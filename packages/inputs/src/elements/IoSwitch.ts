@@ -7,7 +7,7 @@ import { IoBoolean } from './IoBoolean.js'
  **/
 @Register
 export class IoSwitch extends IoBoolean {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -69,7 +69,7 @@ export class IoSwitch extends IoBoolean {
       }
     `
   }
-  changed() {
+  override changed() {
     this.render([
       this.icon ? ioIcon({value: this.icon}) : null,
       span()

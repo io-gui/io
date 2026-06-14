@@ -62,7 +62,7 @@ export type IoMenuItemProps = IoFieldProps & {
 // TODO: fix and improve keyboard navigation in all cases.
 @Register
 export class IoMenuItem extends IoField {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host > * {
         pointer-events: none;
@@ -106,7 +106,7 @@ export class IoMenuItem extends IoField {
 
   declare $options?: IoMenuOptions
 
-  static get Listeners(): any {
+  static override get Listeners(): any {
     return {
       'click': 'preventDefault',
       'focus': 'onFocus',
@@ -126,15 +126,15 @@ export class IoMenuItem extends IoField {
   get inoverlay() {
     return Overlay.contains(this.parentElement?.parentElement as HTMLElement)
   }
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback()
     if (this.$options) Overlay.appendChild(this.$options as HTMLElement)
   }
-  disconnectedCallback() {
+  override disconnectedCallback() {
     super.disconnectedCallback()
     if (this.$options) Overlay.removeChild(this.$options as HTMLElement)
   }
-  onClick() {
+  override onClick() {
     const o = this.option
     if (this.hasmore) {
       if (!this.expanded) this.expanded = true
@@ -159,7 +159,7 @@ export class IoMenuItem extends IoField {
     }
     getMenuRoot(this).dispatch('io-menu-option-clicked', {option: o}, true)
   }
-  onPointerdown(event: PointerEvent) {
+  override onPointerdown(event: PointerEvent) {
     super.onPointerdown(event)
     if (event.pointerType !== 'touch') {
       this.setPointerCapture(event.pointerId)
@@ -168,13 +168,13 @@ export class IoMenuItem extends IoField {
       onOverlayPointerdown.call(this, event)
     }
   }
-  onPointermove(event: PointerEvent) {
+  override onPointermove(event: PointerEvent) {
     event.stopPropagation()
     if (event.pointerType !== 'touch') {
       onOverlayPointermove.call(this, event)
     }
   }
-  onPointerup(event: PointerEvent) {
+  override onPointerup(event: PointerEvent) {
     super.onPointerup(event)
     event.stopPropagation()
     this.onPointerupAction(event)
@@ -182,7 +182,7 @@ export class IoMenuItem extends IoField {
   onPointerupAction(event: PointerEvent) {
     this.onClick()
   }
-  onFocus(event: FocusEvent) {
+  override onFocus(event: FocusEvent) {
     super.onFocus(event)
     if (this.hasmore && this.inoverlay) this.expanded = true
     const $allitems = getMenuDescendants(getMenuRoot(this))
@@ -193,7 +193,7 @@ export class IoMenuItem extends IoField {
       }
     }
   }
-  onBlur(event: FocusEvent) {
+  override onBlur(event: FocusEvent) {
     super.onBlur(event)
     this.debounce(this.onBlurDebounced)
   }
@@ -217,7 +217,7 @@ export class IoMenuItem extends IoField {
       this.collapseRoot()
     }
   }
-  onKeydown(event: KeyboardEvent) {
+  override onKeydown(event: KeyboardEvent) {
     const inoverlay = this.inoverlay
     let direction = this.direction
 
@@ -347,7 +347,7 @@ export class IoMenuItem extends IoField {
       }
     }
   }
-  changed() {
+  override changed() {
     const icon = this.icon || this.option.icon
     const label = this.label || this.option.label
 
@@ -361,7 +361,7 @@ export class IoMenuItem extends IoField {
       this.hasmore && this.direction === 'down' ? ioIcon({value: 'io:triangle_down', class: 'hasmore'}) : null,
     ])
   }
-  dispose() {
+  override dispose() {
     super.dispose()
     delete this.$options
   }

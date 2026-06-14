@@ -11,7 +11,7 @@ export type IoSlider2dProps = IoSliderBaseProps & {
 @Register
 export class IoSlider2d extends IoSliderBase {
 
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         cursor: crosshair;
@@ -46,7 +46,7 @@ export class IoSlider2d extends IoSliderBase {
 
   constructor(args: IoSlider2dProps = {}) { super(args) }
 
-  static get GlUtils() {
+  static override get GlUtils() {
     return /* glsl */`
       vec3 paintKnob(vec3 dstCol, vec2 p, vec2 center, vec3 color) {
         vec4 finalCol = vec4(0.0);
@@ -63,7 +63,7 @@ export class IoSlider2d extends IoSliderBase {
       }
     `
   }
-  static get Frag() {
+  static override get Frag() {
     return /* glsl */`
     varying vec2 vUv;
 

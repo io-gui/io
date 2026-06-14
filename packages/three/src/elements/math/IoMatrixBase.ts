@@ -10,7 +10,7 @@ export type IoMatrixBaseProps = IoElementProps & {
  **/
 @Register
 export class IoMatrixBase extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: grid;
@@ -65,7 +65,7 @@ export class IoMatrixBase extends IoElement {
   valueMutated() {
     this.debounce(this.changed)
   }
-  changed() {
+  override changed() {
     const vChildren: Array<VDOMElement | null> = []
     for (const k of this.keys) {
       if (this.value[k] !== undefined) {

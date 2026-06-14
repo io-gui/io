@@ -13,7 +13,7 @@ export type IoFieldProps = IoElementProps & {
 
 @Register
 export class IoField extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         cursor: pointer;
@@ -121,7 +121,7 @@ export class IoField extends IoElement {
   @Property(0)
   declare tabIndex: number
 
-  static get Listeners(): ListenerDefinitions { // TODO: fix listener types
+  static override get Listeners(): ListenerDefinitions { // TODO: fix listener types
     return {
       'focus': 'onFocus',
       'pointerdown': 'onPointerdown',
@@ -285,7 +285,7 @@ export class IoField extends IoElement {
       this.removeAttribute('aria-disabled')
     }
   }
-  changed() {
+  override changed() {
     this.render([
       this.icon ? ioIcon({value: this.icon}) : null,
       this.value !== undefined ? span(String(this.value)) : null,

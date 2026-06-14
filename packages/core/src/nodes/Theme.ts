@@ -105,7 +105,7 @@ function isThemeColorKey(key: string): boolean {
  */
 @Register
 export class Theme extends ReactiveNode {
-  static get ReactiveProperties(): ReactivePropertyDefinitions {
+  static override get ReactiveProperties(): ReactivePropertyDefinitions {
     const props: ReactivePropertyDefinitions = {}
     for (const key of themeKeys) {
       if (isThemeColorKey(key)) {
@@ -155,7 +155,7 @@ export class Theme extends ReactiveNode {
   @ReactiveProperty('debounced')
   declare reactivity: ReactivityType
 
-  onPropertyMutated(event: CustomEvent) {
+  override onPropertyMutated(event: CustomEvent) {
     const mutated = super.onPropertyMutated(event)
     if (mutated) {
       this.changed()
@@ -173,7 +173,7 @@ export class Theme extends ReactiveNode {
     this.fontSize = Math.min(this.lineHeight, this.fontSize)
   }
 
-  changed() {
+  override changed() {
     this.fieldHeight = this.lineHeight + 2 * (this.spacing + this.borderWidth)
     this.spacing2 = this.spacing * 2
     this.spacing3 = this.spacing * 3

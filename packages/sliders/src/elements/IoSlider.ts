@@ -21,7 +21,7 @@ export type IoSliderProps = IoElementProps & {
  **/
 @Register
 export class IoSlider extends IoGl {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -90,7 +90,7 @@ export class IoSlider extends IoGl {
   #active = -1
   #rect: DOMRect | null = null
 
-  static get Frag() {
+  static override get Frag() {
     return /* glsl */`
     varying vec2 vUv;
 
@@ -133,7 +133,7 @@ export class IoSlider extends IoGl {
     }`
   }
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'focus': 'onFocus',
       'contextmenu': 'onContextmenu',
@@ -275,7 +275,7 @@ export class IoSlider extends IoGl {
       this.dispatch('io-focus-to', {source: this, command: event.key}, true)
     }
   }
-  ready() {
+  override ready() {
     this.valueChanged()
     this.minChanged()
     this.maxChanged()

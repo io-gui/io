@@ -200,7 +200,7 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
     action.setEffectiveWeight(weight)
   }
 
-  onAnimate(delta: number) {
+  override onAnimate(delta: number) {
     if (!this.mixer) return
 
     debug: {
@@ -222,7 +222,7 @@ export class IoAnimationSkinningBlendingExample extends IoThreeExample {
   @ReactiveProperty({type: AnimationSkinningBlendingExample, init: {isPlaying: true}})
   declare applet: AnimationSkinningBlendingExample
 
-  ready() {
+  override ready() {
 
     this.render([
       ioSplit({

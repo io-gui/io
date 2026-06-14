@@ -11,7 +11,7 @@ export type IoNavigatorDrawerProps = IoElementProps & {
 
 @Register
 export class IoNavigatorDrawer extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         pointer-events: auto;
@@ -109,7 +109,7 @@ export class IoNavigatorDrawer extends IoElement {
     super(args)
   }
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'io-menu-option-clicked': 'onMenuOptionClicked',
       'io-menu-tree-resized': 'onMenuTreeResized',
@@ -134,7 +134,7 @@ export class IoNavigatorDrawer extends IoElement {
     this.dispatch('io-drawer-expanded-changed', {element: this}, true)
   }
 
-  changed() {
+  override changed() {
     const icon = {
       left: this.expanded ? 'io:triangle_left' : 'io:triangle_right',
       right: this.expanded ? 'io:triangle_right' : 'io:triangle_left',

@@ -62,7 +62,7 @@ export class CameraLogarithmicDepthBufferExample extends ThreeApplet {
     this.scene.add(light)
   }
 
-  async onRendererInitialized(renderer: WebGPURenderer) {
+  override async onRendererInitialized(renderer: WebGPURenderer) {
     super.onRendererInitialized(renderer)
 
     try {
@@ -117,7 +117,7 @@ export class CameraLogarithmicDepthBufferExample extends ThreeApplet {
     }
   }
 
-  onAnimate() {
+  override onAnimate() {
     const minzoom = labeldata[0].size * labeldata[0].scale * 1
     const maxzoom = labeldata[labeldata.length - 1].size * labeldata[labeldata.length - 1].scale * 100
     let damping = (Math.abs(this.zoomspeed) > this.minzoomspeed ? 0.95 : 1.0)
@@ -150,7 +150,7 @@ export class IoCameraLogarithmicDepthBufferExample extends IoThreeExample {
   @ReactiveProperty({type: WebGPURenderer, init: {antialias: true, logarithmicDepthBuffer: true}})
   declare renderer: WebGPURenderer
 
-  ready() {
+  override ready() {
 
     this.renderer.setPixelRatio(window.devicePixelRatio)
     void this.renderer.init()
@@ -174,7 +174,7 @@ export class IoCameraLogarithmicDepthBufferExample extends IoThreeExample {
 
   }
 
-  dispose() {
+  override dispose() {
     this.renderer.dispose()
     super.dispose()
   }

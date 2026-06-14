@@ -6,7 +6,7 @@ export type IoDividerProps = IoElementProps & {
 
 @Register
 export class IoDivider extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         position: relative;
@@ -71,7 +71,7 @@ export class IoDivider extends IoElement {
   @ReactiveProperty({value: 'horizontal', type: String, reflect: true})
   declare orientation: 'horizontal' | 'vertical'
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'pointerdown': 'onPointerdown',
       'touchstart': ['onTouchstart', {passive: false}] as ListenerDefinition,

@@ -25,7 +25,7 @@ export type IoTabProps = IoFieldProps & {
 // TODO: fix and improve keyboard navigation in all cases.
 @Register
 export class IoTab extends IoField {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -87,7 +87,7 @@ export class IoTab extends IoField {
   @ReactiveProperty({type: Boolean, reflect: true})
   declare overflow: boolean
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'click': 'preventDefault',
       'contextmenu': 'onContextMenu',
@@ -100,7 +100,7 @@ export class IoTab extends IoField {
     const span = this.querySelector('span')!
     this.overflow = span.scrollWidth > span.clientWidth
   }
-  onTouchmove(event: TouchEvent) {
+  override onTouchmove(event: TouchEvent) {
     event.preventDefault()
   }
   preventDefault(event: Event) {
@@ -113,7 +113,7 @@ export class IoTab extends IoField {
     event.preventDefault()
     this.expandContextEditor()
   }
-  onPointerdown(event: PointerEvent) {
+  override onPointerdown(event: PointerEvent) {
     event.preventDefault()
     event.stopPropagation()
     this.setPointerCapture(event.pointerId)
@@ -123,14 +123,14 @@ export class IoTab extends IoField {
       this.focus()
     }
   }
-  onPointermove(event: PointerEvent) {
+  override onPointermove(event: PointerEvent) {
     event.preventDefault()
     if (event.buttons !== 1) return
     const panel = this.parentElement!.parentElement as IoPanel
     const root = this.closest('io-split[root]') as IoSplit
     tabDragIconSingleton.updateDrag(this.tab, panel, event.clientX, event.clientY, root)
   }
-  onPointerup(event: PointerEvent) {
+  override onPointerup(event: PointerEvent) {
     event.preventDefault()
     super.onPointerup(event)
     this.releasePointerCapture(event.pointerId)
@@ -140,17 +140,17 @@ export class IoTab extends IoField {
       this.onClick()
     }
   }
-  onPointercancel(event: PointerEvent) {
+  override onPointercancel(event: PointerEvent) {
     event.preventDefault()
     event.stopPropagation()
     super.onPointercancel(event)
     tabDragIconSingleton.cancelDrag()
   }
-  onPointerleave(event: PointerEvent) {
+  override onPointerleave(event: PointerEvent) {
     event.preventDefault()
     event.stopPropagation()
   }
-  onClick() {
+  override onClick() {
     this.dispatch('io-edit-tab', {tab: this.tab, key: 'Select'}, true)
   }
   onDeleteClick() {
@@ -173,7 +173,7 @@ export class IoTab extends IoField {
       widget: ioButton({label: 'Delete Tab', icon: 'io:close', action: deleteAction}),
     })
   }
-  onKeydown(event: KeyboardEvent) {
+  override onKeydown(event: KeyboardEvent) {
     if (event.shiftKey && ['Backspace', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
       event.preventDefault()
       this.dispatch('io-edit-tab', {tab: this.tab, key: event.key}, true)
@@ -186,7 +186,7 @@ export class IoTab extends IoField {
   tabMutated() {
     this.changed()
   }
-  changed() {
+  override changed() {
     this.setAttribute('selected', this.tab.selected)
     this.setAttribute('title', this.tab.label)
     this.render([

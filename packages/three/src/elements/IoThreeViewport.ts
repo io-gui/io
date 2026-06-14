@@ -73,7 +73,7 @@ export class IoThreeViewport extends IoElement {
 
   declare private renderTarget: CanvasTarget
 
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         position: relative;
@@ -97,7 +97,7 @@ export class IoThreeViewport extends IoElement {
     `
   }
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'three-applet-needs-render': 'onAppletNeedsRender',
     }
@@ -109,7 +109,7 @@ export class IoThreeViewport extends IoElement {
     this.debounce(this.renderViewportDebounced)
   }
 
-  ready() {
+  override ready() {
     // TODO: This is a hack to enable rendering with WebGL fallback
     if (this.renderer.backend instanceof WebGPUBackend) {
       this.renderTarget = new CanvasTarget(document.createElement('canvas'))
@@ -120,11 +120,11 @@ export class IoThreeViewport extends IoElement {
     }
   }
 
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback()
     observer.observe(this)
   }
-  disconnectedCallback() {
+  override disconnectedCallback() {
     super.disconnectedCallback()
     observer.unobserve(this)
     // TODO: Visibility observe
@@ -164,7 +164,7 @@ export class IoThreeViewport extends IoElement {
   viewCamerasMutated() {
     this.debounce(this.renderViewportDebounced)
   }
-  changed() {
+  override changed() {
     this.debounce(this.renderViewportDebounced)
   }
 
@@ -207,7 +207,7 @@ export class IoThreeViewport extends IoElement {
     this.renderer.toneMappingExposure = toneMappingExposure
   }
 
-  dispose() {
+  override dispose() {
     delete (this as any).applet
     this.renderTarget.dispose()
     this.viewCameras.dispose()

@@ -111,7 +111,7 @@ export class AnimationRetargetingExample extends ThreeApplet {
     void this.loadModels()
   }
 
-  onResized(width: number, height: number) {
+  override onResized(width: number, height: number) {
     super.onResized(width, height)
     const aspect = width / height
     this.camera.aspect = aspect
@@ -226,7 +226,7 @@ export class AnimationRetargetingExample extends ThreeApplet {
     return mixer
   }
 
-  onAnimate(delta: number) {
+  override onAnimate(delta: number) {
     if (this.sourceMixer) {
       this.sourceMixer.update(delta)
     }
@@ -243,7 +243,7 @@ export class IoAnimationRetargetingExample extends IoThreeExample {
   @ReactiveProperty({type: AnimationRetargetingExample, init: {isPlaying: true}})
   declare applet: AnimationRetargetingExample
 
-  ready() {
+  override ready() {
 
     this.render([
       ioSplit({

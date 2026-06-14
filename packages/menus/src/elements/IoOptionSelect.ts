@@ -18,7 +18,7 @@ export type IoOptionSelectProps = IoElementProps & {
  **/
 @Register
 export class IoOptionSelect extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
     :host {
       display: inline-block;
@@ -103,7 +103,7 @@ export class IoOptionSelect extends IoElement {
   optionMutated() {
     this.changed()
   }
-  changed() {
+  override changed() {
     let selectedItem
     let label = this.label
     if (this.selectBy === 'value') {

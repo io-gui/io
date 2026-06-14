@@ -22,7 +22,7 @@ export type IoObjectProps = IoElementProps & {
  **/
 @Register
 export class IoObject extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
     :host {
       display: flex;
@@ -124,7 +124,7 @@ export class IoObject extends IoElement {
     clearFocusBacktrack()
   }
 
-  changed() {
+  override changed() {
     const label = this.label || this.value.constructor.name
 
     const propCount = Object.keys(this.value).length

@@ -68,7 +68,7 @@ export class CameraArrayExample extends ThreeApplet {
     this.scene.add( this.mesh )
   }
 
-  onResized(width: number, height: number) {
+  override onResized(width: number, height: number) {
     super.onResized(width, height)
     this.updateCameras(width, height)
   }
@@ -105,7 +105,7 @@ export class CameraArrayExample extends ThreeApplet {
     }
   }
 
-  onAnimate() {
+  override onAnimate() {
     this.mesh.rotation.x += 0.005
     this.mesh.rotation.z += 0.01
   }

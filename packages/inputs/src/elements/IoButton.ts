@@ -12,7 +12,7 @@ export type IoButtonProps = IoFieldProps & {
  **/
 @Register
 export class IoButton extends IoField {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         text-align: center;
@@ -40,28 +40,28 @@ export class IoButton extends IoField {
 
   constructor(args: IoButtonProps = {}) { super(args) }
 
-  onPointerdown(event: PointerEvent) {
+  override onPointerdown(event: PointerEvent) {
     event.preventDefault()
     super.onPointerdown(event)
   }
-  onKeydown(event: KeyboardEvent) {
+  override onKeydown(event: KeyboardEvent) {
     super.onKeydown(event)
     if (event.key === 'Enter' || event.key === ' ') {
       this.pressed = true
     }
   }
-  onKeyup(event: KeyboardEvent) {
+  override onKeyup(event: KeyboardEvent) {
     super.onKeyup(event)
     this.pressed = false
   }
-  onClick(event: MouseEvent) {
+  override onClick(event: MouseEvent) {
     if (typeof this.action === 'function') this.action(this.value)
     this.dispatch('io-button-clicked', {value: this.value}, true)
   }
-  ready() {
+  override ready() {
     this.changed()
   }
-  changed() {
+  override changed() {
     this.setAttribute('aria-pressed', String(this.pressed))
     this.render([
       this.icon ? ioIcon({value: this.icon}) : null,

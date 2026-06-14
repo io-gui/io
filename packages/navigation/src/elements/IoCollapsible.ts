@@ -15,7 +15,7 @@ export type IoCollapsibleProps = IoElementProps & {
 
 @Register
 export class IoCollapsible extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
     :host {
       display: flex;
@@ -89,7 +89,7 @@ export class IoCollapsible extends IoElement {
     clearFocusBacktrack()
   }
 
-  changed() {
+  override changed() {
     this.render([
       // TODO: consider implementing caching
       ioBoolean({icon: this.icon, true: this.label, false: this.label, value: this.bind('expanded')}),

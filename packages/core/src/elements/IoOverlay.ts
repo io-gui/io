@@ -14,7 +14,7 @@ let focusRestoreTarget: Element | null = null
  **/
 @Register
 class IoOverlay extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: block;
@@ -43,7 +43,7 @@ class IoOverlay extends IoElement {
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare expanded: boolean
 
-  static get Listeners(): ListenerDefinitions {
+  static override get Listeners(): ListenerDefinitions {
     return {
       'pointerdown': ['stopPropagation', {passive: false}],
       'pointermove': ['stopPropagation', {passive: false}],
@@ -66,7 +66,7 @@ class IoOverlay extends IoElement {
 
   constructor(args: IoElementProps = {}) { super(args) }
 
-  init() {
+  override init() {
     this.expandAsChildren = this.expandAsChildren.bind(this)
   }
   stopPropagation(event: Event) {
@@ -90,13 +90,13 @@ class IoOverlay extends IoElement {
   onResized() {
     this.collapse()
   }
-  appendChild<El extends Node>(child: El) {
+  override appendChild<El extends Node>(child: El) {
     super.appendChild(child)
     child.addEventListener('expanded-changed', this.onChildExpandedChanged)
     this.debounce(this.expandAsChildren)
     return child
   }
-  removeChild<El extends Node>(child: El) {
+  override removeChild<El extends Node>(child: El) {
     super.removeChild(child)
     child.removeEventListener('expanded-changed', this.onChildExpandedChanged)
     this.debounce(this.expandAsChildren)

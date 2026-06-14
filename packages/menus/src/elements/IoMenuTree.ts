@@ -40,7 +40,7 @@ export type IoMenuTreeProps = IoElementProps & {
 @Register
 export class IoMenuTree extends IoElement {
 
-  static get Style() {
+  static override get Style() {
     return /* css */`
     :host {
       display: flex;
@@ -103,7 +103,7 @@ export class IoMenuTree extends IoElement {
     this.changed()
   }
 
-  changed() {
+  override changed() {
     const vChildren: VDOMElement[] = this.widget ? [this.widget] : []
 
     if (this.searchable) {

@@ -106,7 +106,7 @@ export class Panel extends ReactiveNode {
     })
     return this
   }
-  dispose() {
+  override dispose() {
     this.tabs.length = 0
     super.dispose()
   }

@@ -42,7 +42,7 @@ export type IoSelectorProps = IoElementProps & {
 @Register
 export class IoSelector extends IoElement {
 
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -104,13 +104,13 @@ export class IoSelector extends IoElement {
   @Property(false)
   declare private onScrollSuspended: boolean
 
-  static get Listeners(): ListenerDefinitions {
+  static override get Listeners(): ListenerDefinitions {
     return {
       scroll: 'onScrollChanged',
     }
   }
   constructor(args: IoSelectorProps = {}) { super(args) }
-  init() {
+  override init() {
     this.preacheNext = this.preacheNext.bind(this)
     this.startPreache = this.startPreache.bind(this)
     this.scrollToUnsuspend = this.scrollToUnsuspend.bind(this)
@@ -266,7 +266,7 @@ export class IoSelector extends IoElement {
     }
     this._preaching = false
   }
-  dispose() {
+  override dispose() {
     for (const key in this._caches) {
       // Dispose cached elements not in the DOM.
       if (!this._caches[key].parentElement) {

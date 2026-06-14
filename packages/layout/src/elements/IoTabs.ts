@@ -11,7 +11,7 @@ export type IoTabsProps = IoElementProps & {
 
 @Register
 export class IoTabs extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -88,7 +88,7 @@ export class IoTabs extends IoElement {
     }
   }
 
-  changed() {
+  override changed() {
     const hasOptions = this.addMenuOption && this.addMenuOption.options?.length > 0
     this.render([
       ioTabsHamburger({tabs: this.tabs}),

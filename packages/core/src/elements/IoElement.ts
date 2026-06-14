@@ -182,11 +182,11 @@ export class IoElement extends HTMLElement {
   unbind(name: string): void {
     unbind(this, name)
   }
-  addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions) {
+  override addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions) {
     if (this._disposed) return
     this._eventDispatcher.addEventListener(type, listener as EventListener, options)
   }
-  removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions) {
+  override removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions) {
     if (this._disposed) return
     this._eventDispatcher.removeEventListener(type, listener as EventListener, options)
   }
@@ -354,7 +354,7 @@ export class IoElement extends HTMLElement {
   * @param {string} attr - Attribute name.
   * @param {*} value - Attribute value.
   */
-  setAttribute(attr: string, value: boolean | number | string) {
+  override setAttribute(attr: string, value: boolean | number | string) {
     if (value === true) {
       HTMLElement.prototype.setAttribute.call(this, attr, '')
     } else if (value === false || value === '') {

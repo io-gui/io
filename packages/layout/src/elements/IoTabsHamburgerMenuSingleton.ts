@@ -12,7 +12,7 @@ export interface IoTabsHamburgerMenuExpandProps {
 @Register
 class IoTabsHamburgerMenu extends IoElement {
   // static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -54,7 +54,7 @@ class IoTabsHamburgerMenu extends IoElement {
 
   declare private onEditTab: (event: CustomEvent) => void
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'touchstart': ['stopPropagation', {passive: false}] as ListenerDefinition, // TODO: why?
       'io-focus-to': 'onIoFocusTo',
@@ -113,7 +113,7 @@ class IoTabsHamburgerMenu extends IoElement {
   onExpand() {
     (this.querySelector('[selected]') as HTMLElement)?.focus()
   }
-  changed() {
+  override changed() {
     this.render([
       ...this.tabs.map(tab => ioTab({tab: tab})),
     ])

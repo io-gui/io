@@ -108,3 +108,9 @@ Refined `packages/three/src/nodes/ToolBase.ts` so hover and active pointer recor
 - **bundle externals**: markdown keeps marked/dompurify external (moved to dependencies); three externalizes all `three/*`
 - **type fixes exposed by composite**: exported `Json` from ReactiveNode; MenuOption `override toJSON(): Json`; IoMarkdown uses `$ThemeID.value` not `ThemeSingleton.themeID`
 - **three**: added missing `@io-gui/inputs` dev+peer dep and tsconfig reference
+
+## 2026-06-14 [build] noImplicitOverride fix
+
+- **cause**: `noImplicitOverride: true` in root tsconfig triggered 261 TS4114 errors across all packages
+- **fix**: added `override` to static getters (Style, Listeners, GlUtils, etc.), lifecycle methods (changed, ready, dispose, connectedCallback), and event handlers (onPointerdown, onKeydown, etc.)
+- **build**: `pnpm build` passes cleanly

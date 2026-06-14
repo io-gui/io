@@ -27,7 +27,7 @@ export type IoMenuOptionsProps = IoElementProps & {
  **/
 @Register
 export class IoMenuOptions extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
     :host {
       display: flex;
@@ -116,7 +116,7 @@ export class IoMenuOptions extends IoElement {
   @Property('listbox')
   declare role: string
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'touchstart': ['stopPropagation'] as ListenerDefinition,
       'io-focus-to': 'onIoFocusTo',
@@ -134,13 +134,13 @@ export class IoMenuOptions extends IoElement {
       event.stopPropagation()
     }
   }
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback()
     if (this.inoverlay) {
       this.setAttribute('inoverlay', 'true')
     }
   }
-  disconnectedCallback() {
+  override disconnectedCallback() {
     super.disconnectedCallback()
     if (this.expanded) this.collapse()
   }
@@ -228,7 +228,7 @@ export class IoMenuOptions extends IoElement {
       nudge(this, this.$parent, this.direction, true)
     }
   }
-  changed() {
+  override changed() {
     const vChildren: VDOMElement[] = this.widget ? [this.widget] : []
     if (this.searchable) {
       vChildren.push(ioString({

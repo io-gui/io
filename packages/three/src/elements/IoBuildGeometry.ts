@@ -15,7 +15,7 @@ export class IoBuildGeometry extends IoElement {
   @ReactiveProperty({type: Object, init: null})
   declare value: BufferGeometry<NormalOrGLBufferAttributes> | null
 
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -69,7 +69,7 @@ export class IoBuildGeometry extends IoElement {
     this.dispatchMutation(geometry.boundingSphere!)
   }
 
-  changed() {
+  override changed() {
     const geometry = this.value
     if (!geometry) {
       this.render([])

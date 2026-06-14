@@ -144,7 +144,7 @@ export class GeometriesExample extends ThreeApplet {
     })
   }
 
-  onAnimate(delta: number, time: number) {
+  override onAnimate(delta: number, time: number) {
     if (this.material.wireframe) {
       this.material.emissive.set(0xffffff)
     } else {
@@ -166,7 +166,7 @@ export class IoGeometriesExample extends IoThreeExample {
   @ReactiveProperty({type: GeometriesExample, init: {isPlaying: true}})
   declare applet: GeometriesExample
 
-  ready() {
+  override ready() {
 
     this.render([
       ioSplit({

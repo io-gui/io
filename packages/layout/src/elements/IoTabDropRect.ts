@@ -5,7 +5,7 @@ import { IoTab } from './IoTab.js'
 
 @Register
 class IoTabDropRect extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         position: fixed;
@@ -37,7 +37,7 @@ class IoTabDropRect extends IoElement {
 
   constructor(args: IoElementProps = {}) { super(args) }
 
-  changed() {
+  override changed() {
     if (this.dropTarget && this.dropIndex !== -1) {
       const tabs = this.dropTarget.querySelectorAll('io-tab')
       this.style.width = ''

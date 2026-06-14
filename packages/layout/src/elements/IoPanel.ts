@@ -14,7 +14,7 @@ export type IoPanelProps = IoElementProps & {
 
 @Register
 export class IoPanel extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -34,7 +34,7 @@ export class IoPanel extends IoElement {
   @Property({type: MenuOption})
   declare addMenuOption: MenuOption | undefined
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'io-edit-tab': 'onEditTab',
     }
@@ -158,7 +158,7 @@ export class IoPanel extends IoElement {
     if (options.length === 0) return undefined
     return new MenuOption({options})
   }
-  changed() {
+  override changed() {
     this.render([
       ioTabs({
         tabs: this.panel.tabs,

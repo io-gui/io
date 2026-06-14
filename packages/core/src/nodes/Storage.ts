@@ -185,7 +185,7 @@ export class StorageNode extends ReactiveNode {
       return this
     }
   }
-  dispose() {
+  override dispose() {
     this.clearStorage()
     super.dispose()
   }
@@ -206,7 +206,7 @@ export class StorageNode extends ReactiveNode {
   valueMutated() {
     this.debounce(this.changed, undefined, 1)
   }
-  changed() {
+  override changed() {
     switch (this.storage) {
       case 'hash': {
         this.saveValueToHash()

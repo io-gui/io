@@ -38,7 +38,7 @@ let currentProgram: WebGLProgram | null
 
 @Register
 export class IoGl extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         position: relative;
@@ -254,7 +254,7 @@ export class IoGl extends IoElement {
     this.updateThemeUniforms()
     this.debounce(this.onRender)
   }
-  changed() {
+  override changed() {
     this.debounce(this.onRender)
   }
   onRender() {
@@ -365,7 +365,7 @@ export class IoGl extends IoElement {
       default:
     }
   }
-  Register(ioNodeConstructor: typeof IoElement) {
+  override Register(ioNodeConstructor: typeof IoElement) {
     super.Register(ioNodeConstructor)
     let _glUtils = ''
     const constructors = ioNodeConstructor.prototype._protochain.constructors

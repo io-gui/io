@@ -8,7 +8,7 @@ import { ioColorSlider } from './IoColorSliders.js'
  **/
 @Register
 class IoColorPanel extends IoColorBase {
-  static get Style() {
+  static override get Style() {
     return /* css */`
     :host {
       display: flex;
@@ -31,7 +31,7 @@ class IoColorPanel extends IoColorBase {
   @ReactiveProperty({value: false, reflect: true})
   declare expanded: boolean
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'keydown': 'onKeydown',
       'io-focus-to': 'onIoFocusTo',
@@ -60,7 +60,7 @@ class IoColorPanel extends IoColorBase {
   onValueInput() {
     this.dispatch('value-input', {property: 'value', value: this.value}, true)
   }
-  changed() {
+  override changed() {
     this.render([
       ioColorSlider({value: this.value, channel: 'sv', '@value-input': this.onValueInput}),
       ioColorSlider({value: this.value, channel: 'h', vertical: true, '@value-input': this.onValueInput}),

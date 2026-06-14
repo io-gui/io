@@ -17,7 +17,7 @@ export type IoNumberLadderProps = IoElementProps & {
  **/
 @Register
 class IoNumberLadder extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -85,7 +85,7 @@ class IoNumberLadder extends IoElement {
   @Property('listbox')
   declare role: string
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'ladder-step-change': '_onLadderStepChange',
       'ladder-step-collapse': 'onLadderStepCollapse',
@@ -154,7 +154,7 @@ class IoNumberLadder extends IoElement {
     }
     this.dispatch('expanded', {value: this.expanded}, true)
   }
-  changed() {
+  override changed() {
     const range = this.max - this.min
     const hiddenItem = span({class: 'io-number-ladder-empty'})
 

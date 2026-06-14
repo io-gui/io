@@ -15,7 +15,7 @@ export type IoSliderBaseProps = IoElementProps & {
 }
 
 export class IoSliderBase extends IoGl {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -117,7 +117,7 @@ export class IoSliderBase extends IoGl {
     return [NaN, NaN]
   }
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'focus': 'onFocus',
       'contextmenu': 'onContextmenu',
@@ -320,7 +320,7 @@ export class IoSliderBase extends IoGl {
     value[1] = value[1] + step[1]
     this._inputValue(value)
   }
-  ready() {
+  override ready() {
     this.changed()
   }
   valueChanged() {
@@ -343,7 +343,7 @@ export class IoSliderBase extends IoGl {
     this.changed()
     this.dispatchMutation()
   }
-  changed() {
+  override changed() {
     super.changed()
     this.setAttribute('aria-valuemin', JSON.stringify(this.min))
     this.setAttribute('aria-valuemax', JSON.stringify(this.max))

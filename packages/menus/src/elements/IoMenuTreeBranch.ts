@@ -15,7 +15,7 @@ export type IoMenuTreeBranchProps = IoElementProps & {
 
 @Register
 export class IoMenuTreeBranch extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
     :host {
       display: flex;
@@ -64,7 +64,7 @@ export class IoMenuTreeBranch extends IoElement {
     clearFocusBacktrack()
   }
 
-  changed() {
+  override changed() {
     this.render([
       ioBoolean({icon: this.option.icon, true: this.option.label, false: this.option.label, value: this.bind('expanded')}),
       this.expanded ? ioMenuTree({option: this.option, depth: this.depth + 1}) : null,

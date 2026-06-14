@@ -11,7 +11,7 @@ export class NodeArray<N extends ReactiveNode> extends Array<N> {
   private _isInternalOperation = false
   private _observers = new Set<ReactiveNode | IoElement>()
 
-  static get [Symbol.species]() { return Array }
+  static override get [Symbol.species]() { return Array }
 
   constructor(public node: ReactiveNode | IoElement, ...args: any[]) {
     super(...args)
@@ -95,7 +95,7 @@ export class NodeArray<N extends ReactiveNode> extends Array<N> {
       this._isInternalOperation = false
     }
   }
-  splice(start: number, deleteCount: number, ...items: N[]): N[] {
+  override splice(start: number, deleteCount: number, ...items: N[]): N[] {
     return this.withInternalOperation(() => {
       for (let i = start; i < start + deleteCount; i++) {
         const item = this[i]
@@ -116,7 +116,7 @@ export class NodeArray<N extends ReactiveNode> extends Array<N> {
       return result
     })
   }
-  push(...items: N[]): number {
+  override push(...items: N[]): number {
     return this.withInternalOperation(() => {
       const result = super.push(...items)
       for (const item of items) {
@@ -129,7 +129,7 @@ export class NodeArray<N extends ReactiveNode> extends Array<N> {
       return result
     })
   }
-  unshift(...items: N[]): number {
+  override unshift(...items: N[]): number {
     return this.withInternalOperation(() => {
       const result = super.unshift(...items)
       for (const item of items) {
@@ -142,7 +142,7 @@ export class NodeArray<N extends ReactiveNode> extends Array<N> {
       return result
     })
   }
-  pop(): N | undefined {
+  override pop(): N | undefined {
     return this.withInternalOperation(() => {
       const item = super.pop()
       if (item !== undefined && item._isNode) {
@@ -153,7 +153,7 @@ export class NodeArray<N extends ReactiveNode> extends Array<N> {
       return item
     })
   }
-  shift(): N | undefined {
+  override shift(): N | undefined {
     return this.withInternalOperation(() => {
       const item = super.shift()
       if (item !== undefined && item._isNode) {
@@ -164,21 +164,21 @@ export class NodeArray<N extends ReactiveNode> extends Array<N> {
       return item
     })
   }
-  reverse() {
+  override reverse() {
     return this.withInternalOperation(() => {
       const result = super.reverse()
       if (result.length) this.dispatchMutation()
       return result
     })
   }
-  sort(compareFn?: (a: N, b: N) => number) {
+  override sort(compareFn?: (a: N, b: N) => number) {
     return this.withInternalOperation(() => {
       const result = super.sort(compareFn)
       if (result.length) this.dispatchMutation()
       return result
     })
   }
-  fill(value: N, start?: number, end?: number): this {
+  override fill(value: N, start?: number, end?: number): this {
     return this.withInternalOperation(() => {
       const len = this.length
       const relativeStart = start ?? 0
@@ -212,7 +212,7 @@ export class NodeArray<N extends ReactiveNode> extends Array<N> {
       return this
     })
   }
-  copyWithin(target: number, start?: number, end?: number): this {
+  override copyWithin(target: number, start?: number, end?: number): this {
     return this.withInternalOperation(() => {
       const len = this.length
       const relativeTarget = target

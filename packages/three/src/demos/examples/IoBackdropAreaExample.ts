@@ -141,7 +141,7 @@ export class BackdropAreaExample extends ThreeApplet {
     })
   }
 
-  onAnimate(delta: number) {
+  override onAnimate(delta: number) {
     if (this.mixer) {
       this.mixer.update(delta)
     }
@@ -154,7 +154,7 @@ export class IoBackdropAreaExample extends IoThreeExample {
   @ReactiveProperty({type: BackdropAreaExample, init: {isPlaying: true}})
   declare applet: BackdropAreaExample
 
-  ready() {
+  override ready() {
     this.render([
       ioSplit({
         elements: [

@@ -12,7 +12,7 @@ export type IoColorPickerProps = IoElementProps &{
 
 @Register
 export class IoColorPicker extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         position: relative;
@@ -35,7 +35,7 @@ export class IoColorPicker extends IoElement {
   @ReactiveProperty({value: {r: 1, g: 1, b: 1, a: 1}})
   declare value: {r: number; g: number; b: number; a?: number}
 
-  static get Listeners(): any {
+  static override get Listeners(): any {
     return {
       'click': 'onClick',
       'keydown': 'onKeydown',
@@ -49,7 +49,7 @@ export class IoColorPicker extends IoElement {
     return Panel.expanded && Panel.value === this.value
   }
 
-  ready() {
+  override ready() {
     this.valueChanged()
   }
 
@@ -97,7 +97,7 @@ export class IoColorPicker extends IoElement {
     Panel.value = {r: 1, g: 1, b: 1, a: 1}
     this.removePanelListeners()
   }
-  disconnectedCallback() {
+  override disconnectedCallback() {
     super.disconnectedCallback()
     this.removePanelListeners()
     if (this.expanded) this.collapse()

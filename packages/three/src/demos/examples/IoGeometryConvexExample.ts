@@ -109,7 +109,7 @@ export class GeometryConvexExample extends ThreeApplet {
     this.group.add( mesh )
   }
 
-  onAnimate() {
+  override onAnimate() {
     this.group.rotation.y += 0.005
   }
 }
@@ -120,7 +120,7 @@ export class IoGeometryConvexExample extends IoThreeExample {
   @ReactiveProperty({type: GeometryConvexExample, init: {isPlaying: true}})
   declare applet: GeometryConvexExample
 
-  ready() {
+  override ready() {
 
     this.render([
       ioSplit({

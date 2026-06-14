@@ -23,7 +23,7 @@ export class AnimationKeyframesExample extends ThreeApplet {
     this.scene.background = new Color( 0xbfe3dd )
   }
 
-  async onRendererInitialized(renderer: WebGPURenderer) {
+  override async onRendererInitialized(renderer: WebGPURenderer) {
     super.onRendererInitialized(renderer)
 
     const pmremGenerator = new PMREMGenerator( renderer )
@@ -58,7 +58,7 @@ export class AnimationKeyframesExample extends ThreeApplet {
     }
   }
 
-  onAnimate(delta: number) {
+  override onAnimate(delta: number) {
     if ( this.mixer ) {
       this.mixer.update( delta )
       debug: {
@@ -74,7 +74,7 @@ export class IoAnimationKeyframesExample extends IoThreeExample {
   @ReactiveProperty({type: AnimationKeyframesExample, init: {isPlaying: true}})
   declare applet: AnimationKeyframesExample
 
-  ready() {
+  override ready() {
     this.render([
       ioSplit({
         elements: [

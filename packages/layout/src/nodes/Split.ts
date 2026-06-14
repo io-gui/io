@@ -96,7 +96,7 @@ export class Split extends ReactiveNode {
     })
     return this
   }
-  dispose() {
+  override dispose() {
     this.children.length = 0
     super.dispose()
   }

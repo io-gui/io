@@ -20,7 +20,7 @@ export type IoNumberProps = IoFieldProps & {
  **/
 @Register
 export class IoNumber extends IoField {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         cursor: text;
@@ -87,7 +87,7 @@ export class IoNumber extends IoField {
     this._textNode.nodeValue = String(value)
   }
 
-  onBlur(event: FocusEvent) {
+  override onBlur(event: FocusEvent) {
     super.onBlur(event)
     this._setFromTextNode()
     this.scrollTop = 0
@@ -99,13 +99,13 @@ export class IoNumber extends IoField {
       }
     })
   }
-  onPointerdown(event: PointerEvent) {
+  override onPointerdown(event: PointerEvent) {
     // if (event.pointerType === 'touch') event.preventDefault()
     this.addEventListener('pointermove', this.onPointermove)
     this.addEventListener('pointerup', this.onPointerup)
     if (document.activeElement === this as unknown as Element && event.button === 0) return
   }
-  onPointerup(event: PointerEvent) {
+  override onPointerup(event: PointerEvent) {
     this.removeEventListener('pointermove', this.onPointermove)
     this.removeEventListener('pointerup', this.onPointerup)
     if (this.ladder || event.button === 1) {
@@ -133,7 +133,7 @@ export class IoNumber extends IoField {
   collapseLadder() {
     IoNumberLadderSingleton.expanded = false
   }
-  onKeydown(event: KeyboardEvent) {
+  override onKeydown(event: KeyboardEvent) {
     const range = (window.getSelection() as Selection).getRangeAt(0)
     const rangeStart = range.startOffset
     const rangeEnd = range.endOffset
@@ -197,7 +197,7 @@ export class IoNumber extends IoField {
         break
     }
   }
-  onKeyup(event: KeyboardEvent) {
+  override onKeyup(event: KeyboardEvent) {
     // TODO: move to onkeydown?
     if (event.key === 'Control' || event.key === 'Shift') {
       IoNumberLadderSingleton.expanded ? this.collapseLadder() : this.expandLadder()
@@ -230,11 +230,11 @@ export class IoNumber extends IoField {
       this.setAttribute('aria-invalid', 'true')
     }
   }
-  ready() {
+  override ready() {
     this.disabledChanged()
     this.changed()
   }
-  changed() {
+  override changed() {
     this.setAttribute('aria-valuenow', this.value)
     this.setAttribute('aria-valuemin', this.min)
     this.setAttribute('aria-valuemax', this.max)

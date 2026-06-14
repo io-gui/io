@@ -8,7 +8,7 @@ export type IoPropertyLinkProps = IoButtonProps & {
 
 @Register
 export class IoPropertyLink extends IoButton {
-  static get Style() {
+  static override get Style() {
     return /* css */`
     :host {
       display: flex;
@@ -38,7 +38,7 @@ export class IoPropertyLink extends IoButton {
     this.changed()
   }
 
-  changed() {
+  override changed() {
     let label: string | undefined
     if (this.value instanceof Array) {
       label = `${this.value.constructor.name} (${this.value.length})`

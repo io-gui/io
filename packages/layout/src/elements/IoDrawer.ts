@@ -20,7 +20,7 @@ export type IoDrawerProps = IoElementProps & {
 
 @Register
 export class IoDrawer extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         pointer-events: auto;
@@ -154,7 +154,7 @@ export class IoDrawer extends IoElement {
     this.changed()
   }
 
-  changed() {
+  override changed() {
     if (!this.child) {
       this.render([])
       return

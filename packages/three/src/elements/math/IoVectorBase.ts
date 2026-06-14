@@ -16,7 +16,7 @@ export type IoVectorBaseProps = IoElementProps & {
 
 @Register
 export class IoVectorBase extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -101,7 +101,7 @@ export class IoVectorBase extends IoElement {
   valueMutated() {
     this.debounce(this.changed)
   }
-  changed() {
+  override changed() {
     const vChildren: Array<VDOMElement | null> = []
     for (const k of this.keys) {
       const value = this.value[k as keyof typeof this.value] as number

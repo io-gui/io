@@ -13,7 +13,7 @@ export class IoSpan extends IoElement {
     super(props)
   }
 
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: inline-block;

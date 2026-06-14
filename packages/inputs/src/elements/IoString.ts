@@ -13,7 +13,7 @@ export type IoStringProps = IoFieldProps & {
  **/
 @Register
 export class IoString extends IoField {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         cursor: text;
@@ -50,14 +50,14 @@ export class IoString extends IoField {
 
   constructor(args: IoStringProps = {}) { super(args) }
 
-  onPointerdown(event: PointerEvent) {
+  override onPointerdown(event: PointerEvent) {
     // if (event.pointerType === 'touch') event.preventDefault()
     this.addEventListener('pointermove', this.onPointermove)
     this.addEventListener('pointerup', this.onPointerup)
     // If already focused, let browser handle cursor placement naturally
     if (document.activeElement === this as unknown as Element && event.button === 0) return
   }
-  onPointerup(event: PointerEvent) {
+  override onPointerup(event: PointerEvent) {
     this.removeEventListener('pointermove', this.onPointermove)
     this.removeEventListener('pointerup', this.onPointerup)
     // Focus and set caret to end only when gaining focus programmatically
@@ -94,13 +94,13 @@ export class IoString extends IoField {
       this._setFromTextNode()
     }
   }
-  onBlur(event: FocusEvent) {
+  override onBlur(event: FocusEvent) {
     super.onBlur(event)
     this._setFromTextNode()
     this.scrollTop = 0
     this.scrollLeft = 0
   }
-  onKeydown(event: KeyboardEvent) {
+  override onKeydown(event: KeyboardEvent) {
     const range = (window.getSelection() as Selection).getRangeAt(0)
     const rangeStart = range.startOffset
     const rangeEnd = range.endOffset
@@ -148,7 +148,7 @@ export class IoString extends IoField {
         }
     }
   }
-  onKeyup(event: KeyboardEvent) {
+  override onKeyup(event: KeyboardEvent) {
     super.onKeyup(event)
     if (this.live) {
       const carretPosition = this.getCaretPosition()
@@ -156,13 +156,13 @@ export class IoString extends IoField {
       this.setCaretPosition(carretPosition)
     }
   }
-  ready() {
+  override ready() {
     this.disabledChanged()
   }
   valueChanged() {
     this.invalid = (typeof this.value !== 'string' && this.value !== null && this.value !== undefined)
   }
-  changed() {
+  override changed() {
     this.textNode = String(this.value || '')
   }
 }

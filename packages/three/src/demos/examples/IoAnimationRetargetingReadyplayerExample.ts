@@ -133,7 +133,7 @@ export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
     return mixer
   }
 
-  onAnimate(delta: number) {
+  override onAnimate(delta: number) {
 
     if (this.sourceMixer) {
       this.sourceMixer.update(delta)

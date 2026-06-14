@@ -23,7 +23,7 @@ export class IoColorBase extends IoElement {
   @ReactiveProperty({type: Array, init: [1, 1, 1]})
   declare hsl: [number, number, number]
 
-  ready() {
+  override ready() {
     // this.throttle(this.valueChanged);
     this.valueChanged()
     this.changed()

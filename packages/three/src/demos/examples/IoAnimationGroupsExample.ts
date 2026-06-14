@@ -63,7 +63,7 @@ export class AnimationGroupsExample extends ThreeApplet {
     clipAction.play()
   }
 
-  onAnimate(delta: number) {
+  override onAnimate(delta: number) {
     this.mixer.update(delta)
   }
 }
