@@ -7,6 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { ReactiveProperty } from '../decorators/Property.js';
 import { Register } from '../decorators/Register.js';
 import { IoElement } from './IoElement.js';
+/** Inline text element; `value` updates `innerText`. */
 let IoSpan = class IoSpan extends IoElement {
     constructor(props) {
         super(props);

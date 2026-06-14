@@ -21,31 +21,14 @@ const isTypeCompatible = (type1: any, type2: any) => {
   return false
 }
 /**
- * This class is used internally by the framework to enable two-way data synchronization between reactive properties.
- * It manages bindings between a source node's reactive property and one or more target nodes and reactive properties.
- * It uses hub-and-spoke pub/sub event system and maintains data consistency by automatically propagating changes to all bound nodes and properties.
- *
- * Key features:
- * - Listens for `[propName]-changed` events to detect changes
- * - Supports one-to-many property bindings
- * - Prevents circular update loops
- * - Automatically cleans up listeners when disposed
- *
- * @example
- * const binding = new Binding(nodeA, 'value');
- * binding.addTarget(nodeB, 'value');
+ * Hub-and-spoke two-way sync between reactive properties via `[propName]-changed` events.
+ * @example binding.addTarget(nodeB, 'value')
  */
 export class Binding<T = unknown> {
   readonly node: ReactiveNode | IoElement
   readonly property: string
   readonly targets: Set<ReactiveNode | IoElement> = new Set()
   readonly targetProperties: TargetProperties = new WeakMap()
-  /**
-   * Creates a binding object for specified source `node` and `property`.
-   * It attaches a `[propName]-changed` listener to the source node.
-   * @param {ReactiveNode | IoElement} node - Source node
-   * @param {string} property - Name of the sourceproperty
-   */
   constructor(node: ReactiveNode | IoElement, property: string) {
     debug: {
       if (!(node as ReactiveNode)._isNode && !(node as IoElement)._isIoElement) console.warn('Source node is not a ReactiveNode or IoElement instance!')

@@ -5,10 +5,7 @@ function lerp(a, b, t) {
   return a + (b - a) * t
 }
 
-/**
- * `IoStyleContainer` is a container element that applies styles to the elements inside it.
- * It is used to apply styles to the elements inside it.
- */
+/** @internal Demo: scoped style container for nested elements. */
 export class IoStyleContainer extends IoElement {
   static get Style() {
     return /* css */`

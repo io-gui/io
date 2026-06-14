@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { Binding, ReactiveProtoProperty, ReactivePropertyInstance, ReactiveProperty, ReactiveNode, Register, reactivePropertyDecorators } from '@io-gui/core'
+import { Binding, ReactiveProtoProperty, ReactivePropertyInstance, ReactiveNode, Register, Observer, NodeArray, IoElement, nextQueue, ReactivePropertyDefinitions } from '@io-gui/core'
 
 class Object1 {
   constructor(init?: any) {
@@ -12,7 +12,9 @@ class Object1 {
 
 @Register
 class TestNode extends ReactiveNode {
-  @ReactiveProperty('default')
+  static override get ReactiveProperties(): ReactivePropertyDefinitions {
+    return { label: 'default' }
+  }
   declare label: string
   constructor(args?: any) {super(args)}
 }
@@ -20,6 +22,7 @@ class TestNode extends ReactiveNode {
 const dummy = new TestNode()
 
 describe('ReactiveProperty', () => {
+  describe('ReactiveProtoProperty', () => {
   it('Should initialize correct property definitions and values from loosely typed property definitions', () => {
     let propDef, prop
     // initialize with empty object as property definition
@@ -478,19 +481,22 @@ describe('ReactiveProperty', () => {
       observer: {type: 'object', observing: true},
     })
   })
-  it('Should register property definitions from decorators.', () => {
+  it('Should register property definitions from static ReactiveProperties.', () => {
+    @Register
     class TestClass extends ReactiveNode {
-      @ReactiveProperty('value1')
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return {
+          prop1: 'value1',
+          prop2: { value: 'value2', type: String },
+        }
+      }
       declare prop1: string
-      @ReactiveProperty({value: 'value2', type: String})
       declare prop2: string
     }
-    Register(TestClass)
-    const propertyDefs = reactivePropertyDecorators.get(TestClass)
-    expect(propertyDefs).toEqual({
-      prop1: 'value1',
-      prop2: {value: 'value2', type: String}
-    })
+    const node = new TestClass()
+    expect(node.prop1).toBe('value1')
+    expect(node.prop2).toBe('value2')
+    node.dispose()
   })
   it('Should initialize properties with binding correctly', () => {
     let propDef, prop
@@ -577,6 +583,128 @@ describe('ReactiveProperty', () => {
       type: String,
       reflect: true,
       init: undefined
+    })
+  })
+  })
+
+  describe('Observer', () => {
+    it('observes none type for primitives', () => {
+      const node = new TestNode()
+      const prop = node._reactiveProperties.get('label')!
+      expect(prop.observer.type).toBe('none')
+      expect(prop.observer.observing).toBe(false)
+      node.dispose()
+    })
+
+    it('observes object type for plain objects', () => {
+      @Register
+      class ObjectPropNode extends ReactiveNode {
+        static get ReactiveProperties() {
+          return {data: {type: Object, init: null}}
+        }
+        declare data: Record<string, unknown>
+      }
+
+      const node = new ObjectPropNode()
+      const prop = node._reactiveProperties.get('data')!
+      expect(prop.observer.type).toBe('object')
+      expect(prop.observer.observing).toBe(true)
+      expect(node._hasWindowMutationListener).toBe(true)
+      node.dispose()
+    })
+
+    it('observes io type for ReactiveNode values', () => {
+      @Register
+      class IoPropNode extends ReactiveNode {
+        static get ReactiveProperties() {
+          return {child: {type: TestNode, init: null}}
+        }
+        declare child: TestNode
+      }
+
+      const node = new IoPropNode()
+      const child = new TestNode({label: 'child'})
+      node.child = child
+      const prop = node._reactiveProperties.get('child')!
+      expect(prop.observer.type).toBe('io')
+      expect(prop.observer.observing).toBe(true)
+      node.dispose()
+      child.dispose()
+    })
+
+    it('observes nodearray type', () => {
+      @Register
+      class ArrayPropNode extends ReactiveNode {
+        static get ReactiveProperties() {
+          return {items: {type: NodeArray, init: null}}
+        }
+        declare items: NodeArray<TestNode>
+      }
+
+      const node = new ArrayPropNode()
+      const prop = node._reactiveProperties.get('items')!
+      expect(prop.observer.type).toBe('nodearray')
+      expect(prop.observer.observing).toBe(true)
+      expect(node._hasSelfMutationListener).toBe(true)
+      node.dispose()
+    })
+
+    it('start and stop are idempotent', () => {
+      const node = new TestNode()
+      const prop = node._reactiveProperties.get('label')!
+      const observer = new Observer(node)
+      const value = {x: 1}
+
+      observer.start(value)
+      observer.start(value)
+      expect(observer.observing).toBe(true)
+
+      observer.stop(value)
+      observer.stop(value)
+      expect(observer.observing).toBe(false)
+
+      node.dispose()
+    })
+  })
+
+  describe('ReactivePropertyInstance', () => {
+    it('reflects to attribute on IoElement', () => {
+      @Register
+      class ReflectElement extends IoElement {
+        static get ReactiveProperties() {
+          return {
+            count: {type: Number, value: 0, reflect: true},
+          }
+        }
+        declare count: number
+      }
+
+      const el = new ReflectElement()
+      expect(el.getAttribute('count')).toBe('0')
+      el.count = 5
+      expect(el.getAttribute('count')).toBe('5')
+      el.dispose()
+    })
+
+    it('setter dispatches change queue', async () => {
+      @Register
+      class QueueNode extends ReactiveNode {
+        static get ReactiveProperties() {
+          return {value: 0}
+        }
+        declare value: number
+        changes = 0
+        valueChanged() {
+          this.changes++
+        }
+      }
+
+      const node = new QueueNode()
+      node.value = 1
+      await nextQueue()
+      expect(node.changes).toBe(1)
+      expect(node.value).toBe(1)
+      node.dispose()
     })
   })
 })

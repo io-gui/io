@@ -52,11 +52,7 @@ export declare class ReactiveNode extends Object {
     reactivity: ReactivityType;
     static get ReactiveProperties(): ReactivePropertyDefinitions;
     static get Properties(): Record<string, any>;
-    /**
-     * Declares class-level event listeners wired at construction via {@link EventDispatcher}.
-     * Subclass definitions replace parent handlers for the same event name (last wins).
-     * Use {@link addEventListener} for additional listeners at runtime.
-     */
+    /** Class-level listeners wired at construction; subclass overrides same event name (last wins). */
     static get Listeners(): ListenerDefinitions;
     readonly _protochain: ProtoChain;
     readonly _reactiveProperties: Map<string, ReactivePropertyInstance>;
@@ -101,14 +97,19 @@ export declare class ReactiveNode extends Object {
 export declare function initReactiveProperties(node: ReactiveNode | IoElement): void;
 export declare function initProperties(node: ReactiveNode | IoElement): void;
 export declare function setProperties(node: ReactiveNode | IoElement, props: any): void;
+/** Assigns a reactive property, queuing change dispatch unless debounced. */
 export declare function setProperty(node: ReactiveNode | IoElement, name: string, value: any, debounce?: boolean): void;
 export declare function dispatchQueue(node: ReactiveNode | IoElement, debounce?: boolean): void;
+/** Dispatches `io-object-mutation` for in-place object or nested Io value changes. */
 export declare function dispatchMutation(node: ReactiveNode | IoElement, object: object | ReactiveNode, properties: string[]): void;
 export declare function onPropertyMutated(node: ReactiveNode | IoElement, event: CustomEvent): boolean;
+/** Returns or creates a two-way {@link Binding} for the named reactive property. */
 export declare function bind<TNode extends ReactiveNode | IoElement, K extends keyof TNode & string>(node: TNode, name: K): Binding<TNode[K]>;
 export declare function bind(node: ReactiveNode | IoElement, name: string): Binding<unknown>;
+/** Disposes and removes the binding for the named reactive property. */
 export declare function unbind<TNode extends ReactiveNode | IoElement, K extends keyof TNode & string>(node: TNode, name: K): void;
 export declare function unbind(node: ReactiveNode | IoElement, name: string): void;
 export { detachChildParents } from '../core/ReactiveCore.js';
+/** Tears down bindings, listeners, queues, and parent links for a reactive owner. */
 export declare function dispose(node: ReactiveNode | IoElement): void;
 //# sourceMappingURL=ReactiveNode.d.ts.map

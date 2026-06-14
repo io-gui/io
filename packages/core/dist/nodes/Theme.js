@@ -16,7 +16,6 @@ export const $ThemeID = $({
     storage: 'local',
     key: 'theme-' + THEME_VERSION
 });
-console.log('theme id', $ThemeID.value);
 export const THEMES = {
     light: {
         spacing: 2,
@@ -96,9 +95,8 @@ function isThemeColorKey(key) {
     return key.includes('Color') || key.startsWith('color') || key.startsWith('gradient');
 }
 /**
- * `Theme` is designed to be used as `ThemeSingleton`. It holds top-level CSS variables for Io-Gui design system.
- *
- * CSS color variables such as `'--io_color'` and `'--io_bgColor'` are mapped to numeric properties `io_color` and `io_bgColor`.
+ * Top-level theme singleton; maps numeric/Color properties to `--io_*` CSS variables.
+ * @see ThemeSingleton
  */
 let Theme = class Theme extends ReactiveNode {
     static get ReactiveProperties() {

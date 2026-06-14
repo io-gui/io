@@ -68,12 +68,8 @@ export declare const hardenListenerDefinition: (listenerDefinition: ListenerDefi
  */
 export declare const listenerFromDefinition: (node: ReactiveNode | IoElement | EventTarget, def: ListenerDefinition) => Listener;
 /**
- * Internal utility class responsible for handling listeners and dispatching events.
- * It makes events of all `ReactiveNode` class instances compatible with DOM events.
- * It maintains three independent lists of listeners:
- *  - `protoListeners` specified as `get Listeners()` return value of class.
- *  - `propListeners` specified as inline properties prefixed with "@".
- *  - `addedListeners` explicitly added/removed using `addEventListener()` and `removeEventListener()`.
+ * Routes proto, prop, and added listeners; bridges DOM and synthetic Io events.
+ * Proto listeners use last-wins per event name from {@link ProtoChain}.
  */
 export declare class EventDispatcher {
     readonly node: ReactiveNode | IoElement | EventTarget;

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { ProtoChain, ReactiveNode, ReactiveProperty, ReactivePropertyDefinitions, ListenerDefinitions, IoElement, Register, Property } from '@io-gui/core'
+import { ProtoChain, ReactiveNode, ReactivePropertyDefinitions, ListenerDefinitions, IoElement, Register } from '@io-gui/core'
 
 class Array1 extends Array {}
 class Array2 extends Array1 {}
@@ -22,7 +22,7 @@ class Node1 extends ReactiveNode {
       prop1: {
         init: false
       },
-      prop2: {}
+      prop2: { type: Object, init: null }
     }
   }
 
@@ -31,9 +31,6 @@ class Node1 extends ReactiveNode {
       sprop1: 'foo'
     }
   }
-
-  @ReactiveProperty({type: Object, init: null})
-  declare prop2: object
 }
 
 @Register
@@ -43,33 +40,33 @@ class Node3 extends Node1 {
       prop1: {
         init: true,
         reflect: true
-      }
+      },
+      prop2: { value: 'foo', reflect: false },
+      prop3: { reflect: true },
     }
   }
 
-  @ReactiveProperty({init: true})
-  declare prop1: any
-
-  @ReactiveProperty({value: 'foo', reflect: false})
-  declare prop2: any
-
-  @ReactiveProperty({reflect: true})
-  declare prop3: any
-
-  @Property('bar')
-  declare sprop2: any
+  static get Properties(): Record<string, any> {
+    return {
+      sprop2: 'bar'
+    }
+  }
 }
 
 @Register
 class Node4 extends Node1 {
-  @ReactiveProperty({init: true})
-  declare prop1: any
+  static get ReactiveProperties(): ReactivePropertyDefinitions {
+    return {
+      prop1: { init: true },
+      prop2: {},
+    }
+  }
 
-  @ReactiveProperty({})
-  declare prop2: any
-
-  @Property('baz')
-  declare sprop1: string
+  static get Properties(): Record<string, any> {
+    return {
+      sprop1: 'baz'
+    }
+  }
 }
 
 class IoElement1 extends IoElement {}
@@ -160,7 +157,7 @@ describe('ProtoChain', () => {
       prop2:{},
     })
   })
-  it('Should include properties declared in Property decorator', () => {
+  it('Should include properties from subclass static Properties', () => {
     const protoChain = new ProtoChain(Node3)
     expect(Object.keys(protoChain.properties)).toEqual(['sprop1', 'sprop2'])
     expect(protoChain.properties).toEqual({
@@ -168,16 +165,16 @@ describe('ProtoChain', () => {
       sprop2: 'bar'
     })
   })
-  it('Should include reactive properties declared in ReactiveProperty decorator', () => {
+  it('Should include reactive properties from static ReactiveProperties', () => {
     let protoChain = new ProtoChain(Node1)
-    expect(Object.keys(protoChain.reactiveProperties)).toEqual(['reactivity', 'prop2', 'prop1'])
+    expect(Object.keys(protoChain.reactiveProperties)).toEqual(['reactivity', 'prop1', 'prop2'])
     expect(protoChain.reactiveProperties).toEqual({
       reactivity:{value: 'immediate', type: String},
       prop1:{init: false},
       prop2:{type: Object, init: null},
     })
     protoChain = new ProtoChain(Node3)
-    expect(Object.keys(protoChain.reactiveProperties)).toEqual(['reactivity', 'prop2', 'prop1', 'prop3'])
+    expect(Object.keys(protoChain.reactiveProperties)).toEqual(['reactivity', 'prop1', 'prop2', 'prop3'])
     expect(protoChain.reactiveProperties).toEqual({
       reactivity:{value: 'immediate', type: String},
       prop1:{reflect: true, init: true},
@@ -185,16 +182,16 @@ describe('ProtoChain', () => {
       prop3:{reflect: true},
     })
   })
-  it('Should not override properties declared in Property decorator with inherited `static get Properties()` return oject', () => {
+  it('Should not override subclass Properties with inherited static Properties', () => {
     const protoChain = new ProtoChain(Node4)
     expect(Object.keys(protoChain.properties)).toEqual(['sprop1'])
     expect(protoChain.properties).toEqual({
       sprop1: 'baz',
     })
   })
-  it('Should not override reactive properties declared in ReactiveProperty decorator with inherited `static get ReactiveProperties()` return oject', () => {
+  it('Should not override subclass ReactiveProperties with inherited static ReactiveProperties', () => {
     const protoChain = new ProtoChain(Node4)
-    expect(Object.keys(protoChain.reactiveProperties)).toEqual(['reactivity', 'prop2', 'prop1'])
+    expect(Object.keys(protoChain.reactiveProperties)).toEqual(['reactivity', 'prop1', 'prop2'])
     expect(protoChain.reactiveProperties).toEqual({
       reactivity:{value: 'immediate', type: String},
       prop1:{init: true},
@@ -240,5 +237,19 @@ describe('ProtoChain', () => {
     expect(node.function2.name).toBe('function2')
     expect(node.onFunction2.name).toBe('bound onFunction2')
     expect(node._onFunction2.name).toBe('bound _onFunction2')
+  })
+  it('double Register does not re-init protochain', () => {
+    @Register
+    class FreshRegisterNode extends ReactiveNode {
+      static get ReactiveProperties() {
+        return {value: 0}
+      }
+      declare value: number
+    }
+
+    const chain = FreshRegisterNode.prototype._protochain
+    const node = new FreshRegisterNode()
+    expect(node._protochain).toBe(chain)
+    node.dispose()
   })
 })

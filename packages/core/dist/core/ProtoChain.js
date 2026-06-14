@@ -4,42 +4,14 @@ import { reactivePropertyDecorators } from '../decorators/Property.js';
 import { propertyDecorators } from '../decorators/Property.js';
 import { styleDecorators } from '../decorators/Style.js';
 /**
- * ProtoChain manages class inheritance metadata and configuration.
- *
- * This utility class traverses the prototype chain during class registration to:
- * - Aggregate property configurations
- * - Aggregate event listeners
- * - Aggregate CSS styles strings
- * - Auto-bind event handlers to maintain proper 'this' context
- *
- * This class is internal and instantiated during the `Register()` process.
+ * Aggregates inherited property, listener, and style metadata during {@link Register}.
  */
 export class ProtoChain {
-    /**
-     * Array of inherited class constructors
-     */
     constructors = [];
-    /**
-     * Aggregated initial value for properties declared in `static get Properties()` or @Property() decorators
-    */
     properties = {};
-    /**
-     * Aggregated reactive property definition declared in `static get ReactiveProperties()` or @ReactiveProperty() decorators
-     */
     reactiveProperties = {};
-    /**
-     * Aggregated listener definitions from `static get Listeners()` across the prototype chain.
-     * Multiple entries may exist per event name (merged inheritance). At runtime,
-     * {@link EventDispatcher.setProtoListeners} registers only the **last** entry per name.
-     */
     listeners = {};
-    /**
-     * Aggregated CSS style definition declared in `static get Style()`
-     */
     style = '';
-    /**
-     * Array of function names that start with "on[A-Z]" or "_on[A-Z]" for auto-binding.
-     */
     handlers = [];
     /**
      * Creates an instance of `ProtoChain` for specified class constructor.

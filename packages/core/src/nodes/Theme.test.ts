@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import {
   Theme,
   ThemeSingleton,
+  $Theme,
+  $ThemeID,
   THEMES,
   Color,
   StorageNode,
@@ -43,6 +45,13 @@ describe('Theme', () => {
     it('keeps Color instances on color properties', () => {
       expect(ThemeSingleton.borderColor).toBeInstanceOf(Color)
       expect(ThemeSingleton.bgColor.toCss()).toMatch(/^rgba\(/)
+    })
+
+    it('wires ThemeSingleton through $Theme binding', () => {
+      expect($Theme.value).toBe(ThemeSingleton)
+      expect(ThemeSingleton).toBeInstanceOf(Theme)
+      expect($ThemeID.value).toBeDefined()
+      expect(THEMES[$ThemeID.value as keyof typeof THEMES]).toBeDefined()
     })
   })
 

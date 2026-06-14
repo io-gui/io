@@ -82,7 +82,7 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
         this.ready();
         this.dispatchQueue();
     }
-    // TODO: add types
+    /** Applies constructor/render props; defers dispatch when `skipDispatch` is true. */
     applyProperties(props, skipDispatch = false) {
         for (const name in props) {
             if (this._reactiveProperties.has(name)) {
@@ -187,6 +187,7 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
     removeParent(parent) {
         removeParent(this, parent);
     }
+    /** Releases bindings, listeners, queues, and child elements. */
     dispose() {
         dispose(this);
     }
@@ -200,12 +201,7 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
             resizeObserver.unobserve(this);
         }
     }
-    /**
-     * Renders DOM from virtual DOM arrays.
-     * @param {Array} vDOMElements - Array of VDOMElement[] children.
-     * @param {HTMLElement} [host] - Optional template target.
-     * @param {boolean} [noDispose] - Skip disposal of existing elements.
-     */
+    /** Renders VDOM children into this element or optional host. */
     render(vDOMElements, host, noDispose) {
         host = (host || this);
         const vDOMElementsOnly = filterVDOMElements(vDOMElements);
@@ -213,13 +209,7 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
             delete this.$[id];
         this.traverse(vDOMElementsOnly, host, noDispose);
     }
-    /**
-     * Recurively traverses virtual DOM elements.
-     * Uses keyed reconciliation when any vDOM child specifies a `key` prop, positional reconciliation otherwise.
-     * @param {Array} vDOMElements - Array of VDOMElements elements.
-     * @param {HTMLElement} [host] - Optional template target.
-     * @param {boolean} [noDispose] - Skip disposal of existing elements.
-     */
+    /** Reconciles VDOM tree into host; keyed when children specify `key`. */
     traverse(vChildren, host, noDispose) {
         this._reconcileChildren(vChildren, host, noDispose);
         const children = host.children;

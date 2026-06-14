@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { Change, Binding, ReactiveNode, Register, ReactivePropertyDefinitions, IoElement, ListenerDefinitions, nextQueue, Color, NodeArray } from '@io-gui/core'
+import { Change, Binding, ReactiveNode, Register, ReactivePropertyDefinitions, IoElement, ListenerDefinitions, nextQueue, Color, NodeArray, NODES } from '@io-gui/core'
 
 @Register
 class JsonChildNode extends ReactiveNode {
@@ -1274,5 +1274,80 @@ describe('ReactiveNode', () => {
       expect(parsed.count).toBe(7)
       node.dispose()
     })
+  })
+
+  it('Should track active nodes in NODES registry', () => {
+    const node = new ReactiveNode()
+    expect(NODES.active.has(node)).toBe(true)
+    expect(NODES.disposed.has(node)).toBe(false)
+    node.dispose()
+    expect(NODES.active.has(node)).toBe(false)
+    expect(NODES.disposed.has(node)).toBe(true)
+  })
+
+  it('Should ignore dispose on already disposed node', () => {
+    const node = new ReactiveNode()
+    node.dispose()
+    expect(() => node.dispose()).not.toThrow()
+    expect(NODES.disposed.has(node)).toBe(true)
+  })
+
+  it('Should apply only reactive properties from applyProperties', () => {
+    @Register
+    class PropsNode extends ReactiveNode {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return { count: 0, label: '' }
+      }
+      declare count: number
+      declare label: string
+    }
+    const node = new PropsNode()
+    node.applyProperties({ count: 3, label: 'x', extra: 99 })
+    expect(node.count).toBe(3)
+    expect(node.label).toBe('x')
+    expect((node as any).extra).toBe(99)
+    node.dispose()
+  })
+
+  it('Should skip setProperty when disposed', () => {
+    @Register
+    class CountNode extends ReactiveNode {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return { count: 0 }
+      }
+      declare count: number
+    }
+    const node = new CountNode()
+    node.dispose()
+    expect(() => node.setProperty('count', 5)).not.toThrow()
+    expect(node._disposed).toBe(true)
+  })
+
+  it('Should bubble synthetic events through parent graph', async () => {
+    @Register
+    class ChildNode extends ReactiveNode {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return { value: 0 }
+      }
+      declare value: number
+    }
+    @Register
+    class ParentNode extends ReactiveNode {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return { child: { type: ChildNode, init: null } }
+      }
+      declare child: ChildNode
+    }
+    const parent = new ParentNode()
+    const child = new ChildNode()
+    parent.child = child
+    const events: string[] = []
+    parent.addEventListener('value-changed', () => events.push('parent'))
+    child.addEventListener('value-changed', () => events.push('child'))
+    child.dispatch('value-changed', { property: 'value', value: 1, oldValue: 0 }, true)
+    await nextQueue()
+    expect(events).toContain('child')
+    parent.dispose()
+    child.dispose()
   })
 })

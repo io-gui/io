@@ -193,3 +193,20 @@ Refined `packages/three/src/nodes/ToolBase.ts` so hover and active pointer recor
 - **category:technical** Principles: concise TSDoc (code is documentation), smoke+unit expansion, bench hot paths only
 - **category:technical** Largest gaps: IoSpan (no tests), IoElement (6 tests), IoOverlay (1 test), Observer/RPI (indirect only)
 - **category:technical** Bench targets: ReactiveNode, NodeArray, EventDispatcher, IoElement, Binding; optional VDOM module bench
+
+## 2026-06-14 — Core docs/tests/bench implementation
+
+- **category:technical** Implemented full core_docs_tests_bench plan: 225 tests (+48), 8 bench files
+- **category:technical** Trimmed verbose TSDoc on ChangeQueue, Binding, ProtoChain, ReactiveProperty, Color, Theme, Storage
+- **category:technical** New tests: IoSpan, demos smoke, Observer/RPI/ProtoProperty describes, IoElement render/traverse, expanded Binding/Overlay/Color/Storage
+- **category:technical** bench-setup.ts expanded with window/document/customElements/self mocks for Node benchmarks
+- **category:technical** Bench files use relative imports to avoid barrel side-effects (Theme/Storage init)
+- **category:technical** Removed Theme.ts debug console.log; restored ThemeJSON export
+
+## 2026-06-14 — Core tests/bench implementation
+
+- **category:technical** Implemented remaining core plan tests/benches: 224 tests pass (`pnpm test:core`)
+- **category:technical** New files: IoSpan.test.ts, demos.test.ts, 6 bench files (IoElement, EventDispatcher, Binding, NodeArray, VDOM)
+- **category:technical** IoSyntheticEvent.path accumulates per bubble target — copy path in handlers (shared array popped after dispatch)
+- **category:technical** Double Register on same class throws (Cannot redefine _protochain) — test uses fresh class instead
+- **category:technical** IoElementInspectorDemo constructor fails in ready() — demo smoke uses class prototype check only

@@ -55,5 +55,13 @@ describe('ChangeQueue', () => {
         q.queue('prop1', 1, 0);
         q.dispatch();
     });
+    bench('coalesce 50 props to final values', () => {
+        const q = freshQueue();
+        for (let i = 0; i < 50; i++) {
+            q.queue(`p${i}`, 0, 0);
+            q.queue(`p${i}`, i + 1, 0);
+        }
+        q.dispatch();
+    });
 });
 //# sourceMappingURL=ChangeQueue.bench.js.map

@@ -52,6 +52,7 @@ export declare class IoElement extends HTMLElement {
     _textNode: Text;
     readonly _children: Array<ReactiveNode | IoElement>;
     constructor(args?: IoElementProps);
+    /** Applies constructor/render props; defers dispatch when `skipDispatch` is true. */
     applyProperties(props: any, skipDispatch?: boolean): void;
     setProperties(props: any): void;
     setProperty(name: string, value: any, debounce?: boolean): void;
@@ -74,23 +75,13 @@ export declare class IoElement extends HTMLElement {
     dispatch(type: string, detail?: any, bubbles?: boolean, src?: ReactiveNode | HTMLElement | Document | Window): void;
     addParent(parent: ReactiveNode | IoElement): void;
     removeParent(parent: ReactiveNode | IoElement): void;
+    /** Releases bindings, listeners, queues, and child elements. */
     dispose(): void;
     connectedCallback(): void;
     disconnectedCallback(): void;
-    /**
-     * Renders DOM from virtual DOM arrays.
-     * @param {Array} vDOMElements - Array of VDOMElement[] children.
-     * @param {HTMLElement} [host] - Optional template target.
-     * @param {boolean} [noDispose] - Skip disposal of existing elements.
-     */
+    /** Renders VDOM children into this element or optional host. */
     render(vDOMElements: Array<VDOMElement | null>, host?: HTMLElement | IoElement, noDispose?: boolean): void;
-    /**
-     * Recurively traverses virtual DOM elements.
-     * Uses keyed reconciliation when any vDOM child specifies a `key` prop, positional reconciliation otherwise.
-     * @param {Array} vDOMElements - Array of VDOMElements elements.
-     * @param {HTMLElement} [host] - Optional template target.
-     * @param {boolean} [noDispose] - Skip disposal of existing elements.
-     */
+    /** Reconciles VDOM tree into host; keyed when children specify `key`. */
     traverse(vChildren: VDOMElement[], host: HTMLElement | IoElement, noDispose?: boolean): void;
     /**
      * Reconciles host children with vDOM children by position and tag name.

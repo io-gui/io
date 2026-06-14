@@ -1,6 +1,7 @@
 import { ReactivePropertyInstance, ReactivePropertyDefinition } from '../core/ReactiveProperty.js';
 import { ThemeSingleton } from '../nodes/Theme.js';
 import { IoElement, IoElementProps } from './IoElement.js';
+/** WebGL canvas element with shared context and shader program cache. */
 export declare class IoGl extends IoElement {
     #private;
     static get Style(): string;

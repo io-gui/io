@@ -4,64 +4,64 @@ overview: "Per-class audit of @io-gui/core: concise TSDoc, expanded smoke + unit
 todos:
   - id: core-reactive-node
     content: "ReactiveNode: trim class TSDoc; add smoke (construct/dispose/register); unit gaps — synthetic bubble, NODES registry, applyProperties edge cases, free-function exports (bind/unbind/dispatchMutation); bench setProperty+dispatch hot path"
-    status: pending
+    status: completed
   - id: core-io-element
     content: "IoElement: concise class TSDoc + render/traverse/dispose one-liners; smoke (custom element upgrade, Style adoption); unit gaps — render(), traverse keyed reuse, ResizeObserver hook, attribute reflection batch; bench render+traverse with 100+ VDOM nodes"
-    status: pending
+    status: completed
   - id: core-change-queue
     content: "ChangeQueue: shorten verbose TSDoc to role+coalesce behavior; expand unit — handler throw recovery, dispatching guard, cancel mid-cascade; keep/extend existing bench (queue, coalesce, dispatch, cascade)"
-    status: pending
+    status: completed
   - id: core-reactive-proto-property
     content: "ReactiveProtoProperty: replace @typedef/@class blocks with 1-line class doc + @param on constructor; unit — loose-def matrix (primitive, ctor, Binding, merge inherited defs) currently buried in ReactiveProperty.test.ts — split dedicated cases"
-    status: pending
+    status: completed
   - id: core-observer
     content: "Observer: add 1-line class doc (observation type lifecycle); unit — start/stop per type (none/io/nodearray/object), shared-value listener refcount, window vs self listener; no bench (not hot path)"
-    status: pending
+    status: completed
   - id: core-reactive-property-instance
     content: "ReactivePropertyInstance: concise class doc; unit — getter/setter dispatch, reflect-to-attribute, type coercion, binding attach, init:null vs init:args, dispose cleanup; no bench"
-    status: pending
+    status: completed
   - id: core-proto-chain
     content: "ProtoChain: trim property-level noise, keep class purpose doc; smoke — Register() triggers init once; unit — style merge, listener last-wins vs merge introspection, decorator+static aggregation; no bench (one-time registration cost)"
-    status: pending
+    status: completed
   - id: core-event-dispatcher
     content: "EventDispatcher: shorten class doc; smoke — proto/prop/added listener wiring; unit gaps — synthetic bubble path, DOM bridge, stopPropagation, listenerFromDefinition/hardenListenerDefinition matrix; bench dispatch+bubble with deep parent graph"
-    status: pending
+    status: completed
   - id: core-binding
     content: "Binding: cut example block to 1-line @example; unit — circular loop guard, multi-target, type mismatch, dispose removes all listeners, NaN equality; bench source→N targets propagation"
-    status: pending
+    status: completed
   - id: core-node-array
     content: "NodeArray: keep concise class doc (already good); smoke — proxy identity, push/splice; unit gaps — indexed assign, sort/reverse, JSON round-trip, observer fan-out, species; bench splice/push at 1k items"
-    status: pending
+    status: completed
   - id: core-color
     content: "Color: class doc OK — add one-liners on applyJSON/toHex/toCss only; unit — 24-bit vs 32-bit hex, alpha edge 0/1, toCss rounding; no bench"
-    status: pending
+    status: completed
   - id: core-storage-node
     content: "StorageNode + EmulatedLocalStorage: concise StorageNode doc; smoke — factory dedup by key, hash/local/none; unit — JSON hydrate IoValue, permission fallback, clearStorage/dispose, __proto__ key guard; no bench"
-    status: pending
+    status: completed
   - id: core-theme
     content: "Theme: concise singleton doc; smoke — ThemeSingleton CSS vars on changed(); unit — fontSize/lineHeight coupling, Color vs number CSS output, applyJSON theme switch; no bench (debounced, infrequent)"
-    status: pending
+    status: completed
   - id: core-io-gl
     content: "IoGl: add minimal class TSDoc (WebGL canvas element); smoke — construct without throw when WebGL available; unit — shader compile path, uniform cache, resize; no bench (GPU-bound, unreliable in Node vitest)"
-    status: pending
+    status: completed
   - id: core-io-span
     content: "IoSpan: add 1-line class doc; smoke — ioSpan factory + valueChanged sets innerText; unit — binding on value prop; no bench"
-    status: pending
+    status: completed
   - id: core-io-overlay
     content: "IoOverlay: trim singleton doc to behavior summary; smoke — IoOverlaySingleton expanded toggle; unit — expanded event collapse children, focus restore, pointer blocking; no bench"
-    status: pending
+    status: completed
   - id: demo-io-theme-editor
     content: "IoThemeEditor (demo): 1-line @internal doc; smoke — construct + render snapshot; no unit depth required; no bench"
-    status: pending
+    status: completed
   - id: demo-io-style-container
     content: "IoStyleContainer (demo): 1-line @internal doc; smoke — construct; no bench"
-    status: pending
+    status: completed
   - id: demo-io-element-inspector
     content: "IoElementInspectorDemo (demo): 1-line @internal doc; smoke — construct; no bench"
-    status: pending
+    status: completed
   - id: demo-io-change-viz
     content: "IoChangeVisualization + SimulatedNode + ForceDirectedLayout (demo): @internal docs on demo classes only; smoke — construct; unit optional for layout tick; no bench"
-    status: pending
+    status: completed
 isProject: false
 ---
 

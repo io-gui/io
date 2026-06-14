@@ -117,11 +117,7 @@ export type StorageProps = ReactiveNodeProps & {
  * Call {@link Storage.permit} before writing to localStorage when privacy
  * settings require explicit user consent.
  *
- * @example
- * ```ts
- * const theme = Storage({ key: 'theme', value: 'light', storage: 'local' })
- * theme.value = 'dark'
- * ```
+ * @example Storage({ key: 'theme', value: 'light', storage: 'local' })
  */
 @Register
 export class StorageNode extends ReactiveNode {

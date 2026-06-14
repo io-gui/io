@@ -47,11 +47,7 @@ let ReactiveNode = ReactiveNode_1 = class ReactiveNode extends Object {
     static get Properties() {
         return {};
     }
-    /**
-     * Declares class-level event listeners wired at construction via {@link EventDispatcher}.
-     * Subclass definitions replace parent handlers for the same event name (last wins).
-     * Use {@link addEventListener} for additional listeners at runtime.
-     */
+    /** Class-level listeners wired at construction; subclass overrides same event name (last wins). */
     static get Listeners() {
         return {};
     }
@@ -361,6 +357,7 @@ function debugPropertyType(node, name, prop, value) {
         }
     }
 }
+/** Assigns a reactive property, queuing change dispatch unless debounced. */
 export function setProperty(node, name, value, debounce = false) {
     const prop = node._reactiveProperties.get(name);
     const oldValue = prop.value;
@@ -392,7 +389,7 @@ export function dispatchQueue(node, debounce = false) {
       Expected one of: "immediate", "throttled", "debounced".`);
     }
 }
-// TODO: Consider using global event bus for all mutation events!
+/** Dispatches `io-object-mutation` for in-place object or nested Io value changes. */
 export function dispatchMutation(node, object, properties) {
     if (isIoValue(object)) {
         node.dispatch('io-object-mutation', { object, properties });
@@ -434,6 +431,7 @@ export function unbind(node, name) {
     property?.binding?.removeTarget(node, name);
 }
 export { detachChildParents } from '../core/ReactiveCore.js';
+/** Tears down bindings, listeners, queues, and parent links for a reactive owner. */
 export function dispose(node) {
     debug: if (node._disposed) {
         console.warn('ReactiveNode.dispose(): Already disposed!', node.constructor.name);

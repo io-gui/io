@@ -5,6 +5,7 @@ import { ioButton, ioField } from '@io-gui/inputs'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioColorRgba } from '@io-gui/colors'
 
+/** @internal Demo: live theme variable editor. */
 export class IoThemeEditor extends IoElement {
   static get Style() {
     return /* css */`

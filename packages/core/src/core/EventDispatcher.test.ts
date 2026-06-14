@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { ReactiveNode, Register, ListenerDefinitions, EventDispatcher, IoElement } from '@io-gui/core'
+import { ReactiveNode, Register, ListenerDefinitions, EventDispatcher, IoElement, constructElement, releaseEventDispatcher } from '@io-gui/core'
 
 const handlerFunction = (event: CustomEvent) => {
   (event.target as unknown as MockNode1).eventStack.push(`handlerFunction ${event.detail}`)
@@ -519,5 +519,42 @@ describe('EventDispatcher', () => {
 
     eventDispatcher.dispatchEvent('immediate-stop', 1)
     expect(node.eventStack).toEqual(['first', 'stopper'])
+  })
+  it('Should populate IoSyntheticEvent.path when bubbling', () => {
+    const root = new MockNode1()
+    const parent = new MockNode1()
+    const child = new MockNode1()
+    parent.addParent(root)
+    child.addParent(parent)
+
+    let childPath: Array<ReactiveNode | IoElement> = []
+    let parentPath: Array<ReactiveNode | IoElement> = []
+    let rootPath: Array<ReactiveNode | IoElement> = []
+
+    child._eventDispatcher.addEventListener('path-event', (event) => {
+      childPath = [...event.path]
+    })
+    parent._eventDispatcher.addEventListener('path-event', (event) => {
+      parentPath = [...event.path]
+    })
+    root._eventDispatcher.addEventListener('path-event', (event) => {
+      rootPath = [...event.path]
+    })
+
+    child._eventDispatcher.dispatchEvent('path-event', 1, true)
+
+    expect(childPath).toEqual([child])
+    expect(parentPath).toEqual([child, parent])
+    expect(rootPath).toEqual([child, parent, root])
+
+    root.dispose()
+    parent.dispose()
+    child.dispose()
+  })
+  it('releaseEventDispatcher disposes native element listeners', () => {
+    const element = constructElement({tag: 'div', props: {'@click': () => {}}})
+    expect((element as any)._eventDispatcher).toBeDefined()
+    releaseEventDispatcher(element)
+    expect((element as any)._eventDispatcher).toBeUndefined()
   })
 })

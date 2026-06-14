@@ -38,4 +38,19 @@ describe('Color', () => {
     expect(color.b).toBe(0)
     expect(color.a).toBeCloseTo(0.2)
   })
+
+  it('handles alpha edge values 0 and 1', () => {
+    const transparent = new Color(1, 0, 0, 0)
+    expect(transparent.a).toBe(0)
+    expect(transparent.toJSON() >>> 24).toBe(0)
+
+    const opaque = new Color(0, 0, 1, 1)
+    expect(opaque.a).toBe(1)
+    expect(opaque.toJSON() >>> 24).toBe(255)
+  })
+
+  it('toCss rounds channels with floor', () => {
+    const color = new Color(0.501, 0.499, 0.996, 0.5)
+    expect(color.toCss()).toBe('rgba(127, 127, 253, 0.5)')
+  })
 })

@@ -118,7 +118,7 @@ export class IoElement extends HTMLElement {
     this.ready()
     this.dispatchQueue()
   }
-  // TODO: add types
+  /** Applies constructor/render props; defers dispatch when `skipDispatch` is true. */
   applyProperties(props: any, skipDispatch = false) {
     for (const name in props) {
       if (this._reactiveProperties.has(name)) {
@@ -215,6 +215,7 @@ export class IoElement extends HTMLElement {
   removeParent(parent: ReactiveNode | IoElement) {
     removeParent(this, parent)
   }
+  /** Releases bindings, listeners, queues, and child elements. */
   dispose() {
     dispose(this)
   }
@@ -230,25 +231,14 @@ export class IoElement extends HTMLElement {
     }
   }
 
-  /**
-   * Renders DOM from virtual DOM arrays.
-   * @param {Array} vDOMElements - Array of VDOMElement[] children.
-   * @param {HTMLElement} [host] - Optional template target.
-   * @param {boolean} [noDispose] - Skip disposal of existing elements.
-   */
+  /** Renders VDOM children into this element or optional host. */
   render(vDOMElements: Array<VDOMElement | null>, host?: HTMLElement | IoElement, noDispose?: boolean) {
     host = (host || this) as any
     const vDOMElementsOnly = filterVDOMElements(vDOMElements)
     for (const id in this.$) delete this.$[id]
     this.traverse(vDOMElementsOnly, host as HTMLElement, noDispose)
   }
-  /**
-   * Recurively traverses virtual DOM elements.
-   * Uses keyed reconciliation when any vDOM child specifies a `key` prop, positional reconciliation otherwise.
-   * @param {Array} vDOMElements - Array of VDOMElements elements.
-   * @param {HTMLElement} [host] - Optional template target.
-   * @param {boolean} [noDispose] - Skip disposal of existing elements.
-   */
+  /** Reconciles VDOM tree into host; keyed when children specify `key`. */
   traverse(vChildren: VDOMElement[], host: HTMLElement | IoElement, noDispose?: boolean) {
     this._reconcileChildren(vChildren, host, noDispose)
     const children = host.children

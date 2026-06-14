@@ -489,5 +489,20 @@ describe('NodeArray', () => {
       parent.dispose()
     })
   })
+
+  describe('constructor', () => {
+    it('accepts prefilled items', () => {
+      const parent = new ParentNode()
+      const item1 = new TestNode({label: 'a'})
+      const item2 = new TestNode({label: 'b'})
+      const array = new NodeArray<TestNode>(parent, item1, item2)
+
+      expect(array.length).toBe(2)
+      expect(array[0]).toBe(item1)
+      expect(array[1]).toBe(item2)
+
+      parent.dispose()
+    })
+  })
 })
 

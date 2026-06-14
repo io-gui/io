@@ -1,18 +1,25 @@
 import { describe, it, expect } from 'vitest'
-import { Binding, ReactiveNode, Register, ReactiveProperty } from '@io-gui/core'
+import { Binding, ReactiveNode, Register, ReactiveProperty, ReactivePropertyDefinitions } from '@io-gui/core'
 
 @Register
 class TestNode extends ReactiveNode {
-  @ReactiveProperty({type: Number, value: 0})
   declare prop1: number
-  @ReactiveProperty({type: Number, value: 0})
-  declare prop2: number
+  static override get ReactiveProperties(): ReactivePropertyDefinitions {
+    return {
+      prop1: 0,
+      prop2: 0
+    }
+  }
 }
 
 @Register
 class TestNodeString extends ReactiveNode {
-  @ReactiveProperty({type: String, value: ''})
   declare strProp: string
+  static override get ReactiveProperties(): ReactivePropertyDefinitions {
+    return {
+      strProp: ''
+    }
+  }
 }
 
 describe('Binding', () => {
@@ -184,5 +191,63 @@ describe('Binding', () => {
         ['strProp']
       ]
     })
+  })
+  it('Should passthrough NaN without resync loop', () => {
+    const src = new TestNode()
+    const dst = new TestNode()
+    const binding = new Binding(src, 'prop1')
+    binding.addTarget(dst, 'prop1')
+
+    src.prop1 = NaN
+    expect(src.prop1).toBeNaN()
+    expect(dst.prop1).toBeNaN()
+
+    let changes = 0
+    src.addEventListener('prop1-changed', () => changes++)
+    dst.prop1 = NaN
+    expect(changes).toBe(0)
+
+    src.dispose()
+    dst.dispose()
+  })
+  it('Should sync one source to four targets', () => {
+    const src = new TestNode()
+    const binding = new Binding(src, 'prop1')
+    const targets = [new TestNode(), new TestNode(), new TestNode(), new TestNode()]
+    for (const target of targets) {
+      binding.addTarget(target, 'prop1')
+    }
+
+    src.prop1 = 7
+    for (const target of targets) {
+      expect(target.prop1).toBe(7)
+    }
+
+    targets[2].prop1 = 9
+    expect(src.prop1).toBe(9)
+    for (const target of targets) {
+      expect(target.prop1).toBe(9)
+    }
+
+    src.dispose()
+    for (const target of targets) target.dispose()
+  })
+  it('Should not infinite loop on circular binding', () => {
+    const node1 = new TestNode()
+    const node2 = new TestNode()
+    node1.prop1 = node2.bind('prop1') as unknown as number
+    node2.prop1 = node1.bind('prop1') as unknown as number
+
+    let changes = 0
+    node1.addEventListener('prop1-changed', () => changes++)
+    node2.addEventListener('prop1-changed', () => changes++)
+
+    node1.prop1 = 3
+    expect(node1.prop1).toBe(3)
+    expect(node2.prop1).toBe(3)
+    expect(changes).toBeLessThan(8)
+
+    node1.dispose()
+    node2.dispose()
   })
 })

@@ -159,4 +159,20 @@ describe('Storage.test.ts', () => {
     storage.dispose()
     expect(self.location.hash).not.toContain('test=foo')
   })
+  it('storage none does not persist values', () => {
+    const node = new StorageNode({key: 'test-none', value: 'default', storage: 'none'})
+    expect(node.storage).toBe('none')
+    node.value = 'changed'
+    expect(localStorage.getItem('Storage:test-none')).toBe(null)
+    expect(self.location.hash).not.toContain('test-none')
+    node.dispose()
+  })
+  it('Storage factory returns singleton binding per key and storage', () => {
+    const binding1 = Storage({key: 'factory-singleton', value: 1, storage: 'none'})
+    const binding2 = Storage({key: 'factory-singleton', value: 2, storage: 'none'})
+    expect(binding1).toBe(binding2)
+    binding1.value = 9
+    expect(binding2.value).toBe(9)
+    binding1.dispose()
+  })
 })

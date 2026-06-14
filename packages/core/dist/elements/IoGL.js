@@ -49,6 +49,7 @@ function getUniformLocation(program, name) {
     }
     return locations.get(name) ?? null;
 }
+/** WebGL canvas element with shared context and shader program cache. */
 let IoGl = IoGl_1 = class IoGl extends IoElement {
     static get Style() {
         return /* css */ `

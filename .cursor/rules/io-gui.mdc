@@ -146,6 +146,8 @@ Each package can be built/linted individually:
 - If playwright browsers are not installed in sandbox try `source .env && pnpm test:[package] 2>&1`
 - If that fails, install playwright browsers with `pnpm exec playwright install chromium 2>&1`
 - Use `nextQueue()` from `@io-gui/core` to wait for next queue tick in tests. Dont use `await new Promise`
+- DO NOT use `@ReactiveProperty` decorator in test files. Use `static override get ReactiveProperties()` method instead.
+- DO NOT use `@Property` decorator in test files. Use `static override get Properties()` method instead.
 
 ### Development Guidelines
 

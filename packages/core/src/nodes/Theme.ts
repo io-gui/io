@@ -13,7 +13,6 @@ export const $ThemeID = $({
   key: 'theme-' + THEME_VERSION
 })
 
-console.log('theme id', $ThemeID.value)
 
 export type ThemeJSON = Record<string, number>
 
@@ -99,9 +98,8 @@ function isThemeColorKey(key: string): boolean {
 }
 
 /**
- * `Theme` is designed to be used as `ThemeSingleton`. It holds top-level CSS variables for Io-Gui design system.
- *
- * CSS color variables such as `'--io_color'` and `'--io_bgColor'` are mapped to numeric properties `io_color` and `io_bgColor`.
+ * Top-level theme singleton; maps numeric/Color properties to `--io_*` CSS variables.
+ * @see ThemeSingleton
  */
 @Register
 export class Theme extends ReactiveNode {

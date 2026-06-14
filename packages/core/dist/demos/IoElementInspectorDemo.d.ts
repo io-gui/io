@@ -1,4 +1,5 @@
 import { IoElement } from '@io-gui/core';
+/** @internal Demo: component inspector playground. */
 export declare class IoElementInspectorDemo extends IoElement {
     static get Style(): string;
     static get ReactiveProperties(): {

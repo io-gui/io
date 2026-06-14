@@ -55,6 +55,7 @@ const option = new MenuOption({
   selectedID: $({key: 'element-demo', storage: 'local', value: 'io-slider'})
 })
 
+/** @internal Demo: component inspector playground. */
 export class IoElementInspectorDemo extends IoElement {
   static get Style() {
     return /* css */`

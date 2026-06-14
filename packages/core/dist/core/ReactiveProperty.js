@@ -1,16 +1,7 @@
 import { Binding } from './Binding.js';
 import { isIoValue } from './ReactiveCore.js';
 import { NodeArray } from '../core/NodeArray.js';
-/**
- * Instantiates a property definition object from a loosely or strongly typed property definition.
- * It facilitates merging of inherited property definitions from the prototype chain.
- * @class
- * @property {*} [value] The property's value. Can be any type.
- * @property {AnyConstructor} [type] Constructor function defining the property's type.
- * @property {Binding} [binding] Binding object for two-way data synchronization.
- * @property {boolean} [reflect] Whether to reflect the property to an HTML attribute.
- * @property {*} [init] Initialization arguments for constructing initial values.
- */
+/** Normalized reactive property definition merged from decorators and static getters. */
 export class ReactiveProtoProperty {
     /**
      * Creates a property definition from various input types.
@@ -143,11 +134,8 @@ export function removeSelfMutationListener(node) {
     node.removeEventListener('io-object-mutation', node.onPropertyMutated);
 }
 /**
- * Manages mutation observation state for a reactive property.
- * - 'none': Primitives (String, Number, Boolean) - no mutation observation
- * - 'io': Io types (ReactiveNode, IoElement subclasses) - observe on the value itself
- * - 'nodearray': NodeArray - registers as observer, receives mutations via self-listener
- * - 'object': Non-Io objects (Object, Array, etc.) - observe via window (global event bus)
+ * Tracks mutation observation mode and listener wiring for one reactive property.
+ * @see ObservationType
  */
 export class Observer {
     type = 'none';
@@ -188,9 +176,7 @@ export class Observer {
     }
     dispose() { }
 }
-/**
- * ReactivePropertyInstance object constructed from `ReactiveProtoProperty`.
- */
+/** Runtime reactive property: value, type, binding, reflect, and mutation observer. */
 export class ReactivePropertyInstance {
     // Property value.
     value;

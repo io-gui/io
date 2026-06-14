@@ -254,4 +254,28 @@ describe('ChangeQueue', () => {
       'changed',
     ])
   })
+
+  it('Should ignore nested dispatch while dispatching is in progress', () => {
+    @Register
+    class ReentrantNode extends ReactiveNode {
+      changeStack: string[] = []
+      prop1Changed(change: Change) {
+        this.changeStack.push(`prop1Changed ${change.value}`)
+        this._changeQueue.dispatch()
+      }
+      dispatch() {}
+      changed() {
+        this.changeStack.push('changed')
+      }
+    }
+    const node = new ReentrantNode()
+    const changeQueue = node._changeQueue
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    changeQueue.queue('prop1', 1, 0)
+    changeQueue.dispatch()
+    expect(changeQueue.dispatching).toBe(false)
+    expect(node.changeStack).toEqual(['prop1Changed 1', 'changed'])
+    consoleSpy.mockRestore()
+    node.dispose()
+  })
 })

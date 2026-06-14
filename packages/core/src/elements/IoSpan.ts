@@ -7,6 +7,7 @@ type IoSpanProps = IoElementProps & {
   value?: WithBinding<string>
 }
 
+/** Inline text element; `value` updates `innerText`. */
 @Register
 export class IoSpan extends IoElement {
   constructor(props: IoSpanProps) {

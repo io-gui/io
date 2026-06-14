@@ -3,6 +3,7 @@ import { IoElement, IoElementProps } from './IoElement.js';
 type IoSpanProps = IoElementProps & {
     value?: WithBinding<string>;
 };
+/** Inline text element; `value` updates `innerText`. */
 export declare class IoSpan extends IoElement {
     constructor(props: IoSpanProps);
     static get Style(): string;
