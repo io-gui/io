@@ -45,6 +45,9 @@ export class IoColorPicker extends IoElement {
   @Property(0)
   declare tabIndex: number
 
+  @Property(false)
+  declare _panelListening: boolean
+
   get expanded() {
     return Panel.expanded && Panel.value === this.value
   }
@@ -74,21 +77,26 @@ export class IoColorPicker extends IoElement {
   onValueSet() {
     this.dispatch('value-input', {property: 'value', value: this.value}, true)
   }
-  onPanelCollapse() {
+  onPanelExpandedChanged() {
     // TODO: Reconsider this.
     if (!this.expanded) {
       this.removePanelListeners()
     }
   }
   removePanelListeners() {
+    if (!this._panelListening) return
     Panel.removeEventListener('value-input', this.onValueSet)
-    Panel.removeEventListener('expanded-changed', this.onPanelCollapse)
+    Panel.removeEventListener('expanded-changed', this.onPanelExpandedChanged)
+    this._panelListening = false
   }
   expand() {
     Panel.value = this.value
     Panel.expanded = true
-    Panel.addEventListener('value-input', this.onValueSet)
-    Panel.addEventListener('expanded-changed', this.onPanelCollapse)
+    if (!this._panelListening) {
+      Panel.addEventListener('value-input', this.onValueSet)
+      Panel.addEventListener('expanded-changed', this.onPanelExpandedChanged)
+      this._panelListening = true
+    }
     nudge(Panel, this, 'right');
     (Panel.firstChild?.firstChild as HTMLElement)?.focus()
   }
@@ -99,8 +107,11 @@ export class IoColorPicker extends IoElement {
   }
   override disconnectedCallback() {
     super.disconnectedCallback()
+    if (this.expanded) {
+      Panel.expanded = false
+      Panel.value = {r: 1, g: 1, b: 1, a: 1}
+    }
     this.removePanelListeners()
-    if (this.expanded) this.collapse()
   }
   valueChanged() {
     this.render([
