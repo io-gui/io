@@ -54,6 +54,7 @@ Io-Gui is organized as a monorepo with the following packages:
 - `pnpm lint` - Lint all packages (auto-fixes)
 - `pnpm test` - Run tests with Vitest
 - `pnpm test:watch` - Run tests in watch mode
+- `pnpm bench` - Run all `*.bench.ts` benchmarks (Node); writes `benchmarks/results.json`. First run shows absolute numbers; later runs compare against the previous local run in the terminal. Optionally attach `benchmarks/results.json` to performance PRs.
 - `pnpm clean` - Clean all build directories
 
 ## Development Workflow

@@ -6,7 +6,8 @@
 None
 
 ## Key Context
-- Quick wins completed: GL uniform cache, dev loop (parallel tsc -w + vite), three override removed, docs updated, ChangeQueue index map
+- Benchmark harness: `pnpm bench` → `benchmarks/results.json` with run-over-run terminal diff
+- Ready for ChangeQueue Map refactor baseline capture
 
 ## Blockers / Open Questions
 - None

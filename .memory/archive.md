@@ -136,7 +136,14 @@ Refined `packages/three/src/nodes/ToolBase.ts` so hover and active pointer recor
 - TypeDoc config + docs:api script; docs/api-reference.md guide
 
 
-## 2026-06-14 [quick-wins] Roadmap quick wins implemented
+
+## 2026-06-14 [benchmark] ChangeQueue Vitest bench harness
+
+- Vitest projects: `unit` (browser tests) + `bench` (Node `*.bench.ts`)
+- `pnpm bench` with `--compare`/`--outputJson` on `benchmarks/results.json` (CLI flags; project config alone did not write JSON)
+- `ChangeQueue.bench.ts` + `bench-setup.ts` (rAF/ResizeObserver/HTMLElement polyfills for Node)
+- All `test:*` scripts use `--project unit` to exclude bench files
+- Commented CI bench job stub in ci.yml
 
 - **C1**: IoGL caches `gl.getUniformLocation` per program via `uniformLocationsCache` WeakMap
 - **C6**: ChangeQueue uses `#changeIndex` Map for O(1) property lookup instead of `findIndex`
