@@ -23,7 +23,7 @@ export class IoThemeEditor extends IoElement {
         {id: 'Light Theme', value: 'light'},
         {id: 'Dark Theme', value: 'dark'},
       ]})}),
-      ioButton({label: 'Reset', action: () => ThemeSingleton.loadTheme(THEMES[$ThemeID.value as keyof typeof THEMES]) }),
+      ioButton({label: 'Reset', action: () => ThemeSingleton.applyJSON(THEMES[$ThemeID.value as keyof typeof THEMES]) }),
 
       ioField('spacing'),
       ioNumberSlider({value: ThemeSingleton.bind('spacing'), min: 0, max: 20, step: 1}),

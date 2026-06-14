@@ -21,19 +21,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20.x'
+          cache: pnpm
 
-      - name: Install pnpm
-        run: npm install -g pnpm@latest-10
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.5.0
 
       - name: Install packages
         run: pnpm install
 
       - name: Build
-        run: pnpm bundle
+        run: pnpm lint:check && pnpm build:ci && pnpm bundle:packages
 
       - name: Replace paths in index.html for production
         run: |

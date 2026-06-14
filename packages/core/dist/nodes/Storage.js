@@ -96,6 +96,24 @@ const nodes = {
     none: new Map(),
 };
 let hashValues = {};
+/**
+ * Persistent reactive value backed by localStorage or location hash.
+ *
+ * `Storage(props)` returns a {@link Binding} to the stored value. Each unique
+ * `key` + `storage` pair resolves to a singleton {@link StorageNode}, so multiple
+ * bindings share the same persisted state. Values are JSON-serialized at the
+ * storage boundary; domain types should own their own encode/decode via
+ * `toJSON` / `applyJSON` or constructor hydration.
+ *
+ * Call {@link Storage.permit} before writing to localStorage when privacy
+ * settings require explicit user consent.
+ *
+ * @example
+ * ```ts
+ * const theme = Storage({ key: 'theme', value: 'light', storage: 'local' })
+ * theme.value = 'dark'
+ * ```
+ */
 let StorageNode = class StorageNode extends ReactiveNode {
     constructor(props) {
         debug: {
@@ -280,6 +298,7 @@ StorageNode = __decorate([
     Register
 ], StorageNode);
 export { StorageNode };
+/** Factory that returns a binding to a persisted value. See {@link StorageNode}. */
 export const Storage = Object.assign((props) => {
     const storageNode = new StorageNode(props);
     return storageNode.binding;

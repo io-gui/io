@@ -1,9 +1,27 @@
-// TODO: test!!!
+/**
+ * Reactive array of {@link ReactiveNode} items owned by a parent node or element.
+ *
+ * Use `NodeArray` as the type for reactive properties that hold collections of child
+ * nodes (for example `MenuOption.options`). The constructor registers the owner as
+ * an observer; mutating methods (`push`, `splice`, indexed assignment, etc.) wire
+ * parent/child links and dispatch `io-object-mutation` on the owner so change
+ * handlers like `optionsMutated()` run automatically.
+ *
+ * Items must be {@link ReactiveNode} instances. The returned value from the
+ * constructor is a proxied array — always use that reference, not the raw instance.
+ *
+ * @example
+ * ```ts
+ * @ReactiveProperty({ type: NodeArray, init: null })
+ * declare options: NodeArray<MenuOption>
+ * ```
+ */
 export class NodeArray extends Array {
     node;
     _isInternalOperation = false;
     _observers = new Set();
     static get [Symbol.species]() { return Array; }
+    /** @param node Owner that receives mutation events for this collection. */
     constructor(node, ...args) {
         super(...args);
         this.node = node;
@@ -78,7 +96,7 @@ export class NodeArray extends Array {
         Object.defineProperty(this, 'proxy', { value: proxy, enumerable: false, configurable: false });
         return proxy;
     }
-    // TODO: test!
+    /** Run array mutations without dispatching `io-object-mutation` until complete. */
     withInternalOperation(operation) {
         this._isInternalOperation = true;
         try {
@@ -245,9 +263,11 @@ export class NodeArray extends Array {
             return this;
         });
     }
+    /** Register an additional node to receive mutation events from this array. */
     addObserver(node) {
         this._observers.add(node);
     }
+    /** Stop delivering mutation events to a previously registered observer. */
     removeObserver(node) {
         this._observers.delete(node);
     }
@@ -261,9 +281,11 @@ export class NodeArray extends Array {
             observer.dispatch('io-object-mutation', { object: this.proxy });
         }
     }
+    /** Serialize each item via its own {@link ReactiveNode.toJSON}. */
     toJSON() {
         return this.map((item) => item.toJSON());
     }
+    /** Hydrate each item from wire-format JSON via {@link ReactiveNode.applyJSON}. */
     applyJSON(json) {
         for (let i = 0; i < json.length; i++) {
             this[i].applyJSON(json[i]);

@@ -2,10 +2,27 @@ import { ReactiveNode } from '../nodes/ReactiveNode.js'
 import { IoElement } from '../elements/IoElement.js'
 
 interface Json {
-  [key: string]: string | number | boolean | Json | Json[];
+  [key: string]: string | number | boolean | Json | Json[]
 }
 
-// TODO: test!!!
+/**
+ * Reactive array of {@link ReactiveNode} items owned by a parent node or element.
+ *
+ * Use `NodeArray` as the type for reactive properties that hold collections of child
+ * nodes (for example `MenuOption.options`). The constructor registers the owner as
+ * an observer; mutating methods (`push`, `splice`, indexed assignment, etc.) wire
+ * parent/child links and dispatch `io-object-mutation` on the owner so change
+ * handlers like `optionsMutated()` run automatically.
+ *
+ * Items must be {@link ReactiveNode} instances. The returned value from the
+ * constructor is a proxied array — always use that reference, not the raw instance.
+ *
+ * @example
+ * ```ts
+ * @ReactiveProperty({ type: NodeArray, init: null })
+ * declare options: NodeArray<MenuOption>
+ * ```
+ */
 export class NodeArray<N extends ReactiveNode> extends Array<N> {
   declare private proxy: typeof Proxy
   private _isInternalOperation = false
@@ -13,6 +30,7 @@ export class NodeArray<N extends ReactiveNode> extends Array<N> {
 
   static override get [Symbol.species]() { return Array }
 
+  /** @param node Owner that receives mutation events for this collection. */
   constructor(public node: ReactiveNode | IoElement, ...args: any[]) {
     super(...args)
     // TODO: Avoid creating empty NodeArrays in models!
@@ -86,7 +104,7 @@ export class NodeArray<N extends ReactiveNode> extends Array<N> {
     Object.defineProperty(this, 'proxy', {value: proxy, enumerable: false, configurable: false})
     return proxy
   }
-  // TODO: test!
+  /** Run array mutations without dispatching `io-object-mutation` until complete. */
   withInternalOperation<T>(operation: () => T): T {
     this._isInternalOperation = true
     try {
@@ -254,9 +272,11 @@ export class NodeArray<N extends ReactiveNode> extends Array<N> {
       return this
     })
   }
+  /** Register an additional node to receive mutation events from this array. */
   addObserver(node: ReactiveNode | IoElement) {
     this._observers.add(node)
   }
+  /** Stop delivering mutation events to a previously registered observer. */
   removeObserver(node: ReactiveNode | IoElement) {
     this._observers.delete(node)
   }
@@ -270,9 +290,11 @@ export class NodeArray<N extends ReactiveNode> extends Array<N> {
       observer.dispatch('io-object-mutation', {object: this.proxy})
     }
   }
+  /** Serialize each item via its own {@link ReactiveNode.toJSON}. */
   toJSON(): Json[] {
     return this.map((item: N) => item.toJSON())
   }
+  /** Hydrate each item from wire-format JSON via {@link ReactiveNode.applyJSON}. */
   applyJSON(json: Json[]) {
     for (let i = 0; i < json.length; i++) {
       this[i].applyJSON(json[i])

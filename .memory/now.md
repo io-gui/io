@@ -6,9 +6,8 @@
 None
 
 ## Key Context
-- Package exports now point to dist; sideEffects narrowed to elements/nodes/configs
-- Root build uses `tsc -b` with composite project references; clean also removes tsbuildinfo
-- `noImplicitOverride: true` in root tsconfig — all overriding members need `override` keyword
+- CI split into lint/build/test jobs; bundle only on main push
+- TypeDoc generates @io-gui/core API docs to docs/generated/api
 
 ## Blockers / Open Questions
 - None

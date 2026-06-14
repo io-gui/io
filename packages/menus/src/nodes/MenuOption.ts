@@ -243,7 +243,7 @@ export class MenuOption extends ReactiveNode {
     }
     this.updatePaths()
     this.dispatchMutation()
-  }   
+  }
   override toJSON(): Json {
     return {
       id: this.id,

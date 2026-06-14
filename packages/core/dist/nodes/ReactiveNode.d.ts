@@ -33,6 +33,20 @@ export type ReactiveNodeProps = {
     reactivity?: ReactivityType;
     [key: prefix<string, '@'>]: string | AnyEventHandler;
 };
+/**
+ * Base class for reactive data models and state containers.
+ *
+ * ReactiveNode provides the core Io-Gui reactive property system without DOM
+ * integration. Subclass it for domain models (for example menu options, layout
+ * tabs, or theme state). Property changes dispatch change events and invoke
+ * matching handlers; object mutations can propagate via {@link dispatchMutation}.
+ *
+ * Use {@link bind} for two-way synchronization between properties. Nodes register
+ * with {@link Register} and declare reactive properties via static
+ * `ReactiveProperties` or `@ReactiveProperty` decorators.
+ *
+ * @see IoElement for the DOM-integrated counterpart
+ */
 export declare class ReactiveNode extends Object {
     reactivity: ReactivityType;
     static get ReactiveProperties(): ReactivePropertyDefinitions;

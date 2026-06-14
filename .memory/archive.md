@@ -114,3 +114,27 @@ Refined `packages/three/src/nodes/ToolBase.ts` so hover and active pointer recor
 - **cause**: `noImplicitOverride: true` in root tsconfig triggered 261 TS4114 errors across all packages
 - **fix**: added `override` to static getters (Style, Listeners, GlUtils, etc.), lifecycle methods (changed, ready, dispose, connectedCallback), and event handlers (onPointerdown, onKeydown, etc.)
 - **build**: `pnpm build` passes cleanly
+
+## 2026-06-14 [ongoing] D5-D7, E2/E4, F2/F3 roadmap items
+
+### CI/lint/releases (D5-D7)
+- CI split into parallel lint (`lint:check`), build (`build:ci`), test jobs; bundle only on main push
+- Removed docs/** paths-ignore; aligned pnpm to 9.5.0 via packageManager + pnpm/action-setup
+- bundle.js parallelized with Promise.all
+- Changesets: config, release workflow, version-packages/release scripts
+- ESLint: ban-ts-comment enabled (tests/demos exempt), no-explicit-any warn, no-unused-expressions warn
+
+### Tests (E2/E4)
+- Menus: IoMenuItem, IoContextMenu, IoMenuOptions, IoMenuTree tests
+- Markdown: sanitize + theme tests
+- Navigation: IoNavigatorDrawer tests
+- Editors: IoPropertyLink, IoBreadcrumbs, IoContextEditorSingleton tests
+- Layout: IoTabDragIcon singleton tests
+
+### Docs (F2/F3)
+- TSDoc on ReactiveNode, IoElement, StorageNode, Color
+- TypeDoc config + docs:api script; docs/api-reference.md guide
+
+## 2026-06-14 [releases] Changesets removed
+
+User deferred release tooling decision. Removed @changesets/cli, .changeset/, release workflow, and related scripts. Existing `publish` / `publish:dry` scripts unchanged.

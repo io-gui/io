@@ -10,4 +10,5 @@ npm-debug.log
 .vscode/
 .wireit
 .playwright-browsers/
+docs/generated/
 *.tsbuildinfo

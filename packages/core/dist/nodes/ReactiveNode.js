@@ -30,6 +30,20 @@ function hasValueAtOtherProperty(node, prop, value) {
     });
     return found;
 }
+/**
+ * Base class for reactive data models and state containers.
+ *
+ * ReactiveNode provides the core Io-Gui reactive property system without DOM
+ * integration. Subclass it for domain models (for example menu options, layout
+ * tabs, or theme state). Property changes dispatch change events and invoke
+ * matching handlers; object mutations can propagate via {@link dispatchMutation}.
+ *
+ * Use {@link bind} for two-way synchronization between properties. Nodes register
+ * with {@link Register} and declare reactive properties via static
+ * `ReactiveProperties` or `@ReactiveProperty` decorators.
+ *
+ * @see IoElement for the DOM-integrated counterpart
+ */
 let ReactiveNode = ReactiveNode_1 = class ReactiveNode extends Object {
     static get ReactiveProperties() {
         return {};

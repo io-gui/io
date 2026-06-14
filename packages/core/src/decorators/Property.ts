@@ -7,7 +7,7 @@ export const reactivePropertyDecorators: WeakMap<AnyConstructor, ReactivePropert
 
 const RESERVED_ELEMENT_PROPERTIES = [
   // TODO: consider adding all native element properties?
-  'class', 'style', 'id', 'key', 'children' 
+  'class', 'style', 'id', 'key', 'children'
 ]
 
 /**

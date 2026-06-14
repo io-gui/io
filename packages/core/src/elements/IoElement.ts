@@ -24,6 +24,20 @@ export type IoElementProps = NativeElementProps & {
   [key: prefix<string, '@'>]: string | AnyEventHandler
 }
 
+/**
+ * Base class for Io-Gui custom elements.
+ *
+ * IoElement extends `HTMLElement` with the same reactive property system as
+ * {@link ReactiveNode}, plus virtual DOM rendering, inherited CSS via static
+ * `Style`, and DOM event bridging through {@link EventDispatcher}.
+ *
+ * Elements render children with {@link IoElement.render} and declare structure
+ * through VDOM helpers exported from `@io-gui/core`. Register elements with
+ * {@link Register}; factory functions (for example `ioButton`) are generated
+ * automatically for VDOM composition.
+ *
+ * @see ReactiveNode for non-DOM reactive objects
+ */
 @Register
 export class IoElement extends HTMLElement {
   declare static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement

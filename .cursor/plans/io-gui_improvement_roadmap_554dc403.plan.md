@@ -31,7 +31,7 @@ todos:
     status: completed
   - id: ongoing
     content: "Ongoing: CI/lint/releases (D5-D7), remaining tests (E2/E4), TSDoc + API docs (F2/F3)"
-    status: pending
+    status: completed
 isProject: false
 ---
 

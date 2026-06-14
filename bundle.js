@@ -20,7 +20,7 @@ const bundleRoots = [
   "packages/three",
 ];
 
-async function bundle(bundleRoot) {
+function bundle(bundleRoot) {
   return new Promise((resolve, reject) => {
     console.log(`\nBundling ${bundleRoot}...`);
     const proc = spawn(
@@ -40,6 +40,4 @@ async function bundle(bundleRoot) {
   });
 }
 
-for (const root of bundleRoots) {
-  await bundle(root);
-}
+await Promise.all(bundleRoots.map(bundle));
