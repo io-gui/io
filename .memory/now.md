@@ -1,3 +1,3 @@
 # Current Focus
 
-Fixed NodeArray assignment duplicate listener bug — `applyNodeArrayAssignment` now uses `splice` instead of `length=0`+`push` so kept items get listeners removed before re-adding.
+Benchmarks run in Chromium via `pnpm bench` / `pnpm bench:baseline` (`--run`, no watch). Re-baseline after env switch from Node mocks to browser.

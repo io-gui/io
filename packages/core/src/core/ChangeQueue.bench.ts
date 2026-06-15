@@ -1,4 +1,5 @@
-import { bench, describe } from 'vitest'
+import { describe } from 'vitest'
+import { bench } from '../testing/bench.js'
 import { ChangeQueue } from './ChangeQueue.js'
 import type { Change } from './ChangeQueue.js'
 import type { ReactiveNode } from '../nodes/ReactiveNode.js'
@@ -25,7 +26,7 @@ describe('ChangeQueue', () => {
   bench('queue 50 unique', () => {
     const q = freshQueue()
     for (let i = 0; i < 50; i++) {
-      q.queue(`p${i}`, i, 0)
+      q.queue(`p${i}`, i + 1, i)
     }
   })
 
@@ -45,7 +46,7 @@ describe('ChangeQueue', () => {
   bench('dispatch 50', () => {
     const q = freshQueue()
     for (let i = 0; i < 50; i++) {
-      q.queue(`p${i}`, i, 0)
+      q.queue(`p${i}`, i + 1, i)
     }
     q.dispatch()
   })
@@ -73,8 +74,8 @@ describe('ChangeQueue', () => {
   bench('coalesce 50 props to final values', () => {
     const q = freshQueue()
     for (let i = 0; i < 50; i++) {
-      q.queue(`p${i}`, 0, 0)
-      q.queue(`p${i}`, i + 1, 0)
+      q.queue(`p${i}`, i + 1, i)
+      q.queue(`p${i}`, i + 2, i + 1)
     }
     q.dispatch()
   })

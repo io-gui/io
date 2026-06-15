@@ -1,4 +1,5 @@
-import { bench, describe } from 'vitest'
+import { describe } from 'vitest'
+import { bench } from '../testing/bench.js'
 import { Register } from '../decorators/Register.js'
 import { ReactiveNode } from '../nodes/ReactiveNode.js'
 

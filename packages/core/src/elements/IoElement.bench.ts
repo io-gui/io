@@ -1,4 +1,5 @@
-import { bench, describe } from 'vitest'
+import { describe } from 'vitest'
+import { bench } from '../testing/bench.js'
 import { Register } from '../decorators/Register.js'
 import { IoElement } from './IoElement.js'
 import { div } from './IoNative.js'
@@ -19,6 +20,13 @@ describe('IoElement', () => {
   bench('render 200 div nodes', () => {
     const el = new BenchRenderElement()
     el.renderNodes()
+    el.dispose()
+  })
+
+  bench('re-render 200 unchanged', () => {
+    const el = new BenchRenderElement()
+    el.renderNodes()
+    el.renderNodes(0)
     el.dispose()
   })
 

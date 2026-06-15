@@ -25,7 +25,8 @@
     "test:sliders": "vitest run --project unit packages/sliders",
     "test:three": "vitest run --project unit packages/three",
     "test:coverage": "vitest run --project coverage --coverage",
-    "bench": "vitest bench --project bench --compare ./benchmarks/results.json --outputJson ./benchmarks/results.json",
+    "bench": "vitest bench --run --no-file-parallelism --project bench --compare ./benchmarks/results-baseline.json --outputJson ./benchmarks/results.json",
+    "bench:baseline": "vitest bench --run --no-file-parallelism --project bench --outputJson ./benchmarks/results-baseline.json",
     "clean": "rm -rf packages/**/dist packages/**/tsconfig.tsbuildinfo"
   },
   "devDependencies": {

@@ -1,11 +1,11 @@
 /**
- * Vitest configuration with browser testing and Node benchmarks
+ * Vitest configuration with browser testing and browser benchmarks
  *
  * Usage:
  *   pnpm test                          - Run unit tests (browser)
  *   pnpm test:coverage                 - Run core coverage with thresholds
- *   pnpm bench                         - Run Node *.bench.ts benchmarks
- *   pnpm bench:browser                 - Run browser *.browser.bench.ts benchmarks
+ *   pnpm bench                         - Run *.bench.ts benchmarks in Chromium (compare vs baseline)
+ *   pnpm bench:baseline                - Save benchmark baseline to benchmarks/results-baseline.json
  *   pnpm test:core                     - Run core package tests
  *   pnpm bench packages/core           - Run benchmarks in one package
  */
@@ -70,8 +70,8 @@ export default defineConfig({
           benchmark: {
             include: ['packages/*/src/**/*.bench.ts'],
           },
+          fileParallelism: false,
           browser: browserUnitConfig,
-          setupFiles: ['packages/core/src/testing/bench-setup.ts'],
         },
       },
     ],
