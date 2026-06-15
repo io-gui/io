@@ -1,6 +1,6 @@
 {
   "name": "@io-gui/editors",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-alpha.3",
   "description": "A set of object inspector elements for Io-Gui.",
   "sideEffects": [
     "**/elements/**",
@@ -53,11 +53,11 @@
     "@io-gui/navigation": "workspace:*"
   },
   "peerDependencies": {
-    "@io-gui/core": "^2.0.0-alpha.2",
-    "@io-gui/inputs": "^2.0.0-alpha.2",
-    "@io-gui/menus": "^2.0.0-alpha.2",
-    "@io-gui/colors": "^2.0.0-alpha.2",
-    "@io-gui/sliders": "^2.0.0-alpha.2",
-    "@io-gui/navigation": "^2.0.0-alpha.2"
+    "@io-gui/core": "^2.0.0-alpha.3",
+    "@io-gui/inputs": "^2.0.0-alpha.3",
+    "@io-gui/menus": "^2.0.0-alpha.3",
+    "@io-gui/colors": "^2.0.0-alpha.3",
+    "@io-gui/sliders": "^2.0.0-alpha.3",
+    "@io-gui/navigation": "^2.0.0-alpha.3"
   }
 }

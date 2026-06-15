@@ -1,6 +1,6 @@
 {
   "name": "@io-gui/sliders",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-alpha.3",
   "description": "A set of sliders for Io-Gui.",
   "sideEffects": [
     "**/elements/**",
@@ -50,7 +50,7 @@
     "@io-gui/inputs": "workspace:*"
   },
   "peerDependencies": {
-    "@io-gui/core": "^2.0.0-alpha.2",
-    "@io-gui/inputs": "^2.0.0-alpha.2"
+    "@io-gui/core": "^2.0.0-alpha.3",
+    "@io-gui/inputs": "^2.0.0-alpha.3"
   }
 }

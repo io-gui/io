@@ -1,6 +1,6 @@
 {
   "name": "@io-gui/colors",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-alpha.3",
   "description": "A set of color pickers and editors for Io-Gui.",
   "sideEffects": [
     "**/elements/**",
@@ -52,8 +52,8 @@
     "@io-gui/sliders": "workspace:*"
   },
   "peerDependencies": {
-    "@io-gui/core": "^2.0.0-alpha.2",
-    "@io-gui/inputs": "^2.0.0-alpha.2",
-    "@io-gui/sliders": "^2.0.0-alpha.2"
+    "@io-gui/core": "^2.0.0-alpha.3",
+    "@io-gui/inputs": "^2.0.0-alpha.3",
+    "@io-gui/sliders": "^2.0.0-alpha.3"
   }
 }
