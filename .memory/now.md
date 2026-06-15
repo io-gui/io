@@ -1,3 +1,3 @@
 # Current Focus
 
-Fixed bundle copyright preservation in `vite.bundle.config.ts` (Vite 8/Rolldown regression).
+Fixed @types/node stale-path IDE error after package updates — added `"types": []` to root tsconfig.
