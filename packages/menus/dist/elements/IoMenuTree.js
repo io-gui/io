@@ -129,4 +129,3 @@ export { IoMenuTree };
 export const ioMenuTree = function (arg0) {
     return IoMenuTree.vConstructor(arg0);
 };
-//# sourceMappingURL=IoMenuTree.js.map

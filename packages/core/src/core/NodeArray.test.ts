@@ -1,9 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
-import { ReactiveNode, Register, ReactivePropertyDefinitions } from '@io-gui/core'
-import { NodeArray } from './NodeArray.js'
+import { ReactiveNode, Register, ReactivePropertyDefinitions, NodeArray } from '@io-gui/core'
 
 @Register
-class TestNode extends ReactiveNode {
+class LabelNode extends ReactiveNode {
   static get ReactiveProperties(): ReactivePropertyDefinitions {
     return {
       label: ''
@@ -25,24 +24,24 @@ class ScoreNode extends ReactiveNode {
 }
 
 @Register
-class ParentNode extends ReactiveNode {
+class ItemstNode extends ReactiveNode {
   static get ReactiveProperties(): ReactivePropertyDefinitions {
     return {
       items: {type: Array, init: null}
     }
   }
-  declare items: TestNode[]
+  declare items: LabelNode[]
 }
 
 describe('NodeArray', () => {
   describe('fill()', () => {
     it('Should fill entire array with a value', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item1 = new TestNode({label: 'a'})
-      const item2 = new TestNode({label: 'b'})
-      const item3 = new TestNode({label: 'c'})
-      const fillItem = new TestNode({label: 'fill'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
+      const item3 = new LabelNode({label: 'c'})
+      const fillItem = new LabelNode({label: 'fill'})
 
       array.push(item1, item2, item3)
 
@@ -57,12 +56,12 @@ describe('NodeArray', () => {
     })
 
     it('Should fill from start index to end', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item1 = new TestNode({label: 'a'})
-      const item2 = new TestNode({label: 'b'})
-      const item3 = new TestNode({label: 'c'})
-      const fillItem = new TestNode({label: 'fill'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
+      const item3 = new LabelNode({label: 'c'})
+      const fillItem = new LabelNode({label: 'fill'})
 
       array.push(item1, item2, item3)
 
@@ -76,13 +75,13 @@ describe('NodeArray', () => {
     })
 
     it('Should fill from start to end index', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item1 = new TestNode({label: 'a'})
-      const item2 = new TestNode({label: 'b'})
-      const item3 = new TestNode({label: 'c'})
-      const item4 = new TestNode({label: 'd'})
-      const fillItem = new TestNode({label: 'fill'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
+      const item3 = new LabelNode({label: 'c'})
+      const item4 = new LabelNode({label: 'd'})
+      const fillItem = new LabelNode({label: 'fill'})
 
       array.push(item1, item2, item3, item4)
 
@@ -97,12 +96,12 @@ describe('NodeArray', () => {
     })
 
     it('Should handle negative start index', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item1 = new TestNode({label: 'a'})
-      const item2 = new TestNode({label: 'b'})
-      const item3 = new TestNode({label: 'c'})
-      const fillItem = new TestNode({label: 'fill'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
+      const item3 = new LabelNode({label: 'c'})
+      const fillItem = new LabelNode({label: 'fill'})
 
       array.push(item1, item2, item3)
 
@@ -116,12 +115,12 @@ describe('NodeArray', () => {
     })
 
     it('Should handle negative end index', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item1 = new TestNode({label: 'a'})
-      const item2 = new TestNode({label: 'b'})
-      const item3 = new TestNode({label: 'c'})
-      const fillItem = new TestNode({label: 'fill'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
+      const item3 = new LabelNode({label: 'c'})
+      const fillItem = new LabelNode({label: 'fill'})
 
       array.push(item1, item2, item3)
 
@@ -135,11 +134,11 @@ describe('NodeArray', () => {
     })
 
     it('Should remove listeners from old items and add to new item', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item1 = new TestNode({label: 'a'})
-      const item2 = new TestNode({label: 'b'})
-      const fillItem = new TestNode({label: 'fill'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
+      const fillItem = new LabelNode({label: 'fill'})
 
       array.push(item1, item2)
 
@@ -156,10 +155,10 @@ describe('NodeArray', () => {
     })
 
     it('Should dispatch mutation event', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item1 = new TestNode({label: 'a'})
-      const fillItem = new TestNode({label: 'fill'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const fillItem = new LabelNode({label: 'fill'})
 
       array.push(item1)
 
@@ -175,10 +174,10 @@ describe('NodeArray', () => {
     })
 
     it('Should not dispatch mutation when filling empty range', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item1 = new TestNode({label: 'a'})
-      const fillItem = new TestNode({label: 'fill'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const fillItem = new LabelNode({label: 'fill'})
 
       array.push(item1)
 
@@ -196,12 +195,12 @@ describe('NodeArray', () => {
 
   describe('copyWithin()', () => {
     it('Should copy elements within the array', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item1 = new TestNode({label: 'a'})
-      const item2 = new TestNode({label: 'b'})
-      const item3 = new TestNode({label: 'c'})
-      const item4 = new TestNode({label: 'd'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
+      const item3 = new LabelNode({label: 'c'})
+      const item4 = new LabelNode({label: 'd'})
 
       array.push(item1, item2, item3, item4)
 
@@ -216,13 +215,13 @@ describe('NodeArray', () => {
     })
 
     it('Should copy elements with start and end indices', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item1 = new TestNode({label: 'a'})
-      const item2 = new TestNode({label: 'b'})
-      const item3 = new TestNode({label: 'c'})
-      const item4 = new TestNode({label: 'd'})
-      const item5 = new TestNode({label: 'e'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
+      const item3 = new LabelNode({label: 'c'})
+      const item4 = new LabelNode({label: 'd'})
+      const item5 = new LabelNode({label: 'e'})
 
       array.push(item1, item2, item3, item4, item5)
 
@@ -238,11 +237,11 @@ describe('NodeArray', () => {
     })
 
     it('Should handle negative target index', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item1 = new TestNode({label: 'a'})
-      const item2 = new TestNode({label: 'b'})
-      const item3 = new TestNode({label: 'c'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
+      const item3 = new LabelNode({label: 'c'})
 
       array.push(item1, item2, item3)
 
@@ -256,11 +255,11 @@ describe('NodeArray', () => {
     })
 
     it('Should handle negative start index', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item1 = new TestNode({label: 'a'})
-      const item2 = new TestNode({label: 'b'})
-      const item3 = new TestNode({label: 'c'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
+      const item3 = new LabelNode({label: 'c'})
 
       array.push(item1, item2, item3)
 
@@ -274,10 +273,10 @@ describe('NodeArray', () => {
     })
 
     it('Should update parent relationships correctly', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item1 = new TestNode({label: 'a'})
-      const item2 = new TestNode({label: 'b'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
 
       array.push(item1, item2)
 
@@ -293,10 +292,10 @@ describe('NodeArray', () => {
     })
 
     it('Should dispatch mutation event', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item1 = new TestNode({label: 'a'})
-      const item2 = new TestNode({label: 'b'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
 
       array.push(item1, item2)
 
@@ -312,10 +311,10 @@ describe('NodeArray', () => {
     })
 
     it('Should not copy when count is zero', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item1 = new TestNode({label: 'a'})
-      const item2 = new TestNode({label: 'b'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
 
       array.push(item1, item2)
 
@@ -335,9 +334,9 @@ describe('NodeArray', () => {
 
   describe('push()', () => {
     it('Should push items and add parent relationships', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item = new TestNode({label: 'test'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item = new LabelNode({label: 'test'})
 
       array.push(item)
 
@@ -351,9 +350,9 @@ describe('NodeArray', () => {
 
   describe('pop()', () => {
     it('Should pop items and remove parent relationships', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item = new TestNode({label: 'test'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item = new LabelNode({label: 'test'})
 
       array.push(item)
       const popped = array.pop()
@@ -368,11 +367,11 @@ describe('NodeArray', () => {
 
   describe('splice()', () => {
     it('Should splice items and update parent relationships', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item1 = new TestNode({label: 'a'})
-      const item2 = new TestNode({label: 'b'})
-      const item3 = new TestNode({label: 'c'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
+      const item3 = new LabelNode({label: 'c'})
 
       array.push(item1, item2)
       array.splice(1, 1, item3)
@@ -390,10 +389,10 @@ describe('NodeArray', () => {
 
   describe('reverse()', () => {
     it('Should reverse array and dispatch mutation', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item1 = new TestNode({label: 'a'})
-      const item2 = new TestNode({label: 'b'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
 
       array.push(item1, item2)
 
@@ -413,10 +412,10 @@ describe('NodeArray', () => {
 
   describe('sort()', () => {
     it('Should sort array and dispatch mutation', () => {
-      const parent = new ParentNode()
-      const array = new NodeArray<TestNode>(parent)
-      const item1 = new TestNode({label: 'b'})
-      const item2 = new TestNode({label: 'a'})
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'b'})
+      const item2 = new LabelNode({label: 'a'})
 
       array.push(item1, item2)
 
@@ -436,7 +435,7 @@ describe('NodeArray', () => {
 
   describe('toJSON and applyJSON', () => {
     it('serializes each item via toJSON', () => {
-      const parent = new ParentNode()
+      const parent = new ItemstNode()
       const array = new NodeArray<ScoreNode>(parent)
       const item1 = new ScoreNode({ score: 1 })
       const item2 = new ScoreNode({ score: 2 })
@@ -451,7 +450,7 @@ describe('NodeArray', () => {
     })
 
     it('applyJSON updates existing items in place', () => {
-      const parent = new ParentNode()
+      const parent = new ItemstNode()
       const array = new NodeArray<ScoreNode>(parent)
       const item1 = new ScoreNode({ score: 1 })
       const item2 = new ScoreNode({ score: 2 })
@@ -490,12 +489,43 @@ describe('NodeArray', () => {
     })
   })
 
+  describe('array assignment', () => {
+    it('replaces items without duplicate mutation listeners when keeping existing items', () => {
+      @Register
+      class ItemsNode extends ReactiveNode {
+        static get ReactiveProperties(): ReactivePropertyDefinitions {
+          return {
+            items: { type: NodeArray, init: 'this' },
+          }
+        }
+        declare items: NodeArray<ScoreNode>
+      }
+
+      const parent = new ItemsNode()
+      const item1 = new ScoreNode({ score: 1 })
+      const item2 = new ScoreNode({ score: 2 })
+      const item3 = new ScoreNode({ score: 3 })
+      parent.items.push(item1, item2, item3)
+
+      parent.setProperty('items', [item1, item3])
+
+      expect(parent.items.length).toBe(2)
+      expect(parent.items[0]).toBe(item1)
+      expect(parent.items[1]).toBe(item3)
+      expect(item1._eventDispatcher.addedListeners['io-object-mutation']?.length).toBe(1)
+      expect(item3._eventDispatcher.addedListeners['io-object-mutation']?.length).toBe(1)
+      expect(item2._eventDispatcher.addedListeners['io-object-mutation']).toBeUndefined()
+
+      parent.dispose()
+    })
+  })
+
   describe('constructor', () => {
     it('accepts prefilled items', () => {
-      const parent = new ParentNode()
-      const item1 = new TestNode({label: 'a'})
-      const item2 = new TestNode({label: 'b'})
-      const array = new NodeArray<TestNode>(parent, item1, item2)
+      const parent = new ItemstNode()
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
+      const array = new NodeArray<LabelNode>(parent, item1, item2)
 
       expect(array.length).toBe(2)
       expect(array[0]).toBe(item1)

@@ -112,4 +112,3 @@ registerEditorGroups(ThreeApplet, {
         '_timer',
     ],
 });
-//# sourceMappingURL=ThreeApplet.js.map

@@ -44,4 +44,3 @@ export declare class IoNumber extends IoField {
     changed(): void;
 }
 export declare const ioNumber: (arg0?: IoNumberProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoNumber.d.ts.map

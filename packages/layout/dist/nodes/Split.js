@@ -93,4 +93,3 @@ Split = __decorate([
     Register
 ], Split);
 export { Split };
-//# sourceMappingURL=Split.js.map

@@ -73,4 +73,3 @@ export class IoSlidersDemo extends IoElement {
 }
 Register(IoSlidersDemo);
 export const ioSlidersDemo = IoSlidersDemo.vConstructor;
-//# sourceMappingURL=IoSlidersDemo.js.map

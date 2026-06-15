@@ -81,4 +81,3 @@ IoMatrixBase = __decorate([
     Register
 ], IoMatrixBase);
 export { IoMatrixBase };
-//# sourceMappingURL=IoMatrixBase.js.map

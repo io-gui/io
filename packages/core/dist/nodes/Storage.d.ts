@@ -39,4 +39,3 @@ export declare const Storage: (<T = unknown>(props: StorageProps<T>) => Binding<
     permit(): void;
     unpermit(): void;
 };
-//# sourceMappingURL=Storage.d.ts.map

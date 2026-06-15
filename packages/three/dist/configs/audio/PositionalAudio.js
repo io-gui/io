@@ -37,4 +37,3 @@ registerEditorGroups(PositionalAudio, {
 registerEditorConfig(Object, [
     [PositionalAudio, ioObject()],
 ]);
-//# sourceMappingURL=PositionalAudio.js.map

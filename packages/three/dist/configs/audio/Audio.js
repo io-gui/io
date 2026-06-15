@@ -44,4 +44,3 @@ registerEditorGroups(Audio, {
 registerEditorConfig(Object, [
     [Audio, ioObject({ label: 'Audio' })],
 ]);
-//# sourceMappingURL=Audio.js.map

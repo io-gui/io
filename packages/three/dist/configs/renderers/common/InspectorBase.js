@@ -4,4 +4,3 @@ import { InspectorBase } from 'three/webgpu';
 registerEditorConfig(InspectorBase, [
     ['currentFrame', ioNumber({ disabled: true })],
 ]);
-//# sourceMappingURL=InspectorBase.js.map

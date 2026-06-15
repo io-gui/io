@@ -28,4 +28,3 @@ export declare class IoOptionSelect extends IoElement {
     changed(): void;
 }
 export declare const ioOptionSelect: (arg0: IoOptionSelectProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoOptionSelect.d.ts.map

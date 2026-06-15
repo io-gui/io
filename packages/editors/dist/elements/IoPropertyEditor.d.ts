@@ -40,4 +40,3 @@ export declare class IoPropertyEditor extends IoElement {
     dispose(): void;
 }
 export declare const ioPropertyEditor: (arg0?: IoPropertyEditorProps) => VDOMElement;
-//# sourceMappingURL=IoPropertyEditor.d.ts.map

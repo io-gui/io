@@ -9,4 +9,3 @@ registerEditorConfig(SphericalHarmonics3, [
 registerEditorConfig(Object, [
     [SphericalHarmonics3, ioObject({ labeled: false })],
 ]);
-//# sourceMappingURL=SphericalHarmonics3.js.map

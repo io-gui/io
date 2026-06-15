@@ -27,4 +27,3 @@ export declare class IoNumberSlider extends IoElement {
     changed(): void;
 }
 export declare const ioNumberSlider: (arg0?: IoNumberSliderProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoNumberSlider.d.ts.map

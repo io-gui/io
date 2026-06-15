@@ -342,4 +342,3 @@ function updateAllFromHash() {
 }
 self.addEventListener('hashchange', updateAllFromHash, false);
 updateAllFromHash();
-//# sourceMappingURL=Storage.js.map

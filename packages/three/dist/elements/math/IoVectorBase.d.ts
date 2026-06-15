@@ -30,4 +30,3 @@ export declare class IoVectorBase extends IoElement {
     valueMutated(): void;
     changed(): void;
 }
-//# sourceMappingURL=IoVectorBase.d.ts.map

@@ -9,4 +9,3 @@ export declare class IoVector2 extends IoVectorBase {
     constructor(args: IoVector2Props);
 }
 export declare const ioVector2: (arg0?: IoVector2Props) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoVector2.d.ts.map

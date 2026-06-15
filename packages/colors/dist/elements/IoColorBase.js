@@ -105,4 +105,3 @@ IoColorBase = __decorate([
     Register
 ], IoColorBase);
 export { IoColorBase };
-//# sourceMappingURL=IoColorBase.js.map

@@ -35,4 +35,3 @@ registerEditorGroups(Object3D, {
         'static', 'parent', 'children'
     ],
 });
-//# sourceMappingURL=Object3D.js.map

@@ -110,4 +110,3 @@ export const IoContextEditorSingleton = new IoContextEditor();
 setTimeout(() => {
     IoOverlaySingleton.appendChild(IoContextEditorSingleton);
 }, 100);
-//# sourceMappingURL=IoContextEditorSingleton.js.map

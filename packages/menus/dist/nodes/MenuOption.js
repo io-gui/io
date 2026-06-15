@@ -288,4 +288,3 @@ MenuOption = MenuOption_1 = __decorate([
     Register
 ], MenuOption);
 export { MenuOption };
-//# sourceMappingURL=MenuOption.js.map

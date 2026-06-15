@@ -7,4 +7,3 @@ export type EditorConfig = Map<AnyConstructor, PropertyConfig[]>;
 export declare function getEditorConfig(object: object, propertyConfigs: PropertyConfig[]): PropertyConfigRecord;
 export declare function registerEditorConfig(constructor: AnyConstructor, propertyTypes: PropertyConfig[]): void;
 export {};
-//# sourceMappingURL=EditorConfig.d.ts.map

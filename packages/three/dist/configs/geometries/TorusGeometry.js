@@ -15,4 +15,3 @@ registerEditorConfig(TorusGeometry, [
 registerEditorGroups(TorusGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=TorusGeometry.js.map

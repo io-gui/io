@@ -18,4 +18,3 @@ registerEditorGroups(Clock, {
 registerEditorConfig(Object, [
     [Clock, ioObject()]
 ]);
-//# sourceMappingURL=Clock.js.map

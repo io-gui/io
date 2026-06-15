@@ -9,4 +9,3 @@ registerEditorConfig(PointLight, [
 registerEditorGroups(PointLight, {
     Main: ['distance', 'decay', 'power', 'shadow'],
 });
-//# sourceMappingURL=PointLight.js.map

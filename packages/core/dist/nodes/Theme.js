@@ -175,4 +175,3 @@ $ThemeID.node.addEventListener('value-changed', (event) => {
     ThemeSingleton.applyJSON(THEMES[event.detail.value]);
 });
 export { ThemeSingleton };
-//# sourceMappingURL=Theme.js.map

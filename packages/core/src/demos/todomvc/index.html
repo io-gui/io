@@ -4,7 +4,14 @@
     <meta charset="utf-8">
     <title>Io • TodoMVC</title>
     <link rel="stylesheet" href="./index.css">
-    <script type="module" src="./TodoApp.ts"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "@io-gui/core": "../../../dist/index.js"
+        }
+      }
+    </script>
+    <script type="module" src="../../../dist/demos/todomvc/TodoApp.js"></script>
   </head>
   <body>
     <todo-app></todo-app>

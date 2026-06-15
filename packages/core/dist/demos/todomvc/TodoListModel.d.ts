@@ -24,4 +24,3 @@ export declare class TodoListModel extends ReactiveNode {
     };
     applyJSON(json: any): this;
 }
-//# sourceMappingURL=TodoListModel.d.ts.map

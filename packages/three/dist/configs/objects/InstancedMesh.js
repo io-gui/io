@@ -9,4 +9,3 @@ registerEditorGroups(InstancedMesh, {
     Rendering: ['boundingBox', 'boundingSphere'],
     Hidden: ['previousInstanceMatrix'],
 });
-//# sourceMappingURL=InstancedMesh.js.map

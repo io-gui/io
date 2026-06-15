@@ -154,4 +154,3 @@ function getTempIdentifier(object) {
     }
     return tempIdentifiers.get(object);
 }
-//# sourceMappingURL=IoObject.js.map

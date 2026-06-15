@@ -126,4 +126,3 @@ IoVolumePerlinExample = __decorate([
 ], IoVolumePerlinExample);
 export { IoVolumePerlinExample };
 export const ioVolumePerlinExample = IoVolumePerlinExample.vConstructor;
-//# sourceMappingURL=IoVolumePerlinExample.js.map

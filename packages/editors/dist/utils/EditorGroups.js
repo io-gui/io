@@ -233,4 +233,3 @@ export function registerEditorGroups(constructor, groups) {
     }
     editorGroupsSingleton.set(constructor, existingGroups);
 }
-//# sourceMappingURL=EditorGroups.js.map

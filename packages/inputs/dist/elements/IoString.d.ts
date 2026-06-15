@@ -32,4 +32,3 @@ export declare class IoString extends IoField {
     changed(): void;
 }
 export declare const ioString: (arg0?: IoStringProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoString.d.ts.map

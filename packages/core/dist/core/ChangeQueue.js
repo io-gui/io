@@ -114,4 +114,3 @@ export class ChangeQueue {
         delete this.node;
     }
 }
-//# sourceMappingURL=ChangeQueue.js.map

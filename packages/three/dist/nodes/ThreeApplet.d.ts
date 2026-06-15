@@ -25,4 +25,3 @@ export declare class ThreeApplet extends ReactiveNode {
     onAnimate(delta: number, time: number): void;
     dispose(): void;
 }
-//# sourceMappingURL=ThreeApplet.d.ts.map

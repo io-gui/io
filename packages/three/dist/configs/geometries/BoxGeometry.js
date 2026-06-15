@@ -17,4 +17,3 @@ registerEditorConfig(BoxGeometry, [
 registerEditorGroups(BoxGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=BoxGeometry.js.map

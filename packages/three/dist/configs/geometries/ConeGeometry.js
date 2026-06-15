@@ -18,4 +18,3 @@ registerEditorConfig(ConeGeometry, [
 registerEditorGroups(ConeGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=ConeGeometry.js.map

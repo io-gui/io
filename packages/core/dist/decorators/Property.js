@@ -61,4 +61,3 @@ export function ReactiveProperty(defLoose = {}) {
     };
 }
 ;
-//# sourceMappingURL=Property.js.map

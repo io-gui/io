@@ -4,4 +4,3 @@ import { Color } from 'three/webgpu';
 registerEditorConfig(Object, [
     [Color, ioColorRgba()],
 ]);
-//# sourceMappingURL=Color.js.map

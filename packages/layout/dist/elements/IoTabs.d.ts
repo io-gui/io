@@ -16,4 +16,3 @@ export declare class IoTabs extends IoElement {
     changed(): void;
 }
 export declare const ioTabs: (arg0: IoTabsProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoTabs.d.ts.map

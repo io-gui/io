@@ -70,4 +70,3 @@ export { IoColorRgba };
 export const ioColorRgba = function (arg0) {
     return IoColorRgba.vConstructor(arg0);
 };
-//# sourceMappingURL=IoColorRgba.js.map

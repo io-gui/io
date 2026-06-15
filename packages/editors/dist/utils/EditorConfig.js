@@ -264,4 +264,3 @@ export function registerEditorConfig(constructor, propertyTypes) {
     }
     editorConfigSingleton.set(constructor, existingConfigs);
 }
-//# sourceMappingURL=EditorConfig.js.map

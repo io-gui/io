@@ -10,4 +10,3 @@ registerEditorGroups(DiscreteInterpolant, {
     Settings: ['settings'],
     Hidden: ['_cachedIndex', 'DefaultSettings_'],
 });
-//# sourceMappingURL=DiscreteInterpolant.js.map

@@ -23,4 +23,3 @@ declare class IoTabDragIcon extends IoField {
 }
 export declare const tabDragIconSingleton: IoTabDragIcon;
 export {};
-//# sourceMappingURL=IoTabDragIcon.d.ts.map

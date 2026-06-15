@@ -20,4 +20,3 @@ export declare class IoDivider extends IoElement {
     onTouchend(): void;
 }
 export declare const ioDivider: (arg0: IoDividerProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoDivider.d.ts.map

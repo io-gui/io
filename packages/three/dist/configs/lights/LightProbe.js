@@ -3,4 +3,3 @@ import { LightProbe } from 'three/webgpu';
 registerEditorGroups(LightProbe, {
     Main: ['sh'],
 });
-//# sourceMappingURL=LightProbe.js.map

@@ -16,4 +16,3 @@ registerEditorConfig(RingGeometry, [
 registerEditorGroups(RingGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=RingGeometry.js.map

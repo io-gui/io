@@ -116,4 +116,3 @@ IoVectorBase = __decorate([
     Register
 ], IoVectorBase);
 export { IoVectorBase };
-//# sourceMappingURL=IoVectorBase.js.map

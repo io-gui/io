@@ -27,4 +27,3 @@ __decorate([
     ReactiveProperty({ type: Boolean })
 ], TodoItemModel.prototype, "completed", void 0);
 Register(TodoItemModel);
-//# sourceMappingURL=TodoItemModel.js.map

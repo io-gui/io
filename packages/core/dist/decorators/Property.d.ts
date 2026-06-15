@@ -38,4 +38,3 @@ export declare function Property(initialValue?: unknown): (target: typeof IoElem
  * }
  */
 export declare function ReactiveProperty(defLoose?: ReactivePropertyDefinitionLoose): (target: typeof IoElement.prototype | typeof ReactiveNode.prototype, propertyName: string) => void;
-//# sourceMappingURL=Property.d.ts.map

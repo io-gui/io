@@ -60,4 +60,3 @@ export { IoPropertyLink };
 export const ioPropertyLink = function (arg0) {
     return IoPropertyLink.vConstructor(arg0);
 };
-//# sourceMappingURL=IoPropertyLink.js.map

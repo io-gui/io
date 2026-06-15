@@ -87,4 +87,3 @@ export { IoSwitch };
 export const ioSwitch = function (arg0) {
     return IoSwitch.vConstructor(arg0);
 };
-//# sourceMappingURL=IoSwitch.js.map

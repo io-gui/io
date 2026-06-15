@@ -13,4 +13,3 @@ export function Style(style) {
         styleDecorators.set(target, style);
     };
 }
-//# sourceMappingURL=Style.js.map

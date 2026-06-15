@@ -185,4 +185,3 @@ function formatHtml(html, indentSize = 2) {
     return result.trim().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 export const ioElementInspectorDemo = IoElementInspectorDemo.vConstructor;
-//# sourceMappingURL=IoElementInspectorDemo.js.map

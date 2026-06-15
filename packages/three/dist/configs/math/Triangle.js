@@ -3,4 +3,3 @@ import { Triangle } from 'three/webgpu';
 registerEditorConfig(Object, [
     [Triangle, ioObject({ labelWidth: '18px' })],
 ]);
-//# sourceMappingURL=Triangle.js.map

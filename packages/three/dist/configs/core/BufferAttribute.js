@@ -43,4 +43,3 @@ registerEditorGroups(BufferAttribute, {
     ],
     Hidden: ['onUploadCallback'],
 });
-//# sourceMappingURL=BufferAttribute.js.map

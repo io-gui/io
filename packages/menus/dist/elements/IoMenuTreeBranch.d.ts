@@ -20,4 +20,3 @@ export declare class IoMenuTreeBranch extends IoElement {
     changed(): void;
 }
 export declare const ioMenuTreeBranch: (arg0?: IoMenuTreeBranchProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoMenuTreeBranch.d.ts.map

@@ -63,4 +63,3 @@ export function processElementStyle(localName, style) {
 export function applyElementStyleToDocument(localName, style) {
     adoptDocumentStylesheet(processElementStyle(localName, style));
 }
-//# sourceMappingURL=Style.js.map

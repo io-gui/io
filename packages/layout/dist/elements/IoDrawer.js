@@ -199,4 +199,3 @@ export { IoDrawer };
 export const ioDrawer = function (args) {
     return IoDrawer.vConstructor(args);
 };
-//# sourceMappingURL=IoDrawer.js.map

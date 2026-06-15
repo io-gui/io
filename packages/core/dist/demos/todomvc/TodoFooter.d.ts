@@ -15,4 +15,3 @@ export declare class TodoFooter extends IoElement {
 }
 export declare const todoFooter: (arg0: TodoFooterProps) => import("@io-gui/core").VDOMElement;
 export {};
-//# sourceMappingURL=TodoFooter.d.ts.map

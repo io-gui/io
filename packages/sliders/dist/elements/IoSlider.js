@@ -298,4 +298,3 @@ export { IoSlider };
 export const ioSlider = function (arg0) {
     return IoSlider.vConstructor(arg0);
 };
-//# sourceMappingURL=IoSlider.js.map

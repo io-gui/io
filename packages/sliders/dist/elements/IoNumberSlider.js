@@ -90,4 +90,3 @@ export { IoNumberSlider };
 export const ioNumberSlider = function (arg0) {
     return IoNumberSlider.vConstructor(arg0);
 };
-//# sourceMappingURL=IoNumberSlider.js.map

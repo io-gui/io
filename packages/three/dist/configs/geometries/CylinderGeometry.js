@@ -19,4 +19,3 @@ registerEditorConfig(CylinderGeometry, [
 registerEditorGroups(CylinderGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=CylinderGeometry.js.map

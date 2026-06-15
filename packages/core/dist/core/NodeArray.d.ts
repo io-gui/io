@@ -52,4 +52,3 @@ export declare class NodeArray<N extends ReactiveNode> extends Array<N> {
     applyJSON(json: Json[]): void;
 }
 export {};
-//# sourceMappingURL=NodeArray.d.ts.map

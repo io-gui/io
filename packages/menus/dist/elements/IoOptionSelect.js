@@ -117,4 +117,3 @@ export { IoOptionSelect };
 export const ioOptionSelect = function (arg0) {
     return IoOptionSelect.vConstructor(arg0);
 };
-//# sourceMappingURL=IoOptionSelect.js.map

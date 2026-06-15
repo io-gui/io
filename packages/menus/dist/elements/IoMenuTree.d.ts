@@ -23,4 +23,3 @@ export declare class IoMenuTree extends IoElement {
     changed(): void;
 }
 export declare const ioMenuTree: (arg0?: IoMenuTreeProps) => VDOMElement;
-//# sourceMappingURL=IoMenuTree.d.ts.map

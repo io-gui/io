@@ -23,4 +23,3 @@ registerEditorGroups(PropertyMixer, {
     ],
     Hidden: ['buffer', 'originalValue', '_mixBufferRegion', '_mixBufferRegionAdditive', '_setIdentity', '_select', '_slerp', '_slerpAdditive', '_lerp', '_lerpAdditive'],
 });
-//# sourceMappingURL=PropertyMixer.js.map

@@ -98,4 +98,3 @@ export { IoCollapsible };
 export const ioCollapsible = function (arg0) {
     return IoCollapsible.vConstructor(arg0);
 };
-//# sourceMappingURL=IoCollapsible.js.map

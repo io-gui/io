@@ -11,4 +11,3 @@ registerEditorGroups(PostProcessing, {
         'outputColorTransform',
     ],
 });
-//# sourceMappingURL=PostProcessing.js.map

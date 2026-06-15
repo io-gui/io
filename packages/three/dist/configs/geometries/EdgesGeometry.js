@@ -12,4 +12,3 @@ registerEditorConfig(EdgesGeometry, [
 registerEditorGroups(EdgesGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=EdgesGeometry.js.map

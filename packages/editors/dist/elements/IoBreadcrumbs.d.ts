@@ -21,4 +21,3 @@ export declare class IoBreadcrumbs extends IoElement {
     changed(): void;
 }
 export declare const ioBreadcrumbs: (arg0?: IoBreadcrumbsProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoBreadcrumbs.d.ts.map

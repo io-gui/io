@@ -47,4 +47,3 @@ export declare class IoThreeViewport extends IoElement {
     dispose(): void;
 }
 export declare const ioThreeViewport: (arg0: IoThreeViewportProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoThreeViewport.d.ts.map

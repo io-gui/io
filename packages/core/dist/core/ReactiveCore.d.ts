@@ -21,4 +21,3 @@ export type DisposableInternals = {
 export declare function addParent(child: ReactiveOwner, parent: ReactiveOwner): void;
 export declare function removeParent(child: ReactiveOwner, parent: ReactiveOwner): void;
 export declare function detachChildParents(owner: ReactiveOwner): void;
-//# sourceMappingURL=ReactiveCore.d.ts.map

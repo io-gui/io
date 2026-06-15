@@ -115,4 +115,3 @@ export function isPointerAboveIoMenuItem(event, element) {
     }
     return false;
 }
-//# sourceMappingURL=MenuDOMUtils.js.map

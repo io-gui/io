@@ -133,4 +133,3 @@ export declare class EventDispatcher {
     dispose(): void;
 }
 export {};
-//# sourceMappingURL=EventDispatcher.d.ts.map

@@ -14,4 +14,3 @@ registerEditorConfig(DepthTexture, [
                     { value: AlwaysCompare, id: 'Always' },
                 ] }) })],
 ]);
-//# sourceMappingURL=DepthTexture.js.map

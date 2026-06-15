@@ -23,4 +23,3 @@ export function searchMenuOption(option, search, depth = 5, d = 0) {
         }
     return subitems;
 }
-//# sourceMappingURL=MenuNodeUtils.js.map

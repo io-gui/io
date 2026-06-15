@@ -7,4 +7,3 @@ registerEditorConfig(ProjectorLight, [
 registerEditorGroups(ProjectorLight, {
     Main: ['aspect'],
 });
-//# sourceMappingURL=ProjectorLight.js.map

@@ -160,4 +160,3 @@ IoGeometriesExample = __decorate([
 ], IoGeometriesExample);
 export { IoGeometriesExample };
 export const ioGeometriesExample = IoGeometriesExample.vConstructor;
-//# sourceMappingURL=IoGeometriesExample.js.map

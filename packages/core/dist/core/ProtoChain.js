@@ -219,4 +219,3 @@ export class ProtoChain {
         }
     }
 }
-//# sourceMappingURL=ProtoChain.js.map

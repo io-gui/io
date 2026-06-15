@@ -69,4 +69,3 @@ registerEditorGroups(WebGPURenderer, {
         '_inspector',
     ],
 });
-//# sourceMappingURL=WebGPURenderer.js.map

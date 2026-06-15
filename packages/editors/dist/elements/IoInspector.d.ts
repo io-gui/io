@@ -35,4 +35,3 @@ export declare class IoInspector extends IoElement {
     dispose(): void;
 }
 export declare const ioInspector: (arg0?: IoInspectorProps) => VDOMElement;
-//# sourceMappingURL=IoInspector.d.ts.map

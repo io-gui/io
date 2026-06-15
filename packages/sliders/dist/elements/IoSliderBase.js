@@ -356,4 +356,3 @@ __decorate([
 __decorate([
     Property(0)
 ], IoSliderBase.prototype, "tabIndex", void 0);
-//# sourceMappingURL=IoSliderBase.js.map

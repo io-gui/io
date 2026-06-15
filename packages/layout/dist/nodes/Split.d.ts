@@ -19,4 +19,3 @@ export declare class Split extends ReactiveNode {
     applyJSON(json: SplitProps): this;
     dispose(): void;
 }
-//# sourceMappingURL=Split.d.ts.map

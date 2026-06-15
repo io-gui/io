@@ -116,4 +116,3 @@ IoTabsHamburgerMenu = __decorate([
 ], IoTabsHamburgerMenu);
 export const ioTabsHamburgerMenuSingleton = new IoTabsHamburgerMenu();
 IoOverlaySingleton.appendChild(ioTabsHamburgerMenuSingleton);
-//# sourceMappingURL=IoTabsHamburgerMenuSingleton.js.map

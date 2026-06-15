@@ -52,4 +52,3 @@ export declare class MenuOption extends ReactiveNode {
     changed(): void;
     dispose(): void;
 }
-//# sourceMappingURL=MenuOption.d.ts.map

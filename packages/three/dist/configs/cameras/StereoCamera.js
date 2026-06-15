@@ -17,4 +17,3 @@ registerEditorGroups(StereoCamera, {
     ],
     Hidden: ['_cache'],
 });
-//# sourceMappingURL=StereoCamera.js.map

@@ -8,4 +8,3 @@
 // registerEditorGroups(Light, {
 //   Main: ['color', 'intensity'],
 // })
-//# sourceMappingURL=Light.js.map

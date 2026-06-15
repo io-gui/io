@@ -17,4 +17,3 @@ registerEditorGroups(Raycaster, {
     ],
     Advanced: ['params'],
 });
-//# sourceMappingURL=Raycaster.js.map

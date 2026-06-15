@@ -118,4 +118,3 @@ export { IoSliderRange };
 export const ioSliderRange = function (arg0) {
     return IoSliderRange.vConstructor(arg0);
 };
-//# sourceMappingURL=IoSliderRange.js.map

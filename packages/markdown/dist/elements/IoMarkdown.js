@@ -216,4 +216,3 @@ function setTheme() {
 }
 setTheme();
 $ThemeID.node.addEventListener('value-changed', setTheme);
-//# sourceMappingURL=IoMarkdown.js.map

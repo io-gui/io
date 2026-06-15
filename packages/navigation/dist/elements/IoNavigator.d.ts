@@ -42,4 +42,3 @@ export declare class IoNavigator extends IoElement {
     changed(): void;
 }
 export declare const ioNavigator: (arg0?: IoNavigatorProps) => VDOMElement;
-//# sourceMappingURL=IoNavigator.d.ts.map

@@ -11,4 +11,3 @@ export declare class IoBuildGeometry extends IoElement {
     changed(): void;
 }
 export declare const ioBuildGeometry: (arg0?: IoBuildGeometryProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoBuildGeometry.d.ts.map

@@ -26,4 +26,3 @@ declare class IoTabsHamburgerMenu extends IoElement {
 }
 export declare const ioTabsHamburgerMenuSingleton: IoTabsHamburgerMenu;
 export {};
-//# sourceMappingURL=IoTabsHamburgerMenuSingleton.d.ts.map

@@ -19,4 +19,3 @@ registerEditorGroups(InterleavedBufferAttribute, {
         'array',
     ],
 });
-//# sourceMappingURL=InterleavedBufferAttribute.js.map

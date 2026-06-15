@@ -17,4 +17,3 @@ registerEditorConfig(SphereGeometry, [
 registerEditorGroups(SphereGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=SphereGeometry.js.map

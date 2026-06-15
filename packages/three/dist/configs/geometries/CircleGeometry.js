@@ -14,4 +14,3 @@ registerEditorConfig(CircleGeometry, [
 registerEditorGroups(CircleGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=CircleGeometry.js.map

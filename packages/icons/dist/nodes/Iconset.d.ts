@@ -9,4 +9,3 @@ declare class Iconset extends ReactiveNode {
 }
 export declare const IconsetSingleton: Iconset;
 export {};
-//# sourceMappingURL=Iconset.d.ts.map

@@ -366,4 +366,3 @@ IoGl = IoGl_1 = __decorate([
     Register
 ], IoGl);
 export { IoGl };
-//# sourceMappingURL=IoGL.js.map

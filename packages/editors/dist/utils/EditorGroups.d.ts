@@ -8,4 +8,3 @@ export type EditorGroups = Map<AnyConstructor, PropertyGroups>;
 export declare function getEditorGroups(object: object, propertyGroups: PropertyGroups): PropertyGroupsRecord;
 export declare function registerEditorGroups(constructor: AnyConstructor, groups: PropertyGroups): void;
 export {};
-//# sourceMappingURL=EditorGroups.d.ts.map

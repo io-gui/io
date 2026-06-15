@@ -34,4 +34,3 @@ export declare class IoObject extends IoElement {
     changed(): void;
 }
 export declare const ioObject: (arg0?: IoObjectProps) => VDOMElement;
-//# sourceMappingURL=IoObject.d.ts.map

@@ -4,7 +4,6 @@ import WebGPU from 'three/addons/capabilities/WebGPU.js'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
 import { ViewCameras } from '../nodes/ViewCameras.js'
 import { ToolBase } from '../nodes/ToolBase.js'
-import WebGPUBackend from 'three/src/renderers/webgpu/WebGPUBackend.js'
 
 if ( WebGPU.isAvailable() === false ) {
   console.error( 'No WebGPU support!' )
@@ -111,7 +110,7 @@ export class IoThreeViewport extends IoElement {
 
   override ready() {
     // TODO: This is a hack to enable rendering with WebGL fallback
-    if (this.renderer.backend instanceof WebGPUBackend) {
+    if ((this.renderer.backend as any).isWebGPUBackend) {
       this.renderTarget = new CanvasTarget(document.createElement('canvas'))
       this.appendChild(this.renderTarget.domElement)
     } else {
@@ -148,7 +147,7 @@ export class IoThreeViewport extends IoElement {
     const rect = this.getBoundingClientRect()
     this.width = Math.floor(rect.width)
     this.height = Math.floor(rect.height)
-    if (this.renderer.backend instanceof WebGPUBackend) {
+    if ((this.renderer.backend as any).isWebGPUBackend) {
       this.renderTarget.setSize(this.width, this.height)
       this.renderTarget.setPixelRatio(window.devicePixelRatio)
     }
@@ -183,7 +182,7 @@ export class IoThreeViewport extends IoElement {
     }
     if (!this.width || !this.height) return
 
-    if (this.renderer.backend instanceof WebGPUBackend) {
+    if ((this.renderer.backend as any).isWebGPUBackend) {
       this.renderer.setCanvasTarget(this.renderTarget)
     }
 

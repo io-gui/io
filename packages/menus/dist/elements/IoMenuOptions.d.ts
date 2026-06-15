@@ -46,4 +46,3 @@ export declare class IoMenuOptions extends IoElement {
     changed(): void;
 }
 export declare const ioMenuOptions: (arg0?: IoMenuOptionsProps) => VDOMElement;
-//# sourceMappingURL=IoMenuOptions.d.ts.map

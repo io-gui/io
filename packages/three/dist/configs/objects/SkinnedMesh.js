@@ -11,4 +11,3 @@ registerEditorGroups(SkinnedMesh, {
     Main: ['skeleton', 'bindMode', 'bindMatrix', 'bindMatrixInverse'],
     Rendering: ['boundingBox', 'boundingSphere'],
 });
-//# sourceMappingURL=SkinnedMesh.js.map

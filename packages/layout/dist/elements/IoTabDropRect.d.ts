@@ -11,4 +11,3 @@ declare class IoTabDropRect extends IoElement {
 }
 export declare const ioTabDropRectSingleton: IoTabDropRect;
 export {};
-//# sourceMappingURL=IoTabDropRect.d.ts.map

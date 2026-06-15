@@ -10,4 +10,3 @@ registerEditorGroups(QuaternionLinearInterpolant, {
     Settings: ['settings'],
     Hidden: ['_cachedIndex', 'DefaultSettings_'],
 });
-//# sourceMappingURL=QuaternionLinearInterpolant.js.map

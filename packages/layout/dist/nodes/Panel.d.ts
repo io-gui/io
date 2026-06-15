@@ -18,4 +18,3 @@ export declare class Panel extends ReactiveNode {
     applyJSON(json: PanelProps): this;
     dispose(): void;
 }
-//# sourceMappingURL=Panel.d.ts.map

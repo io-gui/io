@@ -1,7 +1,7 @@
 //@ts-nocheck
 import { IoElement, Register, div, h2, h3, p, table, thead, tbody, tr, th, td } from '@io-gui/core'
 
-const RESULTS_URL = '/benchmarks/results.json'
+const RESULTS_URL = './benchmarks/results.json'
 
 function formatDuration(seconds: number | undefined) {
   if (seconds === null) return '—'

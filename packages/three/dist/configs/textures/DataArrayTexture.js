@@ -12,4 +12,3 @@ registerEditorGroups(DataArrayTexture, {
     Hidden: ['layerUpdates'],
     Wrapping: ['wrapR'],
 });
-//# sourceMappingURL=DataArrayTexture.js.map

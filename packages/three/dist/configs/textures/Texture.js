@@ -129,4 +129,3 @@ registerEditorGroups(Texture, {
         'onUpdate',
     ],
 });
-//# sourceMappingURL=Texture.js.map

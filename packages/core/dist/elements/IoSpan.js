@@ -33,4 +33,3 @@ export { IoSpan };
 export const ioSpan = function (props) {
     return IoSpan.vConstructor(props);
 };
-//# sourceMappingURL=IoSpan.js.map

@@ -53,4 +53,3 @@ Tab = __decorate([
     Register
 ], Tab);
 export { Tab };
-//# sourceMappingURL=Tab.js.map

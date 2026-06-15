@@ -13,4 +13,3 @@ export declare class IoStyleContainer extends IoElement {
     generateWhiteNoise(): void;
 }
 export declare const ioStyleContainer: (arg0?: import("@io-gui/core").IoElementProps | Array<import("@io-gui/core").VDOMElement | null> | string, arg1?: Array<import("@io-gui/core").VDOMElement | null> | string) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoStyleContainer.d.ts.map

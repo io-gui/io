@@ -12,4 +12,3 @@ export declare class IoSpan extends IoElement {
 }
 export declare const ioSpan: (props?: IoSpanProps) => import("../index.js").VDOMElement;
 export {};
-//# sourceMappingURL=IoSpan.d.ts.map

@@ -63,4 +63,3 @@ export { IoBoolean };
 export const ioBoolean = function (arg0) {
     return IoBoolean.vConstructor(arg0);
 };
-//# sourceMappingURL=IoBoolean.js.map

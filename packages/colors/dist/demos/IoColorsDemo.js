@@ -61,4 +61,3 @@ export class IoColorsDemo extends IoElement {
 }
 Register(IoColorsDemo);
 export const ioColorsDemo = IoColorsDemo.vConstructor;
-//# sourceMappingURL=IoColorsDemo.js.map

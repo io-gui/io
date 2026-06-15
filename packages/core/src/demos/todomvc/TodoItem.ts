@@ -8,11 +8,12 @@ type TodoItemProps = IoElementProps & {
 }
 
 export class TodoItem extends IoElement {
+
   static override get Style() {
     return /* css */`
-    :host {
-      display: contents;
-    }
+      :host {
+        display: contents;
+      }
     `
   }
 
@@ -25,10 +26,12 @@ export class TodoItem extends IoElement {
   @ReactiveProperty({value: false})
   declare editing: boolean
 
-  private $input!: HTMLInputElement
-  private _originalTitle!: string
+  declare private $input: HTMLInputElement
+  declare private _originalTitle: string
 
-  constructor(args: TodoItemProps = {}) { super(args) }
+  constructor(args: TodoItemProps = {}) {
+    super(args)
+  }
 
   itemMutated() {
     this.changed()

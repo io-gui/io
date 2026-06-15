@@ -69,4 +69,3 @@ Register(TodoItem);
 export const todoItem = function (arg0) {
     return TodoItem.vConstructor(arg0);
 };
-//# sourceMappingURL=TodoItem.js.map

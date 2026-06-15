@@ -35,4 +35,3 @@ export * from './elements/IoTabsHamburgerMenuSingleton.js';
 export * from './nodes/Panel.js';
 export * from './nodes/Split.js';
 export * from './nodes/Tab.js';
-//# sourceMappingURL=index.d.ts.map

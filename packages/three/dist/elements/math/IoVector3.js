@@ -25,4 +25,3 @@ export { IoVector3 };
 export const ioVector3 = function (arg0) {
     return IoVector3.vConstructor(arg0);
 };
-//# sourceMappingURL=IoVector3.js.map

@@ -23,4 +23,3 @@ export declare class IoNavigatorDrawer extends IoElement {
     updateDrawerSizeThrottled(): void;
 }
 export declare const ioNavigatorDrawer: (args: IoNavigatorDrawerProps) => VDOMElement;
-//# sourceMappingURL=IoNavigatorDrawer.d.ts.map

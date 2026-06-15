@@ -55,4 +55,3 @@ export declare class IoSplit extends IoElement {
     changed(): void;
 }
 export declare const ioSplit: (arg0: IoSplitProps) => VDOMElement;
-//# sourceMappingURL=IoSplit.d.ts.map

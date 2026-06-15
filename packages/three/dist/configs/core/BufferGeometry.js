@@ -9,4 +9,3 @@ registerEditorGroups(BufferGeometry, {
     Morphing: ['morphAttributes', 'morphTargetsRelative'],
     Advanced: ['groups', 'drawRange', 'indirect', 'indirectOffset'],
 });
-//# sourceMappingURL=BufferGeometry.js.map

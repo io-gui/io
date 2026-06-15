@@ -85,4 +85,3 @@ export declare class ReactivePropertyInstance {
      */
     constructor(node: ReactiveNode | IoElement, propDef: ReactiveProtoProperty);
 }
-//# sourceMappingURL=ReactiveProperty.d.ts.map

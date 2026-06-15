@@ -13,4 +13,3 @@ export declare class IoTabsHamburger extends IoField {
     changed(): void;
 }
 export declare const ioTabsHamburger: (arg0: IoTabsHamburgerProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoTabsHamburger.d.ts.map

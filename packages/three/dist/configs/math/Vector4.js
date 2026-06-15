@@ -4,4 +4,3 @@ import { ioVector4 } from '../../elements/math/IoVector4.js';
 registerEditorConfig(Object, [
     [Vector4, ioVector4({ min: -Infinity, max: Infinity, step: 0.1 })],
 ]);
-//# sourceMappingURL=Vector4.js.map

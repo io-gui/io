@@ -310,4 +310,3 @@ ViewCameras = __decorate([
     Register
 ], ViewCameras);
 export { ViewCameras };
-//# sourceMappingURL=ViewCameras.js.map

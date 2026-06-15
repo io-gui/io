@@ -115,4 +115,3 @@ export declare function unbind(node: ReactiveNode | IoElement, name: string): vo
 export { detachChildParents } from '../core/ReactiveCore.js';
 /** Tears down bindings, listeners, queues, and parent links for a reactive owner. */
 export declare function dispose(node: ReactiveNode | IoElement): void;
-//# sourceMappingURL=ReactiveNode.d.ts.map

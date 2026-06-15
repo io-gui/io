@@ -4,4 +4,3 @@ registerEditorGroups(LOD, {
     Main: ['levels', 'autoUpdate'],
     Hidden: ['_currentLevel'],
 });
-//# sourceMappingURL=LOD.js.map

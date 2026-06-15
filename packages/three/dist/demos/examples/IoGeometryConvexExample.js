@@ -124,4 +124,3 @@ IoGeometryConvexExample = __decorate([
 ], IoGeometryConvexExample);
 export { IoGeometryConvexExample };
 export const ioGeometryConvexExample = IoGeometryConvexExample.vConstructor;
-//# sourceMappingURL=IoGeometryConvexExample.js.map

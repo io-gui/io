@@ -9,4 +9,3 @@ registerEditorConfig(Object, [
     ['drawingBufferColorSpace', ioOptionSelect({ option: new MenuOption({ options: [SRGBColorSpace, LinearSRGBColorSpace] }) })],
     ['outputColorSpace', ioOptionSelect({ option: new MenuOption({ options: [SRGBColorSpace, LinearSRGBColorSpace] }) })],
 ]);
-//# sourceMappingURL=ColorManagement.js.map

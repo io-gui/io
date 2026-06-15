@@ -21,7 +21,9 @@ export class TodoFooter extends IoElement {
   @ReactiveProperty({value: 'all'})
   declare route: string
 
-  constructor(args: TodoFooterProps = {}) { super(args) }
+  constructor(args: TodoFooterProps = {}) {
+    super(args)
+  }
 
   onRouteClicked(event: CustomEvent) {
     const target = event.target as HTMLElement

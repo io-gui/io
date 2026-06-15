@@ -74,4 +74,3 @@ export { IoIcon };
 export const ioIcon = function (arg0) {
     return IoIcon.vConstructor(arg0);
 };
-//# sourceMappingURL=IoIcon.js.map

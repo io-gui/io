@@ -30,4 +30,3 @@ export declare class IoPanel extends IoElement {
     changed(): void;
 }
 export declare const ioPanel: (arg0: IoPanelProps) => VDOMElement;
-//# sourceMappingURL=IoPanel.d.ts.map

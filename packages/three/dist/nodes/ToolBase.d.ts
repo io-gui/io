@@ -40,4 +40,3 @@ export declare class ToolBase extends ReactiveNode {
     private _removeHoverPointer;
     pointerTo3D(event: PointerEvent): Pointer3D;
 }
-//# sourceMappingURL=ToolBase.d.ts.map

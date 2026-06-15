@@ -17,4 +17,3 @@ export declare class IoMatrixBase extends IoElement {
     valueMutated(): void;
     changed(): void;
 }
-//# sourceMappingURL=IoMatrixBase.d.ts.map

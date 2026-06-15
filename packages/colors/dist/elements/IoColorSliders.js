@@ -562,4 +562,3 @@ export { IoColorSliderSl };
 export const ioColorSliderSl = function (arg0) {
     return IoColorSliderSl.vConstructor(arg0);
 };
-//# sourceMappingURL=IoColorSliders.js.map

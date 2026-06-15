@@ -10,4 +10,3 @@ registerEditorGroups(LinearInterpolant, {
     Settings: ['settings'],
     Hidden: ['_cachedIndex', 'DefaultSettings_'],
 });
-//# sourceMappingURL=LinearInterpolant.js.map

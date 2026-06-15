@@ -36,4 +36,3 @@ export declare class IoContextMenu extends IoElement {
     collapse(): void;
 }
 export declare const ioContextMenu: (arg0?: IoContextMenuProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoContextMenu.d.ts.map

@@ -577,4 +577,3 @@ const icons = /* html */ `
   </g>
 </svg>`;
 IconsetSingleton.registerIcons('io', icons);
-//# sourceMappingURL=Iconset.js.map

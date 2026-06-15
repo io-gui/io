@@ -12,4 +12,3 @@ registerEditorGroups(CompressedArrayTexture, {
     Source: ['layerUpdates'],
     Wrapping: ['wrapR'],
 });
-//# sourceMappingURL=CompressedArrayTexture.js.map

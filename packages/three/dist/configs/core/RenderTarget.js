@@ -35,4 +35,3 @@ registerEditorGroups(RenderTarget, {
         '_depthTexture',
     ]
 });
-//# sourceMappingURL=RenderTarget.js.map

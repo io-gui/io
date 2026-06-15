@@ -408,4 +408,3 @@ IoElement = IoElement_1 = __decorate([
 ], IoElement);
 export { IoElement };
 export const ioElement = IoElement.vConstructor;
-//# sourceMappingURL=IoElement.js.map

@@ -29,4 +29,3 @@ export declare class IoDrawer extends IoElement {
     changed(): void;
 }
 export declare const ioDrawer: (args: IoDrawerProps) => VDOMElement;
-//# sourceMappingURL=IoDrawer.d.ts.map

@@ -23,4 +23,3 @@ import { IoElement } from '../elements/IoElement.js';
  * Register(MyNode);
 */
 export declare function Register(ioNodeConstructor: typeof ReactiveNode | typeof IoElement): void;
-//# sourceMappingURL=Register.d.ts.map

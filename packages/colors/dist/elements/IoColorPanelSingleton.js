@@ -86,4 +86,3 @@ export const IoColorPanelSingleton = new IoColorPanel();
 setTimeout(() => {
     IoOverlaySingleton.appendChild(IoColorPanelSingleton);
 }, 100);
-//# sourceMappingURL=IoColorPanelSingleton.js.map

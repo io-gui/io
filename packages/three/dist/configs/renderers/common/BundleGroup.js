@@ -5,4 +5,3 @@ registerEditorConfig(BundleGroup, [
     ['version', ioNumber({ disabled: true })],
     ['needsUpdate', ioSwitch({ value: false })],
 ]);
-//# sourceMappingURL=BundleGroup.js.map

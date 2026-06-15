@@ -32,4 +32,3 @@ registerEditorGroups(KeyframeTrack, {
 registerEditorConfig(Object, [
     [KeyframeTrack, ioObject()],
 ]);
-//# sourceMappingURL=KeyframeTrack.js.map

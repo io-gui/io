@@ -22,4 +22,3 @@ registerEditorConfig(AnimationAction, [
 registerEditorGroups(AnimationAction, {
     Advanced: ['zeroSlopeAtStart', 'zeroSlopeAtEnd', 'clampWhenFinished', 'blendMode', 'loop', 'repetitions', 'timeScale']
 });
-//# sourceMappingURL=AnimationAction.js.map

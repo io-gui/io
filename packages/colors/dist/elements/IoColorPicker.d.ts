@@ -28,4 +28,3 @@ export declare class IoColorPicker extends IoElement {
     valueChanged(): void;
 }
 export declare const ioColorPicker: (arg0: IoColorPickerProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoColorPicker.d.ts.map

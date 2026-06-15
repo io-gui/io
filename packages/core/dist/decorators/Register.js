@@ -23,4 +23,3 @@
 export function Register(ioNodeConstructor) {
     ioNodeConstructor.prototype.Register(ioNodeConstructor);
 }
-//# sourceMappingURL=Register.js.map

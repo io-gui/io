@@ -6,4 +6,3 @@ export declare class TodoItemModel extends ReactiveNode {
     delete: () => void;
     applyJSON(json: any): this;
 }
-//# sourceMappingURL=TodoItemModel.d.ts.map

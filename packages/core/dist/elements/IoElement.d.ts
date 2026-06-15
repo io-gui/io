@@ -117,4 +117,3 @@ export declare class IoElement extends HTMLElement {
 }
 export declare const ioElement: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 export {};
-//# sourceMappingURL=IoElement.d.ts.map

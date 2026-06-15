@@ -31,4 +31,3 @@ registerEditorGroups(InterleavedBuffer, {
     ],
     Hidden: ['onUploadCallback'],
 });
-//# sourceMappingURL=InterleavedBuffer.js.map

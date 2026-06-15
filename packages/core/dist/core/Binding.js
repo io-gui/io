@@ -204,4 +204,3 @@ export class Binding {
         delete this.targetProperties;
     }
 }
-//# sourceMappingURL=Binding.js.map

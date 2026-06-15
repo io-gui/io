@@ -47,4 +47,3 @@ export { IoColorSwatch };
 export const ioColorSwatch = function (arg0) {
     return IoColorSwatch.vConstructor(arg0);
 };
-//# sourceMappingURL=IoColorSwatch.js.map

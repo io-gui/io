@@ -102,4 +102,3 @@ export { IoColorPicker };
 export const ioColorPicker = function (arg0) {
     return IoColorPicker.vConstructor(arg0);
 };
-//# sourceMappingURL=IoColorPicker.js.map

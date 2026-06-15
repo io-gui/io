@@ -12,4 +12,3 @@ export declare class IoPropertyLink extends IoButton {
     changed(): void;
 }
 export declare const ioPropertyLink: (arg0?: IoPropertyLinkProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoPropertyLink.d.ts.map

@@ -120,4 +120,3 @@ export declare class IoColorSliderSl extends IoColorSlider2dBase {
 }
 export declare const ioColorSliderSl: (arg0?: IoColorSliderProps) => import("@io-gui/core").VDOMElement;
 export {};
-//# sourceMappingURL=IoColorSliders.d.ts.map

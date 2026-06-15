@@ -76,4 +76,3 @@ export { IoButton };
 export const ioButton = function (arg0) {
     return IoButton.vConstructor(arg0);
 };
-//# sourceMappingURL=IoButton.js.map

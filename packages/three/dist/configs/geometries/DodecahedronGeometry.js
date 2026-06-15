@@ -12,4 +12,3 @@ registerEditorConfig(DodecahedronGeometry, [
 registerEditorGroups(DodecahedronGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=DodecahedronGeometry.js.map

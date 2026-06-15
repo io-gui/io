@@ -8,4 +8,3 @@ export declare class IoColorRgba extends IoColorBase {
     changed(): void;
 }
 export declare const ioColorRgba: (arg0?: IoColorBaseProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoColorRgba.d.ts.map

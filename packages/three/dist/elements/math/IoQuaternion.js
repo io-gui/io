@@ -25,4 +25,3 @@ export { IoQuaternion };
 export const ioQuaternion = function (arg0) {
     return IoQuaternion.vConstructor(arg0);
 };
-//# sourceMappingURL=IoQuaternion.js.map

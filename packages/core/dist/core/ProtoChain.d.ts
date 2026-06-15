@@ -81,4 +81,3 @@ export declare class ProtoChain {
     validateReactiveProperties(): void;
 }
 export {};
-//# sourceMappingURL=ProtoChain.d.ts.map

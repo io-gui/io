@@ -10,4 +10,3 @@ registerEditorGroups(AudioAnalyser, {
 registerEditorConfig(Object, [
     [AudioAnalyser, ioObject()],
 ]);
-//# sourceMappingURL=AudioAnalyser.js.map

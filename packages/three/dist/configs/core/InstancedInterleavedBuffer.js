@@ -8,4 +8,3 @@ registerEditorConfig(InstancedInterleavedBuffer, [
 registerEditorGroups(InstancedInterleavedBuffer, {
     Instancing: ['meshPerAttribute'],
 });
-//# sourceMappingURL=InstancedInterleavedBuffer.js.map

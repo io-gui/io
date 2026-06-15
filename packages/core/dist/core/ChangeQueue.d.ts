@@ -40,4 +40,3 @@ export declare class ChangeQueue {
      */
     dispose(): void;
 }
-//# sourceMappingURL=ChangeQueue.d.ts.map

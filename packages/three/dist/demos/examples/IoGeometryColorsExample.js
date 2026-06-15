@@ -103,4 +103,3 @@ IoGeometryColorsExample = __decorate([
 ], IoGeometryColorsExample);
 export { IoGeometryColorsExample };
 export const ioGeometryColorsExample = IoGeometryColorsExample.vConstructor;
-//# sourceMappingURL=IoGeometryColorsExample.js.map

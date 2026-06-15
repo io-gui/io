@@ -267,4 +267,3 @@ IoAnimationSkinningBlendingExample = __decorate([
 ], IoAnimationSkinningBlendingExample);
 export { IoAnimationSkinningBlendingExample };
 export const ioAnimationSkinningBlendingExample = IoAnimationSkinningBlendingExample.vConstructor;
-//# sourceMappingURL=IoAnimationSkinningBlendingExample.js.map

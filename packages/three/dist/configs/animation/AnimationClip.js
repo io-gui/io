@@ -20,4 +20,3 @@ registerEditorGroups(AnimationClip, {
 registerEditorConfig(Object, [
     [AnimationClip, ioObject()],
 ]);
-//# sourceMappingURL=AnimationClip.js.map

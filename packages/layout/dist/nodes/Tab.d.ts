@@ -14,4 +14,3 @@ export declare class Tab extends ReactiveNode {
     toJSON(): TabProps;
     applyJSON(json: TabProps): this;
 }
-//# sourceMappingURL=Tab.d.ts.map

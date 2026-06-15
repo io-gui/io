@@ -22,4 +22,3 @@ export declare class IoCollapsible extends IoElement {
     changed(): void;
 }
 export declare const ioCollapsible: (arg0?: IoCollapsibleProps) => VDOMElement;
-//# sourceMappingURL=IoCollapsible.d.ts.map

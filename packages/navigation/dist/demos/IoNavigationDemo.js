@@ -127,4 +127,3 @@ export class IoNavigationDemo extends IoElement {
 }
 Register(IoNavigationDemo);
 export const ioNavigationDemo = IoNavigationDemo.vConstructor;
-//# sourceMappingURL=IoNavigationDemo.js.map

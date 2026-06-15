@@ -45,4 +45,3 @@ export { IoTabsHamburger };
 export const ioTabsHamburger = function (arg0) {
     return IoTabsHamburger.vConstructor(arg0);
 };
-//# sourceMappingURL=IoTabsHamburger.js.map

@@ -137,4 +137,3 @@ function executeQueue() {
     requestAnimationFrame(executeQueue);
 }
 requestAnimationFrame(executeQueue);
-//# sourceMappingURL=Queue.js.map

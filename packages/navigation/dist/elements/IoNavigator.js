@@ -182,4 +182,3 @@ export { IoNavigator };
 export const ioNavigator = function (arg0) {
     return IoNavigator.vConstructor(arg0);
 };
-//# sourceMappingURL=IoNavigator.js.map

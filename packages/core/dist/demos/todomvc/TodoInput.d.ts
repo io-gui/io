@@ -12,4 +12,3 @@ export declare class TodoInput extends IoElement {
 }
 export declare const todoInput: (arg0: TodoInputProps) => import("@io-gui/core").VDOMElement;
 export {};
-//# sourceMappingURL=TodoInput.d.ts.map

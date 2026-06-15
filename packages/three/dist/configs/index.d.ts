@@ -159,4 +159,3 @@ import './renderers/common/StorageInstancedBufferAttribute.js';
 import './renderers/common/IndirectStorageBufferAttribute.js';
 import './lights/webgpu/IESSpotLight.js';
 import './lights/webgpu/ProjectorLight.js';
-//# sourceMappingURL=index.d.ts.map

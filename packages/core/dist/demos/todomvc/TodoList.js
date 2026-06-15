@@ -41,4 +41,3 @@ Register(TodoList);
 export const todoList = function (arg0) {
     return TodoList.vConstructor(arg0);
 };
-//# sourceMappingURL=TodoList.js.map

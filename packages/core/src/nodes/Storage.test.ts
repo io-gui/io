@@ -1,5 +1,41 @@
 import { describe, it, expect } from 'vitest'
-import { StorageNode, Storage, Binding } from '@io-gui/core'
+import { StorageNode, Storage, Binding, ReactiveNode, Register, ReactivePropertyDefinitions, NodeArray, Json, PropertyValues } from '@io-gui/core'
+
+@Register
+class StoredItem extends ReactiveNode {
+  static get ReactiveProperties(): ReactivePropertyDefinitions {
+    return {
+      title: { type: String },
+      completed: { type: Boolean },
+    }
+  }
+  declare title: string
+  declare completed: boolean
+}
+
+@Register
+class StoredModel extends ReactiveNode {
+  static get ReactiveProperties(): ReactivePropertyDefinitions {
+    return {
+      items: { type: NodeArray, init: 'this' },
+    }
+  }
+  declare items: NodeArray<StoredItem>
+
+  constructor(args: { items?: Array<{ title?: string, completed?: boolean }> } = {}) {
+    const items = (args.items ?? []).map(item => new StoredItem(item))
+    super({ items })
+  }
+
+  override applyJSON(json: Json) {
+    const { items: itemsJson, ...rest } = json
+    super.applyJSON(rest)
+    if (Array.isArray(itemsJson)) {
+      this.setProperty('items', itemsJson.map(item => new StoredItem(item as PropertyValues)), true)
+    }
+    return this
+  }
+}
 
 async function afterHashChange(): Promise<void> {
   return new Promise((resolve) => {
@@ -13,6 +49,7 @@ localStorage.removeItem('Storage:test2')
 localStorage.removeItem('Storage:test3')
 localStorage.removeItem('Storage:test4')
 localStorage.removeItem('Storage:test5')
+localStorage.removeItem('Storage:test-model-hydrate')
 
 const permited = localStorage.getItem('Storage:user-permitted')
 
@@ -174,5 +211,22 @@ describe('Storage.test.ts', () => {
     binding1.value = 9
     expect(binding2.value).toBe(9)
     binding1.dispose()
+  })
+  it('hydrates IoValue models via applyJSON from localStorage', () => {
+    Storage.permit()
+    localStorage.setItem('Storage:test-model-hydrate', JSON.stringify({
+      items: [{ title: 'Buy milk', completed: true }],
+    }))
+    const node = new StorageNode({
+      key: 'test-model-hydrate',
+      value: new StoredModel({ items: [] }),
+      storage: 'local',
+    })
+    expect(node.value).toBeInstanceOf(StoredModel)
+    const model = node.value as StoredModel
+    expect(model.items.length).toBe(1)
+    expect(model.items[0].title).toBe('Buy milk')
+    expect(model.items[0].completed).toBe(true)
+    node.dispose()
   })
 })

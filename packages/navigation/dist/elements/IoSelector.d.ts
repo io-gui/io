@@ -36,4 +36,3 @@ export declare class IoSelector extends IoElement {
     dispose(): void;
 }
 export declare const ioSelector: (arg0?: IoSelectorProps) => VDOMElement;
-//# sourceMappingURL=IoSelector.d.ts.map

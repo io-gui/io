@@ -160,4 +160,3 @@ export { IoNavigatorDrawer };
 export const ioNavigatorDrawer = function (args) {
     return IoNavigatorDrawer.vConstructor(args);
 };
-//# sourceMappingURL=IoNavigatorDrawer.js.map

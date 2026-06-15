@@ -21,4 +21,3 @@ export declare class IoMarkdown extends IoElement {
     srcChanged(): void;
 }
 export declare const ioMarkdown: (arg0?: IoMarkdownProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoMarkdown.d.ts.map

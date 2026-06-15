@@ -47,4 +47,3 @@ export declare class IoField extends IoElement {
     changed(): void;
 }
 export declare const ioField: (arg0: IoFieldProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoField.d.ts.map

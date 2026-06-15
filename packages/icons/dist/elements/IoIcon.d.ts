@@ -18,4 +18,3 @@ export declare class IoIcon extends IoElement {
     valueChanged(): void;
 }
 export declare const ioIcon: (arg0: IoIconProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoIcon.d.ts.map

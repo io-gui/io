@@ -32,4 +32,3 @@ IoMenuHamburger = __decorate([
 ], IoMenuHamburger);
 export { IoMenuHamburger };
 export const ioMenuHamburger = IoMenuHamburger.vConstructor;
-//# sourceMappingURL=IoMenuHamburger.js.map

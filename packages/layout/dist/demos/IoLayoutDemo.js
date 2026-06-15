@@ -172,4 +172,3 @@ export class IoLayoutDemo extends IoElement {
 }
 Register(IoLayoutDemo);
 export const ioLayoutDemo = IoLayoutDemo.vConstructor;
-//# sourceMappingURL=IoLayoutDemo.js.map

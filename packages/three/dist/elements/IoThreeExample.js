@@ -46,4 +46,3 @@ __decorate([
 ], IoThreeExample.prototype, "applet", void 0);
 Register(IoThreeExample);
 export const ioThreeExample = IoThreeExample.vConstructor;
-//# sourceMappingURL=IoThreeExample.js.map

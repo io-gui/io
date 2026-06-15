@@ -164,4 +164,3 @@ __decorate([
 ], IoEditorsDemo.prototype, "object", void 0);
 Register(IoEditorsDemo);
 export const ioEditorsDemo = IoEditorsDemo.vConstructor;
-//# sourceMappingURL=IoEditorsDemo.js.map

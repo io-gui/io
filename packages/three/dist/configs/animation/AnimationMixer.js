@@ -9,4 +9,3 @@ registerEditorGroups(AnimationMixer, {
         'stats',
     ],
 });
-//# sourceMappingURL=AnimationMixer.js.map

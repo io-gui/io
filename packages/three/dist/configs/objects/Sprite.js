@@ -7,4 +7,3 @@ registerEditorConfig(Sprite, [
 registerEditorGroups(Sprite, {
     Main: ['geometry', 'material', 'center', 'count'],
 });
-//# sourceMappingURL=Sprite.js.map

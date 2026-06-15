@@ -187,4 +187,3 @@ IoTabDragIcon = __decorate([
 ], IoTabDragIcon);
 export const tabDragIconSingleton = new IoTabDragIcon();
 document.body.appendChild(tabDragIconSingleton);
-//# sourceMappingURL=IoTabDragIcon.js.map

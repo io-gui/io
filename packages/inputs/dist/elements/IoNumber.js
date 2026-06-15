@@ -272,4 +272,3 @@ function isMobileDevice() {
 export const ioNumber = function (arg0) {
     return IoNumber.vConstructor(arg0);
 };
-//# sourceMappingURL=IoNumber.js.map

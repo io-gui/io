@@ -9,4 +9,3 @@
 // registerEditorGroups(SpotLightShadow, {
 //   Main: ['focus', 'aspect'],
 // })
-//# sourceMappingURL=SpotLightShadow.js.map

@@ -23,4 +23,3 @@ export declare class IoSliderRange extends IoSliderBase {
     static get Frag(): string;
 }
 export declare const ioSliderRange: (arg0?: IoSliderRangeProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoSliderRange.d.ts.map

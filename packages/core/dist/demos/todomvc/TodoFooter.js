@@ -44,4 +44,3 @@ Register(TodoFooter);
 export const todoFooter = function (arg0) {
     return TodoFooter.vConstructor(arg0);
 };
-//# sourceMappingURL=TodoFooter.js.map

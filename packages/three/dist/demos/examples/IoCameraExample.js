@@ -150,4 +150,3 @@ IoCameraExample = __decorate([
 ], IoCameraExample);
 export { IoCameraExample };
 export const ioCameraExample = IoCameraExample.vConstructor;
-//# sourceMappingURL=IoCameraExample.js.map

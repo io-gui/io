@@ -1221,17 +1221,17 @@ describe('ReactiveNode', () => {
   })
 
   describe('toJSON and applyJSON', () => {
-    it('serializes numbers and nested toJSON values, skips reactivity and strings', () => {
+    it('serializes primitives and nested toJSON values, skips reactivity', () => {
       const node = new JsonNode()
       node.count = 9
       node.color.applyJSON(Color.toHex(1, 0.2, 0))
-      node.label = 'ignored'
+      node.label = 'saved'
       node.children.push(new JsonChildNode())
 
       const json = node.toJSON()
       expect(json.count).toBe(9)
       expect(json.color).toBe(0xffff3300)
-      expect(json.label).toBeUndefined()
+      expect(json.label).toBe('saved')
       expect(json.reactivity).toBeUndefined()
       expect(json.children).toEqual([{ count: 3 }])
     })

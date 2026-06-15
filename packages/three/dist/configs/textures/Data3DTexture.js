@@ -11,4 +11,3 @@ registerEditorConfig(Data3DTexture, [
 registerEditorGroups(Data3DTexture, {
     Wrapping: ['wrapR'],
 });
-//# sourceMappingURL=Data3DTexture.js.map

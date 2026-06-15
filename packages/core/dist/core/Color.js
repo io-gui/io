@@ -51,4 +51,3 @@ export class Color {
         return `rgba(${r}, ${g}, ${b}, ${this.a})`;
     }
 }
-//# sourceMappingURL=Color.js.map

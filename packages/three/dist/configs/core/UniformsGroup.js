@@ -18,4 +18,3 @@ registerEditorGroups(UniformsGroup, {
     Main: ['uniforms'],
     Advanced: ['usage'],
 });
-//# sourceMappingURL=UniformsGroup.js.map

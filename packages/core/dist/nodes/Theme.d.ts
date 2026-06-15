@@ -52,4 +52,3 @@ export declare class Theme extends ReactiveNode {
 declare const ThemeSingleton: Theme;
 export declare const $Theme: import("../index.js").Binding<Theme>;
 export { ThemeSingleton };
-//# sourceMappingURL=Theme.d.ts.map

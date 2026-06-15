@@ -18,4 +18,3 @@ export declare function debounce(func: CallbackFunction, arg?: unknown, node?: R
  * Removes pending queue and throttle state for a disposed node.
  */
 export declare function clearNodeQueue(node: ReactiveNode | IoElement): void;
-//# sourceMappingURL=Queue.d.ts.map

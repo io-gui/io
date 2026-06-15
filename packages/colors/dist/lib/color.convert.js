@@ -172,4 +172,3 @@ export const hsv2rgb = function (hsv) {
             return [v, p, q];
     }
 };
-//# sourceMappingURL=color.convert.js.map

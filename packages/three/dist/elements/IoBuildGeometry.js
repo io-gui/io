@@ -116,4 +116,3 @@ export { IoBuildGeometry };
 export const ioBuildGeometry = function (arg0) {
     return IoBuildGeometry.vConstructor(arg0);
 };
-//# sourceMappingURL=IoBuildGeometry.js.map

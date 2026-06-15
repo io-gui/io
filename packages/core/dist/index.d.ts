@@ -48,4 +48,3 @@ export * from './utils/Focus.js';
 export * from './utils/Nudge.js';
 declare const LICENSE = "MIT";
 export { LICENSE };
-//# sourceMappingURL=index.d.ts.map

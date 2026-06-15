@@ -23,7 +23,9 @@ export class TodoList extends IoElement {
   @ReactiveProperty({value: 'all'})
   declare route: string
 
-  constructor(args: TodoListProps = {}) { super(args) }
+  constructor(args: TodoListProps = {}) {
+    super(args)
+  }
 
   modelMutated() {
     this.changed()

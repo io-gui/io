@@ -23,4 +23,3 @@ export declare class IoBoolean extends IoField {
     changed(): void;
 }
 export declare const ioBoolean: (arg0?: IoBooleanProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoBoolean.d.ts.map

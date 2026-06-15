@@ -57,4 +57,3 @@ IoAnimationGroupsExample = __decorate([
 ], IoAnimationGroupsExample);
 export { IoAnimationGroupsExample };
 export const ioAnimationGroupsExample = IoAnimationGroupsExample.vConstructor;
-//# sourceMappingURL=IoAnimationGroupsExample.js.map

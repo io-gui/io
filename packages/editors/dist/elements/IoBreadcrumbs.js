@@ -120,4 +120,3 @@ export { IoBreadcrumbs };
 export const ioBreadcrumbs = function (arg0) {
     return IoBreadcrumbs.vConstructor(arg0);
 };
-//# sourceMappingURL=IoBreadcrumbs.js.map

@@ -180,4 +180,3 @@ export { IoPanel };
 export const ioPanel = function (arg0) {
     return IoPanel.vConstructor(arg0);
 };
-//# sourceMappingURL=IoPanel.js.map

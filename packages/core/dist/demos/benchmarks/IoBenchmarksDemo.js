@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { IoElement, Register, div, h2, h3, p, table, thead, tbody, tr, th, td } from '@io-gui/core';
-const RESULTS_URL = '/benchmarks/results.json';
+const RESULTS_URL = './benchmarks/results.json';
 function formatDuration(seconds) {
     if (seconds === null)
         return '—';
@@ -124,4 +124,3 @@ export class IoBenchmarksDemo extends IoElement {
 }
 Register(IoBenchmarksDemo);
 export const ioBenchmarksDemo = IoBenchmarksDemo.vConstructor;
-//# sourceMappingURL=IoBenchmarksDemo.js.map

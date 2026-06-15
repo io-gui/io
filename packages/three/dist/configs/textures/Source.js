@@ -7,4 +7,3 @@ registerEditorConfig(Source, [
 registerEditorGroups(Source, {
     Advanced: ['version'],
 });
-//# sourceMappingURL=Source.js.map

@@ -14,4 +14,3 @@ export declare class TodoList extends IoElement {
 }
 export declare const todoList: (arg0: TodoListProps) => import("@io-gui/core").VDOMElement;
 export {};
-//# sourceMappingURL=TodoList.d.ts.map

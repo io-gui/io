@@ -25,4 +25,3 @@ export { IoEuler };
 export const ioEuler = function (arg0) {
     return IoEuler.vConstructor(arg0);
 };
-//# sourceMappingURL=IoEuler.js.map

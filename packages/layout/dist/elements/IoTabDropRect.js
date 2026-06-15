@@ -99,4 +99,3 @@ IoTabDropRect = __decorate([
 ], IoTabDropRect);
 export const ioTabDropRectSingleton = new IoTabDropRect();
 document.body.appendChild(ioTabDropRectSingleton);
-//# sourceMappingURL=IoTabDropRect.js.map

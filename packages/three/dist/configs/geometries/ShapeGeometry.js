@@ -14,4 +14,3 @@ registerEditorConfig(ShapeGeometry, [
 registerEditorGroups(ShapeGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=ShapeGeometry.js.map

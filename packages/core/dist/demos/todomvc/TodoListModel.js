@@ -66,4 +66,3 @@ __decorate([
     ReactiveProperty({ type: NodeArray, init: 'this' })
 ], TodoListModel.prototype, "items", void 0);
 Register(TodoListModel);
-//# sourceMappingURL=TodoListModel.js.map

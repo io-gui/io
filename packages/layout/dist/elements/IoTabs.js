@@ -103,4 +103,3 @@ export { IoTabs };
 export const ioTabs = function (arg0) {
     return IoTabs.vConstructor(arg0);
 };
-//# sourceMappingURL=IoTabs.js.map

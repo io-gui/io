@@ -27,4 +27,3 @@ registerEditorGroups(Scene, {
     ],
     Advanced: [''],
 });
-//# sourceMappingURL=Scene.js.map

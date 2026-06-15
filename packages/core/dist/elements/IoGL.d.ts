@@ -25,4 +25,3 @@ export declare class IoGl extends IoElement {
     setUniform(name: string, value: unknown): void;
     Register(ioNodeConstructor: typeof IoElement): void;
 }
-//# sourceMappingURL=IoGL.d.ts.map

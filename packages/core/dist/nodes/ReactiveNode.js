@@ -478,4 +478,3 @@ export function dispose(node) {
     Object.defineProperty(node, '_disposed', { value: true });
 }
 ;
-//# sourceMappingURL=ReactiveNode.js.map

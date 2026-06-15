@@ -53,4 +53,3 @@ __decorate([
 ], TodoApp.prototype, "route", void 0);
 Register(TodoApp);
 export const todoApp = TodoApp.vConstructor;
-//# sourceMappingURL=TodoApp.js.map

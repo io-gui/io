@@ -55,4 +55,3 @@ export declare class IoMenuItem extends IoField {
     dispose(): void;
 }
 export declare const ioMenuItem: (arg0?: IoMenuItemProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoMenuItem.d.ts.map

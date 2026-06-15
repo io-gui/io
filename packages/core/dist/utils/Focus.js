@@ -144,4 +144,3 @@ function onIoFocusTo(event) {
     }
 }
 document.addEventListener('io-focus-to', onIoFocusTo);
-//# sourceMappingURL=Focus.js.map

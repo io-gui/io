@@ -325,4 +325,3 @@ export declare const disposeChildren: (element: IoElement) => void;
  */
 export declare const toVDOM: (element: IoElement | HTMLElement) => VDOMElement;
 export {};
-//# sourceMappingURL=VDOM.d.ts.map

@@ -25,4 +25,3 @@ export declare class IoColorBase extends IoElement {
     valueFromRgb(): void;
     valueChanged(): void;
 }
-//# sourceMappingURL=IoColorBase.d.ts.map

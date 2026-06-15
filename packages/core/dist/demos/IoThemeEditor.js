@@ -85,4 +85,3 @@ export class IoThemeEditor extends IoElement {
 }
 Register(IoThemeEditor);
 export const ioThemeEditor = IoThemeEditor.vConstructor;
-//# sourceMappingURL=IoThemeEditor.js.map

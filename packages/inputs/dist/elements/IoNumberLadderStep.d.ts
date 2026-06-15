@@ -18,4 +18,3 @@ export declare class IoNumberLadderStep extends IoField {
     changed(): void;
 }
 export declare const ioNumberLadderStep: (arg0?: IoNumberLadderStepProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoNumberLadderStep.d.ts.map

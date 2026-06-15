@@ -7,4 +7,3 @@ registerEditorConfig(InstancedBufferGeometry, [
 registerEditorGroups(InstancedBufferGeometry, {
     Instancing: ['instanceCount'],
 });
-//# sourceMappingURL=InstancedBufferGeometry.js.map

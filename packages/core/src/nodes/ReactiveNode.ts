@@ -183,7 +183,7 @@ export class ReactiveNode extends Object {
       const value = this._reactiveProperties.get(key as string)!.value
       if (typeof value === 'object' && value !== null && typeof (value as { toJSON?: () => Json }).toJSON === 'function') {
         out[key] = (value as { toJSON: () => Json }).toJSON()
-      } else if (typeof value === 'number') {
+      } else if (typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean') {
         out[key] = value
       }
     }
@@ -358,13 +358,7 @@ function applyNodeArrayAssignment(name: string, prop: ReactivePropertyInstance, 
     console.error(`Node: Property "${name}" should be initialized as a NodeArray!`, nodeArray)
   }
 
-  nodeArray.withInternalOperation(() => {
-    nodeArray.length = 0
-    nodeArray.push(...value as ReactiveNode[])
-    if (value.length === 0) {
-      nodeArray.dispatchMutation()
-    }
-  })
+  nodeArray.splice(0, nodeArray.length, ...(value as ReactiveNode[]))
   return true
 }
 

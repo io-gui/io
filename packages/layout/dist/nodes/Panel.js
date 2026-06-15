@@ -113,4 +113,3 @@ Panel = __decorate([
     Register
 ], Panel);
 export { Panel };
-//# sourceMappingURL=Panel.js.map

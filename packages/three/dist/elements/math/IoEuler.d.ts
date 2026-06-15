@@ -9,4 +9,3 @@ export declare class IoEuler extends IoVectorBase {
     constructor(args: IoEulerProps);
 }
 export declare const ioEuler: (arg0?: IoEulerProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoEuler.d.ts.map

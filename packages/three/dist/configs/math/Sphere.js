@@ -3,4 +3,3 @@ import { Sphere } from 'three/webgpu';
 registerEditorConfig(Object, [
     [Sphere, ioObject({ labelWidth: '64px' })],
 ]);
-//# sourceMappingURL=Sphere.js.map

@@ -18,4 +18,3 @@ registerEditorGroups(PropertyBinding, {
         'setValue',
     ],
 });
-//# sourceMappingURL=PropertyBinding.js.map

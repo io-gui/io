@@ -5,4 +5,3 @@ export class IoMarkdownDemo extends IoElement {
 }
 Register(IoMarkdownDemo);
 export const ioMarkdownDemo = IoMarkdownDemo.vConstructor;
-//# sourceMappingURL=IoMarkdownDemo.js.map

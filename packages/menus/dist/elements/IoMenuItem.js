@@ -383,4 +383,3 @@ export { IoMenuItem };
 export const ioMenuItem = function (arg0) {
     return IoMenuItem.vConstructor(arg0);
 };
-//# sourceMappingURL=IoMenuItem.js.map

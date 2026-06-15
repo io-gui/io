@@ -184,4 +184,3 @@ export const toVDOM = function (element) {
         children: element.children.length > 0 ? toVDOMChildren(element.children) : element.textContent
     };
 };
-//# sourceMappingURL=VDOM.js.map

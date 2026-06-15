@@ -100,4 +100,3 @@ export { IoSlider2d };
 export const ioSlider2d = function (arg0) {
     return IoSlider2d.vConstructor(arg0);
 };
-//# sourceMappingURL=IoSlider2d.js.map

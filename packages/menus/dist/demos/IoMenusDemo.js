@@ -297,4 +297,3 @@ class IoMenusDemo extends IoElement {
 }
 Register(IoMenusDemo);
 export const ioMenusDemo = IoMenusDemo.vConstructor;
-//# sourceMappingURL=IoMenusDemo.js.map

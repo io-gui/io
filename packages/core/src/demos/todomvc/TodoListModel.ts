@@ -1,5 +1,9 @@
 import { ReactiveNode, NodeArray, Register, ReactiveProperty } from '@io-gui/core'
-import { TodoItemModel } from './TodoItemModel.js'
+import { TodoItemModel, TodoItemProps } from './TodoItemModel.js'
+
+export type TodoListProps = {
+  items: TodoItemProps[]
+}
 
 export class TodoListModel extends ReactiveNode {
 
@@ -42,9 +46,8 @@ export class TodoListModel extends ReactiveNode {
     return this.items.every(item => item.completed)
   }
 
-  constructor(args: any) {
-    args = { ...args }
-    args.items = args.items.map((item: any) => new TodoItemModel({...item}))
+  constructor(args: TodoListProps = {items: []}) {
+    args.items = args.items.map(item => new TodoItemModel(item))
     super(args)
   }
 
@@ -60,17 +63,10 @@ export class TodoListModel extends ReactiveNode {
     this.dispatchMutation()
   }
 
-  override toJSON() {
-    return {
-      items: this.items.map(item => item.toJSON()),
-    }
-  }
-
-  override applyJSON(json: any) {
-    this.setProperties({
-      items: json.items.map((item: any) => new TodoItemModel(item)),
-    })
+  override applyJSON(json: TodoListProps) {
+    this.setProperty('items', json.items.map((item) => new TodoItemModel(item)))
     return this
   }
+
 }
 Register(TodoListModel)
