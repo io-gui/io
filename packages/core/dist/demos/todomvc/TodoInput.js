@@ -10,12 +10,14 @@ import { TodoItemModel } from './TodoItemModel.js';
 export class TodoInput extends IoElement {
     static get Style() {
         return /* css */ `
-    :host {
-      display: contents;
-    }
+      :host {
+        display: contents;
+      }
     `;
     }
-    constructor(args = {}) { super(args); }
+    constructor(args = {}) {
+        super(args);
+    }
     onInputKey(event) {
         if (event.key === 'Enter') {
             const inputElement = this.$.input;
@@ -32,7 +34,7 @@ export class TodoInput extends IoElement {
             inputElement.focus();
         }
     }
-    changed() {
+    ready() {
         this.render([
             input({ id: 'input', class: 'new-todo', placeholder: 'What needs to be done?', '@keyup': this.onInputKey, autofocus: true }),
         ]);

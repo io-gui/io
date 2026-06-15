@@ -36,9 +36,8 @@ export class TodoListModel extends ReactiveNode {
     get allCompleted() {
         return this.items.every(item => item.completed);
     }
-    constructor(args) {
-        args = { ...args };
-        args.items = args.items.map((item) => new TodoItemModel({ ...item }));
+    constructor(args = { items: [] }) {
+        args.items = args.items.map(item => new TodoItemModel(item));
         super(args);
     }
     completeAll = () => {
@@ -50,15 +49,8 @@ export class TodoListModel extends ReactiveNode {
     itemsMutated() {
         this.dispatchMutation();
     }
-    toJSON() {
-        return {
-            items: this.items.map(item => item.toJSON()),
-        };
-    }
     applyJSON(json) {
-        this.setProperties({
-            items: json.items.map((item) => new TodoItemModel(item)),
-        });
+        this.setProperty('items', json.items.map((item) => new TodoItemModel(item)));
         return this;
     }
 }

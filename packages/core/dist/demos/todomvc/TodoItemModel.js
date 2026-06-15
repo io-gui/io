@@ -12,13 +12,6 @@ export class TodoItemModel extends ReactiveNode {
     delete = () => {
         this.dispatch('delete-item', { item: this }, true);
     };
-    applyJSON(json) {
-        this.setProperties({
-            title: json.title ?? '',
-            completed: json.completed ?? false,
-        });
-        return this;
-    }
 }
 __decorate([
     ReactiveProperty({ type: String })

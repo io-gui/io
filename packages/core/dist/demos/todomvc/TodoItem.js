@@ -10,14 +10,14 @@ import { TodoListModel } from './TodoListModel.js';
 export class TodoItem extends IoElement {
     static get Style() {
         return /* css */ `
-    :host {
-      display: contents;
-    }
+      :host {
+        display: contents;
+      }
     `;
     }
-    $input;
-    _originalTitle;
-    constructor(args = {}) { super(args); }
+    constructor(args = {}) {
+        super(args);
+    }
     itemMutated() {
         this.changed();
     }

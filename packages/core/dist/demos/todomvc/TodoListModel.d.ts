@@ -1,5 +1,8 @@
 import { ReactiveNode } from '@io-gui/core';
-import { TodoItemModel } from './TodoItemModel.js';
+import { TodoItemModel, TodoItemProps } from './TodoItemModel.js';
+export type TodoListProps = {
+    items: TodoItemProps[];
+};
 export declare class TodoListModel extends ReactiveNode {
     items: TodoItemModel[];
     static get Listeners(): {
@@ -15,12 +18,9 @@ export declare class TodoListModel extends ReactiveNode {
     get completedCount(): number;
     get activeCount(): number;
     get allCompleted(): boolean;
-    constructor(args: any);
+    constructor(args?: TodoListProps);
     completeAll: () => void;
     clearCompleted: () => void;
     itemsMutated(): void;
-    toJSON(): {
-        items: import("@io-gui/core").Json[];
-    };
-    applyJSON(json: any): this;
+    applyJSON(json: TodoListProps): this;
 }

@@ -11,7 +11,7 @@ import { todoList } from './TodoList.js';
 import { todoFooter } from './TodoFooter.js';
 $.permit();
 const $route = $({ key: 'route', storage: 'hash', value: 'all' });
-const $model = $({ key: 'model', storage: 'local', value: new TodoListModel({ items: [] }) });
+const $model = $({ key: 'model', storage: 'local', value: new TodoListModel() });
 export class TodoApp extends IoElement {
     ready() {
         this.changed();
@@ -29,18 +29,11 @@ export class TodoApp extends IoElement {
                 todoList({ class: 'todo-list', model: this.model, route: this.route }),
                 this.model.count ? todoFooter({ class: 'footer', model: this.model, route: this.bind('route') }) : null,
             ]),
+            // TODO: implement text and DOM mixed content rendering
             div({ class: 'info' }, [
                 p('Double-click to edit a todo'),
-                p([
-                    // TODO: implement text and DOM mixed content rendering
-                    span('Created with '),
-                    a({ href: 'https://iogui.dev', target: '_blank' }, 'Io-Gui'),
-                ]),
-                p([
-                    // TODO: implement text and DOM mixed content rendering
-                    span('Part of '),
-                    a({ href: 'http://todomvc.com/', target: '_blank' }, 'TodoMVC')
-                ])
+                p([span('Created with '), a({ href: 'https://iogui.dev', target: '_blank' }, 'Io-Gui')]),
+                p([span('Part of '), a({ href: 'http://todomvc.com/', target: '_blank' }, 'TodoMVC')])
             ])
         ]);
     }

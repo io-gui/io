@@ -116,7 +116,7 @@ let ReactiveNode = ReactiveNode_1 = class ReactiveNode extends Object {
             if (typeof value === 'object' && value !== null && typeof value.toJSON === 'function') {
                 out[key] = value.toJSON();
             }
-            else if (typeof value === 'number') {
+            else if (typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean') {
                 out[key] = value;
             }
         }
@@ -290,13 +290,7 @@ function applyNodeArrayAssignment(name, prop, value) {
     debug: if (nodeArray.constructor !== NodeArray) {
         console.error(`Node: Property "${name}" should be initialized as a NodeArray!`, nodeArray);
     }
-    nodeArray.withInternalOperation(() => {
-        nodeArray.length = 0;
-        nodeArray.push(...value);
-        if (value.length === 0) {
-            nodeArray.dispatchMutation();
-        }
-    });
+    nodeArray.splice(0, nodeArray.length, ...value);
     return true;
 }
 function disconnectPropertyValue(node, prop, oldValue) {

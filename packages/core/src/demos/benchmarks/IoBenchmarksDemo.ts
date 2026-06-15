@@ -12,7 +12,7 @@ const COMPARISON_METRICS = [
 const MARGIN_KEY = 'rme'
 
 function formatDuration(ms: number | undefined) {
-  if (ms == null) return 'NA'
+  if (ms === null) return 'NA'
   if (ms === 0) return '—'
   if (ms < 0.001) return `${(ms * 1e6).toFixed(1)} ns`
   if (ms < 1) return `${(ms * 1000).toFixed(1)} µs`
@@ -21,19 +21,19 @@ function formatDuration(ms: number | undefined) {
 }
 
 function formatMargin(rme: number | undefined) {
-  if (rme == null) return 'NA'
+  if (rme === null) return 'NA'
   return `${rme.toFixed(2)}%`
 }
 
 function averageMargin(baseline: number | undefined, current: number | undefined) {
-  if (baseline == null && current == null) return undefined
-  if (baseline == null) return current
-  if (current == null) return baseline
+  if (baseline === null && current === null) return undefined
+  if (baseline === null) return current
+  if (current === null) return baseline
   return (baseline + current) / 2
 }
 
 function formatDeltaPercent(baseline: number | undefined, current: number | undefined) {
-  if (baseline == null || current == null) return 'NA'
+  if (baseline === null || current === null) return 'NA'
   if (baseline === 0 && current === 0) return '0.0%'
   if (baseline === 0) return 'NA'
   const pct = ((current - baseline) / baseline) * 100
@@ -254,7 +254,7 @@ export class IoBenchmarksDemo extends IoElement {
       p({class: 'path'}, `Current: ${RESULTS_URL}`),
       p({class: 'path'}, `Baseline: ${BASELINE_URL}`),
       this.#baselineMissing
-        ? p({class: 'notice'}, `Baseline not found — run pnpm bench:baseline to create it. Baseline columns show NA.`)
+        ? p({class: 'notice'}, 'Baseline not found — run pnpm bench:baseline to create it. Baseline columns show NA.')
         : null,
       ...collectGroupNames(this.#report, this.#baseline).map(groupName =>
         this.renderGroup(groupName, baselineIndex)

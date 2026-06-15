@@ -14,7 +14,9 @@ export class TodoFooter extends IoElement {
       }
     `;
     }
-    constructor(args = {}) { super(args); }
+    constructor(args = {}) {
+        super(args);
+    }
     onRouteClicked(event) {
         const target = event.target;
         this.route = target.innerText.toLowerCase();

@@ -22,7 +22,7 @@ class StoredModel extends ReactiveNode {
   }
   declare items: NodeArray<StoredItem>
 
-  constructor(args: { items?: Array<{ title?: string, completed?: boolean }> } = {}) {
+  constructor(args: { items?: Array<{ title?: string; completed?: boolean }> } = {}) {
     const items = (args.items ?? []).map(item => new StoredItem(item))
     super({ items })
   }
