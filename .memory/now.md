@@ -1,3 +1,3 @@
 # Current Focus
 
-Node benchmarks: `pnpm bench`. Browser benchmarks: `pnpm bench:browser` (`*.browser.bench.ts`).
+Fixed bundle copyright preservation in `vite.bundle.config.ts` (Vite 8/Rolldown regression).

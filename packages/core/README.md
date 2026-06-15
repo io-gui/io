@@ -1,6 +1,6 @@
 # @io-gui/core
 
-A lightweight (~22KB gzipped) reactive framework for nodes and custom elements.
+A lightweight (~25KB gzipped) core reactive library for Io-Gui framework.
 
 ## Core Classes
 

@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import fs from 'node:fs'
 import path from 'node:path'
 import { resolveConfig } from './vite.config'
 import strip from '@rollup/plugin-strip'
@@ -13,14 +14,18 @@ function getExternals(bundleRoot: string): RegExp[] {
     return [...common, /^three/]
   }
 
-  if (bundleRoot.endsWith('markdown')) {
-    return [...common, /^marked/, /^dompurify/, /^marked-highlight/]
-  }
-
   return common
 }
 
+function readLicenseBanner(bundleRoot: string): string {
+  const indexPath = path.resolve(bundleRoot, 'src/index.ts')
+  const source = fs.readFileSync(indexPath, 'utf8')
+  const match = source.match(/^\/\*![\s\S]*?\*\//)
+  return match ? `${match[0]}\n` : ''
+}
+
 const externals = getExternals(bundleRoot)
+const licenseBanner = readLicenseBanner(rootDir)
 
 export default defineConfig({
   root: rootDir,
@@ -65,8 +70,11 @@ export default defineConfig({
         )
       },
       output: {
-        preserveModules: false,
-        inlineDynamicImports: true,
+        banner: licenseBanner,
+        comments: {
+          annotation: true,
+          legal: true,
+        },
       },
     },
   },
