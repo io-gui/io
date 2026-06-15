@@ -34,7 +34,7 @@ let IoColorPicker = class IoColorPicker extends IoElement {
         };
     }
     get expanded() {
-        return Panel.expanded && Panel.value === this.value;
+        return Panel.expanded && Panel.src === this;
     }
     ready() {
         this.valueChanged();
@@ -58,37 +58,30 @@ let IoColorPicker = class IoColorPicker extends IoElement {
                 }
         }
     }
-    onValueSet() {
+    onPanelValueInput() {
         this.dispatch('value-input', { property: 'value', value: this.value }, true);
     }
-    onPanelCollapse() {
-        // TODO: Reconsider this.
-        if (!this.expanded) {
-            this.removePanelListeners();
-        }
-    }
-    removePanelListeners() {
-        Panel.removeEventListener('value-input', this.onValueSet);
-        Panel.removeEventListener('expanded-changed', this.onPanelCollapse);
-    }
     expand() {
-        Panel.value = this.value;
-        Panel.expanded = true;
-        Panel.addEventListener('value-input', this.onValueSet);
-        Panel.addEventListener('expanded-changed', this.onPanelCollapse);
+        Panel.setProperties({
+            src: this,
+            value: this.value,
+            expanded: true
+        });
         nudge(Panel, this, 'right');
         Panel.firstChild?.firstChild?.focus();
     }
     collapse() {
-        Panel.expanded = false;
-        Panel.value = { r: 1, g: 1, b: 1, a: 1 };
-        this.removePanelListeners();
+        if (Panel.src === this) {
+            Panel.src = null;
+            Panel.expanded = false;
+        }
     }
     disconnectedCallback() {
         super.disconnectedCallback();
-        this.removePanelListeners();
-        if (this.expanded)
-            this.collapse();
+        if (Panel.src === this) {
+            Panel.src = null;
+            Panel.expanded = false;
+        }
     }
     valueChanged() {
         this.render([

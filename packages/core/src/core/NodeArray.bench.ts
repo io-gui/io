@@ -7,7 +7,7 @@ import { NodeArray } from './NodeArray.js'
 class BenchArrayNode extends ReactiveNode {
   static override get ReactiveProperties(): ReactivePropertyDefinitions {
     return {
-      items: {type: NodeArray, init: null},
+      items: {type: NodeArray, init: 'this'},
     }
   }
   declare items: NodeArray<BenchItemNode>

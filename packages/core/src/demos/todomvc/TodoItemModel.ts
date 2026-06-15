@@ -1,0 +1,26 @@
+import { ReactiveNode, Register, ReactiveProperty } from '@io-gui/core'
+
+export class TodoItemModel extends ReactiveNode {
+  @ReactiveProperty({type: String})
+  declare title: string
+
+  @ReactiveProperty({type: Boolean})
+  declare completed: boolean
+
+  toggle = () => {
+    this.completed = !this.completed
+  }
+
+  delete = () => {
+    this.dispatch('delete-item', {item: this}, true)
+  }
+
+  override applyJSON(json: any) {
+    this.setProperties({
+      title: json.title ?? '',
+      completed: json.completed ?? false,
+    })
+    return this
+  }
+}
+Register(TodoItemModel)

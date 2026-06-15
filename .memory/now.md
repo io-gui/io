@@ -1,3 +1,3 @@
 # Current Focus
 
-Simplified IoColorPicker ↔ IoColorPanelSingleton via `src` ownership (IoNumber ladder pattern). No cross-element event listeners.
+Node benchmarks: `pnpm bench`. Browser benchmarks: `pnpm bench:browser` (`*.browser.bench.ts`).

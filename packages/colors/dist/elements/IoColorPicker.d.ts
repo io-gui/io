@@ -21,9 +21,7 @@ export declare class IoColorPicker extends IoElement {
     ready(): void;
     onClick(): void;
     onKeydown(event: KeyboardEvent): void;
-    onValueSet(): void;
-    onPanelCollapse(): void;
-    removePanelListeners(): void;
+    onPanelValueInput(): void;
     expand(): void;
     collapse(): void;
     disconnectedCallback(): void;

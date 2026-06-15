@@ -46,10 +46,6 @@
       "default": "./dist/index.js"
     }
   },
-  "scripts": {
-    "clean": "rm -rf dist tsconfig.tsbuildinfo",
-    "build": "tsc -b"
-  },
   "devDependencies": {
     "@io-gui/core": "workspace:*",
     "@io-gui/inputs": "workspace:*",

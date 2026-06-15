@@ -4,7 +4,8 @@
  * Usage:
  *   pnpm test                          - Run unit tests (browser)
  *   pnpm test:coverage                 - Run core coverage with thresholds
- *   pnpm bench                         - Run all *.bench.ts benchmarks (Node)
+ *   pnpm bench                         - Run Node *.bench.ts benchmarks
+ *   pnpm bench:browser                 - Run browser *.browser.bench.ts benchmarks
  *   pnpm test:core                     - Run core package tests
  *   pnpm bench packages/core           - Run benchmarks in one package
  */
@@ -66,7 +67,10 @@ export default defineConfig({
         test: {
           name: 'bench',
           include: ['packages/*/src/**/*.bench.ts'],
-          browser: { enabled: false },
+          benchmark: {
+            include: ['packages/*/src/**/*.bench.ts'],
+          },
+          browser: browserUnitConfig,
           setupFiles: ['packages/core/src/testing/bench-setup.ts'],
         },
       },
