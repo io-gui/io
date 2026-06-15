@@ -8,7 +8,7 @@ import { ioColorPicker } from './IoColorPicker.js'
  **/
 @Register
 export class IoColorRgba extends IoColorBase {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -48,7 +48,7 @@ export class IoColorRgba extends IoColorBase {
     this.dispatch('value-input', {property: 'value', value: this.value}, false)
   }
 
-  changed() {
+  override changed() {
     this.render([
       // Consider removing global id collisions.
       ioNumber({id: 'r', value: this.value.r, min: 0, max: 1, step: 0.001, ladder: true, '@value-input': this._onNumberValueInput}),

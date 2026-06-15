@@ -432,6 +432,7 @@ const animate = () => {
     requestAnimationFrame(animate);
 };
 requestAnimationFrame(animate);
+/** @internal Demo: reactive change graph visualization. */
 export class IoChangeVisualization extends IoElement {
     static get Style() {
         return /* css */ `

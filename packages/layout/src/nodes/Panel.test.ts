@@ -373,7 +373,7 @@ describe('Panel', () => {
 
   })
 
-  describe('Deserialization - fromJSON', () => {
+  describe('Deserialization - applyJSON', () => {
 
     it('should restore panel from JSON', () => {
       const panel = new Panel({
@@ -381,7 +381,7 @@ describe('Panel', () => {
         tabs: [{ id: 'placeholder' }]
       })
 
-      panel.fromJSON({
+      panel.applyJSON({
         type: 'panel',
         tabs: [
           { id: 'restored1', label: 'Restored' },
@@ -404,7 +404,7 @@ describe('Panel', () => {
         tabs: [{ id: 'old1' }, { id: 'old2' }, { id: 'old3' }]
       })
 
-      panel.fromJSON({
+      panel.applyJSON({
         type: 'panel',
         tabs: [{ id: 'new1' }]
       })
@@ -420,7 +420,7 @@ describe('Panel', () => {
         flex: '0 0 100px'
       })
 
-      panel.fromJSON({
+      panel.applyJSON({
         type: 'panel',
         tabs: [{ id: 'restored' }]
       } as PanelProps)
@@ -434,7 +434,7 @@ describe('Panel', () => {
         tabs: [{ id: 'test' }]
       })
 
-      const result = panel.fromJSON({
+      const result = panel.applyJSON({
         type: 'panel',
         tabs: [{ id: 'chained' }]
       })
@@ -442,14 +442,14 @@ describe('Panel', () => {
       expect(result).toBe(panel)
     })
 
-    it('should collapse duplicate tab ids in fromJSON', () => {
+    it('should collapse duplicate tab ids in applyJSON', () => {
 
       const panel = new Panel({
         type: 'panel',
         tabs: [{ id: 'original' }]
       })
 
-      panel.fromJSON({
+      panel.applyJSON({
         type: 'panel',
         tabs: [
           { id: 'dup', label: 'First' },
@@ -469,7 +469,7 @@ describe('Panel', () => {
 
   describe('Serialization Roundtrip', () => {
 
-    it('should preserve data through toJSON/fromJSON roundtrip', () => {
+    it('should preserve data through toJSON/applyJSON roundtrip', () => {
       const original = new Panel({
         type: 'panel',
         tabs: [
@@ -484,7 +484,7 @@ describe('Panel', () => {
         type: 'panel',
         tabs: [{ id: 'temp' }]
       })
-      restored.fromJSON(json)
+      restored.applyJSON(json)
 
       expect(restored.tabs.length).toBe(original.tabs.length)
       expect(restored.flex).toBe(original.flex)
@@ -512,7 +512,7 @@ describe('Panel', () => {
         type: 'panel',
         tabs: [{ id: 'temp' }]
       })
-      restored.fromJSON(json1)
+      restored.applyJSON(json1)
       const json2 = restored.toJSON()
 
       expect(json2).toEqual(json1)

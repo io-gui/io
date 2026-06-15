@@ -18,7 +18,7 @@ export type IoNumberSliderProps = IoElementProps & {
 @Register
 export class IoNumberSlider extends IoElement {
 
-  static get Style() {
+  static override get Style() {
     return /* css */`
     :host {
       display: flex;
@@ -66,10 +66,10 @@ export class IoNumberSlider extends IoElement {
     this.value = event.detail.value
     this.dispatch('value-input', event.detail, false)
   }
-  ready() {
+  override ready() {
     this.changed()
   }
-  changed() {
+  override changed() {
     this.render([
       ioNumber({
         id: 'number',

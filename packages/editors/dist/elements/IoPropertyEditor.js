@@ -130,7 +130,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
                 };
                 vChildren.push(widgetWithValue);
             }
-            if (this.properties !== undefined) {
+            if (this.properties !== undefined && this.properties.length > 0) {
                 properties.push(...this.properties);
             }
             else {

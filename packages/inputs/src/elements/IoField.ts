@@ -2,7 +2,7 @@ import { Register, ReactiveProperty, IoElement, IoElementProps, span, Property, 
 import { ioIcon } from '@io-gui/icons'
 
 export type IoFieldProps = IoElementProps & {
-  value?: WithBinding<any>
+  value?: WithBinding<unknown>
   icon?: WithBinding<string>
   label?: WithBinding<string>
   selected?: WithBinding<boolean>
@@ -13,7 +13,7 @@ export type IoFieldProps = IoElementProps & {
 
 @Register
 export class IoField extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         cursor: pointer;
@@ -30,7 +30,7 @@ export class IoField extends IoElement {
         font-size: var(--io_fontSize);
         text-size-adjust: 100%;
         overflow: hidden;
-        @apply --unselectable;
+        @apply --io-unselectable;
       }
       :host:focus {
         text-overflow: inherit;
@@ -88,7 +88,7 @@ export class IoField extends IoElement {
   }
 
   @ReactiveProperty({value: ''})
-  declare value: any
+  declare value: unknown
 
   @ReactiveProperty({type: String, value: ''})
   declare icon: string
@@ -121,7 +121,7 @@ export class IoField extends IoElement {
   @Property(0)
   declare tabIndex: number
 
-  static get Listeners(): ListenerDefinitions { // TODO: fix listener types
+  static override get Listeners(): ListenerDefinitions { // TODO: fix listener types
     return {
       'focus': 'onFocus',
       'pointerdown': 'onPointerdown',
@@ -194,7 +194,7 @@ export class IoField extends IoElement {
     this.removeEventListener('touchmove', this.onTouchmove)
     this.removeEventListener('touchend', this.onTouchend)
   }
-  inputValue(value: any) {
+  inputValue(value: unknown) {
     if (this.value !== value || typeof this.value === 'object') {
       const oldValue = this.value
       this.setProperty('value', value)
@@ -285,7 +285,7 @@ export class IoField extends IoElement {
       this.removeAttribute('aria-disabled')
     }
   }
-  changed() {
+  override changed() {
     this.render([
       this.icon ? ioIcon({value: this.icon}) : null,
       this.value !== undefined ? span(String(this.value)) : null,

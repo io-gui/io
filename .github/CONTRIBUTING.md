@@ -48,13 +48,13 @@ Io-Gui is organized as a monorepo with the following packages:
 ## Development Commands
 
 ### Essential Commands
-- `pnpm dev` - Start watch mode for all packages (TypeScript compilation)
+- `pnpm dev` - Start Vite dev server and TypeScript watch mode (`tsc -b -w`) in parallel
 - `pnpm build` - Build all packages
 - `pnpm bundle` - Bundle all packages with Rollup
 - `pnpm lint` - Lint all packages (auto-fixes)
-- `pnpm test` - Run tests with web-test-runner
+- `pnpm test` - Run tests with Vitest
 - `pnpm test:watch` - Run tests in watch mode
-- `pnpm serve` - Start @web/dev-server for development
+- `pnpm bench` - Run all `*.bench.ts` benchmarks (Node); writes `benchmarks/results.json`. First run shows absolute numbers; later runs compare against the previous local run in the terminal. Optionally attach `benchmarks/results.json` to performance PRs.
 - `pnpm clean` - Clean all build directories
 
 ## Development Workflow
@@ -101,13 +101,13 @@ Io-Gui is organized as a monorepo with the following packages:
 - Use decorators (`@Register`, `@ReactiveProperty`, `@Property`)
 - Strong typing with interfaces and type definitions
 - Avoid using `any` whenever possible
-- Import modules with `.js` extensions if they are in the same package e.g. `import { Node } from '../nodes/Node.js'`
+- Import modules with `.js` extensions if they are in the same package e.g. `import { ReactiveNode } from '../nodes/ReactiveNode.js'`
 - Import modules from other package using scoped package name instead e.g. `import { IoElement } from '@io-gui/core'`
 - Virtual DOM factories for Elements are lower-cased. e.g. `ioMarkdown` is a virtual DOM factory for `IoMarkdown` element.
 
 ### Defining New Components
 - Elements extend `IoElement`
-- Nodes (non-DOM Objects) extend `IoNode`
+- Nodes (non-DOM Objects) extend `ReactiveNode`
 - Nodes and elements require registration using `Register(IoClassConstructor)` or `@Register` decorator
 - CSS styles defined in static `static get Style()` string
 - CSS selectors have to start with `:host` selector which represents the host element
@@ -137,7 +137,7 @@ Io-Gui is organized as a monorepo with the following packages:
 ## Development
 The framework has no runtime dependencies - only development dependencies. It uses `pnpm` as the package manager.
 - Make changes to source files in `/packages/*/src/`
-- TypeScript will compile to `/packages/*/build/`
+- TypeScript will compile to `/packages/*/dist/`
 
 ## Submitting Changes
 

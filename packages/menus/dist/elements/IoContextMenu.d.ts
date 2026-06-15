@@ -19,12 +19,14 @@ export declare class IoContextMenu extends IoElement {
     button: number;
     $options: IoMenuOptions;
     _contextTimeout: ReturnType<typeof setTimeout>;
+    _listenerParent: HTMLElement | null;
     static get ReactiveProperties(): any;
     constructor(args: IoContextMenuProps);
     init(): void;
     optionChanged(): void;
     connectedCallback(): void;
     disconnectedCallback(): void;
+    releasePointerListeners(): void;
     getBoundingClientRect(): DOMRect;
     onContextmenu(event: MouseEvent): void;
     onPointerdown(event: PointerEvent): void;

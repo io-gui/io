@@ -1,47 +1,26 @@
 import { Binding } from './Binding.js'
+import { isIoValue } from './ReactiveCore.js'
 import { AnyConstructor, ReactiveNode } from '../nodes/ReactiveNode.js'
 import { IoElement } from '../elements/IoElement.js'
 import { NodeArray } from '../core/NodeArray.js'
 
-/**
- * Configuration for a property of a ReactiveNode class.
- * @typedef {Object} ReactivePropertyDefinition
- * @property {*} [value] The property's value. Can be any type unless `type` is specified.
- * @property {AnyConstructor} [type] Constructor function defining the property's type.
- * @property {Binding} [binding] Binding object for two-way data synchronization.
- * @property {boolean} [reflect] Whether to reflect the property to an HTML attribute.
- * @property {*} [init] Initialization arguments for constructing initial value.
- */
 export type ReactivePropertyDefinition= {
-  value?: any
+  value?: unknown
   type?: AnyConstructor
-  binding?: Binding
+  binding?: Binding<unknown>
   reflect?: boolean
-  init?: any
+  init?: unknown
 }
 
-/**
- * Allows loose definition of properties by specifying only partial definitions, such as default value, type or a binding object.
- * @typedef {(string|number|boolean|Array<*>|null|undefined|AnyConstructor|Binding|ReactivePropertyDefinition)} ReactivePropertyDefinitionLoose
- */
-export type ReactivePropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding | ReactivePropertyDefinition
+export type ReactivePropertyDefinitionLoose = string | number | boolean | unknown[] | null | undefined | AnyConstructor | Binding<unknown> | ReactivePropertyDefinition
 
-/**
- * Instantiates a property definition object from a loosely or strongly typed property definition.
- * It facilitates merging of inherited property definitions from the prototype chain.
- * @class
- * @property {*} [value] The property's value. Can be any type.
- * @property {AnyConstructor} [type] Constructor function defining the property's type.
- * @property {Binding} [binding] Binding object for two-way data synchronization.
- * @property {boolean} [reflect] Whether to reflect the property to an HTML attribute.
- * @property {*} [init] Initialization arguments for constructing initial values.
- */
+/** Normalized reactive property definition merged from decorators and static getters. */
 export class ReactiveProtoProperty {
-  declare value?: any
+  declare value?: unknown
   declare type?: AnyConstructor
-  declare binding?: Binding
+  declare binding?: Binding<unknown>
   declare reflect?: boolean
-  declare init?: any
+  declare init?: unknown
   /**
    * Creates a property definition from various input types.
    * @param {ReactivePropertyDefinitionLoose} def Input definition which can be:
@@ -98,7 +77,13 @@ export class ReactiveProtoProperty {
    * @returns {object} A plain object suitable for JSON serialization
    */
   toJSON() {
-    const json: any = {
+    const json: {
+      value?: unknown
+      type?: AnyConstructor | string
+      reflect?: boolean
+      init?: unknown
+      binding?: Binding<unknown>
+    } = {
       value: this.value,
       type: this.type,
       reflect: this.reflect,
@@ -106,7 +91,7 @@ export class ReactiveProtoProperty {
       binding: this.binding,
     }
     if (json.value && typeof json.value === 'object') {
-      json.value = json.value.constructor.name
+      json.value = (json.value as object).constructor.name
     }
     if (json.type && typeof json.type === 'function') {
       json.type = json.type.name
@@ -115,14 +100,19 @@ export class ReactiveProtoProperty {
   }
 }
 
-function decodeInitArgument(item: any, node: ReactiveNode | IoElement) {
+function decodeInitArgument(item: unknown, node: ReactiveNode | IoElement): unknown {
   if (item === 'this') {
     return node
   } else if (typeof item === 'string' && item.startsWith('this.')) {
     const keys = item.split('.')
-    let target: any = node
+    let target: unknown = node
     for (let i = 1; i < keys.length; i++) {
-      target = target[keys[i]]
+      if (typeof target === 'object' && target !== null) {
+        target = (target as Record<string, unknown>)[keys[i]]
+      } else {
+        target = undefined
+        break
+      }
     }
     if (target) return target
     console.error(`ReactivePropertyInstance: Invalid path ${item}`)
@@ -131,31 +121,53 @@ function decodeInitArgument(item: any, node: ReactiveNode | IoElement) {
 
 export type ObservationType = 'none' | 'io' | 'object' | 'nodearray'
 
-function isIoValue(value: any): boolean {
-  return typeof value === 'object' && value !== null && (value._isNode || value._isIoElement)
+type MutationListenerNode = ReactiveNode | IoElement & {
+  _hasWindowMutationListener?: boolean
+  _hasSelfMutationListener?: boolean
+}
+
+export function ensureWindowMutationListener(node: ReactiveNode | IoElement) {
+  const target = node as MutationListenerNode
+  if (target._hasWindowMutationListener) return
+  target._hasWindowMutationListener = true
+  window.addEventListener('io-object-mutation', node.onPropertyMutated as unknown as EventListener)
+}
+
+export function removeWindowMutationListener(node: ReactiveNode | IoElement) {
+  const target = node as MutationListenerNode
+  if (!target._hasWindowMutationListener) return
+  target._hasWindowMutationListener = false
+  window.removeEventListener('io-object-mutation', node.onPropertyMutated as unknown as EventListener)
+}
+
+export function ensureSelfMutationListener(node: ReactiveNode | IoElement) {
+  const target = node as MutationListenerNode
+  if (target._hasSelfMutationListener) return
+  target._hasSelfMutationListener = true
+  node.addEventListener('io-object-mutation', node.onPropertyMutated)
+}
+
+export function removeSelfMutationListener(node: ReactiveNode | IoElement) {
+  const target = node as MutationListenerNode
+  if (!target._hasSelfMutationListener) return
+  target._hasSelfMutationListener = false
+  node.removeEventListener('io-object-mutation', node.onPropertyMutated)
 }
 
 /**
- * Manages mutation observation state for a reactive property.
- * - 'none': Primitives (String, Number, Boolean) - no mutation observation
- * - 'io': Io types (ReactiveNode, IoElement subclasses) - observe on the value itself
- * - 'nodearray': NodeArray - registers as observer, receives mutations via self-listener
- * - 'object': Non-Io objects (Object, Array, etc.) - observe via window (global event bus)
+ * Tracks mutation observation mode and listener wiring for one reactive property.
+ * @see ObservationType
  */
 export class Observer {
   declare private readonly node: ReactiveNode | IoElement
-  declare private _hasSelfMutationListener: boolean
-  declare private _hasWindowMutationListener: boolean
   type: ObservationType = 'none'
   observing = false
 
   constructor(node: ReactiveNode | IoElement) {
     Object.defineProperty(this, 'node', {enumerable: false, configurable: false, writable: false, value: node})
-    Object.defineProperty(this, '_hasSelfMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
-    Object.defineProperty(this, '_hasWindowMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
   }
 
-  start(value: any) {
+  start(value: unknown) {
     if (this.observing) return
     if (!value || typeof value !== 'object') return
 
@@ -166,62 +178,39 @@ export class Observer {
     } else if (value instanceof NodeArray) {
       this.type = 'nodearray'
       this.observing = true
-      // Register this node as an observer of the NodeArray
       value.addObserver(this.node)
-      // Also need self-listener to handle the dispatched events
-      if (!this._hasSelfMutationListener) {
-        this._hasSelfMutationListener = true
-        this.node.addEventListener('io-object-mutation', this.node.onPropertyMutated)
-      }
+      ensureSelfMutationListener(this.node)
     } else {
       this.type = 'object'
       this.observing = true
-      if (!this._hasWindowMutationListener) {
-        this._hasWindowMutationListener = true
-        window.addEventListener('io-object-mutation', this.node.onPropertyMutated as unknown as EventListener)
-      }
+      ensureWindowMutationListener(this.node)
     }
   }
 
-  stop(value: any) {
-    // TODO: Reconsider
-    // if (!this.observing) return
-    // if (this.type === 'io' && !value._disposed) {
+  stop(value: unknown) {
     if (isIoValue(value) && !value._disposed) {
       value.removeEventListener('io-object-mutation', this.node.onPropertyMutated)
     } else if (value instanceof NodeArray) {
       value.removeObserver(this.node)
     }
     this.observing = false
-    // Note: Window and self listeners are removed at dispose time, not here
   }
 
-  dispose() {
-    if (this._hasSelfMutationListener) {
-      this.node.removeEventListener('io-object-mutation', this.node.onPropertyMutated)
-      this._hasSelfMutationListener = false
-    }
-    if (this._hasWindowMutationListener) {
-      window.removeEventListener('io-object-mutation', this.node.onPropertyMutated as unknown as EventListener)
-      this._hasWindowMutationListener = false
-    }
-  }
+  dispose() {}
 }
 
-/**
- * ReactivePropertyInstance object constructed from `ReactiveProtoProperty`.
- */
+/** Runtime reactive property: value, type, binding, reflect, and mutation observer. */
 export class ReactivePropertyInstance {
   // Property value.
-  value?: any
+  value?: unknown
   // Constructor of the property value.
   type?: AnyConstructor
   // Binding object.
-  binding?: Binding
+  binding?: Binding<unknown>
   // Reflects to HTML attribute.
   reflect = false
   // Initialize property with provided constructor arguments. `null` prevents initialization.
-  init?: any = undefined
+  init?: unknown = undefined
   // Mutation observation state for this property.
   readonly observer: Observer
   /**
@@ -262,18 +251,19 @@ export class ReactivePropertyInstance {
         if (this.init !== undefined) {
           if (this.init instanceof Array) {
             const args = this.init.map(item => decodeInitArgument(item, node))
-            this.value = new this.type(...args)
+            this.value = new (this.type as new (...args: unknown[]) => object)(...args)
           } else if (this.init instanceof Object) {
-            const args: any = {}
-            Object.keys(this.init).forEach(key => {
-              args[key] = decodeInitArgument(this.init[key], node)
+            const initObj = this.init as Record<string, unknown>
+            const args: Record<string, unknown> = {}
+            Object.keys(initObj).forEach(key => {
+              args[key] = decodeInitArgument(initObj[key], node)
             })
-            this.value = new this.type(args)
+            this.value = new (this.type as new (args: Record<string, unknown>) => object)(args)
           } else if (this.init === null) {
-            this.value = new this.type()
+            this.value = new (this.type as new () => object)()
           } else {
             const argument = decodeInitArgument(this.init, node)
-            this.value = new this.type(argument)
+            this.value = new (this.type as new (arg: unknown) => object)(argument)
           }
         }
       }
@@ -284,7 +274,7 @@ export class ReactivePropertyInstance {
 
     debug: {
       if (this.value !== undefined && this.init !== undefined) {
-        if ([String, Number, Boolean].indexOf(this.type as any) !== -1) {
+        if (this.type === String || this.type === Number || this.type === Boolean) {
           if (this.type === Boolean && typeof this.value !== 'boolean' ||
               this.type === Number && typeof this.value !== 'number' ||
               this.type === String && typeof this.value !== 'string') {

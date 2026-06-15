@@ -37,6 +37,7 @@ export * from './elements/IoThreeExample.js'
 export * from './elements/IoThreeViewport.js'
 export * from './nodes/ThreeApplet.js'
 export * from './nodes/ToolBase.js'
+export * from './nodes/ViewCameras.js'
 
 import './configs/index.js'
 

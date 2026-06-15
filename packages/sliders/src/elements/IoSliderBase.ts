@@ -1,4 +1,4 @@
-import { ReactiveProperty, IoGl, IoElementProps, WithBinding, Property, ListenerDefinition } from '@io-gui/core'
+import { ReactiveProperty, IoGl, IoElementProps, WithBinding, Property, ListenerDefinition, CallbackFunction } from '@io-gui/core'
 
 const clamp = (num: number, min: number, max: number) => {
   return max > min ? Math.min(Math.max(num, min), max) : Math.min(Math.max(num, max), min)
@@ -15,7 +15,7 @@ export type IoSliderBaseProps = IoElementProps & {
 }
 
 export class IoSliderBase extends IoGl {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -117,7 +117,7 @@ export class IoSliderBase extends IoGl {
     return [NaN, NaN]
   }
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'focus': 'onFocus',
       'contextmenu': 'onContextmenu',
@@ -181,7 +181,7 @@ export class IoSliderBase extends IoGl {
   }
   onPointermove(event: PointerEvent) {
     if (event.pointerType !== 'touch') this._active = 1
-    this.throttle(this.onPointermoveThrottled, event)
+    this.throttle(this.onPointermoveThrottled as CallbackFunction, event)
   }
   onPointerup(event: PointerEvent) {
     this.releasePointerCapture(event.pointerId)
@@ -246,7 +246,7 @@ export class IoSliderBase extends IoGl {
       this.dispatchMutation(this.value)
     }
   }
-  inputValue(value: any) {
+  inputValue(value: number | [number, number]) {
     if (this.value !== value || typeof this.value === 'object') {
       const oldValue = this.value
       this.setProperty('value', value)
@@ -320,7 +320,7 @@ export class IoSliderBase extends IoGl {
     value[1] = value[1] + step[1]
     this._inputValue(value)
   }
-  ready() {
+  override ready() {
     this.changed()
   }
   valueChanged() {
@@ -343,7 +343,7 @@ export class IoSliderBase extends IoGl {
     this.changed()
     this.dispatchMutation()
   }
-  changed() {
+  override changed() {
     super.changed()
     this.setAttribute('aria-valuemin', JSON.stringify(this.min))
     this.setAttribute('aria-valuemax', JSON.stringify(this.max))

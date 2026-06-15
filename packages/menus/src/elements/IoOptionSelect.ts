@@ -18,7 +18,7 @@ export type IoOptionSelectProps = IoElementProps & {
  **/
 @Register
 export class IoOptionSelect extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
     :host {
       display: inline-block;
@@ -79,10 +79,10 @@ export class IoOptionSelect extends IoElement {
   }
   optionChanged(change: Change) {
     if (change.oldValue) {
-      change.oldValue.removeEventListener('option-selected', this.onOptionSelected)
+      (change.oldValue as MenuOption).removeEventListener('option-selected', this.onOptionSelected)
     }
     if (change.value) {
-      change.value.addEventListener('option-selected', this.onOptionSelected)
+      (change.value as MenuOption).addEventListener('option-selected', this.onOptionSelected)
     }
 
     //TODO: Cleanup and test
@@ -100,7 +100,10 @@ export class IoOptionSelect extends IoElement {
       }
     }
   }
-  changed() {
+  optionMutated() {
+    this.changed()
+  }
+  override changed() {
     let selectedItem
     let label = this.label
     if (this.selectBy === 'value') {

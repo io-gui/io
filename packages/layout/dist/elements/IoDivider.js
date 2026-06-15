@@ -16,7 +16,7 @@ let IoDivider = class IoDivider extends IoElement {
         border-width: 0 var(--io_borderWidth);
         border-color: var(--io_color);
         cursor: col-resize;
-        @apply --unselectable;
+        @apply --io-unselectable;
       }
       :host[pressed] {
         border-color: var(--io_borderColorBlue);

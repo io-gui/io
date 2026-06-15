@@ -1,43 +1,21 @@
 import { Binding } from './Binding.js';
 import { AnyConstructor, ReactiveNode } from '../nodes/ReactiveNode.js';
 import { IoElement } from '../elements/IoElement.js';
-/**
- * Configuration for a property of a ReactiveNode class.
- * @typedef {Object} ReactivePropertyDefinition
- * @property {*} [value] The property's value. Can be any type unless `type` is specified.
- * @property {AnyConstructor} [type] Constructor function defining the property's type.
- * @property {Binding} [binding] Binding object for two-way data synchronization.
- * @property {boolean} [reflect] Whether to reflect the property to an HTML attribute.
- * @property {*} [init] Initialization arguments for constructing initial value.
- */
 export type ReactivePropertyDefinition = {
-    value?: any;
+    value?: unknown;
     type?: AnyConstructor;
-    binding?: Binding;
+    binding?: Binding<unknown>;
     reflect?: boolean;
-    init?: any;
+    init?: unknown;
 };
-/**
- * Allows loose definition of properties by specifying only partial definitions, such as default value, type or a binding object.
- * @typedef {(string|number|boolean|Array<*>|null|undefined|AnyConstructor|Binding|ReactivePropertyDefinition)} ReactivePropertyDefinitionLoose
- */
-export type ReactivePropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding | ReactivePropertyDefinition;
-/**
- * Instantiates a property definition object from a loosely or strongly typed property definition.
- * It facilitates merging of inherited property definitions from the prototype chain.
- * @class
- * @property {*} [value] The property's value. Can be any type.
- * @property {AnyConstructor} [type] Constructor function defining the property's type.
- * @property {Binding} [binding] Binding object for two-way data synchronization.
- * @property {boolean} [reflect] Whether to reflect the property to an HTML attribute.
- * @property {*} [init] Initialization arguments for constructing initial values.
- */
+export type ReactivePropertyDefinitionLoose = string | number | boolean | unknown[] | null | undefined | AnyConstructor | Binding<unknown> | ReactivePropertyDefinition;
+/** Normalized reactive property definition merged from decorators and static getters. */
 export declare class ReactiveProtoProperty {
-    value?: any;
+    value?: unknown;
     type?: AnyConstructor;
-    binding?: Binding;
+    binding?: Binding<unknown>;
     reflect?: boolean;
-    init?: any;
+    init?: unknown;
     /**
      * Creates a property definition from various input types.
      * @param {ReactivePropertyDefinitionLoose} def Input definition which can be:
@@ -66,36 +44,39 @@ export declare class ReactiveProtoProperty {
      * - Only includes defined fields
      * @returns {object} A plain object suitable for JSON serialization
      */
-    toJSON(): any;
+    toJSON(): {
+        value?: unknown;
+        type?: AnyConstructor | string;
+        reflect?: boolean;
+        init?: unknown;
+        binding?: Binding<unknown>;
+    };
 }
 export type ObservationType = 'none' | 'io' | 'object' | 'nodearray';
+export declare function ensureWindowMutationListener(node: ReactiveNode | IoElement): void;
+export declare function removeWindowMutationListener(node: ReactiveNode | IoElement): void;
+export declare function ensureSelfMutationListener(node: ReactiveNode | IoElement): void;
+export declare function removeSelfMutationListener(node: ReactiveNode | IoElement): void;
 /**
- * Manages mutation observation state for a reactive property.
- * - 'none': Primitives (String, Number, Boolean) - no mutation observation
- * - 'io': Io types (ReactiveNode, IoElement subclasses) - observe on the value itself
- * - 'nodearray': NodeArray - registers as observer, receives mutations via self-listener
- * - 'object': Non-Io objects (Object, Array, etc.) - observe via window (global event bus)
+ * Tracks mutation observation mode and listener wiring for one reactive property.
+ * @see ObservationType
  */
 export declare class Observer {
     private readonly node;
-    private _hasSelfMutationListener;
-    private _hasWindowMutationListener;
     type: ObservationType;
     observing: boolean;
     constructor(node: ReactiveNode | IoElement);
-    start(value: any): void;
-    stop(value: any): void;
+    start(value: unknown): void;
+    stop(value: unknown): void;
     dispose(): void;
 }
-/**
- * ReactivePropertyInstance object constructed from `ReactiveProtoProperty`.
- */
+/** Runtime reactive property: value, type, binding, reflect, and mutation observer. */
 export declare class ReactivePropertyInstance {
-    value?: any;
+    value?: unknown;
     type?: AnyConstructor;
-    binding?: Binding;
+    binding?: Binding<unknown>;
     reflect: boolean;
-    init?: any;
+    init?: unknown;
     readonly observer: Observer;
     /**
      * Creates the property configuration object and copies values from `ReactiveProtoProperty`.

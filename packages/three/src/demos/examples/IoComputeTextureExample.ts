@@ -41,7 +41,7 @@ export class ComputeTextureExample extends ThreeApplet {
     const plane = new Mesh(new PlaneGeometry(1, 1), material)
     this.scene.add(plane)
   }
-  async onRendererInitialized(renderer: WebGPURenderer) {
+  override async onRendererInitialized(renderer: WebGPURenderer) {
     super.onRendererInitialized(renderer)
     void renderer.compute(this.computeNode)
   }
@@ -53,7 +53,7 @@ export class IoComputeTextureExample extends IoThreeExample {
   @ReactiveProperty({type: ComputeTextureExample, init: null})
   declare applet: ComputeTextureExample
 
-  ready() {
+  override ready() {
 
     this.render([
       ioThreeViewport({id: 'Front', applet: this.applet, cameraSelect: 'front'}),

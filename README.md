@@ -23,15 +23,15 @@ git clone https://github.com/io-gui/io.git && cd io
 pnpm i && pnpm dev
 ```
 
-This will install dev dependencies and start the vite watch script and server.
+This will install dev dependencies and start the Vite dev server with TypeScript watch mode.
 
 To learn more Io-Gui development, please read [contributing guide](https://github.com/io-gui/io/blob/main/.github/CONTRIBUTING.md) and [code of conduct](https://github.com/io-gui/io/blob/main/.github/CODE_OF_CONDUCT.md), browse and submit [issues](https://github.com/io-gui/io/issues).
 
-[npm]: https://img.shields.io/npm/v/io-core
-[npm-url]: https://www.npmjs.com/package/io-core
+[npm]: https://img.shields.io/npm/v/@io-gui/core
+[npm-url]: https://www.npmjs.com/package/@io-gui/core
 [deepscan]: https://deepscan.io/api/teams/18863/projects/22152/branches/651706/badge/grade.svg
 [deepscan-url]: https://deepscan.io/dashboard#view=project&tid=18863&pid=22152&bid=651706
-[license]: https://img.shields.io/github/license/io-core/io
+[license]: https://img.shields.io/github/license/io-gui/io
 [license-url]: https://github.com/io-gui/io/blob/main/LICENSE
 
 [github]: https://github.com/io-gui/io/

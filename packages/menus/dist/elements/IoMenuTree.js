@@ -47,7 +47,7 @@ let IoMenuTree = class IoMenuTree extends IoElement {
       border-color: var(--io_borderColorOutset);
       background-color: var(--io_bgColorLight);
       padding: var(--io_spacing);
-      @apply --unselectable;
+      @apply --io-unselectable;
     }
     :host io-menu-tree {
       padding: 0 !important;

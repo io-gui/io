@@ -1,6 +1,8 @@
 import { ReactiveProperty, Register } from '@io-gui/core'
 import {
+  AnimationClip,
   AnimationMixer,
+  Bone,
   BoxGeometry,
   DirectionalLight,
   Group,
@@ -18,13 +20,36 @@ import {
   reflector,
   positionWorld,
 } from 'three/tsl'
-import { GLTFLoader, GLTF } from 'three/addons/loaders/GLTFLoader.js'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
 import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
 
+type FbxModel = Group & {
+  animations: AnimationClip[]
+}
+
+type GltfModel = {
+  scene: Group
+  animations: AnimationClip[]
+}
+
+type AnimationSource = {
+  clip: AnimationClip
+  skeleton: Skeleton
+  mixer: AnimationMixer
+}
+
 const gltfLoader = new GLTFLoader()
 const fbxLoader = new FBXLoader()
+
+const loadFbx = (url: string) => new Promise<FbxModel>((resolve, reject) => {
+  fbxLoader.load(url, resolve, undefined, reject)
+})
+
+const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
+  gltfLoader.load(url, resolve, undefined, reject)
+})
 
 @Register
 export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
@@ -73,14 +98,10 @@ export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
   }
 
   private async loadModels() {
-    const [sourceModel, targetModel]: [Group, GLTF] = await Promise.all([
-      new Promise((resolve, reject) => {
-        fbxLoader.load('https://threejs.org/examples/models/fbx/mixamo.fbx', resolve as (group: Group) => void, undefined, reject)
-      }),
-      new Promise((resolve, reject) => {
-        gltfLoader.load('https://threejs.org/examples/models/gltf/readyplayer.me.glb', resolve as (gltf: GLTF) => void, undefined, reject)
-      })
-    ]) as [Group, GLTF]
+    const [sourceModel, targetModel] = await Promise.all([
+      loadFbx('https://threejs.org/examples/models/fbx/mixamo.fbx'),
+      loadGltf('https://threejs.org/examples/models/gltf/readyplayer.me.glb'),
+    ])
 
     const models = new Group()
     models.add(sourceModel)
@@ -99,7 +120,7 @@ export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
     this.dispatch('frame-object', {object: models, overscan: 1.5}, true)
   }
 
-  private getSource(sourceModel: any) {
+  private getSource(sourceModel: FbxModel): AnimationSource {
     const clip = sourceModel.animations[0]
     const helper = new SkeletonHelper(sourceModel)
     const skeleton = new Skeleton(helper.bones)
@@ -109,8 +130,8 @@ export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
     return { clip, skeleton, mixer }
   }
 
-  private retargetModel(sourceModel: any, targetModel: any) {
-    const targetSkin = targetModel.scene.children[0].children[1]
+  private retargetModel(sourceModel: AnimationSource, targetModel: GltfModel) {
+    const targetSkin = targetModel.scene.children[0]!.children[1]!
 
     const retargetOptions = {
       // specify the name of the source's hip bone
@@ -120,7 +141,7 @@ export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
       scale: .01,
 
       // Map of target's bone names to source's bone names
-      getBoneName: function (bone: any) {
+      getBoneName: function (bone: Bone) {
         return 'mixamorig' + bone.name
       }
     }
@@ -133,7 +154,7 @@ export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
     return mixer
   }
 
-  onAnimate(delta: number) {
+  override onAnimate(delta: number) {
 
     if (this.sourceMixer) {
       this.sourceMixer.update(delta)

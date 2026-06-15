@@ -28,6 +28,10 @@ describe('IoElement', () => {
     expect(typeof element.traverse).toBe('function')
     expect(typeof element.setAttribute).toBe('function')
     expect(typeof element.$).toBe('object')
+    expect(typeof element.addParent).toBe('function')
+    expect(typeof element.removeParent).toBe('function')
+    expect(Array.isArray(element._parents)).toBe(true)
+    expect(Array.isArray(element._children)).toBe(true)
   })
   it('Should initialize properties correctly', () => {
     // Default properties
@@ -362,5 +366,82 @@ describe('IoElement', () => {
     element1.prop0 = 2
     expect(element1.prop0).toBe(2)
     expect(element2.prop0).toBe(1)
+  })
+  it('render creates DOM children from VDOM', () => {
+    @Register
+    class RenderElement extends IoElement {
+      ready() {
+        this.render([
+          {tag: 'div', props: {id: 'a', class: 'child-a'}},
+          {tag: 'span', props: {id: 'b', class: 'child-b'}, children: 'text'},
+        ])
+      }
+    }
+
+    const el = new RenderElement()
+    expect(el.children.length).toBe(2)
+    expect(el.children[0].localName).toBe('div')
+    expect(el.children[1].localName).toBe('span')
+    expect(el.$.a.className).toBe('child-a')
+    expect(el.$.b.textContent).toBe('text')
+    el.dispose()
+  })
+  it('traverse reuses keyed elements on re-render', () => {
+    @Register
+    class KeyedRenderElement extends IoElement {
+      index = 0
+      ready() {
+        this.changed()
+      }
+      changed() {
+        this.render([
+          {tag: 'div', props: {key: 'a', id: 'first', class: `v${this.index}`}},
+          {tag: 'div', props: {key: 'b', id: 'second', class: `v${this.index}`}},
+        ])
+      }
+    }
+
+    const el = new KeyedRenderElement()
+    const first = el.$.first
+    const second = el.$.second
+    expect((first as any)._vdomKey).toBe('a')
+    expect((second as any)._vdomKey).toBe('b')
+
+    el.index = 1
+    el.changed()
+
+    expect(el.$.first).toBe(first)
+    expect(el.$.second).toBe(second)
+    expect(el.$.first.className).toBe('v1')
+    el.dispose()
+  })
+  it('dispose cleans up', () => {
+    @Register
+    class DisposeElement extends IoElement {
+      ready() {
+        this.render([{tag: 'div', props: {id: 'child'}}])
+      }
+    }
+
+    const el = new DisposeElement()
+    el.dispose()
+    expect(el._disposed).toBe(true)
+    expect(el._eventDispatcher).toBe(undefined)
+  })
+  it('connectedCallback and disconnectedCallback with onResized smoke', () => {
+    @Register
+    class ResizeElement extends IoElement {
+      resizeCount = 0
+      onResized() {
+        this.resizeCount++
+      }
+    }
+
+    const el = new ResizeElement()
+    document.body.appendChild(el as HTMLElement)
+    expect(() => el.connectedCallback()).not.toThrow()
+    expect(() => el.disconnectedCallback()).not.toThrow()
+    document.body.removeChild(el as HTMLElement)
+    el.dispose()
   })
 })

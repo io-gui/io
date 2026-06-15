@@ -1,5 +1,6 @@
 import { Register, ReactiveProperty } from '@io-gui/core'
 import {
+  AnimationClip,
   AnimationMixer,
   BoxGeometry,
   DirectionalLight,
@@ -39,6 +40,21 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
 import { ThreeApplet, IoThreeExample, ThreeAppletProps, ioThreeViewport } from '@io-gui/three'
 import { ioSplit, Split } from '@io-gui/layout'
+
+type GltfModel = {
+  scene: Group
+  animations: AnimationClip[]
+}
+
+type AnimationSource = {
+  clip: AnimationClip
+  skeleton: Skeleton
+  mixer: AnimationMixer
+}
+
+const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
+  new GLTFLoader().load(url, resolve, undefined, reject)
+})
 
 const lightSpeed = /*#__PURE__*/ Fn<[Node]>(([suv_immutable]) => {
   // forked from https://www.shadertoy.com/view/7ly3D1
@@ -111,7 +127,7 @@ export class AnimationRetargetingExample extends ThreeApplet {
     void this.loadModels()
   }
 
-  onResized(width: number, height: number) {
+  override onResized(width: number, height: number) {
     super.onResized(width, height)
     const aspect = width / height
     this.camera.aspect = aspect
@@ -120,29 +136,25 @@ export class AnimationRetargetingExample extends ThreeApplet {
 
   private async loadModels() {
     const [sourceModel, targetModel] = await Promise.all([
-      new Promise((resolve, reject) => {
-        new GLTFLoader().load('https://threejs.org/examples/models/gltf/Michelle.glb', resolve as any, undefined, reject)
-      }),
-      new Promise((resolve, reject) => {
-        new GLTFLoader().load('https://threejs.org/examples/models/gltf/Soldier.glb', resolve as any, undefined, reject)
-      })
+      loadGltf('https://threejs.org/examples/models/gltf/Michelle.glb'),
+      loadGltf('https://threejs.org/examples/models/gltf/Soldier.glb'),
     ])
 
     // Add models to group
-    this.group.add((sourceModel as any).scene)
-    this.group.add((targetModel as any).scene);
+    this.group.add(sourceModel.scene)
+    this.group.add(targetModel.scene)
 
     // Reposition models
-    (sourceModel as any).scene.position.x -= .8;
-    (targetModel as any).scene.position.x += .7;
-    (targetModel as any).scene.position.z -= .1;
+    sourceModel.scene.position.x -= .8
+    targetModel.scene.position.x += .7
+    targetModel.scene.position.z -= .1
 
     // Readjust model
-    (targetModel as any).scene.scale.setScalar(.01);
+    targetModel.scene.scale.setScalar(.01)
 
     // Flip models
-    (sourceModel as any).scene.rotation.y = Math.PI / 2;
-    (targetModel as any).scene.rotation.y = -Math.PI / 2
+    sourceModel.scene.rotation.y = Math.PI / 2
+    targetModel.scene.rotation.y = -Math.PI / 2
 
     // Retarget
     const source = this.getSource(sourceModel)
@@ -153,7 +165,7 @@ export class AnimationRetargetingExample extends ThreeApplet {
 
   }
 
-  private getSource(sourceModel: any) {
+  private getSource(sourceModel: GltfModel): AnimationSource {
     const clip = sourceModel.animations[0]
     const skeleton = new Skeleton(new SkeletonHelper(sourceModel.scene).bones)
     const mixer = new AnimationMixer(sourceModel.scene)
@@ -162,8 +174,8 @@ export class AnimationRetargetingExample extends ThreeApplet {
     return { clip, skeleton, mixer }
   }
 
-  private retargetModel(sourceModel: any, targetModel: any) {
-    const targetSkin = targetModel.scene.children[0].children[0]
+  private retargetModel(sourceModel: AnimationSource, targetModel: GltfModel) {
+    const targetSkin = targetModel.scene.children[0]!.children[0]!
 
     const rotateCW45 = new Matrix4().makeRotationY(MathUtils.degToRad(45))
     const rotateCCW180 = new Matrix4().makeRotationY(MathUtils.degToRad(-180))
@@ -226,7 +238,7 @@ export class AnimationRetargetingExample extends ThreeApplet {
     return mixer
   }
 
-  onAnimate(delta: number) {
+  override onAnimate(delta: number) {
     if (this.sourceMixer) {
       this.sourceMixer.update(delta)
     }
@@ -243,7 +255,7 @@ export class IoAnimationRetargetingExample extends IoThreeExample {
   @ReactiveProperty({type: AnimationRetargetingExample, init: {isPlaying: true}})
   declare applet: AnimationRetargetingExample
 
-  ready() {
+  override ready() {
 
     this.render([
       ioSplit({

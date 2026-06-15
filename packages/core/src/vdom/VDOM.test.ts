@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { Register, IoElement, applyNativeElementProps, constructElement, VDOMElement, div, span, ReactivePropertyDefinitions } from '@io-gui/core'
+import { Register, IoElement, applyNativeElementProps, constructElement, VDOMElement, div, span, ReactivePropertyDefinitions, clearNativeElementChildren } from '@io-gui/core'
 
 describe('VDOM', () => {
   it('Should construct an native DIV element', () => {
@@ -870,5 +870,17 @@ describe('VDOM Element Reuse', () => {
     expect(widget.children[2].className).toBe('widget-child-c')
 
     parent.remove()
+  })
+  it('Should release EventDispatchers when clearing native element children', () => {
+    const parent = document.createElement('div')
+    const child = document.createElement('button')
+    applyNativeElementProps(child, { '@click': () => {}})
+    expect((child as any)._eventDispatcher).toBeDefined()
+
+    parent.appendChild(child)
+    clearNativeElementChildren(parent)
+
+    expect(parent.childNodes.length).toBe(0)
+    expect((child as any)._eventDispatcher).toBeUndefined()
   })
 })

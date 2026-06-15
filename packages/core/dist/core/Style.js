@@ -7,7 +7,13 @@ const mediaQueryRegex = new RegExp('((@media [\\s\\S]*?){([\\s\\S]*?}\\s*?)})', 
 const mixinRegex = new RegExp('(( --[\\s\\S]*?): {([\\s\\S]*?)})', 'gi');
 const applyRegex = new RegExp('(@apply\\s.*?;)', 'gi');
 const cssRegex = new RegExp('((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\\S]*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})', 'gi');
-export function applyElementStyleToDocument(localName, style) {
+export function adoptDocumentStylesheet(css) {
+    const styleSheet = new CSSStyleSheet();
+    styleSheet.replaceSync(css);
+    document.adoptedStyleSheets = [...document.adoptedStyleSheets, styleSheet];
+    return styleSheet;
+}
+export function processElementStyle(localName, style) {
     let mixinsString = '';
     const mixins = style.match(mixinRegex);
     if (mixins) {
@@ -52,10 +58,9 @@ export function applyElementStyleToDocument(localName, style) {
         }
     }
     // Replace `:host` with element tag and add mixin CSS variables.
-    style = mixinsString + style.replace(new RegExp(':host', 'g'), localName);
-    const styleElement = document.createElement('style');
-    styleElement.innerHTML = style;
-    styleElement.setAttribute('id', 'io-style-' + localName.replace('io-', ''));
-    document.head.appendChild(styleElement);
+    return mixinsString + style.replace(new RegExp(':host', 'g'), localName);
+}
+export function applyElementStyleToDocument(localName, style) {
+    adoptDocumentStylesheet(processElementStyle(localName, style));
 }
 //# sourceMappingURL=Style.js.map

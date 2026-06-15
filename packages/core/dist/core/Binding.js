@@ -13,31 +13,14 @@ const isTypeCompatible = (type1, type2) => {
     return false;
 };
 /**
- * This class is used internally by the framework to enable two-way data synchronization between reactive properties.
- * It manages bindings between a source node's reactive property and one or more target nodes and reactive properties.
- * It uses hub-and-spoke pub/sub event system and maintains data consistency by automatically propagating changes to all bound nodes and properties.
- *
- * Key features:
- * - Listens for `[propName]-changed` events to detect changes
- * - Supports one-to-many property bindings
- * - Prevents circular update loops
- * - Automatically cleans up listeners when disposed
- *
- * @example
- * const binding = new Binding(nodeA, 'value');
- * binding.addTarget(nodeB, 'value');
+ * Hub-and-spoke two-way sync between reactive properties via `[propName]-changed` events.
+ * @example binding.addTarget(nodeB, 'value')
  */
 export class Binding {
     node;
     property;
     targets = new Set();
     targetProperties = new WeakMap();
-    /**
-     * Creates a binding object for specified source `node` and `property`.
-     * It attaches a `[propName]-changed` listener to the source node.
-     * @param {ReactiveNode | IoElement} node - Source node
-     * @param {string} property - Name of the sourceproperty
-     */
     constructor(node, property) {
         debug: {
             if (!node._isNode && !node._isIoElement)
@@ -52,10 +35,10 @@ export class Binding {
         this.node.addEventListener(`${this.property}-changed`, this.onSourceChanged);
     }
     set value(value) {
-        this.node[this.property] = value;
+        this.node.setProperty(this.property, value);
     }
     get value() {
-        return this.node[this.property];
+        return this.node._reactiveProperties.get(this.property).value;
     }
     /**
      * Adds a target node and property.
@@ -152,7 +135,7 @@ export class Binding {
         if (oldValue !== value) {
             if (bothAreNaNs(value, oldValue))
                 return;
-            this.node[this.property] = value;
+            this.node.setProperty(this.property, value);
         }
     }
     /**
@@ -168,11 +151,11 @@ export class Binding {
             const targetProperties = this.getTargetProperties(target);
             for (let j = targetProperties.length; j--;) {
                 const propName = targetProperties[j];
-                const oldValue = target[propName];
+                const oldValue = target._reactiveProperties.get(propName).value;
                 if (oldValue !== value) {
                     if (bothAreNaNs(value, oldValue))
                         continue;
-                    target[propName] = value;
+                    target.setProperty(propName, value);
                 }
             }
         }

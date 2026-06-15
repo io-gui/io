@@ -1,4 +1,5 @@
 import { IoElement } from '@io-gui/core';
+/** @internal Demo: reactive change graph visualization. */
 export declare class IoChangeVisualization extends IoElement {
     static get Style(): string;
     ready(): void;

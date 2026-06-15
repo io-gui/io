@@ -14,40 +14,14 @@ type ReactiveProtoProperties = { [property: string]: ReactiveProtoProperty }
 type ProtoListeners = { [property: string]: ListenerDefinition[] }
 
 /**
- * ProtoChain manages class inheritance metadata and configuration.
- *
- * This utility class traverses the prototype chain during class registration to:
- * - Aggregate property configurations
- * - Aggregate event listeners
- * - Aggregate CSS styles strings
- * - Auto-bind event handlers to maintain proper 'this' context
- *
- * This class is internal and instantiated during the `Register()` process.
+ * Aggregates inherited property, listener, and style metadata during {@link Register}.
  */
 export class ProtoChain {
-  /**
-   * Array of inherited class constructors
-   */
   constructors: ProtoConstructors = []
-  /**
-   * Aggregated initial value for properties declared in `static get Properties()` or @Property() decorators
-  */
-  properties: Record<string, any> = {}
-  /**
-   * Aggregated reactive property definition declared in `static get ReactiveProperties()` or @ReactiveProperty() decorators
-   */
+  properties: Record<string, unknown> = {}
   reactiveProperties: ReactiveProtoProperties = {}
-  /**
-   * Aggregated listener definition declared in `static get Listeners()`
-   */
   listeners: ProtoListeners = {}
-  /**
-   * Aggregated CSS style definition declared in `static get Style()`
-   */
   style: string = ''
-  /**
-   * Array of function names that start with "on[A-Z]" or "_on[A-Z]" for auto-binding.
-   */
   handlers: ProtoHandlers = []
   /**
    * Creates an instance of `ProtoChain` for specified class constructor.
@@ -99,8 +73,10 @@ export class ProtoChain {
       throw new Error(`${node.constructor.name} not registered! Use @Register decorator before using ${node.constructor.name} class.`)
     }
     for (let i = this.handlers.length; i--;) {
-      Object.defineProperty(node, this.handlers[i], {
-        value: (node as any)[this.handlers[i]].bind(node),
+      const handlerName = this.handlers[i]
+      const handler = (node as unknown as Record<string, unknown>)[handlerName]
+      Object.defineProperty(node, handlerName, {
+        value: (handler as (...args: unknown[]) => unknown).bind(node),
         writable: true,
         configurable: true
       })
@@ -116,7 +92,7 @@ export class ProtoChain {
       this.properties[name] = props[name]
     }
   }
-  addProperties(properties: Record<string, any> = {}, prevHash = ''): string {
+  addProperties(properties: Record<string, unknown> = {}, prevHash = ''): string {
     const newHash = JSON.stringify(properties)
     if (newHash !== prevHash) {
       for (const name in properties) {
@@ -162,8 +138,10 @@ export class ProtoChain {
     return prevHash
   }
   /**
-   * Merges or appends a listener definitions to the existing listeners array.
-   * @param {ListenerDefinitions} listenerDefs - Listener definitions to add
+   * Merges listener definitions from each class in the prototype chain into {@link listeners}.
+   * Duplicate handler names update options; distinct handler names append to the array.
+   * Runtime registration is handled separately: {@link EventDispatcher} uses last-wins per event name.
+   * @param listenerDefs Listener definitions to add
    */
   addListeners(listenerDefs?: ListenerDefinitions) {
     for (const name in listenerDefs) {
@@ -210,7 +188,7 @@ export class ProtoChain {
       if (/^on[A-Z]/.test(fn) || /^_on[A-Z]/.test(fn) || fn.endsWith('Changed') || fn.endsWith('Mutated') || fn.endsWith('Debounced') || fn.endsWith('Throttled') || fn === 'changed') {
         const propDesr = Object.getOwnPropertyDescriptor(proto, fn)
         if (propDesr === undefined || propDesr.get || propDesr.set) continue
-        if (typeof (proto as any)[fn] === 'function') {
+        if (typeof (proto as unknown as Record<string, unknown>)[fn] === 'function') {
           if (this.handlers.indexOf(fn) === -1) {
             this.handlers.push(fn)
           }
@@ -226,7 +204,7 @@ export class ProtoChain {
   validateReactiveProperties() {
     for (const name in this.reactiveProperties) {
       const prop = this.reactiveProperties[name]
-      if ([String, Number, Boolean].indexOf(prop.type as any) !== -1) {
+      if (prop.type === String || prop.type === Number || prop.type === Boolean) {
         if (prop.type === Boolean && prop.value !== undefined && typeof prop.value !== 'boolean' ||
             prop.type === Number && prop.value !== undefined && typeof prop.value !== 'number' ||
             prop.type === String && prop.value !== undefined && typeof prop.value !== 'string') {

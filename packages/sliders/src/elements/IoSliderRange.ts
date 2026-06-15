@@ -39,14 +39,14 @@ export class IoSliderRange extends IoSliderBase {
     coord[1] = (value[1] - min[1]) / (max[1] - min[1])
     return coord
   }
-  onPointerdown(event: PointerEvent) {
+  override onPointerdown(event: PointerEvent) {
     super.onPointerdown(event)
     const value = this._value
     const p = this._getPointerCoord(event)
     const c = this._getCoordFromValue(value)
     this._index = Math.abs(c[0] - p[0]) < Math.abs(c[1] - p[0]) ? 0 : 1
   }
-  onPointermoveThrottled(event: PointerEvent) {
+  override onPointermoveThrottled(event: PointerEvent) {
     if (this._active === 1) {
       if (document.activeElement !== this as unknown as Element) this.focus()
       const value = this._value
@@ -59,7 +59,7 @@ export class IoSliderRange extends IoSliderBase {
       }
     }
   }
-  static get Frag() {
+  static override get Frag() {
     return /* glsl */`
     varying vec2 vUv;
 

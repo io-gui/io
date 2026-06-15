@@ -88,7 +88,7 @@ export class ThreeApplet extends ReactiveNode {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onAnimate(delta: number, time: number) {}
 
-  dispose() {
+  override dispose() {
     this.isPlaying = false
     super.dispose()
     // this._timer.disconnect();

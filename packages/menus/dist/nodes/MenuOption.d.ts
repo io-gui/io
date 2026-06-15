@@ -1,11 +1,11 @@
-import { ReactiveNode, WithBinding, NodeArray } from '@io-gui/core';
+import { ReactiveNode, WithBinding, NodeArray, Json } from '@io-gui/core';
 export type MenuOptionMode = 'select' | 'toggle' | 'none';
 export type MenuOptionProps = {
     id?: string;
     value?: any;
-    label?: string;
+    label?: WithBinding<string>;
     icon?: string;
-    hint?: string;
+    hint?: WithBinding<string>;
     action?: (value?: any) => void;
     mode?: MenuOptionMode;
     disabled?: boolean;
@@ -47,7 +47,7 @@ export declare class MenuOption extends ReactiveNode {
     updatePaths(): void;
     pathChanged(): void;
     optionsMutated(event: CustomEvent): void;
-    toJSON(): MenuOptionProps;
+    toJSON(): Json;
     fromJSON(json: MenuOptionProps): this;
     changed(): void;
     dispose(): void;

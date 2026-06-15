@@ -14,7 +14,7 @@ export type IoIconProps = IoElementProps & {
  **/
 @Register
 export class IoIcon extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: inline-block;

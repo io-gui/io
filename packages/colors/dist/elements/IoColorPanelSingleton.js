@@ -37,6 +37,11 @@ let IoColorPanel = class IoColorPanel extends IoColorBase {
             'io-focus-to': 'onIoFocusTo',
         };
     }
+    expandedChanged() {
+        if (!this.expanded) {
+            this.src = null;
+        }
+    }
     onKeydown(event) {
         if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
@@ -58,7 +63,7 @@ let IoColorPanel = class IoColorPanel extends IoColorBase {
         }
     }
     onValueInput() {
-        this.dispatch('value-input', { property: 'value', value: this.value }, true);
+        this.src?.onPanelValueInput();
     }
     changed() {
         this.render([
@@ -71,6 +76,9 @@ let IoColorPanel = class IoColorPanel extends IoColorBase {
 __decorate([
     ReactiveProperty({ value: false, reflect: true })
 ], IoColorPanel.prototype, "expanded", void 0);
+__decorate([
+    ReactiveProperty({ value: null })
+], IoColorPanel.prototype, "src", void 0);
 IoColorPanel = __decorate([
     Register
 ], IoColorPanel);

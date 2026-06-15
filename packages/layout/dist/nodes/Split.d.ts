@@ -16,7 +16,7 @@ export declare class Split extends ReactiveNode {
     onChildrenMutatedDebounced(): void;
     flexChanged(): void;
     toJSON(): SplitProps;
-    fromJSON(json: SplitProps): this;
+    applyJSON(json: SplitProps): this;
     dispose(): void;
 }
 //# sourceMappingURL=Split.d.ts.map

@@ -71,7 +71,7 @@ export class Split extends ReactiveNode {
       this.flex = '0 1 auto'
     }
   }
-  toJSON(): SplitProps {
+  override toJSON(): SplitProps {
     const json: SplitProps = {
       type: 'split',
       children: this.children.map((child: Split | Panel) => child.toJSON()),
@@ -80,7 +80,7 @@ export class Split extends ReactiveNode {
     if (this.flex !== '1 1 auto') json.flex = this.flex
     return json
   }
-  fromJSON(json: SplitProps) {
+  override applyJSON(json: SplitProps) {
     debug: {
       if (json.type !== 'split') {
         console.error(`Split.fromJSON: Invalid type "${json.type}". Expected "split".`)
@@ -96,7 +96,7 @@ export class Split extends ReactiveNode {
     })
     return this
   }
-  dispose() {
+  override dispose() {
     this.children.length = 0
     super.dispose()
   }

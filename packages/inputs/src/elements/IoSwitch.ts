@@ -1,13 +1,13 @@
 import { span, Register } from '@io-gui/core'
 import { ioIcon } from '@io-gui/icons'
-import { IoBoolean } from './IoBoolean.js'
+import { IoBoolean, IoBooleanProps } from './IoBoolean.js'
 
 /**
  * Input element for `Boolean` data type displayed as switch.
  **/
 @Register
 export class IoSwitch extends IoBoolean {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -69,13 +69,13 @@ export class IoSwitch extends IoBoolean {
       }
     `
   }
-  changed() {
+  override changed() {
     this.render([
       this.icon ? ioIcon({value: this.icon}) : null,
       span()
     ])
   }
 }
-export const ioSwitch = function(arg0?: any) {
+export const ioSwitch = function(arg0?: IoBooleanProps) {
   return IoSwitch.vConstructor(arg0)
 }

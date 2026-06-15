@@ -33,7 +33,7 @@ export type IoSplitProps = IoElementProps & {
 
 @Register
 export class IoSplit extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -104,7 +104,7 @@ export class IoSplit extends IoElement {
   @ReactiveProperty({type: Boolean, value: false, reflect: true})
   declare editable: boolean
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'io-divider-move': 'onDividerMove',
       'io-divider-move-end': 'onDividerMoveEnd',
@@ -379,7 +379,7 @@ export class IoSplit extends IoElement {
   splitChanged() {
     this.calculateCollapsedDrawers()
   }
-  changed() {
+  override changed() {
     this.setAttribute('orientation', this.split.orientation)
     const childCount = this.split.children.length
     const lastIndex = childCount - 1

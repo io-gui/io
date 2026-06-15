@@ -1,6 +1,7 @@
 import { ReactivePropertyInstance, ReactivePropertyDefinition } from '../core/ReactiveProperty.js';
 import { ThemeSingleton } from '../nodes/Theme.js';
 import { IoElement, IoElementProps } from './IoElement.js';
+/** WebGL canvas element with shared context and shader program cache. */
 export declare class IoGl extends IoElement {
     #private;
     static get Style(): string;
@@ -21,7 +22,7 @@ export declare class IoGl extends IoElement {
     setShaderProgram(): void;
     updatePropertyUniform(name: string, property: ReactivePropertyInstance): void;
     updateThemeUniforms(): void;
-    setUniform(name: string, value: any): void;
+    setUniform(name: string, value: unknown): void;
     Register(ioNodeConstructor: typeof IoElement): void;
 }
 //# sourceMappingURL=IoGL.d.ts.map

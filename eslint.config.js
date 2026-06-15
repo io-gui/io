@@ -22,7 +22,19 @@ const globals = {
 
 export default tseslint.config(
   {
-    ignores: ["**/dist/**", "**/bundle/**", "**/node_modules/**"],
+    ignores: [
+      "**/dist/**",
+      "**/bundle/**",
+      "**/node_modules/**",
+      "docs/generated/**",
+      "**/*.d.ts",
+      "**/packages/*/src/**/*.js",
+      "**/packages/*/src/**/*.js.map",
+      "vite.config.ts",
+      "vite.bundle.config.ts",
+      "vitest.config.ts",
+      "bundle.js",
+    ],
   },
   {
     files: ["**/*.ts"],
@@ -44,14 +56,12 @@ export default tseslint.config(
     },
     extends: [
       js.configs.recommended,
-      // tseslint.configs.base
       tseslint.configs.recommended,
     ],
     plugins: {
       "@stylistic": stylistic,
     },
     rules: {
-      // Semantic/type-aware rules (require typescript-eslint)
       "@typescript-eslint/consistent-type-assertions": "error",
       "@typescript-eslint/no-floating-promises": "error",
       "@typescript-eslint/no-unused-vars": [
@@ -61,10 +71,25 @@ export default tseslint.config(
       "@typescript-eslint/no-empty-function": "off",
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
-      "@typescript-eslint/no-explicit-any": "off", // TODO: enable this rule
-      "@typescript-eslint/no-unused-expressions": "off", // TODO: enable this rule
-      "@typescript-eslint/ban-ts-comment": "off", // TODO: enable this rule
-      // Stylistic rules (migrated to @stylistic)
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-expressions": [
+        "warn",
+        {
+          allowShortCircuit: true,
+          allowTernary: true,
+          allowTaggedTemplates: true,
+        },
+      ],
+      "@typescript-eslint/ban-ts-comment": [
+        "error",
+        {
+          "ts-expect-error": "allow-with-description",
+          "ts-ignore": true,
+          "ts-nocheck": true,
+          "ts-check": false,
+          minimumDescriptionLength: 3,
+        },
+      ],
       "@stylistic/member-delimiter-style": [
         "error",
         {
@@ -75,9 +100,8 @@ export default tseslint.config(
       "@stylistic/semi": ["error", "never"],
       "@stylistic/quotes": ["error", "single"],
       "@stylistic/no-trailing-spaces": "error",
-      "@stylistic/max-len": ["warn", { code: 320 }],
+      "@stylistic/max-len": ["warn", { code: 360 }],
 
-      // Core ESLint rules
       "no-debugger": "error",
       "no-unused-labels": "off",
       "no-unused-vars": "off",
@@ -87,9 +111,28 @@ export default tseslint.config(
     },
   },
   {
-    files: ["**/*.test.ts"],
+    files: ["**/*.test.ts", "**/*.bench.ts", "**/bench-setup.ts"],
+    extends: [tseslint.configs.disableTypeChecked],
     rules: {
       "@typescript-eslint/no-empty-function": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+    },
+  },
+  {
+    files: ["**/demos/**/*.ts"],
+    rules: {
+      "@typescript-eslint/no-empty-function": "off",
+      "@typescript-eslint/ban-ts-comment": [
+        "error",
+        {
+          "ts-expect-error": "allow-with-description",
+          "ts-ignore": false,
+          "ts-nocheck": false,
+          "ts-check": false,
+          minimumDescriptionLength: 3,
+        },
+      ],
     },
   },
 );

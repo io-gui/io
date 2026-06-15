@@ -2,32 +2,90 @@ name: CI
 
 on:
   pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - 'images/**'
   push:
-    paths-ignore:
-      - 'docs/**'
-      - 'images/**'
+    branches: [main, dev]
 
 jobs:
   lint:
-    name: "Building"
+    name: Lint
     runs-on: ubuntu-latest
     steps:
-      - name: Git checkout
-        uses: actions/checkout@v4
-      - name: Install node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
         with:
-          node-version: '20.x'
-      - name: Install pnpm
-        run: npm install -g pnpm@latest-10
-      - name: Install packages
-        run: pnpm install
-      - name: Install playwright
-        run: npx playwright install --with-deps
-      - name: Bundling
-        run: pnpm bundle
-      - name: Running tests
-        run: pnpm test
+          version: 9.5.0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+          cache: pnpm
+      - run: pnpm install
+      - run: pnpm lint:check
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 9.5.0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+          cache: pnpm
+      - run: pnpm install
+      - run: pnpm clean && tsc -b
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 9.5.0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+          cache: pnpm
+      - run: pnpm install
+      - run: npx playwright install --with-deps chromium
+      - run: pnpm test
+
+  bundle:
+    name: Bundle
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 9.5.0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+          cache: pnpm
+      - run: pnpm install
+      - run: pnpm clean && tsc -b && node bundle.js
+
+  # bench:
+  #   name: Benchmark
+  #   runs-on: ubuntu-latest
+  #   if: github.event_name == 'pull_request'
+  #   steps:
+  #     - uses: actions/checkout@v6
+  #     - uses: pnpm/action-setup@v6
+  #       with:
+  #         version: 9.5.0
+  #     - uses: actions/setup-node@v6
+  #       with:
+  #         node-version: '24.x'
+  #         cache: pnpm
+  #     - run: pnpm install
+  #     # Phase 2: restore cached benchmarks/results.json from main
+  #     - run: pnpm bench
+  #     - uses: actions/upload-artifact@v4
+  #       if: always()
+  #       with:
+  #         name: benchmark-results
+  #         path: benchmarks/results.json

@@ -4,7 +4,7 @@ import { IoMenuItem } from './IoMenuItem.js'
 
 @Register
 export class IoMenuHamburger extends IoMenuItem {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -20,7 +20,7 @@ export class IoMenuHamburger extends IoMenuItem {
   @ReactiveProperty({value: 'down', reflect: true})
   declare direction: NudgeDirection
 
-  changed() {
+  override changed() {
     this.render([ioIcon({value: 'io:hamburger'})])
   }
 }

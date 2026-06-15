@@ -1,6 +1,12 @@
 import { ReactiveProperty, Register, span } from '@io-gui/core'
 import { IoButton, IoButtonProps } from '@io-gui/inputs'
 
+interface NamedValue {
+  name?: string
+  title?: string
+  id?: string
+}
+
 export type IoPropertyLinkProps = IoButtonProps & {
   value?: object
   showName?: boolean
@@ -8,7 +14,7 @@ export type IoPropertyLinkProps = IoButtonProps & {
 
 @Register
 export class IoPropertyLink extends IoButton {
-  static get Style() {
+  static override get Style() {
     return /* css */`
     :host {
       display: flex;
@@ -38,7 +44,7 @@ export class IoPropertyLink extends IoButton {
     this.changed()
   }
 
-  changed() {
+  override changed() {
     let label: string | undefined
     if (this.value instanceof Array) {
       label = `${this.value.constructor.name} (${this.value.length})`
@@ -46,7 +52,8 @@ export class IoPropertyLink extends IoButton {
       label = `${this.value.constructor.name}`
     }
     if (this.showName) {
-      const name = (this.value as any).name || (this.value as any).title || (this.value as any).id
+      const named = this.value as NamedValue
+      const name = named.name || named.title || named.id
       if (name) {
         label += ` "${name}"`
       }

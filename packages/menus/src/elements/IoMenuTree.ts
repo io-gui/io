@@ -5,7 +5,7 @@ import { ioMenuItem, IoMenuItem } from './IoMenuItem.js'
 import { ioMenuTreeBranch } from './IoMenuTreeBranch.js'
 import { searchMenuOption } from '../utils/MenuNodeUtils.js'
 
-function genObjectStorageID(object: Record<string, any>) {
+function genObjectStorageID(object: MenuOption) {
   const string = JSON.stringify(object)
   let hash = 0
   for (let i = 0; i < string.length; i++) {
@@ -40,7 +40,7 @@ export type IoMenuTreeProps = IoElementProps & {
 @Register
 export class IoMenuTree extends IoElement {
 
-  static get Style() {
+  static override get Style() {
     return /* css */`
     :host {
       display: flex;
@@ -51,7 +51,7 @@ export class IoMenuTree extends IoElement {
       border-color: var(--io_borderColorOutset);
       background-color: var(--io_bgColorLight);
       padding: var(--io_spacing);
-      @apply --unselectable;
+      @apply --io-unselectable;
     }
     :host io-menu-tree {
       padding: 0 !important;
@@ -103,7 +103,7 @@ export class IoMenuTree extends IoElement {
     this.changed()
   }
 
-  changed() {
+  override changed() {
     const vChildren: VDOMElement[] = this.widget ? [this.widget] : []
 
     if (this.searchable) {

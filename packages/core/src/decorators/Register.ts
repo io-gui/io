@@ -24,5 +24,5 @@ import { IoElement } from '../elements/IoElement.js'
  * Register(MyNode);
 */
 export function Register(ioNodeConstructor: typeof ReactiveNode | typeof IoElement) {
-  (ioNodeConstructor as any).prototype.Register(ioNodeConstructor)
+  ioNodeConstructor.prototype.Register(ioNodeConstructor as typeof ReactiveNode & typeof IoElement)
 }

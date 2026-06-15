@@ -1,13 +1,13 @@
-import { ReactiveNode, Register, ReactiveProperty, WithBinding, NodeArray } from '@io-gui/core'
+import { ReactiveNode, Register, ReactiveProperty, WithBinding, NodeArray, Json } from '@io-gui/core'
 
 export type MenuOptionMode = 'select' | 'toggle' | 'none'
 
 export type MenuOptionProps = {
   id?: string
   value?: any
-  label?: string
+  label?: WithBinding<string>
   icon?: string
-  hint?: string
+  hint?: WithBinding<string>
   action?: (value?: any) => void
   mode?: MenuOptionMode
   disabled?: boolean
@@ -60,7 +60,7 @@ export class MenuOption extends ReactiveNode {
   @ReactiveProperty({type: NodeArray, init: 'this'})
   declare options: NodeArray<MenuOption>
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'option-selected-changed': 'onOptionSelectedChanged',
     }
@@ -244,7 +244,7 @@ export class MenuOption extends ReactiveNode {
     this.updatePaths()
     this.dispatchMutation()
   }
-  toJSON(): MenuOptionProps {
+  override toJSON(): Json {
     return {
       id: this.id,
       value: this.value,
@@ -257,6 +257,7 @@ export class MenuOption extends ReactiveNode {
       options: this.options.map(option => option.toJSON()),
     }
   }
+  // TODO: use applyJSON recursively
   fromJSON(json: MenuOptionProps) {
     this.setProperties({
       id: json.id,
@@ -272,7 +273,7 @@ export class MenuOption extends ReactiveNode {
     })
     return this
   }
-  changed() {
+  override changed() {
     debug: {
       if (['select', 'toggle', 'none'].indexOf(this.mode) === -1) {
         console.warn(`Unknown "mode" property "${this.mode}"!`, this)
@@ -288,7 +289,7 @@ export class MenuOption extends ReactiveNode {
       }
     }
   }
-  dispose() {
+  override dispose() {
     this.options.length = 0 // TODO: test magic!
     super.dispose()
   }

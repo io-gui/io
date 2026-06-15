@@ -2,7 +2,10 @@
   "name": "@io-gui/editors",
   "version": "2.0.0-alpha.2",
   "description": "A set of object inspector elements for Io-Gui.",
-  "sideEffects": true,
+  "sideEffects": [
+    "**/elements/**",
+    "**/nodes/**"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/io-gui/io.git"
@@ -36,13 +39,10 @@
   ],
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "default": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     }
-  },
-  "scripts": {
-    "clean": "rm -rf dist",
-    "build": "pnpm run clean && tsc"
   },
   "devDependencies": {
     "@io-gui/core": "workspace:*",

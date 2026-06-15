@@ -1,5 +1,9 @@
 export const propertyDecorators = new WeakMap();
 export const reactivePropertyDecorators = new WeakMap();
+const RESERVED_ELEMENT_PROPERTIES = [
+    // TODO: consider adding all native element properties?
+    'class', 'style', 'id', 'key', 'children'
+];
 /**
  * Declares a property and an initial value for a property.
  * @decorator
@@ -15,6 +19,9 @@ export const reactivePropertyDecorators = new WeakMap();
  */
 export function Property(initialValue = undefined) {
     return (target, propertyName) => {
+        if (RESERVED_ELEMENT_PROPERTIES.includes(propertyName) && target._isIoElement) {
+            console.error(`Property ${propertyName} is reserved and cannot be used as a property name.`);
+        }
         const constructor = target.constructor;
         const properties = propertyDecorators.get(constructor) || {};
         propertyDecorators.set(constructor, properties);
@@ -44,6 +51,9 @@ export function Property(initialValue = undefined) {
  */
 export function ReactiveProperty(defLoose = {}) {
     return (target, propertyName) => {
+        if (RESERVED_ELEMENT_PROPERTIES.includes(propertyName) && target._isIoElement) {
+            console.error(`ReactiveProperty ${propertyName} is reserved and cannot be used as a property name.`);
+        }
         const constructor = target.constructor;
         const properties = reactivePropertyDecorators.get(constructor) || {};
         reactivePropertyDecorators.set(constructor, properties);

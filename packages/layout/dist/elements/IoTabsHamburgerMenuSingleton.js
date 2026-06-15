@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { IoOverlaySingleton, NodeArray, IoElement, Register, ReactiveProperty, nudge } from '@io-gui/core';
 import { ioTab } from './IoTab.js';
 let IoTabsHamburgerMenu = class IoTabsHamburgerMenu extends IoElement {
-    static vConstructor;
+    // static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement
     static get Style() {
         return /* css */ `
       :host {

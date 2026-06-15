@@ -37,7 +37,8 @@ function getKey(func, node) {
  */
 export async function nextQueue() {
     return new Promise((resolve) => {
-        const key = getKey(resolve, undefined);
+        const callback = () => resolve();
+        const key = getKey(callback, undefined);
         queue.set(key, { arg: undefined, frame: currentFrame + 1 });
     });
 }
@@ -94,6 +95,19 @@ export function throttle(func, arg, node, delay = 1) {
 export function debounce(func, arg, node, delay = 1) {
     const key = getKey(func, node);
     queue.set(key, { arg, frame: currentFrame + delay });
+}
+/**
+ * Removes pending queue and throttle state for a disposed node.
+ */
+export function clearNodeQueue(node) {
+    for (const activeQueue of [queue0, queue1]) {
+        for (const [key] of activeQueue) {
+            if (key.node === node)
+                activeQueue.delete(key);
+        }
+    }
+    keysByNode.delete(node);
+    throttleNextFrame.delete(node);
 }
 function executeQueue() {
     currentFrame++;

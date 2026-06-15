@@ -13,6 +13,12 @@ import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { ThreeApplet, IoThreeExample } from '@io-gui/three';
 const gltfLoader = new GLTFLoader();
 const fbxLoader = new FBXLoader();
+const loadFbx = (url) => new Promise((resolve, reject) => {
+    fbxLoader.load(url, resolve, undefined, reject);
+});
+const loadGltf = (url) => new Promise((resolve, reject) => {
+    gltfLoader.load(url, resolve, undefined, reject);
+});
 let AnimationRetargetingReadyplayerExample = class AnimationRetargetingReadyplayerExample extends ThreeApplet {
     constructor(args) {
         super(args);
@@ -43,12 +49,8 @@ let AnimationRetargetingReadyplayerExample = class AnimationRetargetingReadyplay
     }
     async loadModels() {
         const [sourceModel, targetModel] = await Promise.all([
-            new Promise((resolve, reject) => {
-                fbxLoader.load('https://threejs.org/examples/models/fbx/mixamo.fbx', resolve, undefined, reject);
-            }),
-            new Promise((resolve, reject) => {
-                gltfLoader.load('https://threejs.org/examples/models/gltf/readyplayer.me.glb', resolve, undefined, reject);
-            })
+            loadFbx('https://threejs.org/examples/models/fbx/mixamo.fbx'),
+            loadGltf('https://threejs.org/examples/models/gltf/readyplayer.me.glb'),
         ]);
         const models = new Group();
         models.add(sourceModel);

@@ -16,7 +16,7 @@ export type IoNumberSliderRangeProps = IoElementProps & {
  **/
 @Register
 export class IoNumberSliderRange extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
     :host {
       display: flex;
@@ -67,10 +67,10 @@ export class IoNumberSliderRange extends IoElement {
       this.dispatchMutation(this.value)
     }
   }
-  ready() {
+  override ready() {
     this.changed()
   }
-  changed() {
+  override changed() {
     this.render([
       ioNumber({
         id: 'number0',

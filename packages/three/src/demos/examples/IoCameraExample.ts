@@ -73,11 +73,11 @@ export class CameraExample extends ThreeApplet {
     this.scene.add( particles )
   }
 
-  onResized(width: number, height: number) {
+  override onResized(width: number, height: number) {
     super.onResized(width, height)
     this.perspectiveCamera.aspect =  width / height
   }
-  onAnimate() {
+  override onAnimate() {
     const r = Date.now() * 0.0005
 
     this.mesh.position.x = 700 * Math.cos( r )
@@ -142,7 +142,7 @@ export class IoCameraExample extends IoThreeExample {
   @ReactiveProperty({type: CameraExample, init: {isPlaying: true}})
   declare applet: CameraExample
 
-  ready() {
+  override ready() {
 
     this.render([
       ioSplit({

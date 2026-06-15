@@ -20,7 +20,7 @@ export type IoDrawerProps = IoElementProps & {
 
 @Register
 export class IoDrawer extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         pointer-events: auto;
@@ -95,7 +95,7 @@ export class IoDrawer extends IoElement {
         background-color: var(--io_bgColorLight);
         border: var(--io_border);
         border-color: var(--io_borderColorStrong);
-        @apply --unselectable;
+        @apply --io-unselectable;
       }
       :host[orientation="horizontal"] > .io-drawer-content > .io-drawer-handle {
         border-top: 0;
@@ -154,7 +154,7 @@ export class IoDrawer extends IoElement {
     this.changed()
   }
 
-  changed() {
+  override changed() {
     if (!this.child) {
       this.render([])
       return

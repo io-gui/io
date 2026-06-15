@@ -1,15 +1,16 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "composite": true,
     "outDir": "./dist",
-    "rootDir": "./src",
-    "paths": {
-      "@io-gui/navigation": ["./src/index.ts"],
-      "@io-gui/core": ["../core"],
-      "@io-gui/menus": ["../menus"],
-      "@io-gui/inputs": ["../inputs"],
-      "@io-gui/icons": ["../icons"]
-    }
+    "rootDir": "./src"
   },
-  "include": ["./src"]
+  "include": ["./src"],
+  "exclude": ["./src/**/*.test.ts"],
+  "references": [
+    { "path": "../core" },
+    { "path": "../menus" },
+    { "path": "../inputs" },
+    { "path": "../icons" }
+  ]
 }

@@ -115,7 +115,7 @@ export class BackdropExample extends ThreeApplet {
     })
   }
 
-  onAnimate(delta: number) {
+  override onAnimate(delta: number) {
     this.mixer.update(delta)
     debug: {
       this.dispatchMutation(this.mixer)

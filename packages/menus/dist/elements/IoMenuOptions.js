@@ -26,7 +26,7 @@ let IoMenuOptions = class IoMenuOptions extends IoElement {
       background-color: var(--io_bgColorLight);
       padding: calc(var(--io_spacing) + var(--io_borderWidth));
       transition: opacity 0.3s ease-in-out;
-      @apply --unselectable;
+      @apply --io-unselectable;
     }
     :host[horizontal] {
       padding: var(--io_spacing) 0;
@@ -92,6 +92,11 @@ let IoMenuOptions = class IoMenuOptions extends IoElement {
             this.setAttribute('inoverlay', 'true');
         }
     }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this.expanded)
+            this.collapse();
+    }
     onIoFocusTo(event) {
         const source = event.detail.source;
         const cmd = event.detail.command;
@@ -151,7 +156,9 @@ let IoMenuOptions = class IoMenuOptions extends IoElement {
         const optionWasFocused = this.contains(document.activeElement);
         const searchHadInput = this.searchable && !!this.search;
         getMenuDescendants(this).forEach(descendant => {
-            descendant.expanded = false;
+            if (Object.prototype.hasOwnProperty.call(descendant, 'expanded')) {
+                descendant.expanded = false;
+            }
         });
         this.expanded = false;
         if (searchHadInput && optionWasFocused && !this.inoverlay) {

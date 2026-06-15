@@ -8,180 +8,110 @@ import { Register } from '../decorators/Register.js';
 import { ReactiveProperty } from '../decorators/Property.js';
 import { ReactiveNode } from '../nodes/ReactiveNode.js';
 import { Storage as $ } from '../nodes/Storage.js';
-const THEME_VERSION = 'v0.11';
-const styleElement = document.createElement('style');
-styleElement.setAttribute('id', 'io-theme-variables-' + THEME_VERSION);
-document.head.appendChild(styleElement);
-export class Color {
-    r;
-    g;
-    b;
-    a;
-    constructor(r, g, b, a) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
-    }
-    toCss() {
-        const r = Math.floor(this.r * 255);
-        const g = Math.floor(this.g * 255);
-        const b = Math.floor(this.b * 255);
-        if (this.a !== undefined && this.a !== 1) {
-            return `rgba(${r}, ${g}, ${b}, ${this.a})`;
-        }
-        else {
-            return `rgb(${r}, ${g}, ${b})`;
-        }
-    }
-}
-export const LIGHT_THEME = {
-    spacing: 2,
-    spacing2: 0,
-    spacing3: 0,
-    spacing5: 0,
-    spacing8: 0,
-    lineHeight: 20,
-    fontSize: 14,
-    fieldHeight: 0,
-    borderRadius: 2,
-    borderWidth: 1,
-    borderColor: new Color(0.2, 0.2, 0.2, 1),
-    borderColorLight: new Color(0.3, 0.3, 0.3, 1),
-    borderColorStrong: new Color(0.6, 0.6, 0.6, 1),
-    borderColorRed: new Color(1, 0.35, 0.15, 1),
-    borderColorGreen: new Color(0.1, 0.7, 0.2, 1),
-    borderColorBlue: new Color(0.2, 0.4, 0.95, 1),
-    bgColor: new Color(0.85, 0.85, 0.85, 1),
-    bgColorStrong: new Color(0.9, 0.9, 0.9, 1),
-    bgColorLight: new Color(0.8, 0.8, 0.8, 1),
-    bgColorRed: new Color(1, 0.5, 0.3, 1),
-    bgColorGreen: new Color(0.2, 0.9, 0.3, 1),
-    bgColorBlue: new Color(0.2, 0.5, 0.9, 1),
-    bgColorInput: new Color(0.95, 0.96, 0.95, 1),
-    color: new Color(0.25, 0.25, 0.2, 1),
-    colorStrong: new Color(0, 0, 0, 1),
-    colorLight: new Color(0.6, 0.6, 0.6, 1),
-    colorRed: new Color(1, 0.2, 0.0, 1),
-    colorGreen: new Color(0, 0.6, 0.1, 1),
-    colorBlue: new Color(0.2, 0.3, 1, 1),
-    colorWhite: new Color(1, 1, 1, 1),
-    colorInput: new Color(0, 0.05, 0.02, 1),
-    gradientColorStart: new Color(0.9, 0.9, 0.9, 1),
-    gradientColorEnd: new Color(0.75, 0.75, 0.75, 1),
-    shadowColor: new Color(0, 0, 0, 0.2),
-};
-export const DARK_THEME = {
-    spacing: 2,
-    spacing2: 0,
-    spacing3: 0,
-    spacing5: 0,
-    spacing8: 0,
-    lineHeight: 20,
-    fontSize: 14,
-    fieldHeight: 0,
-    borderRadius: 2,
-    borderWidth: 1,
-    borderColor: new Color(0.5, 0.5, 0.5, 1),
-    borderColorLight: new Color(0.3, 0.3, 0.3, 1),
-    borderColorStrong: new Color(0, 0, 0, 1),
-    borderColorRed: new Color(1, 0.2, 0.0, 1),
-    borderColorBlue: new Color(0.4, 0.5, 0.9, 1),
-    borderColorGreen: new Color(0, 0.6, 0.1, 1),
-    bgColor: new Color(0.2, 0.2, 0.2, 1),
-    bgColorStrong: new Color(0.15, 0.15, 0.15, 1),
-    bgColorLight: new Color(0.25, 0.25, 0.25, 1),
-    bgColorRed: new Color(0.7, 0.2, 0.1, 1),
-    bgColorGreen: new Color(0.1, 0.5, 0.2, 1),
-    bgColorBlue: new Color(0.2, 0.4, 0.8, 1),
-    bgColorInput: new Color(0.02, 0.02, 0.02, 1),
-    color: new Color(0.6, 0.6, 0.6, 1),
-    colorStrong: new Color(0.86, 0.86, 0.86, 1),
-    colorLight: new Color(0.3, 0.3, 0.3, 1),
-    colorRed: new Color(1, 0.4, 0.4, 1),
-    colorGreen: new Color(0.4, 0.95, 0.3, 1),
-    colorBlue: new Color(0.6, 0.9, 1, 1),
-    colorWhite: new Color(1, 1, 1, 1),
-    colorInput: new Color(0.65, 0.7, 0.68, 1),
-    gradientColorStart: new Color(0.45, 0.45, 0.45, 1),
-    gradientColorEnd: new Color(0.2, 0.2, 0.2, 1),
-    shadowColor: new Color(0, 0, 0, 0.2),
-};
-const $ThemeID = $({
+import { Color } from '../core/Color.js';
+import { adoptDocumentStylesheet } from '../core/Style.js';
+const THEME_VERSION = 'v0.17';
+export const $ThemeID = $({
     value: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
     storage: 'local',
     key: 'theme-' + THEME_VERSION
 });
-const $Themes = $({
-    value: {},
-    storage: 'local',
-    key: 'io-themes-' + THEME_VERSION
-});
-const compositeVariables = /* css */ `
-  body {
-    --io_border: var(--io_borderWidth) solid var(--io_borderColor);
-    --io_borderColorInset: var(--io_borderColorStrong) var(--io_borderColorLight) var(--io_borderColorLight) var(--io_borderColorStrong);
-    --io_borderColorOutset: var(--io_borderColorLight) var(--io_borderColorStrong) var(--io_borderColorStrong) var(--io_borderColorLight);
-    --io_gradientOutset: linear-gradient(180deg, var(--io_gradientColorStart), var(--io_gradientColorEnd) 100%);
-    --io_gradientInset: linear-gradient(0deg, var(--io_gradientColorStart), var(--io_gradientColorEnd) 150%);
-    --io_shadow: 2px 2px 6px var(--io_shadowColor), 1px 1px 1px var(--io_shadowColor);
-    --io_shadowInset: 0.75px 0.75px 2px inset var(--io_shadowColor);
-    --io_shadowOutset: 1px 1px 2px var(--io_shadowColor);
-  }
-`;
+export const THEMES = {
+    light: {
+        spacing: 2,
+        spacing2: 0,
+        spacing3: 0,
+        spacing5: 0,
+        spacing8: 0,
+        lineHeight: 20,
+        fontSize: 14,
+        fieldHeight: 0,
+        borderRadius: 2,
+        borderWidth: 1,
+        borderColor: Color.toHex(0.2, 0.2, 0.2),
+        borderColorLight: Color.toHex(0.3, 0.3, 0.3),
+        borderColorStrong: Color.toHex(0.6, 0.6, 0.6),
+        borderColorRed: Color.toHex(1, 0.35, 0.15),
+        borderColorGreen: Color.toHex(0.1, 0.7, 0.2),
+        borderColorBlue: Color.toHex(0.2, 0.4, 0.95),
+        bgColor: Color.toHex(0.85, 0.85, 0.85),
+        bgColorStrong: Color.toHex(0.9, 0.9, 0.9),
+        bgColorLight: Color.toHex(0.8, 0.8, 0.8),
+        bgColorRed: Color.toHex(1, 0.5, 0.3),
+        bgColorGreen: Color.toHex(0.2, 0.9, 0.3),
+        bgColorBlue: Color.toHex(0.2, 0.5, 0.9),
+        bgColorInput: Color.toHex(0.95, 0.96, 0.95),
+        color: Color.toHex(0.25, 0.25, 0.2),
+        colorStrong: Color.toHex(0, 0, 0),
+        colorLight: Color.toHex(0.6, 0.6, 0.6),
+        colorRed: Color.toHex(1, 0.2, 0),
+        colorGreen: Color.toHex(0, 0.6, 0.1),
+        colorBlue: Color.toHex(0.2, 0.3, 1),
+        colorWhite: Color.toHex(1, 1, 1),
+        colorInput: Color.toHex(0, 0.05, 0.02),
+        gradientColorStart: Color.toHex(0.9, 0.9, 0.9),
+        gradientColorEnd: Color.toHex(0.75, 0.75, 0.75),
+        shadowColor: Color.toHex(0, 0, 0, 0.2),
+    },
+    dark: {
+        spacing: 2,
+        spacing2: 0,
+        spacing3: 0,
+        spacing5: 0,
+        spacing8: 0,
+        lineHeight: 20,
+        fontSize: 14,
+        fieldHeight: 0,
+        borderRadius: 2,
+        borderWidth: 1,
+        borderColor: Color.toHex(0.5, 0.5, 0.5),
+        borderColorLight: Color.toHex(0.3, 0.3, 0.3),
+        borderColorStrong: Color.toHex(0, 0, 0),
+        borderColorRed: Color.toHex(1, 0.2, 0),
+        borderColorBlue: Color.toHex(0.4, 0.5, 0.9),
+        borderColorGreen: Color.toHex(0, 0.6, 0.1),
+        bgColor: Color.toHex(0.2, 0.2, 0.2),
+        bgColorStrong: Color.toHex(0.15, 0.15, 0.15),
+        bgColorLight: Color.toHex(0.25, 0.25, 0.25),
+        bgColorRed: Color.toHex(0.7, 0.2, 0.1),
+        bgColorGreen: Color.toHex(0.1, 0.5, 0.2),
+        bgColorBlue: Color.toHex(0.2, 0.4, 0.8),
+        bgColorInput: Color.toHex(0.02, 0.02, 0.02),
+        color: Color.toHex(0.6, 0.6, 0.6),
+        colorStrong: Color.toHex(0.86, 0.86, 0.86),
+        colorLight: Color.toHex(0.3, 0.3, 0.3),
+        colorRed: Color.toHex(1, 0.4, 0.4),
+        colorGreen: Color.toHex(0.4, 0.95, 0.3),
+        colorBlue: Color.toHex(0.6, 0.9, 1),
+        colorWhite: Color.toHex(1, 1, 1),
+        colorInput: Color.toHex(0.65, 0.7, 0.68),
+        gradientColorStart: Color.toHex(0.45, 0.45, 0.45),
+        gradientColorEnd: Color.toHex(0.2, 0.2, 0.2),
+        shadowColor: Color.toHex(0, 0, 0, 0.2),
+    },
+};
+const themeKeys = Object.keys(THEMES.light);
+function isThemeColorKey(key) {
+    return key.includes('Color') || key.startsWith('color') || key.startsWith('gradient');
+}
 /**
- * `Theme` is designed to be used as `ThemeSingleton`. It holds top-level CSS variables for Io-Gui design system.
- * CSS Variables are grouped in different themes and can be collectively switched by changing `theme` property.
- *
- * ```javascript
- * ThemeSingleton.themeID = 'dark';
- * ```
- *
- * CSS color variables such as `'--io_color'` and `'--io_bgColor'` are mapped to numeric properties `io_color` and `io_bgColor`.
+ * Top-level theme singleton; maps numeric/Color properties to `--io_*` CSS variables.
+ * @see ThemeSingleton
  */
 let Theme = class Theme extends ReactiveNode {
     static get ReactiveProperties() {
         const props = {};
-        for (const p in LIGHT_THEME) {
-            const prop = LIGHT_THEME[p];
-            if (prop instanceof Object) {
-                props[p] = { value: prop, type: Color, init: null };
+        for (const key of themeKeys) {
+            if (isThemeColorKey(key)) {
+                props[key] = { type: Color, init: [0, 0, 0, 1] };
             }
             else {
-                props[p] = prop;
+                props[key] = { type: Number };
             }
         }
         return props;
     }
-    ready() {
-        this.registerTheme('light', LIGHT_THEME);
-        this.registerTheme('dark', DARK_THEME);
-        this.themeIDChanged();
-    }
-    registerTheme(themeID, theme) {
-        // Save default theme
-        this.themeDefaults[themeID] = theme;
-        this.setProperty('themeDefaults', JSON.parse(JSON.stringify(this.themeDefaults)), true);
-        // Save persistant theme
-        $Themes.value[themeID] = $Themes.value[themeID] || theme;
-        $Themes.value = JSON.parse(JSON.stringify($Themes.value));
-    }
-    reset() {
-        // Load persistant themes from default themes
-        $Themes.value = JSON.parse(JSON.stringify(this.themeDefaults));
-        this.themeIDChanged();
-    }
-    themeIDChanged() {
-        const values = $Themes.value[this.themeID];
-        for (const p in values) {
-            if (values[p] instanceof Object && JSON.stringify(Object.keys(values[p])) === '["r","g","b","a"]') {
-                values[p] = new Color(values[p].r, values[p].g, values[p].b, values[p].a);
-            }
-        }
-        this.setProperties(values);
-    }
     onPropertyMutated(event) {
-        // TODO: Add properties to mutation handler.
         const mutated = super.onPropertyMutated(event);
         if (mutated) {
             this.changed();
@@ -202,28 +132,13 @@ let Theme = class Theme extends ReactiveNode {
         this.spacing3 = this.spacing * 3;
         this.spacing5 = this.spacing * 5;
         this.spacing8 = this.spacing * 8;
-        const propertyVariables = Array.from(Object.keys(LIGHT_THEME)).reduce((result, prop) => {
-            $Themes.value[this.themeID][prop] = this[prop];
-            if (typeof this[prop] === 'object') {
-                return `${result}--io_${prop}: ${this[prop].toCss()};\n    `;
-            }
-            else {
-                return `${result}--io_${prop}: ${this[prop]}px;\n    `;
-            }
-        }, '');
-        styleElement.innerHTML = /* css */ `body {\n  ${propertyVariables}\n}\n${compositeVariables}`;
-        this.debounce(this.onSaveTheme, undefined, 60);
-    }
-    onSaveTheme() {
-        $Themes.value = JSON.parse(JSON.stringify($Themes.value));
+        for (const key of themeKeys) {
+            const value = this[key];
+            const cssValue = (value instanceof Color) ? value.toCss() : `${value}px`;
+            themeStyleDeclaration.setProperty(`--io_${key}`, cssValue);
+        }
     }
 };
-__decorate([
-    ReactiveProperty({ type: Object, init: null })
-], Theme.prototype, "themeDefaults", void 0);
-__decorate([
-    ReactiveProperty({ type: String, binding: $ThemeID })
-], Theme.prototype, "themeID", void 0);
 __decorate([
     ReactiveProperty('debounced')
 ], Theme.prototype, "reactivity", void 0);
@@ -231,6 +146,33 @@ Theme = __decorate([
     Register
 ], Theme);
 export { Theme };
-const ThemeSingleton = new Theme();
+const compositeVariables = {
+    '--io_border': 'var(--io_borderWidth) solid var(--io_borderColor)',
+    '--io_borderColorInset': 'var(--io_borderColorStrong) var(--io_borderColorLight) var(--io_borderColorLight) var(--io_borderColorStrong)',
+    '--io_borderColorOutset': 'var(--io_borderColorLight) var(--io_borderColorStrong) var(--io_borderColorStrong) var(--io_borderColorLight)',
+    '--io_gradientOutset': 'linear-gradient(180deg, var(--io_gradientColorStart), var(--io_gradientColorEnd) 100%)',
+    '--io_gradientInset': 'linear-gradient(0deg, var(--io_gradientColorStart), var(--io_gradientColorEnd) 150%)',
+    '--io_shadow': '2px 2px 6px var(--io_shadowColor), 1px 1px 1px var(--io_shadowColor)',
+    '--io_shadowInset': '0.75px 0.75px 2px inset var(--io_shadowColor)',
+    '--io_shadowOutset': '1px 1px 2px var(--io_shadowColor)',
+};
+const themeStyleDeclaration = createThemeStyleDeclaration();
+function createThemeStyleDeclaration() {
+    const styleSheet = adoptDocumentStylesheet('body {}');
+    const bodyRule = styleSheet.cssRules[0];
+    for (const name in compositeVariables) {
+        bodyRule.style.setProperty(name, compositeVariables[name]);
+    }
+    return bodyRule.style;
+}
+const ThemeSingleton = new Theme().applyJSON(THEMES[$ThemeID.value]);
+export const $Theme = $({
+    value: ThemeSingleton,
+    storage: 'local',
+    key: 'io-theme-' + THEME_VERSION
+});
+$ThemeID.node.addEventListener('value-changed', (event) => {
+    ThemeSingleton.applyJSON(THEMES[event.detail.value]);
+});
 export { ThemeSingleton };
 //# sourceMappingURL=Theme.js.map

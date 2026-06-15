@@ -2,9 +2,10 @@ import { Register } from '../decorators/Register.js'
 import { ReactiveProperty } from '../decorators/Property.js'
 import { ReactivePropertyInstance, ReactivePropertyDefinition } from '../core/ReactiveProperty.js'
 import { ReactiveNode } from '../nodes/ReactiveNode.js'
-import { ThemeSingleton, Color } from '../nodes/Theme.js'
+import { ThemeSingleton } from '../nodes/Theme.js'
 import { IoElement, IoElementProps } from './IoElement.js'
 import { glsl } from './IoGL.glsl.js'
+import { Color } from '../core/Color.js'
 
 const canvas = document.createElement('canvas')
 const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: false}) as WebGLRenderingContext
@@ -33,16 +34,35 @@ gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuff)
 
 const shadersCache = new WeakMap()
+const uniformLocationsCache = new WeakMap<WebGLProgram, Map<string, WebGLUniformLocation | null>>()
 let currentProgram: WebGLProgram | null
 
+function linkShaderProgram(program: WebGLProgram) {
+  gl.linkProgram(program)
+  uniformLocationsCache.delete(program)
+}
+
+function getUniformLocation(program: WebGLProgram, name: string) {
+  let locations = uniformLocationsCache.get(program)
+  if (!locations) {
+    locations = new Map()
+    uniformLocationsCache.set(program, locations)
+  }
+  if (!locations.has(name)) {
+    locations.set(name, gl.getUniformLocation(program, name))
+  }
+  return locations.get(name) ?? null
+}
+
+/** WebGL canvas element with shared context and shader program cache. */
 @Register
 export class IoGl extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         position: relative;
         overflow: hidden !important;
-        @apply --unselectable;
+        @apply --io-unselectable;
       }
       :host > canvas {
         position: absolute;
@@ -112,15 +132,17 @@ export class IoGl extends IoElement {
       }\n\n`
   }
   initPropertyUniform(name: string, property: ReactivePropertyDefinition) {
-    const type = property.value.constructor
+    const value = property.value
+    if (value === undefined || value === null) return ''
+    const type = (value as object).constructor
     switch (type) {
       case Boolean:
         return 'uniform int ' + name + ';\n'
       case Number:
         return 'uniform float ' + name + ';\n'
       case Array:
-        this.#vecLengths[name] = property.value.length
-        return 'uniform vec' + property.value.length + ' ' + name + ';\n'
+        this.#vecLengths[name] = (value as unknown[]).length
+        return 'uniform vec' + (value as unknown[]).length + ' ' + name + ';\n'
       case Color:
         this.#vecLengths[name] = 4
         return 'uniform vec4 ' + name + ';\n'
@@ -194,7 +216,7 @@ export class IoGl extends IoElement {
 
     this._reactiveProperties.forEach((property, name) => {
       const uname = 'u' + name.charAt(0).toUpperCase() + name.slice(1)
-      if (property.type === Array) {
+      if (property.type === Array && Array.isArray(property.value)) {
         this.#vecLengths[uname] = property.value.length
       }
     })
@@ -203,10 +225,9 @@ export class IoGl extends IoElement {
       this.#shader = shadersCache.get(this.constructor)
     } else {
       this.#shader = this.initShader()
+      linkShaderProgram(this.#shader)
       shadersCache.set(this.constructor, this.#shader)
     }
-
-    gl.linkProgram(this.#shader)
 
     const position = gl.getAttribLocation(this.#shader, 'position')
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuff)
@@ -253,7 +274,7 @@ export class IoGl extends IoElement {
     this.updateThemeUniforms()
     this.debounce(this.onRender)
   }
-  changed() {
+  override changed() {
     this.debounce(this.onRender)
   }
   onRender() {
@@ -305,28 +326,31 @@ export class IoGl extends IoElement {
       this.updatePropertyUniform('io_' + name, property)
     })
   }
-  setUniform(name: string, value: any) {
-    const uniform = gl.getUniformLocation(this.#shader, name)
+  setUniform(name: string, value: unknown) {
+    const uniform = getUniformLocation(this.#shader, name)
     if (uniform === null) return
     let type: string = typeof value
     if (value instanceof Array) type = 'array'
     let _c
+    let indexed: Record<string | number, number>
     switch (type) {
       case 'boolean':
         gl.uniform1i(uniform, value ? 1 : 0)
         break
       case 'number':
-        gl.uniform1f(uniform, value ?? 1)
+        gl.uniform1f(uniform, (value as number) ?? 1)
         break
       case 'object':
       case 'array':
         _c = [0, 1, 2, 3]
-        if (typeof value === 'object') {
-          if (value.x !== undefined) _c = ['x', 'y', 'z', 'w']
-          else if (value.r !== undefined) _c = ['r', 'g', 'b', 'a']
-          else if (value.h !== undefined) _c = ['h', 's', 'v', 'a']
-          else if (value.c !== undefined) _c = ['c', 'm', 'y', 'k']
+        if (typeof value === 'object' && value !== null) {
+          const vec = value as Record<string, number>
+          if (vec.x !== undefined) _c = ['x', 'y', 'z', 'w']
+          else if (vec.r !== undefined) _c = ['r', 'g', 'b', 'a']
+          else if (vec.h !== undefined) _c = ['h', 's', 'v', 'a']
+          else if (vec.c !== undefined) _c = ['c', 'm', 'y', 'k']
         }
+        indexed = value as Record<string | number, number>
         switch (this.#vecLengths[name]) {
           case 2:
             if (value === undefined) {
@@ -334,8 +358,8 @@ export class IoGl extends IoElement {
               break
             }
             gl.uniform2f(uniform,
-                value[_c[0]] ?? 1,
-                value[_c[1]] ?? 1)
+                indexed[_c[0]] ?? 1,
+                indexed[_c[1]] ?? 1)
             break
           case 3:
             if (value === undefined) {
@@ -343,9 +367,9 @@ export class IoGl extends IoElement {
               break
             }
             gl.uniform3f(uniform,
-                value[_c[0]] ?? 1,
-                value[_c[1]] ?? 1,
-                value[_c[2]] ?? 1)
+                indexed[_c[0]] ?? 1,
+                indexed[_c[1]] ?? 1,
+                indexed[_c[2]] ?? 1)
             break
           case 4:
             if (value === undefined) {
@@ -353,10 +377,10 @@ export class IoGl extends IoElement {
               break
             }
             gl.uniform4f(uniform,
-                value[_c[0]] ?? 1,
-                value[_c[1]] ?? 1,
-                value[_c[2]] ?? 1,
-                value[_c[3]] ?? 1)
+                indexed[_c[0]] ?? 1,
+                indexed[_c[1]] ?? 1,
+                indexed[_c[2]] ?? 1,
+                indexed[_c[3]] ?? 1)
                 break
           default:
         }
@@ -364,7 +388,7 @@ export class IoGl extends IoElement {
       default:
     }
   }
-  Register(ioNodeConstructor: typeof IoElement) {
+  override Register(ioNodeConstructor: typeof IoElement) {
     super.Register(ioNodeConstructor)
     let _glUtils = ''
     const constructors = ioNodeConstructor.prototype._protochain.constructors

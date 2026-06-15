@@ -23,6 +23,7 @@
  * THE SOFTWARE.
  */
 
+export * from './core/ReactiveCore.js'
 export * from './core/Binding.js'
 export * from './core/ChangeQueue.js'
 export * from './core/EventDispatcher.js'
@@ -30,6 +31,7 @@ export * from './core/NodeArray.js'
 export * from './core/ProtoChain.js'
 export * from './core/Queue.js'
 export * from './core/ReactiveProperty.js'
+export * from './core/Color.js'
 export * from './vdom/VDOM.js'
 export * from './decorators/Property.js'
 export * from './decorators/Register.js'
@@ -42,6 +44,7 @@ export * from './elements/IoGL.js'
 export * from './elements/IoGL.glsl.js'
 export * from './elements/IoNative.js'
 export * from './elements/IoOverlay.js'
+export * from './elements/IoSpan.js'
 export * from './utils/Focus.js'
 export * from './utils/Nudge.js'
 

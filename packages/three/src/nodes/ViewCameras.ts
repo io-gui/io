@@ -127,7 +127,7 @@ export class ViewCameras extends ReactiveNode {
   @ReactiveProperty({type: OrbitControls, init: ['this.defaultCameras.perspective']})
   declare private readonly orbitControls: OrbitControls
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'frame-object': 'onFrameObject'
     }
@@ -346,7 +346,7 @@ export class ViewCameras extends ReactiveNode {
     camera.updateProjectionMatrix()
   }
 
-  dispose() {
+  override dispose() {
     this.orbitControls.dispose()
     super.dispose()
   }

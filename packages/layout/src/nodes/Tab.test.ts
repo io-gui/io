@@ -210,12 +210,12 @@ describe('Tab', () => {
 
   })
 
-  describe('Deserialization - fromJSON', () => {
+  describe('Deserialization - applyJSON', () => {
 
     it('should restore all properties from JSON', () => {
       const tab = new Tab({ id: 'placeholder' })
 
-      tab.fromJSON({
+      tab.applyJSON({
         id: 'restored',
         label: 'Restored Label',
         icon: 'restored-icon',
@@ -230,28 +230,28 @@ describe('Tab', () => {
 
     it('should default label to id when not in JSON', () => {
       const tab = new Tab({ id: 'placeholder' })
-      tab.fromJSON({ id: 'no-label' } as TabProps)
+      tab.applyJSON({ id: 'no-label' } as TabProps)
 
       expect(tab.label).toBe('no-label')
     })
 
     it('should default icon to empty string when not in JSON', () => {
       const tab = new Tab({ id: 'placeholder' })
-      tab.fromJSON({ id: 'no-icon' } as TabProps)
+      tab.applyJSON({ id: 'no-icon' } as TabProps)
 
       expect(tab.icon).toBe('')
     })
 
     it('should default selected to false when not in JSON', () => {
       const tab = new Tab({ id: 'placeholder', selected: true })
-      tab.fromJSON({ id: 'no-selected' } as TabProps)
+      tab.applyJSON({ id: 'no-selected' } as TabProps)
 
       expect(tab.selected).toBe(false)
     })
 
     it('should return self for chaining', () => {
       const tab = new Tab({ id: 'placeholder' })
-      const result = tab.fromJSON({ id: 'chained' })
+      const result = tab.applyJSON({ id: 'chained' })
 
       expect(result).toBe(tab)
     })
@@ -260,7 +260,7 @@ describe('Tab', () => {
 
   describe('Serialization Roundtrip', () => {
 
-    it('should preserve all data through toJSON/fromJSON roundtrip', () => {
+    it('should preserve all data through toJSON/applyJSON roundtrip', () => {
       const original = new Tab({
         id: 'roundtrip',
         label: 'Roundtrip Label',
@@ -270,7 +270,7 @@ describe('Tab', () => {
 
       const json = original.toJSON()
       const restored = new Tab({ id: 'temp' })
-      restored.fromJSON(json)
+      restored.applyJSON(json)
 
       expect(restored.id).toBe(original.id)
       expect(restored.label).toBe(original.label)
@@ -288,7 +288,7 @@ describe('Tab', () => {
 
       const json1 = original.toJSON()
       const restored = new Tab({ id: 'temp' })
-      restored.fromJSON(json1)
+      restored.applyJSON(json1)
       const json2 = restored.toJSON()
 
       expect(json2).toEqual(json1)
@@ -302,9 +302,9 @@ describe('Tab', () => {
       // JSON is compact
       expect(json).toEqual({ id: 'defaults-test' })
 
-      // But fromJSON restores full state
+      // But applyJSON restores full state
       const restored = new Tab({ id: 'temp', label: 'defaults-test', icon: 'defaults-icon', selected: true })
-      restored.fromJSON(json)
+      restored.applyJSON(json)
 
       expect(restored.id).toBe('defaults-test')
       expect(restored.label).toBe('defaults-test')

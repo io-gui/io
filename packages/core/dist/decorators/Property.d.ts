@@ -1,7 +1,7 @@
 import { ReactivePropertyDefinitionLoose } from '../core/ReactiveProperty.js';
 import { ReactiveNode, AnyConstructor, ReactivePropertyDefinitions } from '../nodes/ReactiveNode.js';
 import { IoElement } from '../elements/IoElement.js';
-export declare const propertyDecorators: WeakMap<AnyConstructor, Record<string, any>>;
+export declare const propertyDecorators: WeakMap<AnyConstructor, Record<string, unknown>>;
 export declare const reactivePropertyDecorators: WeakMap<AnyConstructor, ReactivePropertyDefinitions>;
 /**
  * Declares a property and an initial value for a property.
@@ -16,7 +16,7 @@ export declare const reactivePropertyDecorators: WeakMap<AnyConstructor, Reactiv
  *   declare title: string;
  * }
  */
-export declare function Property(initialValue?: any): (target: ReactiveNode | IoElement, propertyName: string) => void;
+export declare function Property(initialValue?: unknown): (target: typeof IoElement.prototype | typeof ReactiveNode.prototype, propertyName: string) => void;
 /**
  * Declares a reactive property and defines its inital value and behavior using a loose or strict definition.
  * @decorator
@@ -37,5 +37,5 @@ export declare function Property(initialValue?: any): (target: ReactiveNode | Io
  *   declare size: [number, number];
  * }
  */
-export declare function ReactiveProperty(defLoose?: ReactivePropertyDefinitionLoose): (target: ReactiveNode | IoElement, propertyName: string) => void;
+export declare function ReactiveProperty(defLoose?: ReactivePropertyDefinitionLoose): (target: typeof IoElement.prototype | typeof ReactiveNode.prototype, propertyName: string) => void;
 //# sourceMappingURL=Property.d.ts.map

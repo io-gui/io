@@ -3,7 +3,7 @@ import { ioThreeViewport } from '@io-gui/three'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
 
 export class IoThreeExample extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -30,7 +30,7 @@ export class IoThreeExample extends IoElement {
   @ReactiveProperty({type: ThreeApplet, init: null})
   declare applet: ThreeApplet
 
-  ready() {
+  override ready() {
 
     this.render([
       ioThreeViewport({applet: this.applet, cameraSelect: 'perspective'}),
@@ -38,7 +38,7 @@ export class IoThreeExample extends IoElement {
 
   }
 
-  dispose() {
+  override dispose() {
     this.applet.dispose()
     super.dispose()
   }

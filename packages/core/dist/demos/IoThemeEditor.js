@@ -1,9 +1,10 @@
 //@ts-nocheck
-import { Register, IoElement, ThemeSingleton } from '@io-gui/core';
+import { Register, IoElement, ThemeSingleton, $ThemeID, THEMES } from '@io-gui/core';
 import { MenuOption, ioOptionSelect } from '@io-gui/menus';
 import { ioButton, ioField } from '@io-gui/inputs';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { ioColorRgba } from '@io-gui/colors';
+/** @internal Demo: live theme variable editor. */
 export class IoThemeEditor extends IoElement {
     static get Style() {
         return /* css */ `
@@ -18,11 +19,11 @@ export class IoThemeEditor extends IoElement {
     constructor(props) {
         super(props);
         this.render([
-            ioOptionSelect({ value: ThemeSingleton.bind('themeID'), option: new MenuOption({ options: [
+            ioOptionSelect({ value: $ThemeID, option: new MenuOption({ options: [
                         { id: 'Light Theme', value: 'light' },
                         { id: 'Dark Theme', value: 'dark' },
                     ] }) }),
-            ioButton({ label: 'Reset', action: () => ThemeSingleton.reset() }),
+            ioButton({ label: 'Reset', action: () => ThemeSingleton.applyJSON(THEMES[$ThemeID.value]) }),
             ioField('spacing'),
             ioNumberSlider({ value: ThemeSingleton.bind('spacing'), min: 0, max: 20, step: 1 }),
             ioField('lineHeight'),
@@ -79,8 +80,6 @@ export class IoThemeEditor extends IoElement {
             ioColorRgba({ value: ThemeSingleton.bind('gradientColorStart') }),
             ioField('gradientColorEnd'),
             ioColorRgba({ value: ThemeSingleton.bind('gradientColorEnd') }),
-            ioField('shadowColor'),
-            ioColorRgba({ value: ThemeSingleton.bind('shadowColor') }),
         ]);
     }
 }

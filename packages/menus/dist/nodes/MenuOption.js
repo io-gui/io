@@ -208,6 +208,7 @@ let MenuOption = MenuOption_1 = class MenuOption extends ReactiveNode {
             options: this.options.map(option => option.toJSON()),
         };
     }
+    // TODO: use applyJSON recursively
     fromJSON(json) {
         this.setProperties({
             id: json.id,

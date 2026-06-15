@@ -15,7 +15,7 @@ export type IoBooleanProps = IoFieldProps & {
 @Register
 export class IoBoolean extends IoField {
 
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         padding: var(--io_spacing);
@@ -37,14 +37,14 @@ export class IoBoolean extends IoField {
 
   constructor(args: IoBooleanProps = {}) { super(args) }
 
-  onClick() {
+  override onClick() {
     this.toggle()
     this.dispatch('io-boolean-clicked', {value: this.value}, true)
   }
   toggle() {
     this.inputValue(!this.value)
   }
-  ready() {
+  override ready() {
     this.valueChanged()
     this.changed()
   }
@@ -52,7 +52,7 @@ export class IoBoolean extends IoField {
     this.invalid = typeof this.value !== 'boolean'
     this.setAttribute('aria-checked', String(!!this.value))
   }
-  changed() {
+  override changed() {
     const value = this.value ? this.true : this.false
     this.render([
       this.icon ? ioIcon({value: this.icon}) : null,

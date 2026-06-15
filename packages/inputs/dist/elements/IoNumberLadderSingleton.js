@@ -23,7 +23,7 @@ let IoNumberLadder = class IoNumberLadder extends IoElement {
         position: absolute;
         pointer-events: none;
         box-shadow: unset;
-        @apply --unselectable;
+        @apply --io-unselectable;
       }
       :host:not([expanded]) {
         visibility: hidden;

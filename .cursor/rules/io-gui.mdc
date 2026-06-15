@@ -124,10 +124,10 @@ The project is organized as a monorepo with packages in `/packages/`:
 - **io-three** - Three js components
 
 ### Essential Commands
-- `pnpm dev` - Start watch mode for all packages (tsc)
+- `pnpm dev` - Start Vite dev server and TypeScript watch mode in parallel
 - `pnpm build` - Build all packages
 - `pnpm lint` - Lint all packages (auto-fixes)
-- `pnpm test` - Run tests with web-test-runner
+- `pnpm test` - Run tests with Vitest
 - `pnpm test:watch` - Run tests in watch mode
 - `pnpm clean` - Clean all build directories
 - Installing new npm packages is not allowed
@@ -146,3 +146,15 @@ Each package can be built/linted individually:
 - If playwright browsers are not installed in sandbox try `source .env && pnpm test:[package] 2>&1`
 - If that fails, install playwright browsers with `pnpm exec playwright install chromium 2>&1`
 - Use `nextQueue()` from `@io-gui/core` to wait for next queue tick in tests. Dont use `await new Promise`
+- DO NOT use `@ReactiveProperty` decorator in test files. Use `static override get ReactiveProperties()` method instead.
+- DO NOT use `@Property` decorator in test files. Use `static override get Properties()` method instead.
+
+### Development Guidelines
+
+We should follow an invariant-driven, readability-first style: validate uncertain inputs at system boundaries (I/O, parsing, external data), then assume those invariants hold inside core app logic so internal code stays small, clear, and fast. In hot or frequently read paths (rendering, animation, per-frame math), avoid defensive runtime guards unless they protect against a known real failure mode. Prefer clean, direct transformations over repetitive safety checks, and keep diagnostics in targeted debug-only checks when needed. The goal is to optimize for signal over noise: less boilerplate, fewer branches, easier reasoning.
+
+#### Serialization and Hydration
+
+Wire format is dumb; domain types are smart; infrastructure only connects them. Serialize at the boundary, hydrate at the boundary — keep the interior model typed and rich.
+
+Persistence and transport should only deal with plain, JSON-safe data. Each domain type owns how it encodes and decodes itself (toJSON, fromJSON, hydrate, or equivalent). Generic infrastructure (Storage, loaders, APIs) should route serialized data to the right object and never embed type-specific knowledge. Inside the app, work with real types (Color, nodes, domain models), not wire-format leftovers. When a new field needs rehydration, extend the type or its hydrate path once — don’t add parallel clone/stringify logic, lookup tables, or special-case fixups in unrelated layers.

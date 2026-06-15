@@ -246,6 +246,7 @@ type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${T
 type AnyEventHandler = ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void);
 export type NativeElementProps = AriaProps & PropsWithUndefined<{
     [key: prefix<string, '@'>]: string | AnyEventHandler;
+    key?: string | number;
     title?: string;
     lang?: Lang;
     translate?: any;
@@ -291,6 +292,25 @@ export declare const applyNativeElementProps: (element: HTMLElement, props: Nati
  * @return {HTMLElement} - Created element.
  */
 export declare const constructElement: (vDOMElement: VDOMElement) => HTMLElement;
+/**
+ * Filters out null items from a virtual DOM children array.
+ * Returns the same array instance when no null items are present to avoid allocation.
+ * @param {Array} vChildren - Array of VDOMElement children with possible null items.
+ * @return {Array} - Array of VDOMElement children without null items.
+ */
+export declare const filterVDOMElements: (vChildren: Array<VDOMElement | null>) => VDOMElement[];
+/**
+ * Disposes EventDispatcher on a native VDOM element.
+ */
+export declare const releaseEventDispatcher: (element: HTMLElement | IoElement) => void;
+/**
+ * Disposes EventDispatchers on element and all element descendants.
+ */
+export declare const releaseSubtreeEventDispatchers: (root: HTMLElement) => void;
+/**
+ * Clears native element children after releasing orphaned EventDispatchers.
+ */
+export declare const clearNativeElementChildren: (element: HTMLElement) => void;
 /**
  * Disposes the element's children.
  * @param {IoElement} element - Element to dispose children of.

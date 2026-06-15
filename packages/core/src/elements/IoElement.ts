@@ -1,29 +1,62 @@
 import { Property, ReactiveProperty } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
 import { ProtoChain } from '../core/ProtoChain.js'
-import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM, NativeElementProps } from '../vdom/VDOM.js'
-import { ReactiveNode, ReactivityType, dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/ReactiveNode.js'
+import { applyNativeElementProps, constructElement, disposeChildren, filterVDOMElements, VDOMElement, toVDOM, NativeElementProps, clearNativeElementChildren, releaseSubtreeEventDispatchers } from '../vdom/VDOM.js'
+import { ReactiveNode, ReactivityType, dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions, PropertyValues } from '../nodes/ReactiveNode.js'
+import { addParent, initReactiveOwnerInternals, removeParent } from '../core/ReactiveCore.js'
 import { Binding } from '../core/Binding.js'
 import { applyElementStyleToDocument } from '../core/Style.js'
-import { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js'
-import { ChangeQueue } from '../core/ChangeQueue.js'
+import type { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js'
+import type { ChangeQueue } from '../core/ChangeQueue.js'
 import { ReactivePropertyInstance } from '../core/ReactiveProperty.js'
 import { throttle, debounce, CallbackFunction } from '../core/Queue.js'
 
+interface ResizeObservable extends Element {
+  onResized(): void
+}
+
 const resizeObserver = new ResizeObserver(entries => {
   for (const entry of entries) {
-    (entry.target as any).onResized()
+    (entry.target as ResizeObservable).onResized()
   }
 })
 
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never
-type AnyEventHandler = ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void)
+type AnyEventHandler = (
+  (event: CustomEvent) => void) |
+  ((event: PointerEvent) => void) |
+  ((event: KeyboardEvent) => void) |
+  ((event: MouseEvent) => void) |
+  ((event: TouchEvent) => void) |
+  ((event: WheelEvent) => void) |
+  ((event: InputEvent) => void) |
+  ((event: ClipboardEvent) => void) |
+  ((event: DragEvent) => void) |
+  ((event: FocusEvent) => void) |
+  ((event: TransitionEvent) => void) |
+  ((event: AnimationEvent) => void) |
+  ((event: ErrorEvent) => void) |
+  ((event: Event) => void)
 
 export type IoElementProps = NativeElementProps & {
   reactivity?: ReactivityType
   [key: prefix<string, '@'>]: string | AnyEventHandler
 }
 
+/**
+ * Base class for Io-Gui custom elements.
+ *
+ * IoElement extends `HTMLElement` with the same reactive property system as
+ * {@link ReactiveNode}, plus virtual DOM rendering, inherited CSS via static
+ * `Style`, and DOM event bridging through {@link EventDispatcher}.
+ *
+ * Elements render children with {@link IoElement.render} and declare structure
+ * through VDOM helpers exported from `@io-gui/core`. Register elements with
+ * {@link Register}; factory functions (for example `ioButton`) are generated
+ * automatically for VDOM composition.
+ *
+ * @see ReactiveNode for non-DOM reactive objects
+ */
 @Register
 export class IoElement extends HTMLElement {
   declare static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement
@@ -37,7 +70,7 @@ export class IoElement extends HTMLElement {
       :host[hidden] {
         display: none;
       }
-      --unselectable: {
+      --io-unselectable: {
         user-select: none;
         -webkit-user-select: none;
         -webkit-touch-callout: none;
@@ -61,21 +94,28 @@ export class IoElement extends HTMLElement {
     return {}
   }
 
-  static get Properties(): Record<string, any> {
+  static get Properties(): Record<string, unknown> {
     return {}
   }
 
+  /**
+   * Declares class-level event listeners wired at construction via {@link EventDispatcher}.
+   * Subclass definitions replace parent handlers for the same event name (last wins).
+   * Use {@link addEventListener} for additional listeners at runtime.
+   */
   static get Listeners(): ListenerDefinitions {
     return {}
   }
 
   declare readonly _protochain: ProtoChain
   declare readonly _reactiveProperties: Map<string, ReactivePropertyInstance>
-  declare readonly _bindings: Map<string, Binding>
+  declare readonly _bindings: Map<string, Binding<unknown>>
   declare readonly _changeQueue: ChangeQueue
   declare readonly _eventDispatcher: EventDispatcher
   declare _hasWindowMutationListener: boolean
   declare _hasSelfMutationListener: boolean
+  declare readonly _children: Array<ReactiveNode | IoElement>
+  declare readonly _parents: Array<ReactiveNode | IoElement>
   declare readonly _isIoElement: boolean
   declare _disposed: boolean
   declare _textNode: Text
@@ -84,13 +124,7 @@ export class IoElement extends HTMLElement {
     super()
     this._protochain.init(this)
 
-    Object.defineProperty(this, '_changeQueue', {enumerable: false, configurable: true, value: new ChangeQueue(this)})
-    Object.defineProperty(this, '_reactiveProperties', {enumerable: false, configurable: true, value: new Map()})
-    Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()})
-    Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)})
-    Object.defineProperty(this, '_hasWindowMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
-    Object.defineProperty(this, '_hasSelfMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
-    // Object.defineProperty(this, '_parents', {enumerable: false, configurable: true, value: []});
+    initReactiveOwnerInternals(this)
 
     this.init()
 
@@ -102,31 +136,32 @@ export class IoElement extends HTMLElement {
     this.ready()
     this.dispatchQueue()
   }
-  // TODO: add types
-  applyProperties(props: any, skipDispatch = false) {
+  /** Applies constructor/render props; defers dispatch when `skipDispatch` is true. */
+  applyProperties(props: PropertyValues, skipDispatch = false) {
     for (const name in props) {
       if (this._reactiveProperties.has(name)) {
         this.setProperty(name, props[name], true)
       } else {
         if (name === 'class') {
-          this.className = props[name]
+          this.className = props[name] as string
         } else if (name === 'style') {
-          for (const s in props[name]) {
+          const styleProps = props[name] as Record<string, string>
+          for (const s in styleProps) {
             // TODO: Consider supporting importance
-            this.style[s as any] = props[name][s]
+            this.style.setProperty(s, styleProps[s])
           }
         } else if (name.startsWith('data-')) {
           // TODO: Test this!
           if (props[name] === undefined) {
             this.removeAttribute(name)
           } else {
-            this.setAttribute(name, props[name])
+            this.setAttribute(name, props[name] as string | number | boolean)
           }
         } else if (!name.startsWith('@')) {
-          debug: if (props[name] as any instanceof Binding) {
+          debug: if (props[name] instanceof Binding) {
             console.warn(`IoElement: Not a ReactiveProperty! Cannot set binding to "${name}" property on element "${this.localName}"`)
           }
-          this[name as keyof this] = props[name]
+          (this as Record<string, unknown>)[name] = props[name]
           // TODO: test and check if type can be attribute.
           if (props[name] === undefined && this.hasAttribute(name)) {
             this.removeAttribute(name)
@@ -138,14 +173,14 @@ export class IoElement extends HTMLElement {
     if (!skipDispatch) this.dispatchQueue()
   }
   // TODO: add types
-  setProperties(props: any) {
+  setProperties(props: PropertyValues) {
     setProperties(this, props)
   }
-  setProperty(name: string, value: any, debounce = false) {
+  setProperty(name: string, value: unknown, debounce = false) {
     if (this._disposed) return
     setProperty(this, name, value, debounce)
     const prop = this._reactiveProperties.get(name)!
-    if (prop.reflect) this.setAttribute(name.toLowerCase(), value)
+    if (prop.reflect) this.setAttribute(name.toLowerCase(), value as string | number | boolean)
   }
   init() {}
   ready() {}
@@ -153,16 +188,16 @@ export class IoElement extends HTMLElement {
   get [Symbol.toStringTag]() {
     return this.constructor.name
   }
-  queue(name: string, value: any, oldValue: any) {
+  queue(name: string, value: unknown, oldValue: unknown) {
     this._changeQueue.queue(name, value, oldValue)
   }
   dispatchQueue(debounce = false) {
     dispatchQueue(this, debounce)
   }
-  throttle(func: CallbackFunction, arg?: any, timeout = 1) {
+  throttle(func: CallbackFunction, arg?: unknown, timeout = 1) {
     throttle(func, arg, this, timeout)
   }
-  debounce(func: CallbackFunction, arg?: any, timeout = 1) {
+  debounce(func: CallbackFunction, arg?: unknown, timeout = 1) {
     debounce(func, arg, this, timeout)
   }
   onPropertyMutated(event: CustomEvent) {
@@ -171,104 +206,61 @@ export class IoElement extends HTMLElement {
   dispatchMutation(object: object | ReactiveNode = this, properties: string[] = []) {
     dispatchMutation(this, object, properties)
   }
-  bind(name: string): Binding {
+  bind<K extends keyof this & string>(name: K): Binding<this[K]>
+  bind(name: string): Binding<unknown>
+  bind(name: string): Binding<unknown> {
     return bind(this, name)
   }
+  unbind<K extends keyof this & string>(name: K): void
+  unbind(name: string): void
   unbind(name: string): void {
     unbind(this, name)
   }
-  addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions) {
+  override addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions) {
     if (this._disposed) return
     this._eventDispatcher.addEventListener(type, listener as EventListener, options)
   }
-  removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions) {
+  override removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions) {
     if (this._disposed) return
     this._eventDispatcher.removeEventListener(type, listener as EventListener, options)
   }
-  dispatch(type: string, detail: any = undefined, bubbles = false, src?: ReactiveNode | HTMLElement | Document | Window) {
+  dispatch(type: string, detail: unknown = undefined, bubbles = false, src?: ReactiveNode | HTMLElement | Document | Window) {
     if (this._disposed) return
     this._eventDispatcher.dispatchEvent(type, detail, bubbles, src)
   }
+  addParent(parent: ReactiveNode | IoElement) {
+    addParent(this, parent)
+  }
+  removeParent(parent: ReactiveNode | IoElement) {
+    removeParent(this, parent)
+  }
+  /** Releases bindings, listeners, queues, and child elements. */
   dispose() {
     dispose(this)
   }
 
   connectedCallback() {
-    if (typeof (this as any).onResized === 'function') {
+    if ('onResized' in this && typeof (this as ResizeObservable).onResized === 'function') {
       resizeObserver.observe(this)
     }
   }
   disconnectedCallback() {
-    if (typeof (this as any).onResized === 'function') {
+    if ('onResized' in this && typeof (this as ResizeObservable).onResized === 'function') {
       resizeObserver.unobserve(this)
     }
   }
 
-  /**
-   * Renders DOM from virtual DOM arrays.
-   * @param {Array} vDOMElements - Array of VDOMElement[] children.
-   * @param {HTMLElement} [host] - Optional template target.
-   * @param {boolean} [noDispose] - Skip disposal of existing elements.
-   */
+  /** Renders VDOM children into this element or optional host. */
   render(vDOMElements: Array<VDOMElement | null>, host?: HTMLElement | IoElement, noDispose?: boolean) {
-    host = (host || this) as any
-    const vDOMElementsOnly = vDOMElements.filter(item => item !== null)
-    this.$ = {}
-    this.traverse(vDOMElementsOnly, host as HTMLElement, noDispose)
+    const renderHost = host ?? this
+    const vDOMElementsOnly = filterVDOMElements(vDOMElements)
+    for (const id in this.$) delete this.$[id]
+    this.traverse(vDOMElementsOnly, renderHost, noDispose)
   }
-  /**
-   * Recurively traverses virtual DOM elements.
-   * TODO: test element.traverse() function!
-   * @param {Array} vDOMElements - Array of VDOMElements elements.
-   * @param {HTMLElement} [host] - Optional template target.
-   * @param {boolean} [noDispose] - Skip disposal of existing elements.
-   */
+  /** Reconciles VDOM tree into host; keyed when children specify `key`. */
   traverse(vChildren: VDOMElement[], host: HTMLElement | IoElement, noDispose?: boolean) {
+    this._reconcileChildren(vChildren, host, noDispose)
     const children = host.children
-    // remove trailing elements
-    while (children.length > vChildren.length) {
-      const child = children[children.length - 1]
-      host.removeChild(child)
-      if (!noDispose) disposeChildren(child as IoElement)
-    }
-    // replace elements
-    for (let i = 0; i < children.length; i++) {
-      const child = children[i] as HTMLElement | IoElement
-      // replace existing elements
-      if (child.localName !== vChildren[i].tag || noDispose) {
-        const oldElement = child as HTMLElement
-        const element = constructElement(vChildren[i])
-        host.insertBefore(element, oldElement)
-        host.removeChild(oldElement)
-        if (!noDispose) disposeChildren(oldElement as IoElement)
-      // update existing elements
-      } else {
-        // TODO: improve setting/removal/cleanup of native element properties/attributes.
-        child.removeAttribute('className')
-        child.removeAttribute('style')
-        if (vChildren[i].props) {
-          if ((child as IoElement)._isIoElement) {
-            // Set IoElement element properties
-            (child as IoElement).applyProperties(vChildren[i].props as Record<keyof this, any>)
-          } else {
-            // Set native HTML element properties
-            applyNativeElementProps(child as HTMLElement, vChildren[i].props!)
-          }
-        }
-      }
-    }
-    // TODO: doing this before "replace elements" cached (noDispose) elements to be created twice.
-    // TODO: rename nodispose to dispose.
-    // TODO: test
-    // create new elements after existing
-    if (children.length < vChildren.length) {
-      const frag = document.createDocumentFragment()
-      for (let i = children.length; i < vChildren.length; i++) {
-        const element = constructElement(vChildren[i])
-        frag.appendChild(element)
-      }
-      host.appendChild(frag)
-    }
     for (let i = 0; i < vChildren.length; i++) {
       const vChild = vChildren[i]
       const child = children[i] as HTMLElement | IoElement
@@ -288,17 +280,76 @@ export class IoElement extends HTMLElement {
           (child as IoElement)._textNode.nodeValue = String(vChild.children)
         } else if (vChild.children instanceof Array) {
           if (!(child as IoElement)._isIoElement) {
-            const vDOMElementsOnly = (vChild.children as Array<VDOMElement | null>).filter(item => item !== null)
+            const vDOMElementsOnly = filterVDOMElements(vChild.children)
             this.traverse(vDOMElementsOnly, child as HTMLElement, noDispose)
           }
         }
       } else if (!(child as IoElement)._isIoElement) {
         // Clear children for native elements. IoElements manage their own children by design
-        child.textContent = ''
+        clearNativeElementChildren(child)
       }
     }
   }
-
+  /**
+   * Reconciles host children with vDOM children by position and tag name.
+   * @param {Array} vChildren - Array of VDOMElements elements.
+   * @param {HTMLElement} host - Template target.
+   * @param {boolean} [noDispose] - Skip disposal of existing elements.
+   */
+  _reconcileChildren(vChildren: VDOMElement[], host: HTMLElement | IoElement, noDispose?: boolean) {
+    const children = host.children
+    // remove trailing elements
+    while (children.length > vChildren.length) {
+      const child = children[children.length - 1]
+      host.removeChild(child)
+      if (!noDispose) disposeChildren(child as IoElement)
+    }
+    // replace elements
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i] as HTMLElement | IoElement
+      // replace existing elements
+      if (child.localName !== vChildren[i].tag || noDispose) {
+        const oldElement = child as HTMLElement
+        const element = constructElement(vChildren[i])
+        host.insertBefore(element, oldElement)
+        host.removeChild(oldElement)
+        if (!noDispose) disposeChildren(oldElement as IoElement)
+      // update existing elements
+      } else {
+        this._updateElementProps(child, vChildren[i])
+      }
+    }
+    // TODO: doing this before "replace elements" cached (noDispose) elements to be created twice.
+    // TODO: rename nodispose to dispose.
+    // create new elements after existing
+    if (children.length < vChildren.length) {
+      const frag = document.createDocumentFragment()
+      for (let i = children.length; i < vChildren.length; i++) {
+        const element = constructElement(vChildren[i])
+        frag.appendChild(element)
+      }
+      host.appendChild(frag)
+    }
+  }
+  /**
+   * Updates props of an existing element matched during reconciliation.
+   * @param {HTMLElement | IoElement} child - Element to update.
+   * @param {VDOMElement} vChild - Virtual DOM element to apply props from.
+   */
+  _updateElementProps(child: HTMLElement | IoElement, vChild: VDOMElement) {
+    // TODO: improve setting/removal/cleanup of native element properties/attributes.
+    child.removeAttribute('className')
+    child.removeAttribute('style')
+    if (vChild.props) {
+      if ((child as IoElement)._isIoElement) {
+        // Set IoElement element properties
+        (child as IoElement).applyProperties(vChild.props)
+      } else {
+        // Set native HTML element properties
+        applyNativeElementProps(child as HTMLElement, vChild.props)
+      }
+    }
+  }
   /**
   * Helper function to flatten textContent into a single TextNode.
   * Update textContent via TextNode is better for layout performance.
@@ -310,14 +361,20 @@ export class IoElement extends HTMLElement {
       element.appendChild(document.createTextNode(''))
     }
     if (element.childNodes[0].nodeName !== '#text') {
-      element.innerHTML = ''
+      clearNativeElementChildren(element)
       element.appendChild(document.createTextNode(''))
     }
     (element as IoElement)._textNode = element.childNodes[0] as Text
     if (element.childNodes.length > 1) {
       const textContent = element.textContent
       for (let i = element.childNodes.length; i--;) {
-        if (i !== 0) element.removeChild(element.childNodes[i])
+        if (i !== 0) {
+          const node = element.childNodes[i]
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            releaseSubtreeEventDispatchers(node as HTMLElement)
+          }
+          element.removeChild(node)
+        }
       }
       (element as IoElement)._textNode.nodeValue = textContent
     }
@@ -327,7 +384,7 @@ export class IoElement extends HTMLElement {
   * @param {string} attr - Attribute name.
   * @param {*} value - Attribute value.
   */
-  setAttribute(attr: string, value: boolean | number | string) {
+  override setAttribute(attr: string, value: boolean | number | string) {
     if (value === true) {
       HTMLElement.prototype.setAttribute.call(this, attr, '')
     } else if (value === false || value === '') {

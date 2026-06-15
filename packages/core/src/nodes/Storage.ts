@@ -1,7 +1,8 @@
 import { ReactiveProperty } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
 import { Binding } from '../core/Binding.js'
-import { ReactiveNode, ReactiveNodeProps, AnyConstructor } from '../nodes/ReactiveNode.js'
+import { isIoValue } from '../core/ReactiveCore.js'
+import { ReactiveNode, ReactiveNodeProps, AnyConstructor, constructType } from '../nodes/ReactiveNode.js'
 
 class EmulatedLocalStorage {
   declare store: Map<string, unknown>
@@ -95,15 +96,29 @@ const nodes: StorageNodes = {
   none: new Map(),
 }
 
-let hashValues: Record<string, any> = {}
+let hashValues: Record<string, string> = {}
 
-export type StorageProps = ReactiveNodeProps & {
+export type StorageProps<T = unknown> = ReactiveNodeProps & {
   key: string
-  value: any
-  default?: any
+  value: T
+  default?: T
   storage?: 'hash' | 'local' | 'none'
 }
 
+/**
+ * Persistent reactive value backed by localStorage or location hash.
+ *
+ * `Storage(props)` returns a {@link Binding} to the stored value. Each unique
+ * `key` + `storage` pair resolves to a singleton {@link StorageNode}, so multiple
+ * bindings share the same persisted state. Values are JSON-serialized at the
+ * storage boundary; domain types should own their own encode/decode via
+ * `toJSON` / `applyJSON` or constructor hydration.
+ *
+ * Call {@link Storage.permit} before writing to localStorage when privacy
+ * settings require explicit user consent.
+ *
+ * @example Storage({ key: 'theme', value: 'light', storage: 'local' })
+ */
 @Register
 export class StorageNode extends ReactiveNode {
 
@@ -111,14 +126,14 @@ export class StorageNode extends ReactiveNode {
   declare key: string
 
   @ReactiveProperty()
-  declare value: any
+  declare value: unknown
 
   @ReactiveProperty({value: 'local', type: String})
   declare storage: 'hash' | 'local' | 'none'
 
-  declare binding: Binding
+  declare binding: Binding<StorageNode['value']>
 
-  declare default: any
+  declare default: unknown
 
   constructor(props: StorageProps) {
     debug: {
@@ -136,7 +151,7 @@ export class StorageNode extends ReactiveNode {
     if (nodes[props.storage].has(props.key)) {
       return nodes[props.storage].get(props.key)!
     } else {
-      let def: any
+      let def: unknown
       // TODO: test!
       let constructor: AnyConstructor | undefined
       if (typeof props.value === 'object' && props.value !== null) {
@@ -159,8 +174,13 @@ export class StorageNode extends ReactiveNode {
       }
       if (storedValue !== null) {
         try {
-          const value = JSON.parse(storedValue)
-          props.value = constructor ? new constructor(value) : value
+          const parsed = JSON.parse(storedValue)
+          if (isIoValue(props.value)) {
+            (props.value as ReactiveNode).applyJSON(parsed)
+          } else {
+            const constructed = constructor ? constructType(constructor, parsed) : parsed
+            props.value = constructed
+          }
         } catch {
           props.value = storedValue
         }
@@ -180,7 +200,7 @@ export class StorageNode extends ReactiveNode {
       return this
     }
   }
-  dispose() {
+  override dispose() {
     this.clearStorage()
     super.dispose()
   }
@@ -199,13 +219,9 @@ export class StorageNode extends ReactiveNode {
     nodes[s].delete(this.key)
   }
   valueMutated() {
-    this.debounce(this.changed)
-    // this.changed()
+    this.debounce(this.changed, undefined, 1)
   }
-  valueChanged() {
-    this.changed()
-  }
-  changed() {
+  override changed() {
     switch (this.storage) {
       case 'hash': {
         this.saveValueToHash()
@@ -220,6 +236,8 @@ export class StorageNode extends ReactiveNode {
               localStorage.setItem('Storage:' + this.key, `"${this.value}"`)
             } else if (typeof this.value === 'number') {
               localStorage.setItem('Storage:' + this.key, this.value)
+            } else if (typeof this.value === 'boolean') {
+              localStorage.setItem('Storage:' + this.key, JSON.stringify(this.value))
             }
           } else {
             localStorage.setItem('Storage:' + this.key, JSON.stringify(this.value))
@@ -283,10 +301,11 @@ export class StorageNode extends ReactiveNode {
 }
 
 
+/** Factory that returns a binding to a persisted value. See {@link StorageNode}. */
 export const Storage = Object.assign(
-  (props: StorageProps) => {
-    const storageNode = new StorageNode(props)
-    return storageNode.binding
+  <T = unknown>(props: StorageProps<T>): Binding<T> => {
+    const storageNode = new StorageNode(props as StorageProps)
+    return storageNode.binding as Binding<T>
   }, {
     permit() {
       localStorage.permitted = true

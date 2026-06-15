@@ -39,7 +39,6 @@ export function getAllPropertyNames(obj) {
         });
         if (curr.constructor === window.Node)
             break;
-        //@ts-ignore no-cond-assign
     } while ((curr = Object.getPrototypeOf(curr)));
     return allProps;
 }

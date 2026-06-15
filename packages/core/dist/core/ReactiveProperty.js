@@ -1,15 +1,7 @@
 import { Binding } from './Binding.js';
+import { isIoValue } from './ReactiveCore.js';
 import { NodeArray } from '../core/NodeArray.js';
-/**
- * Instantiates a property definition object from a loosely or strongly typed property definition.
- * It facilitates merging of inherited property definitions from the prototype chain.
- * @class
- * @property {*} [value] The property's value. Can be any type.
- * @property {AnyConstructor} [type] Constructor function defining the property's type.
- * @property {Binding} [binding] Binding object for two-way data synchronization.
- * @property {boolean} [reflect] Whether to reflect the property to an HTML attribute.
- * @property {*} [init] Initialization arguments for constructing initial values.
- */
+/** Normalized reactive property definition merged from decorators and static getters. */
 export class ReactiveProtoProperty {
     /**
      * Creates a property definition from various input types.
@@ -104,7 +96,13 @@ function decodeInitArgument(item, node) {
         const keys = item.split('.');
         let target = node;
         for (let i = 1; i < keys.length; i++) {
-            target = target[keys[i]];
+            if (typeof target === 'object' && target !== null) {
+                target = target[keys[i]];
+            }
+            else {
+                target = undefined;
+                break;
+            }
         }
         if (target)
             return target;
@@ -113,23 +111,43 @@ function decodeInitArgument(item, node) {
     else
         return item;
 }
-function isIoValue(value) {
-    return typeof value === 'object' && value !== null && (value._isNode || value._isIoElement);
+export function ensureWindowMutationListener(node) {
+    const target = node;
+    if (target._hasWindowMutationListener)
+        return;
+    target._hasWindowMutationListener = true;
+    window.addEventListener('io-object-mutation', node.onPropertyMutated);
+}
+export function removeWindowMutationListener(node) {
+    const target = node;
+    if (!target._hasWindowMutationListener)
+        return;
+    target._hasWindowMutationListener = false;
+    window.removeEventListener('io-object-mutation', node.onPropertyMutated);
+}
+export function ensureSelfMutationListener(node) {
+    const target = node;
+    if (target._hasSelfMutationListener)
+        return;
+    target._hasSelfMutationListener = true;
+    node.addEventListener('io-object-mutation', node.onPropertyMutated);
+}
+export function removeSelfMutationListener(node) {
+    const target = node;
+    if (!target._hasSelfMutationListener)
+        return;
+    target._hasSelfMutationListener = false;
+    node.removeEventListener('io-object-mutation', node.onPropertyMutated);
 }
 /**
- * Manages mutation observation state for a reactive property.
- * - 'none': Primitives (String, Number, Boolean) - no mutation observation
- * - 'io': Io types (ReactiveNode, IoElement subclasses) - observe on the value itself
- * - 'nodearray': NodeArray - registers as observer, receives mutations via self-listener
- * - 'object': Non-Io objects (Object, Array, etc.) - observe via window (global event bus)
+ * Tracks mutation observation mode and listener wiring for one reactive property.
+ * @see ObservationType
  */
 export class Observer {
     type = 'none';
     observing = false;
     constructor(node) {
         Object.defineProperty(this, 'node', { enumerable: false, configurable: false, writable: false, value: node });
-        Object.defineProperty(this, '_hasSelfMutationListener', { enumerable: false, configurable: true, writable: true, value: false });
-        Object.defineProperty(this, '_hasWindowMutationListener', { enumerable: false, configurable: true, writable: true, value: false });
     }
     start(value) {
         if (this.observing)
@@ -144,27 +162,16 @@ export class Observer {
         else if (value instanceof NodeArray) {
             this.type = 'nodearray';
             this.observing = true;
-            // Register this node as an observer of the NodeArray
             value.addObserver(this.node);
-            // Also need self-listener to handle the dispatched events
-            if (!this._hasSelfMutationListener) {
-                this._hasSelfMutationListener = true;
-                this.node.addEventListener('io-object-mutation', this.node.onPropertyMutated);
-            }
+            ensureSelfMutationListener(this.node);
         }
         else {
             this.type = 'object';
             this.observing = true;
-            if (!this._hasWindowMutationListener) {
-                this._hasWindowMutationListener = true;
-                window.addEventListener('io-object-mutation', this.node.onPropertyMutated);
-            }
+            ensureWindowMutationListener(this.node);
         }
     }
     stop(value) {
-        // TODO: Reconsider
-        // if (!this.observing) return
-        // if (this.type === 'io' && !value._disposed) {
         if (isIoValue(value) && !value._disposed) {
             value.removeEventListener('io-object-mutation', this.node.onPropertyMutated);
         }
@@ -172,22 +179,10 @@ export class Observer {
             value.removeObserver(this.node);
         }
         this.observing = false;
-        // Note: Window and self listeners are removed at dispose time, not here
     }
-    dispose() {
-        if (this._hasSelfMutationListener) {
-            this.node.removeEventListener('io-object-mutation', this.node.onPropertyMutated);
-            this._hasSelfMutationListener = false;
-        }
-        if (this._hasWindowMutationListener) {
-            window.removeEventListener('io-object-mutation', this.node.onPropertyMutated);
-            this._hasWindowMutationListener = false;
-        }
-    }
+    dispose() { }
 }
-/**
- * ReactivePropertyInstance object constructed from `ReactiveProtoProperty`.
- */
+/** Runtime reactive property: value, type, binding, reflect, and mutation observer. */
 export class ReactivePropertyInstance {
     // Property value.
     value;
@@ -249,9 +244,10 @@ export class ReactivePropertyInstance {
                         this.value = new this.type(...args);
                     }
                     else if (this.init instanceof Object) {
+                        const initObj = this.init;
                         const args = {};
-                        Object.keys(this.init).forEach(key => {
-                            args[key] = decodeInitArgument(this.init[key], node);
+                        Object.keys(initObj).forEach(key => {
+                            args[key] = decodeInitArgument(initObj[key], node);
                         });
                         this.value = new this.type(args);
                     }
@@ -269,7 +265,7 @@ export class ReactivePropertyInstance {
         this.observer.start(this.value);
         debug: {
             if (this.value !== undefined && this.init !== undefined) {
-                if ([String, Number, Boolean].indexOf(this.type) !== -1) {
+                if (this.type === String || this.type === Number || this.type === Boolean) {
                     if (this.type === Boolean && typeof this.value !== 'boolean' ||
                         this.type === Number && typeof this.value !== 'number' ||
                         this.type === String && typeof this.value !== 'string') {

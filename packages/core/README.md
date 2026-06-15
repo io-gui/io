@@ -1,6 +1,6 @@
 # @io-gui/core
 
-A lightweight (~22KB gzipped) reactive framework for nodes and custom elements.
+A lightweight (~25KB gzipped) core reactive library for Io-Gui framework.
 
 ## Core Classes
 
@@ -171,6 +171,8 @@ itemsMutated() {
 ## Event System
 
 ### Listener Definition
+
+Subclass `Listeners` replace parent handlers for the same event name (last wins). Only one proto listener is registered per event at runtime.
 
 ```typescript
 static get Listeners() {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { ReactiveNode, Register, ListenerDefinitions, EventDispatcher, IoElement, ReactiveProperty } from '@io-gui/core'
+import { ReactiveNode, Register, ListenerDefinitions, EventDispatcher, IoElement, constructElement, releaseEventDispatcher } from '@io-gui/core'
 
 const handlerFunction = (event: CustomEvent) => {
   (event.target as unknown as MockNode1).eventStack.push(`handlerFunction ${event.detail}`)
@@ -83,6 +83,38 @@ describe('EventDispatcher', () => {
       event2:[[handlerFunction, {passive: true}]],
       event3:[[handlerFunction]]
     })
+  })
+  it('Should use last proto listener when multiple definitions exist in ProtoChain', () => {
+    @Register
+    class MultiListenerNode extends ReactiveNode {
+      eventStack: string[] = []
+      static get Listeners(): ListenerDefinitions {
+        return {
+          'shared-event': 'firstHandler',
+        }
+      }
+      firstHandler(event: CustomEvent) {
+        this.eventStack.push(`first ${event.detail}`)
+      }
+    }
+    @Register
+    class MultiListenerChild extends MultiListenerNode {
+      static get Listeners(): ListenerDefinitions {
+        return {
+          'shared-event': 'secondHandler',
+        }
+      }
+      secondHandler(event: CustomEvent) {
+        this.eventStack.push(`second ${event.detail}`)
+      }
+    }
+
+    const node = new MultiListenerChild()
+    const eventDispatcher = new EventDispatcher(node)
+    expect(eventDispatcher.protoListeners['shared-event']).toEqual([[node.secondHandler]])
+
+    eventDispatcher.dispatchEvent('shared-event', 1)
+    expect(node.eventStack).toEqual(['second 1'])
   })
   it('Should applyPropListeners() correctly', () => {
     const node3 = new MockNode3()
@@ -235,8 +267,8 @@ describe('EventDispatcher', () => {
     const eventDispatcher2 = new EventDispatcher(element2)
     eventDispatcher2.applyPropListeners({'@event1': 'event1Handler'})
 
-    let path = null
-    let target = null
+    let path: EventTarget[] | null = null
+    let target: EventTarget | null = null
     eventDispatcher2.addEventListener('event1', (event: CustomEvent) => {
       path = event.composedPath()
       target = event.target
@@ -283,7 +315,9 @@ describe('EventDispatcher', () => {
     // Dispose the parent (simulates parent being removed from layout)
     parent.dispose()
 
-    // Child still has parent in _parents array but parent is disposed
+    // Child should no longer reference disposed parent
+    expect(child._parents.includes(parent)).toBe(false)
+
     // Dispatch bubbling event - should not error and should not reach disposed parent
     child._eventDispatcher.dispatchEvent('test-event', 2, true)
     expect(child.eventStack).toEqual(['childHandler 2'])
@@ -351,7 +385,11 @@ describe('EventDispatcher', () => {
     class ParentElement extends IoElement {
       eventStack: string[] = []
 
-      @ReactiveProperty({type: ChildNode, init: null})
+      static get ReactiveProperties() {
+        return {
+          childNode: {type: ChildNode, init: null},
+        }
+      }
       declare childNode: ChildNode
 
       static get Listeners(): ListenerDefinitions {
@@ -412,13 +450,21 @@ describe('EventDispatcher', () => {
 
     @Register
     class OverlapChildElement extends IoElement {
-      @ReactiveProperty({type: OverlapChildNode, init: null})
+      static get ReactiveProperties() {
+        return {
+          childNode: {type: OverlapChildNode, init: null},
+        }
+      }
       declare childNode: OverlapChildNode
     }
 
     @Register
     class OverlapParentElement extends IoElement {
-      @ReactiveProperty({type: OverlapChildNode, init: null})
+      static get ReactiveProperties() {
+        return {
+          childNode: {type: OverlapChildNode, init: null},
+        }
+      }
       declare childNode: OverlapChildNode
     }
 
@@ -441,5 +487,74 @@ describe('EventDispatcher', () => {
     parent.dispose()
     childElement.dispose()
     childNode.dispose()
+  })
+  it('Should stop propagation when stopPropagation() is called', () => {
+    const parent = new MockNode1()
+    const child = new MockNode1()
+    child.addParent(parent)
+
+    parent._eventDispatcher.addEventListener('stop-event', () => {
+      parent.eventStack.push('parent')
+    })
+    child._eventDispatcher.addEventListener('stop-event', (event) => {
+      child.eventStack.push('child')
+      event.stopPropagation()
+    })
+
+    child._eventDispatcher.dispatchEvent('stop-event', 1, true)
+    expect(child.eventStack).toEqual(['child'])
+    expect(parent.eventStack).toEqual([])
+  })
+  it('Should stop sibling listeners when stopImmediatePropagation() is called', () => {
+    const node = new MockNode1()
+    const eventDispatcher = new EventDispatcher(node)
+    const first = () => { node.eventStack.push('first') }
+    const second = () => { node.eventStack.push('second') }
+    eventDispatcher.addEventListener('immediate-stop', first)
+    eventDispatcher.addEventListener('immediate-stop', (event) => {
+      node.eventStack.push('stopper')
+      event.stopImmediatePropagation()
+    })
+    eventDispatcher.addEventListener('immediate-stop', second)
+
+    eventDispatcher.dispatchEvent('immediate-stop', 1)
+    expect(node.eventStack).toEqual(['first', 'stopper'])
+  })
+  it('Should populate IoSyntheticEvent.path when bubbling', () => {
+    const root = new MockNode1()
+    const parent = new MockNode1()
+    const child = new MockNode1()
+    parent.addParent(root)
+    child.addParent(parent)
+
+    let childPath: Array<ReactiveNode | IoElement> = []
+    let parentPath: Array<ReactiveNode | IoElement> = []
+    let rootPath: Array<ReactiveNode | IoElement> = []
+
+    child._eventDispatcher.addEventListener('path-event', (event) => {
+      childPath = [...event.path]
+    })
+    parent._eventDispatcher.addEventListener('path-event', (event) => {
+      parentPath = [...event.path]
+    })
+    root._eventDispatcher.addEventListener('path-event', (event) => {
+      rootPath = [...event.path]
+    })
+
+    child._eventDispatcher.dispatchEvent('path-event', 1, true)
+
+    expect(childPath).toEqual([child])
+    expect(parentPath).toEqual([child, parent])
+    expect(rootPath).toEqual([child, parent, root])
+
+    root.dispose()
+    parent.dispose()
+    child.dispose()
+  })
+  it('releaseEventDispatcher disposes native element listeners', () => {
+    const element = constructElement({tag: 'div', props: {'@click': () => {}}})
+    expect((element as any)._eventDispatcher).toBeDefined()
+    releaseEventDispatcher(element)
+    expect((element as any)._eventDispatcher).toBeUndefined()
   })
 })

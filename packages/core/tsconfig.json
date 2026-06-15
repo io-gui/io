@@ -1,11 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "composite": true,
     "outDir": "./dist",
-    "rootDir": "./src",
-    "paths": {
-      "@io-gui/core": ["./src/index.ts"]
-    }
+    "rootDir": "./src"
   },
-  "include": ["./src"]
+  "include": ["./src"],
+  "exclude": ["./src/**/*.test.ts", "./src/**/*.bench.ts", "./src/testing/bench-setup.ts"]
 }

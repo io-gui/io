@@ -231,4 +231,51 @@ describe('ChangeQueue', () => {
     // Queue should be empty after dispatch
     expect(changeQueue.changes.length).toBe(0)
   })
+  it('Should dispatch only remaining properties when one change is cancelled', () => {
+    const node = new MockNode()
+    const changeQueue = new ChangeQueue(node)
+    changeQueue.queue('prop1', 1, 0)
+    changeQueue.queue('prop2', 2, 0)
+    changeQueue.queue('prop1', 0, 1)
+    changeQueue.dispatch()
+    expect(node.changeStack).toEqual(['prop2Changed prop2 2 0', 'changed'])
+    expect(node.eventStack).toEqual(['prop2-changed prop2 2 0', 'io-object-mutation'])
+  })
+  it('Should include changes queued during dispatch after earlier properties', () => {
+    const node = new MockNodeWithCascadingChanges()
+    const changeQueue = node._changeQueue
+    changeQueue.queue('prop1', 1, 0)
+    changeQueue.queue('prop2', 2, 0)
+    changeQueue.dispatch()
+    expect(node.changeStack).toEqual([
+      'prop1Changed 1',
+      'prop2Changed cascaded',
+      'prop3Changed final',
+      'changed',
+    ])
+  })
+
+  it('Should ignore nested dispatch while dispatching is in progress', () => {
+    @Register
+    class ReentrantNode extends ReactiveNode {
+      changeStack: string[] = []
+      prop1Changed(change: Change) {
+        this.changeStack.push(`prop1Changed ${change.value}`)
+        this._changeQueue.dispatch()
+      }
+      dispatch() {}
+      changed() {
+        this.changeStack.push('changed')
+      }
+    }
+    const node = new ReentrantNode()
+    const changeQueue = node._changeQueue
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    changeQueue.queue('prop1', 1, 0)
+    changeQueue.dispatch()
+    expect(changeQueue.dispatching).toBe(false)
+    expect(node.changeStack).toEqual(['prop1Changed 1', 'changed'])
+    consoleSpy.mockRestore()
+    node.dispose()
+  })
 })

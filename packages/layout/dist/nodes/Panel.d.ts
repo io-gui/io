@@ -15,7 +15,7 @@ export declare class Panel extends ReactiveNode {
     setSelected(id: string): void;
     flexChanged(): void;
     toJSON(): PanelProps;
-    fromJSON(json: PanelProps): this;
+    applyJSON(json: PanelProps): this;
     dispose(): void;
 }
 //# sourceMappingURL=Panel.d.ts.map

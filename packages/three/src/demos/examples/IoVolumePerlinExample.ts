@@ -91,7 +91,7 @@ export class IoVolumePerlinExample extends IoThreeExample {
   @ReactiveProperty({type: VolumePerlinExample, init: null})
   declare applet: VolumePerlinExample
 
-  ready() {
+  override ready() {
 
     this.render([
       ioSplit({

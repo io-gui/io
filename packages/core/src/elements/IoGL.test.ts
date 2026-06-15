@@ -1,9 +1,13 @@
 import { describe, it, expect } from 'vitest'
-import { IoGl, ReactiveNode, ThemeSingleton, ReactiveProperty, Register } from '@io-gui/core'
+import { IoGl, ReactiveNode, ThemeSingleton, Register, ReactivePropertyDefinitions } from '@io-gui/core'
 
 @Register
 class IoGlTest extends IoGl {
-  @ReactiveProperty({type: Array, init: [0, 0, 0, 0]})
+  static override get ReactiveProperties(): ReactivePropertyDefinitions {
+    return {
+      color: { type: Array, init: [0, 0, 0, 0] },
+    }
+  }
   declare color: [number, number, number, number]
   static get Frag() {
     return /* glsl */`
@@ -91,5 +95,31 @@ describe('IoGL', () => {
     element.onRender()
     color = (element as IoGl).ctx.getImageData(0, 0, 1, 1).data
     expect(color).toEqual(new Uint8ClampedArray([128, 32, 64, 64]))
+  })
+  it('should render when a second instance shares the cached shader program', () => {
+    const second = new IoGlTest()
+    second.size = [32, 32]
+    second.pxRatio = 1
+    second.style.visibility = 'hidden'
+    second.style.position = 'fixed'
+    second.style.width = '32px'
+    second.style.height = '32px'
+    document.body.appendChild(second as HTMLElement)
+
+    second.color = [0, 1, 0, 1]
+    second.onRender()
+
+    const color = second.ctx.getImageData(0, 0, 1, 1).data
+    expect(color).toEqual(new Uint8ClampedArray([0, 255, 0, 255]))
+  })
+  it('uniform cache smoke', () => {
+    const colorProp = element._reactiveProperties.get('color')!
+    element.updatePropertyUniform('uColor', colorProp)
+    element.updatePropertyUniform('uColor', colorProp)
+    expect(() => element.setUniform('uColor', [0, 0, 1, 1])).not.toThrow()
+    element.color = [0, 0, 1, 1]
+    element.onRender()
+    const color = element.ctx.getImageData(0, 0, 1, 1).data
+    expect(color[2]).toBe(255)
   })
 })

@@ -12,10 +12,14 @@ export function getHoveredMenuItem(event) {
     }
     if (hovered.length) {
         hovered.sort((a, b) => {
-            if (a.depth > b.depth)
-                return 1;
-            if (a.depth < b.depth)
-                return -1;
+            const aDepth = a.depth;
+            const bDepth = b.depth;
+            if (aDepth !== undefined && bDepth !== undefined) {
+                if (aDepth > bDepth)
+                    return 1;
+                if (aDepth < bDepth)
+                    return -1;
+            }
             if (a.localName === 'io-menu-item')
                 return 1;
             if (b.localName === 'io-menu-item')
@@ -38,9 +42,10 @@ export function getHoveredMenuItem(event) {
 }
 export function getMenuDescendants(element) {
     const descendants = [];
-    if (element.$options) {
-        descendants.push(element.$options);
-        const options = element.$options.querySelectorAll(MenuElementTagsSelector);
+    const menuElement = element;
+    if (menuElement.$options) {
+        descendants.push(menuElement.$options);
+        const options = menuElement.$options.querySelectorAll(MenuElementTagsSelector);
         for (let i = options.length; i--;) {
             descendants.push(options[i]);
             descendants.push(...getMenuDescendants(options[i]));
@@ -58,7 +63,7 @@ export function getMenuDescendants(element) {
 export function getMenuAncestors(element) {
     const ancestors = [];
     let option = element;
-    while (option && option.$parent) { // && !option.$parent._disposed
+    while (option && option.$parent) {
         option = option.$parent;
         if (option)
             ancestors.push(option);
@@ -71,9 +76,10 @@ export function getMenuChildren(element) {
     for (let i = options.length; i--;) {
         children.push(options[i]);
     }
-    if (element.$options) {
-        children.push(element.$options);
-        const options = element.$options.querySelectorAll(MenuElementTagsSelector);
+    const menuElement = element;
+    if (menuElement.$options) {
+        children.push(menuElement.$options);
+        const options = menuElement.$options.querySelectorAll(MenuElementTagsSelector);
         for (let i = options.length; i--;) {
             children.push(options[i]);
         }

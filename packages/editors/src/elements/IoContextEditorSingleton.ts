@@ -10,7 +10,7 @@ type IoContextEditorExpandProps = IoPropertyEditorProps & {
 
 @Register
 class IoContextEditor extends IoPropertyEditor {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         z-index: 2;
@@ -26,7 +26,7 @@ class IoContextEditor extends IoPropertyEditor {
 
   declare onClose: null | (() => void)
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'keydown': 'onKeydown',
       'io-focus-to': 'onIoFocusTo',

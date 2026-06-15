@@ -9,12 +9,8 @@ import { Register } from '../decorators/Register.js';
 import { IoElement } from './IoElement.js';
 let focusRestoreTarget = null;
 /**
- * This element is designed to be used as a singleton `IoOverlaySingleton`.
- * It is a pointer-blocking element covering the entire window at a very high z-index.
- * It is designed to be displayed on top all other elements and contain elements like modals, popovers, floating menus etc.
- * When clicked, IoOverlay collapses all child elements by setting their `expanded` property to `false`.
- * Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
- **/
+ * Singleton full-window overlay; blocks pointer events when {@link expanded} and collapses children on backdrop click.
+ */
 let IoOverlay = class IoOverlay extends IoElement {
     static get Style() {
         return /* css */ `
@@ -30,7 +26,7 @@ let IoOverlay = class IoOverlay extends IoElement {
         pointer-events: none;
         touch-action: none;
         background: transparent;
-        @apply --unselectable;
+        @apply --io-unselectable;
       }
       :host[expanded] {
         background: rgba(0, 0, 0, 0.25);

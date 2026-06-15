@@ -16,7 +16,7 @@ export type IoColorSliderProps = IoColorBaseProps & {
  **/
 @Register
 export class IoColorSlider extends IoColorBase {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -100,7 +100,7 @@ export class IoColorSlider extends IoColorBase {
     this.dispatch('value-input', {property: 'value', value: this.value}, false)
   }
 
-  changed() {
+  override changed() {
     const c = this.channel
 
     debug: if (['r', 'g', 'b', 'a', 'h', 's', 'v', 'l', 'hs', 'sv', 'sl'].indexOf(c) === -1) {
@@ -204,7 +204,7 @@ class IoColorSliderBase extends IoSlider {
   @ReactiveProperty({type: Array, init: [0, 0, 0, 0]})
   declare color: [number, number, number, number]
 
-  static get GlUtils() {
+  static override get GlUtils() {
     return /* glsl */`
       // Note: Implement in subclass!
       // TODO: Allow GlUtils to rewrite inherited functions!
@@ -220,7 +220,7 @@ class IoColorSliderBase extends IoSlider {
       }
     `
   }
-  static get Frag() {
+  static override get Frag() {
     return /* glsl */`
     varying vec2 vUv;
 
@@ -268,7 +268,7 @@ class IoColorSlider2dBase extends IoSlider2d {
   @ReactiveProperty({type: Array, init: [0, 0, 0, 0]})
   declare color: [number, number, number, number]
 
-  static get GlUtils() {
+  static override get GlUtils() {
     return /* glsl */`
       // Note: Implement in subclass!
       // TODO: Allow GlUtils to rewrite inherited functions!
@@ -278,7 +278,7 @@ class IoColorSlider2dBase extends IoSlider2d {
       ${glsl.hsl2rgb}
     `
   }
-  static get Frag() {
+  static override get Frag() {
     return /* glsl */`
     varying vec2 vUv;
 
@@ -308,7 +308,7 @@ class IoColorSlider2dBase extends IoSlider2d {
     }`
   }
   // TODO: temp fix
-  valueMutated() {}
+  override valueMutated() {}
 }
 
 /**
@@ -316,7 +316,7 @@ class IoColorSlider2dBase extends IoSlider2d {
  **/
 @Register
 export class IoColorSliderR extends IoColorSliderBase {
-  static get GlUtils() {
+  static override get GlUtils() {
     return /* glsl */`
       vec3 getStartColor(vec2 uv) {
         return vec3(uv.x, uColor[1], uColor[2]);
@@ -336,7 +336,7 @@ export const ioColorSliderR = function(arg0?: IoColorSliderProps) {
  **/
 @Register
 export class IoColorSliderG extends IoColorSliderBase {
-  static get GlUtils() {
+  static override get GlUtils() {
     return /* glsl */`
       vec3 getStartColor(vec2 uv) {
         return vec3(uColor[0], uv.x, uColor[2]);
@@ -356,7 +356,7 @@ export const ioColorSliderG = function(arg0?: IoColorSliderProps) {
  **/
 @Register
 export class IoColorSliderB extends IoColorSliderBase {
-  static get GlUtils() {
+  static override get GlUtils() {
     return /* glsl */`
       vec3 getStartColor(vec2 uv) {
         return vec3(uColor[0], uColor[1], uv.x);
@@ -375,7 +375,7 @@ export const ioColorSliderB = function(arg0?: IoColorSliderProps) {
  **/
 @Register
 export class IoColorSliderA extends IoColorSliderBase {
-  static get GlUtils() {
+  static override get GlUtils() {
     return /* glsl */`
       vec3 getStartColor(vec2 uv) {
         vec2 size = uVertical == 1 ? uSize.yx : uSize;
@@ -400,7 +400,7 @@ export const ioColorSliderA = function(arg0?: IoColorSliderProps) {
  **/
 @Register
 export class IoColorSliderH extends IoColorSliderBase {
-  static get GlUtils() {
+  static override get GlUtils() {
     return /* glsl */`
       vec3 getStartColor(vec2 uv) {
         return hsv2rgb(vec3(uv.x, uColor[1], uColor[2]));
@@ -419,7 +419,7 @@ export const ioColorSliderH = function(arg0?: IoColorSliderProps) {
  **/
 @Register
 export class IoColorSliderS extends IoColorSliderBase {
-  static get GlUtils() {
+  static override get GlUtils() {
     return /* glsl */`
       vec3 getStartColor(vec2 uv) {
         return hsv2rgb(vec3(uColor[0], uv.x, uColor[2]));
@@ -439,7 +439,7 @@ export const ioColorSliderS = function(arg0?: IoColorSliderProps) {
  **/
 @Register
 export class IoColorSliderV extends IoColorSliderBase {
-  static get GlUtils() {
+  static override get GlUtils() {
     return /* glsl */`
       vec3 getStartColor(vec2 uv) {
         return hsv2rgb(vec3(uColor[0], uColor[1], uv.x));
@@ -459,7 +459,7 @@ export const ioColorSliderV = function(arg0?: IoColorSliderProps) {
  **/
 @Register
 export class IoColorSliderL extends IoColorSliderBase {
-  static get GlUtils() {
+  static override get GlUtils() {
     return /* glsl */`
       vec3 getStartColor(vec2 uv) {
         return hsl2rgb(vec3(uColor[0], uColor[1], uv.x));
@@ -479,7 +479,7 @@ export const ioColorSliderL = function(arg0?: IoColorSliderProps) {
  **/
 @Register
 export class IoColorSliderHs extends IoColorSlider2dBase {
-  static get GlUtils() {
+  static override get GlUtils() {
     return /* glsl */`
       vec3 color_field(vec2 uv) {
         return hsv2rgb(vec3(uv, uColor[2]));
@@ -496,7 +496,7 @@ export const ioColorSliderHs = function(arg0?: IoColorSliderProps) {
  **/
 @Register
 export class IoColorSliderSv extends IoColorSlider2dBase {
-  static get GlUtils() {
+  static override get GlUtils() {
     return /* glsl */`
       vec3 color_field(vec2 uv) {
         return hsv2rgb(vec3(uColor[0], uv));
@@ -513,7 +513,7 @@ export const ioColorSliderSv = function(arg0?: IoColorSliderProps) {
  **/
 @Register
 export class IoColorSliderSl extends IoColorSlider2dBase {
-  static get GlUtils() {
+  static override get GlUtils() {
     return /* glsl */`
       vec3 color_field(vec2 uv) {
         return hsl2rgb(vec3(uColor[0], uv));

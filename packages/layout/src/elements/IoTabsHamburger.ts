@@ -10,7 +10,7 @@ export type IoTabsHamburgerProps = IoFieldProps & {
 
 @Register
 export class IoTabsHamburger extends IoField {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -24,7 +24,7 @@ export class IoTabsHamburger extends IoField {
 
   constructor(args: IoTabsHamburgerProps) { super(args) }
 
-  onClick() {
+  override onClick() {
     ioTabsHamburgerMenuSingleton.expand({
       source: this,
       direction: 'over',
@@ -35,7 +35,7 @@ export class IoTabsHamburger extends IoField {
   onEditTab(event: CustomEvent) {
     this.dispatch('io-edit-tab', {tab: event.detail.tab, key: event.detail.key}, true)
   }
-  changed() {
+  override changed() {
     this.render([
       ioIcon({value: 'io:hamburger'})
     ])

@@ -21,7 +21,7 @@ export type IoNavigatorProps = IoElementProps & {
 
 @Register
 export class IoNavigator extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -101,7 +101,7 @@ export class IoNavigator extends IoElement {
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare showVeil: boolean
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'io-drawer-expanded-changed': 'onDrawerExpandedChanged',
     }
@@ -155,7 +155,7 @@ export class IoNavigator extends IoElement {
     this.changed()
   }
 
-  changed() {
+  override changed() {
     const sharedMenuConfig = {
       option: this.option,
       widget: this.widget,

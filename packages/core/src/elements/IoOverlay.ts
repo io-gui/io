@@ -3,18 +3,18 @@ import { Register } from '../decorators/Register.js'
 import { ListenerDefinitions } from '../nodes/ReactiveNode.js'
 import { IoElement, IoElementProps } from './IoElement.js'
 
+export type IoExpandable = {
+  expanded: boolean
+}
+
 let focusRestoreTarget: Element | null = null
 
 /**
- * This element is designed to be used as a singleton `IoOverlaySingleton`.
- * It is a pointer-blocking element covering the entire window at a very high z-index.
- * It is designed to be displayed on top all other elements and contain elements like modals, popovers, floating menus etc.
- * When clicked, IoOverlay collapses all child elements by setting their `expanded` property to `false`.
- * Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
- **/
+ * Singleton full-window overlay; blocks pointer events when {@link expanded} and collapses children on backdrop click.
+ */
 @Register
 class IoOverlay extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: block;
@@ -28,7 +28,7 @@ class IoOverlay extends IoElement {
         pointer-events: none;
         touch-action: none;
         background: transparent;
-        @apply --unselectable;
+        @apply --io-unselectable;
       }
       :host[expanded] {
         background: rgba(0, 0, 0, 0.25);
@@ -43,7 +43,7 @@ class IoOverlay extends IoElement {
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare expanded: boolean
 
-  static get Listeners(): ListenerDefinitions {
+  static override get Listeners(): ListenerDefinitions {
     return {
       'pointerdown': ['stopPropagation', {passive: false}],
       'pointermove': ['stopPropagation', {passive: false}],
@@ -66,7 +66,7 @@ class IoOverlay extends IoElement {
 
   constructor(args: IoElementProps = {}) { super(args) }
 
-  init() {
+  override init() {
     this.expandAsChildren = this.expandAsChildren.bind(this)
   }
   stopPropagation(event: Event) {
@@ -90,13 +90,13 @@ class IoOverlay extends IoElement {
   onResized() {
     this.collapse()
   }
-  appendChild<El extends Node>(child: El) {
+  override appendChild<El extends Node>(child: El) {
     super.appendChild(child)
     child.addEventListener('expanded-changed', this.onChildExpandedChanged)
     this.debounce(this.expandAsChildren)
     return child
   }
-  removeChild<El extends Node>(child: El) {
+  override removeChild<El extends Node>(child: El) {
     super.removeChild(child)
     child.removeEventListener('expanded-changed', this.onChildExpandedChanged)
     this.debounce(this.expandAsChildren)
@@ -113,7 +113,7 @@ class IoOverlay extends IoElement {
   }
   expandAsChildren() {
     for (let i = this.children.length; i--;) {
-      if ((this.children[i] as any).expanded) {
+      if ((this.children[i] as unknown as IoExpandable).expanded) {
         this.expanded = true
         return
       }
@@ -123,7 +123,7 @@ class IoOverlay extends IoElement {
   expandedChanged() {
     if (!this.expanded) {
       for (let i = this.children.length; i--;) {
-        (this.children[i] as any).expanded = false
+        (this.children[i] as unknown as IoExpandable).expanded = false
       }
       if (focusRestoreTarget) (focusRestoreTarget as HTMLElement).focus()
     }

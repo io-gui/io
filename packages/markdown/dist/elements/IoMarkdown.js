@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, ThemeSingleton, Property } from '@io-gui/core';
+import { Register, IoElement, ReactiveProperty, Property, $ThemeID } from '@io-gui/core';
 import { Marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import purify from 'dompurify';
@@ -18,8 +18,7 @@ const marked = new Marked(markedHighlight({
     }
 }));
 const renderer = new marked.Renderer();
-renderer.heading = function ({ tokens, depth }) {
-    const text = tokens.map(token => token.text).join('');
+renderer.heading = function ({ text, depth }) {
     return `<h${depth} data-heading="${text}">${text}</h${depth}>`;
 };
 marked.setOptions({ renderer });
@@ -208,7 +207,7 @@ const styleElement = document.createElement('style');
 styleElement.id = 'io-highlight-theme';
 document.head.appendChild(styleElement);
 function setTheme() {
-    if (ThemeSingleton.themeID === 'dark') {
+    if ($ThemeID.value === 'dark') {
         styleElement.innerHTML = MD_DARK_THEME;
     }
     else {
@@ -216,5 +215,5 @@ function setTheme() {
     }
 }
 setTheme();
-ThemeSingleton.addEventListener('themeID-changed', setTheme);
+$ThemeID.node.addEventListener('value-changed', setTheme);
 //# sourceMappingURL=IoMarkdown.js.map

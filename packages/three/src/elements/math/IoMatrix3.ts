@@ -7,7 +7,7 @@ export type IoMatrix3Props = IoMatrixBaseProps & {
 
 @Register
 export class IoMatrix3 extends IoMatrixBase {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         grid-template-columns: repeat(3, 1fr);

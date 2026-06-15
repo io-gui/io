@@ -16,6 +16,8 @@ export const applyNativeElementProps = function (element, props) {
     for (const _p in props) {
         const p = _p;
         const prop = props[p];
+        if (p === 'key')
+            continue;
         debug: if (prop instanceof Binding) {
             console.warn(`VDOM: Cannot set binding on "${element.localName}.${_p}"`);
         }
@@ -72,15 +74,66 @@ export const applyNativeElementProps = function (element, props) {
  */
 export const constructElement = function (vDOMElement) {
     const props = vDOMElement.props || {};
+    let element;
     // IoElement classes constructed with constructor.
     const ConstructorClass = window.customElements ? window.customElements.get(vDOMElement.tag) : null;
     if (ConstructorClass && ConstructorClass.prototype?._isIoElement) {
-        return new ConstructorClass(props);
+        element = new ConstructorClass(props);
     }
-    // Other element classes constructed with document.createElement.
-    const element = document.createElement(vDOMElement.tag);
-    applyNativeElementProps(element, props);
+    else {
+        // Other element classes constructed with document.createElement.
+        element = document.createElement(vDOMElement.tag);
+        applyNativeElementProps(element, props);
+    }
+    if (props.key !== undefined) {
+        Object.defineProperty(element, '_vdomKey', { enumerable: false, configurable: true, value: props.key });
+    }
     return element;
+};
+/**
+ * Filters out null items from a virtual DOM children array.
+ * Returns the same array instance when no null items are present to avoid allocation.
+ * @param {Array} vChildren - Array of VDOMElement children with possible null items.
+ * @return {Array} - Array of VDOMElement children without null items.
+ */
+export const filterVDOMElements = function (vChildren) {
+    for (let i = 0; i < vChildren.length; i++) {
+        if (vChildren[i] === null) {
+            return vChildren.filter(item => item !== null);
+        }
+    }
+    return vChildren;
+};
+/**
+ * Disposes EventDispatcher on a native VDOM element.
+ */
+export const releaseEventDispatcher = function (element) {
+    if (element._eventDispatcher) {
+        element._eventDispatcher.dispose();
+        delete element._eventDispatcher;
+    }
+};
+/**
+ * Disposes EventDispatchers on element and all element descendants.
+ */
+export const releaseSubtreeEventDispatchers = function (root) {
+    const elements = root.querySelectorAll('*');
+    for (let i = elements.length; i--;) {
+        releaseEventDispatcher(elements[i]);
+    }
+    releaseEventDispatcher(root);
+};
+/**
+ * Clears native element children after releasing orphaned EventDispatchers.
+ */
+export const clearNativeElementChildren = function (element) {
+    for (let i = element.childNodes.length; i--;) {
+        const child = element.childNodes[i];
+        if (child.nodeType === Node.ELEMENT_NODE) {
+            releaseSubtreeEventDispatchers(child);
+        }
+    }
+    element.textContent = '';
 };
 /**
  * Disposes the element's children.
@@ -94,9 +147,8 @@ export const disposeChildren = function (element) {
             if (typeof elements[i].dispose === 'function') {
                 elements[i].dispose();
             }
-            else if (elements[i]._eventDispatcher) {
-                elements[i]._eventDispatcher.dispose();
-                delete elements[i]._eventDispatcher;
+            else {
+                releaseEventDispatcher(elements[i]);
             }
         }
     });

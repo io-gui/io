@@ -170,3 +170,7 @@ The renderer initializes asynchronously. Viewports wait for `renderer.initialize
 ### Dispose Cleanup
 
 Disposing a viewport disposes its CanvasTarget and ViewCameras. The shared renderer is only disposed if a custom renderer was provided.
+
+## Packaging
+
+Published `dist/index.js` is a bundled ES module. All `@io-gui/*` packages and `three` (including `three/webgpu`, `three/tsl`, and `three/addons`) are peer dependencies and stay external — install them alongside this package. The bundle does not inline Three.js.

@@ -9,7 +9,7 @@ export type IoNumberLadderStepProps = IoFieldProps & {
 //TODO: Dont extend IoField.
 @Register
 export class IoNumberLadderStep extends IoField {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         pointer-events: all;
@@ -52,7 +52,7 @@ export class IoNumberLadderStep extends IoField {
 
   constructor(args: IoNumberLadderStepProps) { super(args) }
 
-  onKeydown(event: KeyboardEvent) {
+  override onKeydown(event: KeyboardEvent) {
     // TODO: fix ladder focus handling. Wrap around.
     let stepMove = 0
     switch (event.key) {
@@ -83,13 +83,13 @@ export class IoNumberLadderStep extends IoField {
       this.dispatch('ladder-step-change', {step: Number(stepMove.toFixed(5)), round: event.shiftKey}, true)
     }
   }
-  onPointerdown(event: PointerEvent) {
+  override onPointerdown(event: PointerEvent) {
     this.setPointerCapture(event.pointerId)
     this.addEventListener('pointermove', this.onPointermove)
     this.addEventListener('pointerup', this.onPointerup)
     this.startX = event.clientX
   }
-  onPointermove(event: PointerEvent) {
+  override onPointermove(event: PointerEvent) {
     const deltaX = event.clientX - this.startX
     if (Math.abs(deltaX) > 5) {
       const expMove = Math.pow(deltaX / 5, 2) * deltaX < 0 ? -1: 1
@@ -99,16 +99,16 @@ export class IoNumberLadderStep extends IoField {
       this.dispatch('ladder-step-change', {step: Number(stepMove.toFixed(5)), round: event.shiftKey}, true)
     }
   }
-  onPointerup(event: PointerEvent) {
+  override onPointerup(event: PointerEvent) {
     this.releasePointerCapture(event.pointerId)
     this.removeEventListener('pointermove', this.onPointermove)
     this.removeEventListener('pointerup', this.onPointerup)
     this.dispatch('ladder-step-collapse', {}, true)
   }
-  ready() {
+  override ready() {
     this.changed()
   }
-  changed() {
+  override changed() {
     this.render([span(this.label)])
     this.setAttribute('aria-label', this.label)
     this.setAttribute('aria-valuestep', this.label)

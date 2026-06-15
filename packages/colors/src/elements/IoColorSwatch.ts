@@ -11,7 +11,7 @@ import { IoColorBase, IoColorBaseProps } from './IoColorBase.js'
  **/
 @Register
 export class IoColorSwatch extends IoColorBase {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: inline-block;
@@ -29,7 +29,7 @@ export class IoColorSwatch extends IoColorBase {
       }
     `
   }
-  valueChanged() {
+  override valueChanged() {
     super.valueChanged()
     this.render([
       div({style: {'background-color': `rgba(${this.rgba[0] * 255 },${this.rgba[1] * 255}, ${this.rgba[2] * 255}, ${this.rgba[3]})`}})

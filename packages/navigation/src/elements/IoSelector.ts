@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, ReactiveProperty, WithBinding, Property, span, ListenerDefinitions } from '@io-gui/core'
+import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, ReactiveProperty, WithBinding, Property, span, ListenerDefinitions, CallbackFunction } from '@io-gui/core'
 
 const dummyElement = document.createElement('div')
 /**
@@ -8,7 +8,8 @@ const dummyElement = document.createElement('div')
 
 // TODO: consider moving io-selectior to core elements
 
-const IMPORTED_PATHS: Record<string, any> = {}
+const IMPORTED_PATHS: Record<string, boolean> = {}
+
 function importModule(path: string) {
   const importPath = new URL(path, String(window.location)).pathname
   return new Promise((resolve, reject) => {
@@ -42,7 +43,7 @@ export type IoSelectorProps = IoElementProps & {
 @Register
 export class IoSelector extends IoElement {
 
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -104,13 +105,13 @@ export class IoSelector extends IoElement {
   @Property(false)
   declare private onScrollSuspended: boolean
 
-  static get Listeners(): ListenerDefinitions {
+  static override get Listeners(): ListenerDefinitions {
     return {
       scroll: 'onScrollChanged',
     }
   }
   constructor(args: IoSelectorProps = {}) { super(args) }
-  init() {
+  override init() {
     this.preacheNext = this.preacheNext.bind(this)
     this.startPreache = this.startPreache.bind(this)
     this.scrollToUnsuspend = this.scrollToUnsuspend.bind(this)
@@ -204,13 +205,13 @@ export class IoSelector extends IoElement {
     const importPath = vElement.props?.import
 
     if (!importPath) {
-      this.debounce(this.renderDebounced, vElement)
+      this.debounce(this.renderDebounced as CallbackFunction, vElement)
     } else {
       this.loading = true
       this._preaching = false
       void importModule(importPath).then(() => {
         this.loading = false
-        this.debounce(this.renderDebounced, vElement)
+        this.debounce(this.renderDebounced as CallbackFunction, vElement)
         this.debounce(this.startPreache)
       })
     }
@@ -266,7 +267,7 @@ export class IoSelector extends IoElement {
     }
     this._preaching = false
   }
-  dispose() {
+  override dispose() {
     for (const key in this._caches) {
       // Dispose cached elements not in the DOM.
       if (!this._caches[key].parentElement) {

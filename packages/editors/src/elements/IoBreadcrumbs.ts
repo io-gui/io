@@ -15,7 +15,7 @@ export type IoBreadcrumbsProps = IoElementProps & {
  **/
 @Register
 export class IoBreadcrumbs extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
     :host {
       display: flex;
@@ -93,7 +93,7 @@ export class IoBreadcrumbs extends IoElement {
   onClearSearch() {
     this.search = ''
   }
-  changed() {
+  override changed() {
     const vChildren = []
     if (this._crumbs.length > 1) {
       vChildren.push(ioButton({

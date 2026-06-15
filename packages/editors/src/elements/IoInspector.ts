@@ -32,7 +32,7 @@ function isNestedObject(value: object, selected: object): boolean {
  **/
 @Register
 export class IoInspector extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
     :host {
       display: flex;
@@ -74,7 +74,7 @@ export class IoInspector extends IoElement {
   @ReactiveProperty({type: Object})
   declare widget: VDOMElement
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'io-button-clicked': 'onLinkClicked',
     }
@@ -105,7 +105,7 @@ export class IoInspector extends IoElement {
   selectedChanged() {
     this.search = ''
   }
-  changed() {
+  override changed() {
     this.debounce(this.changedDebounced)
   }
   changedDebounced() {
@@ -144,7 +144,7 @@ export class IoInspector extends IoElement {
 
     this.render(vChildren)
   }
-  dispose() {
+  override dispose() {
     super.dispose()
     window.removeEventListener('io-object-mutation', this.onPropertyMutated as unknown as EventListener)
   }

@@ -1,4 +1,5 @@
 import { IoElement } from '@io-gui/core';
+/** @internal Demo: live theme variable editor. */
 export declare class IoThemeEditor extends IoElement {
     static get Style(): string;
     constructor(props: any);

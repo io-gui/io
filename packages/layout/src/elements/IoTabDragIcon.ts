@@ -11,7 +11,7 @@ const DRAG_THRESHOLD = 10
 
 @Register
 class IoTabDragIcon extends IoField {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: none;
@@ -189,7 +189,7 @@ class IoTabDragIcon extends IoField {
     })
   }
 
-  changed() {
+  override changed() {
     ioTabDropRectSingleton.setProperties({
       dropTarget: this.dropTarget,
       splitDirection: this.splitDirection,

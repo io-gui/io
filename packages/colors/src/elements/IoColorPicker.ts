@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, Property, WithBinding, nudge } from '@io-gui/core'
+import { Register, ReactiveProperty, IoElement, IoElementProps, Property, WithBinding, nudge, ListenerDefinitions } from '@io-gui/core'
 import { IoColorPanelSingleton as Panel } from './IoColorPanelSingleton.js'
 import { ioColorSwatch } from './IoColorSwatch.js'
 
@@ -12,7 +12,7 @@ export type IoColorPickerProps = IoElementProps &{
 
 @Register
 export class IoColorPicker extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         position: relative;
@@ -35,7 +35,7 @@ export class IoColorPicker extends IoElement {
   @ReactiveProperty({value: {r: 1, g: 1, b: 1, a: 1}})
   declare value: {r: number; g: number; b: number; a?: number}
 
-  static get Listeners(): any {
+  static override get Listeners(): ListenerDefinitions {
     return {
       'click': 'onClick',
       'keydown': 'onKeydown',
@@ -46,10 +46,10 @@ export class IoColorPicker extends IoElement {
   declare tabIndex: number
 
   get expanded() {
-    return Panel.expanded && Panel.value === this.value
+    return Panel.expanded && Panel.src === this
   }
 
-  ready() {
+  override ready() {
     this.valueChanged()
   }
 
@@ -71,27 +71,30 @@ export class IoColorPicker extends IoElement {
         }
     }
   }
-  onValueSet() {
+  onPanelValueInput() {
     this.dispatch('value-input', {property: 'value', value: this.value}, true)
   }
-  onPanelCollapse() {
-    // TODO: Reconsider this.
-    if (!this.expanded) {
-      Panel.removeEventListener('value-input', this.onValueSet)
-      Panel.removeEventListener('expanded-changed', this.onPanelCollapse)
-    }
-  }
   expand() {
-    Panel.value = this.value
-    Panel.expanded = true
-    Panel.addEventListener('value-input', this.onValueSet)
-    Panel.addEventListener('expanded-changed', this.onPanelCollapse)
+    Panel.setProperties({
+      src: this,
+      value: this.value,
+      expanded: true
+    })
     nudge(Panel, this, 'right');
     (Panel.firstChild?.firstChild as HTMLElement)?.focus()
   }
   collapse() {
-    Panel.expanded = false
-    Panel.value = {r: 1, g: 1, b: 1, a: 1}
+    if (Panel.src === this) {
+      Panel.src = null
+      Panel.expanded = false
+    }
+  }
+  override disconnectedCallback() {
+    super.disconnectedCallback()
+    if (Panel.src === this) {
+      Panel.src = null
+      Panel.expanded = false
+    }
   }
   valueChanged() {
     this.render([

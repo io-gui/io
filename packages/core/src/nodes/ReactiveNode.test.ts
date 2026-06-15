@@ -1,5 +1,31 @@
-import { describe, it, expect } from 'vitest'
-import { Change, Binding, ReactiveNode, Register, ReactivePropertyDefinitions, IoElement, ListenerDefinitions, nextQueue } from '@io-gui/core'
+import { describe, it, expect, vi } from 'vitest'
+import { Change, Binding, ReactiveNode, Register, ReactivePropertyDefinitions, IoElement, ListenerDefinitions, nextQueue, Color, NodeArray, NODES } from '@io-gui/core'
+
+@Register
+class JsonChildNode extends ReactiveNode {
+  static get ReactiveProperties(): ReactivePropertyDefinitions {
+    return {
+      count: { type: Number, value: 3 },
+    }
+  }
+  declare count: number
+}
+
+@Register
+class JsonNode extends ReactiveNode {
+  static get ReactiveProperties(): ReactivePropertyDefinitions {
+    return {
+      count: { type: Number, value: 5 },
+      color: { type: Color, init: [0, 0, 0, 1] },
+      label: { type: String, value: 'hello' },
+      children: { type: NodeArray, init: 'this' },
+    }
+  }
+  declare count: number
+  declare color: Color
+  declare label: string
+  declare children: NodeArray<JsonChildNode>
+}
 
 describe('ReactiveNode', () => {
   it('Should have all core API functions defined', () => {
@@ -7,6 +33,8 @@ describe('ReactiveNode', () => {
     expect(typeof node.setProperty).toBe('function')
     expect(typeof node.applyProperties).toBe('function')
     expect(typeof node.setProperties).toBe('function')
+    expect(typeof node.toJSON).toBe('function')
+    expect(typeof node.applyJSON).toBe('function')
     expect(typeof node.changed).toBe('function')
     expect(typeof node.queue).toBe('function')
     expect(typeof node.dispatchQueue).toBe('function')
@@ -20,6 +48,72 @@ describe('ReactiveNode', () => {
     expect(typeof node.dispatch).toBe('function')
     expect(typeof node.dispose).toBe('function')
     node.dispose()
+  })
+  it('Should detach child parent references on dispose', () => {
+    @Register
+    class ParentNode extends ReactiveNode {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return {
+          child: { type: ReactiveNode, init: null },
+          children: { type: NodeArray, init: 'this' },
+        }
+      }
+      declare child: ReactiveNode
+      declare children: NodeArray<ReactiveNode>
+    }
+
+    const parent = new ParentNode()
+    const child = new ReactiveNode()
+    const arrayChild = new ReactiveNode()
+    parent.child = child
+    parent.children.push(arrayChild)
+
+    expect(child._parents.includes(parent)).toBe(true)
+    expect(arrayChild._parents.includes(parent)).toBe(true)
+
+    parent.dispose()
+
+    expect(child._parents.includes(parent)).toBe(false)
+    expect(arrayChild._parents.includes(parent)).toBe(false)
+    child.dispose()
+    arrayChild.dispose()
+  })
+  it('Should wire parent graph for IoElement property values', () => {
+    @Register
+    class ChildElement extends IoElement {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return {
+          label: String,
+        }
+      }
+      declare label: string
+    }
+
+    @Register
+    class ParentNode extends ReactiveNode {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return {
+          child: { type: ChildElement, init: null },
+        }
+      }
+      declare child: ChildElement | null
+    }
+
+    const parent = new ParentNode()
+    const child = new ChildElement()
+
+    parent.child = child
+
+    expect((child as IoElement)._parents.includes(parent)).toBe(true)
+    expect(parent._children.includes(child)).toBe(true)
+
+    parent.child = null
+
+    expect((child as IoElement)._parents.includes(parent)).toBe(false)
+    expect(parent._children.includes(child)).toBe(false)
+
+    parent.dispose()
+    child.dispose()
   })
   it('Should register reactive property definitions with correct defaults', () => {
     @Register
@@ -1100,5 +1194,160 @@ describe('ReactiveNode', () => {
 
     ioObject1.dispose()
     ioObject2.dispose()
+  })
+  it('Should use one window mutation listener per node for multiple object properties', () => {
+    @Register
+    class TestNode extends ReactiveNode {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return {
+          propA: {type: Object, init: null},
+          propB: {type: Object, init: null},
+        }
+      }
+    }
+
+    const addSpy = vi.spyOn(window, 'addEventListener')
+    const node = new TestNode() as any
+
+    expect(addSpy.mock.calls.filter(([type]) => type === 'io-object-mutation').length).toBe(1)
+
+    node.propA = {label: 'a'}
+    node.propB = {label: 'b'}
+
+    expect(addSpy.mock.calls.filter(([type]) => type === 'io-object-mutation').length).toBe(1)
+
+    addSpy.mockRestore()
+    node.dispose()
+  })
+
+  describe('toJSON and applyJSON', () => {
+    it('serializes numbers and nested toJSON values, skips reactivity and strings', () => {
+      const node = new JsonNode()
+      node.count = 9
+      node.color.applyJSON(Color.toHex(1, 0.2, 0))
+      node.label = 'ignored'
+      node.children.push(new JsonChildNode())
+
+      const json = node.toJSON()
+      expect(json.count).toBe(9)
+      expect(json.color).toBe(0xffff3300)
+      expect(json.label).toBeUndefined()
+      expect(json.reactivity).toBeUndefined()
+      expect(json.children).toEqual([{ count: 3 }])
+    })
+
+    it('round-trips through applyJSON on the same instance', () => {
+      const node = new JsonNode()
+      node.children.push(new JsonChildNode())
+      node.count = 11
+      node.color.applyJSON(Color.toHex(0, 0, 0, 0.5))
+
+      const json = node.toJSON()
+      node.applyJSON(json)
+
+      expect(node.count).toBe(11)
+      expect(node.color.toJSON()).toBe(json.color)
+      expect(node.color.a).toBeCloseTo(0.5)
+      expect(node.children[0].count).toBe(3)
+    })
+
+    it('applyJSON updates primitive properties from JSON', () => {
+      const node = new JsonNode()
+      node.applyJSON({ count: 42 })
+      expect(node.count).toBe(42)
+      node.dispose()
+    })
+
+    it('applyJSON delegates to nested applyJSON implementations', () => {
+      const node = new JsonNode()
+      const shadowHex = Color.toHex(0, 0, 0, 0.2)
+      node.applyJSON({ color: shadowHex })
+      expect(node.color.a).toBeCloseTo(0.2)
+      expect(node.color.toJSON()).toBe(shadowHex)
+      node.dispose()
+    })
+
+    it('JSON.stringify uses toJSON', () => {
+      const node = new JsonNode()
+      node.count = 7
+      const parsed = JSON.parse(JSON.stringify(node))
+      expect(parsed.count).toBe(7)
+      node.dispose()
+    })
+  })
+
+  it('Should track active nodes in NODES registry', () => {
+    const node = new ReactiveNode()
+    expect(NODES.active.has(node)).toBe(true)
+    expect(NODES.disposed.has(node)).toBe(false)
+    node.dispose()
+    expect(NODES.active.has(node)).toBe(false)
+    expect(NODES.disposed.has(node)).toBe(true)
+  })
+
+  it('Should ignore dispose on already disposed node', () => {
+    const node = new ReactiveNode()
+    node.dispose()
+    expect(() => node.dispose()).not.toThrow()
+    expect(NODES.disposed.has(node)).toBe(true)
+  })
+
+  it('Should apply only reactive properties from applyProperties', () => {
+    @Register
+    class PropsNode extends ReactiveNode {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return { count: 0, label: '' }
+      }
+      declare count: number
+      declare label: string
+    }
+    const node = new PropsNode()
+    node.applyProperties({ count: 3, label: 'x', extra: 99 })
+    expect(node.count).toBe(3)
+    expect(node.label).toBe('x')
+    expect((node as any).extra).toBe(99)
+    node.dispose()
+  })
+
+  it('Should skip setProperty when disposed', () => {
+    @Register
+    class CountNode extends ReactiveNode {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return { count: 0 }
+      }
+      declare count: number
+    }
+    const node = new CountNode()
+    node.dispose()
+    expect(() => node.setProperty('count', 5)).not.toThrow()
+    expect(node._disposed).toBe(true)
+  })
+
+  it('Should bubble synthetic events through parent graph', async () => {
+    @Register
+    class ChildNode extends ReactiveNode {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return { value: 0 }
+      }
+      declare value: number
+    }
+    @Register
+    class ParentNode extends ReactiveNode {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return { child: { type: ChildNode, init: null } }
+      }
+      declare child: ChildNode
+    }
+    const parent = new ParentNode()
+    const child = new ChildNode()
+    parent.child = child
+    const events: string[] = []
+    parent.addEventListener('value-changed', () => events.push('parent'))
+    child.addEventListener('value-changed', () => events.push('child'))
+    child.dispatch('value-changed', { property: 'value', value: 1, oldValue: 0 }, true)
+    await nextQueue()
+    expect(events).toContain('child')
+    parent.dispose()
+    child.dispose()
   })
 })

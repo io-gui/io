@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property } from '@io-gui/core'
+import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property, CallbackFunction } from '@io-gui/core'
 import { ioSelector } from '@io-gui/navigation'
 import { IoMenuItem, MenuOption } from '@io-gui/menus'
 import { ioTabs } from './IoTabs.js'
@@ -14,7 +14,7 @@ export type IoPanelProps = IoElementProps & {
 
 @Register
 export class IoPanel extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -34,7 +34,7 @@ export class IoPanel extends IoElement {
   @Property({type: MenuOption})
   declare addMenuOption: MenuOption | undefined
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'io-edit-tab': 'onEditTab',
     }
@@ -81,12 +81,12 @@ export class IoPanel extends IoElement {
   selectIndex(index: number) {
     index = Math.min(index, this.panel.tabs.length - 1)
     this.panel.setSelected(this.panel.tabs[index].id)
-    this.debounce(this.focusTabDebounced, index)
+    this.debounce(this.focusTabDebounced as CallbackFunction, index)
   }
   selectTab(tab: Tab) {
     const index = this.panel.tabs.indexOf(tab)
     this.panel.setSelected(tab.id)
-    this.debounce(this.focusTabDebounced, index)
+    this.debounce(this.focusTabDebounced as CallbackFunction, index)
   }
   moveTabToSplit(sourcePanel: IoPanel, tab: Tab, direction: SplitDirection) {
     const parentSplit = this.parentElement as IoSplit
@@ -158,7 +158,7 @@ export class IoPanel extends IoElement {
     if (options.length === 0) return undefined
     return new MenuOption({options})
   }
-  changed() {
+  override changed() {
     this.render([
       ioTabs({
         tabs: this.panel.tabs,

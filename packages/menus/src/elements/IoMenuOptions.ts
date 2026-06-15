@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, VDOMElement, IoOverlaySingleton as Overlay, NudgeDirection, IoElementProps, WithBinding, Property, nudge, ListenerDefinition, span } from '@io-gui/core'
+import { Register, IoElement, ReactiveProperty, VDOMElement, IoOverlaySingleton as Overlay, NudgeDirection, IoElementProps, WithBinding, Property, nudge, ListenerDefinition, span, IoExpandable } from '@io-gui/core'
 import { ioField, ioString } from '@io-gui/inputs'
 import { MenuOption } from '../nodes/MenuOption.js'
 import { ioMenuItem, IoMenuItem } from './IoMenuItem.js'
@@ -27,7 +27,7 @@ export type IoMenuOptionsProps = IoElementProps & {
  **/
 @Register
 export class IoMenuOptions extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
     :host {
       display: flex;
@@ -39,7 +39,7 @@ export class IoMenuOptions extends IoElement {
       background-color: var(--io_bgColorLight);
       padding: calc(var(--io_spacing) + var(--io_borderWidth));
       transition: opacity 0.3s ease-in-out;
-      @apply --unselectable;
+      @apply --io-unselectable;
     }
     :host[horizontal] {
       padding: var(--io_spacing) 0;
@@ -116,7 +116,7 @@ export class IoMenuOptions extends IoElement {
   @Property('listbox')
   declare role: string
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'touchstart': ['stopPropagation'] as ListenerDefinition,
       'io-focus-to': 'onIoFocusTo',
@@ -134,11 +134,15 @@ export class IoMenuOptions extends IoElement {
       event.stopPropagation()
     }
   }
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback()
     if (this.inoverlay) {
       this.setAttribute('inoverlay', 'true')
     }
+  }
+  override disconnectedCallback() {
+    super.disconnectedCallback()
+    if (this.expanded) this.collapse()
   }
   onIoFocusTo(event: CustomEvent) {
     const source = event.detail.source
@@ -192,7 +196,9 @@ export class IoMenuOptions extends IoElement {
     const optionWasFocused = this.contains(document.activeElement)
     const searchHadInput = this.searchable && !!this.search
     getMenuDescendants(this).forEach(descendant => {
-      (descendant as any).expanded = false
+      if (Object.prototype.hasOwnProperty.call(descendant, 'expanded')) {
+        (descendant as IoExpandable).expanded = false
+      }
     })
     this.expanded = false
     if (searchHadInput && optionWasFocused && !this.inoverlay) {
@@ -224,7 +230,7 @@ export class IoMenuOptions extends IoElement {
       nudge(this, this.$parent, this.direction, true)
     }
   }
-  changed() {
+  override changed() {
     const vChildren: VDOMElement[] = this.widget ? [this.widget] : []
     if (this.searchable) {
       vChildren.push(ioString({

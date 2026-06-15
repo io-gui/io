@@ -1,4 +1,4 @@
-import { IoElement, IoGl, Theme, Color, ReactiveNode } from '@io-gui/core';
+import { IoElement, IoGl, Theme, ReactiveNode, Color } from '@io-gui/core';
 import { ioString, ioNumber, ioSwitch, ioField, ioButton } from '@io-gui/inputs';
 import { MenuOption, ioOptionSelect } from '@io-gui/menus';
 import { ioNumberSlider } from '@io-gui/sliders';

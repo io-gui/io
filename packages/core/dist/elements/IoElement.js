@@ -8,18 +8,31 @@ var IoElement_1;
 import { Property, ReactiveProperty } from '../decorators/Property.js';
 import { Register } from '../decorators/Register.js';
 import { ProtoChain } from '../core/ProtoChain.js';
-import { applyNativeElementProps, constructElement, disposeChildren, toVDOM } from '../vdom/VDOM.js';
+import { applyNativeElementProps, constructElement, disposeChildren, filterVDOMElements, toVDOM, clearNativeElementChildren, releaseSubtreeEventDispatchers } from '../vdom/VDOM.js';
 import { dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties } from '../nodes/ReactiveNode.js';
+import { addParent, initReactiveOwnerInternals, removeParent } from '../core/ReactiveCore.js';
 import { Binding } from '../core/Binding.js';
 import { applyElementStyleToDocument } from '../core/Style.js';
-import { EventDispatcher } from '../core/EventDispatcher.js';
-import { ChangeQueue } from '../core/ChangeQueue.js';
 import { throttle, debounce } from '../core/Queue.js';
 const resizeObserver = new ResizeObserver(entries => {
     for (const entry of entries) {
         entry.target.onResized();
     }
 });
+/**
+ * Base class for Io-Gui custom elements.
+ *
+ * IoElement extends `HTMLElement` with the same reactive property system as
+ * {@link ReactiveNode}, plus virtual DOM rendering, inherited CSS via static
+ * `Style`, and DOM event bridging through {@link EventDispatcher}.
+ *
+ * Elements render children with {@link IoElement.render} and declare structure
+ * through VDOM helpers exported from `@io-gui/core`. Register elements with
+ * {@link Register}; factory functions (for example `ioButton`) are generated
+ * automatically for VDOM composition.
+ *
+ * @see ReactiveNode for non-DOM reactive objects
+ */
 let IoElement = IoElement_1 = class IoElement extends HTMLElement {
     static get Style() {
         return /* css */ `
@@ -31,7 +44,7 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
       :host[hidden] {
         display: none;
       }
-      --unselectable: {
+      --io-unselectable: {
         user-select: none;
         -webkit-user-select: none;
         -webkit-touch-callout: none;
@@ -50,19 +63,18 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
     static get Properties() {
         return {};
     }
+    /**
+     * Declares class-level event listeners wired at construction via {@link EventDispatcher}.
+     * Subclass definitions replace parent handlers for the same event name (last wins).
+     * Use {@link addEventListener} for additional listeners at runtime.
+     */
     static get Listeners() {
         return {};
     }
     constructor(args = {}) {
         super();
         this._protochain.init(this);
-        Object.defineProperty(this, '_changeQueue', { enumerable: false, configurable: true, value: new ChangeQueue(this) });
-        Object.defineProperty(this, '_reactiveProperties', { enumerable: false, configurable: true, value: new Map() });
-        Object.defineProperty(this, '_bindings', { enumerable: false, configurable: true, value: new Map() });
-        Object.defineProperty(this, '_eventDispatcher', { enumerable: false, configurable: true, value: new EventDispatcher(this) });
-        Object.defineProperty(this, '_hasWindowMutationListener', { enumerable: false, configurable: true, writable: true, value: false });
-        Object.defineProperty(this, '_hasSelfMutationListener', { enumerable: false, configurable: true, writable: true, value: false });
-        // Object.defineProperty(this, '_parents', {enumerable: false, configurable: true, value: []});
+        initReactiveOwnerInternals(this);
         this.init();
         initReactiveProperties(this);
         initProperties(this);
@@ -70,7 +82,7 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
         this.ready();
         this.dispatchQueue();
     }
-    // TODO: add types
+    /** Applies constructor/render props; defers dispatch when `skipDispatch` is true. */
     applyProperties(props, skipDispatch = false) {
         for (const name in props) {
             if (this._reactiveProperties.has(name)) {
@@ -81,9 +93,10 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
                     this.className = props[name];
                 }
                 else if (name === 'style') {
-                    for (const s in props[name]) {
+                    const styleProps = props[name];
+                    for (const s in styleProps) {
                         // TODO: Consider supporting importance
-                        this.style[s] = props[name][s];
+                        this.style.setProperty(s, styleProps[s]);
                     }
                 }
                 else if (name.startsWith('data-')) {
@@ -169,39 +182,76 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
             return;
         this._eventDispatcher.dispatchEvent(type, detail, bubbles, src);
     }
+    addParent(parent) {
+        addParent(this, parent);
+    }
+    removeParent(parent) {
+        removeParent(this, parent);
+    }
+    /** Releases bindings, listeners, queues, and child elements. */
     dispose() {
         dispose(this);
     }
     connectedCallback() {
-        if (typeof this.onResized === 'function') {
+        if ('onResized' in this && typeof this.onResized === 'function') {
             resizeObserver.observe(this);
         }
     }
     disconnectedCallback() {
-        if (typeof this.onResized === 'function') {
+        if ('onResized' in this && typeof this.onResized === 'function') {
             resizeObserver.unobserve(this);
         }
     }
-    /**
-     * Renders DOM from virtual DOM arrays.
-     * @param {Array} vDOMElements - Array of VDOMElement[] children.
-     * @param {HTMLElement} [host] - Optional template target.
-     * @param {boolean} [noDispose] - Skip disposal of existing elements.
-     */
+    /** Renders VDOM children into this element or optional host. */
     render(vDOMElements, host, noDispose) {
-        host = (host || this);
-        const vDOMElementsOnly = vDOMElements.filter(item => item !== null);
-        this.$ = {};
-        this.traverse(vDOMElementsOnly, host, noDispose);
+        const renderHost = host ?? this;
+        const vDOMElementsOnly = filterVDOMElements(vDOMElements);
+        for (const id in this.$)
+            delete this.$[id];
+        this.traverse(vDOMElementsOnly, renderHost, noDispose);
+    }
+    /** Reconciles VDOM tree into host; keyed when children specify `key`. */
+    traverse(vChildren, host, noDispose) {
+        this._reconcileChildren(vChildren, host, noDispose);
+        const children = host.children;
+        for (let i = 0; i < vChildren.length; i++) {
+            const vChild = vChildren[i];
+            const child = children[i];
+            if (vChild.props?.id) {
+                // Update this.$ map of ids.
+                debug: {
+                    if (this.$[vChild.props.id] !== undefined) {
+                        console.warn(`IoElement: Duplicate id in template. "${vChild.props.id}"`);
+                    }
+                }
+                this.$[vChild.props.id] = child;
+            }
+            if (vChild.children !== undefined) {
+                if (typeof vChild.children === 'string') {
+                    // Set textNode value.
+                    this._flattenTextNode(child);
+                    child._textNode.nodeValue = String(vChild.children);
+                }
+                else if (vChild.children instanceof Array) {
+                    if (!child._isIoElement) {
+                        const vDOMElementsOnly = filterVDOMElements(vChild.children);
+                        this.traverse(vDOMElementsOnly, child, noDispose);
+                    }
+                }
+            }
+            else if (!child._isIoElement) {
+                // Clear children for native elements. IoElements manage their own children by design
+                clearNativeElementChildren(child);
+            }
+        }
     }
     /**
-     * Recurively traverses virtual DOM elements.
-     * TODO: test element.traverse() function!
-     * @param {Array} vDOMElements - Array of VDOMElements elements.
-     * @param {HTMLElement} [host] - Optional template target.
+     * Reconciles host children with vDOM children by position and tag name.
+     * @param {Array} vChildren - Array of VDOMElements elements.
+     * @param {HTMLElement} host - Template target.
      * @param {boolean} [noDispose] - Skip disposal of existing elements.
      */
-    traverse(vChildren, host, noDispose) {
+    _reconcileChildren(vChildren, host, noDispose) {
         const children = host.children;
         // remove trailing elements
         while (children.length > vChildren.length) {
@@ -224,24 +274,11 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
                 // update existing elements
             }
             else {
-                // TODO: improve setting/removal/cleanup of native element properties/attributes.
-                child.removeAttribute('className');
-                child.removeAttribute('style');
-                if (vChildren[i].props) {
-                    if (child._isIoElement) {
-                        // Set IoElement element properties
-                        child.applyProperties(vChildren[i].props);
-                    }
-                    else {
-                        // Set native HTML element properties
-                        applyNativeElementProps(child, vChildren[i].props);
-                    }
-                }
+                this._updateElementProps(child, vChildren[i]);
             }
         }
         // TODO: doing this before "replace elements" cached (noDispose) elements to be created twice.
         // TODO: rename nodispose to dispose.
-        // TODO: test
         // create new elements after existing
         if (children.length < vChildren.length) {
             const frag = document.createDocumentFragment();
@@ -251,34 +288,24 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
             }
             host.appendChild(frag);
         }
-        for (let i = 0; i < vChildren.length; i++) {
-            const vChild = vChildren[i];
-            const child = children[i];
-            if (vChild.props?.id) {
-                // Update this.$ map of ids.
-                debug: {
-                    if (this.$[vChild.props.id] !== undefined) {
-                        console.warn(`IoElement: Duplicate id in template. "${vChild.props.id}"`);
-                    }
-                }
-                this.$[vChild.props.id] = child;
+    }
+    /**
+     * Updates props of an existing element matched during reconciliation.
+     * @param {HTMLElement | IoElement} child - Element to update.
+     * @param {VDOMElement} vChild - Virtual DOM element to apply props from.
+     */
+    _updateElementProps(child, vChild) {
+        // TODO: improve setting/removal/cleanup of native element properties/attributes.
+        child.removeAttribute('className');
+        child.removeAttribute('style');
+        if (vChild.props) {
+            if (child._isIoElement) {
+                // Set IoElement element properties
+                child.applyProperties(vChild.props);
             }
-            if (vChild.children !== undefined) {
-                if (typeof vChild.children === 'string') {
-                    // Set textNode value.
-                    this._flattenTextNode(child);
-                    child._textNode.nodeValue = String(vChild.children);
-                }
-                else if (vChild.children instanceof Array) {
-                    if (!child._isIoElement) {
-                        const vDOMElementsOnly = vChild.children.filter(item => item !== null);
-                        this.traverse(vDOMElementsOnly, child, noDispose);
-                    }
-                }
-            }
-            else if (!child._isIoElement) {
-                // Clear children for native elements. IoElements manage their own children by design
-                child.textContent = '';
+            else {
+                // Set native HTML element properties
+                applyNativeElementProps(child, vChild.props);
             }
         }
     }
@@ -293,15 +320,20 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
             element.appendChild(document.createTextNode(''));
         }
         if (element.childNodes[0].nodeName !== '#text') {
-            element.innerHTML = '';
+            clearNativeElementChildren(element);
             element.appendChild(document.createTextNode(''));
         }
         element._textNode = element.childNodes[0];
         if (element.childNodes.length > 1) {
             const textContent = element.textContent;
             for (let i = element.childNodes.length; i--;) {
-                if (i !== 0)
-                    element.removeChild(element.childNodes[i]);
+                if (i !== 0) {
+                    const node = element.childNodes[i];
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        releaseSubtreeEventDispatchers(node);
+                    }
+                    element.removeChild(node);
+                }
             }
             element._textNode.nodeValue = textContent;
         }
@@ -340,8 +372,7 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
         // TODO: Define all overloads with type guards.
         // TODO: Add runtime debug type checks.
         // TODO: Test thoroughly.
-        Object.defineProperty(ioNodeConstructor, 'vConstructor', {
-            value: function (arg0, arg1) {
+        Object.defineProperty(ioNodeConstructor, 'vConstructor', { value: function (arg0, arg1) {
                 const vDOMElement = { tag: localName };
                 if (arg0 !== undefined) {
                     if (typeof arg0 === 'string') {
@@ -363,8 +394,7 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
                     }
                 }
                 return vDOMElement;
-            }
-        });
+            } });
     }
 };
 __decorate([

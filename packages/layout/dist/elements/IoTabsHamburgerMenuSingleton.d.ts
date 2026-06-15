@@ -1,4 +1,4 @@
-import { NudgeDirection, NodeArray, VDOMElement, IoElement, IoElementProps, ListenerDefinition } from '@io-gui/core';
+import { NudgeDirection, NodeArray, IoElement, IoElementProps, ListenerDefinition } from '@io-gui/core';
 import { Tab } from '../nodes/Tab.js';
 export interface IoTabsHamburgerMenuExpandProps {
     source: HTMLElement;
@@ -7,7 +7,6 @@ export interface IoTabsHamburgerMenuExpandProps {
     onEditTab: (event: CustomEvent) => void;
 }
 declare class IoTabsHamburgerMenu extends IoElement {
-    static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     private tabs;
     private expanded;

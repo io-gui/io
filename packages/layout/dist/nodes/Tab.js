@@ -27,7 +27,7 @@ let Tab = class Tab extends ReactiveNode {
             json.selected = this.selected;
         return json;
     }
-    fromJSON(json) {
+    applyJSON(json) {
         this.setProperties({
             id: json.id,
             label: json.label ? json.label : json.id,

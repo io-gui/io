@@ -1,6 +1,6 @@
 import { Register, ReactiveProperty, IoElement, IoElementProps, IoOverlaySingleton, ThemeSingleton, span, WithBinding, Property } from '@io-gui/core'
 import { IoNumber } from './IoNumber.js'
-import { ioNumberLadderStep } from './IoNumberLadderStep.js'
+import { ioNumberLadderStep, IoNumberLadderStep } from './IoNumberLadderStep.js'
 
 export type IoNumberLadderProps = IoElementProps & {
   src?: IoNumber
@@ -17,7 +17,7 @@ export type IoNumberLadderProps = IoElementProps & {
  **/
 @Register
 class IoNumberLadder extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -25,7 +25,7 @@ class IoNumberLadder extends IoElement {
         position: absolute;
         pointer-events: none;
         box-shadow: unset;
-        @apply --unselectable;
+        @apply --io-unselectable;
       }
       :host:not([expanded]) {
         visibility: hidden;
@@ -85,7 +85,7 @@ class IoNumberLadder extends IoElement {
   @Property('listbox')
   declare role: string
 
-  static get Listeners() {
+  static override get Listeners() {
     return {
       'ladder-step-change': '_onLadderStepChange',
       'ladder-step-collapse': 'onLadderStepCollapse',
@@ -154,7 +154,7 @@ class IoNumberLadder extends IoElement {
     }
     this.dispatch('expanded', {value: this.expanded}, true)
   }
-  changed() {
+  override changed() {
     const range = this.max - this.min
     const hiddenItem = span({class: 'io-number-ladder-empty'})
 
@@ -203,7 +203,7 @@ class IoNumberLadder extends IoElement {
       steps[i].setAttribute('aria-valuemin', String(this.min))
       steps[i].setAttribute('aria-valuemax', String(this.max))
       steps[i].setAttribute('aria-valuenow', String(this.value));
-      (steps[i] as any).changed()
+      (steps[i] as IoNumberLadderStep).changed()
     }
   }
 }

@@ -1,6 +1,10 @@
-import { Register, ReactiveProperty, IoOverlaySingleton } from '@io-gui/core'
+import { Register, ReactiveProperty, IoOverlaySingleton, IoElement } from '@io-gui/core'
 import { IoColorBase } from './IoColorBase.js'
 import { ioColorSlider } from './IoColorSliders.js'
+
+type IoColorPanelSource = IoElement & {
+  onPanelValueInput(): void
+}
 
 /**
  * Input element for color displayed as a set of sliders.
@@ -8,7 +12,7 @@ import { ioColorSlider } from './IoColorSliders.js'
  **/
 @Register
 class IoColorPanel extends IoColorBase {
-  static get Style() {
+  static override get Style() {
     return /* css */`
     :host {
       display: flex;
@@ -31,13 +35,21 @@ class IoColorPanel extends IoColorBase {
   @ReactiveProperty({value: false, reflect: true})
   declare expanded: boolean
 
-  static get Listeners() {
+  @ReactiveProperty({value: null})
+  declare src: IoColorPanelSource | null
+
+  static override get Listeners() {
     return {
       'keydown': 'onKeydown',
       'io-focus-to': 'onIoFocusTo',
     }
   }
 
+  expandedChanged() {
+    if (!this.expanded) {
+      this.src = null
+    }
+  }
   onKeydown(event: KeyboardEvent) {
     if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()
@@ -58,9 +70,9 @@ class IoColorPanel extends IoColorBase {
     }
   }
   onValueInput() {
-    this.dispatch('value-input', {property: 'value', value: this.value}, true)
+    this.src?.onPanelValueInput()
   }
-  changed() {
+  override changed() {
     this.render([
       ioColorSlider({value: this.value, channel: 'sv', '@value-input': this.onValueInput}),
       ioColorSlider({value: this.value, channel: 'h', vertical: true, '@value-input': this.onValueInput}),

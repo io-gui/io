@@ -64,12 +64,8 @@ export const listenerFromDefinition = (node, def) => {
     return options ? [handler, options] : [handler];
 };
 /**
- * Internal utility class responsible for handling listeners and dispatching events.
- * It makes events of all `ReactiveNode` class instances compatible with DOM events.
- * It maintains three independent lists of listeners:
- *  - `protoListeners` specified as `get Listeners()` return value of class.
- *  - `propListeners` specified as inline properties prefixed with "@".
- *  - `addedListeners` explicitly added/removed using `addEventListener()` and `removeEventListener()`.
+ * Routes proto, prop, and added listeners; bridges DOM and synthetic Io events.
+ * Proto listeners use last-wins per event name from {@link ProtoChain}.
  */
 export class EventDispatcher {
     node;
@@ -88,9 +84,14 @@ export class EventDispatcher {
         this.setProtoListeners(node);
     }
     /**
-     * Sets `protoListeners` specified as `get Listeners()` class definitions.
-     * Definitions from subclass replace the ones from parent class.
-     * @param {ReactiveNode | IoElement} node owner ReactiveNode
+     * Sets `protoListeners` from `static get Listeners()` definitions aggregated on {@link ProtoChain}.
+     *
+     * For each event name, only the **last** definition in the protochain list is registered.
+     * Subclass `Listeners` entries replace parent handlers for the same event (last wins).
+     * This differs from {@link ProtoChain.addListeners}, which merges the full inheritance chain
+     * for introspection — runtime dispatch uses a single handler per event name here.
+     *
+     * @param node owner ReactiveNode
      */
     setProtoListeners(node) {
         for (const name in node._protochain?.listeners) {
@@ -107,7 +108,7 @@ export class EventDispatcher {
     /**
      * Sets `propListeners` specified as inline properties prefixed with "@".
      * It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
-     * @param {Record<string, any>} properties - Inline properties
+     * @param {Record<string, unknown>} properties - Inline properties
      */
     applyPropListeners(properties) {
         // Create and object with new listeners
@@ -246,25 +247,37 @@ export class EventDispatcher {
     /**
      * Shorthand for custom event dispatch.
      * @param {string} name - Name of the event
-     * @param {any} detail - Event detail data
+     * @param {unknown} detail - Event detail data
      * @param {boolean} [bubbles] - Makes event bubble
      * @param {ReactiveNode | IoElement | EventTarget} [node] - Event target override to dispatch the event from
      */
-    dispatchEvent(name, detail, bubbles = true, node = this.node, path = [], visited = new Set()) {
+    dispatchEvent(name, detail, bubbles = true, node = this.node, path = [], visited = new Set(), propagation = { stopped: false, immediateStopped: false }) {
         if (this.node._disposed)
             return;
         if (visited.has(node))
             return;
         visited.add(node);
-        path = [...path, node];
+        path.push(node);
         if ((node instanceof EventTarget)) {
-            const bubblesNative = bubbles && !hasVisitedDomAncestor(node, visited);
+            const bubblesNative = bubbles && !propagation.stopped && !hasVisitedDomAncestor(node, visited);
             EventTarget.prototype.dispatchEvent.call(node, new CustomEvent(name, { detail: detail, bubbles: bubblesNative, composed: true, cancelable: true }));
         }
         else {
-            const payload = { detail: detail, target: node, path: path };
+            const payload = {
+                detail: detail,
+                target: node,
+                path: path,
+                stopPropagation() {
+                    propagation.stopped = true;
+                },
+                stopImmediatePropagation() {
+                    propagation.immediateStopped = true;
+                },
+            };
             if (this.protoListeners[name]) {
                 for (let i = 0; i < this.protoListeners[name].length; i++) {
+                    if (propagation.immediateStopped)
+                        break;
                     const handler = this.protoListeners[name][i][0];
                     handler.call(node, payload);
                 }
@@ -273,24 +286,28 @@ export class EventDispatcher {
                 debug: if (this.propListeners[name].length > 1) {
                     console.error(`EventDispatcher.dispathEvent: PropListeners[${name}] array too long!`);
                 }
-                const handler = this.propListeners[name][0][0];
-                handler.call(node, payload);
+                if (!propagation.immediateStopped) {
+                    const handler = this.propListeners[name][0][0];
+                    handler.call(node, payload);
+                }
             }
             if (this.addedListeners[name]) {
                 for (let i = 0; i < this.addedListeners[name].length; i++) {
+                    if (propagation.immediateStopped)
+                        break;
                     const handler = this.addedListeners[name][i][0];
                     handler.call(node, payload);
                 }
             }
-            if (bubbles) {
+            if (bubbles && !propagation.stopped) {
                 for (const parent of node._parents) {
                     if ((parent._isNode || parent._isIoElement) && !parent._disposed && !visited.has(parent)) {
-                        // TODO: implement stopPropagation() and stopImmediatePropagation()
-                        parent._eventDispatcher.dispatchEvent(name, detail, bubbles, parent, path, visited);
+                        parent._eventDispatcher.dispatchEvent(name, detail, bubbles, parent, path, visited, propagation);
                     }
                 }
             }
         }
+        path.pop();
     }
     /**
      * Disconnects all event listeners and removes all references for garbage collection.
@@ -325,10 +342,11 @@ export class EventDispatcher {
             this.addedListeners[name].length = 0;
             delete this.addedListeners[name];
         }
-        delete this.node;
-        delete this.protoListeners;
-        delete this.propListeners;
-        delete this.addedListeners;
+        const disposable = this;
+        delete disposable.node;
+        delete disposable.protoListeners;
+        delete disposable.propListeners;
+        delete disposable.addedListeners;
     }
 }
 //# sourceMappingURL=EventDispatcher.js.map

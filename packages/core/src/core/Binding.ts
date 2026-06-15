@@ -7,11 +7,11 @@ type Properties = string[]
 type TargetProperties = WeakMap<ReactiveNode | IoElement, Properties>
 
 // This helper checks if both values are NaN because NaN === NaN is false.
-const bothAreNaNs = function(value: any, oldValue: any) {
+const bothAreNaNs = function(value: unknown, oldValue: unknown) {
   return typeof value === 'number' && isNaN(value) && typeof oldValue === 'number' && isNaN(oldValue)
 }
 
-const isTypeCompatible = (type1: any, type2: any) => {
+const isTypeCompatible = (type1: unknown, type2: unknown) => {
   // Handle primitive types
   if (type1 === type2) return true
   // Handle class inheritance
@@ -21,31 +21,14 @@ const isTypeCompatible = (type1: any, type2: any) => {
   return false
 }
 /**
- * This class is used internally by the framework to enable two-way data synchronization between reactive properties.
- * It manages bindings between a source node's reactive property and one or more target nodes and reactive properties.
- * It uses hub-and-spoke pub/sub event system and maintains data consistency by automatically propagating changes to all bound nodes and properties.
- *
- * Key features:
- * - Listens for `[propName]-changed` events to detect changes
- * - Supports one-to-many property bindings
- * - Prevents circular update loops
- * - Automatically cleans up listeners when disposed
- *
- * @example
- * const binding = new Binding(nodeA, 'value');
- * binding.addTarget(nodeB, 'value');
+ * Hub-and-spoke two-way sync between reactive properties via `[propName]-changed` events.
+ * @example binding.addTarget(nodeB, 'value')
  */
-export class Binding {
+export class Binding<T = unknown> {
   readonly node: ReactiveNode | IoElement
   readonly property: string
   readonly targets: Set<ReactiveNode | IoElement> = new Set()
   readonly targetProperties: TargetProperties = new WeakMap()
-  /**
-   * Creates a binding object for specified source `node` and `property`.
-   * It attaches a `[propName]-changed` listener to the source node.
-   * @param {ReactiveNode | IoElement} node - Source node
-   * @param {string} property - Name of the sourceproperty
-   */
   constructor(node: ReactiveNode | IoElement, property: string) {
     debug: {
       if (!(node as ReactiveNode)._isNode && !(node as IoElement)._isIoElement) console.warn('Source node is not a ReactiveNode or IoElement instance!')
@@ -57,11 +40,11 @@ export class Binding {
     this.onTargetChanged = this.onTargetChanged.bind(this)
     this.node.addEventListener(`${this.property}-changed`, this.onSourceChanged)
   }
-  set value(value: any) {
-    (this.node as any)[this.property] = value
+  set value(value: T) {
+    this.node.setProperty(this.property, value)
   }
-  get value(): any {
-    return (this.node as any)[this.property]
+  get value(): T {
+    return this.node._reactiveProperties.get(this.property)!.value as T
   }
   /**
    * Adds a target node and property.
@@ -162,8 +145,8 @@ export class Binding {
     const oldValue = this.value
     const value = event.detail.value
     if (oldValue !== value) {
-      if (bothAreNaNs(value, oldValue)) return;
-      (this.node as any)[this.property] = value
+      if (bothAreNaNs(value, oldValue)) return
+      this.node.setProperty(this.property, value)
     }
   }
   /**
@@ -179,10 +162,10 @@ export class Binding {
       const targetProperties = this.getTargetProperties(target)
       for (let j = targetProperties.length; j--;) {
         const propName = targetProperties[j]
-        const oldValue = (target as any)[propName]
+        const oldValue = target._reactiveProperties.get(propName)!.value
         if (oldValue !== value) {
-          if (bothAreNaNs(value, oldValue)) continue;
-          (target as any)[propName] = value
+          if (bothAreNaNs(value, oldValue)) continue
+          target.setProperty(propName, value)
         }
       }
     }
@@ -224,9 +207,9 @@ export class Binding {
       this.removeTarget(target)
     }
     this.targets.clear()
-    delete (this as any).node
-    delete (this as any).property
-    delete (this as any).targets
-    delete (this as any).targetProperties
+    delete (this as Record<string, unknown>).node
+    delete (this as Record<string, unknown>).property
+    delete (this as Record<string, unknown>).targets
+    delete (this as Record<string, unknown>).targetProperties
   }
 }

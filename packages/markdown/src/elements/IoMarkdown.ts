@@ -1,5 +1,5 @@
-import { Register, IoElement, ReactiveProperty, ThemeSingleton, IoElementProps, WithBinding, Property } from '@io-gui/core'
-import { Marked } from 'marked'
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, Property, $ThemeID } from '@io-gui/core'
+import { Marked, type Tokens } from 'marked'
 import { markedHighlight } from 'marked-highlight'
 import purify from 'dompurify'
 import { MD_DARK_THEME, MD_LIGHT_THEME } from './IoMarkdownTheme.js'
@@ -16,8 +16,8 @@ const marked = new Marked(
 )
 
 const renderer = new marked.Renderer()
-renderer.heading = function({ tokens, depth }: { tokens: any[]; depth: number }) {
-  const text = tokens.map(token => token.text).join('')
+
+renderer.heading = function({ text, depth }: Tokens.Heading) {
   return `<h${depth} data-heading="${text}">${text}</h${depth}>`
 }
 
@@ -43,7 +43,7 @@ export type IoMarkdownProps = IoElementProps & {
  */
 @Register
 export class IoMarkdown extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -218,11 +218,11 @@ styleElement.id = 'io-highlight-theme'
 document.head.appendChild(styleElement)
 
 function setTheme() {
-  if (ThemeSingleton.themeID === 'dark') {
+  if ($ThemeID.value === 'dark') {
     styleElement.innerHTML = MD_DARK_THEME
   } else {
     styleElement.innerHTML = MD_LIGHT_THEME
   }
 }
 setTheme()
-ThemeSingleton.addEventListener('themeID-changed', setTheme)
+$ThemeID.node.addEventListener('value-changed', setTheme)

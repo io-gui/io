@@ -13,6 +13,9 @@ import { ioObject, ioPropertyEditor } from '@io-gui/editors';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { ioButton } from '@io-gui/inputs';
 const loader = new GLTFLoader();
+const loadGltf = (url) => new Promise((resolve, reject) => {
+    loader.load(url, resolve, undefined, reject);
+});
 let AnimationSkinningBlendingExample = class AnimationSkinningBlendingExample extends ThreeApplet {
     camera;
     mixer = new AnimationMixer(new Group());
@@ -51,29 +54,28 @@ let AnimationSkinningBlendingExample = class AnimationSkinningBlendingExample ex
         void this.loadModel();
     }
     async loadModel() {
-        loader.load('https://threejs.org/examples/models/gltf/Soldier.glb', (gltf) => {
-            const model = gltf.scene;
-            this.scene.add(model);
-            model.traverse((object) => {
-                if (object.isMesh) {
-                    object.castShadow = true;
-                }
-            });
-            this.mixer = new AnimationMixer(model);
-            this.actions = {
-                idle: this.mixer.clipAction(gltf.animations[0]),
-                walk: this.mixer.clipAction(gltf.animations[3]),
-                run: this.mixer.clipAction(gltf.animations[1]),
-            };
-            this.setWeight(this.actions.idle, 0);
-            this.setWeight(this.actions.walk, 1);
-            this.setWeight(this.actions.run, 0);
-            this.setProperties({
-                isActive: true,
-                isPlaying: true,
-            });
-            this.dispatch('frame-object', { object: model }, true);
+        const gltf = await loadGltf('https://threejs.org/examples/models/gltf/Soldier.glb');
+        const model = gltf.scene;
+        this.scene.add(model);
+        model.traverse((object) => {
+            if (object.isMesh) {
+                object.castShadow = true;
+            }
         });
+        this.mixer = new AnimationMixer(model);
+        this.actions = {
+            idle: this.mixer.clipAction(gltf.animations[0]),
+            walk: this.mixer.clipAction(gltf.animations[3]),
+            run: this.mixer.clipAction(gltf.animations[1]),
+        };
+        this.setWeight(this.actions.idle, 0);
+        this.setWeight(this.actions.walk, 1);
+        this.setWeight(this.actions.run, 0);
+        this.setProperties({
+            isActive: true,
+            isPlaying: true,
+        });
+        this.dispatch('frame-object', { object: model }, true);
     }
     isActiveChanged() {
         if (this.isActive) {

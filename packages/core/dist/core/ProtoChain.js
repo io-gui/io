@@ -4,40 +4,14 @@ import { reactivePropertyDecorators } from '../decorators/Property.js';
 import { propertyDecorators } from '../decorators/Property.js';
 import { styleDecorators } from '../decorators/Style.js';
 /**
- * ProtoChain manages class inheritance metadata and configuration.
- *
- * This utility class traverses the prototype chain during class registration to:
- * - Aggregate property configurations
- * - Aggregate event listeners
- * - Aggregate CSS styles strings
- * - Auto-bind event handlers to maintain proper 'this' context
- *
- * This class is internal and instantiated during the `Register()` process.
+ * Aggregates inherited property, listener, and style metadata during {@link Register}.
  */
 export class ProtoChain {
-    /**
-     * Array of inherited class constructors
-     */
     constructors = [];
-    /**
-     * Aggregated initial value for properties declared in `static get Properties()` or @Property() decorators
-    */
     properties = {};
-    /**
-     * Aggregated reactive property definition declared in `static get ReactiveProperties()` or @ReactiveProperty() decorators
-     */
     reactiveProperties = {};
-    /**
-     * Aggregated listener definition declared in `static get Listeners()`
-     */
     listeners = {};
-    /**
-     * Aggregated CSS style definition declared in `static get Style()`
-     */
     style = '';
-    /**
-     * Array of function names that start with "on[A-Z]" or "_on[A-Z]" for auto-binding.
-     */
     handlers = [];
     /**
      * Creates an instance of `ProtoChain` for specified class constructor.
@@ -86,8 +60,10 @@ export class ProtoChain {
             throw new Error(`${node.constructor.name} not registered! Use @Register decorator before using ${node.constructor.name} class.`);
         }
         for (let i = this.handlers.length; i--;) {
-            Object.defineProperty(node, this.handlers[i], {
-                value: node[this.handlers[i]].bind(node),
+            const handlerName = this.handlers[i];
+            const handler = node[handlerName];
+            Object.defineProperty(node, handlerName, {
+                value: handler.bind(node),
                 writable: true,
                 configurable: true
             });
@@ -154,8 +130,10 @@ export class ProtoChain {
         return prevHash;
     }
     /**
-     * Merges or appends a listener definitions to the existing listeners array.
-     * @param {ListenerDefinitions} listenerDefs - Listener definitions to add
+     * Merges listener definitions from each class in the prototype chain into {@link listeners}.
+     * Duplicate handler names update options; distinct handler names append to the array.
+     * Runtime registration is handled separately: {@link EventDispatcher} uses last-wins per event name.
+     * @param listenerDefs Listener definitions to add
      */
     addListeners(listenerDefs) {
         for (const name in listenerDefs) {
@@ -224,7 +202,7 @@ export class ProtoChain {
     validateReactiveProperties() {
         for (const name in this.reactiveProperties) {
             const prop = this.reactiveProperties[name];
-            if ([String, Number, Boolean].indexOf(prop.type) !== -1) {
+            if (prop.type === String || prop.type === Number || prop.type === Boolean) {
                 if (prop.type === Boolean && prop.value !== undefined && typeof prop.value !== 'boolean' ||
                     prop.type === Number && prop.value !== undefined && typeof prop.value !== 'number' ||
                     prop.type === String && prop.value !== undefined && typeof prop.value !== 'string') {

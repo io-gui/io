@@ -1,6 +1,7 @@
 import { ReactiveProperty, Register } from '@io-gui/core'
 import {
   AnimationAction,
+  AnimationClip,
   AnimationMixer,
   Color,
   DirectionalLight,
@@ -19,7 +20,22 @@ import { ioObject, ioPropertyEditor } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioButton } from '@io-gui/inputs'
 
+type GltfModel = {
+  scene: Group
+  animations: AnimationClip[]
+}
+
+type AnimationLoopEvent = {
+  type: 'loop'
+  action: AnimationAction
+  loopDelta: number
+}
+
 const loader = new GLTFLoader()
+
+const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
+  loader.load(url, resolve, undefined, reject)
+})
 
 @Register
 export class AnimationSkinningBlendingExample extends ThreeApplet {
@@ -83,35 +99,34 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
   }
 
   private async loadModel() {
-    loader.load('https://threejs.org/examples/models/gltf/Soldier.glb', (gltf) => {
-      const model = gltf.scene as Group
-      this.scene.add(model)
+    const gltf = await loadGltf('https://threejs.org/examples/models/gltf/Soldier.glb')
+    const model = gltf.scene
+    this.scene.add(model)
 
-      model.traverse((object) => {
-        if ((object as Mesh).isMesh) {
-          object.castShadow = true
-        }
-      })
-
-      this.mixer = new AnimationMixer(model)
-
-      this.actions = {
-        idle: this.mixer.clipAction(gltf.animations[0]),
-        walk: this.mixer.clipAction(gltf.animations[3]),
-        run: this.mixer.clipAction(gltf.animations[1]),
+    model.traverse((object) => {
+      if ((object as Mesh).isMesh) {
+        object.castShadow = true
       }
-
-      this.setWeight(this.actions.idle, 0)
-      this.setWeight(this.actions.walk, 1)
-      this.setWeight(this.actions.run, 0)
-
-      this.setProperties({
-        isActive: true,
-        isPlaying: true,
-      })
-
-      this.dispatch('frame-object', {object: model}, true)
     })
+
+    this.mixer = new AnimationMixer(model)
+
+    this.actions = {
+      idle: this.mixer.clipAction(gltf.animations[0]),
+      walk: this.mixer.clipAction(gltf.animations[3]),
+      run: this.mixer.clipAction(gltf.animations[1]),
+    }
+
+    this.setWeight(this.actions.idle, 0)
+    this.setWeight(this.actions.walk, 1)
+    this.setWeight(this.actions.run, 0)
+
+    this.setProperties({
+      isActive: true,
+      isPlaying: true,
+    })
+
+    this.dispatch('frame-object', {object: model}, true)
   }
 
   isActiveChanged() {
@@ -170,14 +185,14 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
   private synchronizeCrossFade(startAction: AnimationAction, endAction: AnimationAction, duration: number) {
     if (!this.mixer) return
 
-    const onLoopFinished = (event: {action: AnimationAction}) => {
+    const onLoopFinished = (event: AnimationLoopEvent) => {
       if (event.action === startAction) {
-        this.mixer.removeEventListener('loop', onLoopFinished as any)
+        this.mixer.removeEventListener('loop', onLoopFinished)
         this.executeCrossFade(startAction, endAction, duration)
       }
     }
 
-    this.mixer.addEventListener('loop', onLoopFinished as any)
+    this.mixer.addEventListener('loop', onLoopFinished)
   }
 
   private executeCrossFade(startAction: AnimationAction, endAction: AnimationAction, duration: number) {
@@ -200,7 +215,7 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
     action.setEffectiveWeight(weight)
   }
 
-  onAnimate(delta: number) {
+  override onAnimate(delta: number) {
     if (!this.mixer) return
 
     debug: {
@@ -222,7 +237,7 @@ export class IoAnimationSkinningBlendingExample extends IoThreeExample {
   @ReactiveProperty({type: AnimationSkinningBlendingExample, init: {isPlaying: true}})
   declare applet: AnimationSkinningBlendingExample
 
-  ready() {
+  override ready() {
 
     this.render([
       ioSplit({

@@ -21,7 +21,7 @@ export type IoPropertyEditorProps = IoElementProps & {
  **/
 @Register
 export class IoPropertyEditor extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
     :host {
       display: flex;
@@ -263,7 +263,7 @@ export class IoPropertyEditor extends IoElement {
   valueMutated() {
     this.throttle(this.changedThrottled)
   }
-  changed() {
+  override changed() {
     this.throttle(this.changedThrottled)
   }
   changedThrottled() {
@@ -275,7 +275,7 @@ export class IoPropertyEditor extends IoElement {
       editor.value = value
     }
   }
-  dispose() {
+  override dispose() {
     super.dispose()
     this._propertyEditors = {}
   }
