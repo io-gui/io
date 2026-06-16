@@ -968,4 +968,89 @@ describe('VDOM Element Reuse', () => {
     expect(parent.childNodes.length).toBe(0)
     expect((child as any)._eventDispatcher).toBeUndefined()
   })
+
+  it('Should reuse DOM elements when skipDispose re-renders same tag', () => {
+    @Register
+    class TestSkipDisposeReuse extends IoElement {
+      renderWithVdom(vdom: VDOMElement[], skipDispose?: boolean) {
+        this.render(vdom, undefined, skipDispose)
+      }
+    }
+
+    const element = new TestSkipDisposeReuse()
+    document.body.appendChild(element as unknown as HTMLElement)
+
+    element.renderWithVdom([span({class: 'first'})], true)
+    const child = element.children[0]
+
+    element.renderWithVdom([span({class: 'second'})], true)
+    expect(element.children[0]).toBe(child)
+    expect(child.className).toBe('second')
+
+    element.remove()
+  })
+
+  it('Should reset class when omitted from re-render props via render()', () => {
+    @Register
+    class TestClassRemoval extends IoElement {
+      renderWithVdom(vdom: VDOMElement[]) {
+        this.render(vdom)
+      }
+    }
+
+    const element = new TestClassRemoval()
+    document.body.appendChild(element as unknown as HTMLElement)
+
+    element.renderWithVdom([span({class: 'active'})])
+    const child = element.children[0] as HTMLSpanElement
+    expect(child.className).toBe('active')
+    expect(child.getAttribute('class')).toBe('active')
+    expect(child.getAttribute('className')).toBe(null)
+
+    element.renderWithVdom([span({title: 'no-class'})])
+    expect(element.children[0]).toBe(child)
+    expect(child.className).toBe('')
+    expect(child.getAttribute('class')).toBe(null)
+    expect(child.getAttribute('className')).toBe(null)
+
+    element.remove()
+  })
+
+  it('Should replace inline style keys when style object shrinks on re-render', () => {
+    @Register
+    class TestStyleRemoval extends IoElement {
+      renderWithVdom(vdom: VDOMElement[]) {
+        this.render(vdom)
+      }
+    }
+
+    const element = new TestStyleRemoval()
+    document.body.appendChild(element as unknown as HTMLElement)
+
+    element.renderWithVdom([span({style: {'font-size': '12px', color: 'red'}})])
+    const child = element.children[0] as HTMLSpanElement
+    expect(child.style.color).toBe('red')
+    expect(child.style.fontSize).toBe('12px')
+
+    element.renderWithVdom([span({style: {color: 'blue'}})])
+    expect(element.children[0]).toBe(child)
+    expect(child.style.color).toBe('blue')
+    expect(child.style.fontSize).toBe('')
+
+    element.remove()
+  })
+
+  it('Should reset class and style via applyNativeElementProps when props are omitted', () => {
+    const element = document.createElement('div')
+    applyNativeElementProps(element, {class: 'foo', style: {color: 'red', margin: '1px'}})
+    expect(element.className).toBe('foo')
+    expect(element.style.color).toBe('red')
+    expect(element.style.margin).toBe('1px')
+
+    applyNativeElementProps(element, {title: 'bar'})
+    expect(element.className).toBe('')
+    expect(element.getAttribute('class')).toBe(null)
+    expect(element.style.color).toBe('')
+    expect(element.style.margin).toBe('')
+  })
 })

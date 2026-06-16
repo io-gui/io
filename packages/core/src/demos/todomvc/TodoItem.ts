@@ -45,10 +45,10 @@ export class TodoItem extends IoElement {
           label({'@dblclick': this.onStartEdit}, this.item.title),
           button({class: 'destroy', '@click': this.item.delete}),
         ]),
-        input({id: 'input-' + this.item.title, class: 'edit', value: this.item.title, '@blur': this.onBlur, '@keyup': this.onInputKey})
+        input({id: 'input', class: 'edit', value: this.item.title, '@blur': this.onBlur, '@keyup': this.onInputKey})
       ])
     ])
-    this.$input = this.querySelector('input.edit') as HTMLInputElement
+    this.$input = this.$['input'] as HTMLInputElement
   }
 
   onStartEdit() {
@@ -67,9 +67,8 @@ export class TodoItem extends IoElement {
     this.editing = false
   }
 
-  onInputKey(event: CustomEvent) {
-    const keyboardEvent = event.detail as KeyboardEvent
-    if (['Enter', 'Escape'].includes(keyboardEvent.key)) {
+  onInputKey(event: KeyboardEvent) {
+    if (['Enter', 'Escape'].includes(event.key)) {
       this.$input.blur()
     }
   }

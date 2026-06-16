@@ -332,7 +332,27 @@ export type NativeElementProps = AriaProps & PropsWithUndefined<{
   textContent?: string
 }>
 
-const defaultPropsMap = new WeakMap<HTMLElement, NativeElementProps>()
+const defaultPropsMap = new WeakMap<HTMLElement, NativeElementProps & {__styleKeys?: Set<string>}>()
+
+// TODO: Optimize if possible.
+const applyInlineStyleProps = function(
+  element: HTMLElement,
+  prop: Record<string, string> | undefined,
+  defaultPropValues: {__styleKeys?: Set<string>}
+) {
+  const previousKeys = defaultPropValues.__styleKeys ?? new Set<string>()
+  const nextKeys = new Set<string>()
+  if (prop) {
+    for (const s in prop) {
+      element.style.setProperty(s, prop[s])
+      nextKeys.add(s)
+    }
+  }
+  for (const s of previousKeys) {
+    if (!nextKeys.has(s)) element.style.removeProperty(s)
+  }
+  defaultPropValues.__styleKeys = nextKeys
+}
 
 // TODO: Fix types. Remove any.
 
@@ -363,10 +383,7 @@ export const applyNativeElementProps = function(element: HTMLElement, props: Nat
     if (!Object.hasOwn(defaultPropValues, p)) defaultPropValues[p] = element[p]
 
     if (p === 'style') {
-      for (const s in prop) {
-        // TODO: Consider supporting importance
-        element.style.setProperty(s, prop[s])
-      }
+      applyInlineStyleProps(element, prop as Record<string, string> | undefined, defaultPropValues)
     } else if ((p as any) === 'class') {
       element['className'] = prop
     } else if (p.startsWith('data-')) {
@@ -389,10 +406,16 @@ export const applyNativeElementProps = function(element: HTMLElement, props: Nat
   }
   // Reset properties to defaults if they are not in the props.
   for (const _p in defaultPropValues) {
+    if (_p === '__styleKeys') continue
     const p = _p as keyof NativeElementProps
     if (!Object.hasOwn(props, p)) {
-      (element as any)[p] = defaultPropValues[p]
-      element.removeAttribute(p)
+      if (p === 'style') {
+        applyInlineStyleProps(element, undefined, defaultPropValues)
+        element.removeAttribute(p)
+      } else {
+        (element as any)[p] = defaultPropValues[p]
+        element.removeAttribute(p)
+      }
     }
   }
   if (!(element as IoElement)._eventDispatcher) {

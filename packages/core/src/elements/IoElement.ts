@@ -251,15 +251,15 @@ export class IoElement extends HTMLElement {
   }
 
   /** Renders VDOM children into this element or optional host. */
-  render(vDOMElements: Array<VDOMChild>, host?: HTMLElement | IoElement, noDispose?: boolean) {
+  render(vDOMElements: Array<VDOMChild>, host?: HTMLElement | IoElement, skipDispose?: boolean) {
     const renderHost = host ?? this
     const vDOMElementsOnly = filterVDOMElements(vDOMElements)
     for (const id in this.$) delete this.$[id]
-    this.traverse(vDOMElementsOnly, renderHost, noDispose)
+    this.traverse(vDOMElementsOnly, renderHost, skipDispose)
   }
   /** Reconciles VDOM tree into host; keyed when children specify `key`. */
-  traverse(vChildren: VDOMElement[], host: HTMLElement | IoElement, noDispose?: boolean) {
-    this._reconcileChildren(vChildren, host, noDispose)
+  traverse(vChildren: VDOMElement[], host: HTMLElement | IoElement, skipDispose?: boolean) {
+    this._reconcileChildren(vChildren, host, skipDispose)
     const childNodes = host.childNodes
     for (let i = 0; i < vChildren.length; i++) {
       const vChild = vChildren[i]
@@ -283,7 +283,7 @@ export class IoElement extends HTMLElement {
         } else if (vChild.children instanceof Array) {
           if (!(elementChild as IoElement)._isIoElement) {
             const vDOMElementsOnly = filterVDOMElements(vChild.children)
-            this.traverse(vDOMElementsOnly, elementChild as HTMLElement, noDispose)
+            this.traverse(vDOMElementsOnly, elementChild as HTMLElement, skipDispose)
           }
         }
       } else if (!(elementChild as IoElement)._isIoElement) {
@@ -296,27 +296,27 @@ export class IoElement extends HTMLElement {
    * Reconciles host children with vDOM children by position and tag name.
    * @param {Array} vChildren - Array of VDOMElements elements.
    * @param {HTMLElement} host - Template target.
-   * @param {boolean} [noDispose] - Skip disposal of existing elements.
+   * @param {boolean} [skipDispose] - Detach removed/replaced nodes without calling dispose (for DOM caching).
    */
-  _reconcileChildren(vChildren: VDOMElement[], host: HTMLElement | IoElement, noDispose?: boolean) {
+  _reconcileChildren(vChildren: VDOMElement[], host: HTMLElement | IoElement, skipDispose?: boolean) {
     const childNodes = host.childNodes
     // remove trailing nodes
     while (childNodes.length > vChildren.length) {
       const child = childNodes[childNodes.length - 1]
       host.removeChild(child)
-      if (!noDispose && child.nodeType === Node.ELEMENT_NODE) disposeChildren(child as IoElement)
+      if (!skipDispose && child.nodeType === Node.ELEMENT_NODE) disposeChildren(child as IoElement)
     }
     // replace nodes
     for (let i = 0; i < childNodes.length; i++) {
       const child = childNodes[i]
       const vChild = vChildren[i]
       // replace existing nodes
-      if (getNodeVDOMTag(child) !== vChild.tag || noDispose) {
+      if (getNodeVDOMTag(child) !== vChild.tag) {
         const oldNode = child
         const node = constructElement(vChild)
         host.insertBefore(node, oldNode)
         host.removeChild(oldNode)
-        if (!noDispose && oldNode.nodeType === Node.ELEMENT_NODE) disposeChildren(oldNode as IoElement)
+        if (!skipDispose && oldNode.nodeType === Node.ELEMENT_NODE) disposeChildren(oldNode as IoElement)
       // update existing nodes
       } else if (vChild.tag === TEXT_TAG) {
         (child as Text).nodeValue = String(vChild.children ?? '')
@@ -324,8 +324,6 @@ export class IoElement extends HTMLElement {
         this._updateElementProps(child as HTMLElement | IoElement, vChild)
       }
     }
-    // TODO: doing this before "replace elements" cached (noDispose) elements to be created twice.
-    // TODO: rename nodispose to dispose.
     // create new nodes after existing
     if (childNodes.length < vChildren.length) {
       const frag = document.createDocumentFragment()
@@ -342,9 +340,6 @@ export class IoElement extends HTMLElement {
    * @param {VDOMElement} vChild - Virtual DOM element to apply props from.
    */
   _updateElementProps(child: HTMLElement | IoElement, vChild: VDOMElement) {
-    // TODO: improve setting/removal/cleanup of native element properties/attributes.
-    child.removeAttribute('className')
-    child.removeAttribute('style')
     if (vChild.props) {
       if ((child as IoElement)._isIoElement) {
         // Set IoElement element properties
