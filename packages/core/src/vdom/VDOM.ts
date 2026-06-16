@@ -6,14 +6,48 @@ export const TEXT_TAG = '#text'
 
 export type VDOMChild = VDOMElement | string | null
 
+export type VDOMFactoryChildren = Array<VDOMChild> | string
+
 export type VDOMElement = {
   tag: string
   props?: Record<string, any>
-  children?: Array<VDOMChild> | string
+  children?: Array<VDOMChild>
+}
+
+export const normalizeVDOMChildren = function(children: VDOMFactoryChildren): Array<VDOMChild> {
+  return typeof children === 'string' ? [children] : children
+}
+
+export type VDOMFactoryArg = Record<string, any> | VDOMFactoryChildren
+
+export const createVDOMElement = function(
+  tag: string,
+  arg0?: VDOMFactoryArg,
+  arg1?: VDOMFactoryChildren
+): VDOMElement {
+  const vDOMElement: VDOMElement = {tag}
+  if (arg0 !== undefined) {
+    if (typeof arg0 === 'string') {
+      vDOMElement.children = normalizeVDOMChildren(arg0)
+    } else if (arg0 instanceof Array) {
+      vDOMElement.children = arg0
+    } else if (typeof arg0 === 'object') {
+      vDOMElement.props = arg0
+    }
+    if (arg1 !== undefined) {
+      vDOMElement.children = normalizeVDOMChildren(arg1)
+    }
+  }
+  return vDOMElement
+}
+
+export const getTextVDOMContent = function(vDOMElement: VDOMElement): string {
+  const first = vDOMElement.children?.[0]
+  return typeof first === 'string' ? first : ''
 }
 
 export const text = function(content: string): VDOMElement {
-  return {tag: TEXT_TAG, children: content}
+  return {tag: TEXT_TAG, children: [content]}
 }
 
 export const isTextVDOM = function(vDOMElement: VDOMElement) {
@@ -435,7 +469,7 @@ export const applyNativeElementProps = function(element: HTMLElement, props: Nat
  */
 export const constructElement = function(vDOMElement: VDOMElement): ChildNode {
   if (isTextVDOM(vDOMElement)) {
-    return document.createTextNode(String(vDOMElement.children ?? ''))
+    return document.createTextNode(getTextVDOMContent(vDOMElement))
   }
   const props = vDOMElement.props || {}
   let element: HTMLElement
@@ -539,23 +573,8 @@ const vDOMAttributes = function(element: IoElement | HTMLElement): Record<string
   return attributes
 }
 
-const toVDOMChildNodes = function(childNodes: NodeListOf<ChildNode>): Array<VDOMElement> | string {
+const toVDOMChildNodes = function(childNodes: NodeListOf<ChildNode>): Array<VDOMElement> {
   if (childNodes.length === 0) return []
-  let hasElementChild = false
-  for (let i = 0; i < childNodes.length; i++) {
-    if (childNodes[i].nodeType === Node.ELEMENT_NODE) {
-      hasElementChild = true
-      break
-    }
-  }
-  if (!hasElementChild) {
-    if (childNodes.length === 1) return childNodes[0].textContent as string
-    const children: VDOMElement[] = []
-    for (let i = 0; i < childNodes.length; i++) {
-      children.push(text(childNodes[i].textContent ?? ''))
-    }
-    return children
-  }
   const children: VDOMElement[] = []
   for (let i = 0; i < childNodes.length; i++) {
     const node = childNodes[i]

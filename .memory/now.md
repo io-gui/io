@@ -1,3 +1,3 @@
 # Current Focus
 
-Fixed VDOM reconcile: renamed `noDispose` → `skipDispose`, removed inverted `|| skipDispose` replace branch, dropped redundant className/style removeAttribute in `_updateElementProps`.
+Normalized VDOM children API: `VDOMElement.children` is always `Array<VDOMChild> | undefined`. String sugar only at factory boundary via `createVDOMElement` / `normalizeVDOMChildren`. Removed string branch from `IoElement.traverse`.

@@ -1,7 +1,7 @@
 import { Property, ReactiveProperty } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
 import { ProtoChain } from '../core/ProtoChain.js'
-import { applyNativeElementProps, constructElement, disposeChildren, filterVDOMElements, VDOMElement, VDOMChild, toVDOM, NativeElementProps, clearNativeElementChildren, releaseSubtreeEventDispatchers, TEXT_TAG, getNodeVDOMTag } from '../vdom/VDOM.js'
+import { applyNativeElementProps, constructElement, createVDOMElement, disposeChildren, filterVDOMElements, VDOMElement, VDOMChild, VDOMFactoryArg, VDOMFactoryChildren, toVDOM, NativeElementProps, clearNativeElementChildren, releaseSubtreeEventDispatchers, TEXT_TAG, getNodeVDOMTag, getTextVDOMContent } from '../vdom/VDOM.js'
 import { ReactiveNode, ReactivityType, dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions, PropertyValues } from '../nodes/ReactiveNode.js'
 import { addParent, initReactiveOwnerInternals, removeParent } from '../core/ReactiveCore.js'
 import { Binding } from '../core/Binding.js'
@@ -59,7 +59,7 @@ export type IoElementProps = NativeElementProps & {
  */
 @Register
 export class IoElement extends HTMLElement {
-  declare static vConstructor: (arg0?: IoElementProps | Array<VDOMChild> | string, arg1?: Array<VDOMChild> | string) => VDOMElement
+  declare static vConstructor: (arg0?: IoElementProps | VDOMFactoryChildren, arg1?: VDOMFactoryChildren) => VDOMElement
   static get Style() {
     return /* css */`
       :host {
@@ -276,15 +276,9 @@ export class IoElement extends HTMLElement {
         this.$[vChild.props!.id] = elementChild
       }
       if (vChild.children !== undefined) {
-        if (typeof vChild.children === 'string') {
-          // Set textNode value.
-          this._flattenTextNode(elementChild as HTMLElement);
-          (elementChild as IoElement)._textNode.nodeValue = String(vChild.children)
-        } else if (vChild.children instanceof Array) {
-          if (!(elementChild as IoElement)._isIoElement) {
-            const vDOMElementsOnly = filterVDOMElements(vChild.children)
-            this.traverse(vDOMElementsOnly, elementChild as HTMLElement, skipDispose)
-          }
+        if (!(elementChild as IoElement)._isIoElement) {
+          const vDOMElementsOnly = filterVDOMElements(vChild.children)
+          this.traverse(vDOMElementsOnly, elementChild as HTMLElement, skipDispose)
         }
       } else if (!(elementChild as IoElement)._isIoElement) {
         // Clear children for native elements. IoElements manage their own children by design
@@ -319,7 +313,7 @@ export class IoElement extends HTMLElement {
         if (!skipDispose && oldNode.nodeType === Node.ELEMENT_NODE) disposeChildren(oldNode as IoElement)
       // update existing nodes
       } else if (vChild.tag === TEXT_TAG) {
-        (child as Text).nodeValue = String(vChild.children ?? '')
+        (child as Text).nodeValue = getTextVDOMContent(vChild)
       } else {
         this._updateElementProps(child as HTMLElement | IoElement, vChild)
       }
@@ -415,25 +409,8 @@ export class IoElement extends HTMLElement {
     // TODO: Define all overloads with type guards.
     // TODO: Add runtime debug type checks.
     // TODO: Test thoroughly.
-    Object.defineProperty(ioNodeConstructor, 'vConstructor', {value: function(arg0?: IoElementProps | Array<VDOMChild> | string, arg1?: Array<VDOMChild> | string): VDOMElement {
-      const vDOMElement: VDOMElement = {tag: localName}
-      if (arg0 !== undefined) {
-        if (typeof arg0 === 'string') {
-          vDOMElement.children = arg0
-        } else if (arg0 instanceof Array) {
-          vDOMElement.children = arg0
-        } else if (typeof arg0 === 'object') {
-          vDOMElement.props = arg0
-        }
-        if (arg1 !== undefined) {
-          if (typeof arg1 === 'string') {
-            vDOMElement.children = arg1
-          } else if (arg1 instanceof Array) {
-            vDOMElement.children = arg1
-          }
-        }
-      }
-      return vDOMElement
+    Object.defineProperty(ioNodeConstructor, 'vConstructor', {value: function(arg0?: IoElementProps | VDOMFactoryChildren, arg1?: VDOMFactoryChildren): VDOMElement {
+      return createVDOMElement(localName, arg0 as VDOMFactoryArg, arg1)
     }})
   }
 }

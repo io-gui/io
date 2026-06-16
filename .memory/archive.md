@@ -1,7 +1,11 @@
-# Archive - Complete Memory Log
+## 2026-06-16 [technical] VDOM children API normalized to arrays internally
 
-> Commit aggressively. This log serves as proxy for memory access frequency.
-> Later analysis of patterns here informs working memory pruning.
+- `VDOMElement.children` is now `Array<VDOMChild> | undefined` only (no string union).
+- Factory boundary: `createVDOMElement`, `normalizeVDOMChildren`, `VDOMFactoryChildren` type — `span('text')` → `children: ['text']`.
+- `text()` stores `[content]`; `getTextVDOMContent()` reads text nodes.
+- Removed string-children branch from `IoElement.traverse`; all native child updates go through array reconcile path.
+- `_flattenTextNode` kept for IoField/IoString contentEditable (explicit call, not render path).
+- Updated IoPropertyEditor raw VDOM + IoElement.test raw object to use array children.
 
 ## 2026-06-14 [colors] IoColorPicker panel ownership refactor
 

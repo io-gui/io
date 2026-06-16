@@ -13,6 +13,13 @@ describe('VDOM', () => {
     expect(node.nodeName).toBe(TEXT_TAG)
     expect(node.nodeValue).toBe('hello')
   })
+  it('Should store text content as a single-item children array', () => {
+    expect(text('hello').children).toEqual(['hello'])
+  })
+  it('Should normalize string children to array in native factories', () => {
+    expect(span('hello').children).toEqual(['hello'])
+    expect(span({class: 'label'}, 'hello').children).toEqual(['hello'])
+  })
   it('Should treat string children same as text() in filterVDOMElements', () => {
     const filtered = filterVDOMElements(['hello', null, span(), 'world'])
     expect(filtered.length).toBe(3)

@@ -189,10 +189,7 @@ export class IoPropertyEditor extends IoElement {
 
           Object.assign(finalProps, props)
 
-          let children: string | undefined = undefined
-          if (HTML_ELEMENTS.includes(tag) && typeof value === 'string') {
-            children = value
-          }
+          const children = HTML_ELEMENTS.includes(tag) && typeof value === 'string' ? [value] : undefined
 
           if (tag === 'io-object' || tag === 'io-property-editor') {
             finalProps.config = finalProps.config || this.config

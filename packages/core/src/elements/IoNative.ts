@@ -1,4 +1,4 @@
-import { VDOMElement, VDOMChild, NativeElementProps, OtherHTMLElementProps } from '../vdom/VDOM.js'
+import { VDOMElement, VDOMFactoryArg, VDOMFactoryChildren, NativeElementProps, OtherHTMLElementProps, createVDOMElement } from '../vdom/VDOM.js'
 
 /* eslint-disable @stylistic/max-len */
 
@@ -85,36 +85,18 @@ export const HTML_ELEMENTS: string[] = [
 ]
 
 const nativeVDOMConstructors: Record<string, (
-  arg0?: NativeElementProps & OtherHTMLElementProps | Array<VDOMChild> | string,
-  arg1?: Array<VDOMChild> | string) => VDOMElement> = {}
+  arg0?: NativeElementProps & OtherHTMLElementProps | VDOMFactoryChildren,
+  arg1?: VDOMFactoryChildren) => VDOMElement> = {}
 
 HTML_ELEMENTS.forEach((element) => {
   // TODO: Add runtime debug type checks?
   // TODO: Test thoroughly.
-  const vConstructor = function(
-    arg0?: NativeElementProps & OtherHTMLElementProps | Array<VDOMChild> | string,
-    arg1?: Array<VDOMChild> | string): VDOMElement {
-    const vDOMElement: VDOMElement = {tag: element}
-    if (arg0 !== undefined) {
-      if (typeof arg0 === 'string') {
-        vDOMElement.children = arg0
-      } else if (arg0 instanceof Array) {
-        vDOMElement.children = arg0
-      } else if (typeof arg0 === 'object') {
-        vDOMElement.props = arg0
-      }
-      if (arg1 !== undefined) {
-        if (typeof arg1 === 'string') {
-          vDOMElement.children = arg1
-        } else if (arg1 instanceof Array) {
-          vDOMElement.children = arg1
-        }
-      }
-    }
-    return vDOMElement
-
+  nativeVDOMConstructors[element] = function(
+    arg0?: NativeElementProps & OtherHTMLElementProps | VDOMFactoryChildren,
+    arg1?: VDOMFactoryChildren
+  ): VDOMElement {
+    return createVDOMElement(element, arg0 as VDOMFactoryArg, arg1)
   }
-  nativeVDOMConstructors[element] = vConstructor
 })
 
 //TODO: test element vDOM factories!

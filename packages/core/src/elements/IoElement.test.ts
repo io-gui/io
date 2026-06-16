@@ -373,7 +373,7 @@ describe('IoElement', () => {
       ready() {
         this.render([
           {tag: 'div', props: {id: 'a', class: 'child-a'}},
-          {tag: 'span', props: {id: 'b', class: 'child-b'}, children: 'text'},
+          {tag: 'span', props: {id: 'b', class: 'child-b'}, children: ['text']},
         ])
       }
     }
