@@ -1061,3 +1061,123 @@ describe('VDOM Element Reuse', () => {
     expect(element.style.margin).toBe('')
   })
 })
+
+describe('VDOM render optimizations', () => {
+  it('Should dispose removed subtrees synchronously at end of render', () => {
+    @Register
+    class TestDisposeChild extends IoElement {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return {}
+      }
+      disposed = false
+      dispose() {
+        this.disposed = true
+        super.dispose()
+      }
+    }
+
+    @Register
+    class TestDisposeParent extends IoElement {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return {showChild: false}
+      }
+      declare showChild: boolean
+      changed() {
+        this.render(this.showChild ? [TestDisposeChild.vConstructor()] : [])
+      }
+    }
+
+    const parent = new TestDisposeParent()
+    document.body.appendChild(parent as unknown as HTMLElement)
+    parent.showChild = true
+    parent.changed()
+    const child = parent.children[0] as TestDisposeChild
+
+    parent.showChild = false
+    parent.changed()
+    expect(parent.children.length).toBe(0)
+    expect(child.disposed).toBe(true)
+
+    parent.remove()
+  })
+
+  it('Should skip updates when cached VDOM node reference is reused', () => {
+    @Register
+    class TestCachedVDOM extends IoElement {
+      cached = span({class: 'static'})
+      changed() {
+        this.render([this.cached])
+      }
+    }
+
+    const element = new TestCachedVDOM()
+    document.body.appendChild(element as unknown as HTMLElement)
+    element.changed()
+    const child = element.children[0] as HTMLSpanElement
+    expect(child.className).toBe('static')
+
+    element.changed()
+    expect(element.children[0]).toBe(child)
+    expect(child.className).toBe('static')
+
+    element.cached.props!.class = 'mutated'
+    element.changed()
+    expect(element.children[0]).toBe(child)
+    expect(child.className).toBe('static')
+
+    element.cached = span({class: 'updated'})
+    element.changed()
+    expect(element.children[0]).toBe(child)
+    expect(child.className).toBe('updated')
+
+    element.remove()
+  })
+
+  it('Should skip native child traversal when children array reference is unchanged', () => {
+    @Register
+    class TestCachedChildren extends IoElement {
+      inner = [span({class: 'a'}), span({class: 'b'})]
+      cached = div({}, this.inner)
+      changed() {
+        this.render([this.cached])
+      }
+    }
+
+    const element = new TestCachedChildren()
+    document.body.appendChild(element as unknown as HTMLElement)
+    element.changed()
+    const wrapper = element.children[0] as HTMLDivElement
+    const childA = wrapper.children[0] as HTMLSpanElement
+    expect(childA.className).toBe('a')
+
+    element.inner[0].props!.class = 'mutated'
+    element.changed()
+    expect(wrapper.children[0]).toBe(childA)
+    expect(childA.className).toBe('a')
+
+    element.remove()
+  })
+
+  it('Should bail out of render when top-level VDOM array reference is unchanged', () => {
+    @Register
+    class TestTopLevelCache extends IoElement {
+      cached = [span({class: 'cached'})]
+      changed() {
+        this.render(this.cached)
+      }
+    }
+
+    const element = new TestTopLevelCache()
+    document.body.appendChild(element as unknown as HTMLElement)
+    element.changed()
+    const child = element.children[0] as HTMLSpanElement
+    expect(child.className).toBe('cached')
+
+    element.cached[0].props!.class = 'mutated'
+    element.changed()
+    expect(element.children[0]).toBe(child)
+    expect(child.className).toBe('cached')
+
+    element.remove()
+  })
+})

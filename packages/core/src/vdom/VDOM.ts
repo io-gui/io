@@ -521,15 +521,63 @@ export const releaseEventDispatcher = function(element: HTMLElement | IoElement)
   }
 }
 
+const walkElementSubtreePostOrder = function(root: HTMLElement, visit: (element: HTMLElement) => void) {
+  const postOrder: HTMLElement[] = []
+  const stack: HTMLElement[] = [root]
+  while (stack.length) {
+    const element = stack.pop()!
+    postOrder.push(element)
+    for (let i = 0; i < element.childNodes.length; i++) {
+      const child = element.childNodes[i]
+      if (child.nodeType === Node.ELEMENT_NODE) stack.push(child as HTMLElement)
+    }
+  }
+  for (let i = postOrder.length; i--;) visit(postOrder[i])
+}
+
+const disposeElementNode = function(element: HTMLElement) {
+  const ioElement = element as IoElement
+  if (ioElement._isIoElement && typeof ioElement.dispose === 'function') {
+    if (!ioElement._disposed) ioElement.dispose()
+  } else if ((element as IoElement)._eventDispatcher) {
+    releaseEventDispatcher(element)
+  }
+}
+
+/**
+ * Flushes pending change handlers on an IoElement root, then disposes the subtree post-order.
+ */
+export const disposeSubtree = function(root: HTMLElement) {
+  const ioElement = root as IoElement
+  if (ioElement._isIoElement && !ioElement._disposed) ioElement.dispatchQueue()
+  walkElementSubtreePostOrder(root, disposeElementNode)
+}
+
+const pendingDisposals: HTMLElement[] = []
+
+/**
+ * Queues a detached subtree for disposal at the end of the current render pass.
+ */
+export const queueDispose = function(root: HTMLElement) {
+  pendingDisposals.push(root)
+}
+
+/**
+ * Disposes all subtrees queued during the current render pass.
+ */
+export const flushPendingDisposals = function() {
+  if (pendingDisposals.length === 0) return
+  const roots = pendingDisposals.splice(0)
+  for (let i = 0; i < roots.length; i++) disposeSubtree(roots[i])
+}
+
 /**
  * Disposes EventDispatchers on element and all element descendants.
  */
 export const releaseSubtreeEventDispatchers = function(root: HTMLElement) {
-  const elements = root.querySelectorAll('*')
-  for (let i = elements.length; i--;) {
-    releaseEventDispatcher(elements[i] as HTMLElement)
-  }
-  releaseEventDispatcher(root)
+  walkElementSubtreePostOrder(root, (element) => {
+    if ((element as IoElement)._eventDispatcher) releaseEventDispatcher(element)
+  })
 }
 
 /**
@@ -546,21 +594,11 @@ export const clearNativeElementChildren = function(element: HTMLElement) {
 }
 
 /**
- * Disposes the element's children.
- * @param {IoElement} element - Element to dispose children of.
+ * Queues a detached subtree for disposal at the end of the current render pass.
+ * @param {IoElement | HTMLElement} element - Subtree root to dispose.
  */
-export const disposeChildren = function(element: IoElement) {
-  // NOTE: This rAF ensures that element's change queue is emptied before disposing.
-  requestAnimationFrame(() => {
-    const elements = Array.from(element.querySelectorAll('*')).concat([element]) as IoElement[]
-    for (let i = elements.length; i--;) {
-      if (typeof elements[i].dispose === 'function') {
-        elements[i].dispose()
-      } else {
-        releaseEventDispatcher(elements[i])
-      }
-    }
-  })
+export const disposeChildren = function(element: IoElement | HTMLElement) {
+  queueDispose(element as HTMLElement)
 }
 
 const vDOMAttributes = function(element: IoElement | HTMLElement): Record<string, any> {

@@ -1,3 +1,3 @@
 # Current Focus
 
-Normalized VDOM children API: `VDOMElement.children` is always `Array<VDOMChild> | undefined`. String sugar only at factory boundary via `createVDOMElement` / `normalizeVDOMChildren`. Removed string branch from `IoElement.traverse`.
+VDOM render optimizations shipped: batched sync disposal (childNodes walk), reference-identity skip for cached VDOM nodes/children arrays, top-level render bail-out. All 238 core tests pass.

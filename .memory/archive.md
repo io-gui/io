@@ -1,4 +1,12 @@
-## 2026-06-16 [technical] VDOM children API normalized to arrays internally
+## 2026-06-16 [technical] VDOM disposal batching + reference-identity render skip
+
+- Replaced `querySelectorAll('*')` + per-node rAF in `disposeChildren` with `walkElementSubtreePostOrder` (childNodes walk), `queueDispose` batching, and synchronous `flushPendingDisposals` at end of `render()`.
+- `disposeSubtree` flushes IoElement change queue before post-order dispose (preserves rAF intent without deferral).
+- `lastTraversedVDOM` / `lastTraversedChildren` WeakMaps skip prop updates and native subtree recursion when same VDOM object or children array reference is reused.
+- Top-level `render()` bail-out when `vDOMElements === this._lastRenderVDOM`.
+- Important: reference identity means in-place prop mutation on cached VDOM is skipped — assign new VDOM object to update.
+- Bug fix during impl: do not set `lastTraversedVDOM` in `_reconcileChildren` (only in traverse) or second render skips child recursion.
+
 
 - `VDOMElement.children` is now `Array<VDOMChild> | undefined` only (no string union).
 - Factory boundary: `createVDOMElement`, `normalizeVDOMChildren`, `VDOMFactoryChildren` type — `span('text')` → `children: ['text']`.

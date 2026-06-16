@@ -1,7 +1,7 @@
 import { Property, ReactiveProperty } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
 import { ProtoChain } from '../core/ProtoChain.js'
-import { applyNativeElementProps, constructElement, createVDOMElement, disposeChildren, filterVDOMElements, VDOMElement, VDOMChild, VDOMFactoryArg, VDOMFactoryChildren, toVDOM, NativeElementProps, clearNativeElementChildren, releaseSubtreeEventDispatchers, TEXT_TAG, getNodeVDOMTag, getTextVDOMContent } from '../vdom/VDOM.js'
+import { applyNativeElementProps, constructElement, createVDOMElement, filterVDOMElements, flushPendingDisposals, queueDispose, VDOMElement, VDOMChild, VDOMFactoryArg, VDOMFactoryChildren, toVDOM, NativeElementProps, clearNativeElementChildren, releaseSubtreeEventDispatchers, TEXT_TAG, getNodeVDOMTag, getTextVDOMContent } from '../vdom/VDOM.js'
 import { ReactiveNode, ReactivityType, dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions, PropertyValues } from '../nodes/ReactiveNode.js'
 import { addParent, initReactiveOwnerInternals, removeParent } from '../core/ReactiveCore.js'
 import { Binding } from '../core/Binding.js'
@@ -20,6 +20,9 @@ const resizeObserver = new ResizeObserver(entries => {
     (entry.target as ResizeObservable).onResized()
   }
 })
+
+const lastTraversedVDOM = new WeakMap<HTMLElement | IoElement, VDOMElement>()
+const lastTraversedChildren = new WeakMap<HTMLElement | IoElement, Array<VDOMChild> | undefined>()
 
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never
 type AnyEventHandler = (
@@ -119,6 +122,7 @@ export class IoElement extends HTMLElement {
   declare readonly _isIoElement: boolean
   declare _disposed: boolean
   declare _textNode: Text
+  declare _lastRenderVDOM: Array<VDOMChild> | undefined
 
   constructor(args: IoElementProps = {}) {
     super()
@@ -252,10 +256,13 @@ export class IoElement extends HTMLElement {
 
   /** Renders VDOM children into this element or optional host. */
   render(vDOMElements: Array<VDOMChild>, host?: HTMLElement | IoElement, skipDispose?: boolean) {
+    if (host === undefined && vDOMElements === this._lastRenderVDOM) return
+    if (host === undefined) this._lastRenderVDOM = vDOMElements
     const renderHost = host ?? this
     const vDOMElementsOnly = filterVDOMElements(vDOMElements)
     for (const id in this.$) delete this.$[id]
     this.traverse(vDOMElementsOnly, renderHost, skipDispose)
+    if (!skipDispose) flushPendingDisposals()
   }
   /** Reconciles VDOM tree into host; keyed when children specify `key`. */
   traverse(vChildren: VDOMElement[], host: HTMLElement | IoElement, skipDispose?: boolean) {
@@ -266,6 +273,11 @@ export class IoElement extends HTMLElement {
       const child = childNodes[i]
       if (vChild.tag === TEXT_TAG) continue
       const elementChild = child as HTMLElement | IoElement
+      if (lastTraversedVDOM.get(elementChild) === vChild) {
+        if (vChild.props?.id) this.$[vChild.props!.id] = elementChild
+        continue
+      }
+      lastTraversedVDOM.set(elementChild, vChild)
       if (vChild.props?.id) {
         // Update this.$ map of ids.
         debug: {
@@ -277,10 +289,13 @@ export class IoElement extends HTMLElement {
       }
       if (vChild.children !== undefined) {
         if (!(elementChild as IoElement)._isIoElement) {
+          if (lastTraversedChildren.get(elementChild) === vChild.children) continue
+          lastTraversedChildren.set(elementChild, vChild.children)
           const vDOMElementsOnly = filterVDOMElements(vChild.children)
           this.traverse(vDOMElementsOnly, elementChild as HTMLElement, skipDispose)
         }
       } else if (!(elementChild as IoElement)._isIoElement) {
+        lastTraversedChildren.delete(elementChild)
         // Clear children for native elements. IoElements manage their own children by design
         clearNativeElementChildren(elementChild)
       }
@@ -298,7 +313,7 @@ export class IoElement extends HTMLElement {
     while (childNodes.length > vChildren.length) {
       const child = childNodes[childNodes.length - 1]
       host.removeChild(child)
-      if (!skipDispose && child.nodeType === Node.ELEMENT_NODE) disposeChildren(child as IoElement)
+      if (!skipDispose && child.nodeType === Node.ELEMENT_NODE) queueDispose(child as HTMLElement)
     }
     // replace nodes
     for (let i = 0; i < childNodes.length; i++) {
@@ -310,11 +325,11 @@ export class IoElement extends HTMLElement {
         const node = constructElement(vChild)
         host.insertBefore(node, oldNode)
         host.removeChild(oldNode)
-        if (!skipDispose && oldNode.nodeType === Node.ELEMENT_NODE) disposeChildren(oldNode as IoElement)
+        if (!skipDispose && oldNode.nodeType === Node.ELEMENT_NODE) queueDispose(oldNode as HTMLElement)
       // update existing nodes
       } else if (vChild.tag === TEXT_TAG) {
         (child as Text).nodeValue = getTextVDOMContent(vChild)
-      } else {
+      } else if (lastTraversedVDOM.get(child as HTMLElement) !== vChild) {
         this._updateElementProps(child as HTMLElement | IoElement, vChild)
       }
     }
