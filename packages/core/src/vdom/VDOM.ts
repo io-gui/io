@@ -2,10 +2,26 @@ import { EventDispatcher } from '../core/EventDispatcher.js'
 import { IoElement } from '../elements/IoElement.js'
 import { Binding } from '../core/Binding.js'
 
+export const TEXT_TAG = '#text'
+
+export type VDOMChild = VDOMElement | string | null
+
 export type VDOMElement = {
   tag: string
   props?: Record<string, any>
-  children?: Array<VDOMElement | null> | string
+  children?: Array<VDOMChild> | string
+}
+
+export const text = function(content: string): VDOMElement {
+  return {tag: TEXT_TAG, children: content}
+}
+
+export const isTextVDOM = function(vDOMElement: VDOMElement) {
+  return vDOMElement.tag === TEXT_TAG
+}
+
+export const getNodeVDOMTag = function(node: ChildNode) {
+  return node.nodeType === Node.TEXT_NODE ? TEXT_TAG : (node as HTMLElement).localName
 }
 
 type IntegerNumeric = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
@@ -394,7 +410,10 @@ export const applyNativeElementProps = function(element: HTMLElement, props: Nat
  * @param {VDOMElement} vDOMElement - Virtual DOM object.
  * @return {HTMLElement} - Created element.
  */
-export const constructElement = function(vDOMElement: VDOMElement) {
+export const constructElement = function(vDOMElement: VDOMElement): ChildNode {
+  if (isTextVDOM(vDOMElement)) {
+    return document.createTextNode(String(vDOMElement.children ?? ''))
+  }
   const props = vDOMElement.props || {}
   let element: HTMLElement
   // IoElement classes constructed with constructor.
@@ -418,10 +437,18 @@ export const constructElement = function(vDOMElement: VDOMElement) {
  * @param {Array} vChildren - Array of VDOMElement children with possible null items.
  * @return {Array} - Array of VDOMElement children without null items.
  */
-export const filterVDOMElements = function(vChildren: Array<VDOMElement | null>): VDOMElement[] {
+export const filterVDOMElements = function(vChildren: Array<VDOMChild>): VDOMElement[] {
   for (let i = 0; i < vChildren.length; i++) {
-    if (vChildren[i] === null) {
-      return vChildren.filter(item => item !== null) as VDOMElement[]
+    const child = vChildren[i]
+    if (child === null || typeof child === 'string') {
+      const filtered: VDOMElement[] = []
+      for (let j = 0; j < vChildren.length; j++) {
+        const item = vChildren[j]
+        if (item === null) continue
+        if (typeof item === 'string') filtered.push(text(item))
+        else filtered.push(item)
+      }
+      return filtered
     }
   }
   return vChildren as VDOMElement[]
@@ -489,10 +516,31 @@ const vDOMAttributes = function(element: IoElement | HTMLElement): Record<string
   return attributes
 }
 
-const toVDOMChildren = function(htmlCollection: [IoElement | HTMLElement]): VDOMElement[] {
-  const children = []
-  for (let i = 0; i < htmlCollection.length; i++) {
-    children.push(toVDOM(htmlCollection[i]))
+const toVDOMChildNodes = function(childNodes: NodeListOf<ChildNode>): Array<VDOMElement> | string {
+  if (childNodes.length === 0) return []
+  let hasElementChild = false
+  for (let i = 0; i < childNodes.length; i++) {
+    if (childNodes[i].nodeType === Node.ELEMENT_NODE) {
+      hasElementChild = true
+      break
+    }
+  }
+  if (!hasElementChild) {
+    if (childNodes.length === 1) return childNodes[0].textContent as string
+    const children: VDOMElement[] = []
+    for (let i = 0; i < childNodes.length; i++) {
+      children.push(text(childNodes[i].textContent ?? ''))
+    }
+    return children
+  }
+  const children: VDOMElement[] = []
+  for (let i = 0; i < childNodes.length; i++) {
+    const node = childNodes[i]
+    if (node.nodeType === Node.TEXT_NODE) {
+      children.push(text(node.textContent ?? ''))
+    } else {
+      children.push(toVDOM(node as IoElement | HTMLElement))
+    }
   }
   return children
 }
@@ -508,6 +556,6 @@ export const toVDOM = function(element: IoElement | HTMLElement): VDOMElement {
   return {
     tag: element.localName,
     props: vDOMAttributes(element),
-    children: element.children.length > 0 ? toVDOMChildren((element as any).children) : element.textContent as string
+    children: element.childNodes.length > 0 ? toVDOMChildNodes(element.childNodes) : undefined
   }
 }

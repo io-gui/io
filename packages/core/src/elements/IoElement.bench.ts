@@ -3,7 +3,7 @@ import { bench } from '../testing/bench.js'
 import { Register } from '../decorators/Register.js'
 import { IoElement } from './IoElement.js'
 import { div } from './IoNative.js'
-import { VDOMElement } from '../vdom/VDOM.js'
+import { text, VDOMElement } from '../vdom/VDOM.js'
 
 @Register
 class BenchRenderElement extends IoElement {
@@ -34,6 +34,17 @@ describe('IoElement', () => {
     const el = new BenchRenderElement()
     el.renderNodes()
     el.renderNodes(10)
+    el.dispose()
+  })
+
+  bench('render 200 mixed text and div nodes', () => {
+    const nodes: VDOMElement[] = []
+    for (let i = 0; i < 100; i++) {
+      nodes.push(text(`label-${i}`))
+      nodes.push(div({key: i, class: `n${i}`}))
+    }
+    const el = new BenchRenderElement()
+    el.render(nodes)
     el.dispose()
   })
 })

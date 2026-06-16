@@ -1,11 +1,96 @@
 import { describe, it, expect } from 'vitest'
-import { Register, IoElement, applyNativeElementProps, constructElement, VDOMElement, div, span, ReactivePropertyDefinitions, clearNativeElementChildren } from '@io-gui/core'
+import { Register, IoElement, applyNativeElementProps, constructElement, VDOMElement, div, span, text, TEXT_TAG, filterVDOMElements, ReactivePropertyDefinitions, clearNativeElementChildren } from '@io-gui/core'
 
 describe('VDOM', () => {
   it('Should construct an native DIV element', () => {
     const element = constructElement(div())
     expect(element).toBeDefined()
-    expect(element.localName).toBe('div')
+    expect((element as HTMLElement).localName).toBe('div')
+  })
+  it('Should construct a text node from text() VDOM', () => {
+    const node = constructElement(text('hello'))
+    expect(node.nodeType).toBe(Node.TEXT_NODE)
+    expect(node.nodeName).toBe(TEXT_TAG)
+    expect(node.nodeValue).toBe('hello')
+  })
+  it('Should treat string children same as text() in filterVDOMElements', () => {
+    const filtered = filterVDOMElements(['hello', null, span(), 'world'])
+    expect(filtered.length).toBe(3)
+    expect(filtered[0]).toEqual(text('hello'))
+    expect(filtered[1].tag).toBe('span')
+    expect(filtered[2]).toEqual(text('world'))
+  })
+  it('Should render text() nodes as DOM text siblings', () => {
+    @Register
+    class TestTextNodes extends IoElement {
+      label = 'world'
+      changed() {
+        this.render([
+          div([text('Hello '), span({class: 'label'}, this.label)]),
+        ])
+      }
+    }
+
+    const element = new TestTextNodes()
+    document.body.appendChild(element as unknown as HTMLElement)
+    element.changed()
+
+    const container = element.children[0]
+    expect(container.childNodes.length).toBe(2)
+    expect(container.childNodes[0].nodeName).toBe(TEXT_TAG)
+    expect(container.childNodes[0].nodeValue).toBe('Hello ')
+    expect(container.childNodes[1].localName).toBe('span')
+    expect(container.textContent).toBe('Hello world')
+
+    element.label = 'Io-Gui'
+    element.changed()
+    expect(container.childNodes[0].nodeValue).toBe('Hello ')
+    expect(container.childNodes[1].textContent).toBe('Io-Gui')
+    expect(container.textContent).toBe('Hello Io-Gui')
+
+    element.remove()
+  })
+  it('Should render plain strings in child arrays same as text()', () => {
+    @Register
+    class TestStringChildren extends IoElement {
+      ready() {
+        this.render([div(['Hello ', span('world')])])
+      }
+    }
+
+    const element = new TestStringChildren()
+    document.body.appendChild(element as unknown as HTMLElement)
+
+    const container = element.children[0]
+    expect(container.childNodes.length).toBe(2)
+    expect(container.childNodes[0].nodeName).toBe(TEXT_TAG)
+    expect(container.childNodes[0].nodeValue).toBe('Hello ')
+    expect(container.textContent).toBe('Hello world')
+
+    element.remove()
+  })
+  it('Should update text() node value on re-render', () => {
+    @Register
+    class TestTextUpdate extends IoElement {
+      message = 'first'
+      changed() {
+        this.render([div([text(this.message)])])
+      }
+    }
+
+    const element = new TestTextUpdate()
+    document.body.appendChild(element as unknown as HTMLElement)
+    element.changed()
+
+    const container = element.children[0]
+    expect(container.childNodes[0].nodeValue).toBe('first')
+
+    element.message = 'second'
+    element.changed()
+    expect(container.childNodes.length).toBe(1)
+    expect(container.childNodes[0].nodeValue).toBe('second')
+
+    element.remove()
   })
   it('Should apply native element properties to the native DIV element', () => {
     const element = document.createElement('div')

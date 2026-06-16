@@ -1,4 +1,4 @@
-import { VDOMElement, NativeElementProps, OtherHTMLElementProps } from '../vdom/VDOM.js'
+import { VDOMElement, VDOMChild, NativeElementProps, OtherHTMLElementProps } from '../vdom/VDOM.js'
 
 /* eslint-disable @stylistic/max-len */
 
@@ -85,15 +85,15 @@ export const HTML_ELEMENTS: string[] = [
 ]
 
 const nativeVDOMConstructors: Record<string, (
-  arg0?: NativeElementProps & OtherHTMLElementProps | Array<VDOMElement | null> | string,
-  arg1?: Array<VDOMElement | null> | string) => VDOMElement> = {}
+  arg0?: NativeElementProps & OtherHTMLElementProps | Array<VDOMChild> | string,
+  arg1?: Array<VDOMChild> | string) => VDOMElement> = {}
 
 HTML_ELEMENTS.forEach((element) => {
   // TODO: Add runtime debug type checks?
   // TODO: Test thoroughly.
   const vConstructor = function(
-    arg0?: NativeElementProps & OtherHTMLElementProps | Array<VDOMElement | null> | string,
-    arg1?: Array<VDOMElement | null> | string): VDOMElement {
+    arg0?: NativeElementProps & OtherHTMLElementProps | Array<VDOMChild> | string,
+    arg1?: Array<VDOMChild> | string): VDOMElement {
     const vDOMElement: VDOMElement = {tag: element}
     if (arg0 !== undefined) {
       if (typeof arg0 === 'string') {

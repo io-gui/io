@@ -1,3 +1,3 @@
 # Current Focus
 
-Benchmarks run in Chromium via `pnpm bench` / `pnpm bench:baseline` (`--run`, no watch). Re-baseline after env switch from Node mocks to browser.
+Implemented `text()` VDOM helper with `#text` tag. Reconciliation now uses `childNodes` for mixed text/element siblings. Tests and benchmarks passing.

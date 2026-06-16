@@ -27,26 +27,32 @@ class MockElement {
     this.tagName = tag.toUpperCase()
   }
 
-  appendChild(child: MockElement) {
-    this.children.push(child)
-    this.childNodes.push(child)
-    return child
-  }
-
-  removeChild(child: MockElement) {
-    const index = this.children.indexOf(child)
-    if (index !== -1) {
-      this.children.splice(index, 1)
-      this.childNodes.splice(index, 1)
+  appendChild(child: MockElement | Text) {
+    if ((child as Text).nodeType === Node.TEXT_NODE) {
+      this.childNodes.push(child as unknown as MockElement)
+      return child
     }
+    this.children.push(child as MockElement)
+    this.childNodes.push(child as MockElement)
     return child
   }
 
-  insertBefore(newEl: MockElement, ref: MockElement) {
-    const index = this.children.indexOf(ref)
-    if (index === -1) return this.appendChild(newEl)
-    this.children.splice(index, 0, newEl)
-    this.childNodes.splice(index, 0, newEl)
+  removeChild(child: MockElement | Text) {
+    const childNodesIndex = this.childNodes.indexOf(child as unknown as MockElement)
+    if (childNodesIndex !== -1) this.childNodes.splice(childNodesIndex, 1)
+    const index = this.children.indexOf(child as MockElement)
+    if (index !== -1) this.children.splice(index, 1)
+    return child
+  }
+
+  insertBefore(newEl: MockElement | Text, ref: MockElement | Text) {
+    const childNodesIndex = this.childNodes.indexOf(ref as unknown as MockElement)
+    if (childNodesIndex === -1) return this.appendChild(newEl)
+    this.childNodes.splice(childNodesIndex, 0, newEl as unknown as MockElement)
+    if ((newEl as Text).nodeType !== Node.TEXT_NODE) {
+      const childrenIndex = this.children.indexOf(ref as MockElement)
+      if (childrenIndex !== -1) this.children.splice(childrenIndex, 0, newEl as MockElement)
+    }
     return newEl
   }
 

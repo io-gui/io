@@ -1,4 +1,4 @@
-import { IoElement, Register, Storage as $, section, header, h1, div, p, a, span, ReactiveProperty } from '@io-gui/core'
+import { IoElement, Register, Storage as $, section, header, h1, div, p, a, text, ReactiveProperty } from '@io-gui/core'
 
 import { TodoListModel } from './TodoListModel.js'
 import { todoInput } from './TodoInput.js'
@@ -27,11 +27,10 @@ export class TodoApp extends IoElement {
         todoList({class: 'todo-list', model: this.model, route: this.bind('route')}),
         todoFooter({class: 'footer', model: this.model, route: this.bind('route')}),
       ]),
-      // TODO: implement text and DOM mixed content rendering
       div({class: 'info'}, [
         p('Double-click to edit a todo'),
-        p([span('Created with '), a({href: 'https://iogui.dev', target: '_blank'}, 'Io-Gui')]),
-        p([span('Part of '), a({href: 'http://todomvc.com/', target: '_blank'}, 'TodoMVC')])
+        p(['Created with ', a({href: 'https://iogui.dev', target: '_blank'}, 'Io-Gui')]),
+        p(['Part of ', a({href: 'http://todomvc.com/', target: '_blank'}, 'TodoMVC')])
       ])
     ])
   }
