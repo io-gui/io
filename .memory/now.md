@@ -1,3 +1,3 @@
 # Current Focus
 
-VDOM render optimizations shipped: batched sync disposal (childNodes walk), reference-identity skip for cached VDOM nodes/children arrays, top-level render bail-out. All 238 core tests pass.
+Fixed bench issues: IoNavigator bench used opt* menu IDs vs view* element IDs (opt5 warning). mountSteadyElement now clears steady container before mount to prevent DOM accumulation / browser OOM during full bench runs.

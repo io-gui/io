@@ -67,6 +67,7 @@ export default defineConfig({
         test: {
           name: 'bench',
           include: ['packages/*/src/**/*.bench.ts'],
+          setupFiles: ['packages/core/src/testing/bench-browser-setup.ts'],
           benchmark: {
             include: ['packages/*/src/**/*.bench.ts'],
           },

@@ -1,3 +1,9 @@
+## 2026-06-16 [technical] Bench fixes: IoNavigator ID mismatch + steady container leak
+
+- IoNavigation.bench used `createFlatMenuOptions` (opt0..optN) with `createNavigatorElements` (view0..viewN) — toggling option 5 selected triggered IoSelector warning for missing "opt5".
+- Added `createNavigatorMenuOptions` with view* IDs aligned to navigator elements.
+- `mountSteadyElement` now clears `#io-bench-steady-container` before each mount; previously appended every steady element across all bench files, likely causing browser OOM / connection closed during full bench runs.
+
 ## 2026-06-16 [technical] VDOM disposal batching + reference-identity render skip
 
 - Replaced `querySelectorAll('*')` + per-node rAF in `disposeChildren` with `walkElementSubtreePostOrder` (childNodes walk), `queueDispose` batching, and synchronous `flushPendingDisposals` at end of `render()`.

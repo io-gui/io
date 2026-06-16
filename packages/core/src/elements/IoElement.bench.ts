@@ -1,5 +1,6 @@
 import { describe } from 'vitest'
 import { bench } from '../testing/bench.js'
+import { benchFreshVsCached, warmRender } from '../testing/bench-render.js'
 import { Register } from '../decorators/Register.js'
 import { IoElement } from './IoElement.js'
 import { div, span } from './IoNative.js'
@@ -160,26 +161,24 @@ describe('IoElement', () => {
 
 describe('IoElement steady-state re-render', () => {
   const freshEl = new BenchRenderElement()
-  freshEl.renderFresh()
+  warmRender(() => freshEl.renderFresh())
 
   const cachedEl = new BenchCachedRenderElement()
   cachedEl.initCachedNodes()
-  cachedEl.renderCachedNodes()
+  warmRender(() => cachedEl.renderCachedNodes())
 
   const nestedEl = new BenchCachedRenderElement()
   nestedEl.initCachedNested()
-  nestedEl.renderCachedNodes()
+  warmRender(() => nestedEl.renderCachedNodes())
 
   const widgetEl = new BenchCachedRenderElement()
   widgetEl.initWidgetPattern()
-  widgetEl.renderWidgetPattern(0)
+  warmRender(() => widgetEl.renderWidgetPattern(0))
 
-  bench('steady: re-render 200 fresh VDOM', () => {
-    freshEl.renderFresh(0)
-  })
-
-  bench('steady: re-render 200 cached VDOM references', () => {
-    cachedEl.renderCachedNodes()
+  benchFreshVsCached({
+    label: '200 nodes',
+    fresh: () => freshEl.renderFresh(0),
+    cached: () => cachedEl.renderCachedNodes(),
   })
 
   bench('steady: bail-out top-level cached array', () => {
@@ -192,5 +191,9 @@ describe('IoElement steady-state re-render', () => {
 
   bench('steady: widget pattern new wrapper', () => {
     widgetEl.renderWidgetPattern(1)
+  })
+
+  bench('steady: hot mutation (10 changed keys)', () => {
+    freshEl.renderFresh(10)
   })
 })
