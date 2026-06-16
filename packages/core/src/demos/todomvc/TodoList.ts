@@ -4,8 +4,8 @@ import { TodoListModel } from './TodoListModel.js'
 import { todoItem } from './TodoItem.js'
 
 type TodoListProps = IoElementProps & {
-  model?: TodoListModel
-  route?: string
+  model: TodoListModel
+  route: WithBinding<string>
 }
 
 export class TodoList extends IoElement {
@@ -23,7 +23,7 @@ export class TodoList extends IoElement {
   @ReactiveProperty({value: 'all'})
   declare route: string
 
-  constructor(args: TodoListProps = {}) {
+  constructor(args: TodoListProps) {
     super(args)
   }
 

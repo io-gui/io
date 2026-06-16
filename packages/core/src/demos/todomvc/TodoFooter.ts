@@ -2,8 +2,8 @@ import { IoElement, Register, IoElementProps, span, ul, li, a, button, ReactiveP
 import { TodoListModel } from './TodoListModel.js'
 
 type TodoFooterProps = IoElementProps & {
-  model?: TodoListModel
-  route?: WithBinding<string>
+  model: TodoListModel
+  route: WithBinding<string>
 }
 
 export class TodoFooter extends IoElement {
@@ -21,7 +21,7 @@ export class TodoFooter extends IoElement {
   @ReactiveProperty({value: 'all'})
   declare route: string
 
-  constructor(args: TodoFooterProps = {}) {
+  constructor(args: TodoFooterProps) {
     super(args)
   }
 
@@ -35,6 +35,7 @@ export class TodoFooter extends IoElement {
   }
 
   override changed() {
+    this.style.display = this.model.count ? 'block' : 'none'
     this.render([
       span({class: 'todo-count'}, String(this.model.activeCount) + (this.model.activeCount === 1 ? ' item' : ' items') + ' left'),
       ul({class: 'filters'}, [

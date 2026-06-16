@@ -36,7 +36,7 @@ export class TodoListModel extends ReactiveNode {
     get allCompleted() {
         return this.items.every(item => item.completed);
     }
-    constructor(args = { items: [] }) {
+    constructor(args) {
         args.items = args.items.map(item => new TodoItemModel(item));
         super(args);
     }

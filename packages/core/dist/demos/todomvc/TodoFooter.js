@@ -14,7 +14,7 @@ export class TodoFooter extends IoElement {
       }
     `;
     }
-    constructor(args = {}) {
+    constructor(args) {
         super(args);
     }
     onRouteClicked(event) {
@@ -25,6 +25,7 @@ export class TodoFooter extends IoElement {
         this.changed();
     }
     changed() {
+        this.style.display = this.model.count ? 'block' : 'none';
         this.render([
             span({ class: 'todo-count' }, String(this.model.activeCount) + (this.model.activeCount === 1 ? ' item' : ' items') + ' left'),
             ul({ class: 'filters' }, [

@@ -16,7 +16,7 @@ export class TodoList extends IoElement {
       }
     `;
     }
-    constructor(args = {}) {
+    constructor(args) {
         super(args);
     }
     modelMutated() {

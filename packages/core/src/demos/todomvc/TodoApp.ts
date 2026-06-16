@@ -7,7 +7,7 @@ import { todoFooter } from './TodoFooter.js'
 
 $.permit()
 const $route = $({key: 'route', storage: 'hash', value: 'all'})
-const $model = $({key: 'model', storage: 'local', value: new TodoListModel()})
+const $model = $({key: 'model', storage: 'local', value: new TodoListModel({items: []})})
 
 export class TodoApp extends IoElement {
 
@@ -18,22 +18,14 @@ export class TodoApp extends IoElement {
   declare route: string
 
   override ready() {
-    this.changed()
-  }
-
-  modelMutated() {
-    this.changed()
-  }
-
-  override changed() {
     this.render([
       section({class: 'todoapp'}, [
         header({class: 'header'}, [
           h1('todos'),
           todoInput({model: this.model}),
         ]),
-        todoList({class: 'todo-list', model: this.model, route: this.route}),
-        this.model.count ? todoFooter({class: 'footer', model: this.model, route: this.bind('route')}) : null,
+        todoList({class: 'todo-list', model: this.model, route: this.bind('route')}),
+        todoFooter({class: 'footer', model: this.model, route: this.bind('route')}),
       ]),
       // TODO: implement text and DOM mixed content rendering
       div({class: 'info'}, [

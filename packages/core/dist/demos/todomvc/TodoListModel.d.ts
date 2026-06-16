@@ -18,7 +18,7 @@ export declare class TodoListModel extends ReactiveNode {
     get completedCount(): number;
     get activeCount(): number;
     get allCompleted(): boolean;
-    constructor(args?: TodoListProps);
+    constructor(args: TodoListProps);
     completeAll: () => void;
     clearCompleted: () => void;
     itemsMutated(): void;
