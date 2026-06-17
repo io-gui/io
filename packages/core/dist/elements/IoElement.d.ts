@@ -1,5 +1,5 @@
 import { ProtoChain } from '../core/ProtoChain.js';
-import { VDOMElement, NativeElementProps } from '../vdom/VDOM.js';
+import { VDOMElement, VDOMChild, VDOMFactoryChildren, NativeElementProps } from '../vdom/VDOM.js';
 import { ReactiveNode, ReactivityType, ReactivePropertyDefinitions, ListenerDefinitions, PropertyValues } from '../nodes/ReactiveNode.js';
 import { Binding } from '../core/Binding.js';
 import type { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js';
@@ -27,7 +27,7 @@ export type IoElementProps = NativeElementProps & {
  * @see ReactiveNode for non-DOM reactive objects
  */
 export declare class IoElement extends HTMLElement {
-    static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+    static vConstructor: (arg0?: IoElementProps | VDOMFactoryChildren, arg1?: VDOMFactoryChildren) => VDOMElement;
     static get Style(): string;
     reactivity: ReactivityType;
     $: Record<string, HTMLElement | IoElement>;
@@ -80,16 +80,16 @@ export declare class IoElement extends HTMLElement {
     connectedCallback(): void;
     disconnectedCallback(): void;
     /** Renders VDOM children into this element or optional host. */
-    render(vDOMElements: Array<VDOMElement | null>, host?: HTMLElement | IoElement, noDispose?: boolean): void;
+    render(vDOMElements: Array<VDOMChild>, host?: HTMLElement | IoElement, skipDispose?: boolean): void;
     /** Reconciles VDOM tree into host; keyed when children specify `key`. */
-    traverse(vChildren: VDOMElement[], host: HTMLElement | IoElement, noDispose?: boolean): void;
+    traverse(vChildren: VDOMElement[], host: HTMLElement | IoElement, skipDispose?: boolean): void;
     /**
      * Reconciles host children with vDOM children by position and tag name.
      * @param {Array} vChildren - Array of VDOMElements elements.
      * @param {HTMLElement} host - Template target.
-     * @param {boolean} [noDispose] - Skip disposal of existing elements.
+     * @param {boolean} [skipDispose] - Detach removed/replaced nodes without calling dispose (for DOM caching).
      */
-    _reconcileChildren(vChildren: VDOMElement[], host: HTMLElement | IoElement, noDispose?: boolean): void;
+    _reconcileChildren(vChildren: VDOMElement[], host: HTMLElement | IoElement, skipDispose?: boolean): void;
     /**
      * Updates props of an existing element matched during reconciliation.
      * @param {HTMLElement | IoElement} child - Element to update.
@@ -115,5 +115,5 @@ export declare class IoElement extends HTMLElement {
     toVDOM(): VDOMElement;
     Register(ioNodeConstructor: typeof IoElement): void;
 }
-export declare const ioElement: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioElement: (arg0?: IoElementProps | VDOMFactoryChildren, arg1?: VDOMFactoryChildren) => VDOMElement;
 export {};

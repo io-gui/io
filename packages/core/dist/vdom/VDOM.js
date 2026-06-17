@@ -1,6 +1,57 @@
 import { EventDispatcher } from '../core/EventDispatcher.js';
 import { Binding } from '../core/Binding.js';
+export const TEXT_TAG = '#text';
+export const normalizeVDOMChildren = function (children) {
+    return typeof children === 'string' ? [children] : children;
+};
+export const createVDOMElement = function (tag, arg0, arg1) {
+    const vDOMElement = { tag };
+    if (arg0 !== undefined) {
+        if (typeof arg0 === 'string') {
+            vDOMElement.children = normalizeVDOMChildren(arg0);
+        }
+        else if (arg0 instanceof Array) {
+            vDOMElement.children = arg0;
+        }
+        else if (typeof arg0 === 'object') {
+            vDOMElement.props = arg0;
+        }
+        if (arg1 !== undefined) {
+            vDOMElement.children = normalizeVDOMChildren(arg1);
+        }
+    }
+    return vDOMElement;
+};
+export const getTextVDOMContent = function (vDOMElement) {
+    const first = vDOMElement.children?.[0];
+    return typeof first === 'string' ? first : '';
+};
+export const text = function (content) {
+    return { tag: TEXT_TAG, children: [content] };
+};
+export const isTextVDOM = function (vDOMElement) {
+    return vDOMElement.tag === TEXT_TAG;
+};
+export const getNodeVDOMTag = function (node) {
+    return node.nodeType === Node.TEXT_NODE ? TEXT_TAG : node.localName;
+};
 const defaultPropsMap = new WeakMap();
+// TODO: Optimize if possible.
+const applyInlineStyleProps = function (element, prop, defaultPropValues) {
+    const previousKeys = defaultPropValues.__styleKeys ?? new Set();
+    const nextKeys = new Set();
+    if (prop) {
+        for (const s in prop) {
+            element.style.setProperty(s, prop[s]);
+            nextKeys.add(s);
+        }
+    }
+    for (const s of previousKeys) {
+        if (!nextKeys.has(s))
+            element.style.removeProperty(s);
+    }
+    defaultPropValues.__styleKeys = nextKeys;
+};
 // TODO: Fix types. Remove any.
 /**
  * Sets native element's properties and attributes.
@@ -24,10 +75,7 @@ export const applyNativeElementProps = function (element, props) {
         if (!Object.hasOwn(defaultPropValues, p))
             defaultPropValues[p] = element[p];
         if (p === 'style') {
-            for (const s in prop) {
-                // TODO: Consider supporting importance
-                element.style.setProperty(s, prop[s]);
-            }
+            applyInlineStyleProps(element, prop, defaultPropValues);
         }
         else if (p === 'class') {
             element['className'] = prop;
@@ -56,10 +104,18 @@ export const applyNativeElementProps = function (element, props) {
     }
     // Reset properties to defaults if they are not in the props.
     for (const _p in defaultPropValues) {
+        if (_p === '__styleKeys')
+            continue;
         const p = _p;
         if (!Object.hasOwn(props, p)) {
-            element[p] = defaultPropValues[p];
-            element.removeAttribute(p);
+            if (p === 'style') {
+                applyInlineStyleProps(element, undefined, defaultPropValues);
+                element.removeAttribute(p);
+            }
+            else {
+                element[p] = defaultPropValues[p];
+                element.removeAttribute(p);
+            }
         }
     }
     if (!element._eventDispatcher) {
@@ -73,6 +129,9 @@ export const applyNativeElementProps = function (element, props) {
  * @return {HTMLElement} - Created element.
  */
 export const constructElement = function (vDOMElement) {
+    if (isTextVDOM(vDOMElement)) {
+        return document.createTextNode(getTextVDOMContent(vDOMElement));
+    }
     const props = vDOMElement.props || {};
     let element;
     // IoElement classes constructed with constructor.
@@ -98,8 +157,19 @@ export const constructElement = function (vDOMElement) {
  */
 export const filterVDOMElements = function (vChildren) {
     for (let i = 0; i < vChildren.length; i++) {
-        if (vChildren[i] === null) {
-            return vChildren.filter(item => item !== null);
+        const child = vChildren[i];
+        if (child === null || typeof child === 'string') {
+            const filtered = [];
+            for (let j = 0; j < vChildren.length; j++) {
+                const item = vChildren[j];
+                if (item === null)
+                    continue;
+                if (typeof item === 'string')
+                    filtered.push(text(item));
+                else
+                    filtered.push(item);
+            }
+            return filtered;
         }
     }
     return vChildren;
@@ -163,10 +233,18 @@ const vDOMAttributes = function (element) {
     }
     return attributes;
 };
-const toVDOMChildren = function (htmlCollection) {
+const toVDOMChildNodes = function (childNodes) {
+    if (childNodes.length === 0)
+        return [];
     const children = [];
-    for (let i = 0; i < htmlCollection.length; i++) {
-        children.push(toVDOM(htmlCollection[i]));
+    for (let i = 0; i < childNodes.length; i++) {
+        const node = childNodes[i];
+        if (node.nodeType === Node.TEXT_NODE) {
+            children.push(text(node.textContent ?? ''));
+        }
+        else {
+            children.push(toVDOM(node));
+        }
     }
     return children;
 };
@@ -181,6 +259,6 @@ export const toVDOM = function (element) {
     return {
         tag: element.localName,
         props: vDOMAttributes(element),
-        children: element.children.length > 0 ? toVDOMChildren(element.children) : element.textContent
+        children: element.childNodes.length > 0 ? toVDOMChildNodes(element.childNodes) : undefined
     };
 };

@@ -145,10 +145,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
                     const props = config[id].props || {};
                     const finalProps = { id: id, value: value, '@value-input': this._onValueInput };
                     Object.assign(finalProps, props);
-                    let children = undefined;
-                    if (HTML_ELEMENTS.includes(tag) && typeof value === 'string') {
-                        children = value;
-                    }
+                    const children = HTML_ELEMENTS.includes(tag) && typeof value === 'string' ? [value] : undefined;
                     if (tag === 'io-object' || tag === 'io-property-editor') {
                         finalProps.config = finalProps.config || this.config;
                         finalProps.groups = finalProps.groups || this.groups;

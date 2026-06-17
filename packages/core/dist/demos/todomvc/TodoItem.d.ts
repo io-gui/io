@@ -17,7 +17,7 @@ export declare class TodoItem extends IoElement {
     changed(): void;
     onStartEdit(): void;
     onBlur(): void;
-    onInputKey(event: CustomEvent): void;
+    onInputKey(event: KeyboardEvent): void;
 }
 export declare const todoItem: (arg0: TodoItemProps) => import("@io-gui/core").VDOMElement;
 export {};

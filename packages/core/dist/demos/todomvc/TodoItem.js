@@ -29,10 +29,10 @@ export class TodoItem extends IoElement {
                     label({ '@dblclick': this.onStartEdit }, this.item.title),
                     button({ class: 'destroy', '@click': this.item.delete }),
                 ]),
-                input({ id: 'input-' + this.item.title, class: 'edit', value: this.item.title, '@blur': this.onBlur, '@keyup': this.onInputKey })
+                input({ id: 'input', class: 'edit', value: this.item.title, '@blur': this.onBlur, '@keyup': this.onInputKey })
             ])
         ]);
-        this.$input = this.querySelector('input.edit');
+        this.$input = this.$['input'];
     }
     onStartEdit() {
         this.editing = true;
@@ -50,8 +50,7 @@ export class TodoItem extends IoElement {
         this.editing = false;
     }
     onInputKey(event) {
-        const keyboardEvent = event.detail;
-        if (['Enter', 'Escape'].includes(keyboardEvent.key)) {
+        if (['Enter', 'Escape'].includes(event.key)) {
             this.$input.blur();
         }
     }
