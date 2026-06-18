@@ -552,9 +552,9 @@ describe('EventDispatcher', () => {
     child.dispose()
   })
   it('releaseEventDispatcher disposes native element listeners', () => {
-    const element = constructElement({tag: 'div', props: {'@click': () => {}}})
-    expect((element as any)._eventDispatcher).toBeDefined()
+    const element = constructElement({tag: 'div', props: {'@click': () => {}}}) as IoElement
+    expect(element._eventDispatcher).toBeDefined()
     releaseEventDispatcher(element)
-    expect((element as any)._eventDispatcher).toBeUndefined()
+    expect(element._eventDispatcher).toBeUndefined()
   })
 })

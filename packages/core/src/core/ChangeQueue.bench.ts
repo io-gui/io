@@ -1,9 +1,9 @@
-import { describe } from 'vitest'
-import { bench } from '../testing/bench.js'
+import { test } from 'vitest'
 import { ChangeQueue } from './ChangeQueue.js'
 import type { Change } from './ChangeQueue.js'
 import type { ReactiveNode } from '../nodes/ReactiveNode.js'
 import type { IoElement } from '../elements/IoElement.js'
+import { BENCH_OPTIONS } from '../testing.js'
 
 type BenchOwner = ReactiveNode | IoElement
 
@@ -22,37 +22,56 @@ function freshQueue() {
   return new ChangeQueue(benchOwner())
 }
 
-describe('ChangeQueue', () => {
-  bench('queue 50 unique', () => {
-    const q = freshQueue()
+test('ChangeQueue', async ({ bench }) => {
+  let q!: ChangeQueue
+  let owner!: BenchOwner
+
+  await bench('queue 50 unique', {
+    beforeEach: () => {
+        q = freshQueue()
+    },
+  }, () => {
     for (let i = 0; i < 50; i++) {
       q.queue(`p${i}`, i + 1, i)
     }
-  })
+  }).run(BENCH_OPTIONS)
 
-  bench('coalesce 1000x', () => {
-    const q = freshQueue()
+  await bench('coalesce 1000x', {
+    beforeEach: () => {
+      q = freshQueue()
+    },
+  }, () => {
     for (let i = 1; i <= 1000; i++) {
       q.queue('x', i, i - 1)
     }
-  })
+  }).run(BENCH_OPTIONS)
 
-  bench('cancel', () => {
-    const q = freshQueue()
+  await bench('cancel', {
+    beforeEach: () => {
+      q = freshQueue()
+    },
+  }, () => {
     q.queue('x', 1, 0)
     q.queue('x', 0, 1)
-  })
+  }).run(BENCH_OPTIONS)
 
-  bench('dispatch 50', () => {
-    const q = freshQueue()
+  await bench('dispatch 50', {
+    beforeEach: () => {
+      q = freshQueue()
+    },
+  }, () => {
     for (let i = 0; i < 50; i++) {
       q.queue(`p${i}`, i + 1, i)
     }
     q.dispatch()
-  })
+  }).run(BENCH_OPTIONS)
 
-  bench('cascade', () => {
-    const owner = benchOwner()
+  await bench('cascade', {
+    beforeEach: () => {
+      q = freshQueue()
+      owner = benchOwner()
+    },
+  }, () => {
     const q = new ChangeQueue(owner)
     Object.assign(owner, {
       prop1Changed(change: Change) {
@@ -69,14 +88,17 @@ describe('ChangeQueue', () => {
     })
     q.queue('prop1', 1, 0)
     q.dispatch()
-  })
+  }).run(BENCH_OPTIONS)
 
-  bench('coalesce 50 props to final values', () => {
-    const q = freshQueue()
+  await bench('coalesce 50 props to final values', {
+    beforeEach: () => {
+      q = freshQueue()
+    },
+  }, () => {
     for (let i = 0; i < 50; i++) {
       q.queue(`p${i}`, i + 1, i)
       q.queue(`p${i}`, i + 2, i + 1)
     }
     q.dispatch()
-  })
+  }).run(BENCH_OPTIONS)
 })

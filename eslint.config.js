@@ -111,7 +111,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ["**/*.test.ts", "**/*.bench.ts", "**/bench-setup.ts"],
+    files: ["**/*.test.ts", "**/*.bench.ts"],
     extends: [tseslint.configs.disableTypeChecked],
     rules: {
       "@typescript-eslint/no-empty-function": "off",

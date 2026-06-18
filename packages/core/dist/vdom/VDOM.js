@@ -37,8 +37,8 @@ export const getNodeVDOMTag = function (node) {
 };
 const defaultPropsMap = new WeakMap();
 // TODO: Optimize if possible.
-const applyInlineStyleProps = function (element, prop, defaultPropValues) {
-    const previousKeys = defaultPropValues.__styleKeys ?? new Set();
+const applyInlineStyleProps = function (element, prop, defaults) {
+    const previousKeys = defaults.__styleKeys ?? new Set();
     const nextKeys = new Set();
     if (prop) {
         for (const s in prop) {
@@ -50,9 +50,9 @@ const applyInlineStyleProps = function (element, prop, defaultPropValues) {
         if (!nextKeys.has(s))
             element.style.removeProperty(s);
     }
-    defaultPropValues.__styleKeys = nextKeys;
+    defaults.__styleKeys = nextKeys;
 };
-// TODO: Fix types. Remove any.
+// TODO: Improve types. Remove any.
 /**
  * Sets native element's properties and attributes.
  * - style: formatted as Object.
@@ -173,92 +173,4 @@ export const filterVDOMElements = function (vChildren) {
         }
     }
     return vChildren;
-};
-/**
- * Disposes EventDispatcher on a native VDOM element.
- */
-export const releaseEventDispatcher = function (element) {
-    if (element._eventDispatcher) {
-        element._eventDispatcher.dispose();
-        delete element._eventDispatcher;
-    }
-};
-/**
- * Disposes EventDispatchers on element and all element descendants.
- */
-export const releaseSubtreeEventDispatchers = function (root) {
-    const elements = root.querySelectorAll('*');
-    for (let i = elements.length; i--;) {
-        releaseEventDispatcher(elements[i]);
-    }
-    releaseEventDispatcher(root);
-};
-/**
- * Clears native element children after releasing orphaned EventDispatchers.
- */
-export const clearNativeElementChildren = function (element) {
-    for (let i = element.childNodes.length; i--;) {
-        const child = element.childNodes[i];
-        if (child.nodeType === Node.ELEMENT_NODE) {
-            releaseSubtreeEventDispatchers(child);
-        }
-    }
-    element.textContent = '';
-};
-/**
- * Disposes the element's children.
- * @param {IoElement} element - Element to dispose children of.
- */
-export const disposeChildren = function (element) {
-    // NOTE: This rAF ensures that element's change queue is emptied before disposing.
-    requestAnimationFrame(() => {
-        const elements = Array.from(element.querySelectorAll('*')).concat([element]);
-        for (let i = elements.length; i--;) {
-            if (typeof elements[i].dispose === 'function') {
-                elements[i].dispose();
-            }
-            else {
-                releaseEventDispatcher(elements[i]);
-            }
-        }
-    });
-};
-const vDOMAttributes = function (element) {
-    const attributes = {};
-    for (let i = 0; i < element.attributes.length; i++) {
-        const name = element.attributes[i].name;
-        const value = element.getAttribute(name);
-        if (value !== null)
-            attributes[name] = value;
-    }
-    return attributes;
-};
-const toVDOMChildNodes = function (childNodes) {
-    if (childNodes.length === 0)
-        return [];
-    const children = [];
-    for (let i = 0; i < childNodes.length; i++) {
-        const node = childNodes[i];
-        if (node.nodeType === Node.TEXT_NODE) {
-            children.push(text(node.textContent ?? ''));
-        }
-        else {
-            children.push(toVDOM(node));
-        }
-    }
-    return children;
-};
-/**
- * Converts an element to a virtual dom object.
- * NODE: This vDOM contains elements only attributes (not properties).
- * Used for testing but might be useful for other things.
- * @param {IoElement | HTMLElement} element - Element to convert.
- * @return {VDOMElement} - Virtual dom object.
- */
-export const toVDOM = function (element) {
-    return {
-        tag: element.localName,
-        props: vDOMAttributes(element),
-        children: element.childNodes.length > 0 ? toVDOMChildNodes(element.childNodes) : undefined
-    };
 };

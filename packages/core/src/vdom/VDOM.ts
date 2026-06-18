@@ -20,11 +20,7 @@ export const normalizeVDOMChildren = function(children: VDOMFactoryChildren): Ar
 
 export type VDOMFactoryArg = Record<string, any> | VDOMFactoryChildren
 
-export const createVDOMElement = function(
-  tag: string,
-  arg0?: VDOMFactoryArg,
-  arg1?: VDOMFactoryChildren
-): VDOMElement {
+export const createVDOMElement = function(tag: string, arg0?: VDOMFactoryArg, arg1?: VDOMFactoryChildren): VDOMElement {
   const vDOMElement: VDOMElement = {tag}
   if (arg0 !== undefined) {
     if (typeof arg0 === 'string') {
@@ -369,12 +365,8 @@ export type NativeElementProps = AriaProps & PropsWithUndefined<{
 const defaultPropsMap = new WeakMap<HTMLElement, NativeElementProps & {__styleKeys?: Set<string>}>()
 
 // TODO: Optimize if possible.
-const applyInlineStyleProps = function(
-  element: HTMLElement,
-  prop: Record<string, string> | undefined,
-  defaultPropValues: {__styleKeys?: Set<string>}
-) {
-  const previousKeys = defaultPropValues.__styleKeys ?? new Set<string>()
+const applyInlineStyleProps = function(element: HTMLElement, prop: Record<string, string> | undefined, defaults: {__styleKeys?: Set<string>}) {
+  const previousKeys = defaults.__styleKeys ?? new Set<string>()
   const nextKeys = new Set<string>()
   if (prop) {
     for (const s in prop) {
@@ -385,10 +377,10 @@ const applyInlineStyleProps = function(
   for (const s of previousKeys) {
     if (!nextKeys.has(s)) element.style.removeProperty(s)
   }
-  defaultPropValues.__styleKeys = nextKeys
+  defaults.__styleKeys = nextKeys
 }
 
-// TODO: Fix types. Remove any.
+// TODO: Improve types. Remove any.
 
 /**
  * Sets native element's properties and attributes.
@@ -509,95 +501,4 @@ export const filterVDOMElements = function(vChildren: Array<VDOMChild>): VDOMEle
     }
   }
   return vChildren as VDOMElement[]
-}
-
-/**
- * Disposes EventDispatcher on a native VDOM element.
- */
-export const releaseEventDispatcher = function(element: HTMLElement | IoElement) {
-  if ((element as IoElement)._eventDispatcher) {
-    (element as IoElement)._eventDispatcher.dispose()
-    delete (element as any)._eventDispatcher
-  }
-}
-
-/**
- * Disposes EventDispatchers on element and all element descendants.
- */
-export const releaseSubtreeEventDispatchers = function(root: HTMLElement) {
-  const elements = root.querySelectorAll('*')
-  for (let i = elements.length; i--;) {
-    releaseEventDispatcher(elements[i] as HTMLElement)
-  }
-  releaseEventDispatcher(root)
-}
-
-/**
- * Clears native element children after releasing orphaned EventDispatchers.
- */
-export const clearNativeElementChildren = function(element: HTMLElement) {
-  for (let i = element.childNodes.length; i--;) {
-    const child = element.childNodes[i]
-    if (child.nodeType === Node.ELEMENT_NODE) {
-      releaseSubtreeEventDispatchers(child as HTMLElement)
-    }
-  }
-  element.textContent = ''
-}
-
-/**
- * Disposes the element's children.
- * @param {IoElement} element - Element to dispose children of.
- */
-export const disposeChildren = function(element: IoElement) {
-  // NOTE: This rAF ensures that element's change queue is emptied before disposing.
-  requestAnimationFrame(() => {
-    const elements = Array.from(element.querySelectorAll('*')).concat([element]) as IoElement[]
-    for (let i = elements.length; i--;) {
-      if (typeof elements[i].dispose === 'function') {
-        elements[i].dispose()
-      } else {
-        releaseEventDispatcher(elements[i])
-      }
-    }
-  })
-}
-
-const vDOMAttributes = function(element: IoElement | HTMLElement): Record<string, any> {
-  const attributes: Record<string, any> = {}
-  for (let i = 0; i < element.attributes.length; i++) {
-    const name = element.attributes[i].name
-    const value = element.getAttribute(name)
-    if (value !== null) attributes[name] = value
-  }
-  return attributes
-}
-
-const toVDOMChildNodes = function(childNodes: NodeListOf<ChildNode>): Array<VDOMElement> {
-  if (childNodes.length === 0) return []
-  const children: VDOMElement[] = []
-  for (let i = 0; i < childNodes.length; i++) {
-    const node = childNodes[i]
-    if (node.nodeType === Node.TEXT_NODE) {
-      children.push(text(node.textContent ?? ''))
-    } else {
-      children.push(toVDOM(node as IoElement | HTMLElement))
-    }
-  }
-  return children
-}
-
-/**
- * Converts an element to a virtual dom object.
- * NODE: This vDOM contains elements only attributes (not properties).
- * Used for testing but might be useful for other things.
- * @param {IoElement | HTMLElement} element - Element to convert.
- * @return {VDOMElement} - Virtual dom object.
- */
-export const toVDOM = function(element: IoElement | HTMLElement): VDOMElement {
-  return {
-    tag: element.localName,
-    props: vDOMAttributes(element),
-    children: element.childNodes.length > 0 ? toVDOMChildNodes(element.childNodes) : undefined
-  }
 }

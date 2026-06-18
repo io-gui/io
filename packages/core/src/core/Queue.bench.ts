@@ -1,67 +1,81 @@
-import { describe } from 'vitest'
-import { bench } from '../testing/bench.js'
-import { Register } from '../decorators/Register.js'
+import { test } from 'vitest'
 import { ReactiveNode } from '../nodes/ReactiveNode.js'
 import { throttle, debounce, clearNodeQueue } from './Queue.js'
+import { BENCH_OPTIONS } from '../testing.js'
 
 const noop = () => {}
 
-@Register
-class BenchQueueNode extends ReactiveNode {}
+test('Queue', async ({ bench }) => {
+  let node!: ReactiveNode
 
-describe('Queue', () => {
-  bench('debounce 500 unique', () => {
+  await bench('debounce 500 unique', () => {
     for (let i = 0; i < 500; i++) {
       debounce(noop)
     }
-  })
+  }).run(BENCH_OPTIONS)
 
-  bench('debounce coalesce 1000x', () => {
+  await bench('debounce coalesce 1000x', () => {
     for (let i = 0; i < 1000; i++) {
       debounce(noop, i)
     }
-  })
+  }).run(BENCH_OPTIONS)
 
-  bench('throttle leading 500 unique', () => {
+  await bench('throttle leading 500 unique', () => {
     for (let i = 0; i < 500; i++) {
       throttle(noop)
     }
-  })
+  }).run(BENCH_OPTIONS)
 
-  bench('throttle coalesce 1000x', () => {
+  await bench('throttle coalesce 1000x', () => {
     for (let i = 0; i < 1000; i++) {
       throttle(noop, i)
     }
-  })
+  }).run(BENCH_OPTIONS)
 
-  bench('debounce with node 500 unique', () => {
-    const node = new BenchQueueNode()
+  await bench('debounce with node 500 unique', {
+    beforeEach: () => {
+      node = new ReactiveNode()
+    },
+    afterEach: () => {
+      node.dispose()
+    },
+  }, () => {
     for (let i = 0; i < 500; i++) {
       debounce(noop, i, node)
     }
-    node.dispose()
-  })
+  }).run(BENCH_OPTIONS)
 
-  bench('throttle with node 500 unique', () => {
-    const node = new BenchQueueNode()
+  await bench('throttle with node 500 unique', {
+    beforeEach: () => {
+      node = new ReactiveNode()
+    },
+    afterEach: () => {
+      node.dispose()
+    },
+  }, () => {
     for (let i = 0; i < 500; i++) {
       throttle(noop, i, node)
     }
-    node.dispose()
-  })
+  }).run(BENCH_OPTIONS)
 
-  bench('clearNodeQueue 500 pending', () => {
-    const node = new BenchQueueNode()
+  await bench('clearNodeQueue 500 pending', {
+    beforeEach: () => {
+      node = new ReactiveNode()
+    },
+    afterEach: () => {
+      node.dispose()
+    },
+  }, () => {
     for (let i = 0; i < 500; i++) {
       debounce(noop, i, node)
     }
     clearNodeQueue(node)
-  })
+  }).run(BENCH_OPTIONS)
 
-  bench('mixed debounce and throttle 500', () => {
+  await bench('mixed debounce and throttle 500', () => {
     for (let i = 0; i < 250; i++) {
       debounce(noop, i)
       throttle(noop, i)
     }
-  })
+  }).run(BENCH_OPTIONS)
 })

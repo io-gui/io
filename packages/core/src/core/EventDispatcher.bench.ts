@@ -1,20 +1,22 @@
-import { describe } from 'vitest'
-import { bench } from '../testing/bench.js'
-import { Register } from '../decorators/Register.js'
+import { test } from 'vitest'
 import { ReactiveNode } from '../nodes/ReactiveNode.js'
+import { BENCH_OPTIONS } from '../testing.js'
 
-@Register
-class BenchChainNode extends ReactiveNode {}
+test('EventDispatcher', async ({ bench }) => {
+  let nodes!: Array<ReactiveNode>
 
-describe('EventDispatcher', () => {
-  bench('synthetic dispatch depth 20', () => {
-    const nodes: BenchChainNode[] = []
-    for (let i = 0; i < 20; i++) {
-      const node = new BenchChainNode()
-      if (i > 0) node.addParent(nodes[i - 1])
-      nodes.push(node)
-    }
+  await bench('synthetic dispatch depth 20', {
+    beforeAll: () => {
+      nodes = new Array(20).fill(0).map(() => new ReactiveNode())
+      for (let i = 0; i < 20; i++) {
+        nodes[i].addParent(nodes[i - 1])
+      }
+    },
+    afterAll: () => {
+      nodes.forEach(node => node.dispose())
+      nodes.length = 0
+    },
+  }, () => {
     nodes[19]._eventDispatcher.dispatchEvent('bench-event', 1, true)
-    for (const node of nodes) node.dispose()
-  })
+  }).run(BENCH_OPTIONS)
 })

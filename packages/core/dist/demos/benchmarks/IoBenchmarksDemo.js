@@ -58,51 +58,89 @@ function labelAfterArrow(fullName) {
 function benchmarkKey(groupName, name) {
     return `${groupName}\0${name}`;
 }
+function latencyMetrics(latency) {
+    if (!latency)
+        return {};
+    return {
+        mean: latency.mean,
+        median: latency.p50,
+        rme: latency.rme,
+    };
+}
+function normalizeReport(raw) {
+    if (!raw || typeof raw !== 'object')
+        return null;
+    const report = raw;
+    if (Array.isArray(report.testResults)) {
+        const groups = [];
+        for (const file of report.testResults) {
+            for (const assertion of file?.assertionResults ?? []) {
+                const benchmarks = [];
+                for (const benchmark of assertion.benchmarks ?? []) {
+                    for (const task of benchmark.tasks ?? []) {
+                        benchmarks.push({
+                            name: task.name,
+                            metrics: latencyMetrics(task.latency),
+                        });
+                    }
+                }
+                groups.push({ fullName: assertion.fullName, benchmarks });
+            }
+        }
+        return { groups };
+    }
+    if (Array.isArray(report.files)) {
+        const groups = [];
+        for (const file of report.files) {
+            for (const group of file.groups ?? []) {
+                groups.push({
+                    fullName: group.fullName,
+                    benchmarks: (group.benchmarks ?? []).map((benchmark) => ({
+                        name: String(benchmark.name),
+                        metrics: benchmark,
+                    })),
+                });
+            }
+        }
+        return { groups };
+    }
+    return null;
+}
 function indexBenchmarks(report) {
     const map = new Map();
     if (!report)
         return map;
-    for (const file of report.files) {
-        for (const group of file.groups) {
-            for (const benchmark of group.benchmarks) {
-                map.set(benchmarkKey(group.fullName, benchmark.name), benchmark);
-            }
+    for (const group of report.groups) {
+        for (const benchmark of group.benchmarks) {
+            map.set(benchmarkKey(group.fullName, benchmark.name), benchmark.metrics);
         }
     }
     return map;
 }
 function collectGroupNames(current, baseline) {
     const names = new Set();
-    for (const file of current.files) {
-        for (const group of file.groups)
-            names.add(group.fullName);
-    }
+    for (const group of current.groups)
+        names.add(group.fullName);
     if (baseline) {
-        for (const file of baseline.files) {
-            for (const group of file.groups)
-                names.add(group.fullName);
-        }
+        for (const group of baseline.groups)
+            names.add(group.fullName);
     }
     return [...names].sort((a, b) => a.localeCompare(b));
 }
 function collectBenchmarkNames(groupName, current, baseline) {
     const names = new Set();
-    for (const file of current.files) {
-        for (const group of file.groups) {
+    for (const group of current.groups) {
+        if (group.fullName !== groupName)
+            continue;
+        for (const benchmark of group.benchmarks)
+            names.add(benchmark.name);
+    }
+    if (baseline) {
+        for (const group of baseline.groups) {
             if (group.fullName !== groupName)
                 continue;
             for (const benchmark of group.benchmarks)
                 names.add(benchmark.name);
-        }
-    }
-    if (baseline) {
-        for (const file of baseline.files) {
-            for (const group of file.groups) {
-                if (group.fullName !== groupName)
-                    continue;
-                for (const benchmark of group.benchmarks)
-                    names.add(benchmark.name);
-            }
         }
     }
     return [...names].sort((a, b) => a.localeCompare(b));
@@ -224,8 +262,13 @@ export class IoBenchmarksDemo extends IoElement {
             }),
         ])
             .then(([current, baseline]) => {
-            this.#report = current;
-            this.#baseline = baseline;
+            const report = normalizeReport(current);
+            if (!report)
+                throw new Error('Unrecognized benchmark report format');
+            this.#report = report;
+            this.#baseline = baseline ? normalizeReport(baseline) : null;
+            if (baseline && !this.#baseline)
+                throw new Error('Unrecognized baseline report format');
             this.#status = 'ready';
             this.changed();
         })

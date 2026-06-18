@@ -54,11 +54,18 @@ OrbitControls imports `from 'three'`. Import map needs `"three": "./packages/thr
 
 ## Operational
 
-### Vitest bench split
-- `unit` project: browser tests; all `test:*` use `--project unit`.
-- `bench` project: Node-only, `--run`, no watch/browser.
-- `bench:baseline` → `results-baseline.json`; `bench` compares and writes `results.json`.
-- Bench files: relative imports to avoid barrel side-effects (Theme/Storage init); ESLint/tsconfig exclude `*.bench.ts`.
+### Vitest bench beforeEach trap
+- `beforeEach` in bench options runs **per sample**, not once per task — heavy setup (node trees, 1000 items) → 60s+ timeout + console flood.
+- Use `beforeAll`/`afterAll` for expensive fixtures; lightweight `beforeEach` only for reset.
+- Binding bench: 500 bindings → same 10 target props = "Improper usage detected!" spam (debug block). Each binding needs own target nodes.
+- `testTimeout: 120_000` on unit project for full suite (~3min browser bench).
+
+### Vitest v5 bench (beta.5)
+- `bench` fixture inside `test()` — no top-level `bench` import; use `benchSuite()` helper.
+- Browser instances need unique `name` (≠ project name): `unit-chromium`, `coverage-chromium`.
+- No separate bench project — `benchmark.include` on unit project; `vitest bench` auto-spawns `unit (bench)`.
+- `--compare` / `--outputJson` removed; use `--reporter=json --outputFile=` or `bench.from()` + `writeResult`.
+- JSON reporter format changed: `testResults[].assertionResults[].benchmarks[].tasks[].latency` (mean/p50/rme); old was `files[].groups[].benchmarks[]` flat stats. IoBenchmarksDemo normalizes both.
 
 ### io-three ToolBase pointers
 Per-viewport `WeakMap`s for hover/active; resolve viewport from `event.currentTarget`.

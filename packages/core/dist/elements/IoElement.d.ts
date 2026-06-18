@@ -109,11 +109,24 @@ export declare class IoElement extends HTMLElement {
     * @param {*} value - Attribute value.
     */
     setAttribute(attr: string, value: boolean | number | string): void;
-    /**
-     * Returns a vDOM-like representation of the element with children and attributes. This feature is used in testing.
-     */
-    toVDOM(): VDOMElement;
     Register(ioNodeConstructor: typeof IoElement): void;
 }
+/**
+ * Disposes EventDispatcher on an element.
+ */
+export declare const releaseEventDispatcher: (element: HTMLElement | IoElement) => void;
+/**
+ * Disposes EventDispatchers on element and all element descendants.
+ */
+export declare const releaseSubtreeEventDispatchers: (root: HTMLElement) => void;
+/**
+ * Clears native element children after releasing orphaned EventDispatchers.
+ */
+export declare const clearNativeElementChildren: (element: HTMLElement) => void;
+/**
+ * Disposes the element's children.
+ * @param {IoElement} element - Element to dispose children of.
+ */
+export declare const disposeChildren: (element: IoElement) => void;
 export declare const ioElement: (arg0?: IoElementProps | VDOMFactoryChildren, arg1?: VDOMFactoryChildren) => VDOMElement;
 export {};

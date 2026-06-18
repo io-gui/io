@@ -8,7 +8,7 @@ var IoElement_1;
 import { Property, ReactiveProperty } from '../decorators/Property.js';
 import { Register } from '../decorators/Register.js';
 import { ProtoChain } from '../core/ProtoChain.js';
-import { applyNativeElementProps, constructElement, createVDOMElement, disposeChildren, filterVDOMElements, toVDOM, clearNativeElementChildren, releaseSubtreeEventDispatchers, TEXT_TAG, getNodeVDOMTag, getTextVDOMContent } from '../vdom/VDOM.js';
+import { applyNativeElementProps, constructElement, createVDOMElement, filterVDOMElements, TEXT_TAG, getNodeVDOMTag, getTextVDOMContent } from '../vdom/VDOM.js';
 import { dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties } from '../nodes/ReactiveNode.js';
 import { addParent, initReactiveOwnerInternals, removeParent } from '../core/ReactiveCore.js';
 import { Binding } from '../core/Binding.js';
@@ -350,12 +350,6 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
                 HTMLElement.prototype.setAttribute.call(this, attr, String(value));
         }
     }
-    /**
-     * Returns a vDOM-like representation of the element with children and attributes. This feature is used in testing.
-     */
-    toVDOM() {
-        return toVDOM(this);
-    }
     Register(ioNodeConstructor) {
         Object.defineProperty(ioNodeConstructor.prototype, '_protochain', { value: new ProtoChain(ioNodeConstructor) });
         const localName = ioNodeConstructor.name.replace(/([a-z])([A-Z,0-9])/g, '$1-$2').toLowerCase();
@@ -382,4 +376,53 @@ IoElement = IoElement_1 = __decorate([
     Register
 ], IoElement);
 export { IoElement };
+/**
+ * Disposes EventDispatcher on an element.
+ */
+export const releaseEventDispatcher = function (element) {
+    if (element._eventDispatcher) {
+        element._eventDispatcher.dispose();
+        delete element._eventDispatcher;
+    }
+};
+/**
+ * Disposes EventDispatchers on element and all element descendants.
+ */
+export const releaseSubtreeEventDispatchers = function (root) {
+    const elements = root.querySelectorAll('*');
+    for (let i = elements.length; i--;) {
+        releaseEventDispatcher(elements[i]);
+    }
+    releaseEventDispatcher(root);
+};
+/**
+ * Clears native element children after releasing orphaned EventDispatchers.
+ */
+export const clearNativeElementChildren = function (element) {
+    for (let i = element.childNodes.length; i--;) {
+        const child = element.childNodes[i];
+        if (child.nodeType === Node.ELEMENT_NODE) {
+            releaseSubtreeEventDispatchers(child);
+        }
+    }
+    element.textContent = '';
+};
+/**
+ * Disposes the element's children.
+ * @param {IoElement} element - Element to dispose children of.
+ */
+export const disposeChildren = function (element) {
+    // NOTE: This rAF ensures that element's change queue is emptied before disposing.
+    requestAnimationFrame(() => {
+        const elements = Array.from(element.querySelectorAll('*')).concat([element]);
+        for (let i = elements.length; i--;) {
+            if (typeof elements[i].dispose === 'function') {
+                elements[i].dispose();
+            }
+            else {
+                releaseEventDispatcher(elements[i]);
+            }
+        }
+    });
+};
 export const ioElement = IoElement.vConstructor;

@@ -1,3 +1,3 @@
 # Current Focus
 
-(none — archive/working memory cleanup)
+Benchmarks fixed: beforeEach ran per sample (not once), EventDispatcher timeout, Binding improper usage flood.

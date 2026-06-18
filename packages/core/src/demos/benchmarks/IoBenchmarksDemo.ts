@@ -56,53 +56,102 @@ function benchmarkKey(groupName: string, name: string) {
   return `${groupName}\0${name}`
 }
 
-function indexBenchmarks(report: { files: Array<{ groups: Array<{ fullName: string; benchmarks: Array<Record<string, number | string>> }> }> } | null) {
-  const map = new Map<string, Record<string, number | string>>()
-  if (!report) return map
-  for (const file of report.files) {
-    for (const group of file.groups) {
-      for (const benchmark of group.benchmarks) {
-        map.set(benchmarkKey(group.fullName, benchmark.name), benchmark)
+type BenchmarkMetrics = Record<string, number | string | undefined>
+
+type NormalizedGroup = {
+  fullName: string
+  benchmarks: Array<{ name: string; metrics: BenchmarkMetrics }>
+}
+
+type NormalizedReport = {
+  groups: NormalizedGroup[]
+}
+
+function latencyMetrics(latency: Record<string, number> | undefined): BenchmarkMetrics {
+  if (!latency) return {}
+  return {
+    mean: latency.mean,
+    median: latency.p50,
+    rme: latency.rme,
+  }
+}
+
+function normalizeReport(raw: unknown): NormalizedReport | null {
+  if (!raw || typeof raw !== 'object') return null
+  const report = raw as Record<string, unknown>
+
+  if (Array.isArray(report.testResults)) {
+    const groups: NormalizedGroup[] = []
+    for (const file of report.testResults) {
+      for (const assertion of file?.assertionResults ?? []) {
+        const benchmarks: NormalizedGroup['benchmarks'] = []
+        for (const benchmark of assertion.benchmarks ?? []) {
+          for (const task of benchmark.tasks ?? []) {
+            benchmarks.push({
+              name: task.name,
+              metrics: latencyMetrics(task.latency),
+            })
+          }
+        }
+        groups.push({ fullName: assertion.fullName, benchmarks })
       }
+    }
+    return { groups }
+  }
+
+  if (Array.isArray(report.files)) {
+    const groups: NormalizedGroup[] = []
+    for (const file of report.files) {
+      for (const group of file.groups ?? []) {
+        groups.push({
+          fullName: group.fullName,
+          benchmarks: (group.benchmarks ?? []).map((benchmark: Record<string, unknown>) => ({
+            name: String(benchmark.name),
+            metrics: benchmark as BenchmarkMetrics,
+          })),
+        })
+      }
+    }
+    return { groups }
+  }
+
+  return null
+}
+
+function indexBenchmarks(report: NormalizedReport | null) {
+  const map = new Map<string, BenchmarkMetrics>()
+  if (!report) return map
+  for (const group of report.groups) {
+    for (const benchmark of group.benchmarks) {
+      map.set(benchmarkKey(group.fullName, benchmark.name), benchmark.metrics)
     }
   }
   return map
 }
 
-function collectGroupNames(
-  current: { files: Array<{ groups: Array<{ fullName: string; benchmarks: Array<Record<string, number | string>> }> }> },
-  baseline: typeof current | null,
-) {
+function collectGroupNames(current: NormalizedReport, baseline: NormalizedReport | null) {
   const names = new Set<string>()
-  for (const file of current.files) {
-    for (const group of file.groups) names.add(group.fullName)
-  }
+  for (const group of current.groups) names.add(group.fullName)
   if (baseline) {
-    for (const file of baseline.files) {
-      for (const group of file.groups) names.add(group.fullName)
-    }
+    for (const group of baseline.groups) names.add(group.fullName)
   }
   return [...names].sort((a, b) => a.localeCompare(b))
 }
 
 function collectBenchmarkNames(
   groupName: string,
-  current: { files: Array<{ groups: Array<{ fullName: string; benchmarks: Array<Record<string, number | string>> }> }> },
-  baseline: typeof current | null,
+  current: NormalizedReport,
+  baseline: NormalizedReport | null,
 ) {
   const names = new Set<string>()
-  for (const file of current.files) {
-    for (const group of file.groups) {
-      if (group.fullName !== groupName) continue
-      for (const benchmark of group.benchmarks) names.add(benchmark.name)
-    }
+  for (const group of current.groups) {
+    if (group.fullName !== groupName) continue
+    for (const benchmark of group.benchmarks) names.add(benchmark.name)
   }
   if (baseline) {
-    for (const file of baseline.files) {
-      for (const group of file.groups) {
-        if (group.fullName !== groupName) continue
-        for (const benchmark of group.benchmarks) names.add(benchmark.name)
-      }
+    for (const group of baseline.groups) {
+      if (group.fullName !== groupName) continue
+      for (const benchmark of group.benchmarks) names.add(benchmark.name)
     }
   }
   return [...names].sort((a, b) => a.localeCompare(b))
@@ -225,8 +274,11 @@ export class IoBenchmarksDemo extends IoElement {
       }),
     ])
       .then(([current, baseline]) => {
-        this.#report = current
-        this.#baseline = baseline
+        const report = normalizeReport(current)
+        if (!report) throw new Error('Unrecognized benchmark report format')
+        this.#report = report
+        this.#baseline = baseline ? normalizeReport(baseline) : null
+        if (baseline && !this.#baseline) throw new Error('Unrecognized baseline report format')
         this.#status = 'ready'
         this.changed()
       })
@@ -264,7 +316,7 @@ export class IoBenchmarksDemo extends IoElement {
 
   renderGroup(
     groupName: string,
-    baselineIndex: Map<string, Record<string, number | string>>,
+    baselineIndex: Map<string, BenchmarkMetrics>,
   ) {
     const currentIndex = indexBenchmarks(this.#report)
     const benchmarkNames = collectBenchmarkNames(groupName, this.#report, this.#baseline)

@@ -1,9 +1,9 @@
-import { describe } from 'vitest'
-import { bench } from '../testing/bench.js'
+import { test } from 'vitest'
 import { Register } from '../decorators/Register.js'
 import { IoElement } from './IoElement.js'
-import { div } from './IoNative.js'
+import { div, span } from './IoNative.js'
 import { text, VDOMElement } from '../vdom/VDOM.js'
+import { BENCH_OPTIONS } from '../testing.js'
 
 @Register
 class BenchRenderElement extends IoElement {
@@ -16,35 +16,63 @@ class BenchRenderElement extends IoElement {
   }
 }
 
-describe('IoElement', () => {
-  bench('render 200 div nodes', () => {
-    const el = new BenchRenderElement()
-    el.renderNodes()
-    el.dispose()
-  })
+test('IoElement', async ({ bench }) => {
+  let el!: IoElement
+  let vdomNodes!: Array<VDOMElement>
+  await bench('render 200 div nodes', {
+    beforeEach: () => {
+      el = new BenchRenderElement()
+      vdomNodes = new Array(200).fill(0).map((_, i) => div({key: i}))
+    },
+    afterEach: () => {
+      el.dispose()
+      vdomNodes.length = 0
+    },
+  }, () => {
+    el.render(vdomNodes)
+  }).run(BENCH_OPTIONS)
 
-  bench('re-render 200 unchanged', () => {
-    const el = new BenchRenderElement()
-    el.renderNodes()
-    el.renderNodes(0)
-    el.dispose()
-  })
+  await bench('re-render 200 identical nodes', {
+    beforeEach: () => {
+      el = new BenchRenderElement()
+      vdomNodes = new Array(200).fill(0).map((_, i) => div({key: i}))
+      el.render(vdomNodes)
+      vdomNodes = new Array(200).fill(0).map((_, i) => div({key: i}))
+    },
+    afterEach: () => {
+      el.dispose()
+      vdomNodes.length = 0
+    },
+  }, () => {
+    el.render(vdomNodes)
+  }).run(BENCH_OPTIONS)
 
-  bench('re-render 10 changed', () => {
-    const el = new BenchRenderElement()
-    el.renderNodes()
-    el.renderNodes(10)
-    el.dispose()
-  })
+  await bench('re-render 200 changed tag nodes', {
+    beforeEach: () => {
+      el = new BenchRenderElement()
+      vdomNodes = new Array(200).fill(0).map((_, i) => div({key: i}))
+      el.render(vdomNodes)
+      vdomNodes = new Array(200).fill(0).map((_, i) => span({key: i}))
+    },
+    afterEach: () => {
+      el.dispose()
+      vdomNodes.length = 0
+    },
+  }, () => {
+    el.render(vdomNodes)
+  }).run(BENCH_OPTIONS)
 
-  bench('render 200 mixed text and div nodes', () => {
-    const nodes: VDOMElement[] = []
-    for (let i = 0; i < 100; i++) {
-      nodes.push(text(`label-${i}`))
-      nodes.push(div({key: i, class: `n${i}`}))
-    }
-    const el = new BenchRenderElement()
-    el.render(nodes)
-    el.dispose()
-  })
+  await bench('render 200 mixed text and div nodes', {
+    beforeEach: () => {
+      el = new BenchRenderElement()
+      vdomNodes = new Array(100).fill(0).map((_, i) => text(`label-${i}`))
+      vdomNodes.push(...new Array(100).fill(0).map((_, i) => div({key: i, class: `n${i}`})))
+    },
+    afterEach: () => {
+      el.dispose()
+      vdomNodes.length = 0
+    },
+  }, () => {
+    el.render(vdomNodes)
+  }).run(BENCH_OPTIONS)
 })
