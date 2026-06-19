@@ -32,9 +32,10 @@ export interface ReactiveNodeConstructor {
   prototype: ReactiveNodeConstructor | object | HTMLElement
 }
 
-export interface Json {
-  [key: string]: string | number | boolean | Json | Json[]
-}
+export type JsonPrimitive = string | number | boolean | null
+export type JsonObject = { [key: string]: Json }
+export type JsonArray = Json[]
+export type Json = JsonPrimitive | JsonObject | JsonArray
 
 export const NODES = {
   active: new Set<ReactiveNode>(),
@@ -191,26 +192,27 @@ export class ReactiveNode extends Object {
   }
 
   applyJSON(json: Json) {
+    const jsonObject = json as JsonObject
     const primitiveProps: Json = {}
-    for (const name in json) {
+    for (const name in jsonObject) {
       const propDef = this._reactiveProperties.get(name as string)!
       const value = propDef.value
       const type = propDef.type
       if (typeof value === 'object' && value !== null) {
         if (typeof (value as { applyJSON?: (json: unknown) => void }).applyJSON === 'function') {
-          (value as { applyJSON: (json: unknown) => void }).applyJSON(json[name])
+          (value as { applyJSON: (json: unknown) => void }).applyJSON(jsonObject[name])
         } else {
           console.warn(`ReactiveNode.applyJSON(): Property "${name}" does not have applyJSON() method implemented!`)
           continue
         }
       } else {
         debug: {
-          if (type === json.constructor) {
+          if (type === jsonObject.constructor) {
             console.warn(`ReactiveNode.applyJSON(): Property "${name}" is not a ${type.name}!`, json)
             continue
           }
         }
-        primitiveProps[name] = json[name]
+        primitiveProps[name] = jsonObject[name]
       }
     }
     this.setProperties(primitiveProps)

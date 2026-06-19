@@ -1,10 +1,6 @@
-import { ReactiveNode } from '../nodes/ReactiveNode.js'
+import { JsonArray, ReactiveNode } from '../nodes/ReactiveNode.js'
 import { IoElement } from '../elements/IoElement.js'
 import { isReactiveOwner } from './ReactiveCore.js'
-
-interface Json {
-  [key: string]: string | number | boolean | Json | Json[]
-}
 
 /**
  * Reactive array of {@link ReactiveNode} items owned by a parent node or element.
@@ -292,11 +288,11 @@ export class NodeArray<N extends ReactiveNode> extends Array<N> {
     }
   }
   /** Serialize each item via its own {@link ReactiveNode.toJSON}. */
-  toJSON(): Json[] {
-    return this.map((item: N) => item.toJSON())
+  toJSON(): JsonArray {
+    return this.map((item: N) => item.toJSON()) as JsonArray
   }
   /** Hydrate each item from wire-format JSON via {@link ReactiveNode.applyJSON}. */
-  applyJSON(json: Json[]) {
+  applyJSON(json: JsonArray) {
     for (let i = 0; i < json.length; i++) {
       this[i].applyJSON(json[i])
     }

@@ -22,9 +22,12 @@ export interface ReactiveNodeConstructor {
     name?: string;
     prototype: ReactiveNodeConstructor | object | HTMLElement;
 }
-export interface Json {
-    [key: string]: string | number | boolean | Json | Json[];
-}
+export type JsonPrimitive = string | number | boolean | null;
+export type JsonObject = {
+    [key: string]: Json;
+};
+export type JsonArray = Json[];
+export type Json = JsonPrimitive | JsonObject | JsonArray;
 export declare const NODES: {
     active: Set<ReactiveNode>;
     disposed: WeakSet<ReactiveNode>;

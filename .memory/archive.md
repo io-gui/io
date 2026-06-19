@@ -69,3 +69,6 @@ OrbitControls imports `from 'three'`. Import map needs `"three": "./packages/thr
 
 ### io-three ToolBase pointers
 Per-viewport `WeakMap`s for hover/active; resolve viewport from `event.currentTarget`.
+
+### Json type refactor review (Jun 19)
+`Json` changed from object-interface to value-union (`JsonPrimitive|JsonObject|JsonArray`, +null). Compiles clean. Found: NodeArray.ts still has stale LOCAL `interface Json` (object-only) shadowing import; `applyJSON(json: Json[])` uses local, `toJSON(): JsonArray` uses imported → inconsistent. Should delete local iface, import Json. Also pre-existing debug bug in ReactiveNode.applyJSON: `if (type === jsonObject.constructor)` always compares to Object + msg inverted.

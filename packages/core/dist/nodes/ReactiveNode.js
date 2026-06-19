@@ -123,14 +123,15 @@ let ReactiveNode = ReactiveNode_1 = class ReactiveNode extends Object {
         return out;
     }
     applyJSON(json) {
+        const jsonObject = json;
         const primitiveProps = {};
-        for (const name in json) {
+        for (const name in jsonObject) {
             const propDef = this._reactiveProperties.get(name);
             const value = propDef.value;
             const type = propDef.type;
             if (typeof value === 'object' && value !== null) {
                 if (typeof value.applyJSON === 'function') {
-                    value.applyJSON(json[name]);
+                    value.applyJSON(jsonObject[name]);
                 }
                 else {
                     console.warn(`ReactiveNode.applyJSON(): Property "${name}" does not have applyJSON() method implemented!`);
@@ -139,12 +140,12 @@ let ReactiveNode = ReactiveNode_1 = class ReactiveNode extends Object {
             }
             else {
                 debug: {
-                    if (type === json.constructor) {
+                    if (type === jsonObject.constructor) {
                         console.warn(`ReactiveNode.applyJSON(): Property "${name}" is not a ${type.name}!`, json);
                         continue;
                     }
                 }
-                primitiveProps[name] = json[name];
+                primitiveProps[name] = jsonObject[name];
             }
         }
         this.setProperties(primitiveProps);

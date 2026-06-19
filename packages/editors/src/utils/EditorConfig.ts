@@ -1,4 +1,4 @@
-import { IoElement, IoGl, Theme, AnyConstructor, VDOMElement, ReactiveNode, Color } from '@io-gui/core'
+import { IoElement, IoGl, Theme, AnyConstructor, VDOMElement, ReactiveNode, Color, JsonObject } from '@io-gui/core'
 import { ioString, ioNumber, ioSwitch, ioField, ioButton } from '@io-gui/inputs'
 import { MenuOption, MenuOptionProps, ioOptionSelect } from '@io-gui/menus'
 import { ioNumberSlider } from '@io-gui/sliders'
@@ -257,7 +257,7 @@ export function getEditorConfig(object: object, propertyConfigs: PropertyConfig[
       for (const [key, value] of Object.entries(props)) {
         // TODO: Generalize for other objects that should be cloned / unique.
         if (value instanceof MenuOption) {
-          props[key] = new MenuOption({}).fromJSON(value.toJSON())
+          props[key] = new MenuOption({}).fromJSON(value.toJSON() as JsonObject) as MenuOptionProps
         }
       }
     }

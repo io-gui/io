@@ -13,7 +13,6 @@ export const $ThemeID = $({
   key: 'theme-' + THEME_VERSION
 })
 
-
 export type ThemeJSON = Record<string, number>
 
 export const THEMES: Record<string, ThemeJSON> = {
