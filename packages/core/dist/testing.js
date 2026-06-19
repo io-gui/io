@@ -1,6 +1,6 @@
 export const BENCH_OPTIONS = {
-    time: 3000,
-    warmupTime: 500,
-    warmupIterations: 5,
-    iterations: 10,
+    time: 2000,
+    warmupTime: 1000,
+    warmupIterations: 2,
+    iterations: 5,
 };
