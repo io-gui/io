@@ -47,4 +47,3 @@ import{IoElement,IoOverlaySingleton,NodeArray,Property,ReactiveNode,ReactiveProp
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */export{IoDivider,IoDrawer,IoPanel,IoSplit,IoTab,IoTabs,IoTabsHamburger,Panel,Split,Tab,hasFlexGrow,ioDivider,ioDrawer,ioPanel,ioSplit,ioTab,ioTabDropRectSingleton,ioTabs,ioTabsHamburger,ioTabsHamburgerMenuSingleton,parseFlexBasis,tabDragIconSingleton};
-//# sourceMappingURL=index.js.map

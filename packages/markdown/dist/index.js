@@ -62,4 +62,3 @@ function deepFreeze(e){return e instanceof Map?e.clear=e.delete=e.set=()=>{throw
 * THE SOFTWARE.
 */
 export{IoMarkdown,MD_DARK_THEME,MD_LIGHT_THEME,ioMarkdown};
-//# sourceMappingURL=index.js.map

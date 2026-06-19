@@ -47,4 +47,3 @@ import{IoElement,IoGl,Property,ReactiveProperty,Register}from"@io-gui/core";impo
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */export{IoNumberSlider,IoNumberSliderRange,IoSlider,IoSlider2d,IoSliderBase,IoSliderRange,ioNumberSlider,ioNumberSliderRange,ioSlider,ioSlider2d,ioSliderRange};
-//# sourceMappingURL=index.js.map

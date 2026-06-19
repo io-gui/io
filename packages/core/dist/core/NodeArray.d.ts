@@ -1,8 +1,5 @@
 import { JsonArray, ReactiveNode } from '../nodes/ReactiveNode.js';
 import { IoElement } from '../elements/IoElement.js';
-interface Json {
-    [key: string]: string | number | boolean | Json | Json[];
-}
 /**
  * Reactive array of {@link ReactiveNode} items owned by a parent node or element.
  *
@@ -49,6 +46,5 @@ export declare class NodeArray<N extends ReactiveNode> extends Array<N> {
     /** Serialize each item via its own {@link ReactiveNode.toJSON}. */
     toJSON(): JsonArray;
     /** Hydrate each item from wire-format JSON via {@link ReactiveNode.applyJSON}. */
-    applyJSON(json: Json[]): void;
+    applyJSON(json: JsonArray): void;
 }
-export {};

@@ -48,4 +48,3 @@ import{Color,HTML_ELEMENTS,IoElement,IoGl,IoOverlaySingleton,Property,ReactiveNo
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */export{IoBreadcrumbs,IoContextEditorSingleton,IoInspector,IoObject,IoPropertyEditor,SKIPPED_PROPERTIES,getAllPropertyNames,getEditorConfig,getEditorGroups,getEditorWidget,ioBreadcrumbs,ioInspector,ioObject,ioPropertyEditor,registerEditorConfig,registerEditorGroups,registerEditorWidget};
-//# sourceMappingURL=index.js.map

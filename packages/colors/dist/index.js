@@ -70,4 +70,3 @@ var rgb2hsl=function(rgb){const r=rgb[0]/255,g=rgb[1]/255,b=rgb[2]/255,min=Math.
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */export{IoColorBase,IoColorPanelSingleton,IoColorPicker,IoColorRgba,IoColorSlider,IoColorSliderA,IoColorSliderB,IoColorSliderG,IoColorSliderH,IoColorSliderHs,IoColorSliderL,IoColorSliderR,IoColorSliderS,IoColorSliderSl,IoColorSliderSv,IoColorSliderV,IoColorSwatch,hsl2rgb,hsv2rgb,ioColorPicker,ioColorRgba,ioColorSlider,ioColorSliderA,ioColorSliderB,ioColorSliderG,ioColorSliderH,ioColorSliderHs,ioColorSliderL,ioColorSliderR,ioColorSliderS,ioColorSliderSl,ioColorSliderSv,ioColorSliderV,ioColorSwatch,rgb2hsl,rgb2hsv};
-//# sourceMappingURL=index.js.map

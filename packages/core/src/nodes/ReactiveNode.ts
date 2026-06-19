@@ -178,7 +178,7 @@ export class ReactiveNode extends Object {
   }
 
   toJSON(): Json {
-    const out: Json = {}
+    const out: JsonObject = {}
     for (const key of this._reactiveProperties.keys()) {
       if (key === 'reactivity') continue
       const value = this._reactiveProperties.get(key as string)!.value
@@ -193,7 +193,7 @@ export class ReactiveNode extends Object {
 
   applyJSON(json: Json) {
     const jsonObject = json as JsonObject
-    const primitiveProps: Json = {}
+    const primitiveProps: JsonObject = {}
     for (const name in jsonObject) {
       const propDef = this._reactiveProperties.get(name as string)!
       const value = propDef.value
@@ -207,7 +207,7 @@ export class ReactiveNode extends Object {
         }
       } else {
         debug: {
-          if (type === jsonObject.constructor) {
+          if (type && jsonObject[name]?.constructor !== type) {
             console.warn(`ReactiveNode.applyJSON(): Property "${name}" is not a ${type.name}!`, json)
             continue
           }

@@ -47,4 +47,3 @@ import{IoElement,IoOverlaySingleton,Property,ReactiveProperty,Register,ThemeSing
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */export{IoBoolean,IoButton,IoField,IoNumber,IoNumberLadderSingleton,IoNumberLadderStep,IoString,IoSwitch,ioBoolean,ioButton,ioField,ioNumber,ioNumberLadderStep,ioString,ioSwitch};
-//# sourceMappingURL=index.js.map

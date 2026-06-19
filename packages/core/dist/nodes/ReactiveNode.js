@@ -140,7 +140,7 @@ let ReactiveNode = ReactiveNode_1 = class ReactiveNode extends Object {
             }
             else {
                 debug: {
-                    if (type === jsonObject.constructor) {
+                    if (type && jsonObject[name]?.constructor !== type) {
                         console.warn(`ReactiveNode.applyJSON(): Property "${name}" is not a ${type.name}!`, json);
                         continue;
                     }

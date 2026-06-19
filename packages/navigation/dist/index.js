@@ -47,4 +47,3 @@ import{IoElement,Property,ReactiveProperty,Register,ThemeSingleton,clearFocusBac
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */export{IoCollapsible,IoNavigator,IoNavigatorDrawer,IoSelector,ioCollapsible,ioNavigator,ioNavigatorDrawer,ioSelector};
-//# sourceMappingURL=index.js.map

@@ -47,4 +47,3 @@ import{IoElement,ReactiveNode,ReactiveProperty,Register}from"@io-gui/core";funct
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */export{IconsetDB,IconsetSingleton,IoIcon,ioIcon};
-//# sourceMappingURL=index.js.map

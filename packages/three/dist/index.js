@@ -48,4 +48,3 @@ import{IoElement,Property,ReactiveNode,ReactiveProperty,Register,div}from"@io-gu
 * THE SOFTWARE.
 */
 export{IoBuildGeometry,IoEuler,IoMatrix2,IoMatrix3,IoMatrix4,IoQuaternion,IoThreeExample,IoThreeViewport,IoVector2,IoVector3,IoVector4,ThreeApplet,ToolBase,ViewCameras,ioBuildGeometry,ioEuler,ioMatrix2,ioMatrix3,ioMatrix4,ioQuaternion,ioThreeExample,ioThreeViewport,ioVector2,ioVector3,ioVector4};
-//# sourceMappingURL=index.js.map

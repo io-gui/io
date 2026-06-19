@@ -60,7 +60,7 @@ export default defineConfig({
           /^\s*!|Copyright|@license|@License|@preserve|@copyright|SPDX-License-Identifier/i,
       },
     },
-    sourcemap: true,
+    sourcemap: false,
     rollupOptions: {
       external: (id) => {
         return externals.some((ext) =>

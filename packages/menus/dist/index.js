@@ -47,4 +47,3 @@ import{IoElement,IoOverlaySingleton,NodeArray,Property,ReactiveNode,ReactiveProp
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */export{IoContextMenu,IoMenuHamburger,IoMenuItem,IoMenuOptions,IoMenuTree,IoMenuTreeBranch,IoOptionSelect,MenuOption,ioContextMenu,ioMenuHamburger,ioMenuItem,ioMenuOptions,ioMenuTree,ioMenuTreeBranch,ioOptionSelect,onOverlayPointerdown,onOverlayPointermove,onOverlayPointeup};
-//# sourceMappingURL=index.js.map
