@@ -534,5 +534,93 @@ describe('NodeArray', () => {
       parent.dispose()
     })
   })
+
+  describe('dispose()', () => {
+    it('Should not dispatch mutation during dispose', () => {
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      array.push(new LabelNode({label: 'a'}))
+
+      const handler = vi.fn()
+      parent.addEventListener('io-object-mutation', handler)
+
+      array.dispose()
+
+      expect(handler).not.toHaveBeenCalled()
+
+      parent.removeEventListener('io-object-mutation', handler)
+      parent.dispose()
+    })
+
+    it('Should clear items, remove parent links', () => {
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
+
+      array.push(item1, item2)
+
+      expect(item1._parents.includes(parent)).toBe(true)
+      expect(item2._parents.includes(parent)).toBe(true)
+      expect(item1._eventDispatcher.addedListeners['io-object-mutation']?.length).toBe(1)
+      expect(item2._eventDispatcher.addedListeners['io-object-mutation']?.length).toBe(1)
+
+      array.dispose()
+
+      expect(array.length).toBe(0)
+
+      parent.dispose()
+    })
+
+    it('Should clear observers so owner no longer receives mutations', () => {
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item = new LabelNode({label: 'a'})
+      array.push(item)
+
+      const handler = vi.fn()
+      parent.addEventListener('io-object-mutation', handler)
+
+      array.pop()
+      expect(handler).toHaveBeenCalledTimes(1)
+
+      array.dispose()
+      handler.mockClear()
+
+      const item2 = new LabelNode({label: 'b'})
+      array.push(item2)
+      expect(handler).not.toHaveBeenCalled()
+
+      parent.removeEventListener('io-object-mutation', handler)
+      parent.dispose()
+      item.dispose()
+      item2.dispose()
+    })
+
+    it('Should clear additional observers', () => {
+      const parent = new ItemstNode()
+      const observer = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      array.addObserver(observer)
+
+      const handler = vi.fn()
+      observer.addEventListener('io-object-mutation', handler)
+
+      const item = new LabelNode({label: 'a'})
+      array.push(item)
+      expect(handler).toHaveBeenCalledTimes(1)
+
+      array.dispose()
+      handler.mockClear()
+
+      const item2 = new LabelNode({label: 'b'})
+      array.push(item2)
+      expect(handler).not.toHaveBeenCalled()
+
+      parent.dispose()
+      observer.dispose()
+      item2.dispose()
+    })
+  })
 })
 

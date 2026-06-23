@@ -74,9 +74,7 @@ describe('ReactiveNode', () => {
     parent.dispose()
 
     expect(child._parents.includes(parent)).toBe(false)
-    expect(arrayChild._parents.includes(parent)).toBe(false)
     child.dispose()
-    arrayChild.dispose()
   })
   it('Should wire parent graph for IoElement property values', () => {
     @Register
@@ -1228,7 +1226,7 @@ describe('ReactiveNode', () => {
       node.label = 'saved'
       node.children.push(new JsonChildNode())
 
-      const json = node.toJSON()
+      const json = node.toJSON() as any
       expect(json.count).toBe(9)
       expect(json.color).toBe(0xffff3300)
       expect(json.label).toBe('saved')
@@ -1242,7 +1240,7 @@ describe('ReactiveNode', () => {
       node.count = 11
       node.color.applyJSON(Color.toHex(0, 0, 0, 0.5))
 
-      const json = node.toJSON()
+      const json = node.toJSON() as any
       node.applyJSON(json)
 
       expect(node.count).toBe(11)

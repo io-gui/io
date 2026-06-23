@@ -1,3 +1,3 @@
 # Current Focus
 
-Benchmarks fixed: beforeEach ran per sample (not once), EventDispatcher timeout, Binding improper usage flood.
+NodeArray.dispose(): silent teardown (super.splice in withInternalOperation), parent dispose calls NodeArray.dispose() first.

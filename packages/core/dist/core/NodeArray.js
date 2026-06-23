@@ -292,4 +292,19 @@ export class NodeArray extends Array {
             this[i].applyJSON(json[i]);
         }
     }
+    dispose() {
+        const nodes = [...this];
+        for (const item of nodes) {
+            if (isReactiveOwner(item)) {
+                item.removeEventListener('io-object-mutation', this.itemMutated);
+                item.removeParent(this.node);
+            }
+        }
+        this.withInternalOperation(() => {
+            super.splice(0, this.length);
+        });
+        // TODO: Reconsider if nodes in NodeArray should be disposed automatically
+        // for (const node of nodes) node.dispose()
+        this._observers.clear();
+    }
 }

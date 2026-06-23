@@ -2,7 +2,11 @@
 
 ## Patterns
 
-### Io events — bubbling + static Listeners
+### NodeArray.dispose
+- Don't use `this.splice()` in dispose — override always dispatches mutation
+- Use manual listener/parent cleanup + `withInternalOperation(() => super.splice(...))` — proxy length set respects internal op flag
+- Parent `dispose()` must call `NodeArray.dispose()` BEFORE `detachChildParents()` — avoids double removeParent warnings, disposes array children
+
 Source: `dispatch(name, detail, true)`. Consumers: `static get Listeners()` maps event → handler. No manual add/remove in `ready()`.
 
 ### IoColorPicker / IoColorPanel — panel owns picker via `src`

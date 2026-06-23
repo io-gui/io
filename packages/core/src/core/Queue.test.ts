@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { throttle, debounce, nextQueue, ReactiveNode } from '@io-gui/core'
+import { throttle, debounce, nextQueue, ReactiveNode, CallbackFunction } from '@io-gui/core'
 
 describe('Queue', () => {
 
@@ -17,9 +17,9 @@ describe('Queue', () => {
     it('Should execute leading edge and queue trailing with latest arg', async () => {
       const args: string[] = []
       const func = (a: string) => { args.push(a) }
-      throttle(func, 'first')  // Leading: executes with 'first'
-      throttle(func, 'second') // Updates trailing arg
-      throttle(func, 'third')  // Updates trailing arg
+      throttle(func as CallbackFunction, 'first')  // Leading: executes with 'first'
+      throttle(func as CallbackFunction, 'second') // Updates trailing arg
+      throttle(func as CallbackFunction, 'third')  // Updates trailing arg
       expect(args).toEqual(['first']) // Only leading executed so far
       await nextQueue()
       expect(args).toEqual(['first', 'third']) // Trailing executes with last arg
@@ -111,9 +111,9 @@ describe('Queue', () => {
     it('Should use latest argument', async () => {
       let arg = ''
       const func = (a: string) => { arg = a }
-      debounce(func, 'first')
-      debounce(func, 'second')
-      debounce(func, 'third')
+      debounce(func as CallbackFunction, 'first')
+      debounce(func as CallbackFunction, 'second')
+      debounce(func as CallbackFunction, 'third')
       await nextQueue()
       expect(arg).toBe('third')
     })
@@ -160,8 +160,8 @@ describe('Queue', () => {
       const throttleFunc = (a: string) => { throttleArgs.push(a) }
       const debounceFunc = (a: string) => { debounceArgs.push(a) }
 
-      throttle(throttleFunc, 'a') // Leading executes
-      debounce(debounceFunc, 'x') // Queued
+      throttle(throttleFunc as CallbackFunction, 'a') // Leading executes
+      debounce(debounceFunc as CallbackFunction, 'x') // Queued
 
       expect(throttleArgs).toEqual(['a'])
       expect(debounceArgs).toEqual([])

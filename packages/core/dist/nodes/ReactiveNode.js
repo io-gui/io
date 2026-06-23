@@ -437,6 +437,11 @@ export function dispose(node) {
     }
     if (node._disposed)
         return;
+    node._reactiveProperties.forEach((property) => {
+        if (property.value instanceof NodeArray) {
+            property.value.dispose();
+        }
+    });
     detachChildParents(node);
     clearNodeQueue(node);
     const mutable = node;

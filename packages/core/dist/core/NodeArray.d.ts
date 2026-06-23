@@ -47,4 +47,5 @@ export declare class NodeArray<N extends ReactiveNode> extends Array<N> {
     toJSON(): JsonArray;
     /** Hydrate each item from wire-format JSON via {@link ReactiveNode.applyJSON}. */
     applyJSON(json: JsonArray): void;
+    dispose(): void;
 }
