@@ -1,7 +1,7 @@
 //@ts-nocheck
-import { Register, IoElement } from '@io-gui/core'
+import { Register, ReactiveElement } from '@io-gui/core'
 
-export class IoMarkdownDemo extends IoElement {
+export class IoMarkdownDemo extends ReactiveElement {
   ready() {}
 }
 Register(IoMarkdownDemo)

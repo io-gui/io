@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, glsl, WithBinding, ReactiveNode } from '@io-gui/core'
+import { Register, Property, glsl, WithBinding, ReactiveObject } from '@io-gui/core'
 import { IoSlider, IoSlider2d } from '@io-gui/sliders'
 import { IoColorBase, IoColorBaseProps } from './IoColorBase.js'
 
@@ -25,16 +25,16 @@ export class IoColorSlider extends IoColorBase {
   }
 
   // Is this needed? Perhgaps value can be used in glsl?
-  @ReactiveProperty({type: Array, init: [0, 0, 0, 0]})
+  @Property({type: Array, init: [0, 0, 0, 0]})
   declare color: [number, number, number, number]
 
-  @ReactiveProperty({type: Number, value: 0.01})
+  @Property({type: Number, value: 0.01})
   declare step: number
 
-  @ReactiveProperty('a')
+  @Property('a')
   declare channel: 'r' | 'g' | 'b' | 'a' | 'h' | 's' | 'v' | 'l' | 'hs' | 'sv' | 'sl'
 
-  @ReactiveProperty({value: false, reflect: true})
+  @Property({value: false, reflect: true})
   declare vertical: boolean
 
   _onValueInput(event: CustomEvent) {
@@ -94,13 +94,13 @@ export class IoColorSlider extends IoColorBase {
     }
     if (oldValue === JSON.stringify(this.value)) return
 
-    if (!(this.value as unknown as ReactiveNode)._isNode) {
+    if (!(this.value as unknown as ReactiveObject)._isReactiveObject) {
       this.dispatchMutation(this.value)
     }
     this.dispatch('value-input', {property: 'value', value: this.value}, false)
   }
 
-  override changed() {
+  override mutated() {
     const c = this.channel
 
     debug: if (['r', 'g', 'b', 'a', 'h', 's', 'v', 'l', 'hs', 'sv', 'sl'].indexOf(c) === -1) {
@@ -201,7 +201,7 @@ export const ioColorSlider = function(arg0?: IoColorSliderProps) {
  * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
  **/
 class IoColorSliderBase extends IoSlider {
-  @ReactiveProperty({type: Array, init: [0, 0, 0, 0]})
+  @Property({type: Array, init: [0, 0, 0, 0]})
   declare color: [number, number, number, number]
 
   static override get GlUtils() {
@@ -265,7 +265,7 @@ class IoColorSliderBase extends IoSlider {
  * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
  **/
 class IoColorSlider2dBase extends IoSlider2d {
-  @ReactiveProperty({type: Array, init: [0, 0, 0, 0]})
+  @Property({type: Array, init: [0, 0, 0, 0]})
   declare color: [number, number, number, number]
 
   static override get GlUtils() {

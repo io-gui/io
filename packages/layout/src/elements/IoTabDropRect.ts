@@ -1,10 +1,10 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, ThemeSingleton } from '@io-gui/core'
+import { Register, Property, ReactiveElement, IoElementProps, ThemeSingleton } from '@io-gui/core'
 import { SplitDirection } from './IoSplit.js'
 import { IoPanel } from './IoPanel.js'
 import { IoTab } from './IoTab.js'
 
 @Register
-class IoTabDropRect extends IoElement {
+class IoTabDropRect extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host {
@@ -26,18 +26,18 @@ class IoTabDropRect extends IoElement {
     `
   }
 
-  @ReactiveProperty(null)
+  @Property(null)
   declare dropTarget: IoPanel | null
 
-  @ReactiveProperty({type: String, value: 'none', reflect: true})
+  @Property({type: String, value: 'none', reflect: true})
   declare splitDirection: SplitDirection
 
-  @ReactiveProperty({type: Number, value: -1, reflect: true})
+  @Property({type: Number, value: -1, reflect: true})
   declare dropIndex: number
 
   constructor(args: IoElementProps = {}) { super(args) }
 
-  override changed() {
+  override mutated() {
     if (this.dropTarget && this.dropIndex !== -1) {
       const tabs = this.dropTarget.querySelectorAll('io-tab')
       this.style.width = ''

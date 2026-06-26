@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, span, VDOMElement } from '@io-gui/core'
+import { Register, ReactiveElement, Property, IoElementProps, WithBinding, span, VDOMElement } from '@io-gui/core'
 import { ioBreadcrumbs } from './IoBreadcrumbs.js'
 import { ioPropertyEditor } from './IoPropertyEditor.js'
 import { PropertyConfig } from '../utils/EditorConfig.js'
@@ -28,10 +28,10 @@ function isNestedObject(value: object, selected: object): boolean {
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple
  * `io-collapsible` elements. It can be configured to use custom property editors and display only specified properties.
- * Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
+ * Fields of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
  **/
 @Register
-export class IoInspector extends IoElement {
+export class IoInspector extends ReactiveElement {
   static override get Style() {
     return /* css */`
     :host {
@@ -56,22 +56,22 @@ export class IoInspector extends IoElement {
     }
     `
   }
-  @ReactiveProperty({type: Object, init: null})
+  @Property({type: Object, init: null})
   declare value: object | Array<any>
 
-  @ReactiveProperty({type: Object, init: null})
+  @Property({type: Object, init: null})
   declare selected: object | Array<any>
 
-  @ReactiveProperty({type: String})
+  @Property({type: String})
   declare search: string
 
-  @ReactiveProperty({type: Array, init: null})
+  @Property({type: Array, init: null})
   declare config: PropertyConfig[]
 
-  @ReactiveProperty({type: Object, init: null})
+  @Property({type: Object, init: null})
   declare groups: PropertyGroups
 
-  @ReactiveProperty({type: Object})
+  @Property({type: Object})
   declare widget: VDOMElement
 
   static override get Listeners() {
@@ -97,15 +97,15 @@ export class IoInspector extends IoElement {
     if (!isNestedObject(this.value, this.selected)) {
       this.selected = this.value
     }
-    this.changed()
+    this.mutated()
   }
   selectedMutated() {
-    this.changed()
+    this.mutated()
   }
   selectedChanged() {
     this.search = ''
   }
-  override changed() {
+  override mutated() {
     this.debounce(this.changedDebounced)
   }
   changedDebounced() {

@@ -768,7 +768,7 @@ describe('IoSplit View Element', () => {
     })
   })
 
-  describe('Static Properties', () => {
+  describe('Static Fields', () => {
     it('Should have Style getter', () => {
       expect(IoSplit.Style).toBeDefined()
       expect(typeof IoSplit.Style).toBe('string')

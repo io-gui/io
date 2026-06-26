@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, VDOMElement, Storage as $, IoElementProps, WithBinding, Property } from '@io-gui/core'
+import { Register, ReactiveElement, Property, VDOMElement, Storage as $, IoElementProps, WithBinding, Field } from '@io-gui/core'
 import { ioField, ioString } from '@io-gui/inputs'
 import { MenuOption } from '../nodes/MenuOption.js'
 import { ioMenuItem, IoMenuItem } from './IoMenuItem.js'
@@ -38,7 +38,7 @@ export type IoMenuTreeProps = IoElementProps & {
 }
 
 @Register
-export class IoMenuTree extends IoElement {
+export class IoMenuTree extends ReactiveElement {
 
   static override get Style() {
     return /* css */`
@@ -71,25 +71,25 @@ export class IoMenuTree extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: MenuOption})
+  @Property({type: MenuOption})
   declare option: MenuOption
 
-  @ReactiveProperty({value: false, type: Boolean})
+  @Property({value: false, type: Boolean})
   declare searchable: boolean
 
-  @ReactiveProperty({value: '', type: String})
+  @Property({value: '', type: String})
   declare search: string
 
-  @ReactiveProperty({value: Infinity, type: Number})
+  @Property({value: Infinity, type: Number})
   declare depth: number
 
-  @ReactiveProperty(null)
+  @Property(null)
   declare widget: VDOMElement | null
 
-  @Property()
+  @Field()
   declare $parent?: IoMenuItem
 
-  @Property('listbox')
+  @Field('listbox')
   declare role: string
 
   constructor(args: IoMenuTreeProps = {}) { super(args) }
@@ -100,10 +100,10 @@ export class IoMenuTree extends IoElement {
 
   // TODO: Test
   optionMutated() {
-    this.changed()
+    this.mutated()
   }
 
-  override changed() {
+  override mutated() {
     const vChildren: VDOMElement[] = this.widget ? [this.widget] : []
 
     if (this.searchable) {

@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, Property } from '@io-gui/core'
+import { Register, Property, Field } from '@io-gui/core'
 import { Euler } from 'three/webgpu'
 import { IoVectorBaseProps, IoVectorBase } from './IoVectorBase.js'
 
@@ -9,10 +9,10 @@ export type IoEulerProps = IoVectorBaseProps & {
 @Register
 export class IoEuler extends IoVectorBase {
 
-  @ReactiveProperty({type: Euler, init: null})
+  @Property({type: Euler, init: null})
   declare value: Euler
 
-  @Property(['x', 'y', 'z'])
+  @Field(['x', 'y', 'z'])
   declare keys: Array<string>
 
   constructor(args: IoEulerProps) {

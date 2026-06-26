@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property, CallbackFunction } from '@io-gui/core'
+import { Register, ReactiveElement, VDOMElement, IoElementProps, Property, Field, CallbackFunction } from '@io-gui/core'
 import { ioSelector } from '@io-gui/navigation'
 import { IoMenuItem, MenuOption } from '@io-gui/menus'
 import { ioTabs } from './IoTabs.js'
@@ -13,7 +13,7 @@ export type IoPanelProps = IoElementProps & {
 }
 
 @Register
-export class IoPanel extends IoElement {
+export class IoPanel extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host {
@@ -25,13 +25,13 @@ export class IoPanel extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: Object})
+  @Property({type: Object})
   declare panel: Panel
 
-  @ReactiveProperty(Array)
+  @Property(Array)
   declare elements: VDOMElement[]
 
-  @Property({type: MenuOption})
+  @Field({type: MenuOption})
   declare addMenuOption: MenuOption | undefined
 
   static override get Listeners() {
@@ -138,7 +138,7 @@ export class IoPanel extends IoElement {
     if (tabs[index]) tabs[index].focus()
   }
   panelMutated() {
-    this.debounce(this.changed)
+    this.debounce(this.mutated)
   }
   getAddMenuOption(): MenuOption | undefined {
     if (this.addMenuOption && this.addMenuOption.options?.length > 0) {
@@ -158,7 +158,7 @@ export class IoPanel extends IoElement {
     if (options.length === 0) return undefined
     return new MenuOption({options})
   }
-  override changed() {
+  override mutated() {
     this.render([
       ioTabs({
         tabs: this.panel.tabs,

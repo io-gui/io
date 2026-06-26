@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, VDOMElement, div, ThemeSingleton } from '@io-gui/core'
+import { Register, Property, ReactiveElement, IoElementProps, VDOMElement, div, ThemeSingleton } from '@io-gui/core'
 import { ioIcon } from '@io-gui/icons'
 import { MenuOption } from '@io-gui/menus'
 import { Split } from '../nodes/Split.js'
@@ -19,7 +19,7 @@ export type IoDrawerProps = IoElementProps & {
 }
 
 @Register
-export class IoDrawer extends IoElement {
+export class IoDrawer extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host {
@@ -115,25 +115,25 @@ export class IoDrawer extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: String, value: 'horizontal', reflect: true})
+  @Property({type: String, value: 'horizontal', reflect: true})
   declare orientation: 'horizontal' | 'vertical'
 
-  @ReactiveProperty({type: String, value: 'leading', reflect: true})
+  @Property({type: String, value: 'leading', reflect: true})
   declare direction: DrawerDirection
 
-  @ReactiveProperty({type: Boolean, value: false, reflect: true})
+  @Property({type: Boolean, value: false, reflect: true})
   declare expanded: boolean
 
-  @ReactiveProperty({type: Object})
+  @Property({type: Object})
   declare parent: IoSplit
 
-  @ReactiveProperty({type: Object})
+  @Property({type: Object})
   declare child: Split | Panel
 
-  @ReactiveProperty(Array)
+  @Property(Array)
   declare elements: VDOMElement[]
 
-  @ReactiveProperty({type: MenuOption})
+  @Property({type: MenuOption})
   declare addMenuOption: MenuOption | undefined
 
   constructor(args: IoDrawerProps) {
@@ -151,10 +151,10 @@ export class IoDrawer extends IoElement {
   }
 
   childMutated() {
-    this.changed()
+    this.mutated()
   }
 
-  override changed() {
+  override mutated() {
     if (!this.child) {
       this.render([])
       return

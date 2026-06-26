@@ -1,4 +1,4 @@
-import { ReactiveNode, ReactiveProperty, Register } from '@io-gui/core'
+import { ReactiveObject, Property, Register } from '@io-gui/core'
 
 export type TabProps = {
   id: string
@@ -8,18 +8,18 @@ export type TabProps = {
 }
 
 @Register
-export class Tab extends ReactiveNode {
+export class Tab extends ReactiveObject {
 
-  @ReactiveProperty({type: String, value: ''})
+  @Property({type: String, value: ''})
   declare id: string
 
-  @ReactiveProperty({type: String, value: ''})
+  @Property({type: String, value: ''})
   declare label: string
 
-  @ReactiveProperty({type: String, value: ''})
+  @Property({type: String, value: ''})
   declare icon: string
 
-  @ReactiveProperty({type: Boolean, value: false})
+  @Property({type: Boolean, value: false})
   declare selected: boolean
 
   constructor(args: TabProps) {

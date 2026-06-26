@@ -1,4 +1,4 @@
-import { ReactiveProperty, Register } from '@io-gui/core'
+import { Property, Register } from '@io-gui/core'
 import {
   AnimationClip,
   AnimationMixer,
@@ -54,10 +54,10 @@ const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
 @Register
 export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
 
-  @ReactiveProperty({type: AnimationMixer, init: new Group()})
+  @Property({type: AnimationMixer, init: new Group()})
   declare public sourceMixer: AnimationMixer
 
-  @ReactiveProperty({type: AnimationMixer, init: new Group()})
+  @Property({type: AnimationMixer, init: new Group()})
   declare public targetMixer: AnimationMixer
 
   constructor(args: ThreeAppletProps) {
@@ -174,7 +174,7 @@ export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
 @Register
 export class IoAnimationRetargetingReadyplayerExample extends IoThreeExample {
 
-  @ReactiveProperty({type: AnimationRetargetingReadyplayerExample, init: {isPlaying: true}})
+  @Property({type: AnimationRetargetingReadyplayerExample, init: {isPlaying: true}})
   declare applet: AnimationRetargetingReadyplayerExample
 
 }

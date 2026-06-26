@@ -21,7 +21,7 @@ describe('IoSlider2d', () => {
     element.value = [0.1, 0.1]
     element.min = [0, 0]
     element.max = [1, 1]
-    // element.changed()
+    // element.mutated()
     expect(element.getAttribute('aria-valuenow')).toBe('[0.1,0.1]')
     expect(element.getAttribute('aria-valuemin')).toBe('[0,0]')
     expect(element.getAttribute('aria-valuemax')).toBe('[1,1]')

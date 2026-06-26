@@ -17,7 +17,7 @@ import {
 import { instancedBufferAttribute, texture, float, color } from 'three/tsl'
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js'
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
-import { Register, ReactiveProperty } from '@io-gui/core'
+import { Register, Property } from '@io-gui/core'
 import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
 import { ioSplit, Split } from '@io-gui/layout'
 import { ioThreeViewport } from '@io-gui/three'
@@ -117,7 +117,7 @@ export class GeometryConvexExample extends ThreeApplet {
 @Register
 export class IoGeometryConvexExample extends IoThreeExample {
 
-  @ReactiveProperty({type: GeometryConvexExample, init: {isPlaying: true}})
+  @Property({type: GeometryConvexExample, init: {isPlaying: true}})
   declare applet: GeometryConvexExample
 
   override ready() {

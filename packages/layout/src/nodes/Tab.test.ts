@@ -65,7 +65,7 @@ describe('Tab', () => {
 
   })
 
-  describe('Property Changes', () => {
+  describe('Field Changes', () => {
 
     it('should allow changing id', () => {
       const tab = new Tab({ id: 'original' })

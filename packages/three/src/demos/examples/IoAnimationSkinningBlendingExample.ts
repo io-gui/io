@@ -1,4 +1,4 @@
-import { ReactiveProperty, Register } from '@io-gui/core'
+import { Property, Register } from '@io-gui/core'
 import {
   AnimationAction,
   AnimationClip,
@@ -40,13 +40,13 @@ const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
 @Register
 export class AnimationSkinningBlendingExample extends ThreeApplet {
 
-  @ReactiveProperty({type: Boolean, value: false})
+  @Property({type: Boolean, value: false})
   declare isActive: boolean
 
-  @ReactiveProperty({type: Boolean, value: false})
+  @Property({type: Boolean, value: false})
   declare isPlaying: boolean
 
-  @ReactiveProperty({type: Boolean, value: false})
+  @Property({type: Boolean, value: false})
   declare isCrossfading: boolean
 
   public camera: PerspectiveCamera
@@ -234,7 +234,7 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
 @Register
 export class IoAnimationSkinningBlendingExample extends IoThreeExample {
 
-  @ReactiveProperty({type: AnimationSkinningBlendingExample, init: {isPlaying: true}})
+  @Property({type: AnimationSkinningBlendingExample, init: {isPlaying: true}})
   declare applet: AnimationSkinningBlendingExample
 
   override ready() {

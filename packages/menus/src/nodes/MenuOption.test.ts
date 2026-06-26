@@ -222,7 +222,7 @@ describe('MenuOption', () => {
 
     // Now manually set root.selected = false by directly modifying the property value
     // This simulates an edge case where selected became false but selectedIDImmediate is still set
-    const selectedProp = option._reactiveProperties.get('selected')!
+    const selectedProp = option._properties.get('selected')!
     selectedProp.value = false
 
     // Track path-changed events

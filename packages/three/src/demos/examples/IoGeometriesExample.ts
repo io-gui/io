@@ -25,7 +25,7 @@ import {
 } from 'three/webgpu'
 import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js'
 import { plane, klein, mobius } from 'three/addons/geometries/ParametricFunctions.js'
-import { Register, ReactiveProperty } from '@io-gui/core'
+import { Register, Property } from '@io-gui/core'
 import { ThreeApplet, IoThreeExample, ioThreeViewport, ThreeAppletProps } from '@io-gui/three'
 import { Split, ioSplit } from '@io-gui/layout'
 import { ioPropertyEditor, ioObject } from '@io-gui/editors'
@@ -163,7 +163,7 @@ export class GeometriesExample extends ThreeApplet {
 @Register
 export class IoGeometriesExample extends IoThreeExample {
 
-  @ReactiveProperty({type: GeometriesExample, init: {isPlaying: true}})
+  @Property({type: GeometriesExample, init: {isPlaying: true}})
   declare applet: GeometriesExample
 
   override ready() {

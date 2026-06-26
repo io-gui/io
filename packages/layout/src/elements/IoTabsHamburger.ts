@@ -1,4 +1,4 @@
-import { Register, NodeArray, ReactiveProperty } from '@io-gui/core'
+import { Register, NodeArray, Property } from '@io-gui/core'
 import { IoField, IoFieldProps } from '@io-gui/inputs'
 import { ioIcon } from '@io-gui/icons'
 import { Tab } from '../nodes/Tab.js'
@@ -19,7 +19,7 @@ export class IoTabsHamburger extends IoField {
     `
   }
 
-  @ReactiveProperty({type: NodeArray, init: 'this'})
+  @Property({type: NodeArray, init: 'this'})
   declare private tabs: NodeArray<Tab>
 
   constructor(args: IoTabsHamburgerProps) { super(args) }
@@ -35,7 +35,7 @@ export class IoTabsHamburger extends IoField {
   onEditTab(event: CustomEvent) {
     this.dispatch('io-edit-tab', {tab: event.detail.tab, key: event.detail.key}, true)
   }
-  override changed() {
+  override mutated() {
     this.render([
       ioIcon({value: 'io:hamburger'})
     ])

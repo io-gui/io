@@ -102,7 +102,7 @@ describe('IoTab', () => {
 
   describe('Tab Mutation Handling', () => {
     it('should call changed when tabMutated is invoked', () => {
-      const changedSpy = vi.spyOn(ioTab, 'changed')
+      const changedSpy = vi.spyOn(ioTab, 'mutated')
       ioTab.tabMutated()
       expect(changedSpy).toHaveBeenCalledTimes(1)
     })
@@ -778,7 +778,7 @@ describe('IoTab', () => {
     })
   })
 
-  describe('Static Properties', () => {
+  describe('Static Fields', () => {
     it('should have Style getter', () => {
       expect(IoTab.Style).toBeDefined()
       expect(typeof IoTab.Style).toBe('string')

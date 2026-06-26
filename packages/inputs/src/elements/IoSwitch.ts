@@ -69,7 +69,7 @@ export class IoSwitch extends IoBoolean {
       }
     `
   }
-  override changed() {
+  override mutated() {
     this.render([
       this.icon ? ioIcon({value: this.icon}) : null,
       span()

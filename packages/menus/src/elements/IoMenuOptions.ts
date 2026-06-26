@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, VDOMElement, IoOverlaySingleton as Overlay, NudgeDirection, IoElementProps, WithBinding, Property, nudge, ListenerDefinition, span, IoExpandable } from '@io-gui/core'
+import { Register, ReactiveElement, Property, VDOMElement, IoOverlaySingleton as Overlay, NudgeDirection, IoElementProps, WithBinding, Field, nudge, ListenerDefinition, span, IoExpandable } from '@io-gui/core'
 import { ioField, ioString } from '@io-gui/inputs'
 import { MenuOption } from '../nodes/MenuOption.js'
 import { ioMenuItem, IoMenuItem } from './IoMenuItem.js'
@@ -26,7 +26,7 @@ export type IoMenuOptionsProps = IoElementProps & {
  * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu options are displayed in horizontal direction.
  **/
 @Register
-export class IoMenuOptions extends IoElement {
+export class IoMenuOptions extends ReactiveElement {
   static override get Style() {
     return /* css */`
     :host {
@@ -83,37 +83,37 @@ export class IoMenuOptions extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: MenuOption})
+  @Property({type: MenuOption})
   declare option: MenuOption
 
-  @ReactiveProperty({value: false, reflect: true})
+  @Property({value: false, reflect: true})
   declare expanded: boolean
 
-  @ReactiveProperty({value: false, reflect: true})
+  @Property({value: false, reflect: true})
   declare horizontal: boolean
 
-  @ReactiveProperty(false)
+  @Property(false)
   declare searchable: boolean
 
-  @ReactiveProperty('')
+  @Property('')
   declare search: string
 
-  @ReactiveProperty({value: 'none', reflect: true})
+  @Property({value: 'none', reflect: true})
   declare direction: NudgeDirection
 
-  @ReactiveProperty(100)
+  @Property(100)
   declare depth: number
 
-  @ReactiveProperty({value: '', reflect: true})
+  @Property({value: '', reflect: true})
   declare overflow: string
 
-  @ReactiveProperty(null)
+  @Property(null)
   declare widget: VDOMElement | null
 
-  @Property()
+  @Field()
   declare $parent?: IoMenuItem
 
-  @Property('listbox')
+  @Field('listbox')
   declare role: string
 
   static override get Listeners() {
@@ -230,7 +230,7 @@ export class IoMenuOptions extends IoElement {
       nudge(this, this.$parent, this.direction, true)
     }
   }
-  override changed() {
+  override mutated() {
     const vChildren: VDOMElement[] = this.widget ? [this.widget] : []
     if (this.searchable) {
       vChildren.push(ioString({

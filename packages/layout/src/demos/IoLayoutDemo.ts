@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Register, IoElement, div, h1, h4, p, Storage as $ } from '@io-gui/core'
+import { Register, ReactiveElement, div, h1, h4, p, Storage as $ } from '@io-gui/core'
 import { ioSplit, Split } from '@io-gui/layout'
 import { ioCollapsible } from '@io-gui/navigation'
 import { ioMarkdown } from '@io-gui/markdown'
@@ -75,7 +75,7 @@ const split = new Split({
   ]
 })
 
-export class IoLayoutDemo extends IoElement {
+export class IoLayoutDemo extends ReactiveElement {
   static get Style() {
     return /* css */`
       :host {

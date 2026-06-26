@@ -300,7 +300,7 @@ describe('IoPanel', () => {
 
   describe('Panel Mutation Handling', () => {
     it('should call changed when panelMutated is invoked', () => {
-      const changedSpy = vi.spyOn(ioPanel, 'changed')
+      const changedSpy = vi.spyOn(ioPanel, 'mutated')
       ioPanel.panelMutated()
 
       // Need to wait for debounce
@@ -469,7 +469,7 @@ describe('IoPanel', () => {
     })
   })
 
-  describe('Static Properties', () => {
+  describe('Static Fields', () => {
     it('should have Style getter', () => {
       expect(IoPanel.Style).toBeDefined()
       expect(typeof IoPanel.Style).toBe('string')
@@ -498,7 +498,7 @@ describe('IoPanel', () => {
 
     it('should update io-selector selected value', () => {
       panel.setSelected('tab2')
-      ioPanel.changed()
+      ioPanel.mutated()
 
       const selector = ioPanel.querySelector('io-selector')
       expect(selector.selected).toBe('tab2')

@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, WithBinding } from '@io-gui/core'
+import { Register, Property, WithBinding } from '@io-gui/core'
 import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase.js'
 
 export type IoSliderRangeProps = IoSliderBaseProps & {
@@ -15,16 +15,16 @@ export type IoSliderRangeProps = IoSliderBaseProps & {
 @Register
 export class IoSliderRange extends IoSliderBase {
 
-  @ReactiveProperty({type: Array, value: undefined, init: [0, 0]}) // TODO: Remove value: undefined
+  @Property({type: Array, value: undefined, init: [0, 0]}) // TODO: Remove value: undefined
   declare value: [number, number]
 
-  @ReactiveProperty({type: Number, value: 0.01})
+  @Property({type: Number, value: 0.01})
   declare step: number
 
-  @ReactiveProperty({type: Number, value: 0})
+  @Property({type: Number, value: 0})
   declare min: number
 
-  @ReactiveProperty({type: Number, value: 1})
+  @Property({type: Number, value: 1})
   declare max: number
 
   _index = 0

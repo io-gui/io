@@ -1,4 +1,4 @@
-import { ReactiveProperty, IoGl, IoElementProps, WithBinding, Property, ListenerDefinition, CallbackFunction } from '@io-gui/core'
+import { Property, IoGl, IoElementProps, WithBinding, Field, ListenerDefinition, CallbackFunction } from '@io-gui/core'
 
 const clamp = (num: number, min: number, max: number) => {
   return max > min ? Math.min(Math.max(num, min), max) : Math.min(Math.max(num, max), min)
@@ -45,34 +45,34 @@ export class IoSliderBase extends IoGl {
     `
   }
 
-  @ReactiveProperty({type: Number, value: 0})
+  @Property({type: Number, value: 0})
   declare value: number | [number, number]
 
-  @ReactiveProperty({type: Number, value: 0.01})
+  @Property({type: Number, value: 0.01})
   declare step: number | [number, number]
 
-  @ReactiveProperty({type: Number, value: 0})
+  @Property({type: Number, value: 0})
   declare min: number | [number, number]
 
-  @ReactiveProperty({type: Number, value: 1})
+  @Property({type: Number, value: 1})
   declare max: number | [number, number]
 
-  @ReactiveProperty({type: Number, value: 1})
+  @Property({type: Number, value: 1})
   declare exponent: number
 
-  @ReactiveProperty({value: false, reflect: true})
+  @Property({value: false, reflect: true})
   declare vertical: boolean
 
-  @ReactiveProperty({value: false, type: Boolean, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare invalid: boolean
 
-  @Property(false)
+  @Field(false)
   declare noscroll: boolean
 
-  @Property('slider')
+  @Field('slider')
   declare role: string
 
-  @Property(0)
+  @Field(0)
   declare tabIndex: number
 
   _startX = 0
@@ -321,7 +321,7 @@ export class IoSliderBase extends IoGl {
     this._inputValue(value)
   }
   override ready() {
-    this.changed()
+    this.mutated()
   }
   valueChanged() {
     let invalid = false
@@ -340,11 +340,11 @@ export class IoSliderBase extends IoGl {
     }
   }
   valueMutated() {
-    this.changed()
+    this.mutated()
     this.dispatchMutation()
   }
-  override changed() {
-    super.changed()
+  override mutated() {
+    super.mutated()
     this.setAttribute('aria-valuemin', JSON.stringify(this.min))
     this.setAttribute('aria-valuemax', JSON.stringify(this.max))
     this.setAttribute('aria-valuestep', JSON.stringify(this.step))

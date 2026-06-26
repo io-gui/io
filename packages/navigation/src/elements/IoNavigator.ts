@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, ReactiveProperty, IoElementProps, WithBinding, Register, div } from '@io-gui/core'
+import { ReactiveElement, VDOMElement, Property, IoElementProps, WithBinding, Register, div } from '@io-gui/core'
 import { MenuOption, ioMenuOptions, ioMenuTree } from '@io-gui/menus'
 import { CachingType, ioSelector } from './IoSelector.js'
 import { ioNavigatorDrawer, IoNavigatorDrawer } from './IoNavigatorDrawer.js'
@@ -20,7 +20,7 @@ export type IoNavigatorProps = IoElementProps & {
 }
 
 @Register
-export class IoNavigator extends IoElement {
+export class IoNavigator extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host {
@@ -68,37 +68,37 @@ export class IoNavigator extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: Array, init: null})
+  @Property({type: Array, init: null})
   declare elements: VDOMElement[]
 
-  @ReactiveProperty({type: MenuOption})
+  @Property({type: MenuOption})
   declare option: MenuOption
 
-  @ReactiveProperty(null)
+  @Property(null)
   declare widget: VDOMElement | null
 
-  @ReactiveProperty({value: 'left', type: String, reflect: true})
+  @Property({value: 'left', type: String, reflect: true})
   declare menu: MenuPosition
 
-  @ReactiveProperty({value: Infinity, type: Number})
+  @Property({value: Infinity, type: Number})
   declare depth: number
 
-  @ReactiveProperty({value: 'shallow', type: String})
+  @Property({value: 'shallow', type: String})
   declare select: SelectType
 
-  @ReactiveProperty({value: 'none', type: String})
+  @Property({value: 'none', type: String})
   declare caching: CachingType
 
-  @ReactiveProperty({value: 570, type: Number})
+  @Property({value: 570, type: Number})
   declare minWidth: number
 
-  @ReactiveProperty({value: '', type: String})
+  @Property({value: '', type: String})
   declare anchor: string
 
-  @ReactiveProperty({value: false, type: Boolean, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare collapsed: boolean
 
-  @ReactiveProperty({value: false, type: Boolean, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare showVeil: boolean
 
   static override get Listeners() {
@@ -152,10 +152,10 @@ export class IoNavigator extends IoElement {
   }
 
   optionMutated() {
-    this.changed()
+    this.mutated()
   }
 
-  override changed() {
+  override mutated() {
     const sharedMenuConfig = {
       option: this.option,
       widget: this.widget,

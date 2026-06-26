@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, Property, WithBinding } from '@io-gui/core'
+import { Register, Property, Field, WithBinding } from '@io-gui/core'
 import { IoField, IoFieldProps } from './IoField.js'
 
 export type IoStringProps = IoFieldProps & {
@@ -30,22 +30,22 @@ export class IoString extends IoField {
       }
     `
   }
-  @ReactiveProperty({value: '', type: String})
+  @Property({value: '', type: String})
   declare value: string
 
-  @ReactiveProperty({value: false, type: Boolean})
+  @Property({value: false, type: Boolean})
   declare live: boolean
 
-  @ReactiveProperty({value: '', type: String, reflect: true})
+  @Property({value: '', type: String, reflect: true})
   declare placeholder: string
 
-  @ReactiveProperty({value: 'inset', reflect: true})
+  @Property({value: 'inset', reflect: true})
   declare appearance: 'neutral' | 'inset' | 'outset'
 
-  @Property('true')
+  @Field('true')
   declare contentEditable: string
 
-  @Property('textbox')
+  @Field('textbox')
   declare role: string
 
   constructor(args: IoStringProps = {}) { super(args) }
@@ -162,7 +162,7 @@ export class IoString extends IoField {
   valueChanged() {
     this.invalid = (typeof this.value !== 'string' && this.value !== null && this.value !== undefined)
   }
-  override changed() {
+  override mutated() {
     this.textNode = String(this.value || '')
   }
 }

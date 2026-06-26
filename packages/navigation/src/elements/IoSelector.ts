@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, ReactiveProperty, WithBinding, Property, span, ListenerDefinitions, CallbackFunction } from '@io-gui/core'
+import { Register, ReactiveElement, VDOMElement, IoElementProps, disposeChildren, Property, WithBinding, Field, span, ListenerDefinitions, CallbackFunction } from '@io-gui/core'
 
 const dummyElement = document.createElement('div')
 /**
@@ -41,7 +41,7 @@ export type IoSelectorProps = IoElementProps & {
 }
 
 @Register
-export class IoSelector extends IoElement {
+export class IoSelector extends ReactiveElement {
 
   static override get Style() {
     return /* css */`
@@ -77,32 +77,32 @@ export class IoSelector extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: Array, init: null})
+  @Property({type: Array, init: null})
   declare elements: VDOMElement[]
 
-  @ReactiveProperty({value: '', type: String})
+  @Property({value: '', type: String})
   declare selected: string
 
   // TODO: Setting anchor offscreen will not update once it is in the dom.
-  @ReactiveProperty({value: '', type: String})
+  @Property({value: '', type: String})
   declare anchor: string
 
-  @ReactiveProperty({value: 'reactive', type: String})
+  @Property({value: 'reactive', type: String})
   declare caching: CachingType
 
-  @ReactiveProperty({value: false, type: Boolean, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare loading: boolean
 
-  @Property(Object)
-  declare private _caches: Record<string, IoElement | HTMLElement>
+  @Field(Object)
+  declare private _caches: Record<string, ReactiveElement | HTMLElement>
 
-  @Property(false)
+  @Field(false)
   declare private _preaching: boolean
 
-  @Property(false)
+  @Field(false)
   declare private scrollToSuspended: boolean
 
-  @Property(false)
+  @Field(false)
   declare private onScrollSuspended: boolean
 
   static override get Listeners(): ListenerDefinitions {
@@ -221,14 +221,14 @@ export class IoSelector extends IoElement {
     const id = vElement.props?.id
     const cachedElement = this._caches[id]
     if (cache && cachedElement) {
-      if ((cachedElement.parentElement as IoElement) !== this) {
+      if ((cachedElement.parentElement as ReactiveElement) !== this) {
         if (this.firstChild) this.removeChild(this.firstChild)
         this.appendChild(cachedElement as Node)
       }
     } else {
       this.render([vElement], this, cache)
       if (cache) {
-        this._caches[id] = this.childNodes[0] as IoElement
+        this._caches[id] = this.childNodes[0] as ReactiveElement
       }
     }
   }
@@ -271,7 +271,7 @@ export class IoSelector extends IoElement {
     for (const key in this._caches) {
       // Dispose cached elements not in the DOM.
       if (!this._caches[key].parentElement) {
-        disposeChildren(this._caches[key] as IoElement)
+        disposeChildren(this._caches[key] as ReactiveElement)
       }
       delete this._caches[key]
     }

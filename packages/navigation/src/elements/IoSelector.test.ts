@@ -1,14 +1,14 @@
 //@ts-nocheck
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { Register, IoElement, ReactiveProperty, nextQueue } from '@io-gui/core'
+import { Register, ReactiveElement, Property, nextQueue } from '@io-gui/core'
 import { IoSelector, ioSelector } from '@io-gui/navigation'
 
 @Register
-class TestContent extends IoElement {
-  @ReactiveProperty('default')
+class TestContent extends ReactiveElement {
+  @Property('default')
   declare content: string
 
-  changed() {
+  mutated() {
     this.textContent = this.content
   }
 }

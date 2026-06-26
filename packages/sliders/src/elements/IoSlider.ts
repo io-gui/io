@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoGl, IoElementProps, Property, ListenerDefinition, WithBinding, CallbackFunction } from '@io-gui/core'
+import { Register, Property, IoGl, IoElementProps, Field, ListenerDefinition, WithBinding, CallbackFunction } from '@io-gui/core'
 
 const clamp = (num: number, min: number, max: number) => {
   return max > min ? Math.min(Math.max(num, min), max) : Math.min(Math.max(num, max), min)
@@ -52,37 +52,37 @@ export class IoSlider extends IoGl {
     `
   }
 
-  @ReactiveProperty(0)
+  @Property(0)
   declare value: number
 
-  @ReactiveProperty(0.01)
+  @Property(0.01)
   declare step: number
 
-  @ReactiveProperty(0)
+  @Property(0)
   declare min: number
 
-  @ReactiveProperty(1)
+  @Property(1)
   declare max: number
 
-  @ReactiveProperty(1)
+  @Property(1)
   declare exponent: number
 
-  @ReactiveProperty({value: false, reflect: true})
+  @Property({value: false, reflect: true})
   declare vertical: boolean
 
-  @ReactiveProperty({value: false, type: Boolean, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare invalid: boolean
 
-  @ReactiveProperty({value: false, type: Boolean, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare disabled: boolean
 
-  @Property(false)
+  @Field(false)
   declare noscroll: boolean
 
-  @Property('slider')
+  @Field('slider')
   declare role: string
 
-  @Property(0)
+  @Field(0)
   declare tabIndex: number
 
   #startX = 0
@@ -279,7 +279,7 @@ export class IoSlider extends IoGl {
     this.valueChanged()
     this.minChanged()
     this.maxChanged()
-    this.changed()
+    this.mutated()
   }
   invalidChanged() {
     this.ariaInvalid = String(this.invalid)

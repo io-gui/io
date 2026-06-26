@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Register, IoElement, div, span } from '@io-gui/core'
+import { Register, ReactiveElement, div, span } from '@io-gui/core'
 import { MenuOption, ioMenuTree, ioMenuItem, ioMenuOptions, ioContextMenu, ioOptionSelect } from '@io-gui/menus'
 import { ioSwitch, ioField, ioBoolean } from '@io-gui/inputs'
 // TODO: remove dependencies on io-navigation.
@@ -67,7 +67,7 @@ const optionLong = new MenuOption({id: 'long', options: [
   'quantum', 'radiance', 'spectrum', 'tranquility', 'ultraviolet', 'vibrant',
 ]})
 
-class IoSuboptionViewDemo extends IoElement {
+class IoSuboptionViewDemo extends ReactiveElement {
   static get Style() {
     return /* css */`
       :host {
@@ -107,7 +107,7 @@ class IoSuboptionViewDemo extends IoElement {
 
     `
   }
-  static get ReactiveProperties() {
+  static get Properties() {
     return {
       option: {
         type: MenuOption,
@@ -115,9 +115,9 @@ class IoSuboptionViewDemo extends IoElement {
     }
   }
   optionMutated() {
-    this.changed()
+    this.mutated()
   }
-  changed() {
+  mutated() {
     const vChildren = []
     for (let i = 0; i < this.option.options.length; i++) {
       vChildren.push(ioItemViewDemo({option: this.option.options[i]}))
@@ -134,7 +134,7 @@ class IoSuboptionViewDemo extends IoElement {
 Register(IoSuboptionViewDemo)
 const ioSuboptionViewDemo = IoSuboptionViewDemo.vConstructor
 
-class IoItemViewDemo extends IoElement {
+class IoItemViewDemo extends ReactiveElement {
   static get Style() {
     return /* css */`
       :host {
@@ -147,7 +147,7 @@ class IoItemViewDemo extends IoElement {
       }
     `
   }
-  static get ReactiveProperties() {
+  static get Properties() {
     return {
       option: {
         type: MenuOption,
@@ -155,9 +155,9 @@ class IoItemViewDemo extends IoElement {
     }
   }
   optionMutated() {
-    this.changed()
+    this.mutated()
   }
-  changed() {
+  mutated() {
     let selectElement = null
     if (this.option.mode === 'toggle') {
       selectElement = ioBoolean({value: this.option.bind('selected'), true: 'io:box_fill_checked', false: 'io:box'})
@@ -176,7 +176,7 @@ class IoItemViewDemo extends IoElement {
 Register(IoItemViewDemo)
 const ioItemViewDemo = IoItemViewDemo.vConstructor
 
-class IoMenusDemo extends IoElement {
+class IoMenusDemo extends ReactiveElement {
   static get Style () {
     return /* css */`
       :host {

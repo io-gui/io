@@ -1,4 +1,4 @@
-import { Register, IoElement, IoElementProps, ReactiveProperty, NodeArray } from '@io-gui/core'
+import { Register, ReactiveElement, IoElementProps, Property, NodeArray } from '@io-gui/core'
 import { MenuOption, ioMenuItem } from '@io-gui/menus'
 import { ioTab } from './IoTab.js'
 import { ioTabsHamburger } from './IoTabsHamburger.js'
@@ -10,7 +10,7 @@ export type IoTabsProps = IoElementProps & {
 }
 
 @Register
-export class IoTabs extends IoElement {
+export class IoTabs extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host {
@@ -55,19 +55,19 @@ export class IoTabs extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: NodeArray, init: 'this'})
+  @Property({type: NodeArray, init: 'this'})
   declare tabs: NodeArray<Tab>
 
-  @ReactiveProperty({type: Number, value: -1, reflect: true})
+  @Property({type: Number, value: -1, reflect: true})
   declare overflow: number
 
-  @ReactiveProperty({type: MenuOption})
+  @Property({type: MenuOption})
   declare addMenuOption: MenuOption | undefined
 
   constructor(args: IoTabsProps) { super(args) }
 
   tabsMutated() {
-    this.changed()
+    this.mutated()
     this.overflow = -1
     this.onResized()
   }
@@ -88,7 +88,7 @@ export class IoTabs extends IoElement {
     }
   }
 
-  override changed() {
+  override mutated() {
     const hasOptions = this.addMenuOption && this.addMenuOption.options?.length > 0
     this.render([
       ioTabsHamburger({tabs: this.tabs}),

@@ -1,4 +1,4 @@
-import { AnyConstructor, ReactiveNode, IoElement } from '@io-gui/core'
+import { AnyConstructor, ReactiveObject, ReactiveElement } from '@io-gui/core'
 
 export const SKIPPED_PROPERTIES = [
   '$',
@@ -95,18 +95,18 @@ const editorGroupsSingleton: EditorGroups = new Map<AnyConstructor, PropertyGrou
     ],
     Hidden: [],
   }],
-  [ReactiveNode, {
+  [ReactiveObject, {
     Hidden: [
       'reactivity',
-      '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_parents',
-      '_protochain', '_disposed', '_isNode', '_isIoElement',
+      '_changeQueue', '_properties', '_bindings', '_eventDispatcher', '_parents',
+      '_protochain', '_disposed', '_isReactiveObject', '_isReactiveElement',
     ],
   }],
-  [IoElement, {
+  [ReactiveElement, {
     Hidden: [
       'reactivity',
-      '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_parents',
-      '_protochain', '_disposed', '_isNode', '_isIoElement',
+      '_changeQueue', '_properties', '_bindings', '_eventDispatcher', '_parents',
+      '_protochain', '_disposed', '_isReactiveObject', '_isReactiveElement',
     ],
   }],
 ])
@@ -242,7 +242,7 @@ export function getEditorGroups(object: object, propertyGroups: PropertyGroups):
         if (g !== g2) {
           for (const key of groupsRecord[g]) {
             if (groupsRecord[g2].includes(key)) {
-              console.warn(`Property "${key}" belongs to multiple groups: "${g}" and "${g2}". Removing from "${g}".`)
+              console.warn(`Field "${key}" belongs to multiple groups: "${g}" and "${g2}". Removing from "${g}".`)
             }
           }
         }

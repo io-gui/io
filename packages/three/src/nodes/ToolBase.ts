@@ -1,4 +1,4 @@
-import { ReactiveNode, ReactiveNodeProps, Register, ReactiveProperty } from '@io-gui/core'
+import { ReactiveObject, ReactiveNodeProps, Register, Property } from '@io-gui/core'
 import { IoThreeViewport } from '../elements/IoThreeViewport'
 import { Vector2, Ray, Raycaster } from 'three/webgpu'
 import { ThreeApplet } from './ThreeApplet'
@@ -20,9 +20,9 @@ export interface Pointer3D {
 const _raycaster = new Raycaster()
 
 @Register
-export class ToolBase extends ReactiveNode {
+export class ToolBase extends ReactiveObject {
 
-  @ReactiveProperty({type: ThreeApplet})
+  @Property({type: ThreeApplet})
   declare applet: ThreeApplet
 
   private readonly _viewports: IoThreeViewport[] = []

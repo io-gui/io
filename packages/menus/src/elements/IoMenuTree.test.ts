@@ -44,7 +44,7 @@ describe('IoMenuTree', () => {
   it('filters items when search is set', () => {
     element.searchable = true
     element.search = 'Nested'
-    element.changed()
+    element.mutated()
     const items = element.querySelectorAll('io-menu-item')
     expect(items.length).toBe(1)
     expect(items[0].textContent).toContain('Nested')
@@ -53,7 +53,7 @@ describe('IoMenuTree', () => {
   it('shows no matches field for empty search results', () => {
     element.searchable = true
     element.search = 'zzzzz'
-    element.changed()
+    element.mutated()
     const field = element.querySelector('io-field')
     expect(field).toBeTruthy()
     expect(field!.getAttribute('aria-label')).toBe('No matches')

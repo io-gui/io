@@ -1,11 +1,11 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, ListenerDefinition } from '@io-gui/core'
+import { Register, Property, ReactiveElement, IoElementProps, ListenerDefinition } from '@io-gui/core'
 
 export type IoDividerProps = IoElementProps & {
   orientation: 'vertical' | 'horizontal'
 }
 
 @Register
-export class IoDivider extends IoElement {
+export class IoDivider extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host {
@@ -65,10 +65,10 @@ export class IoDivider extends IoElement {
     `
   }
 
-  @ReactiveProperty({value: false, type: Boolean, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare pressed: boolean
 
-  @ReactiveProperty({value: 'horizontal', type: String, reflect: true})
+  @Property({value: 'horizontal', type: String, reflect: true})
   declare orientation: 'horizontal' | 'vertical'
 
   static override get Listeners() {

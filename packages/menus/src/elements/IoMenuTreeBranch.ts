@@ -1,4 +1,4 @@
-import { IoElement, Register, ReactiveProperty, IoElementProps, WithBinding, Property, clearFocusBacktrack } from '@io-gui/core'
+import { ReactiveElement, Register, Property, IoElementProps, WithBinding, Field, clearFocusBacktrack } from '@io-gui/core'
 import { ioBoolean } from '@io-gui/inputs'
 import { MenuOption } from '../nodes/MenuOption.js'
 import { ioMenuTree } from './IoMenuTree.js'
@@ -14,7 +14,7 @@ export type IoMenuTreeBranchProps = IoElementProps & {
  **/
 
 @Register
-export class IoMenuTreeBranch extends IoElement {
+export class IoMenuTreeBranch extends ReactiveElement {
   static override get Style() {
     return /* css */`
     :host {
@@ -44,16 +44,16 @@ export class IoMenuTreeBranch extends IoElement {
     `
   }
 
-  @ReactiveProperty(Number)
+  @Property(Number)
   declare depth: number
 
-  @ReactiveProperty({type: MenuOption})
+  @Property({type: MenuOption})
   declare option: MenuOption
 
-  @ReactiveProperty({value: false, type: Boolean, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare expanded: boolean
 
-  @Property('region')
+  @Field('region')
   declare role: string
 
   optionMutated() {
@@ -64,7 +64,7 @@ export class IoMenuTreeBranch extends IoElement {
     clearFocusBacktrack()
   }
 
-  override changed() {
+  override mutated() {
     this.render([
       ioBoolean({icon: this.option.icon, true: this.option.label, false: this.option.label, value: this.bind('expanded')}),
       this.expanded ? ioMenuTree({option: this.option, depth: this.depth + 1}) : null,

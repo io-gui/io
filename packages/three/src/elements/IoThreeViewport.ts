@@ -1,4 +1,4 @@
-import { Register, IoElement, IoElementProps, ReactiveProperty, ReactivityType, Change, Property, WithBinding } from '@io-gui/core'
+import { Register, ReactiveElement, IoElementProps, Property, ReactivityType, Change, Field, WithBinding } from '@io-gui/core'
 import { WebGPURenderer, CanvasTarget, NeutralToneMapping } from 'three/webgpu'
 import WebGPU from 'three/addons/capabilities/WebGPU.js'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
@@ -34,43 +34,64 @@ export type IoThreeViewportProps = IoElementProps & {
 }
 
 @Register
-export class IoThreeViewport extends IoElement {
+export class IoThreeViewport extends ReactiveElement {
 
   public width: number = 0
   public height: number = 0
   public visible: boolean = false
 
-  @ReactiveProperty({type: Number, value: 1.1})
+  @Property({type: Number, value: 1.1})
   declare public overscan: number
 
-  @ReactiveProperty({type: Number, value: 0x000000})
+  @Property({type: Number, value: 0x000000})
   declare public clearColor: number
 
-  @ReactiveProperty({type: Number, value: 1})
+  @Property({type: Number, value: 1})
   declare public clearAlpha: number
 
-  @ReactiveProperty({type: String, value: 'throttled'})
+  @Property({type: String, value: 'throttled'})
   declare reactivity: ReactivityType
 
-  @ReactiveProperty({type: ThreeApplet, init: null})
+  @Property({type: ThreeApplet, init: null})
   declare applet: ThreeApplet
 
-  @ReactiveProperty({type: String, value: 'perspective'})
+  @Property({type: String, value: 'perspective'})
   declare cameraSelect: string
 
-  @ReactiveProperty({type: WebGPURenderer, value: _renderer})
+  @Property({type: WebGPURenderer, value: _renderer})
   declare renderer: WebGPURenderer
 
-  @ReactiveProperty({type: ViewCameras})
+  @Property({type: ViewCameras})
   declare viewCameras: ViewCameras
 
-  @ReactiveProperty({type: ToolBase})
+  @Property({type: ToolBase})
   declare tool: ToolBase
 
-  @Property(0)
+  @Field(0)
   declare tabIndex: number
 
-  declare private renderTarget: CanvasTarget
+  private renderTarget: CanvasTarget | undefined
+
+  private isWebGPUBackend() {
+    return (this.renderer.backend as { isWebGPUBackend?: boolean }).isWebGPUBackend === true
+  }
+
+  private attachSurface() {
+    if (this.isWebGPUBackend()) {
+      if (!this.renderTarget) {
+        this.renderTarget = new CanvasTarget(document.createElement('canvas'))
+      }
+      const canvas = this.renderTarget.domElement
+      if (canvas.parentElement !== this) {
+        this.appendChild(canvas)
+      }
+      return
+    }
+    const canvas = this.renderer.domElement
+    if (canvas.parentElement !== this) {
+      this.appendChild(canvas)
+    }
+  }
 
   static override get Style() {
     return /* css */`
@@ -109,19 +130,17 @@ export class IoThreeViewport extends IoElement {
   }
 
   override ready() {
-    // TODO: This is a hack to enable rendering with WebGL fallback
-    if ((this.renderer.backend as any).isWebGPUBackend) {
-      this.renderTarget = new CanvasTarget(document.createElement('canvas'))
-      this.appendChild(this.renderTarget.domElement)
-    } else {
+    this.attachSurface()
+    if (!this.isWebGPUBackend()) {
       console.log('WebGL fallback enabled')
-      this.appendChild(this.renderer.domElement)
     }
   }
 
   override connectedCallback() {
     super.connectedCallback()
     observer.observe(this)
+    this.attachSurface()
+    this.onResized()
   }
   override disconnectedCallback() {
     super.disconnectedCallback()
@@ -147,7 +166,7 @@ export class IoThreeViewport extends IoElement {
     const rect = this.getBoundingClientRect()
     this.width = Math.floor(rect.width)
     this.height = Math.floor(rect.height)
-    if ((this.renderer.backend as any).isWebGPUBackend) {
+    if (this.isWebGPUBackend() && this.renderTarget) {
       this.renderTarget.setSize(this.width, this.height)
       this.renderTarget.setPixelRatio(window.devicePixelRatio)
     }
@@ -163,7 +182,7 @@ export class IoThreeViewport extends IoElement {
   viewCamerasMutated() {
     this.debounce(this.renderViewportDebounced)
   }
-  override changed() {
+  override mutated() {
     this.debounce(this.renderViewportDebounced)
   }
 
@@ -182,7 +201,7 @@ export class IoThreeViewport extends IoElement {
     }
     if (!this.width || !this.height) return
 
-    if ((this.renderer.backend as any).isWebGPUBackend) {
+    if (this.isWebGPUBackend() && this.renderTarget) {
       this.renderer.setCanvasTarget(this.renderTarget)
     }
 
@@ -208,9 +227,13 @@ export class IoThreeViewport extends IoElement {
 
   override dispose() {
     delete (this as Record<string, unknown>).applet
-    this.renderTarget.dispose()
+    if (this.renderTarget) {
+      this.renderTarget.dispose()
+    }
     this.viewCameras.dispose()
-    this.tool.unregisterViewport(this)
+    if (this.tool) {
+      this.tool.unregisterViewport(this)
+    }
     super.dispose()
   }
 }

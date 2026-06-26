@@ -159,7 +159,7 @@ describe('IoDrawer', () => {
 
   })
 
-  describe('Static Properties', () => {
+  describe('Static Fields', () => {
     it('should have Style getter', () => {
       expect(IoDrawer.Style).toBeDefined()
       expect(typeof IoDrawer.Style).toBe('string')

@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, IoOverlaySingleton as Overlay, IoElementProps, WithBinding } from '@io-gui/core'
+import { Register, ReactiveElement, Property, IoOverlaySingleton as Overlay, IoElementProps, WithBinding } from '@io-gui/core'
 import { IoMenuOptions } from './IoMenuOptions.js'
 import { onOverlayPointerdown, onOverlayPointermove, onOverlayPointeup } from './IoMenuItem.js'
 import { MenuOption } from '../nodes/MenuOption.js'
@@ -17,22 +17,22 @@ export type IoContextMenuProps = IoElementProps & {
  * `parentElement` as long as the `button` properties are different.
  **/
 @Register
-export class IoContextMenu extends IoElement {
+export class IoContextMenu extends ReactiveElement {
 
-  @ReactiveProperty({type: MenuOption})
+  @Property({type: MenuOption})
   declare option: MenuOption
 
-  @ReactiveProperty({value: false, reflect: true})
+  @Property({value: false, reflect: true})
   declare expanded: boolean
 
-  @ReactiveProperty(0)
+  @Property(0)
   declare button: number
 
   declare $options: IoMenuOptions
   declare _contextTimeout: ReturnType<typeof setTimeout>
   declare _listenerParent: HTMLElement | null
 
-  static override get ReactiveProperties(): any {
+  static override get Properties(): any {
     return {
       $options: null,
     }

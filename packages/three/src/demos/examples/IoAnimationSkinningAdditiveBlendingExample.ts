@@ -1,4 +1,4 @@
-import { ReactiveProperty, Register } from '@io-gui/core'
+import { Property, Register } from '@io-gui/core'
 import {
   AnimationAction,
   AnimationClip,
@@ -38,7 +38,7 @@ const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
 @Register
 export class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
 
-  @ReactiveProperty({type: Boolean, value: false})
+  @Property({type: Boolean, value: false})
   declare isLoaded: boolean
 
   public mixer: AnimationMixer = new AnimationMixer(new Group())
@@ -215,7 +215,7 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
 @Register
 export class IoAnimationSkinningAdditiveBlendingExample extends IoThreeExample {
 
-  @ReactiveProperty({type: AnimationSkinningAdditiveBlendingExample, init: {isPlaying: true}})
+  @Property({type: AnimationSkinningAdditiveBlendingExample, init: {isPlaying: true}})
   declare applet: AnimationSkinningAdditiveBlendingExample
 
   override ready() {

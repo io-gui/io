@@ -1,4 +1,4 @@
-import { ReactiveNode, NodeArray, ReactiveProperty, Register } from '@io-gui/core'
+import { ReactiveObject, NodeArray, Property, Register } from '@io-gui/core'
 import { Tab, TabProps } from './Tab.js'
 
 export type PanelProps = {
@@ -22,12 +22,12 @@ function deduplicateTabs<T extends TabProps>(tabs: Array<T>, context: string): A
 }
 
 @Register
-export class Panel extends ReactiveNode {
+export class Panel extends ReactiveObject {
 
-  @ReactiveProperty({type: NodeArray, init: 'this'})
+  @Property({type: NodeArray, init: 'this'})
   declare tabs: NodeArray<Tab>
 
-  @ReactiveProperty({type: String, value: '1 1 auto'})
+  @Property({type: String, value: '1 1 auto'})
   declare flex: string
 
   constructor(args: PanelProps) {

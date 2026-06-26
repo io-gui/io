@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, Register, ReactiveProperty, div, IoElementProps, WithBinding, Property, clearFocusBacktrack } from '@io-gui/core'
+import { ReactiveElement, VDOMElement, Register, Property, div, IoElementProps, WithBinding, Field, clearFocusBacktrack } from '@io-gui/core'
 import { ioBoolean } from '@io-gui/inputs'
 
 export type IoCollapsibleProps = IoElementProps & {
@@ -14,7 +14,7 @@ export type IoCollapsibleProps = IoElementProps & {
  **/
 
 @Register
-export class IoCollapsible extends IoElement {
+export class IoCollapsible extends ReactiveElement {
   static override get Style() {
     return /* css */`
     :host {
@@ -67,29 +67,29 @@ export class IoCollapsible extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: Array, init: null})
+  @Property({type: Array, init: null})
   declare elements: VDOMElement[]
 
-  @ReactiveProperty({value: '', type: String})
+  @Property({value: '', type: String})
   declare label: string
 
-  @ReactiveProperty({value: 'column', reflect: true})
+  @Property({value: 'column', reflect: true})
   declare direction: 'column' | 'row'
 
-  @ReactiveProperty({value: '', type: String})
+  @Property({value: '', type: String})
   declare icon: string
 
-  @ReactiveProperty({value: false, reflect: true})
+  @Property({value: false, reflect: true})
   declare expanded: boolean
 
-  @Property('region')
+  @Field('region')
   declare role: string
 
   expandedChanged() {
     clearFocusBacktrack()
   }
 
-  override changed() {
+  override mutated() {
     this.render([
       // TODO: consider implementing caching
       ioBoolean({icon: this.icon, true: this.label, false: this.label, value: this.bind('expanded')}),

@@ -1,4 +1,4 @@
-import { ReactiveProperty, Register } from '@io-gui/core'
+import { Property, Register } from '@io-gui/core'
 import {
   AmbientLight,
   AnimationMixer,
@@ -43,7 +43,7 @@ export class BackdropAreaExample extends ThreeApplet {
 
   public boxScale: Vector3
 
-  @ReactiveProperty({type: String, value: 'blurred'})
+  @Property({type: String, value: 'blurred'})
   declare public material: string
 
   constructor(args: ThreeAppletProps) {
@@ -151,7 +151,7 @@ export class BackdropAreaExample extends ThreeApplet {
 @Register
 export class IoBackdropAreaExample extends IoThreeExample {
 
-  @ReactiveProperty({type: BackdropAreaExample, init: {isPlaying: true}})
+  @Property({type: BackdropAreaExample, init: {isPlaying: true}})
   declare applet: BackdropAreaExample
 
   override ready() {

@@ -1,4 +1,4 @@
-import { IoOverlaySingleton, NudgeDirection, nudge, ReactiveProperty, Register } from '@io-gui/core'
+import { IoOverlaySingleton, NudgeDirection, nudge, Property, Register } from '@io-gui/core'
 import { IoPropertyEditor, IoPropertyEditorProps } from './IoPropertyEditor.js'
 
 type IoContextEditorExpandProps = IoPropertyEditorProps & {
@@ -21,7 +21,7 @@ class IoContextEditor extends IoPropertyEditor {
     `
   }
 
-  @ReactiveProperty({type: Boolean, value: false, reflect: true})
+  @Property({type: Boolean, value: false, reflect: true})
   declare expanded: boolean
 
   declare onClose: null | (() => void)

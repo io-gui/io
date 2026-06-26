@@ -1,4 +1,4 @@
-import { Register, ReactiveNode, ReactiveProperty, Property, ReactiveNodeProps, Binding  } from '@io-gui/core'
+import { Register, ReactiveObject, Property, Field, ReactiveNodeProps, Binding  } from '@io-gui/core'
 import { IoThreeViewport } from '../elements/IoThreeViewport.js'
 import { ThreeApplet } from './ThreeApplet.js'
 import { Box3, Camera, Object3D, OrthographicCamera, PerspectiveCamera, Sphere, Vector3 } from 'three/webgpu'
@@ -107,24 +107,24 @@ export type ViewCamerasProps = ReactiveNodeProps & {
 }
 
 @Register
-export class ViewCameras extends ReactiveNode {
+export class ViewCameras extends ReactiveObject {
 
-  @Property()
+  @Field()
   declare private viewport: IoThreeViewport
 
-  @ReactiveProperty({type: ThreeApplet})
+  @Property({type: ThreeApplet})
   declare public applet: ThreeApplet
 
-  @ReactiveProperty({type: String, value: 'perspective'})
+  @Property({type: String, value: 'perspective'})
   declare public cameraSelect: string
 
-  @ReactiveProperty({type: Camera})
+  @Property({type: Camera})
   declare public camera: PerspectiveCamera | OrthographicCamera
 
-  @ReactiveProperty({type: DefaultCameras, init: null})
+  @Property({type: DefaultCameras, init: null})
   declare private readonly defaultCameras: DefaultCameras
 
-  @ReactiveProperty({type: OrbitControls, init: ['this.defaultCameras.perspective']})
+  @Property({type: OrbitControls, init: ['this.defaultCameras.perspective']})
   declare private readonly orbitControls: OrbitControls
 
   static override get Listeners() {

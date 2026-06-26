@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, Property, IoOverlaySingleton as Overlay, span, WithBinding, NudgeDirection, ListenerDefinitions } from '@io-gui/core'
+import { Register, Property, Field, IoOverlaySingleton as Overlay, span, WithBinding, NudgeDirection, ListenerDefinitions } from '@io-gui/core'
 import { IoField, IoFieldProps } from '@io-gui/inputs'
 import { ioIcon } from '@io-gui/icons'
 import { IoMenuElementType, getMenuRoot, getMenuAncestors, getMenuDescendants, getMenuSiblings, getHoveredMenuItem } from '../utils/MenuDOMUtils.js'
@@ -83,25 +83,25 @@ export class IoMenuItem extends IoField {
     `
   }
 
-  @ReactiveProperty({type: MenuOption})
+  @Property({type: MenuOption})
   declare option: MenuOption
 
-  @Property('')
+  @Field('')
   declare label: string
 
-  @ReactiveProperty({value: false, reflect: true})
+  @Property({value: false, reflect: true})
   declare expanded: boolean
 
-  @ReactiveProperty({value: 'right', reflect: true})
+  @Property({value: 'right', reflect: true})
   declare direction: NudgeDirection
 
-  @ReactiveProperty({value: 1000, reflect: true})
+  @Property({value: 1000, reflect: true})
   declare depth: number
 
-  @Property('false')
+  @Field('false')
   declare contentEditable: string
 
-  @Property()
+  @Field()
   declare $parent?: IoMenuOptions | IoMenuTree
 
   declare $options?: IoMenuOptions
@@ -330,7 +330,7 @@ export class IoMenuItem extends IoField {
       selected: this.option.selected,
       disabled: this.option.disabled,
     })
-    this.changed()
+    this.mutated()
   }
   initOptions() {
     if (this.option.options && this.depth > 0) {
@@ -347,7 +347,7 @@ export class IoMenuItem extends IoField {
       }
     }
   }
-  override changed() {
+  override mutated() {
     const icon = this.icon || this.option.icon
     const label = this.label || this.option.label
 

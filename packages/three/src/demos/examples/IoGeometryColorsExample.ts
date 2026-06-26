@@ -10,7 +10,7 @@ import {
   PlaneGeometry,
   SRGBColorSpace
 } from 'three/webgpu'
-import { Register, ReactiveProperty } from '@io-gui/core'
+import { Register, Property } from '@io-gui/core'
 import { ThreeApplet, IoThreeViewport, ThreeAppletProps } from '@io-gui/three'
 
 @Register
@@ -128,7 +128,7 @@ export class GeometryColorsExample extends ThreeApplet {
 @Register
 export class IoGeometryColorsExample extends IoThreeViewport {
 
-  @ReactiveProperty({type: GeometryColorsExample, init: null})
+  @Property({type: GeometryColorsExample, init: null})
   declare applet: GeometryColorsExample
 
 }

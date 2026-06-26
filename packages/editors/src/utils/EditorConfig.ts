@@ -1,4 +1,4 @@
-import { IoElement, IoGl, Theme, AnyConstructor, VDOMElement, ReactiveNode, Color, JsonObject } from '@io-gui/core'
+import { ReactiveElement, IoGl, Theme, AnyConstructor, VDOMElement, ReactiveObject, Color, JsonObject } from '@io-gui/core'
 import { ioString, ioNumber, ioSwitch, ioField, ioButton } from '@io-gui/inputs'
 import { MenuOption, MenuOptionProps, ioOptionSelect } from '@io-gui/menus'
 import { ioNumberSlider } from '@io-gui/sliders'
@@ -143,10 +143,10 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
   ]],
   [HTMLElement, [
   ]],
-  [ReactiveNode, [
+  [ReactiveObject, [
     ['reactivity', ioOptionSelect({option: new MenuOption({options: ['none', 'debounced', 'immediate']})})],
   ]],
-  [IoElement, [
+  [ReactiveElement, [
     ['reactivity', ioOptionSelect({option: new MenuOption({options: ['none', 'debounced', 'immediate']})})],
   ]],
   [IoGl, [

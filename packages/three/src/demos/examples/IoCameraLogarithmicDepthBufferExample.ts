@@ -12,7 +12,7 @@ import {
 } from 'three/webgpu'
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'
-import { Register, ReactiveProperty } from '@io-gui/core'
+import { Register, Property } from '@io-gui/core'
 import { ThreeApplet, IoThreeExample, ioThreeViewport, ThreeAppletProps } from '@io-gui/three'
 import { Split, ioSplit } from '@io-gui/layout'
 
@@ -144,10 +144,10 @@ export class CameraLogarithmicDepthBufferExample extends ThreeApplet {
 @Register
 export class IoCameraLogarithmicDepthBufferExample extends IoThreeExample {
 
-  @ReactiveProperty({type: CameraLogarithmicDepthBufferExample, init: {isPlaying: true}})
+  @Property({type: CameraLogarithmicDepthBufferExample, init: {isPlaying: true}})
   declare applet: CameraLogarithmicDepthBufferExample
 
-  @ReactiveProperty({type: WebGPURenderer, init: {antialias: true, logarithmicDepthBuffer: true}})
+  @Property({type: WebGPURenderer, init: {antialias: true, logarithmicDepthBuffer: true}})
   declare renderer: WebGPURenderer
 
   override ready() {

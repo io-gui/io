@@ -1,4 +1,4 @@
-import { IoElement, ReactiveProperty, Register, IoElementProps, ReactiveNode, span, div, HTML_ELEMENTS, VDOMElement } from '@io-gui/core'
+import { ReactiveElement, Property, Register, IoElementProps, ReactiveObject, span, div, HTML_ELEMENTS, VDOMElement } from '@io-gui/core'
 import { IoField } from '@io-gui/inputs'
 import { PropertyConfig, PropertyConfigRecord, getEditorConfig } from '../utils/EditorConfig.js'
 import { PropertyGroups, getEditorGroups, PropertyGroupsRecord, getAllPropertyNames } from '../utils/EditorGroups.js'
@@ -20,7 +20,7 @@ export type IoPropertyEditorProps = IoElementProps & {
  * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
  **/
 @Register
-export class IoPropertyEditor extends IoElement {
+export class IoPropertyEditor extends ReactiveElement {
   static override get Style() {
     return /* css */`
     :host {
@@ -76,31 +76,31 @@ export class IoPropertyEditor extends IoElement {
     `
   }
 
-  // @ReactiveProperty('debounced')
+  // @Property('debounced')
   // declare reactivity: ReactivityType
 
-  @ReactiveProperty()
+  @Property()
   declare value: object | Array<unknown>
 
-  @ReactiveProperty({type: Array})
+  @Property({type: Array})
   declare properties: string[] | undefined
 
-  @ReactiveProperty({type: String, value: ''})
+  @Property({type: String, value: ''})
   declare label: string
 
-  @ReactiveProperty(true)
+  @Property(true)
   declare labeled: boolean
 
-  @ReactiveProperty('80px')
+  @Property('80px')
   declare labelWidth: string
 
-  @ReactiveProperty({type: Array, init: null})
+  @Property({type: Array, init: null})
   declare config: PropertyConfig[]
 
-  @ReactiveProperty({type: Object, init: null})
+  @Property({type: Object, init: null})
   declare groups: PropertyGroups
 
-  @ReactiveProperty({type: Object})
+  @Property({type: Object})
   declare widget: VDOMElement | undefined | null
 
   private _config: PropertyConfigRecord | null = null
@@ -114,7 +114,7 @@ export class IoPropertyEditor extends IoElement {
     const id = (event.target as HTMLElement).id
     if (id !== undefined) {
       (this.value as Record<string, any>)[id] = event.detail.value
-      if (!(this.value as unknown as ReactiveNode)._isNode) {
+      if (!(this.value as unknown as ReactiveObject)._isReactiveObject) {
         this.dispatchMutation(this.value)
       }
     } else {
@@ -260,7 +260,7 @@ export class IoPropertyEditor extends IoElement {
   valueMutated() {
     this.throttle(this.changedThrottled)
   }
-  override changed() {
+  override mutated() {
     this.throttle(this.changedThrottled)
   }
   changedThrottled() {

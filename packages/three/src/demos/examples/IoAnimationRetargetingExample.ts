@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty } from '@io-gui/core'
+import { Register, Property } from '@io-gui/core'
 import {
   AnimationClip,
   AnimationMixer,
@@ -252,7 +252,7 @@ export class AnimationRetargetingExample extends ThreeApplet {
 @Register
 export class IoAnimationRetargetingExample extends IoThreeExample {
 
-  @ReactiveProperty({type: AnimationRetargetingExample, init: {isPlaying: true}})
+  @Property({type: AnimationRetargetingExample, init: {isPlaying: true}})
   declare applet: AnimationRetargetingExample
 
   override ready() {

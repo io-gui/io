@@ -1,4 +1,4 @@
-import { ReactiveProperty, Register } from '@io-gui/core'
+import { Property, Register } from '@io-gui/core'
 import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
 import {
   AnimationMixer,
@@ -34,7 +34,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 @Register
 export class BackdropExample extends ThreeApplet {
 
-  @ReactiveProperty({type: AnimationMixer, init: new Group()})
+  @Property({type: AnimationMixer, init: new Group()})
   declare public mixer: AnimationMixer
 
   public portals: Group
@@ -127,7 +127,7 @@ export class BackdropExample extends ThreeApplet {
 @Register
 export class IoBackdropExample extends IoThreeExample {
 
-  @ReactiveProperty({type: BackdropExample, init: {isPlaying: true}})
+  @Property({type: BackdropExample, init: {isPlaying: true}})
   declare applet: BackdropExample
 
 }

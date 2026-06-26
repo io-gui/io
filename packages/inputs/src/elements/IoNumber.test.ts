@@ -18,7 +18,7 @@ describe('IoNumber.test', () => {
     expect(element.role).toBe('textbox')
     expect(element.spellcheck).toBe(false)
 
-    expect(element._reactiveProperties.get('conversion')).toEqual({
+    expect(element._properties.get('conversion')).toEqual({
       binding: undefined,
       init: undefined,
       reflect: false,
@@ -26,7 +26,7 @@ describe('IoNumber.test', () => {
       value: 1,
       observer: {type: 'none', observing: false},
     })
-    expect(element._reactiveProperties.get('step')).toEqual({
+    expect(element._properties.get('step')).toEqual({
       binding: undefined,
       init: undefined,
       reflect: false,
@@ -34,7 +34,7 @@ describe('IoNumber.test', () => {
       value: 0.0001,
       observer: {type: 'none', observing: false},
     })
-    expect(element._reactiveProperties.get('min')).toEqual({
+    expect(element._properties.get('min')).toEqual({
       binding: undefined,
       init: undefined,
       reflect: false,
@@ -42,7 +42,7 @@ describe('IoNumber.test', () => {
       value: -Infinity,
       observer: {type: 'none', observing: false},
     })
-    expect(element._reactiveProperties.get('max')).toEqual({
+    expect(element._properties.get('max')).toEqual({
       binding: undefined,
       init: undefined,
       reflect: false,

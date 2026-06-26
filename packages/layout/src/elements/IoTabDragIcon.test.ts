@@ -63,7 +63,7 @@ describe('IoTabDragIcon', () => {
 
   it('renders tab icon and label when tab is set', () => {
     tabDragIconSingleton.tab = tab
-    tabDragIconSingleton.changed()
+    tabDragIconSingleton.mutated()
     expect(tabDragIconSingleton.querySelector('io-icon')).toBeTruthy()
     expect(tabDragIconSingleton.textContent).toContain('Drag Me')
   })

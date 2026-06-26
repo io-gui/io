@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, span } from '@io-gui/core'
+import { Register, Property, span } from '@io-gui/core'
 import { IoField, IoFieldProps, ioString, ioButton } from '@io-gui/inputs'
 import { IoContextEditorSingleton } from '@io-gui/editors'
 import { IconsetDB, ioIcon } from '@io-gui/icons'
@@ -81,10 +81,10 @@ export class IoTab extends IoField {
     `
   }
 
-  @ReactiveProperty({type: Tab})
+  @Property({type: Tab})
   declare tab: Tab
 
-  @ReactiveProperty({type: Boolean, reflect: true})
+  @Property({type: Boolean, reflect: true})
   declare overflow: boolean
 
   static override get Listeners() {
@@ -184,9 +184,9 @@ export class IoTab extends IoField {
     }
   }
   tabMutated() {
-    this.changed()
+    this.mutated()
   }
-  override changed() {
+  override mutated() {
     this.setAttribute('selected', this.tab.selected)
     this.setAttribute('title', this.tab.label)
     this.render([

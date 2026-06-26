@@ -1,4 +1,4 @@
-import { Register, IoElement, IoElementProps, ReactiveProperty, WithBinding, div } from '@io-gui/core'
+import { Register, ReactiveElement, IoElementProps, Property, WithBinding, div } from '@io-gui/core'
 import { ioButton } from '@io-gui/inputs'
 import { ioPropertyEditor } from '@io-gui/editors'
 import { BufferGeometry, type NormalOrGLBufferAttributes } from 'three/webgpu'
@@ -10,9 +10,9 @@ export type IoBuildGeometryProps = IoElementProps & {
 }
 
 @Register
-export class IoBuildGeometry extends IoElement {
+export class IoBuildGeometry extends ReactiveElement {
 
-  @ReactiveProperty({type: Object, init: null})
+  @Property({type: Object, init: null})
   declare value: BufferGeometry<NormalOrGLBufferAttributes> | null
 
   static override get Style() {
@@ -69,7 +69,7 @@ export class IoBuildGeometry extends IoElement {
     this.dispatchMutation(geometry.boundingSphere!)
   }
 
-  override changed() {
+  override mutated() {
     const geometry = this.value
     if (!geometry) {
       this.render([])

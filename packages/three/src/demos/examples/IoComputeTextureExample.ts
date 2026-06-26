@@ -1,6 +1,6 @@
 import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture, WebGPURenderer, ComputeNode } from 'three/webgpu'
 import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl'
-import { Register, ReactiveProperty } from '@io-gui/core'
+import { Register, Property } from '@io-gui/core'
 import { ThreeApplet, IoThreeExample, ioThreeViewport, ThreeAppletProps } from '@io-gui/three'
 
 @Register
@@ -50,7 +50,7 @@ export class ComputeTextureExample extends ThreeApplet {
 @Register
 export class IoComputeTextureExample extends IoThreeExample {
 
-  @ReactiveProperty({type: ComputeTextureExample, init: null})
+  @Property({type: ComputeTextureExample, init: null})
   declare applet: ComputeTextureExample
 
   override ready() {

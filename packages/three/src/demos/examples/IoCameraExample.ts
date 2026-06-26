@@ -1,5 +1,5 @@
 import { PerspectiveCamera, OrthographicCamera, Group, BufferGeometry, Float32BufferAttribute, MathUtils, Mesh, MeshBasicMaterial, Points, PointsMaterial, SphereGeometry } from 'three/webgpu'
-import { Register, ReactiveProperty } from '@io-gui/core'
+import { Register, Property } from '@io-gui/core'
 import { Split, ioSplit } from '@io-gui/layout'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioPropertyEditor, registerEditorConfig, ioObject } from '@io-gui/editors'
@@ -139,7 +139,7 @@ registerEditorConfig(CameraExample, [
 @Register
 export class IoCameraExample extends IoThreeExample {
 
-  @ReactiveProperty({type: CameraExample, init: {isPlaying: true}})
+  @Property({type: CameraExample, init: {isPlaying: true}})
   declare applet: CameraExample
 
   override ready() {

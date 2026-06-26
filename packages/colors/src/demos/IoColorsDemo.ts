@@ -1,8 +1,8 @@
 //@ts-nocheck
-import { Register, IoElement, div } from '@io-gui/core'
+import { Register, ReactiveElement, div } from '@io-gui/core'
 import { ioColorRgba, ioColorSlider } from '@io-gui/colors'
 
-export class IoColorsDemo extends IoElement {
+export class IoColorsDemo extends ReactiveElement {
   static get Style() {
     return /* css */`
       :host {
@@ -29,7 +29,7 @@ export class IoColorsDemo extends IoElement {
       }
     `
   }
-  static get ReactiveProperties() {
+  static get Properties() {
     return {
       rgb: {value: {r: 0, g: 1, b: 0.5}},
       rgba: {value: {r: 1, g: 0.5, b: 1, a: 1}},

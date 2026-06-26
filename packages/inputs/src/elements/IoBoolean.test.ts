@@ -14,7 +14,7 @@ describe('IoBoolean.test', () => {
     expect(element.true).toBe('true')
     expect(element.false).toBe('false')
     expect(element.role).toBe('checkbox')
-    expect(element._reactiveProperties.get('value')).toEqual({
+    expect(element._properties.get('value')).toEqual({
       binding: undefined,
       init: undefined,
       reflect: true,
@@ -22,7 +22,7 @@ describe('IoBoolean.test', () => {
       value: false,
       observer: {type: 'none', observing: false},
     })
-    expect(element._reactiveProperties.get('true')).toEqual({
+    expect(element._properties.get('true')).toEqual({
       binding: undefined,
       init: undefined,
       reflect: false,
@@ -30,7 +30,7 @@ describe('IoBoolean.test', () => {
       value: 'true',
       observer: {type: 'none', observing: false},
     })
-    expect(element._reactiveProperties.get('false')).toEqual({
+    expect(element._properties.get('false')).toEqual({
       binding: undefined,
       init: undefined,
       reflect: false,

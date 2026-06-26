@@ -9,7 +9,7 @@ import {
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
-import { Register, ReactiveProperty } from '@io-gui/core'
+import { Register, Property } from '@io-gui/core'
 import { ThreeApplet, IoThreeExample, ThreeAppletProps, ioThreeViewport   } from '@io-gui/three'
 import { ioSplit, Split } from '@io-gui/layout'
 
@@ -71,7 +71,7 @@ export class AnimationKeyframesExample extends ThreeApplet {
 @Register
 export class IoAnimationKeyframesExample extends IoThreeExample {
 
-  @ReactiveProperty({type: AnimationKeyframesExample, init: {isPlaying: true}})
+  @Property({type: AnimationKeyframesExample, init: {isPlaying: true}})
   declare applet: AnimationKeyframesExample
 
   override ready() {

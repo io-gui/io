@@ -1,4 +1,4 @@
-import { Register, ReactiveNode, ReactiveProperty, ReactiveNodeProps } from '@io-gui/core'
+import { Register, ReactiveObject, Property, ReactiveNodeProps } from '@io-gui/core'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, Timer, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu'
@@ -21,18 +21,18 @@ function rAFLoop() {
 rAFLoop()
 
 @Register
-export class ThreeApplet extends ReactiveNode {
+export class ThreeApplet extends ReactiveObject {
 
-  @ReactiveProperty({type: Scene, init: null})
+  @Property({type: Scene, init: null})
   declare scene: Scene
 
-  @ReactiveProperty({type: Number, value: 1})
+  @Property({type: Number, value: 1})
   declare toneMappingExposure: number
 
-  @ReactiveProperty({type: Number, value: NoToneMapping})
+  @Property({type: Number, value: NoToneMapping})
   declare toneMapping: ToneMapping
 
-  @ReactiveProperty({type: Boolean, value: false})
+  @Property({type: Boolean, value: false})
   declare isPlaying: boolean
 
   public _renderer: WebGPURenderer | null = null

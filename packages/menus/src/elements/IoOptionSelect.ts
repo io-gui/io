@@ -1,4 +1,4 @@
-import { Register, IoElement, Change, ReactiveProperty, IoElementProps, WithBinding, Property } from '@io-gui/core'
+import { Register, ReactiveElement, Change, Property, IoElementProps, WithBinding, Field } from '@io-gui/core'
 import { MenuOption } from '../nodes/MenuOption.js'
 import { ioMenuItem } from './IoMenuItem.js'
 
@@ -17,7 +17,7 @@ export type IoOptionSelectProps = IoElementProps & {
  * When clicked or activated by space/enter key, it expands a menu with selectable options.
  **/
 @Register
-export class IoOptionSelect extends IoElement {
+export class IoOptionSelect extends ReactiveElement {
   static override get Style() {
     return /* css */`
     :host {
@@ -38,23 +38,23 @@ export class IoOptionSelect extends IoElement {
     `
   }
 
-  @ReactiveProperty({value: undefined})
+  @Property({value: undefined})
   declare value: any
 
-  @ReactiveProperty('')
+  @Property('')
   declare label: string
 
-  @ReactiveProperty('')
+  @Property('')
   declare icon: string
 
   // TODO: consider deprecating
-  @ReactiveProperty('value')
+  @Property('value')
   declare selectBy: SelectBy
 
-  @ReactiveProperty({type: MenuOption})
+  @Property({type: MenuOption})
   declare option: MenuOption
 
-  @Property('button')
+  @Field('button')
   declare role: string
 
   constructor(args: IoOptionSelectProps) {
@@ -101,9 +101,9 @@ export class IoOptionSelect extends IoElement {
     }
   }
   optionMutated() {
-    this.changed()
+    this.mutated()
   }
-  override changed() {
+  override mutated() {
     let selectedItem
     let label = this.label
     if (this.selectBy === 'value') {

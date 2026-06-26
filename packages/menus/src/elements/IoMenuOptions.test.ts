@@ -46,7 +46,7 @@ describe('IoMenuOptions', () => {
 
   it('updates when option changes', () => {
     option.options.push(new MenuOption({ id: 'three', label: 'Three' }))
-    element.changed()
+    element.mutated()
     expect(element.querySelectorAll('io-menu-item').length).toBe(3)
   })
 })

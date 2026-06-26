@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, span, ThemeSingleton } from '@io-gui/core'
+import { Register, Property, span, ThemeSingleton } from '@io-gui/core'
 import { IoField, IoFieldProps } from '@io-gui/inputs'
 import { ioIcon } from '@io-gui/icons'
 import { ioTabDropRectSingleton } from './IoTabDropRect.js'
@@ -36,22 +36,22 @@ class IoTabDragIcon extends IoField {
     `
   }
 
-  @ReactiveProperty({type: Boolean, reflect: true})
+  @Property({type: Boolean, reflect: true})
   declare dragging: boolean
 
-  @ReactiveProperty()
+  @Property()
   declare tab: Tab | null
 
-  @ReactiveProperty()
+  @Property()
   declare dropSource: IoPanel | null
 
-  @ReactiveProperty()
+  @Property()
   declare dropTarget: IoPanel | null
 
-  @ReactiveProperty({type: String, value: 'none', reflect: true})
+  @Property({type: String, value: 'none', reflect: true})
   declare splitDirection: SplitDirection
 
-  @ReactiveProperty({type: Number, value: -1})
+  @Property({type: Number, value: -1})
   declare dropIndex: number
 
   private _startX: number = 0
@@ -189,7 +189,7 @@ class IoTabDragIcon extends IoField {
     })
   }
 
-  override changed() {
+  override mutated() {
     ioTabDropRectSingleton.setProperties({
       dropTarget: this.dropTarget,
       splitDirection: this.splitDirection,

@@ -12,7 +12,7 @@ import {
   QuaternionKeyframeTrack,
   Vector3
 } from 'three/webgpu'
-import { Register, ReactiveProperty } from '@io-gui/core'
+import { Register, Property } from '@io-gui/core'
 import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
 
 @Register
@@ -71,7 +71,7 @@ export class AnimationGroupsExample extends ThreeApplet {
 @Register
 export class IoAnimationGroupsExample extends IoThreeExample {
 
-  @ReactiveProperty({type: AnimationGroupsExample, init: {isPlaying: true}})
+  @Property({type: AnimationGroupsExample, init: {isPlaying: true}})
   declare applet: AnimationGroupsExample
 
 }

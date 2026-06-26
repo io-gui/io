@@ -1,4 +1,4 @@
-import { IoOverlaySingleton, NudgeDirection, NodeArray, IoElement, IoElementProps, Register, ReactiveProperty, nudge, ListenerDefinition } from '@io-gui/core'
+import { IoOverlaySingleton, NudgeDirection, NodeArray, ReactiveElement, IoElementProps, Register, Property, nudge, ListenerDefinition } from '@io-gui/core'
 import { Tab } from '../nodes/Tab.js'
 import { ioTab, IoTab } from './IoTab.js'
 
@@ -10,7 +10,7 @@ export interface IoTabsHamburgerMenuExpandProps {
 }
 
 @Register
-class IoTabsHamburgerMenu extends IoElement {
+class IoTabsHamburgerMenu extends ReactiveElement {
   // static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement
   static override get Style() {
     return /* css */`
@@ -46,10 +46,10 @@ class IoTabsHamburgerMenu extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: NodeArray, init: 'this'})
+  @Property({type: NodeArray, init: 'this'})
   declare private tabs: NodeArray<Tab>
 
-  @ReactiveProperty({type: Boolean, reflect: true})
+  @Property({type: Boolean, reflect: true})
   declare private expanded: boolean
 
   declare private onEditTab: (event: CustomEvent) => void
@@ -113,7 +113,7 @@ class IoTabsHamburgerMenu extends IoElement {
   onExpand() {
     (this.querySelector('[selected]') as HTMLElement)?.focus()
   }
-  override changed() {
+  override mutated() {
     this.render([
       ...this.tabs.map(tab => ioTab({tab: tab})),
     ])

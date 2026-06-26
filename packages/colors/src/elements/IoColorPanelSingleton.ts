@@ -1,8 +1,8 @@
-import { Register, ReactiveProperty, IoOverlaySingleton, IoElement } from '@io-gui/core'
+import { Register, Property, IoOverlaySingleton, ReactiveElement } from '@io-gui/core'
 import { IoColorBase } from './IoColorBase.js'
 import { ioColorSlider } from './IoColorSliders.js'
 
-type IoColorPanelSource = IoElement & {
+type IoColorPanelSource = ReactiveElement & {
   onPanelValueInput(): void
 }
 
@@ -32,10 +32,10 @@ class IoColorPanel extends IoColorBase {
     `
   }
 
-  @ReactiveProperty({value: false, reflect: true})
+  @Property({value: false, reflect: true})
   declare expanded: boolean
 
-  @ReactiveProperty({value: null})
+  @Property({value: null})
   declare src: IoColorPanelSource | null
 
   static override get Listeners() {
@@ -72,7 +72,7 @@ class IoColorPanel extends IoColorBase {
   onValueInput() {
     this.src?.onPanelValueInput()
   }
-  override changed() {
+  override mutated() {
     this.render([
       ioColorSlider({value: this.value, channel: 'sv', '@value-input': this.onValueInput}),
       ioColorSlider({value: this.value, channel: 'h', vertical: true, '@value-input': this.onValueInput}),

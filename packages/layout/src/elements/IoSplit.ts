@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, ThemeSingleton, div, WithBinding } from '@io-gui/core'
+import { Register, Property, VDOMElement, ReactiveElement, IoElementProps, ThemeSingleton, div, WithBinding } from '@io-gui/core'
 import { MenuOption } from '@io-gui/menus'
 import { IoPanel, ioPanel } from './IoPanel.js'
 import { ioDivider } from './IoDivider.js'
@@ -32,7 +32,7 @@ export type IoSplitProps = IoElementProps & {
 }
 
 @Register
-export class IoSplit extends IoElement {
+export class IoSplit extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host {
@@ -80,28 +80,28 @@ export class IoSplit extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: Object})
+  @Property({type: Object})
   declare split: Split
 
-  @ReactiveProperty(Array)
+  @Property(Array)
   declare elements: VDOMElement[]
 
-  @ReactiveProperty({type: Object, value: null})
+  @Property({type: Object, value: null})
   declare leadingDrawer: Split | Panel | null
 
-  @ReactiveProperty({type: Object, value: null})
+  @Property({type: Object, value: null})
   declare trailingDrawer: Split | Panel | null
 
-  @ReactiveProperty({type: MenuOption})
+  @Property({type: MenuOption})
   declare addMenuOption: MenuOption | undefined
 
-  @ReactiveProperty({type: Boolean, value: true, reflect: true})
+  @Property({type: Boolean, value: true, reflect: true})
   declare hasVisibleFlexGrow: boolean
 
-  @ReactiveProperty({type: Boolean, value: false, reflect: true})
+  @Property({type: Boolean, value: false, reflect: true})
   declare showVeil: boolean
 
-  @ReactiveProperty({type: Boolean, value: false, reflect: true})
+  @Property({type: Boolean, value: false, reflect: true})
   declare editable: boolean
 
   static override get Listeners() {
@@ -374,12 +374,12 @@ export class IoSplit extends IoElement {
 
   splitMutated() {
     this.calculateCollapsedDrawers()
-    this.changed()
+    this.mutated()
   }
   splitChanged() {
     this.calculateCollapsedDrawers()
   }
-  override changed() {
+  override mutated() {
     this.setAttribute('orientation', this.split.orientation)
     const childCount = this.split.children.length
     const lastIndex = childCount - 1

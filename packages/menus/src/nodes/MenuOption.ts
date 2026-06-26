@@ -1,4 +1,4 @@
-import { ReactiveNode, Register, ReactiveProperty, WithBinding, NodeArray, Json } from '@io-gui/core'
+import { ReactiveObject, Register, Property, WithBinding, NodeArray, Json } from '@io-gui/core'
 
 export type MenuOptionMode = 'select' | 'toggle' | 'none'
 
@@ -19,45 +19,45 @@ export type MenuOptionProps = {
 }
 
 @Register
-export class MenuOption extends ReactiveNode {
+export class MenuOption extends ReactiveObject {
 
-  @ReactiveProperty({value: '', type: String})
+  @Property({value: '', type: String})
   declare id: string
 
-  @ReactiveProperty({value: undefined})
+  @Property({value: undefined})
   declare value: any
 
-  @ReactiveProperty({value: '', type: String})
+  @Property({value: '', type: String})
   declare label: string
 
-  @ReactiveProperty({value: '', type: String})
+  @Property({value: '', type: String})
   declare icon: string
 
-  @ReactiveProperty({value: '', type: String})
+  @Property({value: '', type: String})
   declare hint: string
 
-  @ReactiveProperty({value: false, type: Boolean})
+  @Property({value: false, type: Boolean})
   declare disabled: boolean
 
-  @ReactiveProperty()
+  @Property()
   declare action?: (value?: any) => void
 
-  @ReactiveProperty({value: 'select', type: String})
+  @Property({value: 'select', type: String})
   declare mode: MenuOptionMode
 
-  @ReactiveProperty({value: false, type: Boolean})
+  @Property({value: false, type: Boolean})
   declare selected: boolean
 
-  @ReactiveProperty({value: '', type: String})
+  @Property({value: '', type: String})
   declare selectedIDImmediate: string
 
-  @ReactiveProperty({value: '', type: String})
+  @Property({value: '', type: String})
   declare selectedID: string
 
-  @ReactiveProperty({value: '', type: String})
+  @Property({value: '', type: String})
   declare path: string
 
-  @ReactiveProperty({type: NodeArray, init: 'this'})
+  @Property({type: NodeArray, init: 'this'})
   declare options: NodeArray<MenuOption>
 
   static override get Listeners() {
@@ -273,7 +273,7 @@ export class MenuOption extends ReactiveNode {
     })
     return this
   }
-  override changed() {
+  override mutated() {
     debug: {
       if (['select', 'toggle', 'none'].indexOf(this.mode) === -1) {
         console.warn(`Unknown "mode" property "${this.mode}"!`, this)

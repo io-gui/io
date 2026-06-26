@@ -9,7 +9,7 @@ describe('IoIcon.test', () => {
   it('Should initialize properties correctly', () => {
     expect(element.value).toBe('')
     expect(element.stroke).toBe(false)
-    expect(element._reactiveProperties.get('value')).toEqual({
+    expect(element._properties.get('value')).toEqual({
       binding: undefined,
       init: undefined,
       reflect: true,
@@ -17,7 +17,7 @@ describe('IoIcon.test', () => {
       value: '',
       observer: {type: 'none', observing: false},
     })
-    expect(element._reactiveProperties.get('stroke')).toEqual({
+    expect(element._properties.get('stroke')).toEqual({
       binding: undefined,
       init: undefined,
       reflect: true,

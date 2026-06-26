@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, Property, $ThemeID } from '@io-gui/core'
+import { Register, ReactiveElement, Property, IoElementProps, WithBinding, Field, $ThemeID } from '@io-gui/core'
 import { Marked, type Tokens } from 'marked'
 import { markedHighlight } from 'marked-highlight'
 import purify from 'dompurify'
@@ -42,7 +42,7 @@ export type IoMarkdownProps = IoElementProps & {
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
  */
 @Register
-export class IoMarkdown extends IoElement {
+export class IoMarkdown extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host {
@@ -173,19 +173,19 @@ export class IoMarkdown extends IoElement {
     `
   }
 
-  @ReactiveProperty({value: '', reflect: true})
+  @Property({value: '', reflect: true})
   declare src: string
 
-  @ReactiveProperty({type: Array, init: null})
+  @Property({type: Array, init: null})
   declare strip: string[]
 
-  @ReactiveProperty({value: false, reflect: true})
+  @Property({value: false, reflect: true})
   declare loading: boolean
 
-  @ReactiveProperty(true)
+  @Property(true)
   declare sanitize: boolean
 
-  @Property('document')
+  @Field('document')
   declare role: string
 
   constructor(args: IoMarkdownProps = {}) { super(args) }

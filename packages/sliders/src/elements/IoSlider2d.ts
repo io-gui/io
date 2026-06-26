@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, Property, WithBinding } from '@io-gui/core'
+import { Register, Property, Field, WithBinding } from '@io-gui/core'
 import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase.js'
 
 export type IoSlider2dProps = IoSliderBaseProps & {
@@ -29,19 +29,19 @@ export class IoSlider2d extends IoSliderBase {
     `
   }
 
-  @ReactiveProperty({type: Array, value: undefined, init: [0, 0]}) // TODO: Remove value: undefined
+  @Property({type: Array, value: undefined, init: [0, 0]}) // TODO: Remove value: undefined
   declare value: [number, number]
 
-  @ReactiveProperty({type: Array, value: undefined, init: [0.01, 0.01]}) // TODO: Remove value: undefined
+  @Property({type: Array, value: undefined, init: [0.01, 0.01]}) // TODO: Remove value: undefined
   declare step: [number, number]
 
-  @ReactiveProperty({type: Array, value: undefined, init: [-1, -1]}) // TODO: Remove value: undefined
+  @Property({type: Array, value: undefined, init: [-1, -1]}) // TODO: Remove value: undefined
   declare min: [number, number]
 
-  @ReactiveProperty({type: Array, value: undefined, init: [1, 1]}) // TODO: Remove value: undefined
+  @Property({type: Array, value: undefined, init: [1, 1]}) // TODO: Remove value: undefined
   declare max: [number, number]
 
-  @Property(true)
+  @Field(true)
   declare noscroll: boolean
 
   constructor(args: IoSlider2dProps = {}) { super(args) }
