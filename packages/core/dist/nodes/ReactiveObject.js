@@ -10,7 +10,7 @@ import { ProtoChain } from '../core/ProtoChain.js';
 import { Binding } from '../core/Binding.js';
 import { PropertyInstance, removeSelfMutationListener, removeWindowMutationListener } from '../core/Property.js';
 import { NodeArray } from '../core/NodeArray.js';
-import { throttle, debounce, clearNodeQueue } from '../core/Queue.js';
+import { throttle, debounce, clearNodeCallbacks } from '../core/FrameScheduler.js';
 import { addParent, detachChildParents, initReactiveNodeInternals, isReactiveNode, removeParent } from '../core/ReactiveCore.js';
 import { Property } from '../decorators/Property.js';
 import { ReactiveElement } from '../elements/ReactiveElement.js';
@@ -110,7 +110,7 @@ let ReactiveObject = ReactiveObject_1 = class ReactiveObject extends Object {
     toJSON() {
         const out = {};
         for (const key of this._properties.keys()) {
-            if (key === 'reactivity')
+            if (key === 'dispatchTiming')
                 continue;
             const value = this._properties.get(key).value;
             if (typeof value === 'object' && value !== null && typeof value.toJSON === 'function') {
@@ -208,7 +208,7 @@ let ReactiveObject = ReactiveObject_1 = class ReactiveObject extends Object {
 };
 __decorate([
     Property({ type: String, value: 'immediate' })
-], ReactiveObject.prototype, "reactivity", void 0);
+], ReactiveObject.prototype, "dispatchTiming", void 0);
 ReactiveObject = ReactiveObject_1 = __decorate([
     Register
 ], ReactiveObject);
@@ -373,27 +373,27 @@ export function setProperty(node, name, value, debounce = false) {
     node.dispatchQueue(debounce);
 }
 export function dispatchQueue(node, debounce = false) {
-    if (node.reactivity === 'debounced' || debounce || node._changeQueue.dispatching) {
+    if (node.dispatchTiming === 'debounced' || debounce || node._changeQueue.dispatching) {
         node.debounce(node._changeQueue.dispatch);
     }
-    else if (node.reactivity === 'throttled') {
+    else if (node.dispatchTiming === 'throttled') {
         node.throttle(node._changeQueue.dispatch);
     }
-    else if (node.reactivity === 'immediate') {
+    else if (node.dispatchTiming === 'immediate') {
         node._changeQueue.dispatch();
     }
-    debug: if (['immediate', 'throttled', 'debounced'].indexOf(node.reactivity) === -1) {
-        console.warn(`ReactiveObject.dispatchQueue(): Invalid reactivity property value: "${node.reactivity}".
+    debug: if (['immediate', 'throttled', 'debounced'].indexOf(node.dispatchTiming) === -1) {
+        console.warn(`ReactiveObject.dispatchQueue(): Invalid dispatchTiming property value: "${node.dispatchTiming}".
       Expected one of: "immediate", "throttled", "debounced".`);
     }
 }
-/** Dispatches `io-object-mutation` for in-place object or nested Io value changes. */
+/** Dispatches `io-mutation` for in-place object or nested Io value changes. */
 export function dispatchMutation(node, object, properties) {
     if (isReactiveNode(object)) {
-        node.dispatch('io-object-mutation', { object, properties });
+        node.dispatch('io-mutation', { object, properties });
     }
     else {
-        node.dispatch('io-object-mutation', { object, properties }, false, window);
+        node.dispatch('io-mutation', { object, properties }, false, window);
     }
 }
 export function onPropertyMutated(node, event) {
@@ -443,7 +443,7 @@ export function dispose(node) {
         }
     });
     detachChildParents(node);
-    clearNodeQueue(node);
+    clearNodeCallbacks(node);
     const mutable = node;
     node._bindings.forEach((binding, name) => {
         binding.dispose();

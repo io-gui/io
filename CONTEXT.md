@@ -21,7 +21,18 @@ The DOM-backed base class for reactive custom elements; extends `HTMLElement`. T
 A reactive property is reassigned to a different value, decided by strict `===` identity. Property-level and trunk→leaf: drives a node's own responsive logic. A same-value write, or a write that nets back to the original within one dispatch cycle, is not a change.
 
 **mutation**:
-A container changed internally rather than being replaced. A `ReactiveNode` mutates when any of its properties *change* — this is the node mutating, handled by `mutated()`, and it bubbles up the graph via `io-object-mutation`. A plain object or nested node held at a property mutating in place surfaces locally as `[prop]Mutated()` and, by design, does **not** auto-bubble further; re-dispatching it upward is opt-in and usually an anti-pattern. Routing is by object **identity**, so one object held at two properties fires both handlers.
+A container changed internally rather than being replaced. A `ReactiveNode` mutates when any of its properties *change* — this is the node mutating, handled by `mutated()`, and it bubbles up the graph via `io-mutation`. A plain object or nested node held at a property mutating in place surfaces locally as `[prop]Mutated()` and, by design, does **not** auto-bubble further; re-dispatching it upward is opt-in and usually an anti-pattern. Routing is by object **identity**, so one object held at two properties fires both handlers.
+
+### Graph & propagation
+
+**reactive graph**:
+The shared parent/child structure that links every `ReactiveNode` through `_parents`/`_children`, independent of DOM placement. Edges come from data ownership — node-valued properties and `NodeArray` items, or explicit `addParent`/`removeParent` — not from rendering. A node may have many parents at once, and they can be a mix of `ReactiveObject`s and `ReactiveElement`s, so the graph spans the data/DOM boundary. This cross-domain reach is the point: a non-DOM model can parent (and propagate to) a DOM element and vice versa.
+
+**parent/child (three relations)**:
+A `ReactiveElement` participates in three independent relations that often coincide but are distinct: the reactive graph (`_parents`/`_children`), the DOM tree (`parentElement`/`childNodes`), and VDOM children (the `render()` argument). Cross-domain reactivity lives in the gap where the reactive graph diverges from DOM placement.
+
+**bubbling / circuit breaker**:
+Synthetic events and `io-mutation` propagate by walking `_parents`; elements additionally emit a `composed` native event along the DOM tree. A `visited` set carried through dispatch records each reached node and short-circuits re-entry, making diamonds, shared nodes, and cycles safe (each node handled once) and stopping the graph and DOM domains from double-firing the same event.
 
 ### Property model
 

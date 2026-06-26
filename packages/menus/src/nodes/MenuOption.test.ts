@@ -278,4 +278,50 @@ describe('MenuOption', () => {
     expect(option.options[1].options[0].path).toBe('mangos')
     expect(rootPathChanges).toContain('food,fruits,mangos')
   })
+  it('Should select deepest valid ancestor when path leaf is invalid', () => {
+    const option = new MenuOption({id: 'root', options: [
+      {id: 'home'},
+      {id: 'food', options: [
+        {id: 'fruits', options: [
+          {id: 'apples'},
+          {id: 'mangos'},
+          {id: 'bananas'},
+        ]}
+      ]},
+    ], path: 'food,fruits,misspelled'})
+
+    expect(option.selected).toBe(true)
+    expect(option.selectedIDImmediate).toBe('food')
+    expect(option.options[1].selected).toBe(true)
+    expect(option.options[1].options[0].selected).toBe(true)
+    expect(option.options[1].options[0].selectedIDImmediate).toBe('')
+    expect(option.path).toBe('food,fruits')
+  })
+  it('Should resolve full path when an intermediate segment is invalid', () => {
+    const option = new MenuOption({id: 'root', options: [
+      {id: 'home'},
+      {id: 'food', options: [
+        {id: 'fruits', options: [
+          {id: 'apples'},
+          {id: 'mangos'},
+          {id: 'bananas'},
+        ]}
+      ]},
+    ], path: 'food,misspelled,mangos'})
+
+    expect(option.selected).toBe(true)
+    expect(option.path).toBe('food,fruits,mangos')
+    expect(option.options[1].options[0].selectedIDImmediate).toBe('mangos')
+  })
+  it('Should not select anything when no path segment is valid', () => {
+    const option = new MenuOption({id: 'root', options: [
+      {id: 'home'},
+      {id: 'food', options: [
+        {id: 'fruits'},
+      ]},
+    ], path: 'wrong,nope'})
+
+    expect(option.selected).toBe(false)
+    expect(option.selectedID).toBe('')
+  })
 })

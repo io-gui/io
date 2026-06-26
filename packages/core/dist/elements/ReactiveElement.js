@@ -14,7 +14,7 @@ import { dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty
 import { addParent, initReactiveNodeInternals, removeParent } from '../core/ReactiveCore.js';
 import { Binding } from '../core/Binding.js';
 import { applyElementStyleToDocument } from '../core/Style.js';
-import { throttle, debounce } from '../core/Queue.js';
+import { throttle, debounce } from '../core/FrameScheduler.js';
 const resizeObserver = new ResizeObserver(entries => {
     for (const entry of entries) {
         entry.target.onResized();
@@ -369,7 +369,7 @@ let ReactiveElement = ReactiveElement_1 = class ReactiveElement extends HTMLElem
 };
 __decorate([
     Property({ type: String, value: 'immediate' })
-], ReactiveElement.prototype, "reactivity", void 0);
+], ReactiveElement.prototype, "dispatchTiming", void 0);
 __decorate([
     Field(Object)
 ], ReactiveElement.prototype, "$", void 0);

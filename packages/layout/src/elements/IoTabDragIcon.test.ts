@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { tabDragIconSingleton, Tab } from '@io-gui/layout'
+import { IoTabDragIconSingleton, Tab } from '@io-gui/layout'
 
 describe('IoTabDragIcon', () => {
   let tab: Tab
@@ -8,43 +8,43 @@ describe('IoTabDragIcon', () => {
   beforeEach(() => {
     tab = new Tab({ id: 'drag-tab', label: 'Drag Me', icon: 'io:test' })
     mockPanel = { tagName: 'IO-PANEL' }
-    tabDragIconSingleton.cancelDrag()
+    IoTabDragIconSingleton.cancelDrag()
   })
 
   afterEach(() => {
     tab.dispose()
-    tabDragIconSingleton.cancelDrag()
+    IoTabDragIconSingleton.cancelDrag()
   })
 
   it('starts in idle state', () => {
-    expect(tabDragIconSingleton.dragging).toBe(false)
-    expect(tabDragIconSingleton.tab).toBeNull()
+    expect(IoTabDragIconSingleton.dragging).toBe(false)
+    expect(IoTabDragIconSingleton.tab).toBeNull()
   })
 
   it('does not drag until threshold is exceeded', () => {
-    tabDragIconSingleton.setStartPosition(100, 100)
-    tabDragIconSingleton.updateDrag(tab, mockPanel as any, 105, 105, null)
-    expect(tabDragIconSingleton.dragging).toBe(false)
+    IoTabDragIconSingleton.setStartPosition(100, 100)
+    IoTabDragIconSingleton.updateDrag(tab, mockPanel as any, 105, 105, null)
+    expect(IoTabDragIconSingleton.dragging).toBe(false)
   })
 
   it('starts dragging after threshold exceeded', () => {
-    tabDragIconSingleton.setStartPosition(100, 100)
-    tabDragIconSingleton.updateDrag(tab, mockPanel as any, 120, 100, null)
-    expect(tabDragIconSingleton.dragging).toBe(true)
-    expect(tabDragIconSingleton.tab).toBe(tab)
-    expect(tabDragIconSingleton.dropSource).toBe(mockPanel)
+    IoTabDragIconSingleton.setStartPosition(100, 100)
+    IoTabDragIconSingleton.updateDrag(tab, mockPanel as any, 120, 100, null)
+    expect(IoTabDragIconSingleton.dragging).toBe(true)
+    expect(IoTabDragIconSingleton.tab).toBe(tab)
+    expect(IoTabDragIconSingleton.dropSource).toBe(mockPanel)
   })
 
   it('updates cursor position while dragging', () => {
-    tabDragIconSingleton.setStartPosition(100, 100)
-    tabDragIconSingleton.updateDrag(tab, mockPanel as any, 120, 100, null)
-    tabDragIconSingleton.updateDrag(tab, mockPanel as any, 200, 150, null)
-    expect(tabDragIconSingleton.style.left).toBe('200px')
-    expect(tabDragIconSingleton.style.top).toBe('150px')
+    IoTabDragIconSingleton.setStartPosition(100, 100)
+    IoTabDragIconSingleton.updateDrag(tab, mockPanel as any, 120, 100, null)
+    IoTabDragIconSingleton.updateDrag(tab, mockPanel as any, 200, 150, null)
+    expect(IoTabDragIconSingleton.style.left).toBe('200px')
+    expect(IoTabDragIconSingleton.style.top).toBe('150px')
   })
 
   it('cancelDrag resets all drag state', () => {
-    tabDragIconSingleton.setProperties({
+    IoTabDragIconSingleton.setProperties({
       dragging: true,
       tab,
       dropSource: mockPanel as any,
@@ -52,19 +52,19 @@ describe('IoTabDragIcon', () => {
       splitDirection: 'left',
       dropIndex: 2,
     })
-    tabDragIconSingleton.cancelDrag()
-    expect(tabDragIconSingleton.dragging).toBe(false)
-    expect(tabDragIconSingleton.tab).toBeNull()
-    expect(tabDragIconSingleton.dropSource).toBeNull()
-    expect(tabDragIconSingleton.dropTarget).toBeNull()
-    expect(tabDragIconSingleton.splitDirection).toBe('none')
-    expect(tabDragIconSingleton.dropIndex).toBe(-1)
+    IoTabDragIconSingleton.cancelDrag()
+    expect(IoTabDragIconSingleton.dragging).toBe(false)
+    expect(IoTabDragIconSingleton.tab).toBeNull()
+    expect(IoTabDragIconSingleton.dropSource).toBeNull()
+    expect(IoTabDragIconSingleton.dropTarget).toBeNull()
+    expect(IoTabDragIconSingleton.splitDirection).toBe('none')
+    expect(IoTabDragIconSingleton.dropIndex).toBe(-1)
   })
 
   it('renders tab icon and label when tab is set', () => {
-    tabDragIconSingleton.tab = tab
-    tabDragIconSingleton.mutated()
-    expect(tabDragIconSingleton.querySelector('io-icon')).toBeTruthy()
-    expect(tabDragIconSingleton.textContent).toContain('Drag Me')
+    IoTabDragIconSingleton.tab = tab
+    IoTabDragIconSingleton.mutated()
+    expect(IoTabDragIconSingleton.querySelector('io-icon')).toBeTruthy()
+    expect(IoTabDragIconSingleton.textContent).toContain('Drag Me')
   })
 })

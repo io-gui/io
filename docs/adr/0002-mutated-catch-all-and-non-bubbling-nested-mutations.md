@@ -1,6 +1,6 @@
 # The node catch-all is `mutated()`, and nested mutations do not auto-bubble
 
-A reactive node's per-batch catch-all handler was named `changed()` because it fires after any of the node's properties change. Semantically, a property change *is* the node mutating: `ChangeQueue.dispatch()` runs the catch-all and then dispatches `io-object-mutation` about the node itself, in the same cycle.
+A reactive node's per-batch catch-all handler was named `changed()` because it fires after any of the node's properties change. Semantically, a property change *is* the node mutating: `ChangeQueue.dispatch()` runs the catch-all and then dispatches `io-mutation` about the node itself, in the same cycle.
 
 We decided to rename the catch-all `changed()` → `mutated()` to reflect that a property change is a mutation of the owner node. Per-property change handlers stay `[prop]Changed(change)`, and per-property nested-object handlers stay `[prop]Mutated(event)`.
 

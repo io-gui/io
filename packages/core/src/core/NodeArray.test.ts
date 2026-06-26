@@ -163,13 +163,13 @@ describe('NodeArray', () => {
       array.push(item1)
 
       const handler = vi.fn()
-      parent.addEventListener('io-object-mutation', handler)
+      parent.addEventListener('io-mutation', handler)
 
       array.fill(fillItem)
 
       expect(handler).toHaveBeenCalled()
 
-      parent.removeEventListener('io-object-mutation', handler)
+      parent.removeEventListener('io-mutation', handler)
       parent.dispose()
     })
 
@@ -182,13 +182,13 @@ describe('NodeArray', () => {
       array.push(item1)
 
       const handler = vi.fn()
-      parent.addEventListener('io-object-mutation', handler)
+      parent.addEventListener('io-mutation', handler)
 
       array.fill(fillItem, 2, 2)
 
       expect(handler).not.toHaveBeenCalled()
 
-      parent.removeEventListener('io-object-mutation', handler)
+      parent.removeEventListener('io-mutation', handler)
       parent.dispose()
     })
   })
@@ -300,13 +300,13 @@ describe('NodeArray', () => {
       array.push(item1, item2)
 
       const handler = vi.fn()
-      parent.addEventListener('io-object-mutation', handler)
+      parent.addEventListener('io-mutation', handler)
 
       array.copyWithin(0, 1)
 
       expect(handler).toHaveBeenCalled()
 
-      parent.removeEventListener('io-object-mutation', handler)
+      parent.removeEventListener('io-mutation', handler)
       parent.dispose()
     })
 
@@ -319,7 +319,7 @@ describe('NodeArray', () => {
       array.push(item1, item2)
 
       const handler = vi.fn()
-      parent.addEventListener('io-object-mutation', handler)
+      parent.addEventListener('io-mutation', handler)
 
       array.copyWithin(0, 1, 1)
 
@@ -327,7 +327,7 @@ describe('NodeArray', () => {
       expect(array[0].label).toBe('a')
       expect(array[1].label).toBe('b')
 
-      parent.removeEventListener('io-object-mutation', handler)
+      parent.removeEventListener('io-mutation', handler)
       parent.dispose()
     })
   })
@@ -397,7 +397,7 @@ describe('NodeArray', () => {
       array.push(item1, item2)
 
       const handler = vi.fn()
-      parent.addEventListener('io-object-mutation', handler)
+      parent.addEventListener('io-mutation', handler)
 
       array.reverse()
 
@@ -405,7 +405,7 @@ describe('NodeArray', () => {
       expect(array[1]).toBe(item1)
       expect(handler).toHaveBeenCalled()
 
-      parent.removeEventListener('io-object-mutation', handler)
+      parent.removeEventListener('io-mutation', handler)
       parent.dispose()
     })
   })
@@ -420,7 +420,7 @@ describe('NodeArray', () => {
       array.push(item1, item2)
 
       const handler = vi.fn()
-      parent.addEventListener('io-object-mutation', handler)
+      parent.addEventListener('io-mutation', handler)
 
       array.sort((a, b) => a.label.localeCompare(b.label))
 
@@ -428,7 +428,7 @@ describe('NodeArray', () => {
       expect(array[1]).toBe(item1)
       expect(handler).toHaveBeenCalled()
 
-      parent.removeEventListener('io-object-mutation', handler)
+      parent.removeEventListener('io-mutation', handler)
       parent.dispose()
     })
   })
@@ -512,9 +512,9 @@ describe('NodeArray', () => {
       expect(parent.items.length).toBe(2)
       expect(parent.items[0]).toBe(item1)
       expect(parent.items[1]).toBe(item3)
-      expect(item1._eventDispatcher.addedListeners['io-object-mutation']?.length).toBe(1)
-      expect(item3._eventDispatcher.addedListeners['io-object-mutation']?.length).toBe(1)
-      expect(item2._eventDispatcher.addedListeners['io-object-mutation']).toBeUndefined()
+      expect(item1._eventDispatcher.addedListeners['io-mutation']?.length).toBe(1)
+      expect(item3._eventDispatcher.addedListeners['io-mutation']?.length).toBe(1)
+      expect(item2._eventDispatcher.addedListeners['io-mutation']).toBeUndefined()
 
       parent.dispose()
     })
@@ -542,13 +542,13 @@ describe('NodeArray', () => {
       array.push(new LabelNode({label: 'a'}))
 
       const handler = vi.fn()
-      parent.addEventListener('io-object-mutation', handler)
+      parent.addEventListener('io-mutation', handler)
 
       array.dispose()
 
       expect(handler).not.toHaveBeenCalled()
 
-      parent.removeEventListener('io-object-mutation', handler)
+      parent.removeEventListener('io-mutation', handler)
       parent.dispose()
     })
 
@@ -562,8 +562,8 @@ describe('NodeArray', () => {
 
       expect(item1._parents.includes(parent)).toBe(true)
       expect(item2._parents.includes(parent)).toBe(true)
-      expect(item1._eventDispatcher.addedListeners['io-object-mutation']?.length).toBe(1)
-      expect(item2._eventDispatcher.addedListeners['io-object-mutation']?.length).toBe(1)
+      expect(item1._eventDispatcher.addedListeners['io-mutation']?.length).toBe(1)
+      expect(item2._eventDispatcher.addedListeners['io-mutation']?.length).toBe(1)
 
       array.dispose()
 
@@ -579,7 +579,7 @@ describe('NodeArray', () => {
       array.push(item)
 
       const handler = vi.fn()
-      parent.addEventListener('io-object-mutation', handler)
+      parent.addEventListener('io-mutation', handler)
 
       array.pop()
       expect(handler).toHaveBeenCalledTimes(1)
@@ -591,7 +591,7 @@ describe('NodeArray', () => {
       array.push(item2)
       expect(handler).not.toHaveBeenCalled()
 
-      parent.removeEventListener('io-object-mutation', handler)
+      parent.removeEventListener('io-mutation', handler)
       parent.dispose()
       item.dispose()
       item2.dispose()
@@ -604,7 +604,7 @@ describe('NodeArray', () => {
       array.addObserver(observer)
 
       const handler = vi.fn()
-      observer.addEventListener('io-object-mutation', handler)
+      observer.addEventListener('io-mutation', handler)
 
       const item = new LabelNode({label: 'a'})
       array.push(item)

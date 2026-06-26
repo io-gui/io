@@ -116,28 +116,28 @@ export function ensureWindowMutationListener(node) {
     if (target._hasWindowMutationListener)
         return;
     target._hasWindowMutationListener = true;
-    window.addEventListener('io-object-mutation', node.onPropertyMutated);
+    window.addEventListener('io-mutation', node.onPropertyMutated);
 }
 export function removeWindowMutationListener(node) {
     const target = node;
     if (!target._hasWindowMutationListener)
         return;
     target._hasWindowMutationListener = false;
-    window.removeEventListener('io-object-mutation', node.onPropertyMutated);
+    window.removeEventListener('io-mutation', node.onPropertyMutated);
 }
 export function ensureSelfMutationListener(node) {
     const target = node;
     if (target._hasSelfMutationListener)
         return;
     target._hasSelfMutationListener = true;
-    node.addEventListener('io-object-mutation', node.onPropertyMutated);
+    node.addEventListener('io-mutation', node.onPropertyMutated);
 }
 export function removeSelfMutationListener(node) {
     const target = node;
     if (!target._hasSelfMutationListener)
         return;
     target._hasSelfMutationListener = false;
-    node.removeEventListener('io-object-mutation', node.onPropertyMutated);
+    node.removeEventListener('io-mutation', node.onPropertyMutated);
 }
 /**
  * Tracks mutation observation mode and listener wiring for one reactive property.
@@ -157,7 +157,7 @@ export class Observer {
         if (isReactiveNode(value)) {
             this.type = 'io';
             this.observing = true;
-            value.addEventListener('io-object-mutation', this.node.onPropertyMutated);
+            value.addEventListener('io-mutation', this.node.onPropertyMutated);
         }
         else if (value instanceof NodeArray) {
             this.type = 'nodearray';
@@ -173,7 +173,7 @@ export class Observer {
     }
     stop(value) {
         if (isReactiveNode(value) && !value._disposed) {
-            value.removeEventListener('io-object-mutation', this.node.onPropertyMutated);
+            value.removeEventListener('io-mutation', this.node.onPropertyMutated);
         }
         else if (value instanceof NodeArray) {
             value.removeObserver(this.node);

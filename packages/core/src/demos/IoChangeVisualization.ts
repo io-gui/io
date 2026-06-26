@@ -143,7 +143,7 @@ class SimulatedNode {
 
   setupEventListeners() {
       if (this.node) {
-          this.node.addEventListener('io-object-mutation', () => {
+          this.node.addEventListener('io-mutation', () => {
               this.animateMutation()
           })
       }

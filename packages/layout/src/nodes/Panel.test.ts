@@ -278,7 +278,7 @@ describe('Panel', () => {
         tabs: [{ id: 'tab1' }, { id: 'tab2' }]
       })
       mutationHandler = vi.fn()
-      panel.addEventListener('io-object-mutation', mutationHandler as EventListener)
+      panel.addEventListener('io-mutation', mutationHandler as EventListener)
     })
 
     afterEach(() => {
@@ -577,7 +577,7 @@ describe('Panel', () => {
       })
 
       const mutationHandler = vi.fn()
-      panel.addEventListener('io-object-mutation', mutationHandler as EventListener)
+      panel.addEventListener('io-mutation', mutationHandler as EventListener)
 
       panel.tabs.length = 0
 

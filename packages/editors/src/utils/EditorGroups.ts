@@ -49,7 +49,7 @@ export type PropertyGroups = Record<string, Array<PropertyIdentifier>>
 export type PropertyGroupsRecord = Record<string, Array<string>>
 export type EditorGroups = Map<AnyConstructor, PropertyGroups>
 
-const editorGroupsSingleton: EditorGroups = new Map<AnyConstructor, PropertyGroups>([
+const GROUPS: EditorGroups = new Map<AnyConstructor, PropertyGroups>([
   [Object, {
     Hidden: [
       'constructor','hasOwnProperty','isPrototypeOf','propertyIsEnumerable','toString','valueOf','toLocaleString',
@@ -97,14 +97,14 @@ const editorGroupsSingleton: EditorGroups = new Map<AnyConstructor, PropertyGrou
   }],
   [ReactiveObject, {
     Hidden: [
-      'reactivity',
+      'dispatchTiming',
       '_changeQueue', '_properties', '_bindings', '_eventDispatcher', '_parents',
       '_protochain', '_disposed', '_isReactiveObject', '_isReactiveElement',
     ],
   }],
   [ReactiveElement, {
     Hidden: [
-      'reactivity',
+      'dispatchTiming',
       '_changeQueue', '_properties', '_bindings', '_eventDispatcher', '_parents',
       '_protochain', '_disposed', '_isReactiveObject', '_isReactiveElement',
     ],
@@ -173,7 +173,7 @@ export function getEditorGroups(object: object, propertyGroups: PropertyGroups):
     }
   }
 
-  aggregateGroups(editorGroupsSingleton)
+  aggregateGroups(GROUPS)
   aggregateGroups(new Map([[Object, propertyGroups]]))
 
   const allGroupedNonRegexPropertyNames: string[] = []
@@ -254,10 +254,10 @@ export function getEditorGroups(object: object, propertyGroups: PropertyGroups):
 }
 
 export function registerEditorGroups(constructor: AnyConstructor, groups: PropertyGroups) {
-  const existingGroups = editorGroupsSingleton.get(constructor) || {}
+  const existingGroups = GROUPS.get(constructor) || {}
   for (const group in groups) {
     existingGroups[group] = existingGroups[group] || []
     existingGroups[group].push(...groups[group])
   }
-  editorGroupsSingleton.set(constructor, existingGroups)
+  GROUPS.set(constructor, existingGroups)
 }

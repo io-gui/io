@@ -1,6 +1,6 @@
 import { Register } from '../decorators/Register.js'
 import { Property } from '../decorators/Property.js'
-import { PropertyDefinitions, ReactiveObject, ReactivityType } from '../nodes/ReactiveObject.js'
+import { PropertyDefinitions, ReactiveObject, DispatchTiming } from '../nodes/ReactiveObject.js'
 import { Storage as $ } from '../nodes/Storage.js'
 import { Color } from '../core/Color.js'
 import { adoptDocumentStylesheet } from '../core/Style.js'
@@ -150,7 +150,7 @@ export class Theme extends ReactiveObject {
   declare shadowColor: Color
 
   @Property('debounced')
-  declare reactivity: ReactivityType
+  declare dispatchTiming: DispatchTiming
 
   override onPropertyMutated(event: CustomEvent) {
     const mutated = super.onPropertyMutated(event)

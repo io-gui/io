@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { Register, ReactiveElement, Property, nextQueue } from '@io-gui/core'
+import { Register, ReactiveElement, Property, nextFrame } from '@io-gui/core'
 import { IoSelector, ioSelector } from '@io-gui/navigation'
 
 @Register
@@ -80,7 +80,7 @@ describe('IoSelector', () => {
       })
       container.appendChild(selector)
 
-      await nextQueue()
+      await nextFrame()
 
       expect(selector.querySelector('span')).toBeTruthy()
       expect(selector.querySelector('div')).toBeNull()
@@ -96,11 +96,11 @@ describe('IoSelector', () => {
       })
       container.appendChild(selector)
 
-      await nextQueue()
+      await nextFrame()
       expect(selector.querySelector('span')).toBeTruthy()
 
       selector.selected = 'second'
-      await nextQueue()
+      await nextFrame()
 
       expect(selector.querySelector('div')).toBeTruthy()
       expect(selector.querySelector('span')).toBeNull()
@@ -116,7 +116,7 @@ describe('IoSelector', () => {
       })
       container.appendChild(selector)
 
-      await nextQueue()
+      await nextFrame()
 
       expect(selector.querySelector('span')).toBeTruthy()
       expect(selector.querySelector('div')).toBeTruthy()
@@ -131,7 +131,7 @@ describe('IoSelector', () => {
       })
       container.appendChild(selector)
 
-      await nextQueue()
+      await nextFrame()
 
       expect(selector.childNodes.length).toBe(0)
     })
@@ -145,7 +145,7 @@ describe('IoSelector', () => {
       })
       container.appendChild(selector)
 
-      await nextQueue()
+      await nextFrame()
 
       expect(selector.querySelector('span')).toBeTruthy()
     })
@@ -161,7 +161,7 @@ describe('IoSelector', () => {
       })
       container.appendChild(selector)
 
-      await nextQueue()
+      await nextFrame()
 
       expect(warnSpy).toHaveBeenCalledWith('IoSelector: Could not find elements with id: "nonexistent"!')
       expect(selector.querySelector('span')).toBeTruthy()
@@ -182,7 +182,7 @@ describe('IoSelector', () => {
       })
       container.appendChild(selector)
 
-      await nextQueue()
+      await nextFrame()
 
       const initialChild = selector.querySelector('test-content') as TestContent
       expect(initialChild).toBeTruthy()
@@ -193,7 +193,7 @@ describe('IoSelector', () => {
         { tag: 'test-content', props: { id: 'test-id', content: 'updated content' } }
       ]
 
-      await nextQueue()
+      await nextFrame()
 
       const updatedChild = selector.querySelector('test-content') as TestContent
       expect(updatedChild).toBeTruthy()
@@ -211,14 +211,14 @@ describe('IoSelector', () => {
       })
       container.appendChild(selector)
 
-      await nextQueue()
+      await nextFrame()
       expect(selector.querySelector('span')).toBeTruthy()
 
       selector.elements = [
         { tag: 'div', props: { id: 'test-id' } }
       ]
 
-      await nextQueue()
+      await nextFrame()
 
       expect(selector.querySelector('div')).toBeTruthy()
       expect(selector.querySelector('span')).toBeNull()
@@ -237,14 +237,14 @@ describe('IoSelector', () => {
       })
       container.appendChild(selector)
 
-      await nextQueue()
+      await nextFrame()
       const firstChild = selector.querySelector('test-content') as TestContent
 
       selector.selected = 'second'
-      await nextQueue()
+      await nextFrame()
 
       selector.selected = 'first'
-      await nextQueue()
+      await nextFrame()
 
       const newFirstChild = selector.querySelector('test-content') as TestContent
       expect(newFirstChild).not.toBe(firstChild)
@@ -261,14 +261,14 @@ describe('IoSelector', () => {
       })
       container.appendChild(selector)
 
-      await nextQueue()
+      await nextFrame()
       const firstChild = selector.querySelector('test-content') as TestContent
 
       selector.selected = 'second'
-      await nextQueue()
+      await nextFrame()
 
       selector.selected = 'first'
-      await nextQueue()
+      await nextFrame()
 
       const cachedFirstChild = selector.querySelector('test-content') as TestContent
       expect(cachedFirstChild).toBe(firstChild)
@@ -284,7 +284,7 @@ describe('IoSelector', () => {
       })
       container.appendChild(selector)
 
-      await nextQueue()
+      await nextFrame()
 
       const cachedChild = selector.querySelector('test-content') as TestContent
       expect(cachedChild.content).toBe('cached initial')
@@ -293,7 +293,7 @@ describe('IoSelector', () => {
         { tag: 'test-content', props: { id: 'test-id', content: 'cached updated' } }
       ]
 
-      await nextQueue()
+      await nextFrame()
 
       const reusedChild = selector.querySelector('test-content') as TestContent
       expect(reusedChild).toBe(cachedChild)
@@ -322,7 +322,7 @@ describe('IoSelector', () => {
       })
       container.appendChild(selector)
 
-      await nextQueue()
+      await nextFrame()
 
       expect(selector.anchor).toBe('page#section')
     })
@@ -340,10 +340,10 @@ describe('IoSelector', () => {
       })
       container.appendChild(selector)
 
-      await nextQueue()
+      await nextFrame()
 
       selector.selected = 'second'
-      await nextQueue()
+      await nextFrame()
 
       expect(selector._caches['first']).toBeDefined()
       expect(selector._caches['second']).toBeDefined()

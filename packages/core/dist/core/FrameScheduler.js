@@ -1,7 +1,7 @@
 let currentFrame = 0;
-const queue0 = new Map();
-const queue1 = new Map();
-let queue = queue0;
+const bufferA = new Map();
+const bufferB = new Map();
+let nextBuffer = bufferA;
 // Key registry - shared across both buffers
 const keysByNode = new WeakMap();
 const keysByFunc = new Map();
@@ -35,11 +35,11 @@ function getKey(func, node) {
  * Returns a promise that resolves when the next frame is rendered.
  * @returns {Promise<void>}
  */
-export async function nextQueue() {
+export async function nextFrame() {
     return new Promise((resolve) => {
         const callback = () => resolve();
         const key = getKey(callback, undefined);
-        queue.set(key, { arg: undefined, frame: currentFrame + 1 });
+        nextBuffer.set(key, { arg: undefined, frame: currentFrame + 1 });
     });
 }
 /**
@@ -82,11 +82,11 @@ export function throttle(func, arg, node, delay = 1) {
             console.error(e);
         }
         // Queue trailing call (will execute after delay)
-        queue.set(key, { arg, frame: currentFrame + delay });
+        nextBuffer.set(key, { arg, frame: currentFrame + delay });
     }
     else {
         // Within delay period - only update arg, don't postpone
-        const existing = queue.get(key);
+        const existing = nextBuffer.get(key);
         if (existing) {
             existing.arg = arg;
         }
@@ -94,30 +94,30 @@ export function throttle(func, arg, node, delay = 1) {
 }
 export function debounce(func, arg, node, delay = 1) {
     const key = getKey(func, node);
-    queue.set(key, { arg, frame: currentFrame + delay });
+    nextBuffer.set(key, { arg, frame: currentFrame + delay });
 }
 /**
- * Removes pending queue and throttle state for a disposed node.
+ * Removes pending callbacks for a specified node.
  */
-export function clearNodeQueue(node) {
-    for (const activeQueue of [queue0, queue1]) {
-        for (const [key] of activeQueue) {
+export function clearNodeCallbacks(node) {
+    for (const buffer of [bufferA, bufferB]) {
+        for (const [key] of buffer) {
             if (key.node === node)
-                activeQueue.delete(key);
+                buffer.delete(key);
         }
     }
     keysByNode.delete(node);
     throttleNextFrame.delete(node);
 }
-function executeQueue() {
+function advanceFrame() {
     currentFrame++;
-    const activeQueue = queue;
-    queue = queue === queue0 ? queue1 : queue0;
-    for (const [key, options] of activeQueue) {
-        // Re-queue if target frame not reached
+    const currentBuffer = nextBuffer;
+    nextBuffer = nextBuffer === bufferA ? bufferB : bufferA;
+    for (const [key, options] of currentBuffer) {
+        // Move callback to next frame if target frame not reached
         if (options.frame > currentFrame) {
-            if (!queue.has(key)) {
-                queue.set(key, options);
+            if (!nextBuffer.has(key)) {
+                nextBuffer.set(key, options);
             }
             continue;
         }
@@ -133,7 +133,7 @@ function executeQueue() {
             console.error(e);
         }
     }
-    activeQueue.clear();
-    requestAnimationFrame(executeQueue);
+    currentBuffer.clear();
+    requestAnimationFrame(advanceFrame);
 }
-requestAnimationFrame(executeQueue);
+requestAnimationFrame(advanceFrame);

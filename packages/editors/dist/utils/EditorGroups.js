@@ -42,7 +42,7 @@ export function getAllPropertyNames(obj) {
     } while ((curr = Object.getPrototypeOf(curr)));
     return allProps;
 }
-const editorGroupsSingleton = new Map([
+const GROUPS = new Map([
     [Object, {
             Hidden: [
                 'constructor', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'toString', 'valueOf', 'toLocaleString',
@@ -90,14 +90,14 @@ const editorGroupsSingleton = new Map([
         }],
     [ReactiveObject, {
             Hidden: [
-                'reactivity',
+                'dispatchTiming',
                 '_changeQueue', '_properties', '_bindings', '_eventDispatcher', '_parents',
                 '_protochain', '_disposed', '_isReactiveObject', '_isReactiveElement',
             ],
         }],
     [ReactiveElement, {
             Hidden: [
-                'reactivity',
+                'dispatchTiming',
                 '_changeQueue', '_properties', '_bindings', '_eventDispatcher', '_parents',
                 '_protochain', '_disposed', '_isReactiveObject', '_isReactiveElement',
             ],
@@ -155,7 +155,7 @@ export function getEditorGroups(object, propertyGroups) {
             }
         }
     }
-    aggregateGroups(editorGroupsSingleton);
+    aggregateGroups(GROUPS);
     aggregateGroups(new Map([[Object, propertyGroups]]));
     const allGroupedNonRegexPropertyNames = [];
     for (const g of Object.keys(aggregatedGroups)) {
@@ -226,10 +226,10 @@ export function getEditorGroups(object, propertyGroups) {
     return groupsRecord;
 }
 export function registerEditorGroups(constructor, groups) {
-    const existingGroups = editorGroupsSingleton.get(constructor) || {};
+    const existingGroups = GROUPS.get(constructor) || {};
     for (const group in groups) {
         existingGroups[group] = existingGroups[group] || [];
         existingGroups[group].push(...groups[group]);
     }
-    editorGroupsSingleton.set(constructor, existingGroups);
+    GROUPS.set(constructor, existingGroups);
 }

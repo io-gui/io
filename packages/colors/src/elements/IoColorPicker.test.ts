@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { nextQueue } from '@io-gui/core'
+import { nextFrame } from '@io-gui/core'
 import { IoColorPicker } from './IoColorPicker.js'
 import { IoColorPanelSingleton as Panel } from './IoColorPanelSingleton.js'
 
@@ -29,7 +29,7 @@ describe('IoColorPicker.test', () => {
     const picker = new IoColorPicker()
     picker.value = {r: 0.5, g: 0.5, b: 0.5, a: 1}
     document.body.appendChild(picker as HTMLElement)
-    await nextQueue()
+    await nextFrame()
     picker.expand()
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
@@ -45,7 +45,7 @@ describe('IoColorPicker.test', () => {
     const picker = new IoColorPicker()
     picker.value = {r: 0.5, g: 0.5, b: 0.5, a: 1}
     document.body.appendChild(picker as HTMLElement)
-    await nextQueue()
+    await nextFrame()
     picker.expand()
     picker.collapse()
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
@@ -64,7 +64,7 @@ describe('IoColorPicker.test', () => {
     pickerB.value = {r: 0, g: 1, b: 0, a: 1}
     document.body.appendChild(pickerA as HTMLElement)
     document.body.appendChild(pickerB as HTMLElement)
-    await nextQueue()
+    await nextFrame()
     pickerA.expand()
 
     expect(pickerA.expanded).toBe(true)

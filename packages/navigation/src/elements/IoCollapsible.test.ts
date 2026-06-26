@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { nextQueue } from '@io-gui/core'
+import { nextFrame } from '@io-gui/core'
 import { IoCollapsible, ioCollapsible } from '@io-gui/navigation'
 
 describe('IoCollapsible', () => {
@@ -66,7 +66,7 @@ describe('IoCollapsible', () => {
       collapsible = new IoCollapsible({ label: 'Toggle' })
       container.appendChild(collapsible)
 
-      await nextQueue()
+      await nextFrame()
 
       const toggle = collapsible.querySelector('io-boolean')
       expect(toggle).toBeTruthy()
@@ -76,7 +76,7 @@ describe('IoCollapsible', () => {
       collapsible = new IoCollapsible({ expanded: true, elements: [{ tag: 'span' }] })
       container.appendChild(collapsible)
 
-      await nextQueue()
+      await nextFrame()
 
       const contentDiv = collapsible.querySelector('.io-collapsible-content')
       expect(contentDiv).toBeTruthy()
@@ -86,7 +86,7 @@ describe('IoCollapsible', () => {
       collapsible = new IoCollapsible({ label: 'Section Title' })
       container.appendChild(collapsible)
 
-      await nextQueue()
+      await nextFrame()
 
       const toggle = collapsible.querySelector('io-boolean')
       expect(toggle?.true).toBe('Section Title')
@@ -97,7 +97,7 @@ describe('IoCollapsible', () => {
       collapsible = new IoCollapsible({ icon: 'custom-icon' })
       container.appendChild(collapsible)
 
-      await nextQueue()
+      await nextFrame()
 
       const toggle = collapsible.querySelector('io-boolean')
       expect(toggle?.icon).toBe('custom-icon')
@@ -115,7 +115,7 @@ describe('IoCollapsible', () => {
       })
       container.appendChild(collapsible)
 
-      await nextQueue()
+      await nextFrame()
 
       const contentDiv = collapsible.querySelector('.io-collapsible-content')
       expect(contentDiv?.querySelector('#child1')).toBeTruthy()
@@ -131,7 +131,7 @@ describe('IoCollapsible', () => {
       })
       container.appendChild(collapsible)
 
-      await nextQueue()
+      await nextFrame()
 
       const contentDiv = collapsible.querySelector('.io-collapsible-content')
       expect(contentDiv?.children.length).toBe(0)
@@ -144,19 +144,19 @@ describe('IoCollapsible', () => {
       })
       container.appendChild(collapsible)
 
-      await nextQueue()
+      await nextFrame()
 
       let contentDiv = collapsible.querySelector('.io-collapsible-content')
       expect(contentDiv?.children.length).toBe(0)
 
       collapsible.expanded = true
-      await nextQueue()
+      await nextFrame()
 
       contentDiv = collapsible.querySelector('.io-collapsible-content')
       expect(contentDiv?.querySelector('#child')).toBeTruthy()
 
       collapsible.expanded = false
-      await nextQueue()
+      await nextFrame()
 
       contentDiv = collapsible.querySelector('.io-collapsible-content')
       expect(contentDiv?.children.length).toBe(0)
@@ -209,14 +209,14 @@ describe('IoCollapsible', () => {
       collapsible = new IoCollapsible({ expanded: false, label: 'Test' })
       container.appendChild(collapsible)
 
-      await nextQueue()
+      await nextFrame()
 
       const toggle = collapsible.querySelector('io-boolean')
       expect(toggle).toBeTruthy()
       expect(toggle.value).toBe(false)
 
       collapsible.expanded = true
-      await nextQueue()
+      await nextFrame()
 
       expect(toggle.value).toBe(true)
     })
@@ -225,7 +225,7 @@ describe('IoCollapsible', () => {
       collapsible = new IoCollapsible({ expanded: false, label: 'Test' })
       container.appendChild(collapsible)
 
-      await nextQueue()
+      await nextFrame()
 
       const toggle = collapsible.querySelector('io-boolean')
       expect(toggle).toBeTruthy()

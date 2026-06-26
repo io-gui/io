@@ -1,4 +1,4 @@
-import { ReactiveElement, ReactiveElementProps, ReactivityType, Change, WithBinding } from '@io-gui/core';
+import { ReactiveElement, ReactiveElementProps, DispatchTiming, Change, WithBinding } from '@io-gui/core';
 import { WebGPURenderer } from 'three/webgpu';
 import { ThreeApplet } from '../nodes/ThreeApplet.js';
 import { ViewCameras } from '../nodes/ViewCameras.js';
@@ -19,7 +19,7 @@ export declare class IoThreeViewport extends ReactiveElement {
     overscan: number;
     clearColor: number;
     clearAlpha: number;
-    reactivity: ReactivityType;
+    dispatchTiming: DispatchTiming;
     applet: ThreeApplet;
     cameraSelect: string;
     renderer: WebGPURenderer;

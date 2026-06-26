@@ -272,7 +272,7 @@ describe('Split', () => {
         ]
       })
       mutationHandler = vi.fn()
-      split.addEventListener('io-object-mutation', mutationHandler as EventListener)
+      split.addEventListener('io-mutation', mutationHandler as EventListener)
     })
 
     afterEach(() => {
@@ -732,7 +732,7 @@ describe('Split', () => {
       })
 
       const mutationHandler = vi.fn()
-      split.addEventListener('io-object-mutation', mutationHandler as EventListener)
+      split.addEventListener('io-mutation', mutationHandler as EventListener)
 
       split.children.length = 0
 

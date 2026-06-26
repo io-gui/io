@@ -8,7 +8,7 @@ import {
   Color,
   StorageNode,
   Storage,
-  nextQueue,
+  nextFrame,
 } from '@io-gui/core'
 
 const LIGHT = THEMES.light
@@ -154,7 +154,7 @@ describe('Theme', () => {
       const node = new StorageNode({ key, value: theme, storage: 'local' })
       theme.spacing = 9
       theme.dispatchMutation()
-      await nextQueue()
+      await nextFrame()
       const stored = JSON.parse(localStorage.getItem('Storage:' + key)!)
       expect(stored.spacing).toBe(9)
       expect(stored.shadowColor).toBe(LIGHT.shadowColor)

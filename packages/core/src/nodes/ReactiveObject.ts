@@ -5,7 +5,7 @@ import type { ChangeQueue } from '../core/ChangeQueue.js'
 import { PropertyInstance, PropertyDefinitionLoose, removeSelfMutationListener, removeWindowMutationListener } from '../core/Property.js'
 import type { EventDispatcher } from '../core/EventDispatcher.js'
 import { NodeArray } from '../core/NodeArray.js'
-import { throttle, debounce, clearNodeQueue, CallbackFunction } from '../core/Queue.js'
+import { throttle, debounce, clearNodeCallbacks, CallbackFunction } from '../core/FrameScheduler.js'
 import { addParent, detachChildParents, initReactiveNodeInternals, isReactiveNode, removeParent, DisposableInternals, type ReactiveNode } from '../core/ReactiveCore.js'
 import { Property } from '../decorators/Property.js'
 import { ReactiveElement } from '../elements/ReactiveElement.js'
@@ -42,7 +42,7 @@ export const NODES = {
   disposed: new WeakSet<ReactiveObject>(),
 }
 
-export type ReactivityType = 'immediate' | 'throttled' | 'debounced'
+export type DispatchTiming = 'immediate' | 'throttled' | 'debounced'
 
 // Utility type to add Binding to all properties of a type
 export type WithBinding<T> = T | Binding<T>
@@ -65,7 +65,7 @@ type AnyEventHandler = (
   ((event: Event) => void)
 
 export type ReactiveNodeProps = {
-  reactivity?: ReactivityType
+  dispatchTiming?: DispatchTiming
   [key: prefix<string, '@'>]: string | AnyEventHandler
 }
 
@@ -95,7 +95,7 @@ function hasValueAtOtherProperty(node: ReactiveNode, prop: PropertyInstance, val
 export class ReactiveObject extends Object {
 
   @Property({type: String, value: 'immediate'})
-  declare reactivity: ReactivityType
+  declare dispatchTiming: DispatchTiming
 
   static get Properties(): PropertyDefinitions {
     return {}
@@ -180,7 +180,7 @@ export class ReactiveObject extends Object {
   toJSON(): Json {
     const out: JsonObject = {}
     for (const key of this._properties.keys()) {
-      if (key === 'reactivity') continue
+      if (key === 'dispatchTiming') continue
       const value = this._properties.get(key as string)!.value
       if (typeof value === 'object' && value !== null && typeof (value as { toJSON?: () => Json }).toJSON === 'function') {
         out[key] = (value as { toJSON: () => Json }).toJSON()
@@ -440,25 +440,25 @@ export function setProperty(node: ReactiveNode, name: string, value: unknown, de
   node.dispatchQueue(debounce)
 }
 export function dispatchQueue(node: ReactiveNode, debounce = false) {
-  if (node.reactivity === 'debounced' || debounce || node._changeQueue.dispatching) {
+  if (node.dispatchTiming === 'debounced' || debounce || node._changeQueue.dispatching) {
     node.debounce(node._changeQueue.dispatch)
-  } else if (node.reactivity === 'throttled') {
+  } else if (node.dispatchTiming === 'throttled') {
     node.throttle(node._changeQueue.dispatch)
-  } else if (node.reactivity === 'immediate') {
+  } else if (node.dispatchTiming === 'immediate') {
     node._changeQueue.dispatch()
   }
-  debug: if (['immediate', 'throttled', 'debounced'].indexOf(node.reactivity) === -1) {
-    console.warn(`ReactiveObject.dispatchQueue(): Invalid reactivity property value: "${node.reactivity}".
+  debug: if (['immediate', 'throttled', 'debounced'].indexOf(node.dispatchTiming) === -1) {
+    console.warn(`ReactiveObject.dispatchQueue(): Invalid dispatchTiming property value: "${node.dispatchTiming}".
       Expected one of: "immediate", "throttled", "debounced".`)
   }
 }
 
-/** Dispatches `io-object-mutation` for in-place object or nested Io value changes. */
+/** Dispatches `io-mutation` for in-place object or nested Io value changes. */
 export function dispatchMutation(node: ReactiveNode, object: object | ReactiveObject, properties: string[]) {
   if (isReactiveNode(object)) {
-    node.dispatch('io-object-mutation', {object, properties})
+    node.dispatch('io-mutation', {object, properties})
   } else {
-    node.dispatch('io-object-mutation', {object, properties}, false, window)
+    node.dispatch('io-mutation', {object, properties}, false, window)
   }
 }
 export function onPropertyMutated(node: ReactiveNode, event: CustomEvent) {
@@ -517,7 +517,7 @@ export function dispose(node: ReactiveNode) {
   })
 
   detachChildParents(node)
-  clearNodeQueue(node)
+  clearNodeCallbacks(node)
 
   const mutable = node as DisposableInternals
 

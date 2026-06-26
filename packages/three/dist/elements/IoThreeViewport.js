@@ -192,7 +192,7 @@ __decorate([
 ], IoThreeViewport.prototype, "clearAlpha", void 0);
 __decorate([
     Property({ type: String, value: 'throttled' })
-], IoThreeViewport.prototype, "reactivity", void 0);
+], IoThreeViewport.prototype, "dispatchTiming", void 0);
 __decorate([
     Property({ type: ThreeApplet, init: null })
 ], IoThreeViewport.prototype, "applet", void 0);

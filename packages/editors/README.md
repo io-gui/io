@@ -127,7 +127,7 @@ type IoPropertyEditorProps = {
 **Key behaviors:**
 - Auto-detects appropriate widgets per property
 - Groups properties with collapsible sections
-- Responds to object mutations via `io-object-mutation` event
+- Responds to object mutations via `io-mutation` event
 - Debounced rendering for performance
 
 ### IoObject
@@ -170,7 +170,7 @@ Global singleton for context-aware property editing. Shows property editor popup
 ```
 Object property mutates
     ↓
-io-object-mutation event dispatched
+io-mutation event dispatched
     ↓
 IoPropertyEditor.valueMutated()
     ↓
@@ -197,7 +197,7 @@ Dispatches mutation if not a Node
 | Event | Dispatched By | Payload | Purpose |
 |-------|---------------|---------|---------|
 | `value-input` | All editor widgets | `{ value, oldValue }` | Property value changed |
-| `io-object-mutation` | IoPropertyEditor | `{ object }` | Object mutated |
+| `io-mutation` | IoPropertyEditor | `{ object }` | Object mutated |
 
 ## Edge Cases
 

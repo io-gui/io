@@ -24,5 +24,5 @@ declare class IoTabsHamburgerMenu extends ReactiveElement {
     onExpand(): void;
     mutated(): void;
 }
-export declare const ioTabsHamburgerMenuSingleton: IoTabsHamburgerMenu;
+export declare const IoTabsHamburgerMenuSingleton: IoTabsHamburgerMenu;
 export {};

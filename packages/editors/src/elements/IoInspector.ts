@@ -146,7 +146,7 @@ export class IoInspector extends ReactiveElement {
   }
   override dispose() {
     super.dispose()
-    window.removeEventListener('io-object-mutation', this.onPropertyMutated as unknown as EventListener)
+    window.removeEventListener('io-mutation', this.onPropertyMutated as unknown as EventListener)
   }
 }
 export const ioInspector = function(arg0?: IoInspectorProps) {

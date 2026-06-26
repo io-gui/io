@@ -3,14 +3,14 @@ import { Property } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
 import { ProtoChain } from '../core/ProtoChain.js'
 import { applyNativeElementProps, constructElement, createVDOMElement, filterVDOMElements, VDOMElement, VDOMChild, VDOMFactoryArg, VDOMFactoryChildren, NativeElementProps, TEXT_TAG, getNodeVDOMTag, getTextVDOMContent } from '../vdom/VDOM.js'
-import { ReactiveObject, ReactivityType, dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initProperties, initFields, PropertyDefinitions, ListenerDefinitions, PropertyValues } from '../nodes/ReactiveObject.js'
+import { ReactiveObject, DispatchTiming, dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initProperties, initFields, PropertyDefinitions, ListenerDefinitions, PropertyValues } from '../nodes/ReactiveObject.js'
 import { addParent, initReactiveNodeInternals, removeParent, type ReactiveNode } from '../core/ReactiveCore.js'
 import { Binding } from '../core/Binding.js'
 import { applyElementStyleToDocument } from '../core/Style.js'
 import type { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js'
 import type { ChangeQueue } from '../core/ChangeQueue.js'
 import { PropertyInstance } from '../core/Property.js'
-import { throttle, debounce, CallbackFunction } from '../core/Queue.js'
+import { throttle, debounce, CallbackFunction } from '../core/FrameScheduler.js'
 
 interface ResizeObservable extends Element {
   onResized(): void
@@ -40,7 +40,7 @@ type AnyEventHandler = (
   ((event: Event) => void)
 
 export type ReactiveElementProps = NativeElementProps & {
-  reactivity?: ReactivityType
+  dispatchTiming?: DispatchTiming
   [key: prefix<string, '@'>]: string | AnyEventHandler
 }
 
@@ -86,7 +86,7 @@ export class ReactiveElement extends HTMLElement {
   }
 
   @Property({type: String, value: 'immediate'})
-  declare reactivity: ReactivityType
+  declare dispatchTiming: DispatchTiming
 
   @Field(Object)
   declare $: Record<string, HTMLElement | ReactiveElement>

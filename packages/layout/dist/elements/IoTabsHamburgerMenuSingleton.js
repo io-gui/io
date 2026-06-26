@@ -114,5 +114,5 @@ __decorate([
 IoTabsHamburgerMenu = __decorate([
     Register
 ], IoTabsHamburgerMenu);
-export const ioTabsHamburgerMenuSingleton = new IoTabsHamburgerMenu();
-IoOverlaySingleton.appendChild(ioTabsHamburgerMenuSingleton);
+export const IoTabsHamburgerMenuSingleton = new IoTabsHamburgerMenu();
+IoOverlaySingleton.appendChild(IoTabsHamburgerMenuSingleton);

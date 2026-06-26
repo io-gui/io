@@ -41,7 +41,7 @@ It can be used to create reactive custom elements that can be bound to node prop
 - Generic property handler `.mutated()` gets invoked after any property change
 - Leaf-to-trunk data flow can be achieved using mutation events and handlers
   - Mutation events are automatically dispatched for all nodes and objects
-  - Example: `"data"` property mutation event `"io-object-mutation"` includes `event.detail.object` that equals mutated object
+  - Example: `"data"` property mutation event `"io-mutation"` includes `event.detail.object` that equals mutated object
   - Mutations of generic objects can be dispatched using `this.dispatchMutation(mutatedObject);`
   - Mutation handlers get invoked automatically if they are defined
   - Example: `"data"` property mutation event invokes `dataMutated()` handler if it exists
@@ -55,7 +55,7 @@ It can be used to create reactive custom elements that can be bound to node prop
 - **Property** - Creates and initializes responsive properties
 - **EventDispatcher** - Manages DOM events on elements and bridges them to synthetic events on nodes
 - **ChangeQueue** - Detects property changes and dispatches change/mutation events and handlers
-- **Queue** - Generic queue manager with throttle and debounce capability
+- **FrameScheduler** - Generic frame scheduler with throttle and debounce capability
 - **Binding** - Manages two-way data flow using change events
 - **VDOM** - Virtual DOM implementation for efficient rendering
 
@@ -83,7 +83,7 @@ When using singletons that hold shared state:
 - View elements should capture events and forward them to singleton methods
 - Avoid direct property manipulation from views - use methods instead
 - This keeps views focused on event handling and rendering
-- Example: `IoTab` captures pointer events and forwards to `tabDragIconSingleton.updateDrag()`, `endDrag()`, `cancelDrag()`
+- Example: `IoTab` captures pointer events and forwards to `IoTabDragIconSingleton.updateDrag()`, `endDrag()`, `cancelDrag()`
 
 ### Runtime Type Checking
 - Use `debug: {}` labeled scoped blocks to write runtime debug code such as type checking etc
@@ -147,7 +147,7 @@ Each package can be built/linted individually:
 - Run tests with `pnpm test` or `pnpm test:[package]` for individual packages
 - If playwright browsers are not installed in sandbox try `source .env && pnpm test:[package] 2>&1`
 - If that fails, install playwright browsers with `pnpm exec playwright install chromium 2>&1`
-- Use `nextQueue()` from `@io-gui/core` to wait for next queue tick in tests. Dont use `await new Promise`
+- Use `nextFrame()` from `@io-gui/core` to wait for next queue tick in tests. Dont use `await new Promise`
 - DO NOT use `@Property` decorator in test files. Use `static override get Properties()` method instead.
 - DO NOT use `@Field` decorator in test files. Use `static override get Fields()` method instead.
 

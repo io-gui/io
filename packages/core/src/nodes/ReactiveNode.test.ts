@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { Change, Binding, ReactiveObject, Register, PropertyDefinitions, ReactiveElement, ListenerDefinitions, nextQueue, Color, NodeArray, NODES } from '@io-gui/core'
+import { Change, Binding, ReactiveObject, Register, PropertyDefinitions, ReactiveElement, ListenerDefinitions, nextFrame, Color, NodeArray, NODES } from '@io-gui/core'
 
 @Register
 class JsonChildNode extends ReactiveObject {
@@ -277,8 +277,8 @@ describe('ReactiveObject', () => {
     const protoProps1 = node1._protochain.properties
     const protoProps2 = node2._protochain.properties
 
-    expect(Array.from(node1._properties.keys())).toEqual(['reactivity', 'prop1', 'prop2', 'prop3'])
-    expect(Array.from(node2._properties.keys())).toEqual(['reactivity', 'prop1', 'prop2', 'prop3'])
+    expect(Array.from(node1._properties.keys())).toEqual(['dispatchTiming', 'prop1', 'prop2', 'prop3'])
+    expect(Array.from(node2._properties.keys())).toEqual(['dispatchTiming', 'prop1', 'prop2', 'prop3'])
 
     expect(protoProps1.prop1.value).toBe(0)
     expect(node1._properties.get('prop1')).toEqual({
@@ -503,7 +503,7 @@ describe('ReactiveObject', () => {
       value: 1,
     }])
 
-    await nextQueue()
+    await nextFrame()
 
     expect(node.propChangedEvents).toEqual([{
       oldValue: 0,
@@ -520,7 +520,7 @@ describe('ReactiveObject', () => {
     node.setProperty('prop', 3, true)
     node.prop = 4
 
-    await nextQueue()
+    await nextFrame()
 
     expect(node.propChangedEvents).toEqual([{
       oldValue: 0,
@@ -557,12 +557,12 @@ describe('ReactiveObject', () => {
     }])
 
     node3.propChangedEvents.length = 0
-    node3.reactivity = 'debounced'
+    node3.dispatchTiming = 'debounced'
     node3.prop = 10
 
     expect(node3.propChangedEvents).toEqual([])
 
-    await nextQueue()
+    await nextFrame()
 
     expect(node3.propChangedEvents).toEqual([{
       oldValue: -1,
@@ -571,12 +571,12 @@ describe('ReactiveObject', () => {
     }])
 
     node3.propChangedEvents.length = 0
-    node3.reactivity = 'none'
+    node3.dispatchTiming = 'none'
     node3.prop = 20
 
     expect(node3.propChangedEvents).toEqual([])
 
-    await nextQueue()
+    await nextFrame()
 
     expect(node3.propChangedEvents).toEqual([])
   })
@@ -598,11 +598,11 @@ describe('ReactiveObject', () => {
     // Throttle leading already executed, trailing + debounces pending
     expect(order).toEqual([0])
 
-    await nextQueue()
+    await nextFrame()
     // Debounces execute (in insertion order), then trailing throttle
     expect(order).toEqual([0, 1, 2, 0])
   })
-  it('Should add/remove "io-object-mutation" event listeners to properties of Node type', async () => {
+  it('Should add/remove "io-mutation" event listeners to properties of Node type', async () => {
     @Register
     class TestNode extends ReactiveObject {
       static get Properties(): PropertyDefinitions {
@@ -618,16 +618,16 @@ describe('ReactiveObject', () => {
       prop: subnode,
     }) as any
 
-    expect(subnode._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node.onPropertyMutated)
+    expect(subnode._eventDispatcher.addedListeners['io-mutation'][0][0]).toBe(node.onPropertyMutated)
 
     node.prop = null
 
-    expect(subnode._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
+    expect(subnode._eventDispatcher.addedListeners['io-mutation']).toBe(undefined)
 
     const subnode2 = new TestNode()
     node.prop = subnode2
 
-    expect(subnode2._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node.onPropertyMutated)
+    expect(subnode2._eventDispatcher.addedListeners['io-mutation'][0][0]).toBe(node.onPropertyMutated)
 
     @Register
     class TestNode2 extends ReactiveObject {
@@ -641,18 +641,18 @@ describe('ReactiveObject', () => {
     const node2 = new TestNode2() as any
     const subnode3 = node2.prop
 
-    expect(subnode3._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node2.onPropertyMutated)
+    expect(subnode3._eventDispatcher.addedListeners['io-mutation'][0][0]).toBe(node2.onPropertyMutated)
 
     node2.dispose()
 
-    expect(subnode3._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
+    expect(subnode3._eventDispatcher.addedListeners['io-mutation']).toBe(undefined)
 
     const node3 = new TestNode2() as any
     const subnode4 = node3.prop
 
     node3.prop = null
 
-    expect(subnode4._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
+    expect(subnode4._eventDispatcher.addedListeners['io-mutation']).toBe(undefined)
 
     const node4 = new TestNode2() as any
     const node5 = new TestNode2() as any
@@ -661,9 +661,9 @@ describe('ReactiveObject', () => {
 
     node4.prop = new Binding(node5, 'prop')
 
-    expect(subnode5._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
-    expect(subnode6._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node5.onPropertyMutated)
-    expect(subnode6._eventDispatcher.addedListeners['io-object-mutation'][1][0]).toBe(node4.onPropertyMutated)
+    expect(subnode5._eventDispatcher.addedListeners['io-mutation']).toBe(undefined)
+    expect(subnode6._eventDispatcher.addedListeners['io-mutation'][0][0]).toBe(node5.onPropertyMutated)
+    expect(subnode6._eventDispatcher.addedListeners['io-mutation'][1][0]).toBe(node4.onPropertyMutated)
 
   })
   it('Should correctly invoke handler functions on property changes', async () => {
@@ -740,7 +740,7 @@ describe('ReactiveObject', () => {
     node.prop1Changes.length = 0
     node.prop2Changes.length = 0
 
-    node.reactivity = 'debounced'
+    node.dispatchTiming = 'debounced'
 
     node.setProperties({
       'prop1': 'four',
@@ -750,7 +750,7 @@ describe('ReactiveObject', () => {
     expect(node.prop1Changes).toEqual([])
     expect(node.prop2Changes).toEqual([])
 
-    await nextQueue()
+    await nextFrame()
 
     expect(node.prop1Changes).toEqual([{
       property: 'prop1',
@@ -807,7 +807,7 @@ describe('ReactiveObject', () => {
 
     node.obj1.a = 1
 
-    await nextQueue()
+    await nextFrame()
 
     expect(node.obj1MutatedCounter).toBe(1)
     expect(node.obj2MutatedCounter).toBe(0)
@@ -816,17 +816,17 @@ describe('ReactiveObject', () => {
 
     expect(node.obj2MutatedCounter).toBe(1)
 
-    await nextQueue()
+    await nextFrame()
 
     node.obj1 = new TestNode()
 
-    await nextQueue()
+    await nextFrame()
 
     expect(node.obj1MutatedCounter).toBe(1)
 
     node.obj1.obj1 = {a: 1}
 
-    await nextQueue()
+    await nextFrame()
 
     expect(node.obj1MutatedCounter).toBe(2)
 
@@ -1067,7 +1067,7 @@ describe('ReactiveObject', () => {
     expect(binding1.targets).toBe(undefined)
     expect(binding1.targetProperties).toBe(undefined)
   })
-  it('Should remove "io-object-mutation" listeners from Io objects assigned to properties with type: Object', async () => {
+  it('Should remove "io-mutation" listeners from Io objects assigned to properties with type: Object', async () => {
     @Register
     class IoObjectNode extends ReactiveObject {
       static get Properties(): PropertyDefinitions {
@@ -1092,17 +1092,17 @@ describe('ReactiveObject', () => {
     node.prop = ioObject
 
     // Listener should be added to the Io object
-    expect(ioObject._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node.onPropertyMutated)
+    expect(ioObject._eventDispatcher.addedListeners['io-mutation'][0][0]).toBe(node.onPropertyMutated)
 
     // Dispose the node - listener should be removed
     node.dispose()
 
     // Listener should have been removed
-    expect(ioObject._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
+    expect(ioObject._eventDispatcher.addedListeners['io-mutation']).toBe(undefined)
 
     ioObject.dispose()
   })
-  it('Should remove "io-object-mutation" listeners when shared Io object value is released by all properties', async () => {
+  it('Should remove "io-mutation" listeners when shared Io object value is released by all properties', async () => {
     @Register
     class IoObjectNode extends ReactiveObject {
       static get Properties(): PropertyDefinitions {
@@ -1129,20 +1129,20 @@ describe('ReactiveObject', () => {
     node.propB = ioObject
 
     // Listener should be on the Io object (only one, due to hasValueAtOtherProperty optimization)
-    expect(ioObject._eventDispatcher.addedListeners['io-object-mutation'].length).toBe(1)
-    expect(ioObject._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node.onPropertyMutated)
+    expect(ioObject._eventDispatcher.addedListeners['io-mutation'].length).toBe(1)
+    expect(ioObject._eventDispatcher.addedListeners['io-mutation'][0][0]).toBe(node.onPropertyMutated)
 
     // Release from propA - listener should remain (propB still has it)
     node.propA = null
 
     // Listener should still be present
-    expect(ioObject._eventDispatcher.addedListeners['io-object-mutation'].length).toBe(1)
+    expect(ioObject._eventDispatcher.addedListeners['io-mutation'].length).toBe(1)
 
     // Release from propB - listener should be removed (no other property has it)
     node.propB = null
 
     // Listener should have been removed
-    expect(ioObject._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
+    expect(ioObject._eventDispatcher.addedListeners['io-mutation']).toBe(undefined)
 
     node.dispose()
     ioObject.dispose()
@@ -1178,17 +1178,17 @@ describe('ReactiveObject', () => {
     node.propA = ioObject2
 
     // ioObject1 should still have a listener (from propB)
-    expect(ioObject1._eventDispatcher.addedListeners['io-object-mutation'].length).toBe(1)
+    expect(ioObject1._eventDispatcher.addedListeners['io-mutation'].length).toBe(1)
 
     // ioObject2 should have a listener (from propA)
-    expect(ioObject2._eventDispatcher.addedListeners['io-object-mutation'].length).toBe(1)
-    expect(ioObject2._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node.onPropertyMutated)
+    expect(ioObject2._eventDispatcher.addedListeners['io-mutation'].length).toBe(1)
+    expect(ioObject2._eventDispatcher.addedListeners['io-mutation'][0][0]).toBe(node.onPropertyMutated)
 
     node.dispose()
 
     // Both should have listeners removed after dispose
-    expect(ioObject1._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
-    expect(ioObject2._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
+    expect(ioObject1._eventDispatcher.addedListeners['io-mutation']).toBe(undefined)
+    expect(ioObject2._eventDispatcher.addedListeners['io-mutation']).toBe(undefined)
 
     ioObject1.dispose()
     ioObject2.dispose()
@@ -1207,19 +1207,19 @@ describe('ReactiveObject', () => {
     const addSpy = vi.spyOn(window, 'addEventListener')
     const node = new TestNode() as any
 
-    expect(addSpy.mock.calls.filter(([type]) => type === 'io-object-mutation').length).toBe(1)
+    expect(addSpy.mock.calls.filter(([type]) => type === 'io-mutation').length).toBe(1)
 
     node.propA = {label: 'a'}
     node.propB = {label: 'b'}
 
-    expect(addSpy.mock.calls.filter(([type]) => type === 'io-object-mutation').length).toBe(1)
+    expect(addSpy.mock.calls.filter(([type]) => type === 'io-mutation').length).toBe(1)
 
     addSpy.mockRestore()
     node.dispose()
   })
 
   describe('toJSON and applyJSON', () => {
-    it('serializes primitives and nested toJSON values, skips reactivity', () => {
+    it('serializes primitives and nested toJSON values, skips dispatchTiming', () => {
       const node = new JsonNode()
       node.count = 9
       node.color.applyJSON(Color.toHex(1, 0.2, 0))
@@ -1230,7 +1230,7 @@ describe('ReactiveObject', () => {
       expect(json.count).toBe(9)
       expect(json.color).toBe(0xffff3300)
       expect(json.label).toBe('saved')
-      expect(json.reactivity).toBeUndefined()
+      expect(json.dispatchTiming).toBeUndefined()
       expect(json.children).toEqual([{ count: 3 }])
     })
 
@@ -1343,7 +1343,7 @@ describe('ReactiveObject', () => {
     parent.addEventListener('value-changed', () => events.push('parent'))
     child.addEventListener('value-changed', () => events.push('child'))
     child.dispatch('value-changed', { property: 'value', value: 1, oldValue: 0 }, true)
-    await nextQueue()
+    await nextFrame()
     expect(events).toContain('child')
     parent.dispose()
     child.dispose()

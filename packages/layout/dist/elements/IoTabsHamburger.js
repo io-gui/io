@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Register, NodeArray, Property } from '@io-gui/core';
 import { IoField } from '@io-gui/inputs';
 import { ioIcon } from '@io-gui/icons';
-import { ioTabsHamburgerMenuSingleton } from './IoTabsHamburgerMenuSingleton.js';
+import { IoTabsHamburgerMenuSingleton } from './IoTabsHamburgerMenuSingleton.js';
 let IoTabsHamburger = class IoTabsHamburger extends IoField {
     static get Style() {
         return /* css */ `
@@ -19,7 +19,7 @@ let IoTabsHamburger = class IoTabsHamburger extends IoField {
     }
     constructor(args) { super(args); }
     onClick() {
-        ioTabsHamburgerMenuSingleton.expand({
+        IoTabsHamburgerMenuSingleton.expand({
             source: this,
             direction: 'over',
             tabs: this.tabs,

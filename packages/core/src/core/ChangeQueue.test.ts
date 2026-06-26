@@ -100,7 +100,7 @@ describe('ChangeQueue', () => {
     changeQueue.queue('prop1', 1, 0)
     changeQueue.queue('prop1', 2, 1)
     changeQueue.dispatch()
-    expect(JSON.stringify(node.eventStack)).toBe('["prop1-changed prop1 2 0","io-object-mutation"]')
+    expect(JSON.stringify(node.eventStack)).toBe('["prop1-changed prop1 2 0","io-mutation"]')
   })
   it('Should invoke handler functions with correct payloads', () => {
     const node = new MockNode()
@@ -118,7 +118,7 @@ describe('ChangeQueue', () => {
     changeQueue.queue('prop2', 2, 0)
     changeQueue.dispatch()
     expect(JSON.stringify(node.changeStack)).toBe('["prop1Changed prop1 3 0","prop2Changed prop2 2 0","mutated"]')
-    expect(JSON.stringify(node.eventStack)).toBe('["prop1-changed prop1 3 0","prop2-changed prop2 2 0","io-object-mutation"]')
+    expect(JSON.stringify(node.eventStack)).toBe('["prop1-changed prop1 3 0","prop2-changed prop2 2 0","io-mutation"]')
   })
   it('Setting new value to the same value as oldValue should not trigger change event', () => {
     const node = new MockNode()
@@ -239,7 +239,7 @@ describe('ChangeQueue', () => {
     changeQueue.queue('prop1', 0, 1)
     changeQueue.dispatch()
     expect(node.changeStack).toEqual(['prop2Changed prop2 2 0', 'mutated'])
-    expect(node.eventStack).toEqual(['prop2-changed prop2 2 0', 'io-object-mutation'])
+    expect(node.eventStack).toEqual(['prop2-changed prop2 2 0', 'io-mutation'])
   })
   it('Should include changes queued during dispatch after earlier properties', () => {
     const node = new MockNodeWithCascadingChanges()

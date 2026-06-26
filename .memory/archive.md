@@ -21,13 +21,16 @@ Per-child `props.key` → match-and-move; stored as non-enumerable `_vdomKey`; n
 ### Monorepo build
 See `working.md`. Extra: `clean` must remove `tsconfig.tsbuildinfo` or incremental emit skips stale packages.
 
+### MenuOption.pathChanged — invalid path leaf resilience
+Hash path like `Docs,Deep Dive,Asynchronou Dispatch` (misspelled leaf) used to select nothing — old code took only last segment, findItemById fail → blank page. Fix: walk path segments back-to-front, select deepest id that findItemById resolves. Invalid leaf falls back to valid ancestor; invalid intermediate still resolves via globally-unique leaf id. URL self-corrects via updatePaths.
+
 ## Gotchas
 
 ### EventDispatcher — diamond / dual-path dedupe
 Shared `visited` set per dispatch prevents duplicate delivery when one ancestor is reachable via multiple parent branches or synthetic+DOM overlap on the same ReactiveElement boundary.
 
 ### NodeArray — listener duplication traps
-- Assigning `NodeArray → NodeArray`: must skip copy-via-push path (`value instanceof NodeArray`) or kept items get duplicate `io-object-mutation` listeners.
+- Assigning `NodeArray → NodeArray`: must skip copy-via-push path (`value instanceof NodeArray`) or kept items get duplicate `io-mutation` listeners.
 - In-place filter: use `splice(0, length, ...items)`, not `length = 0` + `push` inside `withInternalOperation` (push re-adds listeners proxy skipped on length).
 
 ### Serialization / hydration
@@ -76,6 +79,9 @@ Per-viewport `WeakMap`s for hover/active; resolve viewport from `event.currentTa
 
 ### Docs sync to ADRs 0001-0004 (Jun 26)
 Audited docs vs ADRs. Source already implements all 4. Found stale only in docs/deep-dive.md + docs/quick-start.md + layout/README:212. Fixed: ReactiveNode(base)→ReactiveObject, ReactiveElement→ReactiveElement, @ReactiveProperty/ReactiveProperties→@Property/Properties, catch-all changed()/change()→mutated(), `new Storage()`→`Storage()` (factory returns Binding). Kept: `ReactiveNode`=graph union (correct), `ReactiveElementProps` type (legit export, NOT stale). core/README already fully correct. io-gui.mdc rule already updated.
+
+### Docs: Cross-Domain Reactivity feature writeup (Jun 26)
+User wants the "three parent/child relations" gap sold as a real feature (not a doc bug). Core facts verified in src: reactive graph `_parents`/`_children` edges created ONLY via addParent/removeParent, sourced from node-valued props (ReactiveObject.ts:300) + NodeArray items — NOT from VDOM children/DOM. EventDispatcher.dispatchEvent walks node._parents (line 365) recursively for synthetic bubbling; elements also fire `composed` native CustomEvent → DOM bubbling. Circuit breaker = `visited: Set<ReactiveNode>` (line 320-323): re-entry into visited node returns early → safe diamonds/cycles/multi-parent. `hasVisitedDomAncestor` (line 78-86) suppresses native DOM bubble when a DOM ancestor already visited by synthetic walk → no double-fire across domains. Multi-parent: `_parents` is array; one node held by multiple props/arrays/owners (mix of objects+elements). Added "Cross-Domain Reactivity" section to docs/deep-dive.md (after Reactive Data Flow), glossary "Graph & propagation" to CONTEXT.md, intro paras to root README.md + quick-start.md, note to CONTRIBUTING.md, framed layout/README table as concrete example. Tone: "distinctive/uncommon", no overhype.
 
 ### Json type refactor review (Jun 19)
 `Json` changed from object-interface to value-union (`JsonPrimitive|JsonObject|JsonArray`, +null). Compiles clean. Found: NodeArray.ts stale LOCAL `interface Json` shadowing import (user fixed). Pre-existing debug bug in ReactiveNode.applyJSON: `if (type === jsonObject.constructor)` always compared to Object + inverted. FIXED → `if (type && jsonObject[name]?.constructor !== type)` (guard `type` because `type?: AnyConstructor` optional; untyped props like MenuOption.value would over-warn). Also tightened locals `out`/`primitiveProps` to `JsonObject` (return type stays `Json` for subclass overrides like MenuOption `toJSON(): Json`). EditorConfig double-cast left as-is: MenuOptionProps has non-JSON fields (action fn, any) so toJSON can't narrow to it. All core/layout/menus tests pass.

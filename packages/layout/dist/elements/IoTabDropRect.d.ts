@@ -9,5 +9,5 @@ declare class IoTabDropRect extends ReactiveElement {
     constructor(args?: ReactiveElementProps);
     mutated(): void;
 }
-export declare const ioTabDropRectSingleton: IoTabDropRect;
+export declare const IoTabDropRectSingleton: IoTabDropRect;
 export {};

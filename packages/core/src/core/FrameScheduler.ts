@@ -2,28 +2,28 @@ import type { ReactiveNode } from './ReactiveCore.js'
 
 export type CallbackFunction = (arg?: unknown) => void
 
-interface QueueOptions {
+interface CallbackOptions {
   arg: unknown
   frame: number
 }
 
-type QueueKey = { node: ReactiveNode | undefined; func: CallbackFunction }
+type CallbackKey = { node: ReactiveNode | undefined; func: CallbackFunction }
 
 let currentFrame = 0
 
-const queue0: Map<QueueKey, QueueOptions> = new Map()
-const queue1: Map<QueueKey, QueueOptions> = new Map()
-let queue = queue0
+const bufferA: Map<CallbackKey, CallbackOptions> = new Map()
+const bufferB: Map<CallbackKey, CallbackOptions> = new Map()
+let nextBuffer = bufferA
 
 // Key registry - shared across both buffers
-const keysByNode: WeakMap<ReactiveNode, Map<CallbackFunction, QueueKey>> = new WeakMap()
-const keysByFunc: Map<CallbackFunction, QueueKey> = new Map()
+const keysByNode: WeakMap<ReactiveNode, Map<CallbackFunction, CallbackKey>> = new WeakMap()
+const keysByFunc: Map<CallbackFunction, CallbackKey> = new Map()
 
 // Throttle: tracks when each node+func can next execute immediately
 const throttleNextFrame: WeakMap<ReactiveNode, Map<CallbackFunction, number>> = new WeakMap()
 const throttleNextFrameGlobal: Map<CallbackFunction, number> = new Map()
 
-function getKey(func: CallbackFunction, node?: ReactiveNode): QueueKey {
+function getKey(func: CallbackFunction, node?: ReactiveNode): CallbackKey {
   if (node) {
     let funcMap = keysByNode.get(node)
     if (!funcMap) {
@@ -50,11 +50,11 @@ function getKey(func: CallbackFunction, node?: ReactiveNode): QueueKey {
  * Returns a promise that resolves when the next frame is rendered.
  * @returns {Promise<void>}
  */
-export async function nextQueue(): Promise<void> {
+export async function nextFrame(): Promise<void> {
   return new Promise((resolve) => {
     const callback: CallbackFunction = () => resolve()
     const key = getKey(callback, undefined)
-    queue.set(key, { arg: undefined, frame: currentFrame + 1 })
+    nextBuffer.set(key, { arg: undefined, frame: currentFrame + 1 })
   })
 }
 
@@ -97,10 +97,10 @@ export function throttle(func: CallbackFunction, arg?: unknown, node?: ReactiveN
     }
 
     // Queue trailing call (will execute after delay)
-    queue.set(key, { arg, frame: currentFrame + delay })
+    nextBuffer.set(key, { arg, frame: currentFrame + delay })
   } else {
     // Within delay period - only update arg, don't postpone
-    const existing = queue.get(key)
+    const existing = nextBuffer.get(key)
     if (existing) {
       existing.arg = arg
     }
@@ -109,33 +109,34 @@ export function throttle(func: CallbackFunction, arg?: unknown, node?: ReactiveN
 
 export function debounce(func: CallbackFunction, arg?: unknown, node?: ReactiveNode, delay = 1) {
   const key = getKey(func, node)
-  queue.set(key, { arg, frame: currentFrame + delay })
+  nextBuffer.set(key, { arg, frame: currentFrame + delay })
 }
 
 /**
- * Removes pending queue and throttle state for a disposed node.
+ * Removes pending callbacks for a specified node.
  */
-export function clearNodeQueue(node: ReactiveNode) {
-  for (const activeQueue of [queue0, queue1]) {
-    for (const [key] of activeQueue) {
-      if (key.node === node) activeQueue.delete(key)
+export function clearNodeCallbacks(node: ReactiveNode) {
+  for (const buffer of [bufferA, bufferB]) {
+    for (const [key] of buffer) {
+      if (key.node === node) buffer.delete(key)
     }
   }
   keysByNode.delete(node)
   throttleNextFrame.delete(node)
 }
 
-function executeQueue() {
+function advanceFrame() {
   currentFrame++
 
-  const activeQueue = queue
-  queue = queue === queue0 ? queue1 : queue0
+  const currentBuffer = nextBuffer
 
-  for (const [key, options] of activeQueue) {
-    // Re-queue if target frame not reached
+  nextBuffer = nextBuffer === bufferA ? bufferB : bufferA
+
+  for (const [key, options] of currentBuffer) {
+    // Move callback to next frame if target frame not reached
     if (options.frame > currentFrame) {
-      if (!queue.has(key)) {
-        queue.set(key, options)
+      if (!nextBuffer.has(key)) {
+        nextBuffer.set(key, options)
       }
       continue
     }
@@ -150,7 +151,7 @@ function executeQueue() {
     }
   }
 
-  activeQueue.clear()
-  requestAnimationFrame(executeQueue)
+  currentBuffer.clear()
+  requestAnimationFrame(advanceFrame)
 }
-requestAnimationFrame(executeQueue)
+requestAnimationFrame(advanceFrame)

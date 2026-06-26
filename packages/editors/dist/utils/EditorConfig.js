@@ -35,10 +35,10 @@ class ConfigCache {
         return this.map.get(key1)?.delete(key2) ?? false;
     }
 }
-const configCache = new ConfigCache();
+const CONFIG_CACHE = new ConfigCache();
 // TODO: Make sure multiple editors dont share the same menu options.
 // TODO: Consider using function to return new view each time editor is configured at runtime.
-const editorConfigSingleton = new Map([
+const CONFIGS = new Map([
     [Object, [
             [String, ioString()],
             [Number, ioNumber({ step: 0.01 })],
@@ -127,10 +127,10 @@ const editorConfigSingleton = new Map([
     [Element, []],
     [HTMLElement, []],
     [ReactiveObject, [
-            ['reactivity', ioOptionSelect({ option: new MenuOption({ options: ['none', 'debounced', 'immediate'] }) })],
+            ['dispatchTiming', ioOptionSelect({ option: new MenuOption({ options: ['immediate', 'throttled', 'debounced'] }) })],
         ]],
     [ReactiveElement, [
-            ['reactivity', ioOptionSelect({ option: new MenuOption({ options: ['none', 'debounced', 'immediate'] }) })],
+            ['dispatchTiming', ioOptionSelect({ option: new MenuOption({ options: ['immediate', 'throttled', 'debounced'] }) })],
         ]],
     [IoGl, [
             ['size', ioObject()],
@@ -147,7 +147,7 @@ const editorConfigSingleton = new Map([
             [Color, ioColorRgba()],
         ]]
 ]);
-editorConfigSingleton.forEach((propertyTypes, constructor) => {
+CONFIGS.forEach((propertyTypes, constructor) => {
     const descriptors = Object.getOwnPropertyDescriptors(constructor.prototype);
     for (const [key, descriptor] of Object.entries(descriptors)) {
         const isWritable = descriptor.writable !== false;
@@ -173,13 +173,13 @@ export function getEditorConfig(object, propertyConfigs) {
         console.warn('`getObjectConfig` should be used with an Object instance');
         return {};
     }
-    const cachedConfig = configCache.get(object, propertyConfigs);
+    const cachedConfig = CONFIG_CACHE.get(object, propertyConfigs);
     if (cachedConfig) {
         // TODO: Test cached configs!
         return cachedConfig;
     }
     const aggregatedConfig = new Map();
-    for (const [constructorKey, propertyTypes] of editorConfigSingleton) {
+    for (const [constructorKey, propertyTypes] of CONFIGS) {
         if (object instanceof constructorKey) {
             for (const [PropertyIdentifier, config] of propertyTypes) {
                 aggregatedConfig.set(PropertyIdentifier, config);
@@ -248,11 +248,11 @@ export function getEditorConfig(object, propertyConfigs) {
         if (!configRecord[key])
             console.warn('No config found for', key, value);
     }
-    configCache.set(object, propertyConfigs, configRecord);
+    CONFIG_CACHE.set(object, propertyConfigs, configRecord);
     return configRecord;
 }
 export function registerEditorConfig(constructor, propertyTypes) {
-    const existingConfigs = editorConfigSingleton.get(constructor) || [];
+    const existingConfigs = CONFIGS.get(constructor) || [];
     for (const [PropertyIdentifier, elementCandidate] of propertyTypes) {
         const existingConfig = existingConfigs.find(config => config[0] === PropertyIdentifier);
         if (existingConfig) {
@@ -262,5 +262,5 @@ export function registerEditorConfig(constructor, propertyTypes) {
             existingConfigs.push([PropertyIdentifier, elementCandidate]);
         }
     }
-    editorConfigSingleton.set(constructor, existingConfigs);
+    CONFIGS.set(constructor, existingConfigs);
 }

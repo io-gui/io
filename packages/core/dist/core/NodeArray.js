@@ -5,7 +5,7 @@ import { isReactiveNode } from './ReactiveCore.js';
  * Use `NodeArray` as the type for reactive properties that hold collections of child
  * nodes (for example `MenuOption.options`). The constructor registers the owner as
  * an observer; mutating methods (`push`, `splice`, indexed assignment, etc.) wire
- * parent/child links and dispatch `io-object-mutation` on the owner so change
+ * parent/child links and dispatch `io-mutation` on the owner so change
  * handlers like `optionsMutated()` run automatically.
  *
  * Items must be {@link ReactiveObject} instances. The returned value from the
@@ -57,7 +57,7 @@ export class NodeArray extends Array {
                             for (let i = newLength; i < oldLength; i++) {
                                 const item = target[i];
                                 if (isReactiveNode(item)) {
-                                    item.removeEventListener('io-object-mutation', self.itemMutated);
+                                    item.removeEventListener('io-mutation', self.itemMutated);
                                     item.removeParent(self.node);
                                 }
                             }
@@ -77,12 +77,12 @@ export class NodeArray extends Array {
                     // TODO Prevent adding to index greater than length?
                     const oldValue = target[index];
                     if (isReactiveNode(oldValue) && !self._isInternalOperation) {
-                        oldValue.removeEventListener('io-object-mutation', self.itemMutated);
+                        oldValue.removeEventListener('io-mutation', self.itemMutated);
                         oldValue.removeParent(self.node);
                     }
                     target[index] = value;
                     if (isReactiveNode(value) && !self._isInternalOperation) {
-                        value.addEventListener('io-object-mutation', self.itemMutated);
+                        value.addEventListener('io-mutation', self.itemMutated);
                         value.addParent(self.node);
                     }
                     if (!self._isInternalOperation)
@@ -96,7 +96,7 @@ export class NodeArray extends Array {
         Object.defineProperty(this, 'proxy', { value: proxy, enumerable: false, configurable: false });
         return proxy;
     }
-    /** Run array mutations without dispatching `io-object-mutation` until complete. */
+    /** Run array mutations without dispatching `io-mutation` until complete. */
     withInternalOperation(operation) {
         this._isInternalOperation = true;
         try {
@@ -111,7 +111,7 @@ export class NodeArray extends Array {
             for (let i = start; i < start + deleteCount; i++) {
                 const item = this[i];
                 if (isReactiveNode(item)) {
-                    item.removeEventListener('io-object-mutation', this.itemMutated);
+                    item.removeEventListener('io-mutation', this.itemMutated);
                     item.removeParent(this.node);
                 }
             }
@@ -119,7 +119,7 @@ export class NodeArray extends Array {
             for (let i = start; i < start + items.length; i++) {
                 const item = this[i];
                 if (isReactiveNode(item)) {
-                    item.addEventListener('io-object-mutation', this.itemMutated);
+                    item.addEventListener('io-mutation', this.itemMutated);
                     item.addParent(this.node);
                 }
             }
@@ -133,7 +133,7 @@ export class NodeArray extends Array {
             const result = super.push(...items);
             for (const item of items) {
                 if (isReactiveNode(item)) {
-                    item.addEventListener('io-object-mutation', this.itemMutated);
+                    item.addEventListener('io-mutation', this.itemMutated);
                     item.addParent(this.node);
                 }
             }
@@ -147,7 +147,7 @@ export class NodeArray extends Array {
             const result = super.unshift(...items);
             for (const item of items) {
                 if (isReactiveNode(item)) {
-                    item.addEventListener('io-object-mutation', this.itemMutated);
+                    item.addEventListener('io-mutation', this.itemMutated);
                     item.addParent(this.node);
                 }
             }
@@ -160,7 +160,7 @@ export class NodeArray extends Array {
         return this.withInternalOperation(() => {
             const item = super.pop();
             if (item !== undefined && isReactiveNode(item)) {
-                item.removeEventListener('io-object-mutation', this.itemMutated);
+                item.removeEventListener('io-mutation', this.itemMutated);
                 item.removeParent(this.node);
             }
             if (item !== undefined)
@@ -172,7 +172,7 @@ export class NodeArray extends Array {
         return this.withInternalOperation(() => {
             const item = super.shift();
             if (item !== undefined && isReactiveNode(item)) {
-                item.removeEventListener('io-object-mutation', this.itemMutated);
+                item.removeEventListener('io-mutation', this.itemMutated);
                 item.removeParent(this.node);
             }
             if (item !== undefined)
@@ -210,14 +210,14 @@ export class NodeArray extends Array {
             for (let i = actualStart; i < actualEnd; i++) {
                 const oldItem = this[i];
                 if (oldItem !== undefined && isReactiveNode(oldItem)) {
-                    oldItem.removeEventListener('io-object-mutation', this.itemMutated);
+                    oldItem.removeEventListener('io-mutation', this.itemMutated);
                     oldItem.removeParent(this.node);
                 }
             }
             super.fill(value, actualStart, actualEnd);
             for (let i = actualStart; i < actualEnd; i++) {
                 if (isReactiveNode(value)) {
-                    value.addEventListener('io-object-mutation', this.itemMutated);
+                    value.addEventListener('io-mutation', this.itemMutated);
                     value.addParent(this.node);
                 }
             }
@@ -247,7 +247,7 @@ export class NodeArray extends Array {
             for (let i = actualTarget; i < actualTarget + count; i++) {
                 const oldItem = this[i];
                 if (oldItem !== undefined && isReactiveNode(oldItem)) {
-                    oldItem.removeEventListener('io-object-mutation', this.itemMutated);
+                    oldItem.removeEventListener('io-mutation', this.itemMutated);
                     oldItem.removeParent(this.node);
                 }
             }
@@ -255,7 +255,7 @@ export class NodeArray extends Array {
             for (let i = actualTarget; i < actualTarget + count; i++) {
                 const item = this[i];
                 if (isReactiveNode(item)) {
-                    item.addEventListener('io-object-mutation', this.itemMutated);
+                    item.addEventListener('io-mutation', this.itemMutated);
                     item.addParent(this.node);
                 }
             }
@@ -273,12 +273,12 @@ export class NodeArray extends Array {
     }
     itemMutated(event) {
         for (const observer of this._observers) {
-            observer.dispatch('io-object-mutation', { object: this.proxy, property: event.detail.index });
+            observer.dispatch('io-mutation', { object: this.proxy, property: event.detail.index });
         }
     }
     dispatchMutation() {
         for (const observer of this._observers) {
-            observer.dispatch('io-object-mutation', { object: this.proxy });
+            observer.dispatch('io-mutation', { object: this.proxy });
         }
     }
     /** Serialize each item via its own {@link ReactiveObject.toJSON}. */
@@ -295,7 +295,7 @@ export class NodeArray extends Array {
         const nodes = [...this];
         for (const item of nodes) {
             if (isReactiveNode(item)) {
-                item.removeEventListener('io-object-mutation', this.itemMutated);
+                item.removeEventListener('io-mutation', this.itemMutated);
                 item.removeParent(this.node);
             }
         }

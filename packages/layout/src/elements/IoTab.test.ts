@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { IoTab, Tab, tabDragIconSingleton } from '@io-gui/layout'
+import { IoTab, Tab, IoTabDragIconSingleton } from '@io-gui/layout'
 
 describe('IoTab', () => {
   let tab: Tab
@@ -23,7 +23,7 @@ describe('IoTab', () => {
     tab.dispose()
 
     // Reset singleton state
-    tabDragIconSingleton.setProperties({
+    IoTabDragIconSingleton.setProperties({
       dragging: false,
       dropSource: null,
       dropTarget: null,
@@ -276,7 +276,7 @@ describe('IoTab', () => {
       })
       ioTab.onPointermove(moveEvent)
 
-      expect(tabDragIconSingleton.dragging).toBe(false)
+      expect(IoTabDragIconSingleton.dragging).toBe(false)
     })
 
     it('should start drag after moving more than 10px horizontally', () => {
@@ -307,8 +307,8 @@ describe('IoTab', () => {
       })
       ioTab.onPointermove(moveEvent)
 
-      expect(tabDragIconSingleton.dragging).toBe(true)
-      expect(tabDragIconSingleton.tab).toBe(tab)
+      expect(IoTabDragIconSingleton.dragging).toBe(true)
+      expect(IoTabDragIconSingleton.tab).toBe(tab)
     })
 
     it('should start drag after moving more than 10px vertically', () => {
@@ -338,7 +338,7 @@ describe('IoTab', () => {
       })
       ioTab.onPointermove(moveEvent)
 
-      expect(tabDragIconSingleton.dragging).toBe(true)
+      expect(IoTabDragIconSingleton.dragging).toBe(true)
     })
 
     it('should not start drag when not holding left button', () => {
@@ -369,7 +369,7 @@ describe('IoTab', () => {
       })
       ioTab.onPointermove(moveEvent)
 
-      expect(tabDragIconSingleton.dragging).toBe(false)
+      expect(IoTabDragIconSingleton.dragging).toBe(false)
     })
 
     it('should set singleton dropSource to parent panel when drag starts', () => {
@@ -399,7 +399,7 @@ describe('IoTab', () => {
       })
       ioTab.onPointermove(moveEvent)
 
-      expect(tabDragIconSingleton.dropSource).toBe(mockPanel)
+      expect(IoTabDragIconSingleton.dropSource).toBe(mockPanel)
     })
   })
 
@@ -432,8 +432,8 @@ describe('IoTab', () => {
       })
       ioTab.onPointermove(moveEvent1)
 
-      expect(tabDragIconSingleton.style.left).toBe('115px')
-      expect(tabDragIconSingleton.style.top).toBe('100px')
+      expect(IoTabDragIconSingleton.style.left).toBe('115px')
+      expect(IoTabDragIconSingleton.style.top).toBe('100px')
 
       // Continue moving
       const moveEvent2 = new PointerEvent('pointermove', {
@@ -446,8 +446,8 @@ describe('IoTab', () => {
       })
       ioTab.onPointermove(moveEvent2)
 
-      expect(tabDragIconSingleton.style.left).toBe('200px')
-      expect(tabDragIconSingleton.style.top).toBe('150px')
+      expect(IoTabDragIconSingleton.style.left).toBe('200px')
+      expect(IoTabDragIconSingleton.style.top).toBe('150px')
     })
   })
 
@@ -465,7 +465,7 @@ describe('IoTab', () => {
       ioTab.onPointerdown(downEvent)
 
       // Set up some drag state
-      tabDragIconSingleton.setProperties({
+      IoTabDragIconSingleton.setProperties({
         dragging: true,
         dropSource: {} as any,
         dropTarget: {} as any,
@@ -480,11 +480,11 @@ describe('IoTab', () => {
       })
       ioTab.onPointercancel(cancelEvent)
 
-      expect(tabDragIconSingleton.dragging).toBe(false)
-      expect(tabDragIconSingleton.dropSource).toBeNull()
-      expect(tabDragIconSingleton.dropTarget).toBeNull()
-      expect(tabDragIconSingleton.splitDirection).toBe('none')
-      expect(tabDragIconSingleton.dropIndex).toBe(-1)
+      expect(IoTabDragIconSingleton.dragging).toBe(false)
+      expect(IoTabDragIconSingleton.dropSource).toBeNull()
+      expect(IoTabDragIconSingleton.dropTarget).toBeNull()
+      expect(IoTabDragIconSingleton.splitDirection).toBe('none')
+      expect(IoTabDragIconSingleton.dropIndex).toBe(-1)
     })
 
     it('should prevent default and stop propagation on cancel', () => {
@@ -565,7 +565,7 @@ describe('IoTab', () => {
       })
       ioTab.onPointerdown(downEvent)
 
-      tabDragIconSingleton.dragging = true
+      IoTabDragIconSingleton.dragging = true
 
       const clickSpy = vi.spyOn(ioTab, 'onClick')
 
@@ -692,7 +692,7 @@ describe('IoTab', () => {
       })
       ioTab.onPointerdown(downEvent)
 
-      tabDragIconSingleton.setProperties({
+      IoTabDragIconSingleton.setProperties({
         dragging: true,
         dropSource: null,
         dropTarget: null,
@@ -710,11 +710,11 @@ describe('IoTab', () => {
       })
       ioTab.onPointerup(upEvent)
 
-      expect(tabDragIconSingleton.dragging).toBe(false)
-      expect(tabDragIconSingleton.dropSource).toBeNull()
-      expect(tabDragIconSingleton.dropTarget).toBeNull()
-      expect(tabDragIconSingleton.splitDirection).toBe('none')
-      expect(tabDragIconSingleton.dropIndex).toBe(-1)
+      expect(IoTabDragIconSingleton.dragging).toBe(false)
+      expect(IoTabDragIconSingleton.dropSource).toBeNull()
+      expect(IoTabDragIconSingleton.dropTarget).toBeNull()
+      expect(IoTabDragIconSingleton.splitDirection).toBe('none')
+      expect(IoTabDragIconSingleton.dropIndex).toBe(-1)
     })
   })
 

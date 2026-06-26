@@ -1,7 +1,7 @@
 import { Register, Property, span, ThemeSingleton } from '@io-gui/core'
 import { IoField, IoFieldProps } from '@io-gui/inputs'
 import { ioIcon } from '@io-gui/icons'
-import { ioTabDropRectSingleton } from './IoTabDropRect.js'
+import { IoTabDropRectSingleton } from './IoTabDropRect.js'
 import { Tab } from '../nodes/Tab.js'
 import { IoSplit, SplitDirection } from './IoSplit.js'
 import { IoPanel } from './IoPanel.js'
@@ -190,7 +190,7 @@ class IoTabDragIcon extends IoField {
   }
 
   override mutated() {
-    ioTabDropRectSingleton.setProperties({
+    IoTabDropRectSingleton.setProperties({
       dropTarget: this.dropTarget,
       splitDirection: this.splitDirection,
       dropIndex: this.dropIndex,
@@ -202,5 +202,5 @@ class IoTabDragIcon extends IoField {
   }
 }
 
-export const tabDragIconSingleton = new IoTabDragIcon()
-document.body.appendChild(tabDragIconSingleton as HTMLElement)
+export const IoTabDragIconSingleton = new IoTabDragIcon()
+document.body.appendChild(IoTabDragIconSingleton as HTMLElement)

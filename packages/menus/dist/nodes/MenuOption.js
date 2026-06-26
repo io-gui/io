@@ -181,8 +181,12 @@ let MenuOption = MenuOption_1 = class MenuOption extends ReactiveObject {
     }
     pathChanged() {
         const path = this.path ? [...this.path.split(',')] : [];
-        if (path.length)
-            this.selectedID = path[path.length - 1];
+        for (let i = path.length - 1; i >= 0; i--) {
+            if (this.findItemById(path[i])) {
+                this.selectedID = path[i];
+                return;
+            }
+        }
     }
     optionsMutated(event) {
         const selectedIDImmediate = this.getSelectedIDImmediate();

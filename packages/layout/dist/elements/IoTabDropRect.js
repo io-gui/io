@@ -97,5 +97,5 @@ __decorate([
 IoTabDropRect = __decorate([
     Register
 ], IoTabDropRect);
-export const ioTabDropRectSingleton = new IoTabDropRect();
-document.body.appendChild(ioTabDropRectSingleton);
+export const IoTabDropRectSingleton = new IoTabDropRect();
+document.body.appendChild(IoTabDropRectSingleton);

@@ -21,5 +21,5 @@ declare class IoTabDragIcon extends IoField {
     cancelDrag(): void;
     mutated(): void;
 }
-export declare const tabDragIconSingleton: IoTabDragIcon;
+export declare const IoTabDragIconSingleton: IoTabDragIcon;
 export {};

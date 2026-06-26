@@ -120,5 +120,5 @@ class IoTabsHamburgerMenu extends ReactiveElement {
   }
 }
 
-export const ioTabsHamburgerMenuSingleton = new IoTabsHamburgerMenu()
-IoOverlaySingleton.appendChild(ioTabsHamburgerMenuSingleton as HTMLElement)
+export const IoTabsHamburgerMenuSingleton = new IoTabsHamburgerMenu()
+IoOverlaySingleton.appendChild(IoTabsHamburgerMenuSingleton as HTMLElement)

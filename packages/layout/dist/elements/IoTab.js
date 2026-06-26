@@ -10,7 +10,7 @@ import { IoContextEditorSingleton } from '@io-gui/editors';
 import { IconsetDB, ioIcon } from '@io-gui/icons';
 import { MenuOption, ioOptionSelect } from '@io-gui/menus';
 import { Tab } from '../nodes/Tab.js';
-import { tabDragIconSingleton } from './IoTabDragIcon.js';
+import { IoTabDragIconSingleton } from './IoTabDragIcon.js';
 const icons = [];
 for (const set of Object.keys(IconsetDB)) {
     for (const icon of Object.keys(IconsetDB[set])) {
@@ -104,7 +104,7 @@ let IoTab = class IoTab extends IoField {
         event.preventDefault();
         event.stopPropagation();
         this.setPointerCapture(event.pointerId);
-        tabDragIconSingleton.setStartPosition(event.clientX, event.clientY);
+        IoTabDragIconSingleton.setStartPosition(event.clientX, event.clientY);
         super.onPointerdown(event);
         if (event.buttons === 1) {
             this.focus();
@@ -116,14 +116,14 @@ let IoTab = class IoTab extends IoField {
             return;
         const panel = this.parentElement.parentElement;
         const root = this.closest('io-split[root]');
-        tabDragIconSingleton.updateDrag(this.tab, panel, event.clientX, event.clientY, root);
+        IoTabDragIconSingleton.updateDrag(this.tab, panel, event.clientX, event.clientY, root);
     }
     onPointerup(event) {
         event.preventDefault();
         super.onPointerup(event);
         this.releasePointerCapture(event.pointerId);
-        if (tabDragIconSingleton.dragging) {
-            tabDragIconSingleton.endDrag();
+        if (IoTabDragIconSingleton.dragging) {
+            IoTabDragIconSingleton.endDrag();
         }
         else {
             this.onClick();
@@ -133,7 +133,7 @@ let IoTab = class IoTab extends IoField {
         event.preventDefault();
         event.stopPropagation();
         super.onPointercancel(event);
-        tabDragIconSingleton.cancelDrag();
+        IoTabDragIconSingleton.cancelDrag();
     }
     onPointerleave(event) {
         event.preventDefault();

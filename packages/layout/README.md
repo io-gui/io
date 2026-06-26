@@ -27,6 +27,8 @@ The system separates **domain models** (data) from **elements** (UI), following 
 | `Panel` | `IoPanel` | Container for tabs with content selection |
 | `Tab` | `IoTab` | Individual tab with id, label, and icon |
 
+This split is a concrete use of Io-Gui's **cross-domain reactivity**: `Split`, `Panel`, and `Tab` are non-DOM `ReactiveObject` models that own the layout state, while `IoSplit`, `IoPanel`, and `IoTab` render it. The models and elements live in one shared reactive graph, so a mutation on a `Tab` deep in the tree bubbles up through the model graph and across the object/element boundary to the elements that render it — without the model holding any DOM reference. See the core [deep dive](https://iogui.dev/io/#path=Docs,Deep%20Dive) "Cross-Domain Reactivity" section for the underlying mechanism.
+
 ## Domain Models
 
 ### Tab
@@ -149,7 +151,7 @@ Individual tab element extending `IoField` for click/keyboard interactions.
 **Drag behavior:**
 - Captures pointer on `pointerdown`
 - Initiates drag after 10px movement threshold
-- Updates `tabDragIconSingleton` with current position
+- Updates `IoTabDragIconSingleton` with current position
 - Detects drop targets by iterating all `io-tabs` and `io-panel` elements
 - Calculates drop position (index or split direction) based on cursor position
 
@@ -237,7 +239,7 @@ Parent elements receive mutation, may propagate up
    → Set pointer capture, record start position
 
 2. pointermove (>10px delta)
-   → Initialize tabDragIconSingleton with tab, source panel
+   → Initialize IoTabDragIconSingleton with tab, source panel
    → Update icon position at cursor
 
 3. pointermove (continued)
@@ -270,9 +272,9 @@ Parent elements receive mutation, may propagate up
 
 IoSplit uses **global singletons** for drag-and-drop functionality:
 
-- `tabDragIconSingleton` - Shows tab icon at cursor during drag
-- `ioTabDropRectSingleton` - Shows drop target preview
-- `ioTabsHamburgerMenuSingleton` - Overflow menu for hidden tabs
+- `IoTabDragIconSingleton` - Shows tab icon at cursor during drag
+- `IoTabDropRectSingleton` - Shows drop target preview
+- `IoTabsHamburgerMenuSingleton` - Overflow menu for hidden tabs
 
 **Limitations when using multiple `IoSplit` instances on the same page:**
 
@@ -329,7 +331,7 @@ When using `Storage` for layout persistence, understanding what gets serialized 
 - All nested children recursively
 
 **What is NOT persisted:**
-- Transient drag state (`tabDragIconSingleton` properties)
+- Transient drag state (`IoTabDragIconSingleton` properties)
 - Runtime element references (`dropSource`, `dropTarget`)
 - Overflow state (`IoTabs.overflow` value)
 - DOM-specific state (scroll positions, focus)

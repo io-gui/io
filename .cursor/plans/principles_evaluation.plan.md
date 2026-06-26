@@ -198,7 +198,7 @@ flowchart TD
 
 ## Principle 4: Automatic observation of plain objects
 
-**Current state:** `type: Object` props use window `io-object-mutation` bus (one listener per node, improved). Io values listen directly; `NodeArray` uses proxy + self-listener. `Color` in-place mutation still invisible ([packages/core/src/core/Color.ts](packages/core/src/core/Color.ts)).
+**Current state:** `type: Object` props use window `io-mutation` bus (one listener per node, improved). Io values listen directly; `NodeArray` uses proxy + self-listener. `Color` in-place mutation still invisible ([packages/core/src/core/Color.ts](packages/core/src/core/Color.ts)).
 
 **Production `type: Object` usage:** layout (`IoSplit`, `IoPanel`, `IoDrawer`), editors (`IoInspector`, `IoObject`, `IoPropertyEditor`), three (`IoVectorBase`, `IoBuildGeometry`).
 

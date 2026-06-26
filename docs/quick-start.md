@@ -6,7 +6,9 @@ Io-Gui relies on interoperable reactive **nodes** and **elements** that respond 
 
 Io-Gui is incrementally adoptable. You can use its core classes `ReactiveObject` and `ReactiveElement` to create your own nodes and elements, build anything from a simple website to an app, or you can import and use one of its nodes and elements in your own architecture.
 
-You can learn more about nodes and elements in the [deep dive] guide. To quickly import Io-Gui and get started, continue reading this article.
+Both base classes share one reactive graph, so plain data models and custom elements propagate changes, mutations, and events through the same system — across the object/element boundary, not just down the DOM tree. The [deep dive] covers this cross-domain reactivity in detail.
+
+To quickly import Io-Gui and get started, continue reading this article.
 
 ## Making an Element
 

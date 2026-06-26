@@ -28,7 +28,7 @@ export * from './core/ChangeQueue.js';
 export * from './core/EventDispatcher.js';
 export * from './core/NodeArray.js';
 export * from './core/ProtoChain.js';
-export * from './core/Queue.js';
+export * from './core/FrameScheduler.js';
 export * from './core/Property.js';
 export * from './core/Color.js';
 export * from './vdom/VDOM.js';

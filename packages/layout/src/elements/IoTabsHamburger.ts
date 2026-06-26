@@ -2,7 +2,7 @@ import { Register, NodeArray, Property } from '@io-gui/core'
 import { IoField, IoFieldProps } from '@io-gui/inputs'
 import { ioIcon } from '@io-gui/icons'
 import { Tab } from '../nodes/Tab.js'
-import { ioTabsHamburgerMenuSingleton } from './IoTabsHamburgerMenuSingleton.js'
+import { IoTabsHamburgerMenuSingleton } from './IoTabsHamburgerMenuSingleton.js'
 
 export type IoTabsHamburgerProps = IoFieldProps & {
   tabs: NodeArray<Tab>
@@ -25,7 +25,7 @@ export class IoTabsHamburger extends IoField {
   constructor(args: IoTabsHamburgerProps) { super(args) }
 
   override onClick() {
-    ioTabsHamburgerMenuSingleton.expand({
+    IoTabsHamburgerMenuSingleton.expand({
       source: this,
       direction: 'over',
       tabs: this.tabs,

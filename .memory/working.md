@@ -59,7 +59,7 @@
 Renamed instance `fromJSON` → `applyJSON` to distinguish apply-to-existing from static factory semantics.
 
 **Generic `ReactiveNode.toJSON()`** (`packages/core/src/nodes/ReactiveNode.ts`):
-- Walks `_reactiveProperties`; skips `reactivity`.
+- Walks `_reactiveProperties`; skips `dispatchTiming`.
 - Objects with `toJSON()` → delegate (nested nodes, `NodeArray`, `Color`, etc.).
 - Primitives (`number`, `string`, `boolean`) → copied as-is.
 - Does **not** auto-serialize arbitrary plain objects or unregistered props.

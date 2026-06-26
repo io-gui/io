@@ -167,16 +167,16 @@ describe('ProtoChain', () => {
   })
   it('Should include reactive properties from static Properties', () => {
     let protoChain = new ProtoChain(Node1)
-    expect(Object.keys(protoChain.properties)).toEqual(['reactivity', 'prop1', 'prop2'])
+    expect(Object.keys(protoChain.properties)).toEqual(['dispatchTiming', 'prop1', 'prop2'])
     expect(protoChain.properties).toEqual({
-      reactivity:{value: 'immediate', type: String},
+      dispatchTiming:{value: 'immediate', type: String},
       prop1:{init: false},
       prop2:{type: Object, init: null},
     })
     protoChain = new ProtoChain(Node3)
-    expect(Object.keys(protoChain.properties)).toEqual(['reactivity', 'prop1', 'prop2', 'prop3'])
+    expect(Object.keys(protoChain.properties)).toEqual(['dispatchTiming', 'prop1', 'prop2', 'prop3'])
     expect(protoChain.properties).toEqual({
-      reactivity:{value: 'immediate', type: String},
+      dispatchTiming:{value: 'immediate', type: String},
       prop1:{reflect: true, init: true},
       prop2:{value: 'foo', init: null, type: Object, reflect: false},
       prop3:{reflect: true},
@@ -191,9 +191,9 @@ describe('ProtoChain', () => {
   })
   it('Should not override subclass Properties with inherited static Properties', () => {
     const protoChain = new ProtoChain(Node4)
-    expect(Object.keys(protoChain.properties)).toEqual(['reactivity', 'prop1', 'prop2'])
+    expect(Object.keys(protoChain.properties)).toEqual(['dispatchTiming', 'prop1', 'prop2'])
     expect(protoChain.properties).toEqual({
-      reactivity:{value: 'immediate', type: String},
+      dispatchTiming:{value: 'immediate', type: String},
       prop1:{init: true},
       prop2:{type: Object, init: null},
     })

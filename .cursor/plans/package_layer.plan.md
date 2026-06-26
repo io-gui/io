@@ -157,7 +157,7 @@ The capture → move → up/cancel pattern is duplicated across ~8+ elements wit
 | [`IoSlider`](packages/sliders/src/elements/IoSlider.ts) | sliders | capture + move/up; caches `#rect`; touch scroll lock |
 | [`IoSliderBase`](packages/sliders/src/elements/IoSliderBase.ts) | sliders | same as IoSlider (near duplicate) |
 | [`IoDivider`](packages/layout/src/elements/IoDivider.ts) | layout | capture + move/up/cancel; dispatches custom events |
-| [`IoTab`](packages/layout/src/elements/IoTab.ts) | layout | capture + move/up/cancel; forwards to `tabDragIconSingleton` |
+| [`IoTab`](packages/layout/src/elements/IoTab.ts) | layout | capture + move/up/cancel; forwards to `IoTabDragIconSingleton` |
 
 `clamp()` is copy-pasted in both [`IoSlider.ts`](packages/sliders/src/elements/IoSlider.ts) and [`IoSliderBase.ts`](packages/sliders/src/elements/IoSliderBase.ts) (~L3–5).
 
@@ -364,4 +364,4 @@ Run `pnpm test` before merging the full package-layer milestone.
 2. **B2:** Single `bindPointerDrag` vs layered helpers (capture vs no-capture presets)?
 3. **B3:** Invalid/disabled styling merge — keep Base red fill, Slider red border, or unify?
 4. **C4:** IoSplit partial update scope — patch flex only, or defer until a dedicated Split render pass?
-5. **C5:** Should spatial cache live on `tabDragIconSingleton` or a small `TabDragSpatialIndex` node class?
+5. **C5:** Should spatial cache live on `IoTabDragIconSingleton` or a small `TabDragSpatialIndex` node class?

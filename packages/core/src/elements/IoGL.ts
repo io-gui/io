@@ -89,7 +89,7 @@ export class IoGl extends ReactiveElement {
   declare pxRatio: number
 
   // @Property('throttled')
-  // declare reactivity: ReactivityType
+  // declare dispatchTiming: DispatchTiming
 
   #needsResize = false
   #canvas: HTMLCanvasElement

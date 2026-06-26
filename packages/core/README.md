@@ -87,7 +87,7 @@ When a reactive property changes:
 1. `[propName]Changed(change)` handler is invoked (if defined)
 2. `[propName]-changed` event is dispatched with `{property, value, oldValue}`
 3. `mutated()` handler is invoked
-4. `io-object-mutation` event is dispatched for the node
+4. `io-mutation` event is dispatched for the node
 
 ```typescript
 labelChanged(change: Change) {
@@ -98,9 +98,9 @@ mutated() {
 }
 ```
 
-### Reactivity Modes
+### Dispatch Timing
 
-Control dispatch timing via `reactivity` property:
+Control dispatch timing via `dispatchTiming` property:
 
 | Mode | Behavior |
 |------|----------|

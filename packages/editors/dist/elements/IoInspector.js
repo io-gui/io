@@ -114,7 +114,7 @@ let IoInspector = class IoInspector extends ReactiveElement {
     }
     dispose() {
         super.dispose();
-        window.removeEventListener('io-object-mutation', this.onPropertyMutated);
+        window.removeEventListener('io-mutation', this.onPropertyMutated);
     }
 };
 __decorate([

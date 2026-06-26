@@ -89,6 +89,6 @@ class IoTabDropRect extends ReactiveElement {
   }
 }
 
-export const ioTabDropRectSingleton = new IoTabDropRect()
-document.body.appendChild(ioTabDropRectSingleton as HTMLElement)
+export const IoTabDropRectSingleton = new IoTabDropRect()
+document.body.appendChild(IoTabDropRectSingleton as HTMLElement)
 

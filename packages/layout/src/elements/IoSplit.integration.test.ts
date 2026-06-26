@@ -7,8 +7,8 @@ import {
   Split,
   Panel,
   Tab,
-  tabDragIconSingleton,
-  ioTabDropRectSingleton,
+  IoTabDragIconSingleton,
+  IoTabDropRectSingleton,
 } from '@io-gui/layout'
 
 /**
@@ -94,7 +94,7 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
     container.remove()
 
     // Reset singleton state
-    tabDragIconSingleton.setProperties({
+    IoTabDragIconSingleton.setProperties({
       dragging: false,
       tab: null,
       dropSource: null,
@@ -138,7 +138,7 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
         clientY: 50,
       })
       ioTab.onPointermove(moveEvent1)
-      expect(tabDragIconSingleton.dragging).toBe(false)
+      expect(IoTabDragIconSingleton.dragging).toBe(false)
 
       // Move past 10px threshold
       const moveEvent2 = createPointerEvent('pointermove', {
@@ -146,7 +146,7 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
         clientY: 50,
       })
       ioTab.onPointermove(moveEvent2)
-      expect(tabDragIconSingleton.dragging).toBe(true)
+      expect(IoTabDragIconSingleton.dragging).toBe(true)
     })
 
     it('should set drag icon position at cursor', () => {
@@ -164,8 +164,8 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
       })
       ioTab.onPointermove(moveEvent)
 
-      expect(tabDragIconSingleton.style.left).toBe('200px')
-      expect(tabDragIconSingleton.style.top).toBe('75px')
+      expect(IoTabDragIconSingleton.style.left).toBe('200px')
+      expect(IoTabDragIconSingleton.style.top).toBe('75px')
     })
 
     it('should set drop source panel when drag starts', () => {
@@ -184,7 +184,7 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
       })
       ioTab.onPointermove(moveEvent)
 
-      expect(tabDragIconSingleton.dropSource).toBe(ioPanel)
+      expect(IoTabDragIconSingleton.dropSource).toBe(ioPanel)
     })
 
     it('should reset singleton state on drop completion', () => {
@@ -192,12 +192,12 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
 
       simulateDrag(ioTab, 100, 50, 200, 50)
 
-      expect(tabDragIconSingleton.dragging).toBe(false)
-      expect(tabDragIconSingleton.tab).toBeNull()
-      expect(tabDragIconSingleton.dropSource).toBeNull()
-      expect(tabDragIconSingleton.dropTarget).toBeNull()
-      expect(tabDragIconSingleton.splitDirection).toBe('none')
-      expect(tabDragIconSingleton.dropIndex).toBe(-1)
+      expect(IoTabDragIconSingleton.dragging).toBe(false)
+      expect(IoTabDragIconSingleton.tab).toBeNull()
+      expect(IoTabDragIconSingleton.dropSource).toBeNull()
+      expect(IoTabDragIconSingleton.dropTarget).toBeNull()
+      expect(IoTabDragIconSingleton.splitDirection).toBe('none')
+      expect(IoTabDragIconSingleton.dropIndex).toBe(-1)
     })
 
     it('should trigger click when no drag occurred', () => {
@@ -434,13 +434,13 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
       })
       ioTab.onPointermove(moveEvent)
 
-      expect(tabDragIconSingleton.dragging).toBe(true)
+      expect(IoTabDragIconSingleton.dragging).toBe(true)
 
       // Cancel
       const cancelEvent = createPointerEvent('pointercancel')
       ioTab.onPointercancel(cancelEvent)
 
-      expect(tabDragIconSingleton.dragging).toBe(false)
+      expect(IoTabDragIconSingleton.dragging).toBe(false)
       expect(panel.tabs.length).toBe(originalTabCount)
     })
 
@@ -461,11 +461,11 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
       ioTab.onPointermove(moveEvent)
 
       // Cancel
-      tabDragIconSingleton.cancelDrag()
+      IoTabDragIconSingleton.cancelDrag()
 
-      expect(ioTabDropRectSingleton.dropTarget).toBeNull()
-      expect(ioTabDropRectSingleton.dropIndex).toBe(-1)
-      expect(ioTabDropRectSingleton.splitDirection).toBe('none')
+      expect(IoTabDropRectSingleton.dropTarget).toBeNull()
+      expect(IoTabDropRectSingleton.dropIndex).toBe(-1)
+      expect(IoTabDropRectSingleton.splitDirection).toBe('none')
     })
   })
 
@@ -487,31 +487,31 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
     it('should update drop marker when drag icon properties change', () => {
       const ioPanel = layout.querySelector('io-panel') as IoPanel
 
-      tabDragIconSingleton.setProperties({
+      IoTabDragIconSingleton.setProperties({
         dragging: true,
         dropTarget: ioPanel,
         splitDirection: 'left',
         dropIndex: -1,
       })
 
-      expect(ioTabDropRectSingleton.dropTarget).toBe(ioPanel)
-      expect(ioTabDropRectSingleton.splitDirection).toBe('left')
+      expect(IoTabDropRectSingleton.dropTarget).toBe(ioPanel)
+      expect(IoTabDropRectSingleton.splitDirection).toBe('left')
     })
 
     it('should show drag icon with dragging attribute', () => {
-      tabDragIconSingleton.dragging = true
-      expect(tabDragIconSingleton.hasAttribute('dragging')).toBe(true)
+      IoTabDragIconSingleton.dragging = true
+      expect(IoTabDragIconSingleton.hasAttribute('dragging')).toBe(true)
 
-      tabDragIconSingleton.dragging = false
-      expect(tabDragIconSingleton.hasAttribute('dragging')).toBe(false)
+      IoTabDragIconSingleton.dragging = false
+      expect(IoTabDragIconSingleton.hasAttribute('dragging')).toBe(false)
     })
 
     it('should display tab label in drag icon', () => {
       const tab = (layout.split.children[0] as Panel).tabs[0]
 
-      tabDragIconSingleton.tab = tab
+      IoTabDragIconSingleton.tab = tab
 
-      const labelSpan = tabDragIconSingleton.querySelector('.label')
+      const labelSpan = IoTabDragIconSingleton.querySelector('.label')
       expect(labelSpan?.textContent).toBe('tab1')
     })
   })
@@ -530,15 +530,15 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
       const ioPanel = layout.querySelector('io-panel') as IoPanel
 
       // Test center detection via direct property setting
-      tabDragIconSingleton.setProperties({
+      IoTabDragIconSingleton.setProperties({
         dragging: true,
         dropTarget: ioPanel,
         splitDirection: 'center',
         dropIndex: -1,
       })
 
-      expect(tabDragIconSingleton.splitDirection).toBe('center')
-      expect(tabDragIconSingleton.dropTarget).toBe(ioPanel)
+      expect(IoTabDragIconSingleton.splitDirection).toBe('center')
+      expect(IoTabDragIconSingleton.dropTarget).toBe(ioPanel)
     })
 
     it('should detect edge directions', () => {
@@ -554,13 +554,13 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
       // Test various directions
       const directions = ['left', 'right', 'top', 'bottom', 'center'] as const
       for (const direction of directions) {
-        tabDragIconSingleton.setProperties({
+        IoTabDragIconSingleton.setProperties({
           dragging: true,
           dropTarget: ioPanel,
           splitDirection: direction,
           dropIndex: -1,
         })
-        expect(tabDragIconSingleton.splitDirection).toBe(direction)
+        expect(IoTabDragIconSingleton.splitDirection).toBe(direction)
       }
     })
   })
@@ -666,7 +666,7 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
     it('should add tab to target panel with specific index when dropIndex is set', () => {
       const tab = sourcePanel.tabs[0]
 
-      tabDragIconSingleton.setProperties({
+      IoTabDragIconSingleton.setProperties({
         dragging: true,
         tab: tab,
         dropSource: sourcePanelElement,
@@ -675,7 +675,7 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
         dropIndex: 1,
       })
 
-      tabDragIconSingleton.endDrag()
+      IoTabDragIconSingleton.endDrag()
 
       expect(sourcePanel.tabs.length).toBe(1)
       expect(targetPanel.tabs.length).toBe(2)
@@ -686,7 +686,7 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
       const tab = sourcePanel.tabs[0]
       const moveTabToSplitSpy = vi.spyOn(targetPanelElement, 'moveTabToSplit')
 
-      tabDragIconSingleton.setProperties({
+      IoTabDragIconSingleton.setProperties({
         dragging: true,
         tab: tab,
         dropSource: sourcePanelElement,
@@ -695,7 +695,7 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
         dropIndex: -1,
       })
 
-      tabDragIconSingleton.endDrag()
+      IoTabDragIconSingleton.endDrag()
 
       expect(moveTabToSplitSpy).toHaveBeenCalledWith(
         sourcePanelElement,
@@ -707,7 +707,7 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
     it('should not move tab when dropping on same panel without direction', () => {
       const tab = sourcePanel.tabs[0]
 
-      tabDragIconSingleton.setProperties({
+      IoTabDragIconSingleton.setProperties({
         dragging: true,
         tab: tab,
         dropSource: sourcePanelElement,
@@ -716,7 +716,7 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
         dropIndex: 1,
       })
 
-      tabDragIconSingleton.endDrag()
+      IoTabDragIconSingleton.endDrag()
 
       // Should reorder within same panel, not remove
       expect(sourcePanel.tabs.length).toBe(2)
@@ -815,35 +815,35 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
       const ioPanel = layout.querySelector('io-panel') as IoPanel
 
       // Initial state
-      expect(ioTabDropRectSingleton.dropIndex).toBe(-1)
+      expect(IoTabDropRectSingleton.dropIndex).toBe(-1)
 
       // Update drag icon state
-      tabDragIconSingleton.setProperties({
+      IoTabDragIconSingleton.setProperties({
         dropTarget: ioPanel,
         splitDirection: 'none',
         dropIndex: 2,
       })
 
       // Drop marker should be in sync
-      expect(ioTabDropRectSingleton.dropTarget).toBe(ioPanel)
-      expect(ioTabDropRectSingleton.dropIndex).toBe(2)
+      expect(IoTabDropRectSingleton.dropTarget).toBe(ioPanel)
+      expect(IoTabDropRectSingleton.dropIndex).toBe(2)
     })
 
     it('should reset drop marker when drag ends', () => {
       const ioPanel = layout.querySelector('io-panel') as IoPanel
 
-      tabDragIconSingleton.setProperties({
+      IoTabDragIconSingleton.setProperties({
         dragging: true,
         dropTarget: ioPanel,
         splitDirection: 'left',
         dropIndex: 1,
       })
 
-      tabDragIconSingleton.cancelDrag()
+      IoTabDragIconSingleton.cancelDrag()
 
-      expect(ioTabDropRectSingleton.dropTarget).toBeNull()
-      expect(ioTabDropRectSingleton.splitDirection).toBe('none')
-      expect(ioTabDropRectSingleton.dropIndex).toBe(-1)
+      expect(IoTabDropRectSingleton.dropTarget).toBeNull()
+      expect(IoTabDropRectSingleton.splitDirection).toBe('none')
+      expect(IoTabDropRectSingleton.dropIndex).toBe(-1)
     })
   })
 
@@ -898,7 +898,7 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
         ioTab.onPointercancel(cancelEvent)
       }
 
-      expect(tabDragIconSingleton.dragging).toBe(false)
+      expect(IoTabDragIconSingleton.dragging).toBe(false)
       expect(layout.split.children[0].tabs.length).toBe(1)
     })
 
@@ -971,7 +971,7 @@ describe('IoSplit Integration - Multiple Instances', () => {
     layout2.remove()
     container.remove()
 
-    tabDragIconSingleton.setProperties({
+    IoTabDragIconSingleton.setProperties({
       dragging: false,
       tab: null,
       dropSource: null,
@@ -1009,8 +1009,8 @@ describe('IoSplit Integration - Multiple Instances', () => {
     tab1.onPointermove(moveEvent)
 
     // Drag icon should show layout1 panel as source
-    expect(tabDragIconSingleton.dragging).toBe(true)
-    expect(tabDragIconSingleton.dropSource).toBe(panel1)
+    expect(IoTabDragIconSingleton.dragging).toBe(true)
+    expect(IoTabDragIconSingleton.dropSource).toBe(panel1)
 
     // Note: Cross-layout drag behavior depends on the root passed to updateDrag
     // which is scoped by closest('io-split[root]')
@@ -1041,7 +1041,7 @@ describe('IoSplit Integration - State Persistence', () => {
   afterEach(() => {
     container.remove()
 
-    tabDragIconSingleton.setProperties({
+    IoTabDragIconSingleton.setProperties({
       dragging: false,
       tab: null,
       dropSource: null,

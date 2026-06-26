@@ -34,7 +34,7 @@ It can be used to create reactive custom elements that can be bound to node prop
   - Generic catch-all handler `.mutated()` gets invoked after any property change
 - Leaf-to-trunk data flow can be achieved using mutation events and handlers
   - Mutation events are automatically dispatched for all nodes and elements
-  - Example: `"data"` object property mutation event `"io-object-mutation"` includes `event.detail.object` that equals mutated object
+  - Example: `"data"` object property mutation event `"io-mutation"` includes `event.detail.object` that equals mutated object
   - Mutation events for generic objects can be dispatched using `this.dispatchMutation(mutatedObject);`
   - Mutation events for generic objects are emitted on a global event bus (window)
   - Mutation handlers get invoked automatically if they are defined
@@ -44,12 +44,35 @@ It can be used to create reactive custom elements that can be bound to node prop
   - Binding object can synchronize reactive properties by simple assignment to a property
   - Binding objects rely on change events for bound properties
 
+### Cross-Domain Reactivity
+
+Most frameworks keep two worlds apart: a component/DOM tree the framework owns and renders, and plain data models that live outside it and only reach the UI through bindings or a store. Io-Gui collapses that split. `ReactiveObject` (non-DOM models) and `ReactiveElement` (custom elements) are both `ReactiveNode`s — vertices in one shared reactive graph. Properties, change/mutation propagation, bindings, and event bubbling behave the same on both, and they also work *across* the boundary between them. A data model can be the reactive parent of a DOM element, and an element can be the reactive parent of a plain object, without either needing to know what the other is.
+
+That boundary-crossing is the design goal: a domain model deep in your data layer can emit a change or mutation that an element several hops away handles, even though the model has no DOM presence of its own.
+
+#### Two kinds of parent/child
+
+A `ReactiveElement` can take part in three overlapping but independent parent/child relations. For ordinary elements they often coincide, but they are not the same relation, and the space between them is where cross-domain reactivity lives:
+
+- **Reactive graph** — `_parents`/`_children`, the edges used for event and mutation bubbling and for data ownership. Edges are created through `addParent()`/`removeParent()`, and they come from *data*, not layout: assigning a node-valued reactive property makes the owner a parent of that node, and `NodeArray` items are parented to the node that holds them. The graph follows ownership, not DOM placement.
+- **DOM tree** — the real `parentElement`/`childNodes` the browser maintains after vDOM reconciliation. Used for layout and native DOM events.
+
+Because the reactive graph is built from ownership rather than placement, a node can be a reactive child of one object while sitting elsewhere in the DOM — or nowhere in the DOM at all.
+
+#### Multi-parenting
+
+A `ReactiveObject` is not limited to a single parent. The same object can be held by several properties, live in several `NodeArray`s, or be passed to `addParent()` on several owners — including a mix of plain objects and DOM elements. `_parents` is an array precisely so one node can belong to many trunks at once. When that node mutates, the change reaches every parent it is attached to, regardless of whether those parents are data models or elements.
+
+#### Bubbling and the circuit breaker
+
+Synthetic events (including `io-mutation`) bubble by walking `_parents` recursively, and elements additionally dispatch a `composed` native `CustomEvent` so the same event also travels the DOM tree. A graph that permits multiple parents and shared nodes can contain diamonds and cycles, so propagation needs a circuit breaker. The dispatcher carries a `visited` set: every node it reaches is recorded, and re-entering an already-visited node returns immediately. Each node therefore handles a given dispatch at most once, and infinite loops are impossible no matter how tangled the parenting is. The same set reconciles the two bubbling domains — before a native DOM bubble fires, the dispatcher checks whether a DOM ancestor was already visited by the synthetic walk and suppresses the duplicate — so an event that crosses both the reactive graph and the DOM tree is still handled once per node.
+
 ### Core Systems
 - **ProtoChain** - Inheritance aggregator that also performs one-time class initialization
 - **Property** - Creates and initializes reactive properties
 - **EventDispatcher** - Manages DOM events on elements and synthetic events on nodes
 - **ChangeQueue** - Detects property changes and dispatches change/mutation events and handlers
-- **Queue** - Generic queue manager with throttle and debounce capability
+- **FrameScheduler** - Generic frame scheduler with throttle and debounce capability
 - **Binding** - Manages two-way data flow using change events
 - **VDOM** - Virtual DOM implementation for efficient rendering
 
@@ -364,11 +387,11 @@ this.prop2Changed(change)
 this.mutated()
 ```
 
-### Debounced Reactivity
+### Asynchronous Dispatch
 
 By default, all nodes and elements handle changes synchronously, meaning that change handler functions and events happen immediately after the change. While this means that nodes react as fast as possible, it can also lead to inefficiencies in complex systems where multiple properties are changing frequently.
 
-Just like in the batching example above we can get into a scenario where change handler functions are called excessively. Again, this is fine but we can avoid redundant work by setting node's `reactivity` property to `debounced` or `throttled`. This will effectively change node's reactivity to an asynchronous regime.
+Just like in the batching example above we can get into a scenario where change handler functions are called excessively. Again, this is fine but we can avoid redundant work by setting node's `dispatchTiming` property to `debounced` or `throttled`. This will defer change dispatch to an asynchronous regime.
 
 In asynchronous regime, nodes don't invoke change events until the next `requestAnimationFrame` cycle. Multiple property changes can happen during this time and the resulting sequence of change events and handler function invocations will be automatically batched.
 

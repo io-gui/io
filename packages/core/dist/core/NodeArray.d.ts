@@ -6,7 +6,7 @@ import { type ReactiveNode } from './ReactiveCore.js';
  * Use `NodeArray` as the type for reactive properties that hold collections of child
  * nodes (for example `MenuOption.options`). The constructor registers the owner as
  * an observer; mutating methods (`push`, `splice`, indexed assignment, etc.) wire
- * parent/child links and dispatch `io-object-mutation` on the owner so change
+ * parent/child links and dispatch `io-mutation` on the owner so change
  * handlers like `optionsMutated()` run automatically.
  *
  * Items must be {@link ReactiveObject} instances. The returned value from the
@@ -26,7 +26,7 @@ export declare class NodeArray<N extends ReactiveObject> extends Array<N> {
     static get [Symbol.species](): ArrayConstructor;
     /** @param node Owner that receives mutation events for this collection. */
     constructor(node: ReactiveObject, ...args: N[]);
-    /** Run array mutations without dispatching `io-object-mutation` until complete. */
+    /** Run array mutations without dispatching `io-mutation` until complete. */
     withInternalOperation<T>(operation: () => T): T;
     splice(start: number, deleteCount: number, ...items: N[]): N[];
     push(...items: N[]): number;

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { Binding, ProtoProperty, PropertyInstance, ReactiveObject, Register, Observer, NodeArray, ReactiveElement, nextQueue, PropertyDefinitions } from '@io-gui/core'
+import { Binding, ProtoProperty, PropertyInstance, ReactiveObject, Register, Observer, NodeArray, ReactiveElement, nextFrame, PropertyDefinitions } from '@io-gui/core'
 
 class Object1 {
   constructor(init?: any) {
@@ -700,7 +700,7 @@ describe('Property', () => {
 
       const node = new QueueNode()
       node.value = 1
-      await nextQueue()
+      await nextFrame()
       expect(node.changes).toBe(1)
       expect(node.value).toBe(1)
       node.dispose()

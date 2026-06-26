@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { throttle, debounce, nextQueue, ReactiveObject, CallbackFunction } from '@io-gui/core'
+import { throttle, debounce, nextFrame, ReactiveObject, CallbackFunction } from '@io-gui/core'
 
 describe('Queue', () => {
 
@@ -10,7 +10,7 @@ describe('Queue', () => {
       const func = () => { count++ }
       throttle(func)
       expect(count).toBe(1) // Executes synchronously
-      await nextQueue() // Trailing also executes
+      await nextFrame() // Trailing also executes
       expect(count).toBe(2)
     })
 
@@ -21,7 +21,7 @@ describe('Queue', () => {
       throttle(func as CallbackFunction, 'second') // Updates trailing arg
       throttle(func as CallbackFunction, 'third')  // Updates trailing arg
       expect(args).toEqual(['first']) // Only leading executed so far
-      await nextQueue()
+      await nextFrame()
       expect(args).toEqual(['first', 'third']) // Trailing executes with last arg
     })
 
@@ -30,7 +30,7 @@ describe('Queue', () => {
       const func = () => { count++ }
       throttle(func) // Leading
       expect(count).toBe(1)
-      await nextQueue() // Trailing
+      await nextFrame() // Trailing
       expect(count).toBe(2)
       throttle(func) // New leading (delay expired)
       expect(count).toBe(3)
@@ -41,13 +41,13 @@ describe('Queue', () => {
       const func = () => { count++ }
       throttle(func, undefined, undefined, 3) // Leading executes
       expect(count).toBe(1)
-      await nextQueue() // Frame 1
+      await nextFrame() // Frame 1
       throttle(func, undefined, undefined, 3) // Ignored, trailing not reached
       expect(count).toBe(1)
-      await nextQueue() // Frame 2
+      await nextFrame() // Frame 2
       throttle(func, undefined, undefined, 3) // Ignored, trailing not reached
       expect(count).toBe(1)
-      await nextQueue() // Frame 3 - trailing executes
+      await nextFrame() // Frame 3 - trailing executes
       expect(count).toBe(2)
       throttle(func, undefined, undefined, 3) // New leading
       expect(count).toBe(3)
@@ -60,7 +60,7 @@ describe('Queue', () => {
       node.dispose()
       throttle(func, undefined, node)
       expect(count).toBe(0)
-      await nextQueue()
+      await nextFrame()
       expect(count).toBe(0) // Trailing also skipped
     })
 
@@ -90,7 +90,7 @@ describe('Queue', () => {
       const func = () => { count++ }
       debounce(func)
       expect(count).toBe(0)
-      await nextQueue()
+      await nextFrame()
       expect(count).toBe(1)
     })
 
@@ -99,12 +99,12 @@ describe('Queue', () => {
       const func = () => { count++ }
       debounce(func, undefined, undefined, 2)
       expect(count).toBe(0)
-      await nextQueue() // Frame 1
+      await nextFrame() // Frame 1
       expect(count).toBe(0)
       debounce(func, undefined, undefined, 2) // Reset to frame+2
-      await nextQueue() // Frame 2
+      await nextFrame() // Frame 2
       expect(count).toBe(0)
-      await nextQueue() // Frame 3
+      await nextFrame() // Frame 3
       expect(count).toBe(1)
     })
 
@@ -114,7 +114,7 @@ describe('Queue', () => {
       debounce(func as CallbackFunction, 'first')
       debounce(func as CallbackFunction, 'second')
       debounce(func as CallbackFunction, 'third')
-      await nextQueue()
+      await nextFrame()
       expect(arg).toBe('third')
     })
 
@@ -124,7 +124,7 @@ describe('Queue', () => {
       const node = new ReactiveObject()
       debounce(func, undefined, node)
       node.dispose()
-      await nextQueue()
+      await nextFrame()
       expect(count).toBe(0)
     })
 
@@ -135,7 +135,7 @@ describe('Queue', () => {
       const func2 = () => { count2++ }
       debounce(func1)
       debounce(func2)
-      await nextQueue()
+      await nextFrame()
       expect(count1).toBe(1)
       expect(count2).toBe(1)
     })
@@ -146,7 +146,7 @@ describe('Queue', () => {
       const normalFunc = () => { count++ }
       debounce(errorFunc)
       debounce(normalFunc)
-      await nextQueue()
+      await nextFrame()
       expect(count).toBe(1)
     })
 
@@ -166,7 +166,7 @@ describe('Queue', () => {
       expect(throttleArgs).toEqual(['a'])
       expect(debounceArgs).toEqual([])
 
-      await nextQueue()
+      await nextFrame()
 
       expect(throttleArgs).toEqual(['a', 'a']) // Leading + trailing
       expect(debounceArgs).toEqual(['x'])
@@ -174,11 +174,11 @@ describe('Queue', () => {
 
   })
 
-  describe('nextQueue utility', () => {
+  describe('nextFrame utility', () => {
 
     it('Should resolve after one frame', async () => {
       let resolved = false
-      const promise = nextQueue().then(() => { resolved = true })
+      const promise = nextFrame().then(() => { resolved = true })
       expect(resolved).toBe(false)
       await promise
       expect(resolved).toBe(true)

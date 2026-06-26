@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { nextQueue } from '@io-gui/core'
+import { nextFrame } from '@io-gui/core'
 import { ioString } from '@io-gui/inputs'
 import { ioSlider } from '@io-gui/sliders'
 import { IoObject } from '@io-gui/editors'
@@ -41,9 +41,9 @@ describe('IoObject', () => {
     expect(element.children[1]).toBe(undefined)
     element.expanded = true
     // Wait for debounce chain: IoObject renders -> IoPropertyEditor configureDebounced -> changed -> changedDebounced
-    await nextQueue()
-    await nextQueue()
-    await nextQueue()
+    await nextFrame()
+    await nextFrame()
+    await nextFrame()
     const properties = element.children[1]
     expect(properties.localName).toBe('io-property-editor')
     expect(properties.children[0].textContent).toBe('number0.5')
@@ -87,9 +87,9 @@ describe('IoObject', () => {
     element.value = testValue
     element.labeled = false
     element.expanded = true
-    await nextQueue()
-    await nextQueue()
-    await nextQueue()
+    await nextFrame()
+    await nextFrame()
+    await nextFrame()
     const properties = element.children[1]
     expect(properties.children[0].children[0].localName).toBe('io-number')
     expect(properties.children[1].children[0].localName).toBe('io-string')
@@ -111,9 +111,9 @@ describe('IoObject', () => {
     element.value = testValue
     element.properties = ['number', 'boolean']
     element.expanded = true
-    await nextQueue()
-    await nextQueue()
-    await nextQueue()
+    await nextFrame()
+    await nextFrame()
+    await nextFrame()
     const properties = element.children[1]
     expect(properties.children[0].textContent).toBe('number0.5')
     expect(properties.children[1].textContent).toBe('boolean')
@@ -127,9 +127,9 @@ describe('IoObject', () => {
       ['boolean', ioString()],
     ]
     element.expanded = true
-    await nextQueue()
-    await nextQueue()
-    await nextQueue()
+    await nextFrame()
+    await nextFrame()
+    await nextFrame()
     const properties = element.children[1]
     expect(properties.children[0].children[1].localName).toBe('io-slider')
     expect(properties.children[1].children[1].localName).toBe('io-string')

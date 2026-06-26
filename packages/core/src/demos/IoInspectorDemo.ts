@@ -125,7 +125,7 @@ export class IoInspectorDemo extends ReactiveElement {
   }
   selectedChanged() {
     const oldElement = this.querySelector('.element-wrap')?.children[0]
-    if (oldElement) oldElement.removeEventListener('io-object-mutation', this.onElementMutated)
+    if (oldElement) oldElement.removeEventListener('io-mutation', this.onElementMutated)
 
     if (this.selected) {
       const vElement = option.findItemById(this.selected).value
@@ -144,7 +144,7 @@ export class IoInspectorDemo extends ReactiveElement {
         ]),
       ])
       const element = this.querySelector('.element-wrap').children[0]
-      element.addEventListener('io-object-mutation', this.onElementMutated)
+      element.addEventListener('io-mutation', this.onElementMutated)
       const inspector = this.$['inspector']
       if (inspector.value !== element) {
         inspector.value = element

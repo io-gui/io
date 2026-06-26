@@ -1,6 +1,6 @@
 import { test } from 'vitest'
 import { ReactiveObject } from '../nodes/ReactiveObject.js'
-import { throttle, debounce, clearNodeQueue } from './Queue.js'
+import { throttle, debounce, clearNodeCallbacks } from './FrameScheduler.js'
 import { BENCH_OPTIONS } from '../testing.js'
 
 const noop = () => {}
@@ -58,7 +58,7 @@ test('Queue', async ({ bench }) => {
     }
   }).run(BENCH_OPTIONS)
 
-  await bench('clearNodeQueue 500 pending', {
+  await bench('clearNodeCallbacks 500 pending', {
     beforeEach: () => {
       node = new ReactiveObject()
     },
@@ -69,7 +69,7 @@ test('Queue', async ({ bench }) => {
     for (let i = 0; i < 500; i++) {
       debounce(noop, i, node)
     }
-    clearNodeQueue(node)
+    clearNodeCallbacks(node)
   }).run(BENCH_OPTIONS)
 
   await bench('mixed debounce and throttle 500', () => {

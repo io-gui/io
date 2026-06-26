@@ -6,7 +6,7 @@ import { MenuOptionProps, MenuOption, ioOptionSelect } from '@io-gui/menus'
 import { IoPanel } from './IoPanel.js'
 import { IoSplit } from './IoSplit.js'
 import { Tab } from '../nodes/Tab.js'
-import { tabDragIconSingleton } from './IoTabDragIcon.js'
+import { IoTabDragIconSingleton } from './IoTabDragIcon.js'
 
 const icons: MenuOptionProps[] = []
 for (const set of Object.keys(IconsetDB)) {
@@ -117,7 +117,7 @@ export class IoTab extends IoField {
     event.preventDefault()
     event.stopPropagation()
     this.setPointerCapture(event.pointerId)
-    tabDragIconSingleton.setStartPosition(event.clientX, event.clientY)
+    IoTabDragIconSingleton.setStartPosition(event.clientX, event.clientY)
     super.onPointerdown(event)
     if (event.buttons === 1) {
       this.focus()
@@ -128,14 +128,14 @@ export class IoTab extends IoField {
     if (event.buttons !== 1) return
     const panel = this.parentElement!.parentElement as IoPanel
     const root = this.closest('io-split[root]') as IoSplit
-    tabDragIconSingleton.updateDrag(this.tab, panel, event.clientX, event.clientY, root)
+    IoTabDragIconSingleton.updateDrag(this.tab, panel, event.clientX, event.clientY, root)
   }
   override onPointerup(event: PointerEvent) {
     event.preventDefault()
     super.onPointerup(event)
     this.releasePointerCapture(event.pointerId)
-    if (tabDragIconSingleton.dragging) {
-      tabDragIconSingleton.endDrag()
+    if (IoTabDragIconSingleton.dragging) {
+      IoTabDragIconSingleton.endDrag()
     } else {
       this.onClick()
     }
@@ -144,7 +144,7 @@ export class IoTab extends IoField {
     event.preventDefault()
     event.stopPropagation()
     super.onPointercancel(event)
-    tabDragIconSingleton.cancelDrag()
+    IoTabDragIconSingleton.cancelDrag()
   }
   override onPointerleave(event: PointerEvent) {
     event.preventDefault()

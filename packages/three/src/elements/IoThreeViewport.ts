@@ -1,4 +1,4 @@
-import { Register, ReactiveElement, ReactiveElementProps, Property, ReactivityType, Change, Field, WithBinding } from '@io-gui/core'
+import { Register, ReactiveElement, ReactiveElementProps, Property, DispatchTiming, Change, Field, WithBinding } from '@io-gui/core'
 import { WebGPURenderer, CanvasTarget, NeutralToneMapping } from 'three/webgpu'
 import WebGPU from 'three/addons/capabilities/WebGPU.js'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
@@ -50,7 +50,7 @@ export class IoThreeViewport extends ReactiveElement {
   declare public clearAlpha: number
 
   @Property({type: String, value: 'throttled'})
-  declare reactivity: ReactivityType
+  declare dispatchTiming: DispatchTiming
 
   @Property({type: ThreeApplet, init: null})
   declare applet: ThreeApplet

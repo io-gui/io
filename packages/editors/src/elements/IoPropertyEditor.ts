@@ -77,7 +77,7 @@ export class IoPropertyEditor extends ReactiveElement {
   }
 
   // @Property('debounced')
-  // declare reactivity: ReactivityType
+  // declare dispatchTiming: DispatchTiming
 
   @Property()
   declare value: object | Array<unknown>

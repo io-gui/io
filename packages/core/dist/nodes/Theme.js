@@ -141,7 +141,7 @@ let Theme = class Theme extends ReactiveObject {
 };
 __decorate([
     Property('debounced')
-], Theme.prototype, "reactivity", void 0);
+], Theme.prototype, "dispatchTiming", void 0);
 Theme = __decorate([
     Register
 ], Theme);

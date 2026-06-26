@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { nextQueue } from '@io-gui/core'
+import { nextFrame } from '@io-gui/core'
 import { IoThreeViewport, ThreeApplet, ToolBase } from '@io-gui/three'
 import { Scene } from 'three/webgpu'
 
@@ -24,13 +24,13 @@ describe('IoThreeViewport', () => {
     const tool2 = new ToolBase({ applet })
     const viewport = new IoThreeViewport({ applet, tool: tool1 })
     container.appendChild(viewport as Node)
-    await nextQueue()
+    await nextFrame()
 
     const unregisterSpy = vi.spyOn(tool1, 'unregisterViewport')
     const registerSpy = vi.spyOn(tool2, 'registerViewport')
 
     viewport.tool = tool2
-    await nextQueue()
+    await nextFrame()
 
     expect(unregisterSpy).toHaveBeenCalledWith(viewport)
     expect(registerSpy).toHaveBeenCalledWith(viewport)
@@ -45,7 +45,7 @@ describe('IoThreeViewport', () => {
     const tool = new ToolBase({ applet })
     const viewport = new IoThreeViewport({ applet, tool })
     container.appendChild(viewport as Node)
-    await nextQueue()
+    await nextFrame()
 
     expect(viewport.viewCameras).toBeTruthy()
     expect(viewport.viewCameras.applet).toBe(applet)

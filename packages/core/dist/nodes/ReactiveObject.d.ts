@@ -3,7 +3,7 @@ import { Binding } from '../core/Binding.js';
 import type { ChangeQueue } from '../core/ChangeQueue.js';
 import { PropertyInstance, PropertyDefinitionLoose } from '../core/Property.js';
 import type { EventDispatcher } from '../core/EventDispatcher.js';
-import { CallbackFunction } from '../core/Queue.js';
+import { CallbackFunction } from '../core/FrameScheduler.js';
 import { type ReactiveNode } from '../core/ReactiveCore.js';
 import type { ListenerDefinitionLoose, AnyEventListener } from '../core/EventDispatcher.js';
 export type AnyConstructor = new (...args: never[]) => object;
@@ -32,12 +32,12 @@ export declare const NODES: {
     active: Set<ReactiveObject>;
     disposed: WeakSet<ReactiveObject>;
 };
-export type ReactivityType = 'immediate' | 'throttled' | 'debounced';
+export type DispatchTiming = 'immediate' | 'throttled' | 'debounced';
 export type WithBinding<T> = T | Binding<T>;
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 type AnyEventHandler = ((event: CustomEvent) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void);
 export type ReactiveNodeProps = {
-    reactivity?: ReactivityType;
+    dispatchTiming?: DispatchTiming;
     [key: prefix<string, '@'>]: string | AnyEventHandler;
 };
 /**
@@ -55,7 +55,7 @@ export type ReactiveNodeProps = {
  * @see ReactiveElement for the DOM-integrated counterpart
  */
 export declare class ReactiveObject extends Object {
-    reactivity: ReactivityType;
+    dispatchTiming: DispatchTiming;
     static get Properties(): PropertyDefinitions;
     static get Fields(): Record<string, unknown>;
     /** Class-level listeners wired at construction; subclass overrides same event name (last wins). */
@@ -106,7 +106,7 @@ export declare function setProperties(node: ReactiveNode, props: PropertyValues)
 /** Assigns a reactive property, queuing change dispatch unless debounced. */
 export declare function setProperty(node: ReactiveNode, name: string, value: unknown, debounce?: boolean): void;
 export declare function dispatchQueue(node: ReactiveNode, debounce?: boolean): void;
-/** Dispatches `io-object-mutation` for in-place object or nested Io value changes. */
+/** Dispatches `io-mutation` for in-place object or nested Io value changes. */
 export declare function dispatchMutation(node: ReactiveNode, object: object | ReactiveObject, properties: string[]): void;
 export declare function onPropertyMutated(node: ReactiveNode, event: CustomEvent): boolean;
 /** Returns or creates a two-way {@link Binding} for the named reactive property. */

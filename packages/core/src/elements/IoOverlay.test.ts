@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { IoOverlaySingleton, ReactiveElement, Register, PropertyDefinitions, nextQueue } from '@io-gui/core'
+import { IoOverlaySingleton, ReactiveElement, Register, PropertyDefinitions, nextFrame } from '@io-gui/core'
 
 @Register
 class OverlayChild extends ReactiveElement {
@@ -25,7 +25,7 @@ describe('IoOverlay', () => {
     const child = new OverlayChild()
     IoOverlaySingleton.appendChild(child as HTMLElement)
     child.expanded = true
-    await nextQueue()
+    await nextFrame()
     expect(IoOverlaySingleton.expanded).toBe(true)
     IoOverlaySingleton.removeChild(child as HTMLElement)
     child.dispose()
@@ -34,9 +34,9 @@ describe('IoOverlay', () => {
     const child = new OverlayChild()
     IoOverlaySingleton.appendChild(child as HTMLElement)
     child.expanded = true
-    await nextQueue()
+    await nextFrame()
     IoOverlaySingleton.expanded = false
-    await nextQueue()
+    await nextFrame()
     expect(child.expanded).toBe(false)
     IoOverlaySingleton.removeChild(child as HTMLElement)
     child.dispose()
