@@ -1,9 +1,9 @@
 import { Property } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
 import { WithBinding } from '../nodes/ReactiveObject.js'
-import { ReactiveElement, IoElementProps } from './ReactiveElement.js'
+import { ReactiveElement, ReactiveElementProps } from './ReactiveElement.js'
 
-type IoSpanProps = IoElementProps & {
+type IoSpanProps = ReactiveElementProps & {
   value?: WithBinding<string>
 }
 

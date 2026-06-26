@@ -1,9 +1,9 @@
 //@ts-nocheck
-import { ReactiveElement, Register, section, input, label, ul, Property, IoElementProps } from '@io-gui/core'
+import { ReactiveElement, Register, section, input, label, ul, Property, ReactiveElementProps } from '@io-gui/core'
 import { TodoListModel } from './TodoListModel.js'
 import { todoItem } from './TodoItem.js'
 
-type TodoListProps = IoElementProps & {
+type TodoListProps = ReactiveElementProps & {
   model: TodoListModel
   route: WithBinding<string>
 }

@@ -1,7 +1,7 @@
-import { ReactiveElement, Register, IoElementProps, span, ul, li, a, button, Property, WithBinding } from '@io-gui/core'
+import { ReactiveElement, Register, ReactiveElementProps, span, ul, li, a, button, Property, WithBinding } from '@io-gui/core'
 import { TodoListModel } from './TodoListModel.js'
 
-type TodoFooterProps = IoElementProps & {
+type TodoFooterProps = ReactiveElementProps & {
   model: TodoListModel
   route: WithBinding<string>
 }

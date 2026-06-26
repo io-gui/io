@@ -56,7 +56,7 @@ const option = new MenuOption({
 })
 
 /** @internal Demo: component inspector playground. */
-export class IoElementInspectorDemo extends ReactiveElement {
+export class IoInspectorDemo extends ReactiveElement {
   static get Style() {
     return /* css */`
     :host {
@@ -158,7 +158,7 @@ export class IoElementInspectorDemo extends ReactiveElement {
     }
   }
 }
-Register(IoElementInspectorDemo)
+Register(IoInspectorDemo)
 
 function formatHtml(html, indentSize = 2) {
   const indent = ' '.repeat(indentSize)
@@ -184,4 +184,4 @@ function formatHtml(html, indentSize = 2) {
   return result.trim().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
 }
 
-export const ioElementInspectorDemo = IoElementInspectorDemo.vConstructor
+export const ioInspectorDemo = IoInspectorDemo.vConstructor

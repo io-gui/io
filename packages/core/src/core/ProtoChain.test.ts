@@ -69,7 +69,7 @@ class Node4 extends Node1 {
   }
 }
 
-class IoElement1 extends ReactiveElement {}
+class ReactiveElement1 extends ReactiveElement {}
 
 class MockNode1 {
   static get Properties(): PropertyDefinitions {
@@ -134,8 +134,8 @@ describe('ProtoChain', () => {
     expect(constructors).toEqual([ReactiveObject])
     constructors = new ProtoChain(Node1).constructors
     expect(constructors).toEqual([Node1, ReactiveObject])
-    constructors = new ProtoChain(IoElement1).constructors
-    expect(constructors).toEqual([IoElement1, ReactiveElement])
+    constructors = new ProtoChain(ReactiveElement1).constructors
+    expect(constructors).toEqual([ReactiveElement1, ReactiveElement])
   })
   it('Should include properties declared in `static get Fields()` return oject', () => {
     const protoChain = new ProtoChain(Node1)

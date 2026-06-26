@@ -1,7 +1,7 @@
 import { Property } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
 import { ListenerDefinitions } from '../nodes/ReactiveObject.js'
-import { ReactiveElement, IoElementProps } from './ReactiveElement.js'
+import { ReactiveElement, ReactiveElementProps } from './ReactiveElement.js'
 
 export type IoExpandable = {
   expanded: boolean
@@ -64,7 +64,7 @@ class IoOverlay extends ReactiveElement {
     }
   }
 
-  constructor(args: IoElementProps = {}) { super(args) }
+  constructor(args: ReactiveElementProps = {}) { super(args) }
 
   override init() {
     this.expandAsChildren = this.expandAsChildren.bind(this)

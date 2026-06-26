@@ -614,7 +614,7 @@ describe('VDOM Element Reuse', () => {
     const cachedWidgetVdom: VDOMElement = {
       tag: 'test-widget-element1',
       props: { class: 'widget' },
-      children: undefined  // IoElements manage their own children
+      children: undefined  // ReactiveElements manage their own children
     }
 
     // First render - create a NEW wrapper object (like widgetWithValue)
@@ -954,7 +954,7 @@ describe('VDOM Element Reuse', () => {
     const widget = parent.children[0] as TestSelfRenderingWidget2
 
     // The widget's internal children should take precedence
-    // because IoElements manage their own children
+    // because ReactiveElements manage their own children
     // BUG: If this fails, parent's traverse is overriding widget's children
     expect(widget.children.length).toBe(3)  // Widget renders 3 children
     expect(widget.children[0].className).toBe('widget-child-a')

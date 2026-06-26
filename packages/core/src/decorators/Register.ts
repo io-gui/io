@@ -14,7 +14,7 @@ import { ReactiveElement } from '../elements/ReactiveElement.js'
  * @example
  * // Creating a new ReactiveElement subclass.
  * \@Register
- * class MyIoElement extends ReactiveElement {
+ * class MyElement extends ReactiveElement {
  * }
  *
  * @example

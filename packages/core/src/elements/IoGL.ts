@@ -3,7 +3,7 @@ import { Property } from '../decorators/Property.js'
 import { PropertyInstance, PropertyDefinition } from '../core/Property.js'
 import { ReactiveObject } from '../nodes/ReactiveObject.js'
 import { ThemeSingleton } from '../nodes/Theme.js'
-import { ReactiveElement, IoElementProps } from './ReactiveElement.js'
+import { ReactiveElement, ReactiveElementProps } from './ReactiveElement.js'
 import { glsl } from './IoGL.glsl.js'
 import { Color } from '../core/Color.js'
 
@@ -194,7 +194,7 @@ export class IoGl extends ReactiveElement {
 
     return program
   }
-  constructor(args: IoElementProps = {}) {
+  constructor(args: ReactiveElementProps = {}) {
     super(args)
 
     this.#canvas = document.createElement('canvas')

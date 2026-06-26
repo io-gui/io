@@ -39,7 +39,7 @@ type AnyEventHandler = (
   ((event: ErrorEvent) => void) |
   ((event: Event) => void)
 
-export type IoElementProps = NativeElementProps & {
+export type ReactiveElementProps = NativeElementProps & {
   reactivity?: ReactivityType
   [key: prefix<string, '@'>]: string | AnyEventHandler
 }
@@ -60,7 +60,7 @@ export type IoElementProps = NativeElementProps & {
  */
 @Register
 export class ReactiveElement extends HTMLElement {
-  declare static vConstructor: (arg0?: IoElementProps | VDOMFactoryChildren, arg1?: VDOMFactoryChildren) => VDOMElement
+  declare static vConstructor: (arg0?: ReactiveElementProps | VDOMFactoryChildren, arg1?: VDOMFactoryChildren) => VDOMElement
   static get Style() {
     return /* css */`
       :host {
@@ -121,7 +121,7 @@ export class ReactiveElement extends HTMLElement {
   declare _disposed: boolean
   declare _textNode: Text
 
-  constructor(args: IoElementProps = {}) {
+  constructor(args: ReactiveElementProps = {}) {
     super()
     this._protochain.init(this)
 
@@ -282,7 +282,7 @@ export class ReactiveElement extends HTMLElement {
           this.traverse(vDOMElementsOnly, elementChild as HTMLElement, skipDispose)
         }
       } else if (!(elementChild as ReactiveElement)._isReactiveElement) {
-        // Clear children for native elements. IoElements manage their own children by design
+        // Clear children for native elements. ReactiveElements manage their own children by design
         clearNativeElementChildren(elementChild)
       }
     }
@@ -404,7 +404,7 @@ export class ReactiveElement extends HTMLElement {
     // TODO: Define all overloads with type guards.
     // TODO: Add runtime debug type checks.
     // TODO: Test thoroughly.
-    Object.defineProperty(ioNodeConstructor, 'vConstructor', {value: function(arg0?: IoElementProps | VDOMFactoryChildren, arg1?: VDOMFactoryChildren): VDOMElement {
+    Object.defineProperty(ioNodeConstructor, 'vConstructor', {value: function(arg0?: ReactiveElementProps | VDOMFactoryChildren, arg1?: VDOMFactoryChildren): VDOMElement {
       return createVDOMElement(localName, arg0 as VDOMFactoryArg, arg1)
     }})
   }
@@ -462,4 +462,4 @@ export const disposeChildren = function(element: ReactiveElement) {
   })
 }
 
-export const ioElement = ReactiveElement.vConstructor
+export const reactiveElement = ReactiveElement.vConstructor

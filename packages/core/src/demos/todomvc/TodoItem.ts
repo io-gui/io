@@ -1,8 +1,8 @@
-import { ReactiveElement, Register, input, label, li, div, button, Property, IoElementProps } from '@io-gui/core'
+import { ReactiveElement, Register, input, label, li, div, button, Property, ReactiveElementProps } from '@io-gui/core'
 import { TodoItemModel } from './TodoItemModel.js'
 import { TodoListModel } from './TodoListModel.js'
 
-type TodoItemProps = IoElementProps & {
+type TodoItemProps = ReactiveElementProps & {
   item?: TodoItemModel
   model?: TodoListModel
 }
