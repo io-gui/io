@@ -8,16 +8,18 @@ Io-Gui implements the same features on top of its base classes - nodes and eleme
 
 By doing this, it achieves reactive interoperability with predictable data flow patterns between nodes and elements.
 
-#### ReactiveNode
-ReactiveNode is a base class extending `Object` with all of the core features provided by Io-Gui.
+`ReactiveNode` is the union of the two concrete bases below — it names a vertex in the shared reactive graph and is matched by the `isReactiveNode` predicate.
+
+#### ReactiveObject
+ReactiveObject is a base class extending `Object` with all of the core features provided by Io-Gui.
 It can be used to create reactive data models and state containers with business logic. Some examples of nodes are:
 - `ThemeSingleton`: Io-Gui's theme system that responsively renders CSS variables to document 
 - `StorageNode` and `Storage`: Data persistence node/factory for data storage in location.hash or localStorage
 - `MenuOption`: A rich domain model for menu options and their state in io-menus
 - `Tab`, `Panel` and `Split`: Rich domain models for tabbed-split-panel layout in io-layout
 
-#### IoElement
-IoElement is a custom element base class extending `HTMLElement` with ReactiveNode functionality as well as some DOM functionality such as:
+#### ReactiveElement
+ReactiveElement is a custom element base class extending `HTMLElement` with ReactiveObject functionality as well as some DOM functionality such as:
 - Virtual DOM rendering
 - Style declaration with inheritance
 
@@ -29,7 +31,7 @@ It can be used to create reactive custom elements that can be bound to node prop
   - Example: `"label"` property change event `"label-changed"` includes `event.detail.value` and `event.detail.oldValue`
   - Change handlers get invoked automatically if they are defined
   - Example: change event `"label-changed"` invokes `.labelChanged()` handler if it exists
-  - Generic property handler `.changed()` gets invoked after any property change
+  - Generic catch-all handler `.mutated()` gets invoked after any property change
 - Leaf-to-trunk data flow can be achieved using mutation events and handlers
   - Mutation events are automatically dispatched for all nodes and elements
   - Example: `"data"` object property mutation event `"io-object-mutation"` includes `event.detail.object` that equals mutated object
@@ -44,7 +46,7 @@ It can be used to create reactive custom elements that can be bound to node prop
 
 ### Core Systems
 - **ProtoChain** - Inheritance aggregator that also performs one-time class initialization
-- **ReactiveProperty** - Creates and initializes responsive properties
+- **Property** - Creates and initializes reactive properties
 - **EventDispatcher** - Manages DOM events on elements and synthetic events on nodes
 - **ChangeQueue** - Detects property changes and dispatches change/mutation events and handlers
 - **Queue** - Generic queue manager with throttle and debounce capability
@@ -57,32 +59,32 @@ All new classes must be registered before use.
 
 ```javascript
 // Javascript flavor
-class MyNode extends ReactiveNode {}
+class MyNode extends ReactiveObject {}
 Register(MyNode)
 
-class MyElement extends IoElement {}
+class MyElement extends ReactiveElement {}
 Register(MyElement)
 ```
 
 ```typescript
 // Typescript flavor with experimentalDecorators: true
 @Register
-class MyNode extends ReactiveNode {}
+class MyNode extends ReactiveObject {}
 
 @Register
-class MyElement extends IoElement {}
+class MyElement extends ReactiveElement {}
 ```
 
 ### Properties
 
-Properties can be defined using property declarations in the `static get ReactiveProperties()` object or the `@ReactiveProperty()` decorator (preferred for TypeScript). These property declarations are loosely typed, meaning that properties don't have to be fully declared and default declarations can be inferred from what is specified.
+Properties are reactive by default and can be defined using property declarations in the `static get Properties()` object or the `@Property()` decorator (preferred for TypeScript). These property declarations are loosely typed, meaning that properties don't have to be fully declared and default declarations can be inferred from what is specified. For non-reactive values, use `static get Fields()` or the `@Field()` decorator instead.
 
 In the following example, we define a boolean property called `selected` by specifying only the default value `false`.
 
 ```javascript
-// Javascript version with `static get ReactiveProperties()` object
-class MyNode extends ReactiveNode {
-  static get ReactiveProperties() {
+// Javascript version with `static get Properties()` object
+class MyNode extends ReactiveObject {
+  static get Properties() {
     return {
       selected: false
     }
@@ -94,7 +96,7 @@ Here we do the same using decorator syntax in typescript. Note that we use `decl
 
 ```typescript
 // Typescript version with `@Property()` decorator
-class MyNode extends ReactiveNode {
+class MyNode extends ReactiveObject {
   @Property(false)
   declare selected: boolean
 }
@@ -105,7 +107,7 @@ class MyNode extends ReactiveNode {
 Alternatively, a property can be declared by specifying only the type. The result of the following declaration is exactly the same since initial value for `Boolean` is inferred to `false`, just like `Number` is `0` and `String` is `""`. In other words, when no initial value is specified, it will be inferred from the specified type. Properties with type `Object` and `Array` will be initialized with `new Object()` and `new Array()` only if the `init: null` flag is specified. Otherwise, they will be initialized with `undefined`. You can also specify custom initialization arguments in the `init` field. e.g. `{type: Array, init: [1, 2, 3]}` will initialize the property with `new Array(1, 2, 3)`.
 
 ```typescript
-class MyNode extends ReactiveNode {
+class MyNode extends ReactiveObject {
   @Property(Boolean)
   declare selected: boolean
 }
@@ -116,7 +118,7 @@ Just like initial property value can be inferred from type, a property type can 
 Note that ANY initial value specified in property declaration can be overridden by a value specified in the constructor.
 
 ```typescript
-class MyNode extends ReactiveNode {
+class MyNode extends ReactiveObject {
   @Property(Color)
   declare color: Color
 }
@@ -127,9 +129,9 @@ new MyNode({color: new Color()})
 While it is possible to specify object instances as values in property declaration it is important to note that such initial values will be shared across all instances of the class.
 
 ```typescript
-class MyNode extends ReactiveNode {
+class MyNode extends ReactiveObject {
   // This is not recommended!
-  @ReactiveProperty({value: new Color()})
+  @Property({value: new Color()})
   declare color: Color
 }
 
@@ -141,7 +143,7 @@ As mentioned above, we can use `init` field to specify how we want to initialize
 
 ```typescript
 // This will initialze value as new Color() for each instance
-@ReactiveProperty({type: Color, init: null})
+@Property({type: Color, init: null})
 ```
 
 ### Property Declaration Inheritance
@@ -149,8 +151,8 @@ As mentioned above, we can use `init` field to specify how we want to initialize
 Property definitions respect inheritance. This means that if a subclass extends a superclass and defines a property with the same name, the subclass's definition will overwrite the superclass's definition but only for explicitly specified parts of the property declaration. In the following example `MyNode` will inherit explicit property declaration from `MySuperNode` but it will override the initial value to `true`. 
 
 ```typescript
-class MySuperNode extends ReactiveNode {
-  @ReactiveProperty({
+class MySuperNode extends ReactiveObject {
+  @Property({
     value: false,
     reflect: true,
   })
@@ -181,7 +183,7 @@ We already covered `value` and `type` in examples above. Now let's dig into the 
 **`reflect`** field is `false` by default and it can enable reflection of properties to attributes in DOM elements. Enabling this on properties of nodes makes no effect. Reflected attributes can be used for CSS selectors for example.
 
 ```typescript
-class MyElement extends IoElement {
+class MyElement extends ReactiveElement {
   // We will get into style syntax later.
   static get Style() {
     return /* css */`
@@ -190,7 +192,7 @@ class MyElement extends IoElement {
       }
     `;
   }
-  @ReactiveProperty({value: false, reflect: true})
+  @Property({value: false, reflect: true})
   declare selected: boolean
 }
 ```
@@ -203,7 +205,7 @@ Each CSS style rule set has to be prefixed with `:host` selector. This selector 
 
 ```typescript
 @Register
-class MyElement extends IoElement {
+class MyElement extends ReactiveElement {
   static get Style() {
     return /* css */`
       :host {
@@ -232,7 +234,7 @@ The theme engine uses simple yet effective approach with CSS variables that defi
 
 ### CSS Mixin Polyfill
 
-CSS mixins are a feature polyfilled by `IoElement`. It allows you to define style rule sets to be reused across multiple elements. To create a mixin, make a style rule set with a CSS selector starting with `--` and ending with `:`.
+CSS mixins are a feature polyfilled by `ReactiveElement`. It allows you to define style rule sets to be reused across multiple elements. To create a mixin, make a style rule set with a CSS selector starting with `--` and ending with `:`.
 
 ```css
 --grid: {
@@ -255,7 +257,7 @@ Listeners are defined inside the `static get Listeners()` object and the followi
 
 ```typescript
 @Register
-class MyElement extends IoElement {
+class MyElement extends ReactiveElement {
   static get Listeners() {
     return {
       'click': 'onClick'
@@ -297,13 +299,13 @@ static get Listeners() {
 [comment]: <Runtime type checking available in debug mode.>
 [comment]: <Can receive data `Binding` objects.>
 
-All properties are reactive by default, meaning that changing a property value will emit a change event and invoke change handler functions if they exist. Lastly, `changed()` function will be called when any one or more reactive properties change.
+All properties are reactive by default, meaning that changing a property value will emit a change event and invoke change handler functions if they exist. Lastly, `mutated()` function will be called when any one or more reactive properties change.
 
 Here is an example of a node fully rigged to handle changes of its `selected` property.
 
 ```typescript
 @Register
-class MyNode extends ReactiveNode {
+class MyNode extends ReactiveObject {
   @Property(false)
   declare selected: boolean
   selectedChanged(change: Change) {
@@ -312,7 +314,7 @@ class MyNode extends ReactiveNode {
     console.log(change.value)
     console.log(change.oldValue)
   }
-  changed() {
+  mutated() {
     // This will happen last
     console.log('Something changed')
   }
@@ -335,7 +337,7 @@ Note that change handler functions are provided with a `change` payload that inc
 
 ### Property Change Batching
 
-Since `change()` function gets invoked every time a reactive property changes we can get into a scenario where multiple property changes invoke `change()` function causing it to do unnecessary work. For example changing `prop1` and `prop2` in sequence will invoke following sequence of change functions.
+Since `mutated()` function gets invoked every time a reactive property changes we can get into a scenario where multiple property changes invoke `mutated()` function causing it to do unnecessary work. For example changing `prop1` and `prop2` in sequence will invoke following sequence of change functions.
 
 ```javascript
 this.prop1 = value1
@@ -343,12 +345,12 @@ this.prop2 = value2
 
 // Sequence of change functions:
 this.prop1Changed(change)
-this.changed() // This can be avoided!
+this.mutated() // This can be avoided!
 this.prop2Changed(change)
-this.changed()
+this.mutated()
 ```
 
-This sequence of invocations is fine but we can avoid executing the `change()` function twice by using the `setProperties()` method to set both properties at the same time.
+This sequence of invocations is fine but we can avoid executing the `mutated()` function twice by using the `setProperties()` method to set both properties at the same time.
 
 ```javascript
 this.setProperties({
@@ -359,7 +361,7 @@ this.setProperties({
 // Sequence of change functions:
 this.prop1Changed(change)
 this.prop2Changed(change)
-this.changed()
+this.mutated()
 ```
 
 ### Debounced Reactivity
@@ -381,7 +383,7 @@ this.prop2 = 'c'
 // Sequence of change functions:
 this.prop1Changed(change) // change.oldValue === 1
 this.prop2Changed(change) // change.oldValue === 'a'
-this.changed()
+this.mutated()
 ```
 
 ### Template Syntax

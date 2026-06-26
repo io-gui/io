@@ -74,5 +74,8 @@ OrbitControls imports `from 'three'`. Import map needs `"three": "./packages/thr
 ### io-three ToolBase pointers
 Per-viewport `WeakMap`s for hover/active; resolve viewport from `event.currentTarget`.
 
+### Docs sync to ADRs 0001-0004 (Jun 26)
+Audited docs vs ADRs. Source already implements all 4. Found stale only in docs/deep-dive.md + docs/quick-start.md + layout/README:212. Fixed: ReactiveNode(base)→ReactiveObject, IoElement→ReactiveElement, @ReactiveProperty/ReactiveProperties→@Property/Properties, catch-all changed()/change()→mutated(), `new Storage()`→`Storage()` (factory returns Binding). Kept: `ReactiveNode`=graph union (correct), `IoElementProps` type (legit export, NOT stale). core/README already fully correct. io-gui.mdc rule already updated.
+
 ### Json type refactor review (Jun 19)
 `Json` changed from object-interface to value-union (`JsonPrimitive|JsonObject|JsonArray`, +null). Compiles clean. Found: NodeArray.ts stale LOCAL `interface Json` shadowing import (user fixed). Pre-existing debug bug in ReactiveNode.applyJSON: `if (type === jsonObject.constructor)` always compared to Object + inverted. FIXED → `if (type && jsonObject[name]?.constructor !== type)` (guard `type` because `type?: AnyConstructor` optional; untyped props like MenuOption.value would over-warn). Also tightened locals `out`/`primitiveProps` to `JsonObject` (return type stays `Json` for subclass overrides like MenuOption `toJSON(): Json`). EditorConfig double-cast left as-is: MenuOptionProps has non-JSON fields (action fn, any) so toJSON can't narrow to it. All core/layout/menus tests pass.

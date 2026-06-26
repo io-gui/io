@@ -4,19 +4,19 @@ Io-Gui is a reactive web UI framework that provides a consistent reactive founda
 
 Io-Gui relies on interoperable reactive **nodes** and **elements** that respond to state changes and mutations. They provide a base for a reactive architecture that combines the best aspects of declarative component-based design, with reactive and composable development patterns.
 
-Io-Gui is incrementally adoptable. You can use its core classes `ReactiveNode` and `IoElement` to create your own nodes and elements, build anything from a simple website to an app, or you can import and use one of its nodes and elements in your own architecture.
+Io-Gui is incrementally adoptable. You can use its core classes `ReactiveObject` and `ReactiveElement` to create your own nodes and elements, build anything from a simple website to an app, or you can import and use one of its nodes and elements in your own architecture.
 
 You can learn more about nodes and elements in the [deep dive] guide. To quickly import Io-Gui and get started, continue reading this article.
 
 ## Making an Element
 
-Here is a basic example of a reactive element `<my-element>` with style declaration and a `message` property. Use "@" decorator syntax to register the element (`@Register`), define properties (`@Property`) and reactive properties (`@ReactiveProperty`).
+Here is a basic example of a reactive element `<my-element>` with style declaration and a `message` property. Use "@" decorator syntax to register the element (`@Register`), define reactive properties (`@Property`) and non-reactive fields (`@Field`).
 
 ```javascript
-import { IoElement, Register, Property, ReactiveProperty, span } from 'io-core'
+import { ReactiveElement, Register, Property, Field, span } from 'io-core'
 
 @Register
-class MyElement extends IoElement {
+class MyElement extends ReactiveElement {
   static get Style() {
     return /* css */`
       :host {
@@ -25,17 +25,17 @@ class MyElement extends IoElement {
     `;
   }
 
-  @Property('hello')
+  @Field('hello')
   declare greeting: string;
 
-  @ReactiveProperty('world')
+  @Property('world')
   declare message: string;
 
   ready() {
-    this.changed();
+    this.mutated();
   }
 
-  changed() {
+  mutated() {
     this.render([
       span(`${this.greeting} ${this.message}`)
     ]);
@@ -62,7 +62,7 @@ document.body.appendChild(
     menu: 'top',
     option: new MenuOption({
       options: ['About', 'Products', 'Services', 'Testimonials', 'Contact'],
-      path: new Storage({storage: 'hash', key: 'page', value: 'About'})
+      path: Storage({storage: 'hash', key: 'page', value: 'About'})
     }),
     elements: [
       // ioMarkdown is a virtual DOM factory, a vDOM counterpart to IoMarkdown constructor
@@ -110,11 +110,11 @@ Just like most modern frameworks, Io-Gui uses a virtual DOM to efficiently updat
 Here, we can replicate the previous example using the `render()` function and virtual DOM constructors inside a custom element.
 
 ```typescript
-import { IoElement, Register, span } from 'io-core'
+import { ReactiveElement, Register, Property, span } from 'io-core'
 import { ioSlider } from 'io-sliders'
 import { ioOptionSelect, MenuOption } from 'io-menus'
 
-class MyElement extends IoElement {
+class MyElement extends ReactiveElement {
 
   static get Style() {
     return /* css */`
@@ -125,10 +125,10 @@ class MyElement extends IoElement {
     `;
   }
 
-  @ReactiveProperty({type: Number, value: 0})
+  @Property({type: Number, value: 0})
   declare numberValue: number
 
-  @ReactiveProperty({type: MenuOption, value: new MenuOption({options: [
+  @Property({type: MenuOption, value: new MenuOption({options: [
     {id: 'Zero', value: 0},
     {id: 'One', value: 1},
     {id: 'Two', value: 2},
@@ -137,14 +137,14 @@ class MyElement extends IoElement {
   declare menuOption: MenuOption
 
   ready() {
-    this.changed()
+    this.mutated()
   }
 
   onValueInput(event) {
     this.numberValue = event.detail.value
   }
 
-  changed() {
+  mutated() {
     this.render([
       // Notice that, unlike constructors, vDOM factories start with lowercase "i"
       ioSlider({value: this.numberValue, min: -3, max: 3, step: 1, '@value-input': this.onValueInput}),

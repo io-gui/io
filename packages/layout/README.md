@@ -209,7 +209,7 @@ Property setter triggers change event
     ↓
 Change handler (e.g., splitMutated) invokes debounced callback
     ↓
-Debounced callback calls changed()
+Debounced callback calls mutated()
     ↓
 Element re-renders with updated model state
 ```
