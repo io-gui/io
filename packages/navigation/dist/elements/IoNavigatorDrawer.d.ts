@@ -1,6 +1,6 @@
-import { ReactiveElement, IoElementProps, VDOMElement } from '@io-gui/core';
+import { ReactiveElement, ReactiveElementProps, VDOMElement } from '@io-gui/core';
 export type DrawerDirection = 'left' | 'right';
-export type IoNavigatorDrawerProps = IoElementProps & {
+export type IoNavigatorDrawerProps = ReactiveElementProps & {
     direction: DrawerDirection;
     expanded?: boolean;
     menuContent: VDOMElement;

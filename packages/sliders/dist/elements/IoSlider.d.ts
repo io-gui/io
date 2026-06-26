@@ -1,5 +1,5 @@
-import { IoGl, IoElementProps, ListenerDefinition, WithBinding } from '@io-gui/core';
-export type IoSliderProps = IoElementProps & {
+import { IoGl, ReactiveElementProps, ListenerDefinition, WithBinding } from '@io-gui/core';
+export type IoSliderProps = ReactiveElementProps & {
     value?: WithBinding<number>;
     step?: number;
     min?: number;

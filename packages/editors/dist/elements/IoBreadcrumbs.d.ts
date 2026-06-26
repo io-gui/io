@@ -1,5 +1,5 @@
-import { ReactiveElement, IoElementProps, WithBinding } from '@io-gui/core';
-export type IoBreadcrumbsProps = IoElementProps & {
+import { ReactiveElement, ReactiveElementProps, WithBinding } from '@io-gui/core';
+export type IoBreadcrumbsProps = ReactiveElementProps & {
     value?: object;
     selected?: WithBinding<object>;
     search?: WithBinding<string>;

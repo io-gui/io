@@ -1,6 +1,6 @@
-import { ReactiveElement, IoElementProps, WithBinding } from '@io-gui/core';
+import { ReactiveElement, ReactiveElementProps, WithBinding } from '@io-gui/core';
 import { IoNumber } from './IoNumber.js';
-export type IoNumberLadderProps = IoElementProps & {
+export type IoNumberLadderProps = ReactiveElementProps & {
     src?: IoNumber;
     expanded?: WithBinding<boolean>;
 };

@@ -1,5 +1,5 @@
-import { ReactiveElement, IoElementProps, WithBinding } from '@io-gui/core';
-export type IoNumberSliderProps = IoElementProps & {
+import { ReactiveElement, ReactiveElementProps, WithBinding } from '@io-gui/core';
+export type IoNumberSliderProps = ReactiveElementProps & {
     value?: WithBinding<number>;
     step?: number;
     min?: number;

@@ -1,7 +1,7 @@
-import { ReactiveElement, IoElementProps, Property, Register, WithBinding, ReactivityType } from '@io-gui/core'
+import { ReactiveElement, ReactiveElementProps, Property, Register, WithBinding, ReactivityType } from '@io-gui/core'
 import { hsl2rgb, rgb2hsl, rgb2hsv, hsv2rgb } from '../lib/color.convert.js'
 
-export type IoColorBaseProps = IoElementProps & {
+export type IoColorBaseProps = ReactiveElementProps & {
   value?: WithBinding<{ r: number; g: number; b: number; a?: number }>
 }
 

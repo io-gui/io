@@ -28,4 +28,4 @@ export declare class IoAnimationSkinningBlendingExample extends IoThreeExample {
     applet: AnimationSkinningBlendingExample;
     ready(): void;
 }
-export declare const ioAnimationSkinningBlendingExample: (arg0?: import("@io-gui/core").IoElementProps | import("@io-gui/core").VDOMFactoryChildren, arg1?: import("@io-gui/core").VDOMFactoryChildren) => import("@io-gui/core").VDOMElement;
+export declare const ioAnimationSkinningBlendingExample: (arg0?: import("@io-gui/core").ReactiveElementProps | import("@io-gui/core").VDOMFactoryChildren, arg1?: import("@io-gui/core").VDOMFactoryChildren) => import("@io-gui/core").VDOMElement;

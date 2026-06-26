@@ -1,6 +1,6 @@
-import { ReactiveElement, VDOMElement, IoElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
+import { ReactiveElement, VDOMElement, ReactiveElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
 export type CachingType = 'proactive' | 'reactive' | 'none';
-export type IoSelectorProps = IoElementProps & {
+export type IoSelectorProps = ReactiveElementProps & {
     elements?: VDOMElement[];
     selected?: WithBinding<string>;
     anchor?: WithBinding<string>;

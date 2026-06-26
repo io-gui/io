@@ -9,7 +9,7 @@ import { PropertyInstance } from '../core/Property.js';
 import { CallbackFunction } from '../core/Queue.js';
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 type AnyEventHandler = ((event: CustomEvent) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void);
-export type IoElementProps = NativeElementProps & {
+export type ReactiveElementProps = NativeElementProps & {
     reactivity?: ReactivityType;
     [key: prefix<string, '@'>]: string | AnyEventHandler;
 };
@@ -28,7 +28,7 @@ export type IoElementProps = NativeElementProps & {
  * @see ReactiveObject for non-DOM reactive objects
  */
 export declare class ReactiveElement extends HTMLElement {
-    static vConstructor: (arg0?: IoElementProps | VDOMFactoryChildren, arg1?: VDOMFactoryChildren) => VDOMElement;
+    static vConstructor: (arg0?: ReactiveElementProps | VDOMFactoryChildren, arg1?: VDOMFactoryChildren) => VDOMElement;
     static get Style(): string;
     reactivity: ReactivityType;
     $: Record<string, HTMLElement | ReactiveElement>;
@@ -52,7 +52,7 @@ export declare class ReactiveElement extends HTMLElement {
     readonly _isReactiveElement: boolean;
     _disposed: boolean;
     _textNode: Text;
-    constructor(args?: IoElementProps);
+    constructor(args?: ReactiveElementProps);
     /** Applies constructor/render props; defers dispatch when `skipDispatch` is true. */
     applyProperties(props: PropertyValues, skipDispatch?: boolean): void;
     setProperties(props: PropertyValues): void;
@@ -129,5 +129,5 @@ export declare const clearNativeElementChildren: (element: HTMLElement) => void;
  * @param {ReactiveElement} element - Element to dispose children of.
  */
 export declare const disposeChildren: (element: ReactiveElement) => void;
-export declare const ioElement: (arg0?: IoElementProps | VDOMFactoryChildren, arg1?: VDOMFactoryChildren) => VDOMElement;
+export declare const reactiveElement: (arg0?: ReactiveElementProps | VDOMFactoryChildren, arg1?: VDOMFactoryChildren) => VDOMElement;
 export {};

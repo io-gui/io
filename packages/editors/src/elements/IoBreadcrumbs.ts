@@ -1,8 +1,8 @@
-import { Register, ReactiveElement, Property, IoElementProps, WithBinding, div, Field } from '@io-gui/core'
+import { Register, ReactiveElement, Property, ReactiveElementProps, WithBinding, div, Field } from '@io-gui/core'
 import { ioButton, ioString } from '@io-gui/inputs'
 import { ioPropertyLink } from './IoPropertyLink.js'
 
-export type IoBreadcrumbsProps = IoElementProps & {
+export type IoBreadcrumbsProps = ReactiveElementProps & {
   value?: object
   selected?: WithBinding<object>
   search?: WithBinding<string>

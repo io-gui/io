@@ -1,11 +1,11 @@
-import { Register, ReactiveElement, Property, IoElementProps, WithBinding, span, VDOMElement } from '@io-gui/core'
+import { Register, ReactiveElement, Property, ReactiveElementProps, WithBinding, span, VDOMElement } from '@io-gui/core'
 import { ioBreadcrumbs } from './IoBreadcrumbs.js'
 import { ioPropertyEditor } from './IoPropertyEditor.js'
 import { PropertyConfig } from '../utils/EditorConfig.js'
 import { getAllPropertyNames, PropertyGroups } from '../utils/EditorGroups.js'
 import { ioPropertyLink } from './IoPropertyLink.js'
 
-export type IoInspectorProps = IoElementProps & {
+export type IoInspectorProps = ReactiveElementProps & {
   value?: Record<string, any> | any[]
   selected?: WithBinding<Record<string, any> | any[]>
   search?: WithBinding<string>

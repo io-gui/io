@@ -1,4 +1,4 @@
-import { Register, ReactiveElement, Property, IoElementProps, WithBinding, Field, $ThemeID } from '@io-gui/core'
+import { Register, ReactiveElement, Property, ReactiveElementProps, WithBinding, Field, $ThemeID } from '@io-gui/core'
 import { Marked, type Tokens } from 'marked'
 import { markedHighlight } from 'marked-highlight'
 import purify from 'dompurify'
@@ -30,7 +30,7 @@ function strip(innerHTML: string, strip: string[]) {
   return innerHTML
 }
 
-export type IoMarkdownProps = IoElementProps & {
+export type IoMarkdownProps = ReactiveElementProps & {
   src?: string
   strip?: string[]
   loading?: WithBinding<boolean>

@@ -16,4 +16,4 @@ export declare class IoCameraLogarithmicDepthBufferExample extends IoThreeExampl
     ready(): void;
     dispose(): void;
 }
-export declare const ioCameraLogarithmicDepthBufferExample: (arg0?: import("@io-gui/core").IoElementProps | import("@io-gui/core").VDOMFactoryChildren, arg1?: import("@io-gui/core").VDOMFactoryChildren) => import("@io-gui/core").VDOMElement;
+export declare const ioCameraLogarithmicDepthBufferExample: (arg0?: import("@io-gui/core").ReactiveElementProps | import("@io-gui/core").VDOMFactoryChildren, arg1?: import("@io-gui/core").VDOMFactoryChildren) => import("@io-gui/core").VDOMElement;

@@ -1,8 +1,8 @@
-import { Register, ReactiveElement, Property, Field, IoElementProps, VDOMElement, ReactiveObject } from '@io-gui/core'
+import { Register, ReactiveElement, Property, Field, ReactiveElementProps, VDOMElement, ReactiveObject } from '@io-gui/core'
 import { ioNumber, ioBoolean } from '@io-gui/inputs'
 import { Vector4 } from 'three/webgpu'
 
-export type IoVectorBaseProps = IoElementProps & {
+export type IoVectorBaseProps = ReactiveElementProps & {
   value?: Vector4
   conversion?: number
   step?: number

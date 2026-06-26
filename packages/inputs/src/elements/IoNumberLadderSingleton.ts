@@ -1,8 +1,8 @@
-import { Register, Property, ReactiveElement, IoElementProps, IoOverlaySingleton, ThemeSingleton, span, WithBinding, Field } from '@io-gui/core'
+import { Register, Property, ReactiveElement, ReactiveElementProps, IoOverlaySingleton, ThemeSingleton, span, WithBinding, Field } from '@io-gui/core'
 import { IoNumber } from './IoNumber.js'
 import { ioNumberLadderStep, IoNumberLadderStep } from './IoNumberLadderStep.js'
 
-export type IoNumberLadderProps = IoElementProps & {
+export type IoNumberLadderProps = ReactiveElementProps & {
   src?: IoNumber
   expanded?: WithBinding<boolean>
 }

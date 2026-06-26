@@ -1,6 +1,6 @@
-import { ReactiveElement, IoElementProps } from '@io-gui/core';
+import { ReactiveElement, ReactiveElementProps } from '@io-gui/core';
 import { Vector4 } from 'three/webgpu';
-export type IoVectorBaseProps = IoElementProps & {
+export type IoVectorBaseProps = ReactiveElementProps & {
     value?: Vector4;
     conversion?: number;
     step?: number;

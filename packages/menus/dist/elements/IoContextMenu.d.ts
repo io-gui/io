@@ -1,7 +1,7 @@
-import { ReactiveElement, IoElementProps, WithBinding } from '@io-gui/core';
+import { ReactiveElement, ReactiveElementProps, WithBinding } from '@io-gui/core';
 import { IoMenuOptions } from './IoMenuOptions.js';
 import { MenuOption } from '../nodes/MenuOption.js';
-export type IoContextMenuProps = IoElementProps & {
+export type IoContextMenuProps = ReactiveElementProps & {
     option: MenuOption;
     expanded?: WithBinding<boolean>;
     button?: number;

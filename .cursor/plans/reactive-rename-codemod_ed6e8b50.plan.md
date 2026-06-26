@@ -1,12 +1,12 @@
 ---
 name: reactive-rename-codemod
-overview: Execute the ADR 0001-0003 renames (plus IoElement→ReactiveElement) as an ordered sequence of repo-wide codemods, each followed by typecheck + tests, sequenced so colliding names never coexist.
+overview: Execute the ADR 0001-0003 renames (plus ReactiveElement→ReactiveElement) as an ordered sequence of repo-wide codemods, each followed by typecheck + tests, sequenced so colliding names never coexist.
 todos:
   - id: rename-reactivenode-class
     content: "Rename base class ReactiveNode (extends Object) → ReactiveObject everywhere, including file nodes/ReactiveNode.ts → nodes/ReactiveObject.ts and all imports. NOTE: this is the Object-base class only; the union type ReactiveOwner is handled later. Then build + test."
     status: completed
   - id: rename-ioelement
-    content: Rename base class IoElement → ReactiveElement (word-boundary, keep Io* subclasses), including file elements/IoElement.ts → elements/ReactiveElement.ts and all imports. Then build + test.
+    content: Rename base class ReactiveElement → ReactiveElement (word-boundary, keep Io* subclasses), including file elements/ReactiveElement.ts → elements/ReactiveElement.ts and all imports. Then build + test.
     status: completed
   - id: rename-reactiveowner-union
     content: Rename union type ReactiveOwner → ReactiveNode, isReactiveOwner → isReactiveNode, initReactiveOwnerInternals → initReactiveNodeInternals (name now freed by todo 1). Optionally collapse `ReactiveObject | ReactiveElement` annotations to `ReactiveNode`. Then build + test.
@@ -15,7 +15,7 @@ todos:
     content: Replace all isIoValue usages with isReactiveNode and delete the `export const isIoValue = isReactiveNode` alias in ReactiveCore.ts. Then build + test.
     status: completed
   - id: rename-flags
-    content: Rename internal flags _isNode → _isReactiveObject and _isIoElement → _isReactiveElement (incl. predicate in ReactiveCore.ts, Register methods, VDOM.ts, decorators/Property.ts). Then build + test.
+    content: Rename internal flags _isNode → _isReactiveObject and _isReactiveElement → _isReactiveElement (incl. predicate in ReactiveCore.ts, Register methods, VDOM.ts, decorators/Property.ts). Then build + test.
     status: completed
   - id: rename-property-to-field
     content: "Move the NON-reactive property family to Field FIRST: @Property → @Field, `static get Properties()` → `static get Fields()`, propertyDecorators → fieldDecorators, initProperties → initFields, ProtoChain non-reactive `properties` → `fields`, and the non-reactive parts of decorators/Property.ts. Use `(?<!Reactive)\\bPropert(y|ies)\\b` to avoid touching ReactiveProperty*. Then build + test."
@@ -62,26 +62,26 @@ flowchart TD
 
 - `Property`/`Properties` is a substring of `ReactiveProperty`/`ReactiveProperties`. In todo 6 use negative lookbehind: `(?<!Reactive)\bPropert(y|ies)\b`.
 - `changed` appears in event strings (`'value-changed'`) and `[prop]Changed` handlers. In todo 8 only target the bare method: `.changed(` / `changed()` declarations and the call site, never `\bchanged\b` globally.
-- Use `\bIoElement\b` (word boundary) so `IoElementInspectorDemo` etc. are untouched.
+- Use `\bReactiveElement\b` (word boundary) so `ReactiveElementInspectorDemo` etc. are untouched.
 
 ## Key files
 
 - [packages/core/src/core/ReactiveCore.ts](packages/core/src/core/ReactiveCore.ts) — `ReactiveOwner`, `isReactiveOwner`, `isIoValue` alias, `initReactiveOwnerInternals`, flag predicate.
 - [packages/core/src/nodes/ReactiveNode.ts](packages/core/src/nodes/ReactiveNode.ts) — base class, `changed()`, `initProperties`/`initReactiveProperties`, flags.
-- [packages/core/src/elements/IoElement.ts](packages/core/src/elements/IoElement.ts) — element base, `_isIoElement`.
+- [packages/core/src/elements/ReactiveElement.ts](packages/core/src/elements/ReactiveElement.ts) — element base, `_isReactiveElement`.
 - [packages/core/src/decorators/Property.ts](packages/core/src/decorators/Property.ts) — `Property`/`ReactiveProperty` decorators, `propertyDecorators`/`reactivePropertyDecorators`.
 - [packages/core/src/core/ProtoChain.ts](packages/core/src/core/ProtoChain.ts) — `reactiveProperties`, `addReactiveProperties*`.
 - [packages/core/src/core/ReactiveProperty.ts](packages/core/src/core/ReactiveProperty.ts) — `ReactivePropertyInstance`, `ReactiveProtoProperty`, `ReactivePropertyDefinition*`.
 - [packages/core/src/core/ChangeQueue.ts](packages/core/src/core/ChangeQueue.ts) — `#invokeChanged` → `this.node.changed()` call site.
-- [packages/core/src/vdom/VDOM.ts](packages/core/src/vdom/VDOM.ts) — `_isIoElement` check.
+- [packages/core/src/vdom/VDOM.ts](packages/core/src/vdom/VDOM.ts) — `_isReactiveElement` check.
 
 ## Magnitude (src only, approx)
 
-`ReactiveProperty*`/`ReactiveProperties` and `IoElement` each appear in essentially every component file across all 11 packages (hundreds of refs); `ReactiveNode` ~250 refs; flags/`isIoValue` concentrated in core. Each codemod is global; expect large but mechanical diffs.
+`ReactiveProperty*`/`ReactiveProperties` and `ReactiveElement` each appear in essentially every component file across all 11 packages (hundreds of refs); `ReactiveNode` ~250 refs; flags/`isIoValue` concentrated in core. Each codemod is global; expect large but mechanical diffs.
 
 ## Notes
 
 - Each todo includes renaming the corresponding file(s) and all imports in the same atomic pass so the build stays green between todos.
-- Concrete element subclasses keep their `Io` prefix (`IoButton`, `IoTab`, …); only the base `IoElement` becomes `ReactiveElement`.
-- Suggested flag names: `_isNode`→`_isReactiveObject`, `_isIoElement`→`_isReactiveElement`; internal map `_reactiveProperties`→`_properties`.
+- Concrete element subclasses keep their `Io` prefix (`IoButton`, `IoTab`, …); only the base `ReactiveElement` becomes `ReactiveElement`.
+- Suggested flag names: `_isNode`→`_isReactiveObject`, `_isReactiveElement`→`_isReactiveElement`; internal map `_reactiveProperties`→`_properties`.
 - Final todo updates human/agent docs so they stop teaching deprecated names: [packages/core/README.md](packages/core/README.md) and [.cursor/rules/io-gui.mdc](.cursor/rules/io-gui.mdc).

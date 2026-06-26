@@ -1,4 +1,4 @@
-import { Register, ReactiveElement, VDOMElement, IoElementProps, Property, Field, CallbackFunction } from '@io-gui/core'
+import { Register, ReactiveElement, VDOMElement, ReactiveElementProps, Property, Field, CallbackFunction } from '@io-gui/core'
 import { ioSelector } from '@io-gui/navigation'
 import { IoMenuItem, MenuOption } from '@io-gui/menus'
 import { ioTabs } from './IoTabs.js'
@@ -6,7 +6,7 @@ import { IoSplit, SplitDirection } from './IoSplit.js'
 import { Tab } from '../nodes/Tab.js'
 import { Panel } from '../nodes/Panel.js'
 
-export type IoPanelProps = IoElementProps & {
+export type IoPanelProps = ReactiveElementProps & {
   panel: Panel
   elements: VDOMElement[]
   addMenuOption?: MenuOption

@@ -1,8 +1,8 @@
-import { Register, ReactiveElement, Property, IoElementProps, WithBinding } from '@io-gui/core'
+import { Register, ReactiveElement, Property, ReactiveElementProps, WithBinding } from '@io-gui/core'
 import {ioNumber} from '@io-gui/inputs'
 import {ioSlider} from './IoSlider.js'
 
-export type IoNumberSliderProps = IoElementProps & {
+export type IoNumberSliderProps = ReactiveElementProps & {
   value?: WithBinding<number>
   step?: number
   min?: number

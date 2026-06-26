@@ -1,4 +1,4 @@
-import { Register, ReactiveElement, VDOMElement, IoElementProps, disposeChildren, Property, WithBinding, Field, span, ListenerDefinitions, CallbackFunction } from '@io-gui/core'
+import { Register, ReactiveElement, VDOMElement, ReactiveElementProps, disposeChildren, Property, WithBinding, Field, span, ListenerDefinitions, CallbackFunction } from '@io-gui/core'
 
 const dummyElement = document.createElement('div')
 /**
@@ -31,7 +31,7 @@ function importModule(path: string) {
 
 export type CachingType = 'proactive' | 'reactive' | 'none'
 
-export type IoSelectorProps = IoElementProps & {
+export type IoSelectorProps = ReactiveElementProps & {
   elements?: VDOMElement[]
   selected?: WithBinding<string>
   anchor?: WithBinding<string>

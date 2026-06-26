@@ -1,4 +1,4 @@
-import { Register, Property, ReactiveElement, IoElementProps, ThemeSingleton } from '@io-gui/core'
+import { Register, Property, ReactiveElement, ReactiveElementProps, ThemeSingleton } from '@io-gui/core'
 import { SplitDirection } from './IoSplit.js'
 import { IoPanel } from './IoPanel.js'
 import { IoTab } from './IoTab.js'
@@ -35,7 +35,7 @@ class IoTabDropRect extends ReactiveElement {
   @Property({type: Number, value: -1, reflect: true})
   declare dropIndex: number
 
-  constructor(args: IoElementProps = {}) { super(args) }
+  constructor(args: ReactiveElementProps = {}) { super(args) }
 
   override mutated() {
     if (this.dropTarget && this.dropIndex !== -1) {

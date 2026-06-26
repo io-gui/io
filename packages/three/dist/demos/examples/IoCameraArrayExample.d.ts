@@ -11,4 +11,4 @@ export declare class CameraArrayExample extends ThreeApplet {
 export declare class IoCameraArrayExample extends IoThreeViewport {
     applet: CameraArrayExample;
 }
-export declare const ioCameraArrayExample: (arg0?: import("@io-gui/core").IoElementProps | import("@io-gui/core").VDOMFactoryChildren, arg1?: import("@io-gui/core").VDOMFactoryChildren) => import("@io-gui/core").VDOMElement;
+export declare const ioCameraArrayExample: (arg0?: import("@io-gui/core").ReactiveElementProps | import("@io-gui/core").VDOMFactoryChildren, arg1?: import("@io-gui/core").VDOMFactoryChildren) => import("@io-gui/core").VDOMElement;

@@ -1,5 +1,5 @@
-import { ReactiveElement, IoElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
-export type IoFieldProps = IoElementProps & {
+import { ReactiveElement, ReactiveElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
+export type IoFieldProps = ReactiveElementProps & {
     value?: WithBinding<unknown>;
     icon?: WithBinding<string>;
     label?: WithBinding<string>;

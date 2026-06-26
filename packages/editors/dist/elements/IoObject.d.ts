@@ -1,7 +1,7 @@
-import { ReactiveElement, IoElementProps, WithBinding, VDOMElement } from '@io-gui/core';
+import { ReactiveElement, ReactiveElementProps, WithBinding, VDOMElement } from '@io-gui/core';
 import { PropertyConfig } from '../utils/EditorConfig.js';
 import { PropertyGroups } from '../utils/EditorGroups.js';
-export type IoObjectProps = IoElementProps & {
+export type IoObjectProps = ReactiveElementProps & {
     value?: Record<string, any> | any[];
     properties?: string[];
     labeled?: boolean;

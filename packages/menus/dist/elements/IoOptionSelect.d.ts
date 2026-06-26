@@ -1,7 +1,7 @@
-import { ReactiveElement, Change, IoElementProps, WithBinding } from '@io-gui/core';
+import { ReactiveElement, Change, ReactiveElementProps, WithBinding } from '@io-gui/core';
 import { MenuOption } from '../nodes/MenuOption.js';
 export type SelectBy = 'value' | 'id';
-export type IoOptionSelectProps = IoElementProps & {
+export type IoOptionSelectProps = ReactiveElementProps & {
     option: MenuOption;
     value?: WithBinding<any>;
     label?: string;

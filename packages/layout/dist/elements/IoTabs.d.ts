@@ -1,7 +1,7 @@
-import { ReactiveElement, IoElementProps, NodeArray } from '@io-gui/core';
+import { ReactiveElement, ReactiveElementProps, NodeArray } from '@io-gui/core';
 import { MenuOption } from '@io-gui/menus';
 import { Tab } from '../nodes/Tab.js';
-export type IoTabsProps = IoElementProps & {
+export type IoTabsProps = ReactiveElementProps & {
     tabs: Array<Tab>;
     addMenuOption?: MenuOption;
 };

@@ -237,7 +237,7 @@ let ReactiveElement = ReactiveElement_1 = class ReactiveElement extends HTMLElem
                 }
             }
             else if (!elementChild._isReactiveElement) {
-                // Clear children for native elements. IoElements manage their own children by design
+                // Clear children for native elements. ReactiveElements manage their own children by design
                 clearNativeElementChildren(elementChild);
             }
         }
@@ -426,4 +426,4 @@ export const disposeChildren = function (element) {
         }
     });
 };
-export const ioElement = ReactiveElement.vConstructor;
+export const reactiveElement = ReactiveElement.vConstructor;

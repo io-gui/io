@@ -24,7 +24,7 @@ See `working.md`. Extra: `clean` must remove `tsconfig.tsbuildinfo` or increment
 ## Gotchas
 
 ### EventDispatcher — diamond / dual-path dedupe
-Shared `visited` set per dispatch prevents duplicate delivery when one ancestor is reachable via multiple parent branches or synthetic+DOM overlap on the same IoElement boundary.
+Shared `visited` set per dispatch prevents duplicate delivery when one ancestor is reachable via multiple parent branches or synthetic+DOM overlap on the same ReactiveElement boundary.
 
 ### NodeArray — listener duplication traps
 - Assigning `NodeArray → NodeArray`: must skip copy-via-push path (`value instanceof NodeArray`) or kept items get duplicate `io-object-mutation` listeners.
@@ -36,7 +36,7 @@ Shared `visited` set per dispatch prevents duplicate delivery when one ancestor 
 - Storage catch must rehydrate to domain types, not leave raw JSON strings on the model.
 
 ### Module init — ProtoChain TDZ
-`ReactiveProperty` importing runtime `constructType` from `ReactiveNode` creates circular init (IoElement → ReactiveProperty → ReactiveNode → IoElement). Use local constructor casts in ReactiveProperty; `import type` only in ReactiveCore deps.
+`ReactiveProperty` importing runtime `constructType` from `ReactiveNode` creates circular init (ReactiveElement → ReactiveProperty → ReactiveNode → ReactiveElement). Use local constructor casts in ReactiveProperty; `import type` only in ReactiveCore deps.
 
 ### Tests & types
 Vitest (esbuild) does not typecheck — run `pnpm build` after adding typed tests.
@@ -75,7 +75,7 @@ OrbitControls imports `from 'three'`. Import map needs `"three": "./packages/thr
 Per-viewport `WeakMap`s for hover/active; resolve viewport from `event.currentTarget`.
 
 ### Docs sync to ADRs 0001-0004 (Jun 26)
-Audited docs vs ADRs. Source already implements all 4. Found stale only in docs/deep-dive.md + docs/quick-start.md + layout/README:212. Fixed: ReactiveNode(base)→ReactiveObject, IoElement→ReactiveElement, @ReactiveProperty/ReactiveProperties→@Property/Properties, catch-all changed()/change()→mutated(), `new Storage()`→`Storage()` (factory returns Binding). Kept: `ReactiveNode`=graph union (correct), `IoElementProps` type (legit export, NOT stale). core/README already fully correct. io-gui.mdc rule already updated.
+Audited docs vs ADRs. Source already implements all 4. Found stale only in docs/deep-dive.md + docs/quick-start.md + layout/README:212. Fixed: ReactiveNode(base)→ReactiveObject, ReactiveElement→ReactiveElement, @ReactiveProperty/ReactiveProperties→@Property/Properties, catch-all changed()/change()→mutated(), `new Storage()`→`Storage()` (factory returns Binding). Kept: `ReactiveNode`=graph union (correct), `ReactiveElementProps` type (legit export, NOT stale). core/README already fully correct. io-gui.mdc rule already updated.
 
 ### Json type refactor review (Jun 19)
 `Json` changed from object-interface to value-union (`JsonPrimitive|JsonObject|JsonArray`, +null). Compiles clean. Found: NodeArray.ts stale LOCAL `interface Json` shadowing import (user fixed). Pre-existing debug bug in ReactiveNode.applyJSON: `if (type === jsonObject.constructor)` always compared to Object + inverted. FIXED → `if (type && jsonObject[name]?.constructor !== type)` (guard `type` because `type?: AnyConstructor` optional; untyped props like MenuOption.value would over-warn). Also tightened locals `out`/`primitiveProps` to `JsonObject` (return type stays `Json` for subclass overrides like MenuOption `toJSON(): Json`). EditorConfig double-cast left as-is: MenuOptionProps has non-JSON fields (action fn, any) so toJSON can't narrow to it. All core/layout/menus tests pass.

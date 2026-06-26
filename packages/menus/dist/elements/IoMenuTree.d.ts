@@ -1,7 +1,7 @@
-import { ReactiveElement, VDOMElement, IoElementProps, WithBinding } from '@io-gui/core';
+import { ReactiveElement, VDOMElement, ReactiveElementProps, WithBinding } from '@io-gui/core';
 import { MenuOption } from '../nodes/MenuOption.js';
 import { IoMenuItem } from './IoMenuItem.js';
-export type IoMenuTreeProps = IoElementProps & {
+export type IoMenuTreeProps = ReactiveElementProps & {
     option?: MenuOption;
     searchable?: boolean;
     search?: WithBinding<string>;

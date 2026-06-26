@@ -1,6 +1,6 @@
 import { WithBinding } from '../nodes/ReactiveObject.js';
-import { ReactiveElement, IoElementProps } from './ReactiveElement.js';
-type IoSpanProps = IoElementProps & {
+import { ReactiveElement, ReactiveElementProps } from './ReactiveElement.js';
+type IoSpanProps = ReactiveElementProps & {
     value?: WithBinding<string>;
 };
 /** Inline text element; `value` updates `innerText`. */

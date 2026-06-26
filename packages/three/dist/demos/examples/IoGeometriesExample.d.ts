@@ -10,4 +10,4 @@ export declare class IoGeometriesExample extends IoThreeExample {
     applet: GeometriesExample;
     ready(): void;
 }
-export declare const ioGeometriesExample: (arg0?: import("@io-gui/core").IoElementProps | import("@io-gui/core").VDOMFactoryChildren, arg1?: import("@io-gui/core").VDOMFactoryChildren) => import("@io-gui/core").VDOMElement;
+export declare const ioGeometriesExample: (arg0?: import("@io-gui/core").ReactiveElementProps | import("@io-gui/core").VDOMFactoryChildren, arg1?: import("@io-gui/core").VDOMFactoryChildren) => import("@io-gui/core").VDOMElement;

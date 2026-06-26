@@ -1,4 +1,4 @@
-import { VDOMElement, ReactiveElement, IoElementProps, WithBinding } from '@io-gui/core';
+import { VDOMElement, ReactiveElement, ReactiveElementProps, WithBinding } from '@io-gui/core';
 import { MenuOption } from '@io-gui/menus';
 import { IoPanel } from './IoPanel.js';
 import { Split, SplitOrientation } from '../nodes/Split.js';
@@ -7,7 +7,7 @@ import { Tab } from '../nodes/Tab.js';
 export declare function parseFlexBasis(flex: string): number;
 export declare function hasFlexGrow(flex: string): boolean;
 export type SplitDirection = 'none' | 'left' | 'right' | 'top' | 'bottom' | 'center';
-export type IoSplitProps = IoElementProps & {
+export type IoSplitProps = ReactiveElementProps & {
     split: WithBinding<Split>;
     elements: VDOMElement[];
     addMenuOption?: MenuOption;

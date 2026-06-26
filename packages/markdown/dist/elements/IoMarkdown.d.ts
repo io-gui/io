@@ -1,5 +1,5 @@
-import { ReactiveElement, IoElementProps, WithBinding } from '@io-gui/core';
-export type IoMarkdownProps = IoElementProps & {
+import { ReactiveElement, ReactiveElementProps, WithBinding } from '@io-gui/core';
+export type IoMarkdownProps = ReactiveElementProps & {
     src?: string;
     strip?: string[];
     loading?: WithBinding<boolean>;

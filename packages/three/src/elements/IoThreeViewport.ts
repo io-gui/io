@@ -1,4 +1,4 @@
-import { Register, ReactiveElement, IoElementProps, Property, ReactivityType, Change, Field, WithBinding } from '@io-gui/core'
+import { Register, ReactiveElement, ReactiveElementProps, Property, ReactivityType, Change, Field, WithBinding } from '@io-gui/core'
 import { WebGPURenderer, CanvasTarget, NeutralToneMapping } from 'three/webgpu'
 import WebGPU from 'three/addons/capabilities/WebGPU.js'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
@@ -23,7 +23,7 @@ _renderer.setPixelRatio(window.devicePixelRatio)
 _renderer.shadowMap.enabled = true
 void _renderer.init()
 
-export type IoThreeViewportProps = IoElementProps & {
+export type IoThreeViewportProps = ReactiveElementProps & {
   overscan?: WithBinding<number>
   clearColor?: WithBinding<number>
   clearAlpha?: WithBinding<number>

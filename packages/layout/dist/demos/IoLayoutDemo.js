@@ -97,7 +97,7 @@ export class IoLayoutDemo extends ReactiveElement {
                     { tag: 'io-menus-demo', props: { id: 'Menus', import: './packages/menus/dist/demos/IoMenusDemo.js' } },
                     { tag: 'io-navigation-demo', props: { id: 'Navigation', import: './packages/navigation/dist/demos/IoNavigationDemo.js' } },
                     { tag: 'io-theme-editor', props: { id: 'Theme Editor', import: './packages/core/dist/demos/IoThemeEditor.js' } },
-                    { tag: 'io-element-inspector-demo', props: { id: 'Element Inspector', import: './packages/core/dist/demos/IoElementInspectorDemo.js' } },
+                    { tag: 'io-element-inspector-demo', props: { id: 'Element Inspector', import: './packages/core/dist/demos/ReactiveElementInspectorDemo.js' } },
                     ioMarkdown({ id: 'Getting Started', strip: ['https://iogui.dev/io/'], sanitize: false, src: './docs/quick-start.md' }),
                     ioMarkdown({ id: 'Deep Dive', strip: ['https://iogui.dev/io/'], sanitize: false, src: './docs/deep-dive.md' }),
                     div({ id: 'Doc 1' }, [

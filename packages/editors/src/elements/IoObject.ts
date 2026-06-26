@@ -1,10 +1,10 @@
-import { Register, ReactiveElement, Property, IoElementProps, WithBinding, VDOMElement, Field, Storage as $, clearFocusBacktrack } from '@io-gui/core'
+import { Register, ReactiveElement, Property, ReactiveElementProps, WithBinding, VDOMElement, Field, Storage as $, clearFocusBacktrack } from '@io-gui/core'
 import { ioBoolean } from '@io-gui/inputs'
 import { ioPropertyEditor } from './IoPropertyEditor.js'
 import { PropertyConfig } from '../utils/EditorConfig.js'
 import { PropertyGroups } from '../utils/EditorGroups.js'
 
-export type IoObjectProps = IoElementProps & {
+export type IoObjectProps = ReactiveElementProps & {
   value?: Record<string, any> | any[]
   properties?: string[]
   labeled?: boolean

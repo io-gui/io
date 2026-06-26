@@ -1,7 +1,7 @@
-import { ReactiveElement, IoElementProps, WithBinding, VDOMElement } from '@io-gui/core';
+import { ReactiveElement, ReactiveElementProps, WithBinding, VDOMElement } from '@io-gui/core';
 import { PropertyConfig } from '../utils/EditorConfig.js';
 import { PropertyGroups } from '../utils/EditorGroups.js';
-export type IoInspectorProps = IoElementProps & {
+export type IoInspectorProps = ReactiveElementProps & {
     value?: Record<string, any> | any[];
     selected?: WithBinding<Record<string, any> | any[]>;
     search?: WithBinding<string>;

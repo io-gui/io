@@ -1,6 +1,6 @@
-import { ReactiveElement, IoElementProps, WithBinding } from '@io-gui/core';
+import { ReactiveElement, ReactiveElementProps, WithBinding } from '@io-gui/core';
 import { BufferGeometry, type NormalOrGLBufferAttributes } from 'three/webgpu';
-export type IoBuildGeometryProps = IoElementProps & {
+export type IoBuildGeometryProps = ReactiveElementProps & {
     value?: WithBinding<BufferGeometry<NormalOrGLBufferAttributes>>;
 };
 export declare class IoBuildGeometry extends ReactiveElement {

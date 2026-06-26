@@ -1,4 +1,4 @@
-import { Register, ReactiveElement, Property, VDOMElement, Storage as $, IoElementProps, WithBinding, Field } from '@io-gui/core'
+import { Register, ReactiveElement, Property, VDOMElement, Storage as $, ReactiveElementProps, WithBinding, Field } from '@io-gui/core'
 import { ioField, ioString } from '@io-gui/inputs'
 import { MenuOption } from '../nodes/MenuOption.js'
 import { ioMenuItem, IoMenuItem } from './IoMenuItem.js'
@@ -29,7 +29,7 @@ function addMenuOptionsOrTreeBranches(option: MenuOption, depth: number, d = 0) 
   return elements
 }
 
-export type IoMenuTreeProps = IoElementProps & {
+export type IoMenuTreeProps = ReactiveElementProps & {
   option?: MenuOption
   searchable?: boolean
   search?: WithBinding<string>

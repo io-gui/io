@@ -1,6 +1,6 @@
-import { ReactiveElement, IoElementProps, WithBinding } from '@io-gui/core';
+import { ReactiveElement, ReactiveElementProps, WithBinding } from '@io-gui/core';
 import { MenuOption } from '../nodes/MenuOption.js';
-export type IoMenuTreeBranchProps = IoElementProps & {
+export type IoMenuTreeBranchProps = ReactiveElementProps & {
     depth?: number;
     option?: MenuOption;
     expanded?: WithBinding<boolean>;

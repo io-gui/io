@@ -1,6 +1,6 @@
 import { PropertyInstance, PropertyDefinition } from '../core/Property.js';
 import { ThemeSingleton } from '../nodes/Theme.js';
-import { ReactiveElement, IoElementProps } from './ReactiveElement.js';
+import { ReactiveElement, ReactiveElementProps } from './ReactiveElement.js';
 /** WebGL canvas element with shared context and shader program cache. */
 export declare class IoGl extends ReactiveElement {
     #private;
@@ -13,7 +13,7 @@ export declare class IoGl extends ReactiveElement {
     static get Frag(): string;
     initPropertyUniform(name: string, property: PropertyDefinition): string;
     initShader(): WebGLProgram;
-    constructor(args?: IoElementProps);
+    constructor(args?: ReactiveElementProps);
     onResized(): void;
     get ctx(): CanvasRenderingContext2D;
     themeMutated(): void;

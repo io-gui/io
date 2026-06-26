@@ -1,5 +1,5 @@
-import { ReactiveElement, VDOMElement, IoElementProps, WithBinding } from '@io-gui/core';
-export type IoCollapsibleProps = IoElementProps & {
+import { ReactiveElement, VDOMElement, ReactiveElementProps, WithBinding } from '@io-gui/core';
+export type IoCollapsibleProps = ReactiveElementProps & {
     elements?: VDOMElement[];
     label?: string;
     direction?: 'column' | 'row';

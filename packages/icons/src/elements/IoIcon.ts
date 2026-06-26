@@ -1,7 +1,7 @@
-import { Register, Property, ReactiveElement, IoElementProps } from '@io-gui/core'
+import { Register, Property, ReactiveElement, ReactiveElementProps } from '@io-gui/core'
 import { IconsetSingleton } from '../nodes/Iconset.js'
 
-export type IoIconProps = IoElementProps & {
+export type IoIconProps = ReactiveElementProps & {
   value: string
   stroke?: boolean
   size?: 'small' | 'medium' | 'large'

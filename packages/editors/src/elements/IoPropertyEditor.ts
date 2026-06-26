@@ -1,11 +1,11 @@
-import { ReactiveElement, Property, Register, IoElementProps, ReactiveObject, span, div, HTML_ELEMENTS, VDOMElement } from '@io-gui/core'
+import { ReactiveElement, Property, Register, ReactiveElementProps, ReactiveObject, span, div, HTML_ELEMENTS, VDOMElement } from '@io-gui/core'
 import { IoField } from '@io-gui/inputs'
 import { PropertyConfig, PropertyConfigRecord, getEditorConfig } from '../utils/EditorConfig.js'
 import { PropertyGroups, getEditorGroups, PropertyGroupsRecord, getAllPropertyNames } from '../utils/EditorGroups.js'
 import { getEditorWidget } from '../utils/EditorWidgets.js'
 import { ioObject } from './IoObject.js'
 
-export type IoPropertyEditorProps = IoElementProps & {
+export type IoPropertyEditorProps = ReactiveElementProps & {
   value?: Record<string, any> | any[]
   properties?: string[] | null
   label?: string
@@ -183,7 +183,7 @@ export class IoPropertyEditor extends ReactiveElement {
           const id = properties[i] as keyof typeof this.value
           const value = this.value[id]
           const tag = config[id]!.tag
-          const props = config[id]!.props as (IoElementProps | undefined) || {}
+          const props = config[id]!.props as (ReactiveElementProps | undefined) || {}
 
           const finalProps: any = {id: id, value: value, '@value-input': this._onValueInput}
 

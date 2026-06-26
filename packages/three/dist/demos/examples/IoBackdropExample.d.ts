@@ -10,4 +10,4 @@ export declare class BackdropExample extends ThreeApplet {
 export declare class IoBackdropExample extends IoThreeExample {
     applet: BackdropExample;
 }
-export declare const ioBackdropExample: (arg0?: import("@io-gui/core").IoElementProps | import("@io-gui/core").VDOMFactoryChildren, arg1?: import("@io-gui/core").VDOMFactoryChildren) => import("@io-gui/core").VDOMElement;
+export declare const ioBackdropExample: (arg0?: import("@io-gui/core").ReactiveElementProps | import("@io-gui/core").VDOMFactoryChildren, arg1?: import("@io-gui/core").VDOMFactoryChildren) => import("@io-gui/core").VDOMElement;

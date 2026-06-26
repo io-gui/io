@@ -1,4 +1,4 @@
-import { Register, Property, ReactiveElement, IoElementProps, Field, WithBinding, nudge, ListenerDefinitions } from '@io-gui/core'
+import { Register, Property, ReactiveElement, ReactiveElementProps, Field, WithBinding, nudge, ListenerDefinitions } from '@io-gui/core'
 import { IoColorPanelSingleton as Panel } from './IoColorPanelSingleton.js'
 import { ioColorSwatch } from './IoColorSwatch.js'
 
@@ -6,7 +6,7 @@ import { ioColorSwatch } from './IoColorSwatch.js'
 // TODO: collapse picker on blur.
 // TODO: fix focus keybord navigation.
 
-export type IoColorPickerProps = IoElementProps &{
+export type IoColorPickerProps = ReactiveElementProps &{
   value: WithBinding<{ r: number; g: number; b: number; a?: number }>
 }
 

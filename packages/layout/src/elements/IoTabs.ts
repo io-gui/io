@@ -1,10 +1,10 @@
-import { Register, ReactiveElement, IoElementProps, Property, NodeArray } from '@io-gui/core'
+import { Register, ReactiveElement, ReactiveElementProps, Property, NodeArray } from '@io-gui/core'
 import { MenuOption, ioMenuItem } from '@io-gui/menus'
 import { ioTab } from './IoTab.js'
 import { ioTabsHamburger } from './IoTabsHamburger.js'
 import { Tab } from '../nodes/Tab.js'
 
-export type IoTabsProps = IoElementProps & {
+export type IoTabsProps = ReactiveElementProps & {
   tabs: Array<Tab>
   addMenuOption?: MenuOption
 }

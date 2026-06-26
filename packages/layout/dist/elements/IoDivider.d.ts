@@ -1,5 +1,5 @@
-import { ReactiveElement, IoElementProps, ListenerDefinition } from '@io-gui/core';
-export type IoDividerProps = IoElementProps & {
+import { ReactiveElement, ReactiveElementProps, ListenerDefinition } from '@io-gui/core';
+export type IoDividerProps = ReactiveElementProps & {
     orientation: 'vertical' | 'horizontal';
 };
 export declare class IoDivider extends ReactiveElement {

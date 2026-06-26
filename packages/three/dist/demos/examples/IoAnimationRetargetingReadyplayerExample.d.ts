@@ -12,4 +12,4 @@ export declare class AnimationRetargetingReadyplayerExample extends ThreeApplet 
 export declare class IoAnimationRetargetingReadyplayerExample extends IoThreeExample {
     applet: AnimationRetargetingReadyplayerExample;
 }
-export declare const ioAnimationRetargetingReadyplayerExample: (arg0?: import("@io-gui/core").IoElementProps | import("@io-gui/core").VDOMFactoryChildren, arg1?: import("@io-gui/core").VDOMFactoryChildren) => import("@io-gui/core").VDOMElement;
+export declare const ioAnimationRetargetingReadyplayerExample: (arg0?: import("@io-gui/core").ReactiveElementProps | import("@io-gui/core").VDOMFactoryChildren, arg1?: import("@io-gui/core").VDOMFactoryChildren) => import("@io-gui/core").VDOMElement;

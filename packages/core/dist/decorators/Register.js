@@ -11,7 +11,7 @@
  * @example
  * // Creating a new ReactiveElement subclass.
  * \@Register
- * class MyIoElement extends ReactiveElement {
+ * class MyElement extends ReactiveElement {
  * }
  *
  * @example

@@ -1,4 +1,4 @@
-import { Register, Property, VDOMElement, ReactiveElement, IoElementProps, ThemeSingleton, div, WithBinding } from '@io-gui/core'
+import { Register, Property, VDOMElement, ReactiveElement, ReactiveElementProps, ThemeSingleton, div, WithBinding } from '@io-gui/core'
 import { MenuOption } from '@io-gui/menus'
 import { IoPanel, ioPanel } from './IoPanel.js'
 import { ioDivider } from './IoDivider.js'
@@ -24,7 +24,7 @@ export type SplitDirection = 'none' | 'left' | 'right' | 'top' | 'bottom' | 'cen
 
 // TODO: child<->drawer caching
 
-export type IoSplitProps = IoElementProps & {
+export type IoSplitProps = ReactiveElementProps & {
   split: WithBinding<Split>
   elements: VDOMElement[]
   addMenuOption?: MenuOption

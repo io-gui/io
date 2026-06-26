@@ -1,9 +1,9 @@
-import { Register, ReactiveElement, Property, IoOverlaySingleton as Overlay, IoElementProps, WithBinding } from '@io-gui/core'
+import { Register, ReactiveElement, Property, IoOverlaySingleton as Overlay, ReactiveElementProps, WithBinding } from '@io-gui/core'
 import { IoMenuOptions } from './IoMenuOptions.js'
 import { onOverlayPointerdown, onOverlayPointermove, onOverlayPointeup } from './IoMenuItem.js'
 import { MenuOption } from '../nodes/MenuOption.js'
 
-export type IoContextMenuProps = IoElementProps & {
+export type IoContextMenuProps = ReactiveElementProps & {
   option: MenuOption
   expanded?: WithBinding<boolean>
   button?: number

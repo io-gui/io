@@ -1,4 +1,4 @@
-import { NudgeDirection, NodeArray, ReactiveElement, IoElementProps, ListenerDefinition } from '@io-gui/core';
+import { NudgeDirection, NodeArray, ReactiveElement, ReactiveElementProps, ListenerDefinition } from '@io-gui/core';
 import { Tab } from '../nodes/Tab.js';
 export interface IoTabsHamburgerMenuExpandProps {
     source: HTMLElement;
@@ -16,7 +16,7 @@ declare class IoTabsHamburgerMenu extends ReactiveElement {
         'io-focus-to': string;
         'io-edit-tab': string;
     };
-    constructor(args?: IoElementProps);
+    constructor(args?: ReactiveElementProps);
     stopPropagation(event: TouchEvent): void;
     onIoFocusTo(event: CustomEvent): void;
     onEditTabCapture(event: CustomEvent): void;

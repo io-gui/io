@@ -1,4 +1,4 @@
-import { Register, ReactiveElement, Property, VDOMElement, IoOverlaySingleton as Overlay, NudgeDirection, IoElementProps, WithBinding, Field, nudge, ListenerDefinition, span, IoExpandable } from '@io-gui/core'
+import { Register, ReactiveElement, Property, VDOMElement, IoOverlaySingleton as Overlay, NudgeDirection, ReactiveElementProps, WithBinding, Field, nudge, ListenerDefinition, span, IoExpandable } from '@io-gui/core'
 import { ioField, ioString } from '@io-gui/inputs'
 import { MenuOption } from '../nodes/MenuOption.js'
 import { ioMenuItem, IoMenuItem } from './IoMenuItem.js'
@@ -10,7 +10,7 @@ import { searchMenuOption } from '../utils/MenuNodeUtils.js'
 
 // TODO: improve focusto nav and in-layer navigation.
 
-export type IoMenuOptionsProps = IoElementProps & {
+export type IoMenuOptionsProps = ReactiveElementProps & {
   option?: MenuOption
   expanded?: WithBinding<boolean>
   horizontal?: boolean

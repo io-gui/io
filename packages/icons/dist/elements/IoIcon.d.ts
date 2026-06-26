@@ -1,5 +1,5 @@
-import { ReactiveElement, IoElementProps } from '@io-gui/core';
-export type IoIconProps = IoElementProps & {
+import { ReactiveElement, ReactiveElementProps } from '@io-gui/core';
+export type IoIconProps = ReactiveElementProps & {
     value: string;
     stroke?: boolean;
     size?: 'small' | 'medium' | 'large';

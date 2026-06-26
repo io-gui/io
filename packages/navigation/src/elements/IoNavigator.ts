@@ -1,4 +1,4 @@
-import { ReactiveElement, VDOMElement, Property, IoElementProps, WithBinding, Register, div } from '@io-gui/core'
+import { ReactiveElement, VDOMElement, Property, ReactiveElementProps, WithBinding, Register, div } from '@io-gui/core'
 import { MenuOption, ioMenuOptions, ioMenuTree } from '@io-gui/menus'
 import { CachingType, ioSelector } from './IoSelector.js'
 import { ioNavigatorDrawer, IoNavigatorDrawer } from './IoNavigatorDrawer.js'
@@ -7,7 +7,7 @@ export type SelectType = 'shallow' | 'deep' | 'all' | 'none'
 
 export type MenuPosition = 'top' | 'left'
 
-export type IoNavigatorProps = IoElementProps & {
+export type IoNavigatorProps = ReactiveElementProps & {
   option?: MenuOption
   elements?: VDOMElement[]
   widget?: VDOMElement

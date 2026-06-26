@@ -1,5 +1,5 @@
-import { ReactiveElement, IoElementProps } from '@io-gui/core';
-export type IoMatrixBaseProps = IoElementProps & {
+import { ReactiveElement, ReactiveElementProps } from '@io-gui/core';
+export type IoMatrixBaseProps = ReactiveElementProps & {
     value?: number[];
     disabled?: boolean;
 };

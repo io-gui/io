@@ -1,9 +1,9 @@
-import { Register, Property, ReactiveElement, IoElementProps, VDOMElement, div, ThemeSingleton } from '@io-gui/core'
+import { Register, Property, ReactiveElement, ReactiveElementProps, VDOMElement, div, ThemeSingleton } from '@io-gui/core'
 import { ioIcon } from '@io-gui/icons'
 
 export type DrawerDirection = 'left' | 'right'
 
-export type IoNavigatorDrawerProps = IoElementProps & {
+export type IoNavigatorDrawerProps = ReactiveElementProps & {
   direction: DrawerDirection
   expanded?: boolean
   menuContent: VDOMElement

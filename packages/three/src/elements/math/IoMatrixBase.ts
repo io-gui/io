@@ -1,7 +1,7 @@
-import { Register, ReactiveElement, Field, Property, IoElementProps, VDOMElement, ReactiveObject } from '@io-gui/core'
+import { Register, ReactiveElement, Field, Property, ReactiveElementProps, VDOMElement, ReactiveObject } from '@io-gui/core'
 import { ioNumber } from '@io-gui/inputs'
 
-export type IoMatrixBaseProps = IoElementProps & {
+export type IoMatrixBaseProps = ReactiveElementProps & {
   value?: number[]
   disabled?: boolean
 }

@@ -1,5 +1,5 @@
-import { ReactiveElement, IoElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
-export type IoColorPickerProps = IoElementProps & {
+import { ReactiveElement, ReactiveElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
+export type IoColorPickerProps = ReactiveElementProps & {
     value: WithBinding<{
         r: number;
         g: number;

@@ -1,5 +1,5 @@
 import { ListenerDefinitions } from '../nodes/ReactiveObject.js';
-import { ReactiveElement, IoElementProps } from './ReactiveElement.js';
+import { ReactiveElement, ReactiveElementProps } from './ReactiveElement.js';
 export type IoExpandable = {
     expanded: boolean;
 };
@@ -10,7 +10,7 @@ declare class IoOverlay extends ReactiveElement {
     static get Style(): string;
     expanded: boolean;
     static get Listeners(): ListenerDefinitions;
-    constructor(args?: IoElementProps);
+    constructor(args?: ReactiveElementProps);
     init(): void;
     stopPropagation(event: Event): void;
     onPointerup(event: PointerEvent): void;

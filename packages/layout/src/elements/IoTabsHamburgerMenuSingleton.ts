@@ -1,4 +1,4 @@
-import { IoOverlaySingleton, NudgeDirection, NodeArray, ReactiveElement, IoElementProps, Register, Property, nudge, ListenerDefinition } from '@io-gui/core'
+import { IoOverlaySingleton, NudgeDirection, NodeArray, ReactiveElement, ReactiveElementProps, Register, Property, nudge, ListenerDefinition } from '@io-gui/core'
 import { Tab } from '../nodes/Tab.js'
 import { ioTab, IoTab } from './IoTab.js'
 
@@ -11,7 +11,7 @@ export interface IoTabsHamburgerMenuExpandProps {
 
 @Register
 class IoTabsHamburgerMenu extends ReactiveElement {
-  // static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement
+  // static vConstructor: (arg0?: ReactiveElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement
   static override get Style() {
     return /* css */`
       :host {
@@ -62,7 +62,7 @@ class IoTabsHamburgerMenu extends ReactiveElement {
     }
   }
 
-  constructor(args: IoElementProps = {}) { super(args) }
+  constructor(args: ReactiveElementProps = {}) { super(args) }
 
   stopPropagation(event: TouchEvent) {
     event.stopPropagation()

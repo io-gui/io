@@ -1,9 +1,9 @@
-import { ReactiveElement, IoElementProps, ReactivityType, Change, WithBinding } from '@io-gui/core';
+import { ReactiveElement, ReactiveElementProps, ReactivityType, Change, WithBinding } from '@io-gui/core';
 import { WebGPURenderer } from 'three/webgpu';
 import { ThreeApplet } from '../nodes/ThreeApplet.js';
 import { ViewCameras } from '../nodes/ViewCameras.js';
 import { ToolBase } from '../nodes/ToolBase.js';
-export type IoThreeViewportProps = IoElementProps & {
+export type IoThreeViewportProps = ReactiveElementProps & {
     overscan?: WithBinding<number>;
     clearColor?: WithBinding<number>;
     clearAlpha?: WithBinding<number>;

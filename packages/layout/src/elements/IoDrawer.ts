@@ -1,4 +1,4 @@
-import { Register, Property, ReactiveElement, IoElementProps, VDOMElement, div, ThemeSingleton } from '@io-gui/core'
+import { Register, Property, ReactiveElement, ReactiveElementProps, VDOMElement, div, ThemeSingleton } from '@io-gui/core'
 import { ioIcon } from '@io-gui/icons'
 import { MenuOption } from '@io-gui/menus'
 import { Split } from '../nodes/Split.js'
@@ -9,7 +9,7 @@ import { ioPanel } from './IoPanel.js'
 export type DrawerDirection = 'leading' | 'trailing'
 export type DrawerOrientation = 'horizontal' | 'vertical'
 
-export type IoDrawerProps = IoElementProps & {
+export type IoDrawerProps = ReactiveElementProps & {
   orientation: DrawerOrientation
   direction: DrawerDirection
   parent: IoSplit

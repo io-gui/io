@@ -1,7 +1,7 @@
-import { ReactiveElement, VDOMElement, Register, Property, div, IoElementProps, WithBinding, Field, clearFocusBacktrack } from '@io-gui/core'
+import { ReactiveElement, VDOMElement, Register, Property, div, ReactiveElementProps, WithBinding, Field, clearFocusBacktrack } from '@io-gui/core'
 import { ioBoolean } from '@io-gui/inputs'
 
-export type IoCollapsibleProps = IoElementProps & {
+export type IoCollapsibleProps = ReactiveElementProps & {
   elements?: VDOMElement[]
   label?: string
   direction?: 'column' | 'row'

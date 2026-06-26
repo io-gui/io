@@ -1,9 +1,9 @@
-import { ReactiveElement, VDOMElement, IoElementProps } from '@io-gui/core';
+import { ReactiveElement, VDOMElement, ReactiveElementProps } from '@io-gui/core';
 import { MenuOption } from '@io-gui/menus';
 import { SplitDirection } from './IoSplit.js';
 import { Tab } from '../nodes/Tab.js';
 import { Panel } from '../nodes/Panel.js';
-export type IoPanelProps = IoElementProps & {
+export type IoPanelProps = ReactiveElementProps & {
     panel: Panel;
     elements: VDOMElement[];
     addMenuOption?: MenuOption;
