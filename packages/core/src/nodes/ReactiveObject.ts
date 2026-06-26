@@ -64,7 +64,7 @@ type AnyEventHandler = (
   ((event: ErrorEvent) => void) |
   ((event: Event) => void)
 
-export type ReactiveNodeProps = {
+export type ReactiveObjectProps = {
   dispatchTiming?: DispatchTiming
   [key: prefix<string, '@'>]: string | AnyEventHandler
 }

@@ -1,10 +1,10 @@
-import { Register, ReactiveObject, Property, ReactiveNodeProps } from '@io-gui/core'
+import { Register, ReactiveObject, Property, ReactiveObjectProps } from '@io-gui/core'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, Timer, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu'
 import { ioOptionSelect, MenuOption } from '@io-gui/menus'
 
-export type ThreeAppletProps = ReactiveNodeProps & {
+export type ThreeAppletProps = ReactiveObjectProps & {
   scene?: Scene
   toneMappingExposure?: number
   toneMapping?: ToneMapping

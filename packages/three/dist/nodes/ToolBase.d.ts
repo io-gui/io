@@ -1,8 +1,8 @@
-import { ReactiveObject, ReactiveNodeProps } from '@io-gui/core';
+import { ReactiveObject, ReactiveObjectProps } from '@io-gui/core';
 import { IoThreeViewport } from '../elements/IoThreeViewport';
 import { Vector2, Ray } from 'three/webgpu';
 import { ThreeApplet } from './ThreeApplet';
-export type ToolBaseProps = ReactiveNodeProps & {
+export type ToolBaseProps = ReactiveObjectProps & {
     applet: ThreeApplet;
 };
 export interface Pointer3D {

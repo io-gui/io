@@ -1,6 +1,6 @@
 import { Binding } from '../core/Binding.js';
-import { ReactiveObject, ReactiveNodeProps } from '../nodes/ReactiveObject.js';
-export type StorageProps<T = unknown> = ReactiveNodeProps & {
+import { ReactiveObject, ReactiveObjectProps } from '../nodes/ReactiveObject.js';
+export type StorageProps<T = unknown> = ReactiveObjectProps & {
     key: string;
     value: T;
     default?: T;

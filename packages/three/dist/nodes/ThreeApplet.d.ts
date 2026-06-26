@@ -1,6 +1,6 @@
-import { ReactiveObject, ReactiveNodeProps } from '@io-gui/core';
+import { ReactiveObject, ReactiveObjectProps } from '@io-gui/core';
 import { Timer, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu';
-export type ThreeAppletProps = ReactiveNodeProps & {
+export type ThreeAppletProps = ReactiveObjectProps & {
     scene?: Scene;
     toneMappingExposure?: number;
     toneMapping?: ToneMapping;
