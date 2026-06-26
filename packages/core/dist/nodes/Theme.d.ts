@@ -1,4 +1,4 @@
-import { ReactivePropertyDefinitions, ReactiveNode, ReactivityType } from '../nodes/ReactiveNode.js';
+import { PropertyDefinitions, ReactiveObject, ReactivityType } from '../nodes/ReactiveObject.js';
 import { Color } from '../core/Color.js';
 export declare const $ThemeID: import("../index.js").Binding<string>;
 export type ThemeJSON = Record<string, number>;
@@ -7,8 +7,8 @@ export declare const THEMES: Record<string, ThemeJSON>;
  * Top-level theme singleton; maps numeric/Color properties to `--io_*` CSS variables.
  * @see ThemeSingleton
  */
-export declare class Theme extends ReactiveNode {
-    static get ReactiveProperties(): ReactivePropertyDefinitions;
+export declare class Theme extends ReactiveObject {
+    static get Properties(): PropertyDefinitions;
     spacing: number;
     spacing2: number;
     spacing3: number;
@@ -47,7 +47,7 @@ export declare class Theme extends ReactiveNode {
     onPropertyMutated(event: CustomEvent): boolean;
     fontSizeChanged(): void;
     lineHeightChanged(): void;
-    changed(): void;
+    mutated(): void;
 }
 declare const ThemeSingleton: Theme;
 export declare const $Theme: import("../index.js").Binding<Theme>;

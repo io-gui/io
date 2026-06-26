@@ -1,11 +1,11 @@
-import { IoElement, IoElementProps, NodeArray } from '@io-gui/core';
+import { ReactiveElement, IoElementProps, NodeArray } from '@io-gui/core';
 import { MenuOption } from '@io-gui/menus';
 import { Tab } from '../nodes/Tab.js';
 export type IoTabsProps = IoElementProps & {
     tabs: Array<Tab>;
     addMenuOption?: MenuOption;
 };
-export declare class IoTabs extends IoElement {
+export declare class IoTabs extends ReactiveElement {
     static get Style(): string;
     tabs: NodeArray<Tab>;
     overflow: number;
@@ -13,6 +13,6 @@ export declare class IoTabs extends IoElement {
     constructor(args: IoTabsProps);
     tabsMutated(): void;
     onResized(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioTabs: (arg0: IoTabsProps) => import("@io-gui/core").VDOMElement;

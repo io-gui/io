@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { AmbientLight, Color, DirectionalLight, Group, MathUtils, Mesh, MeshPhongMaterial, PerspectiveCamera, SphereGeometry, WebGPURenderer } from 'three/webgpu';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-import { Register, ReactiveProperty } from '@io-gui/core';
+import { Register, Property } from '@io-gui/core';
 import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
 import { Split, ioSplit } from '@io-gui/layout';
 // 1 micrometer to 100 billion light years in one scene, with 1 unit = 1 meter
@@ -142,10 +142,10 @@ let IoCameraLogarithmicDepthBufferExample = class IoCameraLogarithmicDepthBuffer
     }
 };
 __decorate([
-    ReactiveProperty({ type: CameraLogarithmicDepthBufferExample, init: { isPlaying: true } })
+    Property({ type: CameraLogarithmicDepthBufferExample, init: { isPlaying: true } })
 ], IoCameraLogarithmicDepthBufferExample.prototype, "applet", void 0);
 __decorate([
-    ReactiveProperty({ type: WebGPURenderer, init: { antialias: true, logarithmicDepthBuffer: true } })
+    Property({ type: WebGPURenderer, init: { antialias: true, logarithmicDepthBuffer: true } })
 ], IoCameraLogarithmicDepthBufferExample.prototype, "renderer", void 0);
 IoCameraLogarithmicDepthBufferExample = __decorate([
     Register

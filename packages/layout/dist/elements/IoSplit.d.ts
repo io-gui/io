@@ -1,4 +1,4 @@
-import { VDOMElement, IoElement, IoElementProps, WithBinding } from '@io-gui/core';
+import { VDOMElement, ReactiveElement, IoElementProps, WithBinding } from '@io-gui/core';
 import { MenuOption } from '@io-gui/menus';
 import { IoPanel } from './IoPanel.js';
 import { Split, SplitOrientation } from '../nodes/Split.js';
@@ -13,7 +13,7 @@ export type IoSplitProps = IoElementProps & {
     addMenuOption?: MenuOption;
     editable?: boolean;
 };
-export declare class IoSplit extends IoElement {
+export declare class IoSplit extends ReactiveElement {
     static get Style(): string;
     split: Split;
     elements: VDOMElement[];
@@ -52,6 +52,6 @@ export declare class IoSplit extends IoElement {
     onVeilClick(event: MouseEvent): void;
     splitMutated(): void;
     splitChanged(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioSplit: (arg0: IoSplitProps) => VDOMElement;

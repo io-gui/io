@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, IoElementProps, WithBinding } from '@io-gui/core';
+import { ReactiveElement, VDOMElement, IoElementProps, WithBinding } from '@io-gui/core';
 import { MenuOption } from '@io-gui/menus';
 import { CachingType } from './IoSelector.js';
 export type SelectType = 'shallow' | 'deep' | 'all' | 'none';
@@ -14,7 +14,7 @@ export type IoNavigatorProps = IoElementProps & {
     anchor?: WithBinding<string>;
     minWidth?: number;
 };
-export declare class IoNavigator extends IoElement {
+export declare class IoNavigator extends ReactiveElement {
     static get Style(): string;
     elements: VDOMElement[];
     option: MenuOption;
@@ -39,6 +39,6 @@ export declare class IoNavigator extends IoElement {
     collapsedChanged(): void;
     menuChanged(): void;
     optionMutated(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioNavigator: (arg0?: IoNavigatorProps) => VDOMElement;

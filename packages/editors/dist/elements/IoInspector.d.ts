@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding, VDOMElement } from '@io-gui/core';
+import { ReactiveElement, IoElementProps, WithBinding, VDOMElement } from '@io-gui/core';
 import { PropertyConfig } from '../utils/EditorConfig.js';
 import { PropertyGroups } from '../utils/EditorGroups.js';
 export type IoInspectorProps = IoElementProps & {
@@ -12,9 +12,9 @@ export type IoInspectorProps = IoElementProps & {
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple
  * `io-collapsible` elements. It can be configured to use custom property editors and display only specified properties.
- * Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
+ * Fields of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
  **/
-export declare class IoInspector extends IoElement {
+export declare class IoInspector extends ReactiveElement {
     static get Style(): string;
     value: object | Array<any>;
     selected: object | Array<any>;
@@ -30,7 +30,7 @@ export declare class IoInspector extends IoElement {
     valueMutated(): void;
     selectedMutated(): void;
     selectedChanged(): void;
-    changed(): void;
+    mutated(): void;
     changedDebounced(): void;
     dispose(): void;
 }

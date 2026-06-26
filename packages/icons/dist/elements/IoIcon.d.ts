@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps } from '@io-gui/core';
+import { ReactiveElement, IoElementProps } from '@io-gui/core';
 export type IoIconProps = IoElementProps & {
     value: string;
     stroke?: boolean;
@@ -9,7 +9,7 @@ export type IoIconProps = IoElementProps & {
  * It displays SVG content specified via `icon` parameter.
  * Custom SVG assets need to be registered with `IconsetSingleton`.
  **/
-export declare class IoIcon extends IoElement {
+export declare class IoIcon extends ReactiveElement {
     static get Style(): string;
     value: string;
     stroke: boolean;

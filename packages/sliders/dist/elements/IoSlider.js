@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, IoGl, Property } from '@io-gui/core';
+import { Register, Property, IoGl, Field } from '@io-gui/core';
 const clamp = (num, min, max) => {
     return max > min ? Math.min(Math.max(num, min), max) : Math.min(Math.max(num, max), min);
 };
@@ -238,7 +238,7 @@ let IoSlider = class IoSlider extends IoGl {
         this.valueChanged();
         this.minChanged();
         this.maxChanged();
-        this.changed();
+        this.mutated();
     }
     invalidChanged() {
         this.ariaInvalid = String(this.invalid);
@@ -259,37 +259,37 @@ let IoSlider = class IoSlider extends IoGl {
     }
 };
 __decorate([
-    ReactiveProperty(0)
+    Property(0)
 ], IoSlider.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty(0.01)
+    Property(0.01)
 ], IoSlider.prototype, "step", void 0);
 __decorate([
-    ReactiveProperty(0)
+    Property(0)
 ], IoSlider.prototype, "min", void 0);
 __decorate([
-    ReactiveProperty(1)
+    Property(1)
 ], IoSlider.prototype, "max", void 0);
 __decorate([
-    ReactiveProperty(1)
+    Property(1)
 ], IoSlider.prototype, "exponent", void 0);
 __decorate([
-    ReactiveProperty({ value: false, reflect: true })
+    Property({ value: false, reflect: true })
 ], IoSlider.prototype, "vertical", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+    Property({ value: false, type: Boolean, reflect: true })
 ], IoSlider.prototype, "invalid", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+    Property({ value: false, type: Boolean, reflect: true })
 ], IoSlider.prototype, "disabled", void 0);
 __decorate([
-    Property(false)
+    Field(false)
 ], IoSlider.prototype, "noscroll", void 0);
 __decorate([
-    Property('slider')
+    Field('slider')
 ], IoSlider.prototype, "role", void 0);
 __decorate([
-    Property(0)
+    Field(0)
 ], IoSlider.prototype, "tabIndex", void 0);
 IoSlider = __decorate([
     Register

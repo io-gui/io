@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { AmbientLight, BoxGeometry, CapsuleGeometry, CircleGeometry, CylinderGeometry, IcosahedronGeometry, LatheGeometry, Mesh, MeshPhongMaterial, OctahedronGeometry, PlaneGeometry, PointLight, RepeatWrapping, RingGeometry, SphereGeometry, SRGBColorSpace, TetrahedronGeometry, TextureLoader, TorusGeometry, TorusKnotGeometry, Vector2, DoubleSide, BufferGeometry } from 'three/webgpu';
 import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
 import { plane, klein, mobius } from 'three/addons/geometries/ParametricFunctions.js';
-import { Register, ReactiveProperty } from '@io-gui/core';
+import { Register, Property } from '@io-gui/core';
 import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
 import { Split, ioSplit } from '@io-gui/layout';
 import { ioPropertyEditor, ioObject } from '@io-gui/editors';
@@ -153,7 +153,7 @@ let IoGeometriesExample = class IoGeometriesExample extends IoThreeExample {
     }
 };
 __decorate([
-    ReactiveProperty({ type: GeometriesExample, init: { isPlaying: true } })
+    Property({ type: GeometriesExample, init: { isPlaying: true } })
 ], IoGeometriesExample.prototype, "applet", void 0);
 IoGeometriesExample = __decorate([
     Register

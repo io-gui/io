@@ -4,10 +4,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { IoElement, Register, input, label, li, div, button, ReactiveProperty } from '@io-gui/core';
+import { ReactiveElement, Register, input, label, li, div, button, Property } from '@io-gui/core';
 import { TodoItemModel } from './TodoItemModel.js';
 import { TodoListModel } from './TodoListModel.js';
-export class TodoItem extends IoElement {
+export class TodoItem extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -19,9 +19,9 @@ export class TodoItem extends IoElement {
         super(args);
     }
     itemMutated() {
-        this.changed();
+        this.mutated();
     }
-    changed() {
+    mutated() {
         this.render([
             li({ class: 'todo ' + (this.item.completed ? 'completed ' : '') + (this.editing ? 'editing' : '') }, [
                 div({ class: 'view' }, [
@@ -56,13 +56,13 @@ export class TodoItem extends IoElement {
     }
 }
 __decorate([
-    ReactiveProperty({ type: TodoItemModel })
+    Property({ type: TodoItemModel })
 ], TodoItem.prototype, "item", void 0);
 __decorate([
-    ReactiveProperty({ type: TodoListModel })
+    Property({ type: TodoListModel })
 ], TodoItem.prototype, "model", void 0);
 __decorate([
-    ReactiveProperty({ value: false })
+    Property({ value: false })
 ], TodoItem.prototype, "editing", void 0);
 Register(TodoItem);
 export const todoItem = function (arg0) {

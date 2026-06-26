@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, span, Property } from '@io-gui/core';
+import { Register, Property, span, Field } from '@io-gui/core';
 import { ioIcon } from '@io-gui/icons';
 import { IoField } from './IoField.js';
 /**
@@ -29,13 +29,13 @@ let IoBoolean = class IoBoolean extends IoField {
     }
     ready() {
         this.valueChanged();
-        this.changed();
+        this.mutated();
     }
     valueChanged() {
         this.invalid = typeof this.value !== 'boolean';
         this.setAttribute('aria-checked', String(!!this.value));
     }
-    changed() {
+    mutated() {
         const value = this.value ? this.true : this.false;
         this.render([
             this.icon ? ioIcon({ value: this.icon }) : null,
@@ -45,16 +45,16 @@ let IoBoolean = class IoBoolean extends IoField {
     }
 };
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+    Property({ value: false, type: Boolean, reflect: true })
 ], IoBoolean.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty({ value: 'true', type: String })
+    Property({ value: 'true', type: String })
 ], IoBoolean.prototype, "true", void 0);
 __decorate([
-    ReactiveProperty({ value: 'false', type: String })
+    Property({ value: 'false', type: String })
 ], IoBoolean.prototype, "false", void 0);
 __decorate([
-    Property('checkbox')
+    Field('checkbox')
 ], IoBoolean.prototype, "role", void 0);
 IoBoolean = __decorate([
     Register

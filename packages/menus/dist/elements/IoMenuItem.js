@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, Property, IoOverlaySingleton as Overlay, span } from '@io-gui/core';
+import { Register, Property, Field, IoOverlaySingleton as Overlay, span } from '@io-gui/core';
 import { IoField } from '@io-gui/inputs';
 import { ioIcon } from '@io-gui/icons';
 import { getMenuRoot, getMenuAncestors, getMenuDescendants, getMenuSiblings, getHoveredMenuItem } from '../utils/MenuDOMUtils.js';
@@ -319,7 +319,7 @@ let IoMenuItem = class IoMenuItem extends IoField {
             selected: this.option.selected,
             disabled: this.option.disabled,
         });
-        this.changed();
+        this.mutated();
     }
     initOptions() {
         if (this.option.options && this.depth > 0) {
@@ -337,7 +337,7 @@ let IoMenuItem = class IoMenuItem extends IoField {
             }
         }
     }
-    changed() {
+    mutated() {
         const icon = this.icon || this.option.icon;
         const label = this.label || this.option.label;
         this.render([
@@ -356,25 +356,25 @@ let IoMenuItem = class IoMenuItem extends IoField {
     }
 };
 __decorate([
-    ReactiveProperty({ type: MenuOption })
+    Property({ type: MenuOption })
 ], IoMenuItem.prototype, "option", void 0);
 __decorate([
-    Property('')
+    Field('')
 ], IoMenuItem.prototype, "label", void 0);
 __decorate([
-    ReactiveProperty({ value: false, reflect: true })
+    Property({ value: false, reflect: true })
 ], IoMenuItem.prototype, "expanded", void 0);
 __decorate([
-    ReactiveProperty({ value: 'right', reflect: true })
+    Property({ value: 'right', reflect: true })
 ], IoMenuItem.prototype, "direction", void 0);
 __decorate([
-    ReactiveProperty({ value: 1000, reflect: true })
+    Property({ value: 1000, reflect: true })
 ], IoMenuItem.prototype, "depth", void 0);
 __decorate([
-    Property('false')
+    Field('false')
 ], IoMenuItem.prototype, "contentEditable", void 0);
 __decorate([
-    Property()
+    Field()
 ], IoMenuItem.prototype, "$parent", void 0);
 IoMenuItem = __decorate([
     Register

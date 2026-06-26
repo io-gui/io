@@ -5,8 +5,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var MenuOption_1;
-import { ReactiveNode, Register, ReactiveProperty, NodeArray } from '@io-gui/core';
-let MenuOption = MenuOption_1 = class MenuOption extends ReactiveNode {
+import { ReactiveObject, Register, Property, NodeArray } from '@io-gui/core';
+let MenuOption = MenuOption_1 = class MenuOption extends ReactiveObject {
     static get Listeners() {
         return {
             'option-selected-changed': 'onOptionSelectedChanged',
@@ -224,7 +224,7 @@ let MenuOption = MenuOption_1 = class MenuOption extends ReactiveNode {
         });
         return this;
     }
-    changed() {
+    mutated() {
         debug: {
             if (['select', 'toggle', 'none'].indexOf(this.mode) === -1) {
                 console.warn(`Unknown "mode" property "${this.mode}"!`, this);
@@ -246,43 +246,43 @@ let MenuOption = MenuOption_1 = class MenuOption extends ReactiveNode {
     }
 };
 __decorate([
-    ReactiveProperty({ value: '', type: String })
+    Property({ value: '', type: String })
 ], MenuOption.prototype, "id", void 0);
 __decorate([
-    ReactiveProperty({ value: undefined })
+    Property({ value: undefined })
 ], MenuOption.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty({ value: '', type: String })
+    Property({ value: '', type: String })
 ], MenuOption.prototype, "label", void 0);
 __decorate([
-    ReactiveProperty({ value: '', type: String })
+    Property({ value: '', type: String })
 ], MenuOption.prototype, "icon", void 0);
 __decorate([
-    ReactiveProperty({ value: '', type: String })
+    Property({ value: '', type: String })
 ], MenuOption.prototype, "hint", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean })
+    Property({ value: false, type: Boolean })
 ], MenuOption.prototype, "disabled", void 0);
 __decorate([
-    ReactiveProperty()
+    Property()
 ], MenuOption.prototype, "action", void 0);
 __decorate([
-    ReactiveProperty({ value: 'select', type: String })
+    Property({ value: 'select', type: String })
 ], MenuOption.prototype, "mode", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean })
+    Property({ value: false, type: Boolean })
 ], MenuOption.prototype, "selected", void 0);
 __decorate([
-    ReactiveProperty({ value: '', type: String })
+    Property({ value: '', type: String })
 ], MenuOption.prototype, "selectedIDImmediate", void 0);
 __decorate([
-    ReactiveProperty({ value: '', type: String })
+    Property({ value: '', type: String })
 ], MenuOption.prototype, "selectedID", void 0);
 __decorate([
-    ReactiveProperty({ value: '', type: String })
+    Property({ value: '', type: String })
 ], MenuOption.prototype, "path", void 0);
 __decorate([
-    ReactiveProperty({ type: NodeArray, init: 'this' })
+    Property({ type: NodeArray, init: 'this' })
 ], MenuOption.prototype, "options", void 0);
 MenuOption = MenuOption_1 = __decorate([
     Register

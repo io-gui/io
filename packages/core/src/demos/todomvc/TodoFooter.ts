@@ -1,4 +1,4 @@
-import { IoElement, Register, IoElementProps, span, ul, li, a, button, ReactiveProperty, WithBinding } from '@io-gui/core'
+import { ReactiveElement, Register, IoElementProps, span, ul, li, a, button, Property, WithBinding } from '@io-gui/core'
 import { TodoListModel } from './TodoListModel.js'
 
 type TodoFooterProps = IoElementProps & {
@@ -6,7 +6,7 @@ type TodoFooterProps = IoElementProps & {
   route: WithBinding<string>
 }
 
-export class TodoFooter extends IoElement {
+export class TodoFooter extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host a {
@@ -15,10 +15,10 @@ export class TodoFooter extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: TodoListModel})
+  @Property({type: TodoListModel})
   declare model: TodoListModel
 
-  @ReactiveProperty({value: 'all'})
+  @Property({value: 'all'})
   declare route: string
 
   constructor(args: TodoFooterProps) {
@@ -31,10 +31,10 @@ export class TodoFooter extends IoElement {
   }
 
   modelMutated() {
-    this.changed()
+    this.mutated()
   }
 
-  override changed() {
+  override mutated() {
     this.style.display = this.model.count ? 'block' : 'none'
     this.render([
       span({class: 'todo-count'}, String(this.model.activeCount) + (this.model.activeCount === 1 ? ' item' : ' items') + ' left'),

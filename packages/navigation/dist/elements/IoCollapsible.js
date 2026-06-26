@@ -4,13 +4,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { IoElement, Register, ReactiveProperty, div, Property, clearFocusBacktrack } from '@io-gui/core';
+import { ReactiveElement, Register, Property, div, Field, clearFocusBacktrack } from '@io-gui/core';
 import { ioBoolean } from '@io-gui/inputs';
 /**
  * An element with collapsible content.
  * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
  **/
-let IoCollapsible = class IoCollapsible extends IoElement {
+let IoCollapsible = class IoCollapsible extends ReactiveElement {
     static get Style() {
         return /* css */ `
     :host {
@@ -65,7 +65,7 @@ let IoCollapsible = class IoCollapsible extends IoElement {
     expandedChanged() {
         clearFocusBacktrack();
     }
-    changed() {
+    mutated() {
         this.render([
             // TODO: consider implementing caching
             ioBoolean({ icon: this.icon, true: this.label, false: this.label, value: this.bind('expanded') }),
@@ -74,22 +74,22 @@ let IoCollapsible = class IoCollapsible extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Array, init: null })
+    Property({ type: Array, init: null })
 ], IoCollapsible.prototype, "elements", void 0);
 __decorate([
-    ReactiveProperty({ value: '', type: String })
+    Property({ value: '', type: String })
 ], IoCollapsible.prototype, "label", void 0);
 __decorate([
-    ReactiveProperty({ value: 'column', reflect: true })
+    Property({ value: 'column', reflect: true })
 ], IoCollapsible.prototype, "direction", void 0);
 __decorate([
-    ReactiveProperty({ value: '', type: String })
+    Property({ value: '', type: String })
 ], IoCollapsible.prototype, "icon", void 0);
 __decorate([
-    ReactiveProperty({ value: false, reflect: true })
+    Property({ value: false, reflect: true })
 ], IoCollapsible.prototype, "expanded", void 0);
 __decorate([
-    Property('region')
+    Field('region')
 ], IoCollapsible.prototype, "role", void 0);
 IoCollapsible = __decorate([
     Register

@@ -4,9 +4,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { IoOverlaySingleton, NodeArray, IoElement, Register, ReactiveProperty, nudge } from '@io-gui/core';
+import { IoOverlaySingleton, NodeArray, ReactiveElement, Register, Property, nudge } from '@io-gui/core';
 import { ioTab } from './IoTab.js';
-let IoTabsHamburgerMenu = class IoTabsHamburgerMenu extends IoElement {
+let IoTabsHamburgerMenu = class IoTabsHamburgerMenu extends ReactiveElement {
     // static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement
     static get Style() {
         return /* css */ `
@@ -99,17 +99,17 @@ let IoTabsHamburgerMenu = class IoTabsHamburgerMenu extends IoElement {
     onExpand() {
         this.querySelector('[selected]')?.focus();
     }
-    changed() {
+    mutated() {
         this.render([
             ...this.tabs.map(tab => ioTab({ tab: tab })),
         ]);
     }
 };
 __decorate([
-    ReactiveProperty({ type: NodeArray, init: 'this' })
+    Property({ type: NodeArray, init: 'this' })
 ], IoTabsHamburgerMenu.prototype, "tabs", void 0);
 __decorate([
-    ReactiveProperty({ type: Boolean, reflect: true })
+    Property({ type: Boolean, reflect: true })
 ], IoTabsHamburgerMenu.prototype, "expanded", void 0);
 IoTabsHamburgerMenu = __decorate([
     Register

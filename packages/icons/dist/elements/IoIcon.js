@@ -4,14 +4,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, IoElement } from '@io-gui/core';
+import { Register, Property, ReactiveElement } from '@io-gui/core';
 import { IconsetSingleton } from '../nodes/Iconset.js';
 /**
  * SVG icon element.
  * It displays SVG content specified via `icon` parameter.
  * Custom SVG assets need to be registered with `IconsetSingleton`.
  **/
-let IoIcon = class IoIcon extends IoElement {
+let IoIcon = class IoIcon extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -59,13 +59,13 @@ let IoIcon = class IoIcon extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ value: '', type: String, reflect: true })
+    Property({ value: '', type: String, reflect: true })
 ], IoIcon.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+    Property({ value: false, type: Boolean, reflect: true })
 ], IoIcon.prototype, "stroke", void 0);
 __decorate([
-    ReactiveProperty({ value: 'small', type: String, reflect: true })
+    Property({ value: 'small', type: String, reflect: true })
 ], IoIcon.prototype, "size", void 0);
 IoIcon = __decorate([
     Register

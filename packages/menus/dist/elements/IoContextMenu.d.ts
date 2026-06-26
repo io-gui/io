@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding } from '@io-gui/core';
+import { ReactiveElement, IoElementProps, WithBinding } from '@io-gui/core';
 import { IoMenuOptions } from './IoMenuOptions.js';
 import { MenuOption } from '../nodes/MenuOption.js';
 export type IoContextMenuProps = IoElementProps & {
@@ -13,14 +13,14 @@ export type IoContextMenuProps = IoElementProps & {
  * but it can be configured for other buttons. You can have multiple `IoContextMenu` instances under the same
  * `parentElement` as long as the `button` properties are different.
  **/
-export declare class IoContextMenu extends IoElement {
+export declare class IoContextMenu extends ReactiveElement {
     option: MenuOption;
     expanded: boolean;
     button: number;
     $options: IoMenuOptions;
     _contextTimeout: ReturnType<typeof setTimeout>;
     _listenerParent: HTMLElement | null;
-    static get ReactiveProperties(): any;
+    static get Properties(): any;
     constructor(args: IoContextMenuProps);
     init(): void;
     optionChanged(): void;

@@ -51,7 +51,7 @@ export declare class IoMenuItem extends IoField {
     optionChanged(): void;
     optionMutated(): void;
     initOptions(): void;
-    changed(): void;
+    mutated(): void;
     dispose(): void;
 }
 export declare const ioMenuItem: (arg0?: IoMenuItemProps) => import("@io-gui/core").VDOMElement;

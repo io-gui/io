@@ -14,8 +14,8 @@ const LISTENER_OPTIONS = ['capture', 'passive'];
  * that was already visited by the current synthetic bubbling dispatch.
  *
  * Edge case:
- * A single logical event can traverse one branch via synthetic ReactiveNode
- * parents, then get converted into a native CustomEvent at an IoElement
+ * A single logical event can traverse one branch via synthetic ReactiveObject
+ * parents, then get converted into a native CustomEvent at an ReactiveElement
  * boundary and bubble through DOM again. Without this guard, shared ancestors
  * can receive the same event twice.
  */
@@ -34,7 +34,7 @@ const hasVisitedDomAncestor = (node, visited) => {
  * Converts a listener definition into a normalized Listener tuple.
  * If the first item is a string, it looks up the method on the node.
  *
- * @param {ReactiveNode | IoElement | EventTarget} node - The node instance containing potential method references
+ * @param {ReactiveNode} node - The node instance containing potential method references
  * @param {ListenerDefinition} def - The listener definition to normalize
  * @return {Listener} Normalized [listener, options?] tuple
  */
@@ -74,9 +74,9 @@ export class EventDispatcher {
     propListeners = {};
     addedListeners = {};
     /**
-     * Creates an instance of `EventDispatcher` for specified `ReactiveNode` instance.
+     * Creates an instance of `EventDispatcher` for specified `ReactiveObject` instance.
      * It initializes `protoListeners` from `ProtoChain`.
-     * @param {ReactiveNode | IoElement | EventTarget} node owner ReactiveNode
+     * @param {ReactiveNode} node owner ReactiveObject
      */
     constructor(node) {
         this.node = node;
@@ -91,7 +91,7 @@ export class EventDispatcher {
      * This differs from {@link ProtoChain.addListeners}, which merges the full inheritance chain
      * for introspection — runtime dispatch uses a single handler per event name here.
      *
-     * @param node owner ReactiveNode
+     * @param node owner ReactiveObject
      */
     setProtoListeners(node) {
         for (const name in node._protochain?.listeners) {
@@ -249,7 +249,7 @@ export class EventDispatcher {
      * @param {string} name - Name of the event
      * @param {unknown} detail - Event detail data
      * @param {boolean} [bubbles] - Makes event bubble
-     * @param {ReactiveNode | IoElement | EventTarget} [node] - Event target override to dispatch the event from
+     * @param {ReactiveNode} [node] - Event target override to dispatch the event from
      */
     dispatchEvent(name, detail, bubbles = true, node = this.node, path = [], visited = new Set(), propagation = { stopped: false, immediateStopped: false }) {
         if (this.node._disposed)
@@ -301,7 +301,7 @@ export class EventDispatcher {
             }
             if (bubbles && !propagation.stopped) {
                 for (const parent of node._parents) {
-                    if ((parent._isNode || parent._isIoElement) && !parent._disposed && !visited.has(parent)) {
+                    if ((parent._isReactiveObject || parent._isReactiveElement) && !parent._disposed && !visited.has(parent)) {
                         parent._eventDispatcher.dispatchEvent(name, detail, bubbles, parent, path, visited, propagation);
                     }
                 }

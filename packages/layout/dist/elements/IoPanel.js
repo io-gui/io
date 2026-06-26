@@ -4,13 +4,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, Property } from '@io-gui/core';
+import { Register, ReactiveElement, Property, Field } from '@io-gui/core';
 import { ioSelector } from '@io-gui/navigation';
 import { MenuOption } from '@io-gui/menus';
 import { ioTabs } from './IoTabs.js';
 import { IoSplit } from './IoSplit.js';
 import { Tab } from '../nodes/Tab.js';
-let IoPanel = class IoPanel extends IoElement {
+let IoPanel = class IoPanel extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -128,7 +128,7 @@ let IoPanel = class IoPanel extends IoElement {
             tabs[index].focus();
     }
     panelMutated() {
-        this.debounce(this.changed);
+        this.debounce(this.mutated);
     }
     getAddMenuOption() {
         if (this.addMenuOption && this.addMenuOption.options?.length > 0) {
@@ -148,7 +148,7 @@ let IoPanel = class IoPanel extends IoElement {
             return undefined;
         return new MenuOption({ options });
     }
-    changed() {
+    mutated() {
         this.render([
             ioTabs({
                 tabs: this.panel.tabs,
@@ -165,13 +165,13 @@ let IoPanel = class IoPanel extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Object })
+    Property({ type: Object })
 ], IoPanel.prototype, "panel", void 0);
 __decorate([
-    ReactiveProperty(Array)
+    Property(Array)
 ], IoPanel.prototype, "elements", void 0);
 __decorate([
-    Property({ type: MenuOption })
+    Field({ type: MenuOption })
 ], IoPanel.prototype, "addMenuOption", void 0);
 IoPanel = __decorate([
     Register

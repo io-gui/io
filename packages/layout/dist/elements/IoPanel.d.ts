@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, IoElementProps } from '@io-gui/core';
+import { ReactiveElement, VDOMElement, IoElementProps } from '@io-gui/core';
 import { MenuOption } from '@io-gui/menus';
 import { SplitDirection } from './IoSplit.js';
 import { Tab } from '../nodes/Tab.js';
@@ -8,7 +8,7 @@ export type IoPanelProps = IoElementProps & {
     elements: VDOMElement[];
     addMenuOption?: MenuOption;
 };
-export declare class IoPanel extends IoElement {
+export declare class IoPanel extends ReactiveElement {
     static get Style(): string;
     panel: Panel;
     elements: VDOMElement[];
@@ -27,6 +27,6 @@ export declare class IoPanel extends IoElement {
     focusTabDebounced(index: number): void;
     panelMutated(): void;
     getAddMenuOption(): MenuOption | undefined;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioPanel: (arg0: IoPanelProps) => VDOMElement;

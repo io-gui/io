@@ -1,5 +1,5 @@
 import { EventDispatcher } from '../core/EventDispatcher.js'
-import { IoElement } from '../elements/IoElement.js'
+import { ReactiveElement } from '../elements/ReactiveElement.js'
 import { Binding } from '../core/Binding.js'
 
 export const TEXT_TAG = '#text'
@@ -444,14 +444,14 @@ export const applyNativeElementProps = function(element: HTMLElement, props: Nat
       }
     }
   }
-  if (!(element as IoElement)._eventDispatcher) {
+  if (!(element as ReactiveElement)._eventDispatcher) {
     Object.defineProperty(
       element,
       '_eventDispatcher',
-      {enumerable: false, configurable: true, value: new EventDispatcher(element as unknown as IoElement)}
+      {enumerable: false, configurable: true, value: new EventDispatcher(element as unknown as ReactiveElement)}
     )
   }
-  (element as IoElement)._eventDispatcher.applyPropListeners(props)
+  (element as ReactiveElement)._eventDispatcher.applyPropListeners(props)
 }
 
 /**
@@ -465,9 +465,9 @@ export const constructElement = function(vDOMElement: VDOMElement): ChildNode {
   }
   const props = vDOMElement.props || {}
   let element: HTMLElement
-  // IoElement classes constructed with constructor.
+  // ReactiveElement classes constructed with constructor.
   const ConstructorClass = window.customElements ? window.customElements.get(vDOMElement.tag) : null
-  if (ConstructorClass && (ConstructorClass as any).prototype?._isIoElement) {
+  if (ConstructorClass && (ConstructorClass as any).prototype?._isReactiveElement) {
     element = new ConstructorClass(props) as HTMLElement
   } else {
     // Other element classes constructed with document.createElement.

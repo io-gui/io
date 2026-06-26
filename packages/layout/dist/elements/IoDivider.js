@@ -4,8 +4,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, IoElement } from '@io-gui/core';
-let IoDivider = class IoDivider extends IoElement {
+import { Register, Property, ReactiveElement } from '@io-gui/core';
+let IoDivider = class IoDivider extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -122,10 +122,10 @@ let IoDivider = class IoDivider extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+    Property({ value: false, type: Boolean, reflect: true })
 ], IoDivider.prototype, "pressed", void 0);
 __decorate([
-    ReactiveProperty({ value: 'horizontal', type: String, reflect: true })
+    Property({ value: 'horizontal', type: String, reflect: true })
 ], IoDivider.prototype, "orientation", void 0);
 IoDivider = __decorate([
     Register

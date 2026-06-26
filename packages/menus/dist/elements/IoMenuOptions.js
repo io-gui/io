@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, IoOverlaySingleton as Overlay, Property, nudge, span } from '@io-gui/core';
+import { Register, ReactiveElement, Property, IoOverlaySingleton as Overlay, Field, nudge, span } from '@io-gui/core';
 import { ioField, ioString } from '@io-gui/inputs';
 import { MenuOption } from '../nodes/MenuOption.js';
 import { ioMenuItem } from './IoMenuItem.js';
@@ -13,7 +13,7 @@ import { searchMenuOption } from '../utils/MenuNodeUtils.js';
 /**
  * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu options are displayed in horizontal direction.
  **/
-let IoMenuOptions = class IoMenuOptions extends IoElement {
+let IoMenuOptions = class IoMenuOptions extends ReactiveElement {
     static get Style() {
         return /* css */ `
     :host {
@@ -191,7 +191,7 @@ let IoMenuOptions = class IoMenuOptions extends IoElement {
             nudge(this, this.$parent, this.direction, true);
         }
     }
-    changed() {
+    mutated() {
         const vChildren = this.widget ? [this.widget] : [];
         if (this.searchable) {
             vChildren.push(ioString({
@@ -237,37 +237,37 @@ let IoMenuOptions = class IoMenuOptions extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: MenuOption })
+    Property({ type: MenuOption })
 ], IoMenuOptions.prototype, "option", void 0);
 __decorate([
-    ReactiveProperty({ value: false, reflect: true })
+    Property({ value: false, reflect: true })
 ], IoMenuOptions.prototype, "expanded", void 0);
 __decorate([
-    ReactiveProperty({ value: false, reflect: true })
+    Property({ value: false, reflect: true })
 ], IoMenuOptions.prototype, "horizontal", void 0);
 __decorate([
-    ReactiveProperty(false)
+    Property(false)
 ], IoMenuOptions.prototype, "searchable", void 0);
 __decorate([
-    ReactiveProperty('')
+    Property('')
 ], IoMenuOptions.prototype, "search", void 0);
 __decorate([
-    ReactiveProperty({ value: 'none', reflect: true })
+    Property({ value: 'none', reflect: true })
 ], IoMenuOptions.prototype, "direction", void 0);
 __decorate([
-    ReactiveProperty(100)
+    Property(100)
 ], IoMenuOptions.prototype, "depth", void 0);
 __decorate([
-    ReactiveProperty({ value: '', reflect: true })
+    Property({ value: '', reflect: true })
 ], IoMenuOptions.prototype, "overflow", void 0);
 __decorate([
-    ReactiveProperty(null)
+    Property(null)
 ], IoMenuOptions.prototype, "widget", void 0);
 __decorate([
-    Property()
+    Field()
 ], IoMenuOptions.prototype, "$parent", void 0);
 __decorate([
-    Property('listbox')
+    Field('listbox')
 ], IoMenuOptions.prototype, "role", void 0);
 IoMenuOptions = __decorate([
     Register

@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding } from '@io-gui/core';
+import { ReactiveElement, IoElementProps, WithBinding } from '@io-gui/core';
 export type IoMarkdownProps = IoElementProps & {
     src?: string;
     strip?: string[];
@@ -9,7 +9,7 @@ export type IoMarkdownProps = IoElementProps & {
 /**
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
  */
-export declare class IoMarkdown extends IoElement {
+export declare class IoMarkdown extends ReactiveElement {
     static get Style(): string;
     src: string;
     strip: string[];

@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty } from '@io-gui/core';
+import { Register, Property } from '@io-gui/core';
 import { AnimationMixer, BoxGeometry, DirectionalLight, Euler, PerspectiveCamera, HemisphereLight, Matrix4, Mesh, NodeMaterial, Skeleton, SkeletonHelper, MathUtils, Group, } from 'three/webgpu';
 import { color, screenUV, hue, reflector, time, Fn, vec2, length, atan, float, sin, cos, vec3, sub, mul, pow, blendDodge, normalWorldGeometry, } from 'three/tsl';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -214,7 +214,7 @@ let IoAnimationRetargetingExample = class IoAnimationRetargetingExample extends 
     }
 };
 __decorate([
-    ReactiveProperty({ type: AnimationRetargetingExample, init: { isPlaying: true } })
+    Property({ type: AnimationRetargetingExample, init: { isPlaying: true } })
 ], IoAnimationRetargetingExample.prototype, "applet", void 0);
 IoAnimationRetargetingExample = __decorate([
     Register

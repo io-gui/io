@@ -4,10 +4,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, div } from '@io-gui/core';
+import { Register, ReactiveElement, Property, div } from '@io-gui/core';
 import { ioButton } from '@io-gui/inputs';
 import { ioPropertyEditor } from '@io-gui/editors';
-let IoBuildGeometry = class IoBuildGeometry extends IoElement {
+let IoBuildGeometry = class IoBuildGeometry extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -52,7 +52,7 @@ let IoBuildGeometry = class IoBuildGeometry extends IoElement {
         this.dispatchMutation(geometry.boundingBox);
         this.dispatchMutation(geometry.boundingSphere);
     }
-    changed() {
+    mutated() {
         const geometry = this.value;
         if (!geometry) {
             this.render([]);
@@ -107,7 +107,7 @@ let IoBuildGeometry = class IoBuildGeometry extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Object, init: null })
+    Property({ type: Object, init: null })
 ], IoBuildGeometry.prototype, "value", void 0);
 IoBuildGeometry = __decorate([
     Register

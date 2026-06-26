@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import { StorageNode, Storage, Binding, ReactiveNode, Register, ReactivePropertyDefinitions, NodeArray, Json, PropertyValues } from '@io-gui/core'
+import { StorageNode, Storage, Binding, ReactiveObject, Register, PropertyDefinitions, NodeArray, Json, PropertyValues } from '@io-gui/core'
 
 @Register
-class StoredItem extends ReactiveNode {
-  static get ReactiveProperties(): ReactivePropertyDefinitions {
+class StoredItem extends ReactiveObject {
+  static get Properties(): PropertyDefinitions {
     return {
       title: { type: String },
       completed: { type: Boolean },
@@ -14,8 +14,8 @@ class StoredItem extends ReactiveNode {
 }
 
 @Register
-class StoredModel extends ReactiveNode {
-  static get ReactiveProperties(): ReactivePropertyDefinitions {
+class StoredModel extends ReactiveObject {
+  static get Properties(): PropertyDefinitions {
     return {
       items: { type: NodeArray, init: 'this' },
     }
@@ -62,7 +62,7 @@ describe('Storage.test.ts', () => {
     expect(node.value).toBe('foo')
     expect(node.storage).toBe('local')
 
-    expect(node._reactiveProperties.get('key')).toEqual({
+    expect(node._properties.get('key')).toEqual({
       binding: undefined,
       reflect: false,
       init: undefined,
@@ -71,7 +71,7 @@ describe('Storage.test.ts', () => {
       observer: {type: 'none', observing: false},
     })
 
-    expect(node._reactiveProperties.get('value')).toEqual({
+    expect(node._properties.get('value')).toEqual({
       binding: undefined,
       reflect: false,
       init: undefined,
@@ -80,7 +80,7 @@ describe('Storage.test.ts', () => {
       observer: {type: 'none', observing: false},
     })
 
-    expect(node._reactiveProperties.get('storage')).toEqual({
+    expect(node._properties.get('storage')).toEqual({
       binding: undefined,
       reflect: false,
       init: undefined,

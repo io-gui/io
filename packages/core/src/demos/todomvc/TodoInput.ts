@@ -1,4 +1,4 @@
-import { IoElement, Register, input, ReactiveProperty, IoElementProps } from '@io-gui/core'
+import { ReactiveElement, Register, input, Property, IoElementProps } from '@io-gui/core'
 import { TodoListModel } from './TodoListModel.js'
 import { TodoItemModel } from './TodoItemModel.js'
 
@@ -6,7 +6,7 @@ type TodoInputProps = IoElementProps & {
   model?: TodoListModel
 }
 
-export class TodoInput extends IoElement {
+export class TodoInput extends ReactiveElement {
 
   static override get Style() {
     return /* css */`
@@ -16,7 +16,7 @@ export class TodoInput extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: TodoListModel})
+  @Property({type: TodoListModel})
   declare model: TodoListModel
 
   constructor(args: TodoInputProps = {}) {

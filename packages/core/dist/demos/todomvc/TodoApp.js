@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { IoElement, Register, Storage as $, section, header, h1, div, p, a, ReactiveProperty } from '@io-gui/core';
+import { ReactiveElement, Register, Storage as $, section, header, h1, div, p, a, Property } from '@io-gui/core';
 import { TodoListModel } from './TodoListModel.js';
 import { todoInput } from './TodoInput.js';
 import { todoList } from './TodoList.js';
@@ -12,7 +12,7 @@ import { todoFooter } from './TodoFooter.js';
 $.permit();
 const $route = $({ key: 'route', storage: 'hash', value: 'all' });
 const $model = $({ key: 'model', storage: 'local', value: new TodoListModel({ items: [] }) });
-export class TodoApp extends IoElement {
+export class TodoApp extends ReactiveElement {
     ready() {
         this.render([
             section({ class: 'todoapp' }, [
@@ -32,10 +32,10 @@ export class TodoApp extends IoElement {
     }
 }
 __decorate([
-    ReactiveProperty($model)
+    Property($model)
 ], TodoApp.prototype, "model", void 0);
 __decorate([
-    ReactiveProperty($route)
+    Property($route)
 ], TodoApp.prototype, "route", void 0);
 Register(TodoApp);
 export const todoApp = TodoApp.vConstructor;

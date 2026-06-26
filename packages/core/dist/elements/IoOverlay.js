@@ -4,14 +4,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { ReactiveProperty } from '../decorators/Property.js';
+import { Property } from '../decorators/Property.js';
 import { Register } from '../decorators/Register.js';
-import { IoElement } from './IoElement.js';
+import { ReactiveElement } from './ReactiveElement.js';
 let focusRestoreTarget = null;
 /**
  * Singleton full-window overlay; blocks pointer events when {@link expanded} and collapses children on backdrop click.
  */
-let IoOverlay = class IoOverlay extends IoElement {
+let IoOverlay = class IoOverlay extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -124,7 +124,7 @@ let IoOverlay = class IoOverlay extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+    Property({ value: false, type: Boolean, reflect: true })
 ], IoOverlay.prototype, "expanded", void 0);
 IoOverlay = __decorate([
     Register

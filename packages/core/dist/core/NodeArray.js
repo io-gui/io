@@ -1,6 +1,6 @@
-import { isReactiveOwner } from './ReactiveCore.js';
+import { isReactiveNode } from './ReactiveCore.js';
 /**
- * Reactive array of {@link ReactiveNode} items owned by a parent node or element.
+ * Reactive array of {@link ReactiveObject} items owned by a parent node or element.
  *
  * Use `NodeArray` as the type for reactive properties that hold collections of child
  * nodes (for example `MenuOption.options`). The constructor registers the owner as
@@ -8,12 +8,12 @@ import { isReactiveOwner } from './ReactiveCore.js';
  * parent/child links and dispatch `io-object-mutation` on the owner so change
  * handlers like `optionsMutated()` run automatically.
  *
- * Items must be {@link ReactiveNode} instances. The returned value from the
+ * Items must be {@link ReactiveObject} instances. The returned value from the
  * constructor is a proxied array — always use that reference, not the raw instance.
  *
  * @example
  * ```ts
- * @ReactiveProperty({ type: NodeArray, init: null })
+ * @Property({ type: NodeArray, init: null })
  * declare options: NodeArray<MenuOption>
  * ```
  */
@@ -28,12 +28,11 @@ export class NodeArray extends Array {
         this.node = node;
         // TODO: Avoid creating empty NodeArrays in models!
         // TODO: Test thoroughly! Check initializations with items!
-        // console.log('NodeArray constructor', args);
         this.itemMutated = this.itemMutated.bind(this);
         this.dispatchMutation = this.dispatchMutation.bind(this);
         // Owner is the primary observer
         this._observers.add(node);
-        debug: if (!isReactiveOwner(node)) {
+        debug: if (!isReactiveNode(node)) {
             console.error('NodeArray constructor called with non-node!');
         }
         // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -57,7 +56,7 @@ export class NodeArray extends Array {
                         if (newLength < oldLength) {
                             for (let i = newLength; i < oldLength; i++) {
                                 const item = target[i];
-                                if (isReactiveOwner(item)) {
+                                if (isReactiveNode(item)) {
                                     item.removeEventListener('io-object-mutation', self.itemMutated);
                                     item.removeParent(self.node);
                                 }
@@ -77,12 +76,12 @@ export class NodeArray extends Array {
                 if (!isNaN(index) && index >= 0) {
                     // TODO Prevent adding to index greater than length?
                     const oldValue = target[index];
-                    if (isReactiveOwner(oldValue) && !self._isInternalOperation) {
+                    if (isReactiveNode(oldValue) && !self._isInternalOperation) {
                         oldValue.removeEventListener('io-object-mutation', self.itemMutated);
                         oldValue.removeParent(self.node);
                     }
                     target[index] = value;
-                    if (isReactiveOwner(value) && !self._isInternalOperation) {
+                    if (isReactiveNode(value) && !self._isInternalOperation) {
                         value.addEventListener('io-object-mutation', self.itemMutated);
                         value.addParent(self.node);
                     }
@@ -111,7 +110,7 @@ export class NodeArray extends Array {
         return this.withInternalOperation(() => {
             for (let i = start; i < start + deleteCount; i++) {
                 const item = this[i];
-                if (isReactiveOwner(item)) {
+                if (isReactiveNode(item)) {
                     item.removeEventListener('io-object-mutation', this.itemMutated);
                     item.removeParent(this.node);
                 }
@@ -119,7 +118,7 @@ export class NodeArray extends Array {
             const result = super.splice(start, deleteCount, ...items);
             for (let i = start; i < start + items.length; i++) {
                 const item = this[i];
-                if (isReactiveOwner(item)) {
+                if (isReactiveNode(item)) {
                     item.addEventListener('io-object-mutation', this.itemMutated);
                     item.addParent(this.node);
                 }
@@ -133,7 +132,7 @@ export class NodeArray extends Array {
         return this.withInternalOperation(() => {
             const result = super.push(...items);
             for (const item of items) {
-                if (isReactiveOwner(item)) {
+                if (isReactiveNode(item)) {
                     item.addEventListener('io-object-mutation', this.itemMutated);
                     item.addParent(this.node);
                 }
@@ -147,7 +146,7 @@ export class NodeArray extends Array {
         return this.withInternalOperation(() => {
             const result = super.unshift(...items);
             for (const item of items) {
-                if (isReactiveOwner(item)) {
+                if (isReactiveNode(item)) {
                     item.addEventListener('io-object-mutation', this.itemMutated);
                     item.addParent(this.node);
                 }
@@ -160,7 +159,7 @@ export class NodeArray extends Array {
     pop() {
         return this.withInternalOperation(() => {
             const item = super.pop();
-            if (item !== undefined && isReactiveOwner(item)) {
+            if (item !== undefined && isReactiveNode(item)) {
                 item.removeEventListener('io-object-mutation', this.itemMutated);
                 item.removeParent(this.node);
             }
@@ -172,7 +171,7 @@ export class NodeArray extends Array {
     shift() {
         return this.withInternalOperation(() => {
             const item = super.shift();
-            if (item !== undefined && isReactiveOwner(item)) {
+            if (item !== undefined && isReactiveNode(item)) {
                 item.removeEventListener('io-object-mutation', this.itemMutated);
                 item.removeParent(this.node);
             }
@@ -210,14 +209,14 @@ export class NodeArray extends Array {
                 : Math.min(relativeEnd, len);
             for (let i = actualStart; i < actualEnd; i++) {
                 const oldItem = this[i];
-                if (oldItem !== undefined && isReactiveOwner(oldItem)) {
+                if (oldItem !== undefined && isReactiveNode(oldItem)) {
                     oldItem.removeEventListener('io-object-mutation', this.itemMutated);
                     oldItem.removeParent(this.node);
                 }
             }
             super.fill(value, actualStart, actualEnd);
             for (let i = actualStart; i < actualEnd; i++) {
-                if (isReactiveOwner(value)) {
+                if (isReactiveNode(value)) {
                     value.addEventListener('io-object-mutation', this.itemMutated);
                     value.addParent(this.node);
                 }
@@ -247,7 +246,7 @@ export class NodeArray extends Array {
                 return this;
             for (let i = actualTarget; i < actualTarget + count; i++) {
                 const oldItem = this[i];
-                if (oldItem !== undefined && isReactiveOwner(oldItem)) {
+                if (oldItem !== undefined && isReactiveNode(oldItem)) {
                     oldItem.removeEventListener('io-object-mutation', this.itemMutated);
                     oldItem.removeParent(this.node);
                 }
@@ -255,7 +254,7 @@ export class NodeArray extends Array {
             super.copyWithin(actualTarget, actualStart, actualEnd);
             for (let i = actualTarget; i < actualTarget + count; i++) {
                 const item = this[i];
-                if (isReactiveOwner(item)) {
+                if (isReactiveNode(item)) {
                     item.addEventListener('io-object-mutation', this.itemMutated);
                     item.addParent(this.node);
                 }
@@ -282,11 +281,11 @@ export class NodeArray extends Array {
             observer.dispatch('io-object-mutation', { object: this.proxy });
         }
     }
-    /** Serialize each item via its own {@link ReactiveNode.toJSON}. */
+    /** Serialize each item via its own {@link ReactiveObject.toJSON}. */
     toJSON() {
         return this.map((item) => item.toJSON());
     }
-    /** Hydrate each item from wire-format JSON via {@link ReactiveNode.applyJSON}. */
+    /** Hydrate each item from wire-format JSON via {@link ReactiveObject.applyJSON}. */
     applyJSON(json) {
         for (let i = 0; i < json.length; i++) {
             this[i].applyJSON(json[i]);
@@ -295,7 +294,7 @@ export class NodeArray extends Array {
     dispose() {
         const nodes = [...this];
         for (const item of nodes) {
-            if (isReactiveOwner(item)) {
+            if (isReactiveNode(item)) {
                 item.removeEventListener('io-object-mutation', this.itemMutated);
                 item.removeParent(this.node);
             }

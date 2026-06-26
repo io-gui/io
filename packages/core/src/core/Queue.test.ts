@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { throttle, debounce, nextQueue, ReactiveNode, CallbackFunction } from '@io-gui/core'
+import { throttle, debounce, nextQueue, ReactiveObject, CallbackFunction } from '@io-gui/core'
 
 describe('Queue', () => {
 
@@ -56,7 +56,7 @@ describe('Queue', () => {
     it('Should not execute if node is disposed', async () => {
       let count = 0
       const func = () => { count++ }
-      const node = new ReactiveNode()
+      const node = new ReactiveObject()
       node.dispose()
       throttle(func, undefined, node)
       expect(count).toBe(0)
@@ -121,7 +121,7 @@ describe('Queue', () => {
     it('Should abort if node is disposed', async () => {
       let count = 0
       const func = () => { count++ }
-      const node = new ReactiveNode()
+      const node = new ReactiveObject()
       debounce(func, undefined, node)
       node.dispose()
       await nextQueue()

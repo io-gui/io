@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, Storage as $, Property } from '@io-gui/core';
+import { Register, ReactiveElement, Property, Storage as $, Field } from '@io-gui/core';
 import { ioField, ioString } from '@io-gui/inputs';
 import { MenuOption } from '../nodes/MenuOption.js';
 import { ioMenuItem } from './IoMenuItem.js';
@@ -35,7 +35,7 @@ function addMenuOptionsOrTreeBranches(option, depth, d = 0) {
         }
     return elements;
 }
-let IoMenuTree = class IoMenuTree extends IoElement {
+let IoMenuTree = class IoMenuTree extends ReactiveElement {
     static get Style() {
         return /* css */ `
     :host {
@@ -72,9 +72,9 @@ let IoMenuTree = class IoMenuTree extends IoElement {
     }
     // TODO: Test
     optionMutated() {
-        this.changed();
+        this.mutated();
     }
-    changed() {
+    mutated() {
         const vChildren = this.widget ? [this.widget] : [];
         if (this.searchable) {
             vChildren.push(ioString({
@@ -102,25 +102,25 @@ let IoMenuTree = class IoMenuTree extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: MenuOption })
+    Property({ type: MenuOption })
 ], IoMenuTree.prototype, "option", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean })
+    Property({ value: false, type: Boolean })
 ], IoMenuTree.prototype, "searchable", void 0);
 __decorate([
-    ReactiveProperty({ value: '', type: String })
+    Property({ value: '', type: String })
 ], IoMenuTree.prototype, "search", void 0);
 __decorate([
-    ReactiveProperty({ value: Infinity, type: Number })
+    Property({ value: Infinity, type: Number })
 ], IoMenuTree.prototype, "depth", void 0);
 __decorate([
-    ReactiveProperty(null)
+    Property(null)
 ], IoMenuTree.prototype, "widget", void 0);
 __decorate([
-    Property()
+    Field()
 ], IoMenuTree.prototype, "$parent", void 0);
 __decorate([
-    Property('listbox')
+    Field('listbox')
 ], IoMenuTree.prototype, "role", void 0);
 IoMenuTree = __decorate([
     Register

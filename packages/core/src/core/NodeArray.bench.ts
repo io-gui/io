@@ -1,12 +1,12 @@
 import { test } from 'vitest'
 import { Register } from '../decorators/Register.js'
-import { ReactiveNode, ReactivePropertyDefinitions } from '../nodes/ReactiveNode.js'
+import { ReactiveObject, PropertyDefinitions } from '../nodes/ReactiveObject.js'
 import { NodeArray } from './NodeArray.js'
 import { BENCH_OPTIONS } from '../testing.js'
 
 @Register
-class BenchArrayNode extends ReactiveNode {
-  static override get ReactiveProperties(): ReactivePropertyDefinitions {
+class BenchArrayNode extends ReactiveObject {
+  static override get Properties(): PropertyDefinitions {
     return {
       items: {type: NodeArray, init: 'this'},
     }
@@ -15,8 +15,8 @@ class BenchArrayNode extends ReactiveNode {
 }
 
 @Register
-class BenchItemNode extends ReactiveNode {
-  static override get ReactiveProperties(): ReactivePropertyDefinitions {
+class BenchItemNode extends ReactiveObject {
+  static override get Properties(): PropertyDefinitions {
     return { n: 0 }
   }
 }

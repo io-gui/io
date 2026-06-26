@@ -73,7 +73,7 @@ let IoSwitch = class IoSwitch extends IoBoolean {
       }
     `;
     }
-    changed() {
+    mutated() {
         this.render([
             this.icon ? ioIcon({ value: this.icon }) : null,
             span()

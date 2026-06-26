@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, Property } from '@io-gui/core';
+import { Register, Property, Field } from '@io-gui/core';
 import { IoSliderBase } from './IoSliderBase.js';
 let IoSlider2d = class IoSlider2d extends IoSliderBase {
     static get Style() {
@@ -79,19 +79,19 @@ let IoSlider2d = class IoSlider2d extends IoSliderBase {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Array, value: undefined, init: [0, 0] }) // TODO: Remove value: undefined
+    Property({ type: Array, value: undefined, init: [0, 0] }) // TODO: Remove value: undefined
 ], IoSlider2d.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty({ type: Array, value: undefined, init: [0.01, 0.01] }) // TODO: Remove value: undefined
+    Property({ type: Array, value: undefined, init: [0.01, 0.01] }) // TODO: Remove value: undefined
 ], IoSlider2d.prototype, "step", void 0);
 __decorate([
-    ReactiveProperty({ type: Array, value: undefined, init: [-1, -1] }) // TODO: Remove value: undefined
+    Property({ type: Array, value: undefined, init: [-1, -1] }) // TODO: Remove value: undefined
 ], IoSlider2d.prototype, "min", void 0);
 __decorate([
-    ReactiveProperty({ type: Array, value: undefined, init: [1, 1] }) // TODO: Remove value: undefined
+    Property({ type: Array, value: undefined, init: [1, 1] }) // TODO: Remove value: undefined
 ], IoSlider2d.prototype, "max", void 0);
 __decorate([
-    Property(true)
+    Field(true)
 ], IoSlider2d.prototype, "noscroll", void 0);
 IoSlider2d = __decorate([
     Register

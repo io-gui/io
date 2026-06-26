@@ -19,7 +19,7 @@ declare class IoTabDragIcon extends IoField {
     private calculateSplitDirection;
     endDrag(): void;
     cancelDrag(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const tabDragIconSingleton: IoTabDragIcon;
 export {};

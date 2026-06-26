@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { ReactiveProperty, Register } from '@io-gui/core';
+import { Property, Register } from '@io-gui/core';
 import { ThreeApplet, IoThreeExample } from '@io-gui/three';
 import { AnimationMixer, Group, Mesh, MeshStandardNodeMaterial, SphereGeometry, SpotLight, MathUtils, NeutralToneMapping, } from 'three/webgpu';
 import { float, vec3, color, viewportSharedTexture, hue, blendOverlay, posterize, grayscale, saturation, viewportSafeUV, screenUV, checker, uv, time, oscSine, output, } from 'three/tsl';
@@ -75,7 +75,7 @@ let BackdropExample = class BackdropExample extends ThreeApplet {
     }
 };
 __decorate([
-    ReactiveProperty({ type: AnimationMixer, init: new Group() })
+    Property({ type: AnimationMixer, init: new Group() })
 ], BackdropExample.prototype, "mixer", void 0);
 BackdropExample = __decorate([
     Register
@@ -84,7 +84,7 @@ export { BackdropExample };
 let IoBackdropExample = class IoBackdropExample extends IoThreeExample {
 };
 __decorate([
-    ReactiveProperty({ type: BackdropExample, init: { isPlaying: true } })
+    Property({ type: BackdropExample, init: { isPlaying: true } })
 ], IoBackdropExample.prototype, "applet", void 0);
 IoBackdropExample = __decorate([
     Register

@@ -1,6 +1,6 @@
 import { test } from 'vitest'
 import { Register } from '../decorators/Register.js'
-import { ReactiveNode, ReactivePropertyDefinitions } from '../nodes/ReactiveNode.js'
+import { ReactiveObject, PropertyDefinitions } from '../nodes/ReactiveObject.js'
 import { Binding } from './Binding.js'
 import { BENCH_OPTIONS } from '../testing.js'
 
@@ -8,10 +8,10 @@ const BINDING_COUNT = 500
 const TARGET_COUNT = 10
 
 @Register
-class BenchBindingNode extends ReactiveNode {
+class BenchBindingNode extends ReactiveObject {
   declare source: number
-  static override get ReactiveProperties(): ReactivePropertyDefinitions {
-    const props: ReactivePropertyDefinitions = { source: 0 }
+  static override get Properties(): PropertyDefinitions {
+    const props: PropertyDefinitions = { source: 0 }
     for (let i = 0; i < TARGET_COUNT; i++) {
       props[`t${i}`] = 0
     }

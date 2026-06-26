@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, IoElementProps, WithBinding } from '@io-gui/core';
+import { ReactiveElement, VDOMElement, IoElementProps, WithBinding } from '@io-gui/core';
 import { MenuOption } from '../nodes/MenuOption.js';
 import { IoMenuItem } from './IoMenuItem.js';
 export type IoMenuTreeProps = IoElementProps & {
@@ -8,7 +8,7 @@ export type IoMenuTreeProps = IoElementProps & {
     depth?: number;
     widget?: VDOMElement | null;
 };
-export declare class IoMenuTree extends IoElement {
+export declare class IoMenuTree extends ReactiveElement {
     static get Style(): string;
     option: MenuOption;
     searchable: boolean;
@@ -20,6 +20,6 @@ export declare class IoMenuTree extends IoElement {
     constructor(args?: IoMenuTreeProps);
     onResized(): void;
     optionMutated(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioMenuTree: (arg0?: IoMenuTreeProps) => VDOMElement;

@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, span, ThemeSingleton } from '@io-gui/core';
+import { Register, Property, span, ThemeSingleton } from '@io-gui/core';
 import { IoField } from '@io-gui/inputs';
 import { ioIcon } from '@io-gui/icons';
 import { ioTabDropRectSingleton } from './IoTabDropRect.js';
@@ -152,7 +152,7 @@ let IoTabDragIcon = class IoTabDragIcon extends IoField {
             dropIndex: -1,
         });
     }
-    changed() {
+    mutated() {
         ioTabDropRectSingleton.setProperties({
             dropTarget: this.dropTarget,
             splitDirection: this.splitDirection,
@@ -165,22 +165,22 @@ let IoTabDragIcon = class IoTabDragIcon extends IoField {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Boolean, reflect: true })
+    Property({ type: Boolean, reflect: true })
 ], IoTabDragIcon.prototype, "dragging", void 0);
 __decorate([
-    ReactiveProperty()
+    Property()
 ], IoTabDragIcon.prototype, "tab", void 0);
 __decorate([
-    ReactiveProperty()
+    Property()
 ], IoTabDragIcon.prototype, "dropSource", void 0);
 __decorate([
-    ReactiveProperty()
+    Property()
 ], IoTabDragIcon.prototype, "dropTarget", void 0);
 __decorate([
-    ReactiveProperty({ type: String, value: 'none', reflect: true })
+    Property({ type: String, value: 'none', reflect: true })
 ], IoTabDragIcon.prototype, "splitDirection", void 0);
 __decorate([
-    ReactiveProperty({ type: Number, value: -1 })
+    Property({ type: Number, value: -1 })
 ], IoTabDragIcon.prototype, "dropIndex", void 0);
 IoTabDragIcon = __decorate([
     Register

@@ -50,7 +50,7 @@ let IoColorRgba = class IoColorRgba extends IoColorBase {
         }
         this.dispatch('value-input', { property: 'value', value: this.value }, false);
     }
-    changed() {
+    mutated() {
         this.render([
             // Consider removing global id collisions.
             ioNumber({ id: 'r', value: this.value.r, min: 0, max: 1, step: 0.001, ladder: true, '@value-input': this._onNumberValueInput }),

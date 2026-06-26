@@ -1,9 +1,9 @@
-import { IoElement, IoElementProps } from '@io-gui/core';
+import { ReactiveElement, IoElementProps } from '@io-gui/core';
 import { TodoListModel } from './TodoListModel.js';
 type TodoInputProps = IoElementProps & {
     model?: TodoListModel;
 };
-export declare class TodoInput extends IoElement {
+export declare class TodoInput extends ReactiveElement {
     static get Style(): string;
     model: TodoListModel;
     constructor(args?: TodoInputProps);

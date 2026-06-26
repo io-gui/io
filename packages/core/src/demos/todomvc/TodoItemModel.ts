@@ -1,4 +1,4 @@
-import { ReactiveNode, Register, ReactiveProperty } from '@io-gui/core'
+import { ReactiveObject, Register, Property } from '@io-gui/core'
 
 
 export type TodoItemProps = {
@@ -6,12 +6,12 @@ export type TodoItemProps = {
   completed: boolean
 }
 
-export class TodoItemModel extends ReactiveNode {
+export class TodoItemModel extends ReactiveObject {
 
-  @ReactiveProperty({type: String})
+  @Property({type: String})
   declare title: string
 
-  @ReactiveProperty({type: Boolean})
+  @Property({type: Boolean})
   declare completed: boolean
 
   toggle = () => {

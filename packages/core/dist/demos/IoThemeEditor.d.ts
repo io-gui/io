@@ -1,6 +1,6 @@
-import { IoElement } from '@io-gui/core';
+import { ReactiveElement } from '@io-gui/core';
 /** @internal Demo: live theme variable editor. */
-export declare class IoThemeEditor extends IoElement {
+export declare class IoThemeEditor extends ReactiveElement {
     static get Style(): string;
     constructor(props: any);
 }

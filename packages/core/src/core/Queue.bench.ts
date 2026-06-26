@@ -1,12 +1,12 @@
 import { test } from 'vitest'
-import { ReactiveNode } from '../nodes/ReactiveNode.js'
+import { ReactiveObject } from '../nodes/ReactiveObject.js'
 import { throttle, debounce, clearNodeQueue } from './Queue.js'
 import { BENCH_OPTIONS } from '../testing.js'
 
 const noop = () => {}
 
 test('Queue', async ({ bench }) => {
-  let node!: ReactiveNode
+  let node!: ReactiveObject
 
   await bench('debounce 500 unique', () => {
     for (let i = 0; i < 500; i++) {
@@ -34,7 +34,7 @@ test('Queue', async ({ bench }) => {
 
   await bench('debounce with node 500 unique', {
     beforeEach: () => {
-      node = new ReactiveNode()
+      node = new ReactiveObject()
     },
     afterEach: () => {
       node.dispose()
@@ -47,7 +47,7 @@ test('Queue', async ({ bench }) => {
 
   await bench('throttle with node 500 unique', {
     beforeEach: () => {
-      node = new ReactiveNode()
+      node = new ReactiveObject()
     },
     afterEach: () => {
       node.dispose()
@@ -60,7 +60,7 @@ test('Queue', async ({ bench }) => {
 
   await bench('clearNodeQueue 500 pending', {
     beforeEach: () => {
-      node = new ReactiveNode()
+      node = new ReactiveObject()
     },
     afterEach: () => {
       node.dispose()

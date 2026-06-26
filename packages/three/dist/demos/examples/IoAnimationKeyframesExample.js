@@ -8,7 +8,7 @@ import { AnimationMixer, Color, Object3D, PerspectiveCamera, PMREMGenerator } fr
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-import { Register, ReactiveProperty } from '@io-gui/core';
+import { Register, Property } from '@io-gui/core';
 import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
 import { ioSplit, Split } from '@io-gui/layout';
 let AnimationKeyframesExample = class AnimationKeyframesExample extends ThreeApplet {
@@ -98,7 +98,7 @@ let IoAnimationKeyframesExample = class IoAnimationKeyframesExample extends IoTh
     }
 };
 __decorate([
-    ReactiveProperty({ type: AnimationKeyframesExample, init: { isPlaying: true } })
+    Property({ type: AnimationKeyframesExample, init: { isPlaying: true } })
 ], IoAnimationKeyframesExample.prototype, "applet", void 0);
 IoAnimationKeyframesExample = __decorate([
     Register

@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, ReactivityType, Change, WithBinding } from '@io-gui/core';
+import { ReactiveElement, IoElementProps, ReactivityType, Change, WithBinding } from '@io-gui/core';
 import { WebGPURenderer } from 'three/webgpu';
 import { ThreeApplet } from '../nodes/ThreeApplet.js';
 import { ViewCameras } from '../nodes/ViewCameras.js';
@@ -12,7 +12,7 @@ export type IoThreeViewportProps = IoElementProps & {
     renderer?: WebGPURenderer;
     tool?: WithBinding<ToolBase>;
 };
-export declare class IoThreeViewport extends IoElement {
+export declare class IoThreeViewport extends ReactiveElement {
     width: number;
     height: number;
     visible: boolean;
@@ -27,6 +27,8 @@ export declare class IoThreeViewport extends IoElement {
     tool: ToolBase;
     tabIndex: number;
     private renderTarget;
+    private isWebGPUBackend;
+    private attachSurface;
     static get Style(): string;
     static get Listeners(): {
         'three-applet-needs-render': string;
@@ -41,7 +43,7 @@ export declare class IoThreeViewport extends IoElement {
     appletChanged(): void;
     appletMutated(): void;
     viewCamerasMutated(): void;
-    changed(): void;
+    mutated(): void;
     renderViewportDebounced(): void;
     renderViewport(): void;
     dispose(): void;

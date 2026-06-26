@@ -1,8 +1,8 @@
-import { ReactiveProperty } from '../decorators/Property.js'
+import { Property } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
 import { Binding } from '../core/Binding.js'
-import { isIoValue } from '../core/ReactiveCore.js'
-import { ReactiveNode, ReactiveNodeProps, AnyConstructor, constructType } from '../nodes/ReactiveNode.js'
+import { isReactiveNode } from '../core/ReactiveCore.js'
+import { ReactiveObject, ReactiveNodeProps, AnyConstructor, constructType } from '../nodes/ReactiveObject.js'
 
 class EmulatedLocalStorage {
   declare store: Map<string, unknown>
@@ -120,15 +120,15 @@ export type StorageProps<T = unknown> = ReactiveNodeProps & {
  * @example Storage({ key: 'theme', value: 'light', storage: 'local' })
  */
 @Register
-export class StorageNode extends ReactiveNode {
+export class StorageNode extends ReactiveObject {
 
-  @ReactiveProperty({value: '', type: String})
+  @Property({value: '', type: String})
   declare key: string
 
-  @ReactiveProperty()
+  @Property()
   declare value: unknown
 
-  @ReactiveProperty({value: 'local', type: String})
+  @Property({value: 'local', type: String})
   declare storage: 'hash' | 'local' | 'none'
 
   declare binding: Binding<StorageNode['value']>
@@ -175,8 +175,8 @@ export class StorageNode extends ReactiveNode {
       if (storedValue !== null) {
         try {
           const parsed = JSON.parse(storedValue)
-          if (isIoValue(props.value)) {
-            (props.value as ReactiveNode).applyJSON(parsed)
+          if (isReactiveNode(props.value)) {
+            (props.value as ReactiveObject).applyJSON(parsed)
           } else {
             const constructed = constructor ? constructType(constructor, parsed) : parsed
             props.value = constructed
@@ -219,9 +219,9 @@ export class StorageNode extends ReactiveNode {
     nodes[s].delete(this.key)
   }
   valueMutated() {
-    this.debounce(this.changed, undefined, 1)
+    this.debounce(this.mutated, undefined, 1)
   }
-  override changed() {
+  override mutated() {
     switch (this.storage) {
       case 'hash': {
         this.saveValueToHash()

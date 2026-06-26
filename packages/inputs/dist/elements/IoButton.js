@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, span, Property } from '@io-gui/core';
+import { Register, Property, span, Field } from '@io-gui/core';
 import { ioIcon } from '@io-gui/icons';
 import { IoField } from './IoField.js';
 /**
@@ -47,9 +47,9 @@ let IoButton = class IoButton extends IoField {
         this.dispatch('io-button-clicked', { value: this.value }, true);
     }
     ready() {
-        this.changed();
+        this.mutated();
     }
-    changed() {
+    mutated() {
         this.setAttribute('aria-pressed', String(this.pressed));
         this.render([
             this.icon ? ioIcon({ value: this.icon }) : null,
@@ -58,16 +58,16 @@ let IoButton = class IoButton extends IoField {
     }
 };
 __decorate([
-    ReactiveProperty({ value: undefined })
+    Property({ value: undefined })
 ], IoButton.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty()
+    Property()
 ], IoButton.prototype, "action", void 0);
 __decorate([
-    ReactiveProperty({ value: 'outset', type: String, reflect: true })
+    Property({ value: 'outset', type: String, reflect: true })
 ], IoButton.prototype, "appearance", void 0);
 __decorate([
-    Property('button')
+    Field('button')
 ], IoButton.prototype, "role", void 0);
 IoButton = __decorate([
     Register

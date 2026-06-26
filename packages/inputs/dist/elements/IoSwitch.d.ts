@@ -4,6 +4,6 @@ import { IoBoolean, IoBooleanProps } from './IoBoolean.js';
  **/
 export declare class IoSwitch extends IoBoolean {
     static get Style(): string;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioSwitch: (arg0?: IoBooleanProps) => import("@io-gui/core").VDOMElement;

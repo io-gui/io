@@ -1,9 +1,9 @@
 import { describe, it, expect, vi } from 'vitest'
-import { ReactiveNode, Register, ReactivePropertyDefinitions, NodeArray } from '@io-gui/core'
+import { ReactiveObject, Register, PropertyDefinitions, NodeArray } from '@io-gui/core'
 
 @Register
-class LabelNode extends ReactiveNode {
-  static get ReactiveProperties(): ReactivePropertyDefinitions {
+class LabelNode extends ReactiveObject {
+  static get Properties(): PropertyDefinitions {
     return {
       label: ''
     }
@@ -13,8 +13,8 @@ class LabelNode extends ReactiveNode {
 }
 
 @Register
-class ScoreNode extends ReactiveNode {
-  static get ReactiveProperties(): ReactivePropertyDefinitions {
+class ScoreNode extends ReactiveObject {
+  static get Properties(): PropertyDefinitions {
     return {
       score: { type: Number, value: 0 },
     }
@@ -24,8 +24,8 @@ class ScoreNode extends ReactiveNode {
 }
 
 @Register
-class ItemstNode extends ReactiveNode {
-  static get ReactiveProperties(): ReactivePropertyDefinitions {
+class ItemstNode extends ReactiveObject {
+  static get Properties(): PropertyDefinitions {
     return {
       items: {type: Array, init: null}
     }
@@ -468,8 +468,8 @@ describe('NodeArray', () => {
 
     it('round-trips through parent node applyJSON', () => {
       @Register
-      class ItemsNode extends ReactiveNode {
-        static get ReactiveProperties(): ReactivePropertyDefinitions {
+      class ItemsNode extends ReactiveObject {
+        static get Properties(): PropertyDefinitions {
           return {
             items: { type: NodeArray, init: 'this' },
           }
@@ -492,8 +492,8 @@ describe('NodeArray', () => {
   describe('array assignment', () => {
     it('replaces items without duplicate mutation listeners when keeping existing items', () => {
       @Register
-      class ItemsNode extends ReactiveNode {
-        static get ReactiveProperties(): ReactivePropertyDefinitions {
+      class ItemsNode extends ReactiveObject {
+        static get Properties(): PropertyDefinitions {
           return {
             items: { type: NodeArray, init: 'this' },
           }

@@ -1,4 +1,4 @@
-import { ReactiveNode, ReactiveNodeProps } from '@io-gui/core';
+import { ReactiveObject, ReactiveNodeProps } from '@io-gui/core';
 import { IoThreeViewport } from '../elements/IoThreeViewport';
 import { Vector2, Ray } from 'three/webgpu';
 import { ThreeApplet } from './ThreeApplet';
@@ -14,7 +14,7 @@ export interface Pointer3D {
     rayStart: Ray;
     rayMovement: Ray;
 }
-export declare class ToolBase extends ReactiveNode {
+export declare class ToolBase extends ReactiveObject {
     applet: ThreeApplet;
     private readonly _viewports;
     private _activePointers;

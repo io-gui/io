@@ -134,9 +134,9 @@ export const constructElement = function (vDOMElement) {
     }
     const props = vDOMElement.props || {};
     let element;
-    // IoElement classes constructed with constructor.
+    // ReactiveElement classes constructed with constructor.
     const ConstructorClass = window.customElements ? window.customElements.get(vDOMElement.tag) : null;
-    if (ConstructorClass && ConstructorClass.prototype?._isIoElement) {
+    if (ConstructorClass && ConstructorClass.prototype?._isReactiveElement) {
         element = new ConstructorClass(props);
     }
     else {

@@ -8,7 +8,7 @@ import { AmbientLight, DodecahedronGeometry, Group, InstancedBufferAttribute, Me
 import { instancedBufferAttribute, texture, float, color } from 'three/tsl';
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
-import { Register, ReactiveProperty } from '@io-gui/core';
+import { Register, Property } from '@io-gui/core';
 import { ThreeApplet, IoThreeExample } from '@io-gui/three';
 import { ioSplit, Split } from '@io-gui/layout';
 import { ioThreeViewport } from '@io-gui/three';
@@ -117,7 +117,7 @@ let IoGeometryConvexExample = class IoGeometryConvexExample extends IoThreeExamp
     }
 };
 __decorate([
-    ReactiveProperty({ type: GeometryConvexExample, init: { isPlaying: true } })
+    Property({ type: GeometryConvexExample, init: { isPlaying: true } })
 ], IoGeometryConvexExample.prototype, "applet", void 0);
 IoGeometryConvexExample = __decorate([
     Register

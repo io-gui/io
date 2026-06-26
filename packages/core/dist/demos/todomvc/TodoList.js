@@ -5,10 +5,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 //@ts-nocheck
-import { IoElement, Register, section, input, label, ul, ReactiveProperty } from '@io-gui/core';
+import { ReactiveElement, Register, section, input, label, ul, Property } from '@io-gui/core';
 import { TodoListModel } from './TodoListModel.js';
 import { todoItem } from './TodoItem.js';
-export class TodoList extends IoElement {
+export class TodoList extends ReactiveElement {
     static get Style() {
         return /* CSS */ `
       :host {
@@ -20,9 +20,9 @@ export class TodoList extends IoElement {
         super(args);
     }
     modelMutated() {
-        this.changed();
+        this.mutated();
     }
-    changed() {
+    mutated() {
         const itemsInRoute = this.model.items.filter(this.model.filters[this.route]);
         this.render([
             section({ class: 'main' }, [
@@ -34,10 +34,10 @@ export class TodoList extends IoElement {
     }
 }
 __decorate([
-    ReactiveProperty({ type: TodoListModel })
+    Property({ type: TodoListModel })
 ], TodoList.prototype, "model", void 0);
 __decorate([
-    ReactiveProperty({ value: 'all' })
+    Property({ value: 'all' })
 ], TodoList.prototype, "route", void 0);
 Register(TodoList);
 export const todoList = function (arg0) {

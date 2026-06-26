@@ -62,5 +62,5 @@ export declare class IoSliderBase extends IoGl {
     valueChanged(): void;
     invalidChanged(): void;
     valueMutated(): void;
-    changed(): void;
+    mutated(): void;
 }

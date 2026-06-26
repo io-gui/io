@@ -1,7 +1,7 @@
-import { IoElement } from '@io-gui/core';
-export declare class IoSlidersDemo extends IoElement {
+import { ReactiveElement } from '@io-gui/core';
+export declare class IoSlidersDemo extends ReactiveElement {
     static get Style(): string;
-    static get ReactiveProperties(): {
+    static get Properties(): {
         number: number;
         array2: number[];
     };

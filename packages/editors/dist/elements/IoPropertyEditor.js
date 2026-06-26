@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { IoElement, ReactiveProperty, Register, span, div, HTML_ELEMENTS } from '@io-gui/core';
+import { ReactiveElement, Property, Register, span, div, HTML_ELEMENTS } from '@io-gui/core';
 import { getEditorConfig } from '../utils/EditorConfig.js';
 import { getEditorGroups, getAllPropertyNames } from '../utils/EditorGroups.js';
 import { getEditorWidget } from '../utils/EditorWidgets.js';
@@ -12,7 +12,7 @@ import { ioObject } from './IoObject.js';
 /**
  * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
  **/
-let IoPropertyEditor = class IoPropertyEditor extends IoElement {
+let IoPropertyEditor = class IoPropertyEditor extends ReactiveElement {
     static get Style() {
         return /* css */ `
     :host {
@@ -76,7 +76,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
         const id = event.target.id;
         if (id !== undefined) {
             this.value[id] = event.detail.value;
-            if (!this.value._isNode) {
+            if (!this.value._isReactiveObject) {
                 this.dispatchMutation(this.value);
             }
         }
@@ -208,7 +208,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
     valueMutated() {
         this.throttle(this.changedThrottled);
     }
-    changed() {
+    mutated() {
         this.throttle(this.changedThrottled);
     }
     changedThrottled() {
@@ -228,28 +228,28 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty()
+    Property()
 ], IoPropertyEditor.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty({ type: Array })
+    Property({ type: Array })
 ], IoPropertyEditor.prototype, "properties", void 0);
 __decorate([
-    ReactiveProperty({ type: String, value: '' })
+    Property({ type: String, value: '' })
 ], IoPropertyEditor.prototype, "label", void 0);
 __decorate([
-    ReactiveProperty(true)
+    Property(true)
 ], IoPropertyEditor.prototype, "labeled", void 0);
 __decorate([
-    ReactiveProperty('80px')
+    Property('80px')
 ], IoPropertyEditor.prototype, "labelWidth", void 0);
 __decorate([
-    ReactiveProperty({ type: Array, init: null })
+    Property({ type: Array, init: null })
 ], IoPropertyEditor.prototype, "config", void 0);
 __decorate([
-    ReactiveProperty({ type: Object, init: null })
+    Property({ type: Object, init: null })
 ], IoPropertyEditor.prototype, "groups", void 0);
 __decorate([
-    ReactiveProperty({ type: Object })
+    Property({ type: Object })
 ], IoPropertyEditor.prototype, "widget", void 0);
 IoPropertyEditor = __decorate([
     Register

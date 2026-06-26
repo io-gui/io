@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { ReactiveProperty, Register } from '@io-gui/core';
+import { Property, Register } from '@io-gui/core';
 import { AnimationAction, AnimationMixer, AnimationUtils, Color, DirectionalLight, Fog, Group, HemisphereLight, Mesh, MeshPhongMaterial, PlaneGeometry, } from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
@@ -159,7 +159,7 @@ let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBl
     }
 };
 __decorate([
-    ReactiveProperty({ type: Boolean, value: false })
+    Property({ type: Boolean, value: false })
 ], AnimationSkinningAdditiveBlendingExample.prototype, "isLoaded", void 0);
 AnimationSkinningAdditiveBlendingExample = __decorate([
     Register
@@ -240,7 +240,7 @@ let IoAnimationSkinningAdditiveBlendingExample = class IoAnimationSkinningAdditi
     }
 };
 __decorate([
-    ReactiveProperty({ type: AnimationSkinningAdditiveBlendingExample, init: { isPlaying: true } })
+    Property({ type: AnimationSkinningAdditiveBlendingExample, init: { isPlaying: true } })
 ], IoAnimationSkinningAdditiveBlendingExample.prototype, "applet", void 0);
 IoAnimationSkinningAdditiveBlendingExample = __decorate([
     Register

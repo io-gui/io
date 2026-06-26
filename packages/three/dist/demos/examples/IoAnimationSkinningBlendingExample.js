@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { ReactiveProperty, Register } from '@io-gui/core';
+import { Property, Register } from '@io-gui/core';
 import { AnimationAction, AnimationMixer, Color, DirectionalLight, Fog, Group, HemisphereLight, Mesh, MeshPhongMaterial, PerspectiveCamera, PlaneGeometry, } from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
@@ -168,13 +168,13 @@ let AnimationSkinningBlendingExample = class AnimationSkinningBlendingExample ex
     }
 };
 __decorate([
-    ReactiveProperty({ type: Boolean, value: false })
+    Property({ type: Boolean, value: false })
 ], AnimationSkinningBlendingExample.prototype, "isActive", void 0);
 __decorate([
-    ReactiveProperty({ type: Boolean, value: false })
+    Property({ type: Boolean, value: false })
 ], AnimationSkinningBlendingExample.prototype, "isPlaying", void 0);
 __decorate([
-    ReactiveProperty({ type: Boolean, value: false })
+    Property({ type: Boolean, value: false })
 ], AnimationSkinningBlendingExample.prototype, "isCrossfading", void 0);
 AnimationSkinningBlendingExample = __decorate([
     Register
@@ -260,7 +260,7 @@ let IoAnimationSkinningBlendingExample = class IoAnimationSkinningBlendingExampl
     }
 };
 __decorate([
-    ReactiveProperty({ type: AnimationSkinningBlendingExample, init: { isPlaying: true } })
+    Property({ type: AnimationSkinningBlendingExample, init: { isPlaying: true } })
 ], IoAnimationSkinningBlendingExample.prototype, "applet", void 0);
 IoAnimationSkinningBlendingExample = __decorate([
     Register

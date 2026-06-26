@@ -1,6 +1,6 @@
-import { IoElement } from '@io-gui/core';
+import { ReactiveElement } from '@io-gui/core';
 import { TodoListModel } from './TodoListModel.js';
-export declare class TodoApp extends IoElement {
+export declare class TodoApp extends ReactiveElement {
     model: TodoListModel;
     route: string;
     ready(): void;

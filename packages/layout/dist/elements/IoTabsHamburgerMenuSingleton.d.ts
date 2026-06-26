@@ -1,4 +1,4 @@
-import { NudgeDirection, NodeArray, IoElement, IoElementProps, ListenerDefinition } from '@io-gui/core';
+import { NudgeDirection, NodeArray, ReactiveElement, IoElementProps, ListenerDefinition } from '@io-gui/core';
 import { Tab } from '../nodes/Tab.js';
 export interface IoTabsHamburgerMenuExpandProps {
     source: HTMLElement;
@@ -6,7 +6,7 @@ export interface IoTabsHamburgerMenuExpandProps {
     tabs: NodeArray<Tab>;
     onEditTab: (event: CustomEvent) => void;
 }
-declare class IoTabsHamburgerMenu extends IoElement {
+declare class IoTabsHamburgerMenu extends ReactiveElement {
     static get Style(): string;
     private tabs;
     private expanded;
@@ -22,7 +22,7 @@ declare class IoTabsHamburgerMenu extends IoElement {
     onEditTabCapture(event: CustomEvent): void;
     expand(props: IoTabsHamburgerMenuExpandProps): void;
     onExpand(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioTabsHamburgerMenuSingleton: IoTabsHamburgerMenu;
 export {};

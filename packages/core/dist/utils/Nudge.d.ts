@@ -1,4 +1,4 @@
-import { IoElement } from '../elements/IoElement.js';
+import { ReactiveElement } from '../elements/ReactiveElement.js';
 /**
  * Nudge direction.
  *
@@ -7,4 +7,4 @@ import { IoElement } from '../elements/IoElement.js';
  *
  */
 export type NudgeDirection = 'none' | 'up' | 'left' | 'down' | 'right' | 'over';
-export declare function nudge(element: HTMLElement | IoElement, srcElement: HTMLElement | IoElement, direction: NudgeDirection, doClip?: boolean): void;
+export declare function nudge(element: HTMLElement | ReactiveElement, srcElement: HTMLElement | ReactiveElement, direction: NudgeDirection, doClip?: boolean): void;

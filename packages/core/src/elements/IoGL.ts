@@ -1,9 +1,9 @@
 import { Register } from '../decorators/Register.js'
-import { ReactiveProperty } from '../decorators/Property.js'
-import { ReactivePropertyInstance, ReactivePropertyDefinition } from '../core/ReactiveProperty.js'
-import { ReactiveNode } from '../nodes/ReactiveNode.js'
+import { Property } from '../decorators/Property.js'
+import { PropertyInstance, PropertyDefinition } from '../core/Property.js'
+import { ReactiveObject } from '../nodes/ReactiveObject.js'
 import { ThemeSingleton } from '../nodes/Theme.js'
-import { IoElement, IoElementProps } from './IoElement.js'
+import { ReactiveElement, IoElementProps } from './ReactiveElement.js'
 import { glsl } from './IoGL.glsl.js'
 import { Color } from '../core/Color.js'
 
@@ -56,7 +56,7 @@ function getUniformLocation(program: WebGLProgram, name: string) {
 
 /** WebGL canvas element with shared context and shader program cache. */
 @Register
-export class IoGl extends IoElement {
+export class IoGl extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host {
@@ -79,16 +79,16 @@ export class IoGl extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: ReactiveNode, value: ThemeSingleton})
+  @Property({type: ReactiveObject, value: ThemeSingleton})
   declare theme: typeof ThemeSingleton
 
-  @ReactiveProperty({type: Array, init: [0, 0]})
+  @Property({type: Array, init: [0, 0]})
   declare size: [number, number]
 
-  @ReactiveProperty({type: Number, value: 1})
+  @Property({type: Number, value: 1})
   declare pxRatio: number
 
-  // @ReactiveProperty('throttled')
+  // @Property('throttled')
   // declare reactivity: ReactivityType
 
   #needsResize = false
@@ -131,7 +131,7 @@ export class IoGl extends IoElement {
         gl_FragColor = io_color;
       }\n\n`
   }
-  initPropertyUniform(name: string, property: ReactivePropertyDefinition) {
+  initPropertyUniform(name: string, property: PropertyDefinition) {
     const value = property.value
     if (value === undefined || value === null) return ''
     const type = (value as object).constructor
@@ -155,13 +155,13 @@ export class IoGl extends IoElement {
     #extension GL_OES_standard_derivatives : enable
     precision highp float;\n`
 
-    this.theme._reactiveProperties.forEach((property, name) => {
+    this.theme._properties.forEach((property, name) => {
       frag += this.initPropertyUniform('io_' + name, property)
     })
 
     frag += '\n'
 
-    this._reactiveProperties.forEach((property, prop) => {
+    this._properties.forEach((property, prop) => {
       const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1)
       frag += this.initPropertyUniform(name, property)
     })
@@ -207,14 +207,14 @@ export class IoGl extends IoElement {
 
     // TODO: improve code clarity
     this.#vecLengths = {}
-    this.theme._reactiveProperties.forEach((property, name) => {
+    this.theme._properties.forEach((property, name) => {
       // TODO: consider making more type agnostic
       if (property.type === Color) {
         this.#vecLengths['io_' + name] = 4
       }
     })
 
-    this._reactiveProperties.forEach((property, name) => {
+    this._properties.forEach((property, name) => {
       const uname = 'u' + name.charAt(0).toUpperCase() + name.slice(1)
       if (property.type === Array && Array.isArray(property.value)) {
         this.#vecLengths[uname] = property.value.length
@@ -274,7 +274,7 @@ export class IoGl extends IoElement {
     this.updateThemeUniforms()
     this.debounce(this.onRender)
   }
-  override changed() {
+  override mutated() {
     this.debounce(this.onRender)
   }
   onRender() {
@@ -286,7 +286,7 @@ export class IoGl extends IoElement {
     this.setShaderProgram()
 
     // TODO: dont brute-force uniform update.
-    this._reactiveProperties.forEach((property, name) => {
+    this._properties.forEach((property, name) => {
       const uname = 'u' + name.charAt(0).toUpperCase() + name.slice(1)
       this.updatePropertyUniform(uname, property)
     })
@@ -317,12 +317,12 @@ export class IoGl extends IoElement {
       gl.useProgram(this.#shader)
     }
   }
-  updatePropertyUniform(name: string, property: ReactivePropertyInstance) {
+  updatePropertyUniform(name: string, property: PropertyInstance) {
     this.setShaderProgram()
     this.setUniform(name, property.value)
   }
   updateThemeUniforms() {
-    this.theme._reactiveProperties.forEach((property, name) => {
+    this.theme._properties.forEach((property, name) => {
       this.updatePropertyUniform('io_' + name, property)
     })
   }
@@ -388,7 +388,7 @@ export class IoGl extends IoElement {
       default:
     }
   }
-  override Register(ioNodeConstructor: typeof IoElement) {
+  override Register(ioNodeConstructor: typeof ReactiveElement) {
     super.Register(ioNodeConstructor)
     let _glUtils = ''
     const constructors = ioNodeConstructor.prototype._protochain.constructors

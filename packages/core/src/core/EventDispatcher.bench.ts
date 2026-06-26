@@ -1,13 +1,13 @@
 import { test } from 'vitest'
-import { ReactiveNode } from '../nodes/ReactiveNode.js'
+import { ReactiveObject } from '../nodes/ReactiveObject.js'
 import { BENCH_OPTIONS } from '../testing.js'
 
 test('EventDispatcher', async ({ bench }) => {
-  let nodes!: Array<ReactiveNode>
+  let nodes!: Array<ReactiveObject>
 
   await bench('synthetic dispatch depth 20', {
     beforeAll: () => {
-      nodes = new Array(20).fill(0).map(() => new ReactiveNode())
+      nodes = new Array(20).fill(0).map(() => new ReactiveObject())
       for (let i = 0; i < 20; i++) {
         nodes[i].addParent(nodes[i - 1])
       }

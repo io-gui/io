@@ -1,5 +1,5 @@
 import { Binding } from '../core/Binding.js';
-import { ReactiveNode, ReactiveNodeProps } from '../nodes/ReactiveNode.js';
+import { ReactiveObject, ReactiveNodeProps } from '../nodes/ReactiveObject.js';
 export type StorageProps<T = unknown> = ReactiveNodeProps & {
     key: string;
     value: T;
@@ -20,7 +20,7 @@ export type StorageProps<T = unknown> = ReactiveNodeProps & {
  *
  * @example Storage({ key: 'theme', value: 'light', storage: 'local' })
  */
-export declare class StorageNode extends ReactiveNode {
+export declare class StorageNode extends ReactiveObject {
     key: string;
     value: unknown;
     storage: 'hash' | 'local' | 'none';
@@ -30,7 +30,7 @@ export declare class StorageNode extends ReactiveNode {
     dispose(): void;
     clearStorage(): void;
     valueMutated(): void;
-    changed(): void;
+    mutated(): void;
     removeValueToHash(): void;
     saveValueToHash(): void;
 }

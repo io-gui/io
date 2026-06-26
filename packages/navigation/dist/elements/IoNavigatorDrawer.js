@@ -4,9 +4,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, IoElement, div, ThemeSingleton } from '@io-gui/core';
+import { Register, Property, ReactiveElement, div, ThemeSingleton } from '@io-gui/core';
 import { ioIcon } from '@io-gui/icons';
-let IoNavigatorDrawer = class IoNavigatorDrawer extends IoElement {
+let IoNavigatorDrawer = class IoNavigatorDrawer extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -114,7 +114,7 @@ let IoNavigatorDrawer = class IoNavigatorDrawer extends IoElement {
     expandedChanged() {
         this.dispatch('io-drawer-expanded-changed', { element: this }, true);
     }
-    changed() {
+    mutated() {
         const icon = {
             left: this.expanded ? 'io:triangle_left' : 'io:triangle_right',
             right: this.expanded ? 'io:triangle_right' : 'io:triangle_left',
@@ -145,13 +145,13 @@ let IoNavigatorDrawer = class IoNavigatorDrawer extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: String, value: 'left', reflect: true })
+    Property({ type: String, value: 'left', reflect: true })
 ], IoNavigatorDrawer.prototype, "direction", void 0);
 __decorate([
-    ReactiveProperty({ type: Boolean, value: false, reflect: true })
+    Property({ type: Boolean, value: false, reflect: true })
 ], IoNavigatorDrawer.prototype, "expanded", void 0);
 __decorate([
-    ReactiveProperty({ type: Object })
+    Property({ type: Object })
 ], IoNavigatorDrawer.prototype, "menuContent", void 0);
 IoNavigatorDrawer = __decorate([
     Register

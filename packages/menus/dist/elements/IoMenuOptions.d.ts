@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, NudgeDirection, IoElementProps, WithBinding, ListenerDefinition } from '@io-gui/core';
+import { ReactiveElement, VDOMElement, NudgeDirection, IoElementProps, WithBinding, ListenerDefinition } from '@io-gui/core';
 import { MenuOption } from '../nodes/MenuOption.js';
 import { IoMenuItem } from './IoMenuItem.js';
 import { IoContextMenu } from './IoContextMenu.js';
@@ -16,7 +16,7 @@ export type IoMenuOptionsProps = IoElementProps & {
 /**
  * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu options are displayed in horizontal direction.
  **/
-export declare class IoMenuOptions extends IoElement {
+export declare class IoMenuOptions extends ReactiveElement {
     static get Style(): string;
     option: MenuOption;
     expanded: boolean;
@@ -43,6 +43,6 @@ export declare class IoMenuOptions extends IoElement {
     expandedChanged(): void;
     searchChanged(): void;
     onExpandInOverlay(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioMenuOptions: (arg0?: IoMenuOptionsProps) => VDOMElement;

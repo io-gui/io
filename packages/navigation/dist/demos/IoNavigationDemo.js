@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Register, IoElement, div, p, h1, h4 } from '@io-gui/core';
+import { Register, ReactiveElement, div, p, h1, h4 } from '@io-gui/core';
 import { MenuOption } from '@io-gui/menus';
 import { ioNavigator, ioSelector, ioCollapsible } from '@io-gui/navigation';
 function lorem(length) {
@@ -83,7 +83,7 @@ const contentOption = new MenuOption({ options: [
             ] },
     ] });
 contentOption.options[0].options[3].selected = true;
-export class IoNavigationDemo extends IoElement {
+export class IoNavigationDemo extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host p {

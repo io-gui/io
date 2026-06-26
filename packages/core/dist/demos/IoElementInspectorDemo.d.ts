@@ -1,8 +1,8 @@
-import { IoElement } from '@io-gui/core';
+import { ReactiveElement } from '@io-gui/core';
 /** @internal Demo: component inspector playground. */
-export declare class IoElementInspectorDemo extends IoElement {
+export declare class IoElementInspectorDemo extends ReactiveElement {
     static get Style(): string;
-    static get ReactiveProperties(): {
+    static get Properties(): {
         selected: any;
     };
     ready(): void;

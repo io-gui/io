@@ -1,6 +1,6 @@
 import { Register } from '../decorators/Register.js'
-import { ReactiveProperty } from '../decorators/Property.js'
-import { ReactivePropertyDefinitions, ReactiveNode, ReactivityType } from '../nodes/ReactiveNode.js'
+import { Property } from '../decorators/Property.js'
+import { PropertyDefinitions, ReactiveObject, ReactivityType } from '../nodes/ReactiveObject.js'
 import { Storage as $ } from '../nodes/Storage.js'
 import { Color } from '../core/Color.js'
 import { adoptDocumentStylesheet } from '../core/Style.js'
@@ -101,9 +101,9 @@ function isThemeColorKey(key: string): boolean {
  * @see ThemeSingleton
  */
 @Register
-export class Theme extends ReactiveNode {
-  static override get ReactiveProperties(): ReactivePropertyDefinitions {
-    const props: ReactivePropertyDefinitions = {}
+export class Theme extends ReactiveObject {
+  static override get Properties(): PropertyDefinitions {
+    const props: PropertyDefinitions = {}
     for (const key of themeKeys) {
       if (isThemeColorKey(key)) {
         props[key] = {type: Color, init: [0, 0, 0, 1]}
@@ -149,13 +149,13 @@ export class Theme extends ReactiveNode {
   declare gradientColorEnd: Color
   declare shadowColor: Color
 
-  @ReactiveProperty('debounced')
+  @Property('debounced')
   declare reactivity: ReactivityType
 
   override onPropertyMutated(event: CustomEvent) {
     const mutated = super.onPropertyMutated(event)
     if (mutated) {
-      this.changed()
+      this.mutated()
       this.dispatchMutation()
       return true
     }
@@ -170,7 +170,7 @@ export class Theme extends ReactiveNode {
     this.fontSize = Math.min(this.lineHeight, this.fontSize)
   }
 
-  override changed() {
+  override mutated() {
     this.fieldHeight = this.lineHeight + 2 * (this.spacing + this.borderWidth)
     this.spacing2 = this.spacing * 2
     this.spacing3 = this.spacing * 3

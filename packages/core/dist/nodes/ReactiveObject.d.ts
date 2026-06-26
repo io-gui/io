@@ -1,22 +1,22 @@
 import { ProtoChain } from '../core/ProtoChain.js';
 import { Binding } from '../core/Binding.js';
 import type { ChangeQueue } from '../core/ChangeQueue.js';
-import { ReactivePropertyInstance, ReactivePropertyDefinitionLoose } from '../core/ReactiveProperty.js';
+import { PropertyInstance, PropertyDefinitionLoose } from '../core/Property.js';
 import type { EventDispatcher } from '../core/EventDispatcher.js';
 import { CallbackFunction } from '../core/Queue.js';
-import { IoElement } from '../elements/IoElement.js';
+import { type ReactiveNode } from '../core/ReactiveCore.js';
 import type { ListenerDefinitionLoose, AnyEventListener } from '../core/EventDispatcher.js';
 export type AnyConstructor = new (...args: never[]) => object;
 /** Instantiates a property type constructor with runtime constructor arguments. */
 export declare function constructType(ctor: AnyConstructor, ...args: unknown[]): object;
-export type ReactivePropertyDefinitions = Record<string, ReactivePropertyDefinitionLoose>;
+export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
 export type PropertyValues = Record<string, unknown>;
 export type ListenerDefinitions = {
     [key: string]: ListenerDefinitionLoose;
 };
 export interface ReactiveNodeConstructor {
-    ReactiveProperties?: ReactivePropertyDefinitions;
-    Properties?: Record<string, unknown>;
+    Properties?: PropertyDefinitions;
+    Fields?: Record<string, unknown>;
     Listeners?: ListenerDefinitions;
     Style?: string;
     name?: string;
@@ -29,8 +29,8 @@ export type JsonObject = {
 export type JsonArray = Json[];
 export type Json = JsonPrimitive | JsonObject | JsonArray;
 export declare const NODES: {
-    active: Set<ReactiveNode>;
-    disposed: WeakSet<ReactiveNode>;
+    active: Set<ReactiveObject>;
+    disposed: WeakSet<ReactiveObject>;
 };
 export type ReactivityType = 'immediate' | 'throttled' | 'debounced';
 export type WithBinding<T> = T | Binding<T>;
@@ -43,78 +43,78 @@ export type ReactiveNodeProps = {
 /**
  * Base class for reactive data models and state containers.
  *
- * ReactiveNode provides the core Io-Gui reactive property system without DOM
+ * ReactiveObject provides the core Io-Gui reactive property system without DOM
  * integration. Subclass it for domain models (for example menu options, layout
- * tabs, or theme state). Property changes dispatch change events and invoke
+ * tabs, or theme state). Field changes dispatch change events and invoke
  * matching handlers; object mutations can propagate via {@link dispatchMutation}.
  *
  * Use {@link bind} for two-way synchronization between properties. Nodes register
  * with {@link Register} and declare reactive properties via static
- * `ReactiveProperties` or `@ReactiveProperty` decorators.
+ * `Properties` or `@Property` decorators.
  *
- * @see IoElement for the DOM-integrated counterpart
+ * @see ReactiveElement for the DOM-integrated counterpart
  */
-export declare class ReactiveNode extends Object {
+export declare class ReactiveObject extends Object {
     reactivity: ReactivityType;
-    static get ReactiveProperties(): ReactivePropertyDefinitions;
-    static get Properties(): Record<string, unknown>;
+    static get Properties(): PropertyDefinitions;
+    static get Fields(): Record<string, unknown>;
     /** Class-level listeners wired at construction; subclass overrides same event name (last wins). */
     static get Listeners(): ListenerDefinitions;
     readonly _protochain: ProtoChain;
-    readonly _reactiveProperties: Map<string, ReactivePropertyInstance>;
+    readonly _properties: Map<string, PropertyInstance>;
     readonly _bindings: Map<string, Binding<unknown>>;
     readonly _changeQueue: ChangeQueue;
     readonly _eventDispatcher: EventDispatcher;
-    readonly _children: Array<ReactiveNode | IoElement>;
-    readonly _parents: Array<ReactiveNode | IoElement>;
+    readonly _children: Array<ReactiveNode>;
+    readonly _parents: Array<ReactiveNode>;
     _hasWindowMutationListener: boolean;
     _hasSelfMutationListener: boolean;
-    readonly _isNode: boolean;
+    readonly _isReactiveObject: boolean;
     _disposed: boolean;
     constructor(args?: unknown);
     applyProperties(props: PropertyValues, skipDispatch?: boolean): void;
     setProperties(props: PropertyValues): void;
     setProperty(name: string, value: unknown, debounce?: boolean): void;
-    copy(node: ReactiveNode): void;
+    copy(node: ReactiveObject): void;
     toJSON(): Json;
     applyJSON(json: Json): this;
     init(): void;
     ready(): void;
-    changed(): void;
+    mutated(): void;
     get [Symbol.toStringTag](): string;
     queue(name: string, value: unknown, oldValue: unknown): void;
     dispatchQueue(debounce?: boolean): void;
     throttle(func: CallbackFunction, arg?: unknown, timeout?: number): void;
     debounce(func: CallbackFunction, arg?: unknown, timeout?: number): void;
     onPropertyMutated(event: CustomEvent): boolean;
-    dispatchMutation(object?: object | ReactiveNode, properties?: string[]): void;
+    dispatchMutation(object?: object | ReactiveObject, properties?: string[]): void;
     bind<K extends keyof this & string>(name: K): Binding<this[K]>;
     bind(name: string): Binding<unknown>;
     unbind<K extends keyof this & string>(name: K): void;
     unbind(name: string): void;
     addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
     removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
-    dispatch(type: string, detail?: unknown, bubbles?: boolean, src?: ReactiveNode | HTMLElement | Document | Window): void;
-    addParent(parent: ReactiveNode | IoElement): void;
-    removeParent(parent: ReactiveNode | IoElement): void;
+    dispatch(type: string, detail?: unknown, bubbles?: boolean, src?: ReactiveObject | HTMLElement | Document | Window): void;
+    addParent(parent: ReactiveNode): void;
+    removeParent(parent: ReactiveNode): void;
     dispose(): void;
-    Register(ioNodeConstructor: typeof ReactiveNode): void;
+    Register(ioNodeConstructor: typeof ReactiveObject): void;
 }
-export declare function initReactiveProperties(node: ReactiveNode | IoElement): void;
-export declare function initProperties(node: ReactiveNode | IoElement): void;
-export declare function setProperties(node: ReactiveNode | IoElement, props: PropertyValues): void;
+export declare function initProperties(node: ReactiveNode): void;
+export declare function initFields(node: ReactiveNode): void;
+export declare function setProperties(node: ReactiveNode, props: PropertyValues): void;
 /** Assigns a reactive property, queuing change dispatch unless debounced. */
-export declare function setProperty(node: ReactiveNode | IoElement, name: string, value: unknown, debounce?: boolean): void;
-export declare function dispatchQueue(node: ReactiveNode | IoElement, debounce?: boolean): void;
+export declare function setProperty(node: ReactiveNode, name: string, value: unknown, debounce?: boolean): void;
+export declare function dispatchQueue(node: ReactiveNode, debounce?: boolean): void;
 /** Dispatches `io-object-mutation` for in-place object or nested Io value changes. */
-export declare function dispatchMutation(node: ReactiveNode | IoElement, object: object | ReactiveNode, properties: string[]): void;
-export declare function onPropertyMutated(node: ReactiveNode | IoElement, event: CustomEvent): boolean;
+export declare function dispatchMutation(node: ReactiveNode, object: object | ReactiveObject, properties: string[]): void;
+export declare function onPropertyMutated(node: ReactiveNode, event: CustomEvent): boolean;
 /** Returns or creates a two-way {@link Binding} for the named reactive property. */
-export declare function bind<TNode extends ReactiveNode | IoElement, K extends keyof TNode & string>(node: TNode, name: K): Binding<TNode[K]>;
-export declare function bind(node: ReactiveNode | IoElement, name: string): Binding<unknown>;
+export declare function bind<TNode extends ReactiveNode, K extends keyof TNode & string>(node: TNode, name: K): Binding<TNode[K]>;
+export declare function bind(node: ReactiveNode, name: string): Binding<unknown>;
 /** Disposes and removes the binding for the named reactive property. */
-export declare function unbind<TNode extends ReactiveNode | IoElement, K extends keyof TNode & string>(node: TNode, name: K): void;
-export declare function unbind(node: ReactiveNode | IoElement, name: string): void;
+export declare function unbind<TNode extends ReactiveNode, K extends keyof TNode & string>(node: TNode, name: K): void;
+export declare function unbind(node: ReactiveNode, name: string): void;
 export { detachChildParents } from '../core/ReactiveCore.js';
 /** Tears down bindings, listeners, queues, and parent links for a reactive owner. */
-export declare function dispose(node: ReactiveNode | IoElement): void;
+export declare function dispose(node: ReactiveNode): void;

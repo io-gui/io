@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, IoElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
+import { ReactiveElement, VDOMElement, IoElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
 export type CachingType = 'proactive' | 'reactive' | 'none';
 export type IoSelectorProps = IoElementProps & {
     elements?: VDOMElement[];
@@ -8,7 +8,7 @@ export type IoSelectorProps = IoElementProps & {
     loading?: WithBinding<boolean>;
     import?: string;
 };
-export declare class IoSelector extends IoElement {
+export declare class IoSelector extends ReactiveElement {
     static get Style(): string;
     elements: VDOMElement[];
     selected: string;

@@ -1,8 +1,8 @@
-import { IoElement, Theme } from '@io-gui/core';
+import { ReactiveElement, Theme } from '@io-gui/core';
 /** @internal Demo: scoped style container for nested elements. */
-export declare class IoStyleContainer extends IoElement {
+export declare class IoStyleContainer extends ReactiveElement {
     static get Style(): string;
-    static get ReactiveProperties(): {
+    static get Properties(): {
         theme: {
             type: typeof Theme;
             value: Theme;

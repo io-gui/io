@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
+import { ReactiveElement, IoElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
 export type IoFieldProps = IoElementProps & {
     value?: WithBinding<unknown>;
     icon?: WithBinding<string>;
@@ -8,7 +8,7 @@ export type IoFieldProps = IoElementProps & {
     appearance?: 'neutral' | 'inset' | 'outset';
     pattern?: string;
 };
-export declare class IoField extends IoElement {
+export declare class IoField extends ReactiveElement {
     static get Style(): string;
     value: unknown;
     icon: string;
@@ -44,6 +44,6 @@ export declare class IoField extends IoElement {
     selectedChanged(): void;
     invalidChanged(): void;
     disabledChanged(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioField: (arg0: IoFieldProps) => import("@io-gui/core").VDOMElement;

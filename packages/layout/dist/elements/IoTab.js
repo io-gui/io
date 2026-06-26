@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, span } from '@io-gui/core';
+import { Register, Property, span } from '@io-gui/core';
 import { IoField, ioString, ioButton } from '@io-gui/inputs';
 import { IoContextEditorSingleton } from '@io-gui/editors';
 import { IconsetDB, ioIcon } from '@io-gui/icons';
@@ -175,9 +175,9 @@ let IoTab = class IoTab extends IoField {
         }
     }
     tabMutated() {
-        this.changed();
+        this.mutated();
     }
-    changed() {
+    mutated() {
         this.setAttribute('selected', this.tab.selected);
         this.setAttribute('title', this.tab.label);
         this.render([
@@ -188,10 +188,10 @@ let IoTab = class IoTab extends IoField {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Tab })
+    Property({ type: Tab })
 ], IoTab.prototype, "tab", void 0);
 __decorate([
-    ReactiveProperty({ type: Boolean, reflect: true })
+    Property({ type: Boolean, reflect: true })
 ], IoTab.prototype, "overflow", void 0);
 IoTab = __decorate([
     Register

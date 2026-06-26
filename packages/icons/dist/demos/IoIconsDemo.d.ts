@@ -1,5 +1,5 @@
-import { IoElement } from '@io-gui/core';
-export declare class IoIconsDemo extends IoElement {
+import { ReactiveElement } from '@io-gui/core';
+export declare class IoIconsDemo extends ReactiveElement {
     static get Style(): string;
     ready(): void;
 }

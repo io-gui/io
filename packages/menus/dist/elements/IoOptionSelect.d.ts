@@ -1,4 +1,4 @@
-import { IoElement, Change, IoElementProps, WithBinding } from '@io-gui/core';
+import { ReactiveElement, Change, IoElementProps, WithBinding } from '@io-gui/core';
 import { MenuOption } from '../nodes/MenuOption.js';
 export type SelectBy = 'value' | 'id';
 export type IoOptionSelectProps = IoElementProps & {
@@ -12,7 +12,7 @@ export type IoOptionSelectProps = IoElementProps & {
  * Option select element. Similar to `IoMenuItem`, except it is displayed as a button and uses `options` property instead of ~~`option.options`~~  and it is `selectable` by default. It displays selected `value` or `label` followed by the `â–¾` character.
  * When clicked or activated by space/enter key, it expands a menu with selectable options.
  **/
-export declare class IoOptionSelect extends IoElement {
+export declare class IoOptionSelect extends ReactiveElement {
     static get Style(): string;
     value: any;
     label: string;
@@ -25,6 +25,6 @@ export declare class IoOptionSelect extends IoElement {
     inputValue(value: any): void;
     optionChanged(change: Change): void;
     optionMutated(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioOptionSelect: (arg0: IoOptionSelectProps) => import("@io-gui/core").VDOMElement;

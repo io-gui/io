@@ -1,4 +1,4 @@
-import { ReactiveNode, ReactiveNodeProps } from '@io-gui/core';
+import { ReactiveObject, ReactiveNodeProps } from '@io-gui/core';
 import { Timer, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu';
 export type ThreeAppletProps = ReactiveNodeProps & {
     scene?: Scene;
@@ -6,7 +6,7 @@ export type ThreeAppletProps = ReactiveNodeProps & {
     toneMapping?: ToneMapping;
     isPlaying?: boolean;
 };
-export declare class ThreeApplet extends ReactiveNode {
+export declare class ThreeApplet extends ReactiveObject {
     scene: Scene;
     toneMappingExposure: number;
     toneMapping: ToneMapping;

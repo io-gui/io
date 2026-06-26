@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { ReactiveNode, NodeArray, ReactiveProperty, Register } from '@io-gui/core';
+import { ReactiveObject, NodeArray, Property, Register } from '@io-gui/core';
 import { Panel } from './Panel.js';
 function createChild(child) {
     return child.type === 'panel' ? new Panel(child) : new Split(child);
@@ -19,7 +19,7 @@ function consolidateChildren(children, orientation) {
     }
     return { children: result, orientation: resultOrientation };
 }
-let Split = class Split extends ReactiveNode {
+let Split = class Split extends ReactiveObject {
     constructor(args) {
         debug: {
             if (args.type !== 'split') {
@@ -81,13 +81,13 @@ let Split = class Split extends ReactiveNode {
     }
 };
 __decorate([
-    ReactiveProperty({ type: NodeArray, init: 'this' })
+    Property({ type: NodeArray, init: 'this' })
 ], Split.prototype, "children", void 0);
 __decorate([
-    ReactiveProperty({ type: String, value: 'horizontal' })
+    Property({ type: String, value: 'horizontal' })
 ], Split.prototype, "orientation", void 0);
 __decorate([
-    ReactiveProperty({ type: String, value: '1 1 auto' })
+    Property({ type: String, value: '1 1 auto' })
 ], Split.prototype, "flex", void 0);
 Split = __decorate([
     Register

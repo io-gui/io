@@ -1,4 +1,4 @@
-import { IoElement } from '../elements/IoElement.js'
+import { ReactiveElement } from '../elements/ReactiveElement.js'
 
 /**
  * Nudge direction.
@@ -28,7 +28,7 @@ const viewport = {
   },
 }
 
-function nudgeUp(element: HTMLElement | IoElement, x: number, y: number, elemRect: DOMRect, force?: boolean, doClip?: boolean) {
+function nudgeUp(element: HTMLElement | ReactiveElement, x: number, y: number, elemRect: DOMRect, force?: boolean, doClip?: boolean) {
   x = Math.max(0, Math.min(x, viewport.width - elemRect.width))
   let clipWidth = -1
   let clipHeight = -1
@@ -61,7 +61,7 @@ function nudgeUp(element: HTMLElement | IoElement, x: number, y: number, elemRec
   return false
 }
 
-function nudgeDown(element: HTMLElement | IoElement, x: number, y: number, elemRect: DOMRect, force?: boolean, doClip?: boolean) {
+function nudgeDown(element: HTMLElement | ReactiveElement, x: number, y: number, elemRect: DOMRect, force?: boolean, doClip?: boolean) {
   y = y + viewport.offsetTop
   x = x + viewport.offsetLeft
   x = Math.max(0, Math.min(x, viewport.width - elemRect.width))
@@ -93,7 +93,7 @@ function nudgeDown(element: HTMLElement | IoElement, x: number, y: number, elemR
   return false
 }
 
-function nudgeLeft(element: HTMLElement | IoElement, x: number, y: number, elemRect: DOMRect, force?: boolean, doClip?: boolean) {
+function nudgeLeft(element: HTMLElement | ReactiveElement, x: number, y: number, elemRect: DOMRect, force?: boolean, doClip?: boolean) {
   y = Math.max(0, Math.min(y, viewport.height - elemRect.height))
   let clipWidth = -1
   let clipHeight = -1
@@ -126,7 +126,7 @@ function nudgeLeft(element: HTMLElement | IoElement, x: number, y: number, elemR
   return false
 }
 
-function nudgeRight(element: HTMLElement | IoElement, x: number, y: number, elemRect: DOMRect, force?: boolean, doClip?: boolean) {
+function nudgeRight(element: HTMLElement | ReactiveElement, x: number, y: number, elemRect: DOMRect, force?: boolean, doClip?: boolean) {
   y = Math.max(0, Math.min(y, viewport.height - elemRect.height))
   let clipWidth = -1
   let clipHeight = -1
@@ -156,7 +156,7 @@ function nudgeRight(element: HTMLElement | IoElement, x: number, y: number, elem
   return false
 }
 
-export function nudge(element: HTMLElement | IoElement, srcElement: HTMLElement | IoElement, direction: NudgeDirection, doClip?: boolean) {
+export function nudge(element: HTMLElement | ReactiveElement, srcElement: HTMLElement | ReactiveElement, direction: NudgeDirection, doClip?: boolean) {
   const elemRect = element.getBoundingClientRect()
   const srcRect = srcElement.getBoundingClientRect()
   const left = srcRect.left

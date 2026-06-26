@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { BufferAttribute, CanvasTexture, Color, DirectionalLight, IcosahedronGeometry, Mesh, MeshBasicMaterial, MeshPhongMaterial, PlaneGeometry, SRGBColorSpace } from 'three/webgpu';
-import { Register, ReactiveProperty } from '@io-gui/core';
+import { Register, Property } from '@io-gui/core';
 import { ThreeApplet, IoThreeViewport } from '@io-gui/three';
 let GeometryColorsExample = class GeometryColorsExample extends ThreeApplet {
     constructor(args) {
@@ -96,7 +96,7 @@ export { GeometryColorsExample };
 let IoGeometryColorsExample = class IoGeometryColorsExample extends IoThreeViewport {
 };
 __decorate([
-    ReactiveProperty({ type: GeometryColorsExample, init: null })
+    Property({ type: GeometryColorsExample, init: null })
 ], IoGeometryColorsExample.prototype, "applet", void 0);
 IoGeometryColorsExample = __decorate([
     Register

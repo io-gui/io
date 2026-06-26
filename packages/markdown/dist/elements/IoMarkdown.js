@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, Property, $ThemeID } from '@io-gui/core';
+import { Register, ReactiveElement, Property, Field, $ThemeID } from '@io-gui/core';
 import { Marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import purify from 'dompurify';
@@ -31,7 +31,7 @@ function strip(innerHTML, strip) {
 /**
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
  */
-let IoMarkdown = class IoMarkdown extends IoElement {
+let IoMarkdown = class IoMarkdown extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -182,19 +182,19 @@ let IoMarkdown = class IoMarkdown extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ value: '', reflect: true })
+    Property({ value: '', reflect: true })
 ], IoMarkdown.prototype, "src", void 0);
 __decorate([
-    ReactiveProperty({ type: Array, init: null })
+    Property({ type: Array, init: null })
 ], IoMarkdown.prototype, "strip", void 0);
 __decorate([
-    ReactiveProperty({ value: false, reflect: true })
+    Property({ value: false, reflect: true })
 ], IoMarkdown.prototype, "loading", void 0);
 __decorate([
-    ReactiveProperty(true)
+    Property(true)
 ], IoMarkdown.prototype, "sanitize", void 0);
 __decorate([
-    Property('document')
+    Field('document')
 ], IoMarkdown.prototype, "role", void 0);
 IoMarkdown = __decorate([
     Register

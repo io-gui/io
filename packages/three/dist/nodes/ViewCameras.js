@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveNode, ReactiveProperty, Property } from '@io-gui/core';
+import { Register, ReactiveObject, Property, Field } from '@io-gui/core';
 import { ThreeApplet } from './ThreeApplet.js';
 import { Box3, Camera, OrthographicCamera, PerspectiveCamera, Sphere, Vector3 } from 'three/webgpu';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -94,7 +94,7 @@ class DefaultCameras {
         return this.cameras.find(camera => camera.name === name);
     }
 }
-let ViewCameras = class ViewCameras extends ReactiveNode {
+let ViewCameras = class ViewCameras extends ReactiveObject {
     static get Listeners() {
         return {
             'frame-object': 'onFrameObject'
@@ -289,22 +289,22 @@ let ViewCameras = class ViewCameras extends ReactiveNode {
     }
 };
 __decorate([
-    Property()
+    Field()
 ], ViewCameras.prototype, "viewport", void 0);
 __decorate([
-    ReactiveProperty({ type: ThreeApplet })
+    Property({ type: ThreeApplet })
 ], ViewCameras.prototype, "applet", void 0);
 __decorate([
-    ReactiveProperty({ type: String, value: 'perspective' })
+    Property({ type: String, value: 'perspective' })
 ], ViewCameras.prototype, "cameraSelect", void 0);
 __decorate([
-    ReactiveProperty({ type: Camera })
+    Property({ type: Camera })
 ], ViewCameras.prototype, "camera", void 0);
 __decorate([
-    ReactiveProperty({ type: DefaultCameras, init: null })
+    Property({ type: DefaultCameras, init: null })
 ], ViewCameras.prototype, "defaultCameras", void 0);
 __decorate([
-    ReactiveProperty({ type: OrbitControls, init: ['this.defaultCameras.perspective'] })
+    Property({ type: OrbitControls, init: ['this.defaultCameras.perspective'] })
 ], ViewCameras.prototype, "orbitControls", void 0);
 ViewCameras = __decorate([
     Register

@@ -29,6 +29,6 @@ export declare class IoString extends IoField {
     onKeyup(event: KeyboardEvent): void;
     ready(): void;
     valueChanged(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioString: (arg0?: IoStringProps) => import("@io-gui/core").VDOMElement;

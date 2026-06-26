@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding } from '@io-gui/core';
+import { ReactiveElement, IoElementProps, WithBinding } from '@io-gui/core';
 export type IoNumberSliderProps = IoElementProps & {
     value?: WithBinding<number>;
     step?: number;
@@ -11,7 +11,7 @@ export type IoNumberSliderProps = IoElementProps & {
 /**
  * Input element for `Number` data type combining `IoNumber` and `IoSlider`
  **/
-export declare class IoNumberSlider extends IoElement {
+export declare class IoNumberSlider extends ReactiveElement {
     static get Style(): string;
     value: number;
     step: number;
@@ -24,6 +24,6 @@ export declare class IoNumberSlider extends IoElement {
     _onNumberSet(event: CustomEvent): void;
     _onSliderSet(event: CustomEvent): void;
     ready(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioNumberSlider: (arg0?: IoNumberSliderProps) => import("@io-gui/core").VDOMElement;

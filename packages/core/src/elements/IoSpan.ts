@@ -1,7 +1,7 @@
-import { ReactiveProperty } from '../decorators/Property.js'
+import { Property } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
-import { WithBinding } from '../nodes/ReactiveNode.js'
-import { IoElement, IoElementProps } from './IoElement.js'
+import { WithBinding } from '../nodes/ReactiveObject.js'
+import { ReactiveElement, IoElementProps } from './ReactiveElement.js'
 
 type IoSpanProps = IoElementProps & {
   value?: WithBinding<string>
@@ -9,7 +9,7 @@ type IoSpanProps = IoElementProps & {
 
 /** Inline text element; `value` updates `innerText`. */
 @Register
-export class IoSpan extends IoElement {
+export class IoSpan extends ReactiveElement {
   constructor(props: IoSpanProps) {
     super(props)
   }
@@ -22,7 +22,7 @@ export class IoSpan extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: String, value: ''})
+  @Property({type: String, value: ''})
   declare value: string
 
   valueChanged() {

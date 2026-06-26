@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { ReactiveProperty, Register } from '@io-gui/core';
+import { Property, Register } from '@io-gui/core';
 import { AnimationMixer, BoxGeometry, DirectionalLight, Group, HemisphereLight, Mesh, NodeMaterial, Skeleton, SkeletonHelper, } from 'three/webgpu';
 import { color, screenUV, vec2, vec4, reflector, positionWorld, } from 'three/tsl';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -103,10 +103,10 @@ let AnimationRetargetingReadyplayerExample = class AnimationRetargetingReadyplay
     }
 };
 __decorate([
-    ReactiveProperty({ type: AnimationMixer, init: new Group() })
+    Property({ type: AnimationMixer, init: new Group() })
 ], AnimationRetargetingReadyplayerExample.prototype, "sourceMixer", void 0);
 __decorate([
-    ReactiveProperty({ type: AnimationMixer, init: new Group() })
+    Property({ type: AnimationMixer, init: new Group() })
 ], AnimationRetargetingReadyplayerExample.prototype, "targetMixer", void 0);
 AnimationRetargetingReadyplayerExample = __decorate([
     Register
@@ -115,7 +115,7 @@ export { AnimationRetargetingReadyplayerExample };
 let IoAnimationRetargetingReadyplayerExample = class IoAnimationRetargetingReadyplayerExample extends IoThreeExample {
 };
 __decorate([
-    ReactiveProperty({ type: AnimationRetargetingReadyplayerExample, init: { isPlaying: true } })
+    Property({ type: AnimationRetargetingReadyplayerExample, init: { isPlaying: true } })
 ], IoAnimationRetargetingReadyplayerExample.prototype, "applet", void 0);
 IoAnimationRetargetingReadyplayerExample = __decorate([
     Register

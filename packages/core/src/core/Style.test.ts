@@ -113,11 +113,11 @@ describe('Style mixin polyfill', () => {
       }
     `)
 
-    expect(warnSpy).toHaveBeenCalledWith('IoElement: cound not find mixin:', '--io-does-not-exist')
+    expect(warnSpy).toHaveBeenCalledWith('ReactiveElement: cound not find mixin:', '--io-does-not-exist')
     expect(normalizeStyle(css)).toBe('io-test-missing { @apply --io-does-not-exist; }')
   })
 
-  it('matches IoElement mixin declaration format', () => {
+  it('matches ReactiveElement mixin declaration format', () => {
     const css = processElementStyle('io-element', /* css */`
       :host {
         display: block;

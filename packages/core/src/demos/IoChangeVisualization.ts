@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { IoElement, Register, div, span, h4, p, NODES } from '@io-gui/core'
+import { ReactiveElement, Register, div, span, h4, p, NODES } from '@io-gui/core'
 import { ioCollapsible } from '@io-gui/navigation'
 import { ioIcon } from '@io-gui/icons'
 
@@ -518,7 +518,7 @@ const animate = () => {
 requestAnimationFrame(animate)
 
 /** @internal Demo: reactive change graph visualization. */
-export class IoChangeVisualization extends IoElement {
+export class IoChangeVisualization extends ReactiveElement {
   static get Style() {
     return /* css */`
     :host {

@@ -4,10 +4,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { ReactiveProperty } from '../decorators/Property.js';
+import { Property } from '../decorators/Property.js';
 import { Register } from '../decorators/Register.js';
-import { isIoValue } from '../core/ReactiveCore.js';
-import { ReactiveNode, constructType } from '../nodes/ReactiveNode.js';
+import { isReactiveNode } from '../core/ReactiveCore.js';
+import { ReactiveObject, constructType } from '../nodes/ReactiveObject.js';
 class EmulatedLocalStorage {
     constructor() {
         Object.defineProperty(this, 'store', { value: new Map() });
@@ -111,7 +111,7 @@ let hashValues = {};
  *
  * @example Storage({ key: 'theme', value: 'light', storage: 'local' })
  */
-let StorageNode = class StorageNode extends ReactiveNode {
+let StorageNode = class StorageNode extends ReactiveObject {
     constructor(props) {
         debug: {
             if (typeof props !== 'object') {
@@ -153,7 +153,7 @@ let StorageNode = class StorageNode extends ReactiveNode {
             if (storedValue !== null) {
                 try {
                     const parsed = JSON.parse(storedValue);
-                    if (isIoValue(props.value)) {
+                    if (isReactiveNode(props.value)) {
                         props.value.applyJSON(parsed);
                     }
                     else {
@@ -195,9 +195,9 @@ let StorageNode = class StorageNode extends ReactiveNode {
         nodes[s].delete(this.key);
     }
     valueMutated() {
-        this.debounce(this.changed, undefined, 1);
+        this.debounce(this.mutated, undefined, 1);
     }
-    changed() {
+    mutated() {
         switch (this.storage) {
             case 'hash': {
                 this.saveValueToHash();
@@ -283,13 +283,13 @@ let StorageNode = class StorageNode extends ReactiveNode {
     }
 };
 __decorate([
-    ReactiveProperty({ value: '', type: String })
+    Property({ value: '', type: String })
 ], StorageNode.prototype, "key", void 0);
 __decorate([
-    ReactiveProperty()
+    Property()
 ], StorageNode.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty({ value: 'local', type: String })
+    Property({ value: 'local', type: String })
 ], StorageNode.prototype, "storage", void 0);
 StorageNode = __decorate([
     Register

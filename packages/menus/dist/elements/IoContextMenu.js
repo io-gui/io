@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, IoOverlaySingleton as Overlay } from '@io-gui/core';
+import { Register, ReactiveElement, Property, IoOverlaySingleton as Overlay } from '@io-gui/core';
 import { IoMenuOptions } from './IoMenuOptions.js';
 import { onOverlayPointerdown, onOverlayPointermove, onOverlayPointeup } from './IoMenuItem.js';
 import { MenuOption } from '../nodes/MenuOption.js';
@@ -15,8 +15,8 @@ import { MenuOption } from '../nodes/MenuOption.js';
  * but it can be configured for other buttons. You can have multiple `IoContextMenu` instances under the same
  * `parentElement` as long as the `button` properties are different.
  **/
-let IoContextMenu = class IoContextMenu extends IoElement {
-    static get ReactiveProperties() {
+let IoContextMenu = class IoContextMenu extends ReactiveElement {
+    static get Properties() {
         return {
             $options: null,
         };
@@ -123,13 +123,13 @@ let IoContextMenu = class IoContextMenu extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: MenuOption })
+    Property({ type: MenuOption })
 ], IoContextMenu.prototype, "option", void 0);
 __decorate([
-    ReactiveProperty({ value: false, reflect: true })
+    Property({ value: false, reflect: true })
 ], IoContextMenu.prototype, "expanded", void 0);
 __decorate([
-    ReactiveProperty(0)
+    Property(0)
 ], IoContextMenu.prototype, "button", void 0);
 IoContextMenu = __decorate([
     Register

@@ -1,7 +1,7 @@
-import { IoElement } from '@io-gui/core';
-export declare class IoInputsDemo extends IoElement {
+import { ReactiveElement } from '@io-gui/core';
+export declare class IoInputsDemo extends ReactiveElement {
     static get Style(): string;
-    static get ReactiveProperties(): {
+    static get Properties(): {
         string: string;
         number: number;
         boolean: boolean;

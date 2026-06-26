@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { Binding, ReactiveProtoProperty, ReactivePropertyInstance, ReactiveNode, Register, Observer, NodeArray, IoElement, nextQueue, ReactivePropertyDefinitions } from '@io-gui/core'
+import { Binding, ProtoProperty, PropertyInstance, ReactiveObject, Register, Observer, NodeArray, ReactiveElement, nextQueue, PropertyDefinitions } from '@io-gui/core'
 
 class Object1 {
   constructor(init?: any) {
@@ -11,8 +11,8 @@ class Object1 {
 }
 
 @Register
-class TestNode extends ReactiveNode {
-  static override get ReactiveProperties(): ReactivePropertyDefinitions {
+class TestNode extends ReactiveObject {
+  static override get Properties(): PropertyDefinitions {
     return { label: 'default' }
   }
   declare label: string
@@ -21,13 +21,13 @@ class TestNode extends ReactiveNode {
 
 const dummy = new TestNode()
 
-describe('ReactiveProperty', () => {
-  describe('ReactiveProtoProperty', () => {
+describe('Property', () => {
+  describe('ProtoProperty', () => {
   it('Should initialize correct property definitions and values from loosely typed property definitions', () => {
     let propDef, prop
     // initialize with empty object as property definition
-    propDef = new ReactiveProtoProperty({})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({})
+    prop = new PropertyInstance(dummy, propDef)
 
     expect(propDef).toEqual({})
     expect(prop).toEqual({
@@ -39,8 +39,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with null property definition
-    propDef = new ReactiveProtoProperty(null)
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty(null)
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       value: null
     })
@@ -53,8 +53,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with undefined property definition
-    propDef = new ReactiveProtoProperty(undefined)
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty(undefined)
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       value: undefined
     })
@@ -67,8 +67,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with Number property definition
-    propDef = new ReactiveProtoProperty(Number)
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty(Number)
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       type: Number,
     })
@@ -81,8 +81,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with type: Number property definition
-    propDef = new ReactiveProtoProperty({type: Number})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({type: Number})
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       type: Number,
     })
@@ -95,8 +95,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with number property definition
-    propDef = new ReactiveProtoProperty(1)
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty(1)
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       value: 1,
     })
@@ -109,8 +109,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with value: number property definition
-    propDef = new ReactiveProtoProperty({value: 2})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({value: 2})
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       value: 2,
     })
@@ -123,8 +123,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with String property definition
-    propDef = new ReactiveProtoProperty(String)
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty(String)
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       type: String,
     })
@@ -137,8 +137,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with type: String property definition
-    propDef = new ReactiveProtoProperty({type: String})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({type: String})
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       type: String
     })
@@ -151,8 +151,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with string property definition
-    propDef = new ReactiveProtoProperty('test')
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty('test')
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       value: 'test'
     })
@@ -165,8 +165,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with value: string property definition
-    propDef = new ReactiveProtoProperty({value: 'test'})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({value: 'test'})
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       value: 'test'
     })
@@ -179,8 +179,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with Boolean property definition
-    propDef = new ReactiveProtoProperty(Boolean)
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty(Boolean)
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       type: Boolean
     })
@@ -193,8 +193,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with type: Boolean property definition
-    propDef = new ReactiveProtoProperty({type: Boolean})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({type: Boolean})
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       type: Boolean
     })
@@ -207,8 +207,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with boolean property definition
-    propDef = new ReactiveProtoProperty(true)
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty(true)
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       value: true
     })
@@ -221,8 +221,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with value: boolean property definition
-    propDef = new ReactiveProtoProperty({value: true})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({value: true})
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       value: true
     })
@@ -235,8 +235,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with Object property definition
-    propDef = new ReactiveProtoProperty(Object)
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty(Object)
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       type: Object,
     })
@@ -249,8 +249,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with type: Object property definition
-    propDef = new ReactiveProtoProperty({type: Object})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({type: Object})
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       type: Object
     })
@@ -263,8 +263,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with type: Object property definition and init: null
-    propDef = new ReactiveProtoProperty({type: Object, init: null})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({type: Object, init: null})
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       type: Object,
       init: null
@@ -279,8 +279,8 @@ describe('ReactiveProperty', () => {
     })
     // initialize with object: value property definition
     const object = {prop: true}
-    propDef = new ReactiveProtoProperty({value: object})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({value: object})
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       value: {prop: true},
     })
@@ -295,8 +295,8 @@ describe('ReactiveProperty', () => {
     expect(propDef.value).toBe(object)
     expect(prop.value).toBe(object)
     // initialize with Array property definition
-    propDef = new ReactiveProtoProperty(Array)
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty(Array)
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       type: Array
     })
@@ -309,8 +309,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with type: Array property definition
-    propDef = new ReactiveProtoProperty({type: Array})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({type: Array})
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       type: Array
     })
@@ -323,8 +323,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with type: Array property definition and init: null
-    propDef = new ReactiveProtoProperty({type: Array, init: null})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({type: Array, init: null})
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       type: Array,
       init: null
@@ -339,8 +339,8 @@ describe('ReactiveProperty', () => {
     })
     // initialize with an object property definition with array value
     const array = [1, 2, 3]
-    propDef = new ReactiveProtoProperty({value: array})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({value: array})
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       value: [1, 2, 3],
     })
@@ -355,8 +355,8 @@ describe('ReactiveProperty', () => {
     expect(propDef.value).toBe(array)
     expect(prop.value).toBe(array)
     // initialize with custom type: Object1 and no value initialization
-    propDef = new ReactiveProtoProperty({type: Object1})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({type: Object1})
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       type: Object1,
     })
@@ -369,8 +369,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with custom Object1 property definition
-    propDef = new ReactiveProtoProperty(Object1)
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty(Object1)
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       type: Object1
     })
@@ -383,8 +383,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with custom type: Object1 and init: 'test'
-    propDef = new ReactiveProtoProperty({type: Object1, init: 'test'})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({type: Object1, init: 'test'})
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       type: Object1,
       init: 'test'
@@ -398,8 +398,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'object', observing: true},
     })
     // initialize with custom Object1 property definition with initial argument being `this` node reference
-    propDef = new ReactiveProtoProperty({type: Object1, init: 'this'})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({type: Object1, init: 'this'})
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       type: Object1,
       init: 'this',
@@ -413,8 +413,8 @@ describe('ReactiveProperty', () => {
       observer: {type: 'object', observing: true},
     })
     // initialize with custom Object1 property definition with initial argument being `this.[propName]` node property reference
-    propDef = new ReactiveProtoProperty({type: Object1, init: 'this.label'})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({type: Object1, init: 'this.label'})
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       type: Object1,
       init: 'this.label'
@@ -429,8 +429,8 @@ describe('ReactiveProperty', () => {
     })
     // initialize with an object property definition with custom object1 value property
     const object1 = new Object1()
-    propDef = new ReactiveProtoProperty({value: object1})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({value: object1})
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       value: object1
     })
@@ -447,8 +447,8 @@ describe('ReactiveProperty', () => {
     expect(propDef.value).toBe(object1)
     expect(prop.value).toBe(object1)
     // initialize with an object property definition with custom Object1 type property
-    propDef = new ReactiveProtoProperty({type: Object1})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({type: Object1})
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       type: Object1
     })
@@ -461,12 +461,12 @@ describe('ReactiveProperty', () => {
       observer: {type: 'none', observing: false},
     })
     // initialize with non-default property definition
-    propDef = new ReactiveProtoProperty({
+    propDef = new ProtoProperty({
       reflect: false,
       type: Object,
       init: true,
     })
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    prop = new PropertyInstance(dummy, propDef)
     expect(propDef).toEqual({
       type: Object,
       reflect: false,
@@ -481,10 +481,10 @@ describe('ReactiveProperty', () => {
       observer: {type: 'object', observing: true},
     })
   })
-  it('Should register property definitions from static ReactiveProperties.', () => {
+  it('Should register property definitions from static Properties.', () => {
     @Register
-    class TestClass extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestClass extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           prop1: 'value1',
           prop2: { value: 'value2', type: String },
@@ -502,8 +502,8 @@ describe('ReactiveProperty', () => {
     let propDef, prop
     let binding = new Binding(new TestNode({label: 'lorem'}), 'label')
 
-    propDef = new ReactiveProtoProperty(binding)
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty(binding)
+    prop = new PropertyInstance(dummy, propDef)
 
     expect(propDef).toEqual({
       value: 'lorem',
@@ -520,8 +520,8 @@ describe('ReactiveProperty', () => {
 
     binding = new Binding(new TestNode({label: 'lorem'}), 'label')
 
-    propDef = new ReactiveProtoProperty({binding: binding, value: 'ipsum'})
-    prop = new ReactivePropertyInstance(dummy, propDef)
+    propDef = new ProtoProperty({binding: binding, value: 'ipsum'})
+    prop = new PropertyInstance(dummy, propDef)
 
     expect(propDef).toEqual({
       value: 'lorem',
@@ -538,8 +538,8 @@ describe('ReactiveProperty', () => {
   })
   it('Should assign property definitions correctly', () => {
     const binding = new Binding(new TestNode({label: 'lorem'}), 'label')
-    let propDef1 = new ReactiveProtoProperty({})
-    let propDef2 = new ReactiveProtoProperty({
+    let propDef1 = new ProtoProperty({})
+    let propDef2 = new ProtoProperty({
       value: 'lorem',
       type: String,
       binding: binding,
@@ -549,10 +549,10 @@ describe('ReactiveProperty', () => {
     propDef1.assign(propDef2)
     expect(propDef1).toEqual(propDef2)
 
-    propDef1 = new ReactiveProtoProperty({})
+    propDef1 = new ProtoProperty({})
     expect(propDef1).toEqual({})
 
-    propDef2 = new ReactiveProtoProperty({
+    propDef2 = new ProtoProperty({
       value: 'lorem',
       type: String,
       binding: binding,
@@ -568,11 +568,11 @@ describe('ReactiveProperty', () => {
       init: true,
     })
 
-    propDef1 = new ReactiveProtoProperty({
+    propDef1 = new ProtoProperty({
       reflect: true,
       init: undefined,
     })
-    propDef2 = new ReactiveProtoProperty({
+    propDef2 = new ProtoProperty({
       value: 'lorem',
       type: String,
       reflect: true
@@ -590,7 +590,7 @@ describe('ReactiveProperty', () => {
   describe('Observer', () => {
     it('observes none type for primitives', () => {
       const node = new TestNode()
-      const prop = node._reactiveProperties.get('label')!
+      const prop = node._properties.get('label')!
       expect(prop.observer.type).toBe('none')
       expect(prop.observer.observing).toBe(false)
       node.dispose()
@@ -598,25 +598,25 @@ describe('ReactiveProperty', () => {
 
     it('observes object type for plain objects', () => {
       @Register
-      class ObjectPropNode extends ReactiveNode {
-        static get ReactiveProperties() {
+      class ObjectPropNode extends ReactiveObject {
+        static get Properties() {
           return {data: {type: Object, init: null}}
         }
         declare data: Record<string, unknown>
       }
 
       const node = new ObjectPropNode()
-      const prop = node._reactiveProperties.get('data')!
+      const prop = node._properties.get('data')!
       expect(prop.observer.type).toBe('object')
       expect(prop.observer.observing).toBe(true)
       expect(node._hasWindowMutationListener).toBe(true)
       node.dispose()
     })
 
-    it('observes io type for ReactiveNode values', () => {
+    it('observes io type for ReactiveObject values', () => {
       @Register
-      class IoPropNode extends ReactiveNode {
-        static get ReactiveProperties() {
+      class IoPropNode extends ReactiveObject {
+        static get Properties() {
           return {child: {type: TestNode, init: null}}
         }
         declare child: TestNode
@@ -625,7 +625,7 @@ describe('ReactiveProperty', () => {
       const node = new IoPropNode()
       const child = new TestNode({label: 'child'})
       node.child = child
-      const prop = node._reactiveProperties.get('child')!
+      const prop = node._properties.get('child')!
       expect(prop.observer.type).toBe('io')
       expect(prop.observer.observing).toBe(true)
       node.dispose()
@@ -634,15 +634,15 @@ describe('ReactiveProperty', () => {
 
     it('observes nodearray type', () => {
       @Register
-      class ArrayPropNode extends ReactiveNode {
-        static get ReactiveProperties() {
+      class ArrayPropNode extends ReactiveObject {
+        static get Properties() {
           return {items: {type: NodeArray, init: null}}
         }
         declare items: NodeArray<TestNode>
       }
 
       const node = new ArrayPropNode()
-      const prop = node._reactiveProperties.get('items')!
+      const prop = node._properties.get('items')!
       expect(prop.observer.type).toBe('nodearray')
       expect(prop.observer.observing).toBe(true)
       expect(node._hasSelfMutationListener).toBe(true)
@@ -666,11 +666,11 @@ describe('ReactiveProperty', () => {
     })
   })
 
-  describe('ReactivePropertyInstance', () => {
-    it('reflects to attribute on IoElement', () => {
+  describe('PropertyInstance', () => {
+    it('reflects to attribute on ReactiveElement', () => {
       @Register
-      class ReflectElement extends IoElement {
-        static get ReactiveProperties() {
+      class ReflectElement extends ReactiveElement {
+        static get Properties() {
           return {
             count: {type: Number, value: 0, reflect: true},
           }
@@ -687,8 +687,8 @@ describe('ReactiveProperty', () => {
 
     it('setter dispatches change queue', async () => {
       @Register
-      class QueueNode extends ReactiveNode {
-        static get ReactiveProperties() {
+      class QueueNode extends ReactiveObject {
+        static get Properties() {
           return {value: 0}
         }
         declare value: number

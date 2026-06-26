@@ -1,11 +1,11 @@
-import { IoElement, IoElementProps } from '@io-gui/core';
+import { ReactiveElement, IoElementProps } from '@io-gui/core';
 import { TodoItemModel } from './TodoItemModel.js';
 import { TodoListModel } from './TodoListModel.js';
 type TodoItemProps = IoElementProps & {
     item?: TodoItemModel;
     model?: TodoListModel;
 };
-export declare class TodoItem extends IoElement {
+export declare class TodoItem extends ReactiveElement {
     static get Style(): string;
     item: TodoItemModel;
     model: TodoListModel;
@@ -14,7 +14,7 @@ export declare class TodoItem extends IoElement {
     private _originalTitle;
     constructor(args?: TodoItemProps);
     itemMutated(): void;
-    changed(): void;
+    mutated(): void;
     onStartEdit(): void;
     onBlur(): void;
     onInputKey(event: KeyboardEvent): void;

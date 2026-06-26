@@ -1,6 +1,6 @@
-import { IoElement } from '@io-gui/core';
+import { ReactiveElement } from '@io-gui/core';
 /** @internal Demo: reactive change graph visualization. */
-export declare class IoChangeVisualization extends IoElement {
+export declare class IoChangeVisualization extends ReactiveElement {
     static get Style(): string;
     ready(): void;
 }

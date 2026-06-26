@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { ReactiveProperty, IoGl, Property } from '@io-gui/core';
+import { Property, IoGl, Field } from '@io-gui/core';
 const clamp = (num, min, max) => {
     return max > min ? Math.min(Math.max(num, min), max) : Math.min(Math.max(num, max), min);
 };
@@ -287,7 +287,7 @@ export class IoSliderBase extends IoGl {
         this._inputValue(value);
     }
     ready() {
-        this.changed();
+        this.mutated();
     }
     valueChanged() {
         let invalid = false;
@@ -308,11 +308,11 @@ export class IoSliderBase extends IoGl {
         }
     }
     valueMutated() {
-        this.changed();
+        this.mutated();
         this.dispatchMutation();
     }
-    changed() {
-        super.changed();
+    mutated() {
+        super.mutated();
         this.setAttribute('aria-valuemin', JSON.stringify(this.min));
         this.setAttribute('aria-valuemax', JSON.stringify(this.max));
         this.setAttribute('aria-valuestep', JSON.stringify(this.step));
@@ -327,32 +327,32 @@ export class IoSliderBase extends IoGl {
     }
 }
 __decorate([
-    ReactiveProperty({ type: Number, value: 0 })
+    Property({ type: Number, value: 0 })
 ], IoSliderBase.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty({ type: Number, value: 0.01 })
+    Property({ type: Number, value: 0.01 })
 ], IoSliderBase.prototype, "step", void 0);
 __decorate([
-    ReactiveProperty({ type: Number, value: 0 })
+    Property({ type: Number, value: 0 })
 ], IoSliderBase.prototype, "min", void 0);
 __decorate([
-    ReactiveProperty({ type: Number, value: 1 })
+    Property({ type: Number, value: 1 })
 ], IoSliderBase.prototype, "max", void 0);
 __decorate([
-    ReactiveProperty({ type: Number, value: 1 })
+    Property({ type: Number, value: 1 })
 ], IoSliderBase.prototype, "exponent", void 0);
 __decorate([
-    ReactiveProperty({ value: false, reflect: true })
+    Property({ value: false, reflect: true })
 ], IoSliderBase.prototype, "vertical", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+    Property({ value: false, type: Boolean, reflect: true })
 ], IoSliderBase.prototype, "invalid", void 0);
 __decorate([
-    Property(false)
+    Field(false)
 ], IoSliderBase.prototype, "noscroll", void 0);
 __decorate([
-    Property('slider')
+    Field('slider')
 ], IoSliderBase.prototype, "role", void 0);
 __decorate([
-    Property(0)
+    Field(0)
 ], IoSliderBase.prototype, "tabIndex", void 0);

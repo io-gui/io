@@ -4,13 +4,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var IoElement_1;
-import { Property, ReactiveProperty } from '../decorators/Property.js';
+var ReactiveElement_1;
+import { Field } from '../decorators/Field.js';
+import { Property } from '../decorators/Property.js';
 import { Register } from '../decorators/Register.js';
 import { ProtoChain } from '../core/ProtoChain.js';
 import { applyNativeElementProps, constructElement, createVDOMElement, filterVDOMElements, TEXT_TAG, getNodeVDOMTag, getTextVDOMContent } from '../vdom/VDOM.js';
-import { dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties } from '../nodes/ReactiveNode.js';
-import { addParent, initReactiveOwnerInternals, removeParent } from '../core/ReactiveCore.js';
+import { dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initProperties, initFields } from '../nodes/ReactiveObject.js';
+import { addParent, initReactiveNodeInternals, removeParent } from '../core/ReactiveCore.js';
 import { Binding } from '../core/Binding.js';
 import { applyElementStyleToDocument } from '../core/Style.js';
 import { throttle, debounce } from '../core/Queue.js';
@@ -22,18 +23,18 @@ const resizeObserver = new ResizeObserver(entries => {
 /**
  * Base class for Io-Gui custom elements.
  *
- * IoElement extends `HTMLElement` with the same reactive property system as
- * {@link ReactiveNode}, plus virtual DOM rendering, inherited CSS via static
+ * ReactiveElement extends `HTMLElement` with the same reactive property system as
+ * {@link ReactiveObject}, plus virtual DOM rendering, inherited CSS via static
  * `Style`, and DOM event bridging through {@link EventDispatcher}.
  *
- * Elements render children with {@link IoElement.render} and declare structure
+ * Elements render children with {@link ReactiveElement.render} and declare structure
  * through VDOM helpers exported from `@io-gui/core`. Register elements with
  * {@link Register}; factory functions (for example `ioButton`) are generated
  * automatically for VDOM composition.
  *
- * @see ReactiveNode for non-DOM reactive objects
+ * @see ReactiveObject for non-DOM reactive objects
  */
-let IoElement = IoElement_1 = class IoElement extends HTMLElement {
+let ReactiveElement = ReactiveElement_1 = class ReactiveElement extends HTMLElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -57,10 +58,10 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
       }
     `;
     }
-    static get ReactiveProperties() {
+    static get Properties() {
         return {};
     }
-    static get Properties() {
+    static get Fields() {
         return {};
     }
     /**
@@ -74,10 +75,10 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
     constructor(args = {}) {
         super();
         this._protochain.init(this);
-        initReactiveOwnerInternals(this);
+        initReactiveNodeInternals(this);
         this.init();
-        initReactiveProperties(this);
         initProperties(this);
+        initFields(this);
         this.applyProperties(args, true);
         this.ready();
         this.dispatchQueue();
@@ -85,7 +86,7 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
     /** Applies constructor/render props; defers dispatch when `skipDispatch` is true. */
     applyProperties(props, skipDispatch = false) {
         for (const name in props) {
-            if (this._reactiveProperties.has(name)) {
+            if (this._properties.has(name)) {
                 this.setProperty(name, props[name], true);
             }
             else {
@@ -110,7 +111,7 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
                 }
                 else if (!name.startsWith('@')) {
                     debug: if (props[name] instanceof Binding) {
-                        console.warn(`IoElement: Not a ReactiveProperty! Cannot set binding to "${name}" property on element "${this.localName}"`);
+                        console.warn(`ReactiveElement: Not a Property! Cannot set binding to "${name}" property on element "${this.localName}"`);
                     }
                     this[name] = props[name];
                     // TODO: test and check if type can be attribute.
@@ -132,13 +133,13 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
         if (this._disposed)
             return;
         setProperty(this, name, value, debounce);
-        const prop = this._reactiveProperties.get(name);
+        const prop = this._properties.get(name);
         if (prop.reflect)
             this.setAttribute(name.toLowerCase(), value);
     }
     init() { }
     ready() { }
-    changed() { }
+    mutated() { }
     get [Symbol.toStringTag]() {
         return this.constructor.name;
     }
@@ -224,18 +225,18 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
                 // Update this.$ map of ids.
                 debug: {
                     if (this.$[vChild.props.id] !== undefined) {
-                        console.warn(`IoElement: Duplicate id in template. "${vChild.props.id}"`);
+                        console.warn(`ReactiveElement: Duplicate id in template. "${vChild.props.id}"`);
                     }
                 }
                 this.$[vChild.props.id] = elementChild;
             }
             if (vChild.children !== undefined) {
-                if (!elementChild._isIoElement) {
+                if (!elementChild._isReactiveElement) {
                     const vDOMElementsOnly = filterVDOMElements(vChild.children);
                     this.traverse(vDOMElementsOnly, elementChild, skipDispose);
                 }
             }
-            else if (!elementChild._isIoElement) {
+            else if (!elementChild._isReactiveElement) {
                 // Clear children for native elements. IoElements manage their own children by design
                 clearNativeElementChildren(elementChild);
             }
@@ -289,13 +290,13 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
     }
     /**
      * Updates props of an existing element matched during reconciliation.
-     * @param {HTMLElement | IoElement} child - Element to update.
+     * @param {HTMLElement | ReactiveElement} child - Element to update.
      * @param {VDOMElement} vChild - Virtual DOM element to apply props from.
      */
     _updateElementProps(child, vChild) {
         if (vChild.props) {
-            if (child._isIoElement) {
-                // Set IoElement element properties
+            if (child._isReactiveElement) {
+                // Set ReactiveElement element properties
                 child.applyProperties(vChild.props);
             }
             else {
@@ -354,7 +355,7 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
         Object.defineProperty(ioNodeConstructor.prototype, '_protochain', { value: new ProtoChain(ioNodeConstructor) });
         const localName = ioNodeConstructor.name.replace(/([a-z])([A-Z,0-9])/g, '$1-$2').toLowerCase();
         Object.defineProperty(ioNodeConstructor.prototype, 'localName', { value: localName });
-        Object.defineProperty(ioNodeConstructor.prototype, '_isIoElement', { enumerable: false, value: true, writable: false });
+        Object.defineProperty(ioNodeConstructor.prototype, '_isReactiveElement', { enumerable: false, value: true, writable: false });
         Object.defineProperty(window, ioNodeConstructor.name, { value: ioNodeConstructor });
         window.customElements.define(localName, ioNodeConstructor);
         applyElementStyleToDocument(localName, ioNodeConstructor.prototype._protochain.style);
@@ -367,15 +368,15 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: String, value: 'immediate' })
-], IoElement.prototype, "reactivity", void 0);
+    Property({ type: String, value: 'immediate' })
+], ReactiveElement.prototype, "reactivity", void 0);
 __decorate([
-    Property(Object)
-], IoElement.prototype, "$", void 0);
-IoElement = IoElement_1 = __decorate([
+    Field(Object)
+], ReactiveElement.prototype, "$", void 0);
+ReactiveElement = ReactiveElement_1 = __decorate([
     Register
-], IoElement);
-export { IoElement };
+], ReactiveElement);
+export { ReactiveElement };
 /**
  * Disposes EventDispatcher on an element.
  */
@@ -409,7 +410,7 @@ export const clearNativeElementChildren = function (element) {
 };
 /**
  * Disposes the element's children.
- * @param {IoElement} element - Element to dispose children of.
+ * @param {ReactiveElement} element - Element to dispose children of.
  */
 export const disposeChildren = function (element) {
     // NOTE: This rAF ensures that element's change queue is emptied before disposing.
@@ -425,4 +426,4 @@ export const disposeChildren = function (element) {
         }
     });
 };
-export const ioElement = IoElement.vConstructor;
+export const ioElement = ReactiveElement.vConstructor;

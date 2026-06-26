@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, Property } from '@io-gui/core';
+import { Register, ReactiveElement, Property, Field } from '@io-gui/core';
 import { WebGPURenderer, CanvasTarget, NeutralToneMapping } from 'three/webgpu';
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
 import { ThreeApplet } from '../nodes/ThreeApplet.js';
@@ -25,10 +25,30 @@ _renderer.toneMapping = NeutralToneMapping;
 _renderer.setPixelRatio(window.devicePixelRatio);
 _renderer.shadowMap.enabled = true;
 void _renderer.init();
-let IoThreeViewport = class IoThreeViewport extends IoElement {
+let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
     width = 0;
     height = 0;
     visible = false;
+    renderTarget;
+    isWebGPUBackend() {
+        return this.renderer.backend.isWebGPUBackend === true;
+    }
+    attachSurface() {
+        if (this.isWebGPUBackend()) {
+            if (!this.renderTarget) {
+                this.renderTarget = new CanvasTarget(document.createElement('canvas'));
+            }
+            const canvas = this.renderTarget.domElement;
+            if (canvas.parentElement !== this) {
+                this.appendChild(canvas);
+            }
+            return;
+        }
+        const canvas = this.renderer.domElement;
+        if (canvas.parentElement !== this) {
+            this.appendChild(canvas);
+        }
+    }
     static get Style() {
         return /* css */ `
       :host {
@@ -63,19 +83,16 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
         this.debounce(this.renderViewportDebounced);
     }
     ready() {
-        // TODO: This is a hack to enable rendering with WebGL fallback
-        if (this.renderer.backend.isWebGPUBackend) {
-            this.renderTarget = new CanvasTarget(document.createElement('canvas'));
-            this.appendChild(this.renderTarget.domElement);
-        }
-        else {
+        this.attachSurface();
+        if (!this.isWebGPUBackend()) {
             console.log('WebGL fallback enabled');
-            this.appendChild(this.renderer.domElement);
         }
     }
     connectedCallback() {
         super.connectedCallback();
         observer.observe(this);
+        this.attachSurface();
+        this.onResized();
     }
     disconnectedCallback() {
         super.disconnectedCallback();
@@ -101,7 +118,7 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
         const rect = this.getBoundingClientRect();
         this.width = Math.floor(rect.width);
         this.height = Math.floor(rect.height);
-        if (this.renderer.backend.isWebGPUBackend) {
+        if (this.isWebGPUBackend() && this.renderTarget) {
             this.renderTarget.setSize(this.width, this.height);
             this.renderTarget.setPixelRatio(window.devicePixelRatio);
         }
@@ -116,7 +133,7 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
     viewCamerasMutated() {
         this.debounce(this.renderViewportDebounced);
     }
-    changed() {
+    mutated() {
         this.debounce(this.renderViewportDebounced);
     }
     renderViewportDebounced() {
@@ -135,7 +152,7 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
         }
         if (!this.width || !this.height)
             return;
-        if (this.renderer.backend.isWebGPUBackend) {
+        if (this.isWebGPUBackend() && this.renderTarget) {
             this.renderer.setCanvasTarget(this.renderTarget);
         }
         this.renderer.setClearColor(this.clearColor, this.clearAlpha);
@@ -154,41 +171,45 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
     }
     dispose() {
         delete this.applet;
-        this.renderTarget.dispose();
+        if (this.renderTarget) {
+            this.renderTarget.dispose();
+        }
         this.viewCameras.dispose();
-        this.tool.unregisterViewport(this);
+        if (this.tool) {
+            this.tool.unregisterViewport(this);
+        }
         super.dispose();
     }
 };
 __decorate([
-    ReactiveProperty({ type: Number, value: 1.1 })
+    Property({ type: Number, value: 1.1 })
 ], IoThreeViewport.prototype, "overscan", void 0);
 __decorate([
-    ReactiveProperty({ type: Number, value: 0x000000 })
+    Property({ type: Number, value: 0x000000 })
 ], IoThreeViewport.prototype, "clearColor", void 0);
 __decorate([
-    ReactiveProperty({ type: Number, value: 1 })
+    Property({ type: Number, value: 1 })
 ], IoThreeViewport.prototype, "clearAlpha", void 0);
 __decorate([
-    ReactiveProperty({ type: String, value: 'throttled' })
+    Property({ type: String, value: 'throttled' })
 ], IoThreeViewport.prototype, "reactivity", void 0);
 __decorate([
-    ReactiveProperty({ type: ThreeApplet, init: null })
+    Property({ type: ThreeApplet, init: null })
 ], IoThreeViewport.prototype, "applet", void 0);
 __decorate([
-    ReactiveProperty({ type: String, value: 'perspective' })
+    Property({ type: String, value: 'perspective' })
 ], IoThreeViewport.prototype, "cameraSelect", void 0);
 __decorate([
-    ReactiveProperty({ type: WebGPURenderer, value: _renderer })
+    Property({ type: WebGPURenderer, value: _renderer })
 ], IoThreeViewport.prototype, "renderer", void 0);
 __decorate([
-    ReactiveProperty({ type: ViewCameras })
+    Property({ type: ViewCameras })
 ], IoThreeViewport.prototype, "viewCameras", void 0);
 __decorate([
-    ReactiveProperty({ type: ToolBase })
+    Property({ type: ToolBase })
 ], IoThreeViewport.prototype, "tool", void 0);
 __decorate([
-    Property(0)
+    Field(0)
 ], IoThreeViewport.prototype, "tabIndex", void 0);
 IoThreeViewport = __decorate([
     Register

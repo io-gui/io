@@ -1,6 +1,6 @@
-import { isReactiveOwner } from './ReactiveCore.js';
+import { isReactiveNode } from './ReactiveCore.js';
 /**
- * FIFO property-change queue for {@link ReactiveNode} and {@link IoElement}.
+ * FIFO property-change queue for {@link ReactiveNode}.
  * Coalesces repeated writes to the same property, then dispatches handlers and events.
  */
 export class ChangeQueue {
@@ -41,7 +41,7 @@ export class ChangeQueue {
             existing.value = value;
         }
     }
-    /** Dispatches queued changes, invokes handlers, then `changed()` and mutation dispatch. */
+    /** Dispatches queued changes, invokes handlers, then `mutated()` and mutation dispatch. */
     dispatch() {
         if (this.dispatching === true) {
             debug: console.error('ChangeQueue: dispatching already in progress!');
@@ -93,14 +93,14 @@ export class ChangeQueue {
     }
     #invokeChanged() {
         try {
-            this.node.changed();
+            this.node.mutated();
         }
         catch (error) {
-            console.error(`Error in ${this.node.constructor.name}.changed():`, error);
+            console.error(`Error in ${this.node.constructor.name}.mutated():`, error);
         }
     }
     #invokeMutation(properties) {
-        if (isReactiveOwner(this.node)) {
+        if (isReactiveNode(this.node)) {
             this.node.dispatchMutation(this.node, properties);
         }
     }

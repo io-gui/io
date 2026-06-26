@@ -4,9 +4,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { ReactiveNode, NodeArray, Register, ReactiveProperty } from '@io-gui/core';
+import { ReactiveObject, NodeArray, Register, Property } from '@io-gui/core';
 import { TodoItemModel } from './TodoItemModel.js';
-export class TodoListModel extends ReactiveNode {
+export class TodoListModel extends ReactiveObject {
     static get Listeners() {
         return {
             'delete-item': 'onDeleteItem',
@@ -55,6 +55,6 @@ export class TodoListModel extends ReactiveNode {
     }
 }
 __decorate([
-    ReactiveProperty({ type: NodeArray, init: 'this' })
+    Property({ type: NodeArray, init: 'this' })
 ], TodoListModel.prototype, "items", void 0);
 Register(TodoListModel);

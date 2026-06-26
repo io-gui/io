@@ -1,4 +1,4 @@
-import { AnyConstructor } from '../nodes/ReactiveNode.js'
+import { AnyConstructor } from '../nodes/ReactiveObject.js'
 
 export const styleDecorators: WeakMap<AnyConstructor, string> = new WeakMap()
 

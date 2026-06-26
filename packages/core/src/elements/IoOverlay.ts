@@ -1,7 +1,7 @@
-import { ReactiveProperty } from '../decorators/Property.js'
+import { Property } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
-import { ListenerDefinitions } from '../nodes/ReactiveNode.js'
-import { IoElement, IoElementProps } from './IoElement.js'
+import { ListenerDefinitions } from '../nodes/ReactiveObject.js'
+import { ReactiveElement, IoElementProps } from './ReactiveElement.js'
 
 export type IoExpandable = {
   expanded: boolean
@@ -13,7 +13,7 @@ let focusRestoreTarget: Element | null = null
  * Singleton full-window overlay; blocks pointer events when {@link expanded} and collapses children on backdrop click.
  */
 @Register
-class IoOverlay extends IoElement {
+class IoOverlay extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host {
@@ -40,7 +40,7 @@ class IoOverlay extends IoElement {
       }
     `
   }
-  @ReactiveProperty({value: false, type: Boolean, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare expanded: boolean
 
   static override get Listeners(): ListenerDefinitions {

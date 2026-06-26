@@ -41,6 +41,6 @@ export declare class IoNumber extends IoField {
     onKeyup(event: KeyboardEvent): void;
     _setFromTextNode(): void;
     ready(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioNumber: (arg0?: IoNumberProps) => import("@io-gui/core").VDOMElement;

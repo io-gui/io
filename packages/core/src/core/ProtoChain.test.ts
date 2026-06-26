@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { ProtoChain, ReactiveNode, ReactivePropertyDefinitions, ListenerDefinitions, IoElement, Register } from '@io-gui/core'
+import { ProtoChain, ReactiveObject, PropertyDefinitions, ListenerDefinitions, ReactiveElement, Register } from '@io-gui/core'
 
 class Array1 extends Array {}
 class Array2 extends Array1 {}
@@ -16,8 +16,8 @@ class HTMLElement3 extends HTMLElement2 {}
 // TODO: Fix init field testing. Based on old implementation.
 
 @Register
-class Node1 extends ReactiveNode {
-  static get ReactiveProperties(): ReactivePropertyDefinitions {
+class Node1 extends ReactiveObject {
+  static get Properties(): PropertyDefinitions {
     return {
       prop1: {
         init: false
@@ -26,7 +26,7 @@ class Node1 extends ReactiveNode {
     }
   }
 
-  static get Properties(): Record<string, any> {
+  static get Fields(): Record<string, any> {
     return {
       sprop1: 'foo'
     }
@@ -35,7 +35,7 @@ class Node1 extends ReactiveNode {
 
 @Register
 class Node3 extends Node1 {
-  static get ReactiveProperties(): ReactivePropertyDefinitions {
+  static get Properties(): PropertyDefinitions {
     return {
       prop1: {
         init: true,
@@ -46,7 +46,7 @@ class Node3 extends Node1 {
     }
   }
 
-  static get Properties(): Record<string, any> {
+  static get Fields(): Record<string, any> {
     return {
       sprop2: 'bar'
     }
@@ -55,24 +55,24 @@ class Node3 extends Node1 {
 
 @Register
 class Node4 extends Node1 {
-  static get ReactiveProperties(): ReactivePropertyDefinitions {
+  static get Properties(): PropertyDefinitions {
     return {
       prop1: { init: true },
       prop2: {},
     }
   }
 
-  static get Properties(): Record<string, any> {
+  static get Fields(): Record<string, any> {
     return {
       sprop1: 'baz'
     }
   }
 }
 
-class IoElement1 extends IoElement {}
+class IoElement1 extends ReactiveElement {}
 
 class MockNode1 {
-  static get ReactiveProperties(): ReactivePropertyDefinitions {
+  static get Properties(): PropertyDefinitions {
     return {
       prop1: {
         init: false
@@ -90,7 +90,7 @@ class MockNode1 {
   static get Style() {
     return 'a'
   }
-  changed() {}
+  mutated() {}
   function1() {}
   onFunction1() {}
   _onFunction1() {}
@@ -100,7 +100,7 @@ class MockNode2 extends MockNode1 {
   function2() {}
   onFunction2() {}
   _onFunction2() {}
-  static get ReactiveProperties(): ReactivePropertyDefinitions {
+  static get Properties(): PropertyDefinitions {
     return {
       prop1: {
         type: Object,
@@ -130,69 +130,69 @@ describe('ProtoChain', () => {
     expect(constructors).toEqual([Object3, Object2, Object1])
     constructors = new ProtoChain(HTMLElement3).constructors
     expect(constructors).toEqual([HTMLElement3, HTMLElement2, HTMLElement1])
-    constructors = new ProtoChain(ReactiveNode).constructors
-    expect(constructors).toEqual([ReactiveNode])
+    constructors = new ProtoChain(ReactiveObject).constructors
+    expect(constructors).toEqual([ReactiveObject])
     constructors = new ProtoChain(Node1).constructors
-    expect(constructors).toEqual([Node1, ReactiveNode])
+    expect(constructors).toEqual([Node1, ReactiveObject])
     constructors = new ProtoChain(IoElement1).constructors
-    expect(constructors).toEqual([IoElement1, IoElement])
+    expect(constructors).toEqual([IoElement1, ReactiveElement])
   })
-  it('Should include properties declared in `static get Properties()` return oject', () => {
+  it('Should include properties declared in `static get Fields()` return oject', () => {
     const protoChain = new ProtoChain(Node1)
-    expect(Object.keys(protoChain.properties)).toEqual(['sprop1'])
-    expect(protoChain.properties).toEqual({
+    expect(Object.keys(protoChain.fields)).toEqual(['sprop1'])
+    expect(protoChain.fields).toEqual({
       sprop1: 'foo'
     })
   })
-  it('Should include reactive properties declared in `static get ReactiveProperties()` return oject', () => {
+  it('Should include reactive properties declared in `static get Properties()` return oject', () => {
     let protoChain = new ProtoChain(MockNode1)
-    expect(Object.keys(protoChain.reactiveProperties)).toEqual(['prop1'])
-    expect(protoChain.reactiveProperties).toEqual({
+    expect(Object.keys(protoChain.properties)).toEqual(['prop1'])
+    expect(protoChain.properties).toEqual({
       prop1:{init: false},
     })
     protoChain = new ProtoChain(MockNode2)
-    expect(Object.keys(protoChain.reactiveProperties)).toEqual(['prop1', 'prop2'])
-    expect(protoChain.reactiveProperties).toEqual({
+    expect(Object.keys(protoChain.properties)).toEqual(['prop1', 'prop2'])
+    expect(protoChain.properties).toEqual({
       prop1:{type: Object, init: null},
       prop2:{},
     })
   })
-  it('Should include properties from subclass static Properties', () => {
+  it('Should include properties from subclass static Fields', () => {
     const protoChain = new ProtoChain(Node3)
-    expect(Object.keys(protoChain.properties)).toEqual(['sprop1', 'sprop2'])
-    expect(protoChain.properties).toEqual({
+    expect(Object.keys(protoChain.fields)).toEqual(['sprop1', 'sprop2'])
+    expect(protoChain.fields).toEqual({
       sprop1: 'foo',
       sprop2: 'bar'
     })
   })
-  it('Should include reactive properties from static ReactiveProperties', () => {
+  it('Should include reactive properties from static Properties', () => {
     let protoChain = new ProtoChain(Node1)
-    expect(Object.keys(protoChain.reactiveProperties)).toEqual(['reactivity', 'prop1', 'prop2'])
-    expect(protoChain.reactiveProperties).toEqual({
+    expect(Object.keys(protoChain.properties)).toEqual(['reactivity', 'prop1', 'prop2'])
+    expect(protoChain.properties).toEqual({
       reactivity:{value: 'immediate', type: String},
       prop1:{init: false},
       prop2:{type: Object, init: null},
     })
     protoChain = new ProtoChain(Node3)
-    expect(Object.keys(protoChain.reactiveProperties)).toEqual(['reactivity', 'prop1', 'prop2', 'prop3'])
-    expect(protoChain.reactiveProperties).toEqual({
+    expect(Object.keys(protoChain.properties)).toEqual(['reactivity', 'prop1', 'prop2', 'prop3'])
+    expect(protoChain.properties).toEqual({
       reactivity:{value: 'immediate', type: String},
       prop1:{reflect: true, init: true},
       prop2:{value: 'foo', init: null, type: Object, reflect: false},
       prop3:{reflect: true},
     })
   })
-  it('Should not override subclass Properties with inherited static Properties', () => {
+  it('Should not override subclass Fields with inherited static Fields', () => {
     const protoChain = new ProtoChain(Node4)
-    expect(Object.keys(protoChain.properties)).toEqual(['sprop1'])
-    expect(protoChain.properties).toEqual({
+    expect(Object.keys(protoChain.fields)).toEqual(['sprop1'])
+    expect(protoChain.fields).toEqual({
       sprop1: 'baz',
     })
   })
-  it('Should not override subclass ReactiveProperties with inherited static ReactiveProperties', () => {
+  it('Should not override subclass Properties with inherited static Properties', () => {
     const protoChain = new ProtoChain(Node4)
-    expect(Object.keys(protoChain.reactiveProperties)).toEqual(['reactivity', 'prop1', 'prop2'])
-    expect(protoChain.reactiveProperties).toEqual({
+    expect(Object.keys(protoChain.properties)).toEqual(['reactivity', 'prop1', 'prop2'])
+    expect(protoChain.properties).toEqual({
       reactivity:{value: 'immediate', type: String},
       prop1:{init: true},
       prop2:{type: Object, init: null},
@@ -221,16 +221,16 @@ describe('ProtoChain', () => {
   })
   it('Should include an array of handler names that start with "on[A-Z]" or "_on[A-Z]" for auto-binding', () => {
     let protoChain = new ProtoChain(Node1)
-    expect(protoChain.handlers).toEqual(['changed', 'onPropertyMutated'])
+    expect(protoChain.handlers).toEqual(['mutated', 'onPropertyMutated'])
     protoChain = new ProtoChain(MockNode1)
-    expect(protoChain.handlers).toEqual(['changed', 'onFunction1', '_onFunction1'])
+    expect(protoChain.handlers).toEqual(['mutated', 'onFunction1', '_onFunction1'])
     protoChain = new ProtoChain(MockNode2)
-    expect(protoChain.handlers).toEqual(['changed', 'onFunction1', '_onFunction1', 'onFunction2', '_onFunction2'])
+    expect(protoChain.handlers).toEqual(['mutated', 'onFunction1', '_onFunction1', 'onFunction2', '_onFunction2'])
   })
   it('Should bind auto-binding functions with `.init(node)` function', () => {
     const protoChain = new ProtoChain(MockNode2)
     const node = new MockNode2()
-    protoChain.init(node as unknown as ReactiveNode)
+    protoChain.init(node as unknown as ReactiveObject)
     expect(node.function1.name).toBe('function1')
     expect(node.onFunction1.name).toBe('bound onFunction1')
     expect(node._onFunction1.name).toBe('bound _onFunction1')
@@ -240,8 +240,8 @@ describe('ProtoChain', () => {
   })
   it('double Register does not re-init protochain', () => {
     @Register
-    class FreshRegisterNode extends ReactiveNode {
-      static get ReactiveProperties() {
+    class FreshRegisterNode extends ReactiveObject {
+      static get Properties() {
         return {value: 0}
       }
       declare value: number

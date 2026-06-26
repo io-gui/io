@@ -1,11 +1,11 @@
-import { IoElement, IoElementProps, VDOMElement } from '@io-gui/core';
+import { ReactiveElement, IoElementProps, VDOMElement } from '@io-gui/core';
 export type DrawerDirection = 'left' | 'right';
 export type IoNavigatorDrawerProps = IoElementProps & {
     direction: DrawerDirection;
     expanded?: boolean;
     menuContent: VDOMElement;
 };
-export declare class IoNavigatorDrawer extends IoElement {
+export declare class IoNavigatorDrawer extends ReactiveElement {
     static get Style(): string;
     direction: DrawerDirection;
     expanded: boolean;
@@ -19,7 +19,7 @@ export declare class IoNavigatorDrawer extends IoElement {
     onMenuTreeResized(): void;
     onClick(event: MouseEvent): void;
     expandedChanged(): void;
-    changed(): void;
+    mutated(): void;
     updateDrawerSizeThrottled(): void;
 }
 export declare const ioNavigatorDrawer: (args: IoNavigatorDrawerProps) => VDOMElement;

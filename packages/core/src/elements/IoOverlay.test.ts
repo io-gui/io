@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import { IoOverlaySingleton, IoElement, Register, ReactivePropertyDefinitions, nextQueue } from '@io-gui/core'
+import { IoOverlaySingleton, ReactiveElement, Register, PropertyDefinitions, nextQueue } from '@io-gui/core'
 
 @Register
-class OverlayChild extends IoElement {
-  static override get ReactiveProperties(): ReactivePropertyDefinitions {
+class OverlayChild extends ReactiveElement {
+  static override get Properties(): PropertyDefinitions {
     return { expanded: { type: Boolean, value: false } }
   }
   declare expanded: boolean
@@ -12,7 +12,7 @@ class OverlayChild extends IoElement {
 describe('IoOverlay', () => {
   it('Should initialize properties correctly', () => {
     expect(IoOverlaySingleton.expanded).toEqual(false)
-    expect(IoOverlaySingleton._reactiveProperties.get('expanded')).toEqual({
+    expect(IoOverlaySingleton._properties.get('expanded')).toEqual({
       binding: undefined,
       init: undefined,
       reflect: true,

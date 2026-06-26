@@ -10,6 +10,6 @@ export declare class IoTabsHamburger extends IoField {
     constructor(args: IoTabsHamburgerProps);
     onClick(): void;
     onEditTab(event: CustomEvent): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioTabsHamburger: (arg0: IoTabsHamburgerProps) => import("@io-gui/core").VDOMElement;

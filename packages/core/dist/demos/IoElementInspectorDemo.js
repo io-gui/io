@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Register, IoElement, div, Storage as $, pre, code } from '@io-gui/core';
+import { Register, ReactiveElement, div, Storage as $, pre, code } from '@io-gui/core';
 import { ioInspector } from '@io-gui/editors';
 import { ioField, ioNumber, ioString, ioBoolean, ioSwitch, ioButton } from '@io-gui/inputs';
 import { ioSlider, ioSliderRange, ioSlider2d, ioNumberSlider, ioNumberSliderRange } from '@io-gui/sliders';
@@ -54,7 +54,7 @@ const option = new MenuOption({
     selectedID: $({ key: 'element-demo', storage: 'local', value: 'io-slider' })
 });
 /** @internal Demo: component inspector playground. */
-export class IoElementInspectorDemo extends IoElement {
+export class IoElementInspectorDemo extends ReactiveElement {
     static get Style() {
         return /* css */ `
     :host {
@@ -110,7 +110,7 @@ export class IoElementInspectorDemo extends IoElement {
     }
     `;
     }
-    static get ReactiveProperties() {
+    static get Properties() {
         return {
             selected: option.bind('selectedID'),
         };

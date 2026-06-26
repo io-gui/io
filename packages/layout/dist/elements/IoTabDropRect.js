@@ -4,8 +4,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, IoElement, ThemeSingleton } from '@io-gui/core';
-let IoTabDropRect = class IoTabDropRect extends IoElement {
+import { Register, Property, ReactiveElement, ThemeSingleton } from '@io-gui/core';
+let IoTabDropRect = class IoTabDropRect extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -27,7 +27,7 @@ let IoTabDropRect = class IoTabDropRect extends IoElement {
     `;
     }
     constructor(args = {}) { super(args); }
-    changed() {
+    mutated() {
         if (this.dropTarget && this.dropIndex !== -1) {
             const tabs = this.dropTarget.querySelectorAll('io-tab');
             this.style.width = '';
@@ -86,13 +86,13 @@ let IoTabDropRect = class IoTabDropRect extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty(null)
+    Property(null)
 ], IoTabDropRect.prototype, "dropTarget", void 0);
 __decorate([
-    ReactiveProperty({ type: String, value: 'none', reflect: true })
+    Property({ type: String, value: 'none', reflect: true })
 ], IoTabDropRect.prototype, "splitDirection", void 0);
 __decorate([
-    ReactiveProperty({ type: Number, value: -1, reflect: true })
+    Property({ type: Number, value: -1, reflect: true })
 ], IoTabDropRect.prototype, "dropIndex", void 0);
 IoTabDropRect = __decorate([
     Register

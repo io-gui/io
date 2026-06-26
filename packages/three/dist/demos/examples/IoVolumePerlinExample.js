@@ -8,7 +8,7 @@ import { Mesh, NodeMaterial, Data3DTexture, RedFormat, LinearFilter, Vector3, Ba
 import { Break, If, vec3, vec4, texture3D, uniform, Fn } from 'three/tsl';
 import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js';
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
-import { Register, ReactiveProperty } from '@io-gui/core';
+import { Register, Property } from '@io-gui/core';
 import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
 import { ioPropertyEditor } from '@io-gui/editors';
 import { ioSplit, Split } from '@io-gui/layout';
@@ -72,10 +72,10 @@ let VolumePerlinExample = class VolumePerlinExample extends ThreeApplet {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Number, value: 0.6 })
+    Property({ type: Number, value: 0.6 })
 ], VolumePerlinExample.prototype, "threshold", void 0);
 __decorate([
-    ReactiveProperty({ type: Number, value: 200 })
+    Property({ type: Number, value: 200 })
 ], VolumePerlinExample.prototype, "steps", void 0);
 VolumePerlinExample = __decorate([
     Register
@@ -119,7 +119,7 @@ let IoVolumePerlinExample = class IoVolumePerlinExample extends IoThreeExample {
     }
 };
 __decorate([
-    ReactiveProperty({ type: VolumePerlinExample, init: null })
+    Property({ type: VolumePerlinExample, init: null })
 ], IoVolumePerlinExample.prototype, "applet", void 0);
 IoVolumePerlinExample = __decorate([
     Register

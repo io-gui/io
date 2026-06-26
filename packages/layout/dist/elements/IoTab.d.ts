@@ -26,6 +26,6 @@ export declare class IoTab extends IoField {
     expandContextEditor(): void;
     onKeydown(event: KeyboardEvent): void;
     tabMutated(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioTab: (arg0: IoTabProps) => import("@io-gui/core").VDOMElement;

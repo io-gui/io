@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, VDOMElement } from '@io-gui/core';
+import { ReactiveElement, IoElementProps, VDOMElement } from '@io-gui/core';
 import { MenuOption } from '@io-gui/menus';
 import { Split } from '../nodes/Split.js';
 import { Panel } from '../nodes/Panel.js';
@@ -13,7 +13,7 @@ export type IoDrawerProps = IoElementProps & {
     elements: VDOMElement[];
     addMenuOption?: MenuOption;
 };
-export declare class IoDrawer extends IoElement {
+export declare class IoDrawer extends ReactiveElement {
     static get Style(): string;
     orientation: 'horizontal' | 'vertical';
     direction: DrawerDirection;
@@ -26,6 +26,6 @@ export declare class IoDrawer extends IoElement {
     onClick(event: MouseEvent): void;
     expandedChanged(): void;
     childMutated(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioDrawer: (args: IoDrawerProps) => VDOMElement;

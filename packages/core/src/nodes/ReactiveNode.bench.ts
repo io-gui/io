@@ -1,12 +1,12 @@
 import { test } from 'vitest'
 import { Register } from '../decorators/Register.js'
-import { ReactiveNode, ReactivePropertyDefinitions } from './ReactiveNode.js'
+import { ReactiveObject, PropertyDefinitions } from './ReactiveObject.js'
 import { BENCH_OPTIONS } from '../testing.js'
 
 @Register
-class BenchNode extends ReactiveNode {
-  static override get ReactiveProperties(): ReactivePropertyDefinitions {
-    const props: ReactivePropertyDefinitions = {}
+class BenchNode extends ReactiveObject {
+  static override get Properties(): PropertyDefinitions {
+    const props: PropertyDefinitions = {}
     for (let i = 0; i < 50; i++) {
       props[`p${i}`] = 0
     }
@@ -14,7 +14,7 @@ class BenchNode extends ReactiveNode {
   }
 }
 
-test('ReactiveNode', async ({ bench }) => {
+test('ReactiveObject', async ({ bench }) => {
   await bench('setProperty 50 changed', () => {
     const node = new BenchNode()
     for (let i = 0; i < 50; i++) {

@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps } from '@io-gui/core';
+import { ReactiveElement, IoElementProps } from '@io-gui/core';
 import { Vector4 } from 'three/webgpu';
 export type IoVectorBaseProps = IoElementProps & {
     value?: Vector4;
@@ -11,7 +11,7 @@ export type IoVectorBaseProps = IoElementProps & {
     ladder?: boolean;
     disabled?: boolean;
 };
-export declare class IoVectorBase extends IoElement {
+export declare class IoVectorBase extends ReactiveElement {
     static get Style(): string;
     value: object;
     conversion: number;
@@ -28,5 +28,5 @@ export declare class IoVectorBase extends IoElement {
     _onNumberPointerDown(event: PointerEvent): void;
     _onNumberValueInput(event: CustomEvent): void;
     valueMutated(): void;
-    changed(): void;
+    mutated(): void;
 }

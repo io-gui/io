@@ -1,7 +1,7 @@
-import { IoElement } from '@io-gui/core';
-export declare class IoColorsDemo extends IoElement {
+import { ReactiveElement } from '@io-gui/core';
+export declare class IoColorsDemo extends ReactiveElement {
     static get Style(): string;
-    static get ReactiveProperties(): {
+    static get Properties(): {
         rgb: {
             value: {
                 r: number;

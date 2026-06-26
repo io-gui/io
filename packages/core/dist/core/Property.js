@@ -1,21 +1,21 @@
 import { Binding } from './Binding.js';
-import { isIoValue } from './ReactiveCore.js';
+import { isReactiveNode } from './ReactiveCore.js';
 import { NodeArray } from '../core/NodeArray.js';
 /** Normalized reactive property definition merged from decorators and static getters. */
-export class ReactiveProtoProperty {
+export class ProtoProperty {
     /**
      * Creates a property definition from various input types.
-     * @param {ReactivePropertyDefinitionLoose} def Input definition which can be:
+     * @param {PropertyDefinitionLoose} def Input definition which can be:
      * - `undefined` or `null`: Sets as value
      * - `AnyConstructor`: Sets as type
      * - `Binding`: Sets value from binding and stores binding reference
-     * - `ReactivePropertyDefinition`: Copies all defined fields
+     * - `PropertyDefinition`: Copies all defined fields
      * - Other values: Sets as value
      * @example
-     * new ReactiveProtoProperty(String) // {type: String}
-     * new ReactiveProtoProperty('hello') // {value: 'hello'}
-     * new ReactiveProtoProperty({value: 42, type: Number}) // {value: 42, type: Number}
-     * new ReactiveProtoProperty(new Binding(node, 'value')) // {value: node.value, binding: ...}
+     * new ProtoProperty(String) // {type: String}
+     * new ProtoProperty('hello') // {value: 'hello'}
+     * new ProtoProperty({value: 42, type: Number}) // {value: 42, type: Number}
+     * new ProtoProperty(new Binding(node, 'value')) // {value: node.value, binding: ...}
      */
     constructor(def) {
         if (def === undefined || def === null) {
@@ -48,8 +48,8 @@ export class ReactiveProtoProperty {
         }
     }
     /**
-     * Assigns values of another ReactiveProtoProperty to itself, unless they are default values.
-     * @param {ReactiveProtoProperty} protoProp Source ReactiveProtoProperty
+     * Assigns values of another ProtoProperty to itself, unless they are default values.
+     * @param {ProtoProperty} protoProp Source ProtoProperty
      */
     assign(protoProp) {
         if (Object.hasOwn(protoProp, 'value'))
@@ -106,7 +106,7 @@ function decodeInitArgument(item, node) {
         }
         if (target)
             return target;
-        console.error(`ReactivePropertyInstance: Invalid path ${item}`);
+        console.error(`PropertyInstance: Invalid path ${item}`);
     }
     else
         return item;
@@ -154,7 +154,7 @@ export class Observer {
             return;
         if (!value || typeof value !== 'object')
             return;
-        if (isIoValue(value)) {
+        if (isReactiveNode(value)) {
             this.type = 'io';
             this.observing = true;
             value.addEventListener('io-object-mutation', this.node.onPropertyMutated);
@@ -172,7 +172,7 @@ export class Observer {
         }
     }
     stop(value) {
-        if (isIoValue(value) && !value._disposed) {
+        if (isReactiveNode(value) && !value._disposed) {
             value.removeEventListener('io-object-mutation', this.node.onPropertyMutated);
         }
         else if (value instanceof NodeArray) {
@@ -183,8 +183,8 @@ export class Observer {
     dispose() { }
 }
 /** Runtime reactive property: value, type, binding, reflect, and mutation observer. */
-export class ReactivePropertyInstance {
-    // Property value.
+export class PropertyInstance {
+    // Field value.
     value;
     // Constructor of the property value.
     type;
@@ -197,15 +197,15 @@ export class ReactivePropertyInstance {
     // Mutation observation state for this property.
     observer;
     /**
-     * Creates the property configuration object and copies values from `ReactiveProtoProperty`.
-     * @param node owner ReactiveNode instance
-     * @param propDef ReactiveProtoProperty object
+     * Creates the property configuration object and copies values from `ProtoProperty`.
+     * @param node owner ReactiveObject instance
+     * @param propDef ProtoProperty object
      */
     constructor(node, propDef) {
         debug: {
             Object.keys(propDef).forEach(key => {
                 if (['value', 'type', 'reflect', 'init', 'binding'].indexOf(key) === -1) {
-                    console.warn(`ReactiveProtoProperty: Invalid field ${key}`);
+                    console.warn(`ProtoProperty: Invalid field ${key}`);
                 }
             });
             if (propDef.type !== undefined) {
@@ -269,12 +269,12 @@ export class ReactivePropertyInstance {
                     if (this.type === Boolean && typeof this.value !== 'boolean' ||
                         this.type === Number && typeof this.value !== 'number' ||
                         this.type === String && typeof this.value !== 'string') {
-                        console.warn(`Property: Uninitialized value for type "${this.type.name}"!`);
+                        console.warn(`Field: Uninitialized value for type "${this.type.name}"!`);
                     }
                 }
                 else {
                     if (typeof this.type === 'function' && !(this.value instanceof this.type)) {
-                        console.warn(`Property: Incorrect value "${this.value}" for type "${this.type.name}"!`);
+                        console.warn(`Field: Incorrect value "${this.value}" for type "${this.type.name}"!`);
                     }
                 }
             }

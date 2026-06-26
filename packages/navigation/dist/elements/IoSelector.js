@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, disposeChildren, ReactiveProperty, Property, span } from '@io-gui/core';
+import { Register, ReactiveElement, disposeChildren, Property, Field, span } from '@io-gui/core';
 const dummyElement = document.createElement('div');
 /**
  * Element selector. Displays one of the virtual elements assigned in the `elements` property as its child if the name of the element matches the `value` property.
@@ -32,7 +32,7 @@ function importModule(path) {
     });
 }
 ;
-let IoSelector = class IoSelector extends IoElement {
+let IoSelector = class IoSelector extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -244,31 +244,31 @@ let IoSelector = class IoSelector extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Array, init: null })
+    Property({ type: Array, init: null })
 ], IoSelector.prototype, "elements", void 0);
 __decorate([
-    ReactiveProperty({ value: '', type: String })
+    Property({ value: '', type: String })
 ], IoSelector.prototype, "selected", void 0);
 __decorate([
-    ReactiveProperty({ value: '', type: String })
+    Property({ value: '', type: String })
 ], IoSelector.prototype, "anchor", void 0);
 __decorate([
-    ReactiveProperty({ value: 'reactive', type: String })
+    Property({ value: 'reactive', type: String })
 ], IoSelector.prototype, "caching", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+    Property({ value: false, type: Boolean, reflect: true })
 ], IoSelector.prototype, "loading", void 0);
 __decorate([
-    Property(Object)
+    Field(Object)
 ], IoSelector.prototype, "_caches", void 0);
 __decorate([
-    Property(false)
+    Field(false)
 ], IoSelector.prototype, "_preaching", void 0);
 __decorate([
-    Property(false)
+    Field(false)
 ], IoSelector.prototype, "scrollToSuspended", void 0);
 __decorate([
-    Property(false)
+    Field(false)
 ], IoSelector.prototype, "onScrollSuspended", void 0);
 IoSelector = __decorate([
     Register

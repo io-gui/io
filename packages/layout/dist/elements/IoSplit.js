@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var IoSplit_1;
-import { Register, ReactiveProperty, IoElement, ThemeSingleton, div } from '@io-gui/core';
+import { Register, Property, ReactiveElement, ThemeSingleton, div } from '@io-gui/core';
 import { MenuOption } from '@io-gui/menus';
 import { ioPanel } from './IoPanel.js';
 import { ioDivider } from './IoDivider.js';
@@ -24,7 +24,7 @@ export function hasFlexGrow(flex) {
     const grow = parseFloat(flex.trim().split(/\s+/)[0] ?? '0');
     return !isNaN(grow) && grow > 0;
 }
-let IoSplit = IoSplit_1 = class IoSplit extends IoElement {
+let IoSplit = IoSplit_1 = class IoSplit extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -323,12 +323,12 @@ let IoSplit = IoSplit_1 = class IoSplit extends IoElement {
     }
     splitMutated() {
         this.calculateCollapsedDrawers();
-        this.changed();
+        this.mutated();
     }
     splitChanged() {
         this.calculateCollapsedDrawers();
     }
-    changed() {
+    mutated() {
         this.setAttribute('orientation', this.split.orientation);
         const childCount = this.split.children.length;
         const lastIndex = childCount - 1;
@@ -398,28 +398,28 @@ let IoSplit = IoSplit_1 = class IoSplit extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Object })
+    Property({ type: Object })
 ], IoSplit.prototype, "split", void 0);
 __decorate([
-    ReactiveProperty(Array)
+    Property(Array)
 ], IoSplit.prototype, "elements", void 0);
 __decorate([
-    ReactiveProperty({ type: Object, value: null })
+    Property({ type: Object, value: null })
 ], IoSplit.prototype, "leadingDrawer", void 0);
 __decorate([
-    ReactiveProperty({ type: Object, value: null })
+    Property({ type: Object, value: null })
 ], IoSplit.prototype, "trailingDrawer", void 0);
 __decorate([
-    ReactiveProperty({ type: MenuOption })
+    Property({ type: MenuOption })
 ], IoSplit.prototype, "addMenuOption", void 0);
 __decorate([
-    ReactiveProperty({ type: Boolean, value: true, reflect: true })
+    Property({ type: Boolean, value: true, reflect: true })
 ], IoSplit.prototype, "hasVisibleFlexGrow", void 0);
 __decorate([
-    ReactiveProperty({ type: Boolean, value: false, reflect: true })
+    Property({ type: Boolean, value: false, reflect: true })
 ], IoSplit.prototype, "showVeil", void 0);
 __decorate([
-    ReactiveProperty({ type: Boolean, value: false, reflect: true })
+    Property({ type: Boolean, value: false, reflect: true })
 ], IoSplit.prototype, "editable", void 0);
 IoSplit = IoSplit_1 = __decorate([
     Register

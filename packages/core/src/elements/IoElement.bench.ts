@@ -1,12 +1,12 @@
 import { test } from 'vitest'
 import { Register } from '../decorators/Register.js'
-import { IoElement } from './IoElement.js'
+import { ReactiveElement } from './ReactiveElement.js'
 import { div, span } from './IoNative.js'
 import { text, VDOMElement } from '../vdom/VDOM.js'
 import { BENCH_OPTIONS } from '../testing.js'
 
 @Register
-class BenchRenderElement extends IoElement {
+class BenchRenderElement extends ReactiveElement {
   renderNodes(changed = 0) {
     const nodes: VDOMElement[] = []
     for (let i = 0; i < 200; i++) {
@@ -16,8 +16,8 @@ class BenchRenderElement extends IoElement {
   }
 }
 
-test('IoElement', async ({ bench }) => {
-  let el!: IoElement
+test('ReactiveElement', async ({ bench }) => {
+  let el!: ReactiveElement
   let vdomNodes!: Array<VDOMElement>
   await bench('render 200 div nodes', {
     beforeEach: () => {

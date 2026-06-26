@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
+import { ReactiveElement, IoElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
 export type IoColorPickerProps = IoElementProps & {
     value: WithBinding<{
         r: number;
@@ -7,7 +7,7 @@ export type IoColorPickerProps = IoElementProps & {
         a?: number;
     }>;
 };
-export declare class IoColorPicker extends IoElement {
+export declare class IoColorPicker extends ReactiveElement {
     static get Style(): string;
     value: {
         r: number;

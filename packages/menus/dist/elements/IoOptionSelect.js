@@ -4,14 +4,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, Property } from '@io-gui/core';
+import { Register, ReactiveElement, Property, Field } from '@io-gui/core';
 import { MenuOption } from '../nodes/MenuOption.js';
 import { ioMenuItem } from './IoMenuItem.js';
 /**
  * Option select element. Similar to `IoMenuItem`, except it is displayed as a button and uses `options` property instead of ~~`option.options`~~  and it is `selectable` by default. It displays selected `value` or `label` followed by the `â–¾` character.
  * When clicked or activated by space/enter key, it expands a menu with selectable options.
  **/
-let IoOptionSelect = class IoOptionSelect extends IoElement {
+let IoOptionSelect = class IoOptionSelect extends ReactiveElement {
     static get Style() {
         return /* css */ `
     :host {
@@ -76,9 +76,9 @@ let IoOptionSelect = class IoOptionSelect extends IoElement {
         }
     }
     optionMutated() {
-        this.changed();
+        this.mutated();
     }
-    changed() {
+    mutated() {
         let selectedItem;
         let label = this.label;
         if (this.selectBy === 'value') {
@@ -93,22 +93,22 @@ let IoOptionSelect = class IoOptionSelect extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ value: undefined })
+    Property({ value: undefined })
 ], IoOptionSelect.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty('')
+    Property('')
 ], IoOptionSelect.prototype, "label", void 0);
 __decorate([
-    ReactiveProperty('')
+    Property('')
 ], IoOptionSelect.prototype, "icon", void 0);
 __decorate([
-    ReactiveProperty('value')
+    Property('value')
 ], IoOptionSelect.prototype, "selectBy", void 0);
 __decorate([
-    ReactiveProperty({ type: MenuOption })
+    Property({ type: MenuOption })
 ], IoOptionSelect.prototype, "option", void 0);
 __decorate([
-    Property('button')
+    Field('button')
 ], IoOptionSelect.prototype, "role", void 0);
 IoOptionSelect = __decorate([
     Register

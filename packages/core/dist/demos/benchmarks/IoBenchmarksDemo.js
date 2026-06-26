@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { IoElement, Register, div, h2, h3, p, table, thead, tbody, tr, th, td } from '@io-gui/core';
+import { ReactiveElement, Register, div, h2, h3, p, table, thead, tbody, tr, th, td } from '@io-gui/core';
 const RESULTS_URL = './benchmarks/results.json';
 const BASELINE_URL = './benchmarks/results-baseline.json';
 const COMPARISON_METRICS = [
@@ -145,7 +145,7 @@ function collectBenchmarkNames(groupName, current, baseline) {
     }
     return [...names].sort((a, b) => a.localeCompare(b));
 }
-export class IoBenchmarksDemo extends IoElement {
+export class IoBenchmarksDemo extends ReactiveElement {
     static get Style() {
         return /* css */ `
     :host {
@@ -270,15 +270,15 @@ export class IoBenchmarksDemo extends IoElement {
             if (baseline && !this.#baseline)
                 throw new Error('Unrecognized baseline report format');
             this.#status = 'ready';
-            this.changed();
+            this.mutated();
         })
             .catch(err => {
             this.#error = err.message || String(err);
             this.#status = 'error';
-            this.changed();
+            this.mutated();
         });
     }
-    changed() {
+    mutated() {
         if (this.#status === 'loading') {
             this.render([p('Loading benchmark results…')]);
             return;

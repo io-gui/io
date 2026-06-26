@@ -37,7 +37,7 @@ export function processElementStyle(localName, style) {
                 style = style.replace(apply[i], mixinRecord[name]);
             }
             else {
-                console.warn('IoElement: cound not find mixin:', name);
+                console.warn('ReactiveElement: cound not find mixin:', name);
             }
         }
     }

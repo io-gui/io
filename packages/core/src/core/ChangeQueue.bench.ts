@@ -1,18 +1,17 @@
 import { test } from 'vitest'
 import { ChangeQueue } from './ChangeQueue.js'
 import type { Change } from './ChangeQueue.js'
-import type { ReactiveNode } from '../nodes/ReactiveNode.js'
-import type { IoElement } from '../elements/IoElement.js'
 import { BENCH_OPTIONS } from '../testing.js'
+import { ReactiveNode } from './ReactiveCore.js'
 
-type BenchOwner = ReactiveNode | IoElement
+type BenchOwner = ReactiveNode
 
 function benchOwner(
   handlers: Record<string, (change: Change) => void> = {},
 ): BenchOwner {
   return {
     dispatch() {},
-    changed() {},
+    mutated() {},
     constructor: { name: 'BenchOwner' },
     ...handlers,
   } as unknown as BenchOwner

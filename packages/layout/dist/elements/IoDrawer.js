@@ -4,14 +4,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, IoElement, div, ThemeSingleton } from '@io-gui/core';
+import { Register, Property, ReactiveElement, div, ThemeSingleton } from '@io-gui/core';
 import { ioIcon } from '@io-gui/icons';
 import { MenuOption } from '@io-gui/menus';
 import { Split } from '../nodes/Split.js';
 import { Panel } from '../nodes/Panel.js';
 import { ioSplit, parseFlexBasis } from './IoSplit.js';
 import { ioPanel } from './IoPanel.js';
-let IoDrawer = class IoDrawer extends IoElement {
+let IoDrawer = class IoDrawer extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -118,9 +118,9 @@ let IoDrawer = class IoDrawer extends IoElement {
         this.dispatch('io-drawer-expanded-changed', { element: this }, true);
     }
     childMutated() {
-        this.changed();
+        this.mutated();
     }
-    changed() {
+    mutated() {
         if (!this.child) {
             this.render([]);
             return;
@@ -172,25 +172,25 @@ let IoDrawer = class IoDrawer extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: String, value: 'horizontal', reflect: true })
+    Property({ type: String, value: 'horizontal', reflect: true })
 ], IoDrawer.prototype, "orientation", void 0);
 __decorate([
-    ReactiveProperty({ type: String, value: 'leading', reflect: true })
+    Property({ type: String, value: 'leading', reflect: true })
 ], IoDrawer.prototype, "direction", void 0);
 __decorate([
-    ReactiveProperty({ type: Boolean, value: false, reflect: true })
+    Property({ type: Boolean, value: false, reflect: true })
 ], IoDrawer.prototype, "expanded", void 0);
 __decorate([
-    ReactiveProperty({ type: Object })
+    Property({ type: Object })
 ], IoDrawer.prototype, "parent", void 0);
 __decorate([
-    ReactiveProperty({ type: Object })
+    Property({ type: Object })
 ], IoDrawer.prototype, "child", void 0);
 __decorate([
-    ReactiveProperty(Array)
+    Property(Array)
 ], IoDrawer.prototype, "elements", void 0);
 __decorate([
-    ReactiveProperty({ type: MenuOption })
+    Property({ type: MenuOption })
 ], IoDrawer.prototype, "addMenuOption", void 0);
 IoDrawer = __decorate([
     Register

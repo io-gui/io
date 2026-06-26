@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, Property } from '@io-gui/core';
+import { Register, Property, Field } from '@io-gui/core';
 import { IoNumberLadderSingleton } from './IoNumberLadderSingleton.js';
 import { IoField } from './IoField.js';
 /**
@@ -180,22 +180,22 @@ let IoNumber = class IoNumber extends IoField {
         const d = Math.max(0, Math.min(100, -Math.floor(Math.log(this.step) / Math.LN10)));
         valueNumber = Number(valueNumber.toFixed(d));
         if (!isNaN(valueNumber)) {
-            this._reactiveProperties.get('invalid').value = false;
+            this._properties.get('invalid').value = false;
             this.removeAttribute('invalid');
             this.removeAttribute('aria-invalid');
             this.inputValue(valueNumber);
         }
         else {
-            this._reactiveProperties.get('invalid').value = true;
+            this._properties.get('invalid').value = true;
             this.setAttribute('invalid', 'true');
             this.setAttribute('aria-invalid', 'true');
         }
     }
     ready() {
         this.disabledChanged();
-        this.changed();
+        this.mutated();
     }
-    changed() {
+    mutated() {
         this.setAttribute('aria-valuenow', this.value);
         this.setAttribute('aria-valuemin', this.min);
         this.setAttribute('aria-valuemax', this.max);
@@ -226,40 +226,40 @@ let IoNumber = class IoNumber extends IoField {
     }
 };
 __decorate([
-    ReactiveProperty({ value: 0, type: Number })
+    Property({ value: 0, type: Number })
 ], IoNumber.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean })
+    Property({ value: false, type: Boolean })
 ], IoNumber.prototype, "live", void 0);
 __decorate([
-    ReactiveProperty({ value: 1, type: Number })
+    Property({ value: 1, type: Number })
 ], IoNumber.prototype, "conversion", void 0);
 __decorate([
-    ReactiveProperty({ value: 0.0001, type: Number })
+    Property({ value: 0.0001, type: Number })
 ], IoNumber.prototype, "step", void 0);
 __decorate([
-    ReactiveProperty({ value: -Infinity, type: Number })
+    Property({ value: -Infinity, type: Number })
 ], IoNumber.prototype, "min", void 0);
 __decorate([
-    ReactiveProperty({ value: Infinity, type: Number })
+    Property({ value: Infinity, type: Number })
 ], IoNumber.prototype, "max", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean })
+    Property({ value: false, type: Boolean })
 ], IoNumber.prototype, "ladder", void 0);
 __decorate([
-    ReactiveProperty({ value: 'inset', type: String, reflect: true })
+    Property({ value: 'inset', type: String, reflect: true })
 ], IoNumber.prototype, "appearance", void 0);
 __decorate([
-    Property('true')
+    Field('true')
 ], IoNumber.prototype, "contentEditable", void 0);
 __decorate([
-    ReactiveProperty({ value: 'pattern="-?[0-9]*?[0-9]*"', type: String, reflect: true })
+    Property({ value: 'pattern="-?[0-9]*?[0-9]*"', type: String, reflect: true })
 ], IoNumber.prototype, "pattern", void 0);
 __decorate([
-    Property('text')
+    Field('text')
 ], IoNumber.prototype, "inputMode", void 0);
 __decorate([
-    Property('textbox')
+    Field('textbox')
 ], IoNumber.prototype, "role", void 0);
 IoNumber = __decorate([
     Register

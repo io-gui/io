@@ -1,6 +1,6 @@
-import { IoElement } from '@io-gui/core';
+import { ReactiveElement } from '@io-gui/core';
 import { ThreeApplet } from '../nodes/ThreeApplet.js';
-export declare class IoThreeExample extends IoElement {
+export declare class IoThreeExample extends ReactiveElement {
     static get Style(): string;
     applet: ThreeApplet;
     ready(): void;

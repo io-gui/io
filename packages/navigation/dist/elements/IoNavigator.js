@@ -4,11 +4,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { IoElement, ReactiveProperty, Register, div } from '@io-gui/core';
+import { ReactiveElement, Property, Register, div } from '@io-gui/core';
 import { MenuOption, ioMenuOptions, ioMenuTree } from '@io-gui/menus';
 import { ioSelector } from './IoSelector.js';
 import { ioNavigatorDrawer } from './IoNavigatorDrawer.js';
-let IoNavigator = class IoNavigator extends IoElement {
+let IoNavigator = class IoNavigator extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -97,9 +97,9 @@ let IoNavigator = class IoNavigator extends IoElement {
         this.calculateCollapsed();
     }
     optionMutated() {
-        this.changed();
+        this.mutated();
     }
-    changed() {
+    mutated() {
         const sharedMenuConfig = {
             option: this.option,
             widget: this.widget,
@@ -143,37 +143,37 @@ let IoNavigator = class IoNavigator extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Array, init: null })
+    Property({ type: Array, init: null })
 ], IoNavigator.prototype, "elements", void 0);
 __decorate([
-    ReactiveProperty({ type: MenuOption })
+    Property({ type: MenuOption })
 ], IoNavigator.prototype, "option", void 0);
 __decorate([
-    ReactiveProperty(null)
+    Property(null)
 ], IoNavigator.prototype, "widget", void 0);
 __decorate([
-    ReactiveProperty({ value: 'left', type: String, reflect: true })
+    Property({ value: 'left', type: String, reflect: true })
 ], IoNavigator.prototype, "menu", void 0);
 __decorate([
-    ReactiveProperty({ value: Infinity, type: Number })
+    Property({ value: Infinity, type: Number })
 ], IoNavigator.prototype, "depth", void 0);
 __decorate([
-    ReactiveProperty({ value: 'shallow', type: String })
+    Property({ value: 'shallow', type: String })
 ], IoNavigator.prototype, "select", void 0);
 __decorate([
-    ReactiveProperty({ value: 'none', type: String })
+    Property({ value: 'none', type: String })
 ], IoNavigator.prototype, "caching", void 0);
 __decorate([
-    ReactiveProperty({ value: 570, type: Number })
+    Property({ value: 570, type: Number })
 ], IoNavigator.prototype, "minWidth", void 0);
 __decorate([
-    ReactiveProperty({ value: '', type: String })
+    Property({ value: '', type: String })
 ], IoNavigator.prototype, "anchor", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+    Property({ value: false, type: Boolean, reflect: true })
 ], IoNavigator.prototype, "collapsed", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+    Property({ value: false, type: Boolean, reflect: true })
 ], IoNavigator.prototype, "showVeil", void 0);
 IoNavigator = __decorate([
     Register

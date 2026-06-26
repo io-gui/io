@@ -1,4 +1,4 @@
-import { IoElement, Register, input, label, li, div, button, ReactiveProperty, IoElementProps } from '@io-gui/core'
+import { ReactiveElement, Register, input, label, li, div, button, Property, IoElementProps } from '@io-gui/core'
 import { TodoItemModel } from './TodoItemModel.js'
 import { TodoListModel } from './TodoListModel.js'
 
@@ -7,7 +7,7 @@ type TodoItemProps = IoElementProps & {
   model?: TodoListModel
 }
 
-export class TodoItem extends IoElement {
+export class TodoItem extends ReactiveElement {
 
   static override get Style() {
     return /* css */`
@@ -17,13 +17,13 @@ export class TodoItem extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: TodoItemModel})
+  @Property({type: TodoItemModel})
   declare item: TodoItemModel
 
-  @ReactiveProperty({type: TodoListModel})
+  @Property({type: TodoListModel})
   declare model: TodoListModel
 
-  @ReactiveProperty({value: false})
+  @Property({value: false})
   declare editing: boolean
 
   declare private $input: HTMLInputElement
@@ -34,10 +34,10 @@ export class TodoItem extends IoElement {
   }
 
   itemMutated() {
-    this.changed()
+    this.mutated()
   }
 
-  override changed() {
+  override mutated() {
     this.render([
       li({class: 'todo ' + (this.item.completed ? 'completed ' : '') + (this.editing ? 'editing' : '')}, [
         div({class: 'view'}, [

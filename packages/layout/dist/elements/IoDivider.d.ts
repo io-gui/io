@@ -1,8 +1,8 @@
-import { IoElement, IoElementProps, ListenerDefinition } from '@io-gui/core';
+import { ReactiveElement, IoElementProps, ListenerDefinition } from '@io-gui/core';
 export type IoDividerProps = IoElementProps & {
     orientation: 'vertical' | 'horizontal';
 };
-export declare class IoDivider extends IoElement {
+export declare class IoDivider extends ReactiveElement {
     static get Style(): string;
     pressed: boolean;
     orientation: 'horizontal' | 'vertical';

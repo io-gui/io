@@ -1,15 +1,15 @@
 //@ts-nocheck
 import { describe, it, expect } from 'vitest'
-import { Register, IoElement, ReactiveNode, Change, ReactivePropertyDefinitions } from '@io-gui/core'
+import { Register, ReactiveElement, ReactiveObject, Change, PropertyDefinitions } from '@io-gui/core'
 
-const element = new IoElement()
+const element = new ReactiveElement()
 element.style.display = 'none'
 document.body.appendChild(element as HTMLElement)
 
 const eventStack: string[] = []
 
-class TestElement extends IoElement {
-  static get ReactiveProperties(): ReactivePropertyDefinitions {
+class TestElement extends ReactiveElement {
+  static get Properties(): PropertyDefinitions {
     return {
       prop0: {
         reflect: true,
@@ -22,7 +22,7 @@ Register(TestElement)
 
 const terstElement = new TestElement()
 
-describe('IoElement', () => {
+describe('ReactiveElement', () => {
   it('Should have core API functions defined', () => {
     expect(typeof element.render).toBe('function')
     expect(typeof element.traverse).toBe('function')
@@ -39,8 +39,8 @@ describe('IoElement', () => {
     expect(terstElement.getAttribute('prop0')).toBe('0')
   })
   it('Invokes change events and functions', () => {
-    class TestNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           prop0: 0,
           prop1: '',
@@ -52,14 +52,14 @@ describe('IoElement', () => {
       prop1Changed() {
         eventStack.push('TestNode: prop1Changed ' + this.prop1)
       }
-      changed() {
+      mutated() {
         eventStack.push('TestNode: changed')
       }
     }
     Register(TestNode)
 
-    class TestSubelement extends IoElement {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestSubelement extends ReactiveElement {
+      static get Properties(): PropertyDefinitions {
         return {
           prop0: 0,
           prop1: '',
@@ -68,8 +68,8 @@ describe('IoElement', () => {
     }
     Register(TestSubelement)
 
-    class TestElement1 extends IoElement {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestElement1 extends ReactiveElement {
+      static get Properties(): PropertyDefinitions {
         return {
           prop0: -1,
           prop1: {
@@ -95,7 +95,7 @@ describe('IoElement', () => {
           prop1: this.bind('prop1'),
         })
       }
-      changed() {
+      mutated() {
         eventStack.push('TestElement1: changed')
         this._counter++
       }
@@ -190,8 +190,8 @@ describe('IoElement', () => {
 
     eventStack.length = 0
 
-    class TestElement2 extends IoElement {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestElement2 extends ReactiveElement {
+      static get Properties(): PropertyDefinitions {
         return {
           prop0: -1,
           prop1: {
@@ -199,7 +199,7 @@ describe('IoElement', () => {
           },
         }
       }
-      changed() {
+      mutated() {
         this.render([{tag: 'test-subelement', props: {id: 'subelement',
           prop0: this.bind('prop0'),
           prop1: this.bind('prop1'),
@@ -239,8 +239,8 @@ describe('IoElement', () => {
   })
   it('Should correctly set values when setProperties() is used to re-set multiple bindings', async () => {
     @Register
-    class TestBindingElement extends IoElement {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestBindingElement extends ReactiveElement {
+      static get Properties(): PropertyDefinitions {
         return {
           prop1: 'subnode1',
           prop2: 'subnode2',
@@ -250,8 +250,8 @@ describe('IoElement', () => {
     }
 
     @Register
-    class TestBindingElementTarget extends IoElement {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestBindingElementTarget extends ReactiveElement {
+      static get Properties(): PropertyDefinitions {
         return {
           prop1: 'target1',
           prop2: 'target2',
@@ -259,9 +259,9 @@ describe('IoElement', () => {
         }
       }
       ready() {
-        this.changed()
+        this.mutated()
       }
-      changed() {
+      mutated() {
         this.render([{tag: 'test-binding-element', props: {
           id: 'testElement',
           prop1: this.bind('prop1'),
@@ -369,7 +369,7 @@ describe('IoElement', () => {
   })
   it('render creates DOM children from VDOM', () => {
     @Register
-    class RenderElement extends IoElement {
+    class RenderElement extends ReactiveElement {
       ready() {
         this.render([
           {tag: 'div', props: {id: 'a', class: 'child-a'}},
@@ -388,12 +388,12 @@ describe('IoElement', () => {
   })
   it('traverse reuses keyed elements on re-render', () => {
     @Register
-    class KeyedRenderElement extends IoElement {
+    class KeyedRenderElement extends ReactiveElement {
       index = 0
       ready() {
-        this.changed()
+        this.mutated()
       }
-      changed() {
+      mutated() {
         this.render([
           {tag: 'div', props: {key: 'a', id: 'first', class: `v${this.index}`}},
           {tag: 'div', props: {key: 'b', id: 'second', class: `v${this.index}`}},
@@ -408,7 +408,7 @@ describe('IoElement', () => {
     expect((second as any)._vdomKey).toBe('b')
 
     el.index = 1
-    el.changed()
+    el.mutated()
 
     expect(el.$.first).toBe(first)
     expect(el.$.second).toBe(second)
@@ -417,7 +417,7 @@ describe('IoElement', () => {
   })
   it('dispose cleans up', () => {
     @Register
-    class DisposeElement extends IoElement {
+    class DisposeElement extends ReactiveElement {
       ready() {
         this.render([{tag: 'div', props: {id: 'child'}}])
       }
@@ -430,7 +430,7 @@ describe('IoElement', () => {
   })
   it('connectedCallback and disconnectedCallback with onResized smoke', () => {
     @Register
-    class ResizeElement extends IoElement {
+    class ResizeElement extends ReactiveElement {
       resizeCount = 0
       onResized() {
         this.resizeCount++

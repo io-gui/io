@@ -1,4 +1,4 @@
-import { ReactiveNode, IoElement } from '@io-gui/core';
+import { ReactiveObject, ReactiveElement } from '@io-gui/core';
 export const SKIPPED_PROPERTIES = [
     '$',
     'ELEMENT_NODE', 'ATTRIBUTE_NODE', 'TEXT_NODE', 'CDATA_SECTION_NODE', 'ENTITY_REFERENCE_NODE', 'ENTITY_NODE',
@@ -88,18 +88,18 @@ const editorGroupsSingleton = new Map([
             ],
             Hidden: [],
         }],
-    [ReactiveNode, {
+    [ReactiveObject, {
             Hidden: [
                 'reactivity',
-                '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_parents',
-                '_protochain', '_disposed', '_isNode', '_isIoElement',
+                '_changeQueue', '_properties', '_bindings', '_eventDispatcher', '_parents',
+                '_protochain', '_disposed', '_isReactiveObject', '_isReactiveElement',
             ],
         }],
-    [IoElement, {
+    [ReactiveElement, {
             Hidden: [
                 'reactivity',
-                '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_parents',
-                '_protochain', '_disposed', '_isNode', '_isIoElement',
+                '_changeQueue', '_properties', '_bindings', '_eventDispatcher', '_parents',
+                '_protochain', '_disposed', '_isReactiveObject', '_isReactiveElement',
             ],
         }],
 ]);
@@ -216,7 +216,7 @@ export function getEditorGroups(object, propertyGroups) {
                 if (g !== g2) {
                     for (const key of groupsRecord[g]) {
                         if (groupsRecord[g2].includes(key)) {
-                            console.warn(`Property "${key}" belongs to multiple groups: "${g}" and "${g2}". Removing from "${g}".`);
+                            console.warn(`Field "${key}" belongs to multiple groups: "${g}" and "${g2}". Removing from "${g}".`);
                         }
                     }
                 }

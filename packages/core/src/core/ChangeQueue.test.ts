@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
-import { ChangeQueue, Change, ReactiveNode, Register } from '@io-gui/core'
+import { ChangeQueue, Change, ReactiveObject, Register } from '@io-gui/core'
 
 @Register
-class MockNode extends ReactiveNode {
+class MockNode extends ReactiveObject {
   eventStack: string[] = []
   changeStack: string[] = []
   prop1Changed(change: Change) {
@@ -18,13 +18,13 @@ class MockNode extends ReactiveNode {
       this.eventStack.push(`${eventName}`)
     }
   }
-  changed() {
-    this.changeStack.push('changed')
+  mutated() {
+    this.changeStack.push('mutated')
   }
 }
 
 @Register
-class MockNodeWithThrowingHandler extends ReactiveNode {
+class MockNodeWithThrowingHandler extends ReactiveObject {
   changeStack: string[] = []
   prop1Changed() {
     throw new Error('Intentional error in prop1Changed')
@@ -33,25 +33,25 @@ class MockNodeWithThrowingHandler extends ReactiveNode {
     this.changeStack.push(`prop2Changed ${change.property} ${change.value} ${change.oldValue}`)
   }
   dispatch() {}
-  changed() {
-    this.changeStack.push('changed')
+  mutated() {
+    this.changeStack.push('mutated')
   }
 }
 
 @Register
-class MockNodeWithThrowingChanged extends ReactiveNode {
+class MockNodeWithThrowingChanged extends ReactiveObject {
   changeStack: string[] = []
   prop1Changed(change: Change) {
     this.changeStack.push(`prop1Changed ${change.property} ${change.value} ${change.oldValue}`)
   }
   dispatch() {}
-  changed() {
+  mutated() {
     throw new Error('Intentional error in changed')
   }
 }
 
 @Register
-class MockNodeWithCascadingChanges extends ReactiveNode {
+class MockNodeWithCascadingChanges extends ReactiveObject {
   changeStack: string[] = []
   prop1Changed(change: Change) {
     this.changeStack.push(`prop1Changed ${change.value}`)
@@ -71,8 +71,8 @@ class MockNodeWithCascadingChanges extends ReactiveNode {
     this.changeStack.push(`prop3Changed ${change.value}`)
   }
   dispatch() {}
-  changed() {
-    this.changeStack.push('changed')
+  mutated() {
+    this.changeStack.push('mutated')
   }
 }
 
@@ -108,7 +108,7 @@ describe('ChangeQueue', () => {
     changeQueue.queue('prop1', 1, 0)
     changeQueue.queue('prop1', 2, 1)
     changeQueue.dispatch()
-    expect(JSON.stringify(node.changeStack)).toBe('["prop1Changed prop1 2 0","changed"]')
+    expect(JSON.stringify(node.changeStack)).toBe('["prop1Changed prop1 2 0","mutated"]')
   })
   it('Should handle changes in first-in, first-out (FIFO) order', () => {
     const node = new MockNode()
@@ -117,7 +117,7 @@ describe('ChangeQueue', () => {
     changeQueue.queue('prop1', 3, 1)
     changeQueue.queue('prop2', 2, 0)
     changeQueue.dispatch()
-    expect(JSON.stringify(node.changeStack)).toBe('["prop1Changed prop1 3 0","prop2Changed prop2 2 0","changed"]')
+    expect(JSON.stringify(node.changeStack)).toBe('["prop1Changed prop1 3 0","prop2Changed prop2 2 0","mutated"]')
     expect(JSON.stringify(node.eventStack)).toBe('["prop1-changed prop1 3 0","prop2-changed prop2 2 0","io-object-mutation"]')
   })
   it('Setting new value to the same value as oldValue should not trigger change event', () => {
@@ -155,8 +155,8 @@ describe('ChangeQueue', () => {
     changeQueue.queue('prop2', 2, 0)
     changeQueue.dispatch()
 
-    // prop1Changed throws, but prop2Changed and changed() should still run
-    expect(node.changeStack).toEqual(['prop2Changed prop2 2 0', 'changed'])
+    // prop1Changed throws, but prop2Changed and mutated() should still run
+    expect(node.changeStack).toEqual(['prop2Changed prop2 2 0', 'mutated'])
     // dispatching flag should be reset
     expect(changeQueue.dispatching).toBe(false)
     // Error should have been logged
@@ -167,7 +167,7 @@ describe('ChangeQueue', () => {
 
     consoleSpy.mockRestore()
   })
-  it('Should reset dispatching flag when changed() throws an error', () => {
+  it('Should reset dispatching flag when mutated() throws an error', () => {
     const node = new MockNodeWithThrowingChanged()
     const changeQueue = new ChangeQueue(node)
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
@@ -177,11 +177,11 @@ describe('ChangeQueue', () => {
 
     // prop1Changed should have run
     expect(node.changeStack).toEqual(['prop1Changed prop1 1 0'])
-    // dispatching flag should be reset even though changed() threw
+    // dispatching flag should be reset even though mutated() threw
     expect(changeQueue.dispatching).toBe(false)
     // Error should have been logged
     expect(consoleSpy).toHaveBeenCalledWith(
-      'Error in MockNodeWithThrowingChanged.changed():',
+      'Error in MockNodeWithThrowingChanged.mutated():',
       expect.any(Error)
     )
 
@@ -203,7 +203,7 @@ describe('ChangeQueue', () => {
     changeQueue.queue('prop2', 3, 0)
     changeQueue.dispatch()
 
-    expect(node.changeStack).toEqual(['prop2Changed prop2 3 0', 'changed'])
+    expect(node.changeStack).toEqual(['prop2Changed prop2 3 0', 'mutated'])
 
     consoleSpy.mockRestore()
   })
@@ -220,12 +220,12 @@ describe('ChangeQueue', () => {
     // 1. prop1Changed(1) → queues prop2
     // 2. prop2Changed('cascaded') → queues prop3
     // 3. prop3Changed('final')
-    // 4. changed() called once at the end
+    // 4. mutated() called once at the end
     expect(node.changeStack).toEqual([
       'prop1Changed 1',
       'prop2Changed cascaded',
       'prop3Changed final',
-      'changed'
+      'mutated'
     ])
 
     // Queue should be empty after dispatch
@@ -238,7 +238,7 @@ describe('ChangeQueue', () => {
     changeQueue.queue('prop2', 2, 0)
     changeQueue.queue('prop1', 0, 1)
     changeQueue.dispatch()
-    expect(node.changeStack).toEqual(['prop2Changed prop2 2 0', 'changed'])
+    expect(node.changeStack).toEqual(['prop2Changed prop2 2 0', 'mutated'])
     expect(node.eventStack).toEqual(['prop2-changed prop2 2 0', 'io-object-mutation'])
   })
   it('Should include changes queued during dispatch after earlier properties', () => {
@@ -251,21 +251,21 @@ describe('ChangeQueue', () => {
       'prop1Changed 1',
       'prop2Changed cascaded',
       'prop3Changed final',
-      'changed',
+      'mutated',
     ])
   })
 
   it('Should ignore nested dispatch while dispatching is in progress', () => {
     @Register
-    class ReentrantNode extends ReactiveNode {
+    class ReentrantNode extends ReactiveObject {
       changeStack: string[] = []
       prop1Changed(change: Change) {
         this.changeStack.push(`prop1Changed ${change.value}`)
         this._changeQueue.dispatch()
       }
       dispatch() {}
-      changed() {
-        this.changeStack.push('changed')
+      mutated() {
+        this.changeStack.push('mutated')
       }
     }
     const node = new ReentrantNode()
@@ -274,7 +274,7 @@ describe('ChangeQueue', () => {
     changeQueue.queue('prop1', 1, 0)
     changeQueue.dispatch()
     expect(changeQueue.dispatching).toBe(false)
-    expect(node.changeStack).toEqual(['prop1Changed 1', 'changed'])
+    expect(node.changeStack).toEqual(['prop1Changed 1', 'mutated'])
     consoleSpy.mockRestore()
     node.dispose()
   })

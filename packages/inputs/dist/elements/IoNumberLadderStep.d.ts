@@ -15,6 +15,6 @@ export declare class IoNumberLadderStep extends IoField {
     onPointermove(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;
     ready(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioNumberLadderStep: (arg0?: IoNumberLadderStepProps) => import("@io-gui/core").VDOMElement;

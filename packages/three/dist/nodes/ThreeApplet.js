@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveNode, ReactiveProperty } from '@io-gui/core';
+import { Register, ReactiveObject, Property } from '@io-gui/core';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
 import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, Timer, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene } from 'three/webgpu';
@@ -17,7 +17,7 @@ function rAFLoop() {
     requestAnimationFrame(rAFLoop);
 }
 rAFLoop();
-let ThreeApplet = class ThreeApplet extends ReactiveNode {
+let ThreeApplet = class ThreeApplet extends ReactiveObject {
     _renderer = null;
     _width = 0;
     _height = 0;
@@ -70,16 +70,16 @@ let ThreeApplet = class ThreeApplet extends ReactiveNode {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Scene, init: null })
+    Property({ type: Scene, init: null })
 ], ThreeApplet.prototype, "scene", void 0);
 __decorate([
-    ReactiveProperty({ type: Number, value: 1 })
+    Property({ type: Number, value: 1 })
 ], ThreeApplet.prototype, "toneMappingExposure", void 0);
 __decorate([
-    ReactiveProperty({ type: Number, value: NoToneMapping })
+    Property({ type: Number, value: NoToneMapping })
 ], ThreeApplet.prototype, "toneMapping", void 0);
 __decorate([
-    ReactiveProperty({ type: Boolean, value: false })
+    Property({ type: Boolean, value: false })
 ], ThreeApplet.prototype, "isPlaying", void 0);
 ThreeApplet = __decorate([
     Register

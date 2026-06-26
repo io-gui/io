@@ -4,18 +4,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { IoElement, ReactiveProperty, Register } from '@io-gui/core';
+import { ReactiveElement, Property, Register } from '@io-gui/core';
 import { hsl2rgb, rgb2hsl, rgb2hsv, hsv2rgb } from '../lib/color.convert.js';
-let IoColorBase = class IoColorBase extends IoElement {
+let IoColorBase = class IoColorBase extends ReactiveElement {
     ready() {
         // this.throttle(this.valueChanged);
         this.valueChanged();
-        this.changed();
+        this.mutated();
     }
     valueMutated() {
         // this.throttle(this.valueChanged);
         this.valueChanged();
-        this.changed();
+        this.mutated();
     }
     rgbFromHsv() {
         const rgb = hsv2rgb([
@@ -87,19 +87,19 @@ let IoColorBase = class IoColorBase extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty('throttled')
+    Property('throttled')
 ], IoColorBase.prototype, "reactivity", void 0);
 __decorate([
-    ReactiveProperty({ type: Object, init: { r: 1, g: 1, b: 1, a: 1 } })
+    Property({ type: Object, init: { r: 1, g: 1, b: 1, a: 1 } })
 ], IoColorBase.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty({ type: Array, init: [1, 1, 1, 1] })
+    Property({ type: Array, init: [1, 1, 1, 1] })
 ], IoColorBase.prototype, "rgba", void 0);
 __decorate([
-    ReactiveProperty({ type: Array, init: [1, 1, 1] })
+    Property({ type: Array, init: [1, 1, 1] })
 ], IoColorBase.prototype, "hsv", void 0);
 __decorate([
-    ReactiveProperty({ type: Array, init: [1, 1, 1] })
+    Property({ type: Array, init: [1, 1, 1] })
 ], IoColorBase.prototype, "hsl", void 0);
 IoColorBase = __decorate([
     Register

@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { IoOverlaySingleton, nudge, ReactiveProperty, Register } from '@io-gui/core';
+import { IoOverlaySingleton, nudge, Property, Register } from '@io-gui/core';
 import { IoPropertyEditor } from './IoPropertyEditor.js';
 let IoContextEditor = class IoContextEditor extends IoPropertyEditor {
     static get Style() {
@@ -101,7 +101,7 @@ let IoContextEditor = class IoContextEditor extends IoPropertyEditor {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Boolean, value: false, reflect: true })
+    Property({ type: Boolean, value: false, reflect: true })
 ], IoContextEditor.prototype, "expanded", void 0);
 IoContextEditor = __decorate([
     Register

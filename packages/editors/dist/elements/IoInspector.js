@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, span } from '@io-gui/core';
+import { Register, ReactiveElement, Property, span } from '@io-gui/core';
 import { ioBreadcrumbs } from './IoBreadcrumbs.js';
 import { ioPropertyEditor } from './IoPropertyEditor.js';
 import { getAllPropertyNames } from '../utils/EditorGroups.js';
@@ -23,9 +23,9 @@ function isNestedObject(value, selected) {
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple
  * `io-collapsible` elements. It can be configured to use custom property editors and display only specified properties.
- * Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
+ * Fields of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
  **/
-let IoInspector = class IoInspector extends IoElement {
+let IoInspector = class IoInspector extends ReactiveElement {
     static get Style() {
         return /* css */ `
     :host {
@@ -73,15 +73,15 @@ let IoInspector = class IoInspector extends IoElement {
         if (!isNestedObject(this.value, this.selected)) {
             this.selected = this.value;
         }
-        this.changed();
+        this.mutated();
     }
     selectedMutated() {
-        this.changed();
+        this.mutated();
     }
     selectedChanged() {
         this.search = '';
     }
-    changed() {
+    mutated() {
         this.debounce(this.changedDebounced);
     }
     changedDebounced() {
@@ -118,22 +118,22 @@ let IoInspector = class IoInspector extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Object, init: null })
+    Property({ type: Object, init: null })
 ], IoInspector.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty({ type: Object, init: null })
+    Property({ type: Object, init: null })
 ], IoInspector.prototype, "selected", void 0);
 __decorate([
-    ReactiveProperty({ type: String })
+    Property({ type: String })
 ], IoInspector.prototype, "search", void 0);
 __decorate([
-    ReactiveProperty({ type: Array, init: null })
+    Property({ type: Array, init: null })
 ], IoInspector.prototype, "config", void 0);
 __decorate([
-    ReactiveProperty({ type: Object, init: null })
+    Property({ type: Object, init: null })
 ], IoInspector.prototype, "groups", void 0);
 __decorate([
-    ReactiveProperty({ type: Object })
+    Property({ type: Object })
 ], IoInspector.prototype, "widget", void 0);
 IoInspector = __decorate([
     Register

@@ -1,13 +1,13 @@
-import { ReactiveNode, NodeArray, Register, ReactiveProperty } from '@io-gui/core'
+import { ReactiveObject, NodeArray, Register, Property } from '@io-gui/core'
 import { TodoItemModel, TodoItemProps } from './TodoItemModel.js'
 
 export type TodoListProps = {
   items: TodoItemProps[]
 }
 
-export class TodoListModel extends ReactiveNode {
+export class TodoListModel extends ReactiveObject {
 
-  @ReactiveProperty({type: NodeArray, init: 'this'})
+  @Property({type: NodeArray, init: 'this'})
   declare items: TodoItemModel[]
 
   static override get Listeners() {

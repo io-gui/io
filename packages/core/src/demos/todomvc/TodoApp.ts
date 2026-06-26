@@ -1,4 +1,4 @@
-import { IoElement, Register, Storage as $, section, header, h1, div, p, a, ReactiveProperty } from '@io-gui/core'
+import { ReactiveElement, Register, Storage as $, section, header, h1, div, p, a, Property } from '@io-gui/core'
 
 import { TodoListModel } from './TodoListModel.js'
 import { todoInput } from './TodoInput.js'
@@ -9,12 +9,12 @@ $.permit()
 const $route = $({key: 'route', storage: 'hash', value: 'all'})
 const $model = $({key: 'model', storage: 'local', value: new TodoListModel({items: []})})
 
-export class TodoApp extends IoElement {
+export class TodoApp extends ReactiveElement {
 
-  @ReactiveProperty($model)
+  @Property($model)
   declare model: TodoListModel
 
-  @ReactiveProperty($route)
+  @Property($route)
   declare route: string
 
   override ready() {

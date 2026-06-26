@@ -5,8 +5,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register } from '../decorators/Register.js';
-import { ReactiveProperty } from '../decorators/Property.js';
-import { ReactiveNode } from '../nodes/ReactiveNode.js';
+import { Property } from '../decorators/Property.js';
+import { ReactiveObject } from '../nodes/ReactiveObject.js';
 import { Storage as $ } from '../nodes/Storage.js';
 import { Color } from '../core/Color.js';
 import { adoptDocumentStylesheet } from '../core/Style.js';
@@ -98,8 +98,8 @@ function isThemeColorKey(key) {
  * Top-level theme singleton; maps numeric/Color properties to `--io_*` CSS variables.
  * @see ThemeSingleton
  */
-let Theme = class Theme extends ReactiveNode {
-    static get ReactiveProperties() {
+let Theme = class Theme extends ReactiveObject {
+    static get Properties() {
         const props = {};
         for (const key of themeKeys) {
             if (isThemeColorKey(key)) {
@@ -114,7 +114,7 @@ let Theme = class Theme extends ReactiveNode {
     onPropertyMutated(event) {
         const mutated = super.onPropertyMutated(event);
         if (mutated) {
-            this.changed();
+            this.mutated();
             this.dispatchMutation();
             return true;
         }
@@ -126,7 +126,7 @@ let Theme = class Theme extends ReactiveNode {
     lineHeightChanged() {
         this.fontSize = Math.min(this.lineHeight, this.fontSize);
     }
-    changed() {
+    mutated() {
         this.fieldHeight = this.lineHeight + 2 * (this.spacing + this.borderWidth);
         this.spacing2 = this.spacing * 2;
         this.spacing3 = this.spacing * 3;
@@ -140,7 +140,7 @@ let Theme = class Theme extends ReactiveNode {
     }
 };
 __decorate([
-    ReactiveProperty('debounced')
+    Property('debounced')
 ], Theme.prototype, "reactivity", void 0);
 Theme = __decorate([
     Register

@@ -4,11 +4,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { ReactiveNode, Register, ReactiveProperty } from '@io-gui/core';
+import { ReactiveObject, Register, Property } from '@io-gui/core';
 import { Vector2, Ray, Raycaster } from 'three/webgpu';
 import { ThreeApplet } from './ThreeApplet';
 const _raycaster = new Raycaster();
-let ToolBase = class ToolBase extends ReactiveNode {
+let ToolBase = class ToolBase extends ReactiveObject {
     _viewports = [];
     _activePointers = new WeakMap();
     _hoverPointers = new WeakMap();
@@ -197,7 +197,7 @@ let ToolBase = class ToolBase extends ReactiveNode {
     }
 };
 __decorate([
-    ReactiveProperty({ type: ThreeApplet })
+    Property({ type: ThreeApplet })
 ], ToolBase.prototype, "applet", void 0);
 ToolBase = __decorate([
     Register

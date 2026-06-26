@@ -1,11 +1,11 @@
-import { ReactiveNode, NodeArray } from '@io-gui/core';
+import { ReactiveObject, NodeArray } from '@io-gui/core';
 import { Tab, TabProps } from './Tab.js';
 export type PanelProps = {
     type: 'panel';
     tabs: Array<TabProps>;
     flex?: string;
 };
-export declare class Panel extends ReactiveNode {
+export declare class Panel extends ReactiveObject {
     tabs: NodeArray<Tab>;
     flex: string;
     constructor(args: PanelProps);

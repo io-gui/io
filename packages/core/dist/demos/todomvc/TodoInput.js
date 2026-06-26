@@ -4,10 +4,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { IoElement, Register, input, ReactiveProperty } from '@io-gui/core';
+import { ReactiveElement, Register, input, Property } from '@io-gui/core';
 import { TodoListModel } from './TodoListModel.js';
 import { TodoItemModel } from './TodoItemModel.js';
-export class TodoInput extends IoElement {
+export class TodoInput extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -41,7 +41,7 @@ export class TodoInput extends IoElement {
     }
 }
 __decorate([
-    ReactiveProperty({ type: TodoListModel })
+    Property({ type: TodoListModel })
 ], TodoInput.prototype, "model", void 0);
 Register(TodoInput);
 export const todoInput = function (arg0) {
