@@ -38,7 +38,7 @@
 - VDOM supports opt-in keyed reconciliation: set `key` in a vChild's props to match-and-move elements on reorder instead of destroy/recreate. Keys live on DOM elements as non-enumerable `_vdomKey` (read via `getElementKey`); `key` is never applied as a property/attribute. Unkeyed siblings in a keyed list still reuse positionally by tag. Duplicate keys warn in debug blocks.
 - VDOM `children` is always `Array<VDOMChild> | undefined`; string literals normalized at factory boundary only. `text()` helper creates `#text` nodes; reconciliation uses `childNodes`.
 - Generic `vConstructor` doesn't type subclass props; in tests, wrap it: `type XProps = ReactiveElementProps & {...}; const x = (props: XProps) => X.vConstructor(props)`
-- ProtoChain init: avoid runtime imports from ReactiveNode into ReactiveProperty (TDZ/circular init).
+- ProtoChain init: avoid runtime imports from ReactiveNode into Property (TDZ/circular init).
 - Vitest does not typecheck — run `pnpm build` after typed test changes.
 - `IoSyntheticEvent.path` is mutated during bubble; copy if retained beyond handler.
 

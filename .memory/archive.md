@@ -2,6 +2,11 @@
 
 ## Patterns
 
+### IoMarkdown — DOMPurify strips iframes by default
+- `purify.sanitize(md)` removes `<iframe>` → video embeds vanish (not a code regression, DOMPurify default)
+- Fix: pass config `{ADD_TAGS:['iframe'], ADD_ATTR:['allow','allowfullscreen','frameborder','scrolling']}` + `uponSanitizeElement` hook restricting iframe src to TRUSTED_IFRAME_HOSTS (youtube/vimeo). Untrusted iframe → removeChild.
+- Tests added for trusted-keep / untrusted-strip.
+
 ### NodeArray.dispose
 - Don't use `this.splice()` in dispose — override always dispatches mutation
 - Use manual listener/parent cleanup + `withInternalOperation(() => super.splice(...))` — proxy length set respects internal op flag
@@ -39,7 +44,7 @@ Shared `visited` set per dispatch prevents duplicate delivery when one ancestor 
 - Storage catch must rehydrate to domain types, not leave raw JSON strings on the model.
 
 ### Module init — ProtoChain TDZ
-`ReactiveProperty` importing runtime `constructType` from `ReactiveNode` creates circular init (ReactiveElement → ReactiveProperty → ReactiveNode → ReactiveElement). Use local constructor casts in ReactiveProperty; `import type` only in ReactiveCore deps.
+`Property` importing runtime `constructType` from `ReactiveNode` creates circular init (ReactiveElement → Property → ReactiveNode → ReactiveElement). Use local constructor casts in Property; `import type` only in ReactiveCore deps.
 
 ### Tests & types
 Vitest (esbuild) does not typecheck — run `pnpm build` after adding typed tests.
@@ -78,7 +83,7 @@ OrbitControls imports `from 'three'`. Import map needs `"three": "./packages/thr
 Per-viewport `WeakMap`s for hover/active; resolve viewport from `event.currentTarget`.
 
 ### Docs sync to ADRs 0001-0004 (Jun 26)
-Audited docs vs ADRs. Source already implements all 4. Found stale only in docs/deep-dive.md + docs/quick-start.md + layout/README:212. Fixed: ReactiveNode(base)→ReactiveObject, ReactiveElement→ReactiveElement, @ReactiveProperty/ReactiveProperties→@Property/Properties, catch-all changed()/change()→mutated(), `new Storage()`→`Storage()` (factory returns Binding). Kept: `ReactiveNode`=graph union (correct), `ReactiveElementProps` type (legit export, NOT stale). core/README already fully correct. io-gui.mdc rule already updated.
+Audited docs vs ADRs. Source already implements all 4. Found stale only in docs/deep-dive.md + docs/quick-start.md + layout/README:212. Fixed: ReactiveNode(base)→ReactiveObject, ReactiveElement→ReactiveElement, @Property/ReactiveProperties→@Property/Properties, catch-all changed()/change()→mutated(), `new Storage()`→`Storage()` (factory returns Binding). Kept: `ReactiveNode`=graph union (correct), `ReactiveElementProps` type (legit export, NOT stale). core/README already fully correct. io-gui.mdc rule already updated.
 
 ### Docs: Cross-Domain Reactivity feature writeup (Jun 26)
 User wants the "three parent/child relations" gap sold as a real feature (not a doc bug). Core facts verified in src: reactive graph `_parents`/`_children` edges created ONLY via addParent/removeParent, sourced from node-valued props (ReactiveObject.ts:300) + NodeArray items — NOT from VDOM children/DOM. EventDispatcher.dispatchEvent walks node._parents (line 365) recursively for synthetic bubbling; elements also fire `composed` native CustomEvent → DOM bubbling. Circuit breaker = `visited: Set<ReactiveNode>` (line 320-323): re-entry into visited node returns early → safe diamonds/cycles/multi-parent. `hasVisitedDomAncestor` (line 78-86) suppresses native DOM bubble when a DOM ancestor already visited by synthetic walk → no double-fire across domains. Multi-parent: `_parents` is array; one node held by multiple props/arrays/owners (mix of objects+elements). Added "Cross-Domain Reactivity" section to docs/deep-dive.md (after Reactive Data Flow), glossary "Graph & propagation" to CONTEXT.md, intro paras to root README.md + quick-start.md, note to CONTRIBUTING.md, framed layout/README table as concrete example. Tone: "distinctive/uncommon", no overhype.

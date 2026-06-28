@@ -92,7 +92,7 @@ Evaluate six architectural principles from the design review. **Goal:** decision
 
 **Already addressed elsewhere (baseline, not in scope):**
 - ReactiveCore + unified parent graph ([packages/core/src/core/ReactiveCore.ts](packages/core/src/core/ReactiveCore.ts)) — original concern #1 largely mitigated
-- One window mutation listener per node ([packages/core/src/core/ReactiveProperty.ts](packages/core/src/core/ReactiveProperty.ts) `ensureWindowMutationListener`)
+- One window mutation listener per node ([packages/core/src/core/Property.ts](packages/core/src/core/Property.ts) `ensureWindowMutationListener`)
 - VDOM keys — done in original roadmap
 - Packaging: `exports` → dist, narrowed `sideEffects`, incremental `tsc -b` ([packages/core/package.json](packages/core/package.json))
 - Package-layer refactors → [package_layer.plan.md](.cursor/plans/package_layer.plan.md)

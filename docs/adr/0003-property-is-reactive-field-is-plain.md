@@ -1,12 +1,12 @@
 # "Property" means reactive; the plain kind is "Field"
 
-The framework had `@ReactiveProperty` (full reactive pipeline) and `@Property` (plain non-reactive field). Because reactivity is the framework's default expectation, the word "property" was ambiguous: people couldn't tell whether a "property" was tracked.
+The framework had `@Property` (full reactive pipeline) and `@Property` (plain non-reactive field). Because reactivity is the framework's default expectation, the word "property" was ambiguous: people couldn't tell whether a "property" was tracked.
 
 We decided to make the reactive kind the default-named one and rename across the board:
 
-- `@ReactiveProperty` / `static ReactiveProperties` → `@Property` / `static Properties`
+- `@Property` / `static ReactiveProperties` → `@Property` / `static Properties`
 - old `@Property` / `static Properties` (non-reactive) → `@Field` / `static Fields`
-- `ReactivePropertyInstance` → `PropertyInstance`, `ReactiveProtoProperty` → `ProtoProperty`
+- `PropertyInstance` → `PropertyInstance`, `ReactiveProtoProperty` → `ProtoProperty`
 
 `Binding` stays a first-class concept (its own class, returned by `bind()` and `Storage()`), not a property option. `reflect` remains a property option, not a standalone term.
 

@@ -23,6 +23,11 @@ renderer.heading = function({ text, depth }: Tokens.Heading) {
 
 marked.setOptions({ renderer })
 
+const PURIFY_CONFIG = {
+  ADD_TAGS: ['iframe'],
+  ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'],
+}
+
 function strip(innerHTML: string, strip: string[]) {
   for (let i = 0; i < strip.length; i++) {
     innerHTML = innerHTML.replace(new RegExp(strip[i], 'g'),'')
@@ -203,7 +208,7 @@ export class IoMarkdown extends ReactiveElement {
       .then(response => response.text())
       .then(markdown => {
         let md = marked.parse(markdown) as string
-        if (this.sanitize) md = purify.sanitize(md)
+        if (this.sanitize) md = purify.sanitize(md, PURIFY_CONFIG)
         this.innerHTML = strip(md, this.strip)
         this.loading = false
       })

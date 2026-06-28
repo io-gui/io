@@ -38,6 +38,29 @@ describe('IoMarkdown', () => {
     expect(element.innerHTML).toContain('Title')
   })
 
+  it('keeps trusted iframe embeds when sanitize is enabled', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      text: () => Promise.resolve('<iframe src="https://www.youtube.com/embed/6JGzPLZrVFU" frameborder="0" allowfullscreen></iframe>'),
+    } as Response)
+
+    element.src = 'video.md'
+    await vi.waitFor(() => expect(element.loading).toBe(false))
+
+    expect(element.innerHTML).toContain('<iframe')
+    expect(element.innerHTML).toContain('youtube.com/embed/6JGzPLZrVFU')
+  })
+
+  it('strips untrusted iframe embeds when sanitize is enabled', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      text: () => Promise.resolve('<iframe src="https://evil.example.com/x"></iframe>'),
+    } as Response)
+
+    element.src = 'evil.md'
+    await vi.waitFor(() => expect(element.loading).toBe(false))
+
+    expect(element.innerHTML).not.toContain('<iframe')
+  })
+
   it('keeps raw html when sanitize is disabled', async () => {
     element.sanitize = false
     vi.spyOn(globalThis, 'fetch').mockResolvedValue({

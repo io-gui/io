@@ -41,14 +41,14 @@ export class ProtoChain {
     }
 
     // Iterate through the prototype chain in reverse to aggregate inherited properties and listeners.
-    let reactivePropertyHash = ''
+    let PropertyHash = ''
     let fieldHash = ''
     for (let i = this.constructors.length; i--;) {
       ioNodeConstructor = this.constructors[i]
       this.addFieldsFromDecorators(ioNodeConstructor)
       fieldHash = this.addFields(ioNodeConstructor.Fields, fieldHash)
       this.addPropertiesFromDecorators(ioNodeConstructor)
-      reactivePropertyHash = this.addProperties(ioNodeConstructor.Properties, reactivePropertyHash)
+      PropertyHash = this.addProperties(ioNodeConstructor.Properties, PropertyHash)
       this.addListeners(ioNodeConstructor.Listeners)
       this.addStyle(ioNodeConstructor.Style)
       this.addStyleFromDecorators(ioNodeConstructor)

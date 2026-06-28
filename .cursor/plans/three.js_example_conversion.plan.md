@@ -19,7 +19,7 @@ Each file contains two classes:
 2. **ReactiveElement** - The UI wrapper extending `IoThreeExample`
 
 ```typescript
-import { Register, ReactiveProperty } from '@io-gui/core'
+import { Register, Property } from '@io-gui/core'
 import { ThreeApplet, IoThreeExample } from '@io-gui/three'
 import { PropertyConfig, PropertyGroups } from '@io-gui/editors'
 
@@ -36,14 +36,14 @@ export class XxxExample extends ThreeApplet {
 
 export class IoXxxExample extends IoThreeExample {
 
-  @ReactiveProperty({type: XxxExample, init: null})
+  @Property({type: XxxExample, init: null})
   declare applet: XxxExample
 
   // Optional: Override uiConfig/uiGroups for custom UI
-  @ReactiveProperty({type: Array})
+  @Property({type: Array})
   declare uiConfig: PropertyConfig[]
 
-  @ReactiveProperty({type: Object})
+  @Property({type: Object})
   declare uiGroups: PropertyGroups
 
   init() {
@@ -118,13 +118,13 @@ UI configuration is defined on the **ReactiveElement**, not the applet:
 
 ```typescript
 export class IoAnimationExample extends IoThreeExample {
-  @ReactiveProperty({type: AnimationExample, init: null})
+  @Property({type: AnimationExample, init: null})
   declare applet: AnimationExample
 
-  @ReactiveProperty({type: Array})
+  @Property({type: Array})
   declare uiConfig: PropertyConfig[]
 
-  @ReactiveProperty({type: Object})
+  @Property({type: Object})
   declare uiGroups: PropertyGroups
 
   init() {
