@@ -98,6 +98,66 @@ const nodes: StorageNodes = {
 
 let hashValues: Record<string, string> = {}
 
+// Suppresses hash write-back while values are being applied from the hash.
+let applyingHash = false
+
+// First hash write of a turn pushes a history entry; later writes replace it,
+// so a burst of changes stays one navigation step. Reset on next microtask.
+let historyEntryPushedThisTurn = false
+let turnResetScheduled = false
+
+function scheduleHistoryTurnReset() {
+  if (turnResetScheduled) return
+  turnResetScheduled = true
+  queueMicrotask(() => {
+    historyEntryPushedThisTurn = false
+    turnResetScheduled = false
+  })
+}
+
+function serializeHashValues(values: Record<string, string>): string {
+  let hashString = ''
+  for (const h in values) {
+    hashString += h + '=' + values[h] + '&'
+  }
+  if (hashString) hashString = hashString.slice(0, -1)
+  return hashString
+}
+
+function hashValuesEqual(a: Record<string, string>, b: Record<string, string>): boolean {
+  const aKeys = Object.keys(a)
+  const bKeys = Object.keys(b)
+  if (aKeys.length !== bKeys.length) return false
+  for (const key of aKeys) {
+    if (a[key] !== b[key]) return false
+  }
+  return true
+}
+
+/** Writes {@link hashValues} to the location hash, coalescing a turn's writes
+ * into a single history entry. No-ops while applying from the hash or when unchanged. */
+function commitHashValues() {
+  if (applyingHash) return
+  if (hashValuesEqual(hashValues, parseHash(self.location.hash))) return
+
+  const base = self.location.pathname + self.location.search
+  const hashString = serializeHashValues(hashValues)
+
+  if (!hashString) {
+    history.replaceState(history.state, '', base)
+    return
+  }
+
+  const url = base + '#' + hashString
+  if (historyEntryPushedThisTurn) {
+    history.replaceState(history.state, '', url)
+  } else {
+    history.pushState(history.state, '', url)
+    historyEntryPushedThisTurn = true
+    scheduleHistoryTurnReset()
+  }
+}
+
 export type StorageProps<T = unknown> = ReactiveObjectProps & {
   key: string
   value: T
@@ -250,17 +310,7 @@ export class StorageNode extends ReactiveObject {
   removeValueToHash() {
     hashValues = parseHash(self.location.hash)
     delete hashValues[this.key]
-
-    let hashString = ''
-    for (const h in hashValues) {
-      hashString += h + '=' + hashValues[h] + '&'
-    }
-    if (hashString) {
-      hashString = hashString.slice(0, -1)
-      self.location.hash = hashString
-    } else {
-      history.replaceState('', document.title, self.location.pathname + self.location.search)
-    }
+    commitHashValues()
   }
   saveValueToHash() {
     hashValues = parseHash(self.location.hash)
@@ -287,16 +337,7 @@ export class StorageNode extends ReactiveObject {
       }
     }
 
-    let hashString = ''
-    for (const h in hashValues) {
-      hashString += h + '=' + hashValues[h] + '&'
-    }
-    if (hashString) {
-      hashString = hashString.slice(0, -1)
-      self.location.hash = hashString
-    } else {
-      history.replaceState('', document.title, self.location.pathname + self.location.search)
-    }
+    commitHashValues()
   }
 }
 
@@ -333,22 +374,27 @@ function getValueFromHash(key: string) {
 }
 
 function updateAllFromHash() {
-  hashValues = parseHash(self.location.hash)
-  for (const h in hashValues) {
-    if (nodes.hash.has(h)) {
-      const node = nodes.hash.get(h) as StorageNode
-      try {
-        node.value = JSON.parse(hashValues[h])
-      } catch {
-        node.value = hashValues[h]
+  applyingHash = true
+  try {
+    hashValues = parseHash(self.location.hash)
+    for (const h in hashValues) {
+      if (nodes.hash.has(h)) {
+        const node = nodes.hash.get(h) as StorageNode
+        try {
+          node.value = JSON.parse(hashValues[h])
+        } catch {
+          node.value = hashValues[h]
+        }
       }
     }
-  }
 
-  for (const [key, node] of nodes.hash.entries()) {
-    if (hashValues[key] === undefined) {
-      node.value = node.default
+    for (const [key, node] of nodes.hash.entries()) {
+      if (hashValues[key] === undefined) {
+        node.value = node.default
+      }
     }
+  } finally {
+    applyingHash = false
   }
 }
 

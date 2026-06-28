@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { StorageNode, Storage, Binding, ReactiveObject, Register, PropertyDefinitions, NodeArray, Json, PropertyValues } from '@io-gui/core'
+import { StorageNode, Storage, Binding, ReactiveObject, Register, PropertyDefinitions, NodeArray, Json, PropertyValues, nextFrame } from '@io-gui/core'
 
 @Register
 class StoredItem extends ReactiveObject {
@@ -228,5 +228,86 @@ describe('Storage.test.ts', () => {
     expect(model.items[0].title).toBe('Buy milk')
     expect(model.items[0].completed).toBe(true)
     node.dispose()
+  })
+  it('coalesces multiple synchronous hash writes into a single history entry (Part A)', async () => {
+    const base = self.location.pathname + self.location.search
+    // Clean history tip representing the "catalog" page, prunes any forward entries.
+    history.pushState(null, '', base + '#navpage=catalog')
+    await nextFrame() // reset the per-frame push flag
+
+    const page = new StorageNode({key: 'navpage', value: 'about', storage: 'hash'})
+    const guid = new StorageNode({key: 'navguid', value: '', storage: 'hash'})
+    expect(page.value).toBe('catalog')
+    expect(guid.value).toBe('')
+
+    const lengthBefore = history.length
+
+    // Simulate onThumbnailClicked: two atomic hash writes in the same frame.
+    page.value = 'model'
+    guid.value = 'abc123'
+
+    // Both writes collapse into ONE new history entry.
+    expect(history.length - lengthBefore).toBe(1)
+    expect(self.location.hash).toContain('navpage=model')
+    expect(self.location.hash).toContain('navguid=abc123')
+
+    // Back must return to the catalog state, not an intermediate "model without guid".
+    const backDone = afterHashChange()
+    history.back()
+    await backDone
+    await nextFrame()
+
+    expect(self.location.hash).toContain('navpage=catalog')
+    expect(self.location.hash).not.toContain('navguid')
+    expect(page.value).toBe('catalog')
+    expect(guid.value).toBe('')
+
+    page.dispose()
+    guid.dispose()
+    history.replaceState(null, '', base)
+    await nextFrame()
+  })
+  it('separate frames still create separate history entries', async () => {
+    const base = self.location.pathname + self.location.search
+    history.pushState(null, '', base)
+    await nextFrame()
+
+    const node = new StorageNode({key: 'navsize', value: '128', storage: 'hash'})
+    const lengthBefore = history.length
+
+    node.value = '256'
+    expect(history.length - lengthBefore).toBe(1)
+    await nextFrame()
+
+    node.value = '512'
+    expect(history.length - lengthBefore).toBe(2)
+
+    node.dispose()
+    history.replaceState(null, '', base)
+    await nextFrame()
+  })
+  it('does not create extra history entries when applying values from a hashchange (Part B)', async () => {
+    const base = self.location.pathname + self.location.search
+    history.pushState(null, '', base + '#navwb=initial')
+    await nextFrame()
+
+    const node = new StorageNode({key: 'navwb', value: 'def', storage: 'hash'})
+    expect(node.value).toBe('initial')
+
+    const lengthBefore = history.length
+
+    // External navigation (URL edit / back-forward). Applying it must not write back.
+    const changed = afterHashChange()
+    self.location.hash = 'navwb=external'
+    await changed
+    await nextFrame()
+
+    expect(node.value).toBe('external')
+    expect(history.length - lengthBefore).toBe(1)
+    expect(self.location.hash).toBe('#navwb=external')
+
+    node.dispose()
+    history.replaceState(null, '', base)
+    await nextFrame()
   })
 })
