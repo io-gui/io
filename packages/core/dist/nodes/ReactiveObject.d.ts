@@ -7,6 +7,7 @@ import { CallbackFunction } from '../core/FrameScheduler.js';
 import { type ReactiveNode } from '../core/ReactiveCore.js';
 import type { ListenerDefinitionLoose, AnyEventListener } from '../core/EventDispatcher.js';
 export type AnyConstructor = new (...args: never[]) => object;
+export type ReactiveObjectConstructor = new (args: ReactiveObjectProps) => ReactiveObject;
 /** Instantiates a property type constructor with runtime constructor arguments. */
 export declare function constructType(ctor: AnyConstructor, ...args: unknown[]): object;
 export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
@@ -72,8 +73,8 @@ export declare class ReactiveObject extends Object {
     readonly _isReactiveObject: boolean;
     _disposed: boolean;
     constructor(args?: unknown);
-    applyProperties(props: PropertyValues, skipDispatch?: boolean): void;
-    setProperties(props: PropertyValues): void;
+    applyProperties(props: PropertyValues, debounce?: boolean): void;
+    setProperties(props: PropertyValues, debounce?: boolean): void;
     setProperty(name: string, value: unknown, debounce?: boolean): void;
     copy(node: ReactiveObject): void;
     toJSON(): Json;
@@ -102,7 +103,7 @@ export declare class ReactiveObject extends Object {
 }
 export declare function initProperties(node: ReactiveNode): void;
 export declare function initFields(node: ReactiveNode): void;
-export declare function setProperties(node: ReactiveNode, props: PropertyValues): void;
+export declare function setProperties(node: ReactiveNode, props: PropertyValues, debounce?: boolean): void;
 /** Assigns a reactive property, queuing change dispatch unless debounced. */
 export declare function setProperty(node: ReactiveNode, name: string, value: unknown, debounce?: boolean): void;
 export declare function dispatchQueue(node: ReactiveNode, debounce?: boolean): void;

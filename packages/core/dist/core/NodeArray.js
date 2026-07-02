@@ -22,10 +22,16 @@ export class NodeArray extends Array {
     _isInternalOperation = false;
     _observers = new Set();
     static get [Symbol.species]() { return Array; }
+    setItemType(item) {
+        if (this._itemType === undefined) {
+            this._itemType = item?.constructor ?? undefined;
+        }
+    }
     /** @param node Owner that receives mutation events for this collection. */
     constructor(node, ...args) {
         super(...args);
         this.node = node;
+        this.setItemType(args[0]); // TODO: test and re-evaluate this!
         // TODO: Avoid creating empty NodeArrays in models!
         // TODO: Test thoroughly! Check initializations with items!
         this.itemMutated = this.itemMutated.bind(this);
@@ -118,6 +124,7 @@ export class NodeArray extends Array {
             const result = super.splice(start, deleteCount, ...items);
             for (let i = start; i < start + items.length; i++) {
                 const item = this[i];
+                this.setItemType(item); // TODO: test and re-evaluate this!
                 if (isReactiveNode(item)) {
                     item.addEventListener('io-mutation', this.itemMutated);
                     item.addParent(this.node);
@@ -132,6 +139,7 @@ export class NodeArray extends Array {
         return this.withInternalOperation(() => {
             const result = super.push(...items);
             for (const item of items) {
+                this.setItemType(item); // TODO: test and re-evaluate this!
                 if (isReactiveNode(item)) {
                     item.addEventListener('io-mutation', this.itemMutated);
                     item.addParent(this.node);
@@ -146,6 +154,7 @@ export class NodeArray extends Array {
         return this.withInternalOperation(() => {
             const result = super.unshift(...items);
             for (const item of items) {
+                this.setItemType(item); // TODO: test and re-evaluate this!
                 if (isReactiveNode(item)) {
                     item.addEventListener('io-mutation', this.itemMutated);
                     item.addParent(this.node);
@@ -287,8 +296,18 @@ export class NodeArray extends Array {
     }
     /** Hydrate each item from wire-format JSON via {@link ReactiveObject.applyJSON}. */
     applyJSON(json) {
+        // TODO: test this!
+        if (json.length > this.length) {
+            this.splice(this.length, json.length - this.length);
+        }
         for (let i = 0; i < json.length; i++) {
-            this[i].applyJSON(json[i]);
+            if (i >= this.length) {
+                const itemConstructor = this._itemType;
+                this.push(new itemConstructor(json[i]));
+            }
+            else {
+                this[i].applyJSON(json[i]);
+            }
         }
     }
     dispose() {

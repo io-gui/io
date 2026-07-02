@@ -324,4 +324,43 @@ describe('MenuOption', () => {
     expect(option.selected).toBe(false)
     expect(option.selectedID).toBe('')
   })
+  it('Should update selectedID when selecting an option with empty id', () => {
+    const option = new MenuOption({
+      options: [
+        {id: '', label: 'all', value: ''},
+        {id: 'animals', label: 'animals'},
+        {id: 'nature', label: 'nature'},
+      ],
+    })
+
+    option.options[1].selected = true
+    expect(option.selectedID).toBe('animals')
+    expect(option.selectedIDImmediate).toBe('animals')
+
+    option.options[0].selected = true
+    expect(option.selectedID).toBe('')
+    expect(option.selectedIDImmediate).toBe('')
+    expect(option.options[0].selected).toBe(true)
+    expect(option.options[1].selected).toBe(false)
+  })
+  it('Should find child option before root when ids match', () => {
+    const option = new MenuOption({
+      options: [{id: '', label: 'all', value: ''}],
+    })
+    expect(option.findItemById('')).toBe(option.options[0])
+  })
+  it('Should update selection when selectedID is set to empty string externally', () => {
+    const option = new MenuOption({
+      options: [
+        {id: '', label: 'all', value: ''},
+        {id: 'animals', label: 'animals'},
+      ],
+    })
+
+    option.options[1].selected = true
+    option.selectedID = ''
+
+    expect(option.options[0].selected).toBe(true)
+    expect(option.options[1].selected).toBe(false)
+  })
 })

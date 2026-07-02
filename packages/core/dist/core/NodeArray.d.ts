@@ -1,4 +1,4 @@
-import { JsonArray, ReactiveObject } from '../nodes/ReactiveObject.js';
+import { ReactiveObjectConstructor, JsonArray, ReactiveObject } from '../nodes/ReactiveObject.js';
 import { type ReactiveNode } from './ReactiveCore.js';
 /**
  * Reactive array of {@link ReactiveObject} items owned by a parent node or element.
@@ -23,7 +23,9 @@ export declare class NodeArray<N extends ReactiveObject> extends Array<N> {
     private proxy;
     private _isInternalOperation;
     private _observers;
+    _itemType: ReactiveObjectConstructor | undefined;
     static get [Symbol.species](): ArrayConstructor;
+    setItemType(item: N): void;
     /** @param node Owner that receives mutation events for this collection. */
     constructor(node: ReactiveObject, ...args: N[]);
     /** Run array mutations without dispatching `io-mutation` until complete. */

@@ -55,6 +55,10 @@ Shared array mutated during bubble (push/pop per target). Handlers that retain p
 ### Double `@Register` on same class
 Throws (`Cannot redefine _protochain`). Tests need fresh anonymous classes.
 
+### Missing `@Register` — vConstructor factory check
+`ProtoChain.init()` throws on `new UnregisteredClass()` only.
+Added debug check in `ReactiveElement.Register()` vConstructor: `this !== ioNodeConstructor` → warn (inherited parent factory called on subclass).
+
 ### Vite 8 / Rolldown bundle — license banner
 With `minify: 'terser'`, Rolldown sets `comments.legal: false` before terser runs. Fix: `rollupOptions.output.comments: { legal: true }` + entry `banner` via `readLicenseBanner()`.
 
@@ -90,3 +94,6 @@ User wants the "three parent/child relations" gap sold as a real feature (not a 
 
 ### Json type refactor review (Jun 19)
 `Json` changed from object-interface to value-union (`JsonPrimitive|JsonObject|JsonArray`, +null). Compiles clean. Found: NodeArray.ts stale LOCAL `interface Json` shadowing import (user fixed). Pre-existing debug bug in ReactiveNode.applyJSON: `if (type === jsonObject.constructor)` always compared to Object + inverted. FIXED → `if (type && jsonObject[name]?.constructor !== type)` (guard `type` because `type?: AnyConstructor` optional; untyped props like MenuOption.value would over-warn). Also tightened locals `out`/`primitiveProps` to `JsonObject` (return type stays `Json` for subclass overrides like MenuOption `toJSON(): Json`). EditorConfig double-cast left as-is: MenuOptionProps has non-JSON fields (action fn, any) so toJSON can't narrow to it. All core/layout/menus tests pass.
+
+### polygone.art AssetInfo types (Jun 30)
+Added `src/asset-info.ts`. Initial enums were hallucinated; corrected to Poly API v1 (20201006): license/visibility/formatType/colorSpace from poly-api.json. Nested types PolyFile/Format/PresentationParams/Quaternion. AssetInfo = blob mirror shape (name, authorId, tags, likes + Poly fields).

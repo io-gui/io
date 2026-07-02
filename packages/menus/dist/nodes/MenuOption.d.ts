@@ -9,6 +9,7 @@ export type MenuOptionProps = {
     action?: (value?: any) => void;
     mode?: MenuOptionMode;
     disabled?: boolean;
+    hidden?: boolean;
     selected?: WithBinding<boolean>;
     selectedID?: WithBinding<string>;
     selectedIDImmediate?: WithBinding<string>;
@@ -22,6 +23,7 @@ export declare class MenuOption extends ReactiveObject {
     icon: string;
     hint: string;
     disabled: boolean;
+    hidden: boolean;
     action?: (value?: any) => void;
     mode: MenuOptionMode;
     selected: boolean;
@@ -41,6 +43,7 @@ export declare class MenuOption extends ReactiveObject {
     selectedIDChanged(): void;
     selectedIDImmediateChanged(): void;
     getSelectedIDImmediate(): string;
+    findSelectedImmediateOption(): MenuOption | undefined;
     setSelectedIDImmediate(id: string): void;
     onOptionSelectedChanged(event: CustomEvent): void;
     unselectSuboptions(): void;

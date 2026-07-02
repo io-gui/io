@@ -67,7 +67,7 @@ let ReactiveObject = ReactiveObject_1 = class ReactiveObject extends Object {
         this.ready();
         this.dispatchQueue();
     }
-    applyProperties(props, skipDispatch = false) {
+    applyProperties(props, debounce = false) {
         for (const name in props) {
             if (this._properties.has(name)) {
                 this.setProperty(name, props[name], true);
@@ -82,11 +82,11 @@ let ReactiveObject = ReactiveObject_1 = class ReactiveObject extends Object {
             }
         }
         this._eventDispatcher.applyPropListeners(props);
-        if (!skipDispatch)
+        if (!debounce)
             this.dispatchQueue();
     }
-    setProperties(props) {
-        setProperties(this, props);
+    setProperties(props, debounce = false) {
+        setProperties(this, props, debounce);
     }
     setProperty(name, value, debounce = false) {
         if (this._disposed)
@@ -250,12 +250,13 @@ export function initFields(node) {
             initialValue = initialValue.slice();
         }
         else if (typeof initialValue === 'object') {
+            // TODO: Consider removing this copy and just use the initialValue directly or prevent object field values
             initialValue = Object.assign({}, initialValue);
         }
         node[name] = initialValue;
     }
 }
-export function setProperties(node, props) {
+export function setProperties(node, props, debounce = false) {
     for (const name in props) {
         if (!node._properties.has(name)) {
             debug: console.warn(`Field "${name}" is not defined`, node);
@@ -263,7 +264,8 @@ export function setProperties(node, props) {
         }
         node.setProperty(name, props[name], true);
     }
-    node.dispatchQueue();
+    if (!debounce)
+        node.dispatchQueue();
 }
 function applyPropertyBinding(node, name, prop, value) {
     if (!(value instanceof Binding))

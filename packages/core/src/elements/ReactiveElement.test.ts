@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { Register, ReactiveElement, ReactiveObject, Change, PropertyDefinitions } from '@io-gui/core'
 
 const element = new ReactiveElement()
@@ -443,5 +443,17 @@ describe('ReactiveElement', () => {
     expect(() => el.disconnectedCallback()).not.toThrow()
     document.body.removeChild(el as HTMLElement)
     el.dispose()
+  })
+  it('warns when vConstructor is called on an unregistered subclass', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    class UnregisteredElement extends ReactiveElement {}
+    UnregisteredElement.vConstructor()
+
+    expect(warnSpy).toHaveBeenCalledWith(
+      'UnregisteredElement not registered! Use @Register before using UnregisteredElement.vConstructor.'
+    )
+
+    warnSpy.mockRestore()
   })
 })

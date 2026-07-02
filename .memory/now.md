@@ -1,3 +1,3 @@
 # Current Focus
 
-NodeArray.dispose(): silent teardown (super.splice in withInternalOperation), parent dispose calls NodeArray.dispose() first.
+Expanded polygone.art AssetInfo type in `src/asset-info.ts`; shared by poly-viewer and poly-page-model-view.

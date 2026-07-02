@@ -75,6 +75,7 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
     static get Listeners() {
         return {
             'three-applet-needs-render': 'onAppletNeedsRender',
+            'three-applet-frame-object-all': 'onAppletFrameObjectAll',
         };
     }
     constructor(args) {
@@ -109,10 +110,16 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
             newTool.registerViewport(this);
     }
     onAppletNeedsRender(event) {
-        event.stopPropagation();
+        event.stopPropagation(); // TODO: Test with multiple viewports
         if (!this.visible)
             return;
         this.debounce(this.renderViewportDebounced);
+    }
+    onAppletFrameObjectAll(event) {
+        event.stopPropagation(); // TODO: Test with multiple viewports
+        if (!this.visible)
+            return;
+        this.viewCameras.frameObjectAll(event.detail);
     }
     onResized() {
         const rect = this.getBoundingClientRect();
@@ -182,6 +189,9 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
     }
 };
 __decorate([
+    Property({ type: ThreeApplet, init: null })
+], IoThreeViewport.prototype, "applet", void 0);
+__decorate([
     Property({ type: Number, value: 1.1 })
 ], IoThreeViewport.prototype, "overscan", void 0);
 __decorate([
@@ -193,9 +203,6 @@ __decorate([
 __decorate([
     Property({ type: String, value: 'throttled' })
 ], IoThreeViewport.prototype, "dispatchTiming", void 0);
-__decorate([
-    Property({ type: ThreeApplet, init: null })
-], IoThreeViewport.prototype, "applet", void 0);
 __decorate([
     Property({ type: String, value: 'perspective' })
 ], IoThreeViewport.prototype, "cameraSelect", void 0);

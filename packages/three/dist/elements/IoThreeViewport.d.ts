@@ -4,10 +4,10 @@ import { ThreeApplet } from '../nodes/ThreeApplet.js';
 import { ViewCameras } from '../nodes/ViewCameras.js';
 import { ToolBase } from '../nodes/ToolBase.js';
 export type IoThreeViewportProps = ReactiveElementProps & {
+    applet: WithBinding<ThreeApplet>;
     overscan?: WithBinding<number>;
     clearColor?: WithBinding<number>;
     clearAlpha?: WithBinding<number>;
-    applet: WithBinding<ThreeApplet>;
     cameraSelect?: WithBinding<string>;
     renderer?: WebGPURenderer;
     tool?: WithBinding<ToolBase>;
@@ -16,11 +16,11 @@ export declare class IoThreeViewport extends ReactiveElement {
     width: number;
     height: number;
     visible: boolean;
+    applet: ThreeApplet;
     overscan: number;
     clearColor: number;
     clearAlpha: number;
     dispatchTiming: DispatchTiming;
-    applet: ThreeApplet;
     cameraSelect: string;
     renderer: WebGPURenderer;
     viewCameras: ViewCameras;
@@ -32,6 +32,7 @@ export declare class IoThreeViewport extends ReactiveElement {
     static get Style(): string;
     static get Listeners(): {
         'three-applet-needs-render': string;
+        'three-applet-frame-object-all': string;
     };
     constructor(args: IoThreeViewportProps);
     ready(): void;
@@ -39,6 +40,7 @@ export declare class IoThreeViewport extends ReactiveElement {
     disconnectedCallback(): void;
     toolChanged(change: Change<ToolBase>): void;
     onAppletNeedsRender(event: CustomEvent): void;
+    onAppletFrameObjectAll(event: CustomEvent): void;
     onResized(): void;
     appletChanged(): void;
     appletMutated(): void;

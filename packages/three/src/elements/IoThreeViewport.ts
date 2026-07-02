@@ -1,5 +1,5 @@
 import { Register, ReactiveElement, ReactiveElementProps, Property, DispatchTiming, Change, Field, WithBinding } from '@io-gui/core'
-import { WebGPURenderer, CanvasTarget, NeutralToneMapping } from 'three/webgpu'
+import { WebGPURenderer, CanvasTarget, NeutralToneMapping, Object3D } from 'three/webgpu'
 import WebGPU from 'three/addons/capabilities/WebGPU.js'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
 import { ViewCameras } from '../nodes/ViewCameras.js'
@@ -24,10 +24,10 @@ _renderer.shadowMap.enabled = true
 void _renderer.init()
 
 export type IoThreeViewportProps = ReactiveElementProps & {
+  applet: WithBinding<ThreeApplet>
   overscan?: WithBinding<number>
   clearColor?: WithBinding<number>
   clearAlpha?: WithBinding<number>
-  applet: WithBinding<ThreeApplet>
   cameraSelect?: WithBinding<string>
   renderer?: WebGPURenderer
   tool?: WithBinding<ToolBase>
@@ -40,6 +40,9 @@ export class IoThreeViewport extends ReactiveElement {
   public height: number = 0
   public visible: boolean = false
 
+  @Property({type: ThreeApplet, init: null})
+  declare applet: ThreeApplet
+
   @Property({type: Number, value: 1.1})
   declare public overscan: number
 
@@ -51,9 +54,6 @@ export class IoThreeViewport extends ReactiveElement {
 
   @Property({type: String, value: 'throttled'})
   declare dispatchTiming: DispatchTiming
-
-  @Property({type: ThreeApplet, init: null})
-  declare applet: ThreeApplet
 
   @Property({type: String, value: 'perspective'})
   declare cameraSelect: string
@@ -120,6 +120,7 @@ export class IoThreeViewport extends ReactiveElement {
   static override get Listeners() {
     return {
       'three-applet-needs-render': 'onAppletNeedsRender',
+      'three-applet-frame-object-all': 'onAppletFrameObjectAll',
     }
   }
 
@@ -157,9 +158,15 @@ export class IoThreeViewport extends ReactiveElement {
   }
 
   onAppletNeedsRender(event: CustomEvent) {
-    event.stopPropagation()
+    event.stopPropagation() // TODO: Test with multiple viewports
     if (!this.visible) return
     this.debounce(this.renderViewportDebounced)
+  }
+
+  onAppletFrameObjectAll(event: CustomEvent) {
+    event.stopPropagation() // TODO: Test with multiple viewports
+    if (!this.visible) return
+    this.viewCameras.frameObjectAll(event.detail as Object3D)
   }
 
   onResized() {

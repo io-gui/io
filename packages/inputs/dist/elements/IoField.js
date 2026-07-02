@@ -272,6 +272,9 @@ __decorate([
 ], IoField.prototype, "disabled", void 0);
 __decorate([
     Property({ value: false, type: Boolean, reflect: true })
+], IoField.prototype, "hidden", void 0);
+__decorate([
+    Property({ value: false, type: Boolean, reflect: true })
 ], IoField.prototype, "pressed", void 0);
 __decorate([
     Property({ value: 'neutral', reflect: true })

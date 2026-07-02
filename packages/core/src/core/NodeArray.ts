@@ -1,4 +1,4 @@
-import { JsonArray, ReactiveObject } from '../nodes/ReactiveObject.js'
+import { ReactiveObjectProps, ReactiveObjectConstructor, JsonArray, ReactiveObject } from '../nodes/ReactiveObject.js'
 import { isReactiveNode, type ReactiveNode } from './ReactiveCore.js'
 
 /**
@@ -23,12 +23,22 @@ export class NodeArray<N extends ReactiveObject> extends Array<N> {
   declare private proxy: typeof Proxy
   private _isInternalOperation = false
   private _observers = new Set<ReactiveNode>()
+  declare _itemType: ReactiveObjectConstructor | undefined
 
   static override get [Symbol.species]() { return Array }
+
+  setItemType(item: N) {
+    if (this._itemType === undefined) {
+      this._itemType = (item as any)?.constructor as ReactiveObjectConstructor ?? undefined
+    }
+  }
 
   /** @param node Owner that receives mutation events for this collection. */
   constructor(public node: ReactiveObject, ...args: N[]) {
     super(...args)
+
+    this.setItemType(args[0]) // TODO: test and re-evaluate this!
+
     // TODO: Avoid creating empty NodeArrays in models!
     // TODO: Test thoroughly! Check initializations with items!
     this.itemMutated = this.itemMutated.bind(this)
@@ -120,6 +130,7 @@ export class NodeArray<N extends ReactiveObject> extends Array<N> {
       const result = super.splice(start, deleteCount, ...items)
       for (let i = start; i < start + items.length; i++) {
         const item = this[i]
+        this.setItemType(item) // TODO: test and re-evaluate this!
         if (isReactiveNode(item)) {
           item.addEventListener('io-mutation', this.itemMutated)
           item.addParent(this.node)
@@ -133,6 +144,7 @@ export class NodeArray<N extends ReactiveObject> extends Array<N> {
     return this.withInternalOperation(() => {
       const result = super.push(...items)
       for (const item of items) {
+        this.setItemType(item) // TODO: test and re-evaluate this!
         if (isReactiveNode(item)) {
           item.addEventListener('io-mutation', this.itemMutated)
           item.addParent(this.node)
@@ -146,6 +158,7 @@ export class NodeArray<N extends ReactiveObject> extends Array<N> {
     return this.withInternalOperation(() => {
       const result = super.unshift(...items)
       for (const item of items) {
+        this.setItemType(item) // TODO: test and re-evaluate this!
         if (isReactiveNode(item)) {
           item.addEventListener('io-mutation', this.itemMutated)
           item.addParent(this.node)
@@ -291,8 +304,17 @@ export class NodeArray<N extends ReactiveObject> extends Array<N> {
   }
   /** Hydrate each item from wire-format JSON via {@link ReactiveObject.applyJSON}. */
   applyJSON(json: JsonArray) {
+    // TODO: test this!
+    if (json.length > this.length) {
+      this.splice(this.length, json.length - this.length)
+    }
     for (let i = 0; i < json.length; i++) {
-      this[i].applyJSON(json[i])
+      if (i >= this.length) {
+        const itemConstructor = this._itemType as ReactiveObjectConstructor
+        this.push(new itemConstructor(json[i] as ReactiveObjectProps) as N)
+      } else {
+        this[i].applyJSON(json[i])
+      }
     }
   }
 

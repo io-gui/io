@@ -13,6 +13,9 @@ import type { ListenerDefinitionLoose, AnyEventListener } from '../core/EventDis
 
 export type AnyConstructor = new (...args: never[]) => object
 
+export type ReactiveObjectConstructor = new (args: ReactiveObjectProps) => ReactiveObject
+
+
 /** Instantiates a property type constructor with runtime constructor arguments. */
 export function constructType(ctor: AnyConstructor, ...args: unknown[]): object {
   return new (ctor as new (...args: unknown[]) => object)(...args)
@@ -140,7 +143,7 @@ export class ReactiveObject extends Object {
     this.ready()
     this.dispatchQueue()
   }
-  applyProperties(props: PropertyValues, skipDispatch = false) {
+  applyProperties(props: PropertyValues, debounce = false) {
     for (const name in props) {
       if (this._properties.has(name)) {
         this.setProperty(name, props[name], true)
@@ -154,10 +157,10 @@ export class ReactiveObject extends Object {
       }
     }
     this._eventDispatcher.applyPropListeners(props)
-    if (!skipDispatch) this.dispatchQueue()
+    if (!debounce) this.dispatchQueue()
   }
-  setProperties(props: PropertyValues) {
-    setProperties(this, props)
+  setProperties(props: PropertyValues, debounce = false) {
+    setProperties(this, props, debounce)
   }
   setProperty(name: string, value: unknown, debounce = false) {
     if (this._disposed) return
@@ -315,12 +318,13 @@ export function initFields(node: ReactiveNode) {
     } else if (initialValue instanceof Array) {
       initialValue = initialValue.slice()
     } else if (typeof initialValue === 'object') {
+      // TODO: Consider removing this copy and just use the initialValue directly or prevent object field values
       initialValue = Object.assign({}, initialValue)
     }
     (node as unknown as Record<string, unknown>)[name] = initialValue
   }
 }
-export function setProperties(node: ReactiveNode, props: PropertyValues) {
+export function setProperties(node: ReactiveNode, props: PropertyValues, debounce = false) {
   for (const name in props) {
     if (!node._properties.has(name)) {
       debug: console.warn(`Field "${name}" is not defined`, node)
@@ -328,7 +332,7 @@ export function setProperties(node: ReactiveNode, props: PropertyValues) {
     }
     node.setProperty(name, props[name], true)
   }
-  node.dispatchQueue()
+  if (!debounce) node.dispatchQueue()
 }
 function applyPropertyBinding(node: ReactiveNode, name: string, prop: PropertyInstance, value: unknown) {
   if (!(value instanceof Binding)) return false

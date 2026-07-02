@@ -16,6 +16,7 @@ export declare class IoField extends ReactiveElement {
     selected: boolean;
     invalid: boolean;
     disabled: boolean;
+    hidden: boolean;
     pressed: boolean;
     appearance: 'neutral' | 'inset' | 'outset';
     pattern: string;

@@ -11,6 +11,7 @@ export type MenuOptionProps = {
   action?: (value?: any) => void
   mode?: MenuOptionMode
   disabled?: boolean
+  hidden?: boolean
   selected?: WithBinding<boolean>
   selectedID?: WithBinding<string>
   selectedIDImmediate?: WithBinding<string>
@@ -38,6 +39,9 @@ export class MenuOption extends ReactiveObject {
 
   @Property({value: false, type: Boolean})
   declare disabled: boolean
+
+  @Property({value: false, type: Boolean})
+  declare hidden: boolean
 
   @Property()
   declare action?: (value?: any) => void
@@ -106,17 +110,19 @@ export class MenuOption extends ReactiveObject {
     }
     return options
   }
-  findItemByValue(value: any) {
-    const allItems = this.getAllOptions()
-    for (let i = 0; i < allItems.length; i++) {
-      if (allItems[i].value === value) return allItems[i]
+  findItemByValue(value: any): MenuOption | undefined {
+    for (let i = 0; i < this.options.length; i++) {
+      const found = this.options[i].findItemByValue(value)
+      if (found) return found
     }
+    if (this.value === value) return this
   }
-  findItemById(id: string) {
-    const allItems = this.getAllOptions()
-    for (let i = 0; i < allItems.length; i++) {
-      if (allItems[i].id === id) return allItems[i]
+  findItemById(id: string): MenuOption | undefined {
+    for (let i = 0; i < this.options.length; i++) {
+      const found = this.options[i].findItemById(id)
+      if (found) return found
     }
+    if (this.id === id) return this
   }
   selectDefault() {
     let walker: MenuOption | undefined = this.mode === 'select' ? this : undefined
@@ -141,6 +147,8 @@ export class MenuOption extends ReactiveObject {
     if (option) {
       option.selected = true
       this.dispatch('option-selected', {option: option}, false)
+    } else {
+      this.unselectSuboptions()
     }
   }
   selectedIDImmediateChanged() {
@@ -157,12 +165,16 @@ export class MenuOption extends ReactiveObject {
     let selected = ''
     for (let i = 0; i < this.options.length; i++) {
       const item = this.options[i]
-      if (item.selected && item.id && item.mode === 'select') {
+      if (item.selected && item.mode === 'select') {
         selected = item.id
         break
       }
     }
     return selected
+  }
+  findSelectedImmediateOption() {
+    const selectedIDImmediate = this.getSelectedIDImmediate()
+    return this.options.find(option => option.mode === 'select' && option.selected && option.id === selectedIDImmediate)
   }
   setSelectedIDImmediate(id: string) {
     // TODO Test and reconsider withInternalOperation
@@ -218,16 +230,20 @@ export class MenuOption extends ReactiveObject {
       return
     }
 
-    let selectedIDImmediate = this.getSelectedIDImmediate()
-    let walker = selectedIDImmediate ? this.options.find(option => option.mode === 'select' && option.selected && option.id === selectedIDImmediate) : undefined
+    let walker = this.findSelectedImmediateOption()
     if (!walker) return
 
     while (walker) {
       path.push(walker.id)
-      selectedIDImmediate = walker.getSelectedIDImmediate()
-      walker = selectedIDImmediate ? walker.options.find(option => option.mode === 'select' && option.selected && option.id === selectedIDImmediate) : undefined
+      walker = walker.findSelectedImmediateOption()
     }
-    this.path = path.join(',')
+    const selectedID = path[path.length - 1]
+    if (this.path !== path.join(',')) {
+      this.path = path.join(',')
+    }
+    if (this.selectedID !== selectedID) {
+      this.selectedID = selectedID
+    }
   }
   pathChanged() {
     const path = this.path ? [...this.path.split(',')] : []
@@ -239,11 +255,11 @@ export class MenuOption extends ReactiveObject {
     }
   }
   optionsMutated(event: CustomEvent) {
-    const selectedIDImmediate = this.getSelectedIDImmediate()
-    if (this.mode === 'select' && selectedIDImmediate && this.options.length) {
+    const hasSelected = this.options.some(option => option.selected && option.mode === 'select')
+    if (this.mode === 'select' && hasSelected && this.options.length) {
       this.setProperties({
         selected: true,
-        selectedIDImmediate: selectedIDImmediate,
+        selectedIDImmediate: this.getSelectedIDImmediate(),
       })
     }
     this.updatePaths()
@@ -257,6 +273,7 @@ export class MenuOption extends ReactiveObject {
       icon: this.icon,
       hint: this.hint,
       disabled: this.disabled,
+      hidden: this.hidden,
       // action: N/A for serialization
       mode: this.mode,
       options: this.options.map(option => option.toJSON()),
@@ -271,6 +288,7 @@ export class MenuOption extends ReactiveObject {
       icon: json.icon ?? '',
       hint: json.hint ?? '',
       disabled: json.disabled ?? false,
+      hidden: json.hidden ?? false,
       // action: N/A for serialization
       mode: json.mode ?? 'select',
       selected: json.selected ?? false,

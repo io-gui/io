@@ -322,6 +322,7 @@ export class IoMenuItem extends IoField {
     this.setProperties({
       selected: this.option.selected,
       disabled: this.option.disabled,
+      hidden: this.option.hidden,
     })
     this.initOptions()
   }
@@ -329,6 +330,7 @@ export class IoMenuItem extends IoField {
     this.setProperties({
       selected: this.option.selected,
       disabled: this.option.disabled,
+      hidden: this.option.hidden,
     })
     this.mutated()
   }

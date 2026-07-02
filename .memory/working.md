@@ -112,7 +112,9 @@ Renamed instance `fromJSON` → `applyJSON` to distinguish apply-to-existing fro
 
 ### io-menus
 
-(none)
+- **MenuOption empty-id selection:** `getSelectedIDImmediate`, `optionsMutated`, `updatePaths` must not treat `''` as falsy. `updatePaths` sets `selectedID` directly (path `''` can't round-trip via `pathChanged`).
+- **Open: root MenuOption identity.** Root defaults `id: ''` (`args.id ?? ''`). Child option with `id: ''` (e.g. filter "all" with `value: ''` for string-input sync) duplicates root id → debug warning in `getAllOptions`. Valid use case; root identity model needs improvement (distinct internal id vs leaf ids, or exclude root from duplicate-id check).
+- **findItemById/findItemByValue:** search descendants before self so empty-id child wins over empty-id root (fixes selectedID `''` binding → menu highlight).
 
 ### Other Packages
 

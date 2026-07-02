@@ -55,7 +55,7 @@ export declare class ReactiveElement extends HTMLElement {
     constructor(args?: ReactiveElementProps);
     /** Applies constructor/render props; defers dispatch when `skipDispatch` is true. */
     applyProperties(props: PropertyValues, skipDispatch?: boolean): void;
-    setProperties(props: PropertyValues): void;
+    setProperties(props: PropertyValues, debounce?: boolean): void;
     setProperty(name: string, value: unknown, debounce?: boolean): void;
     init(): void;
     ready(): void;

@@ -156,7 +156,9 @@ let IoPanel = class IoPanel extends ReactiveElement {
                 '@io-menu-option-clicked': this.onNewTabClicked,
             }),
             ioSelector({
-                caching: 'none', // TODO: Make caching work with mutable elements
+                // TODO: Make caching work with mutable elements
+                caching: 'reactive',
+                // caching: 'none',
                 selected: this.panel.getSelected(),
                 elements: this.elements,
                 anchor: '',

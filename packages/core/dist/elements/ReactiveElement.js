@@ -126,8 +126,8 @@ let ReactiveElement = ReactiveElement_1 = class ReactiveElement extends HTMLElem
             this.dispatchQueue();
     }
     // TODO: add types
-    setProperties(props) {
-        setProperties(this, props);
+    setProperties(props, debounce = false) {
+        setProperties(this, props, debounce);
     }
     setProperty(name, value, debounce = false) {
         if (this._disposed)
@@ -360,9 +360,11 @@ let ReactiveElement = ReactiveElement_1 = class ReactiveElement extends HTMLElem
         window.customElements.define(localName, ioNodeConstructor);
         applyElementStyleToDocument(localName, ioNodeConstructor.prototype._protochain.style);
         // TODO: Define all overloads with type guards.
-        // TODO: Add runtime debug type checks.
         // TODO: Test thoroughly.
         Object.defineProperty(ioNodeConstructor, 'vConstructor', { value: function (arg0, arg1) {
+                debug: if (this !== ioNodeConstructor) {
+                    console.warn(`${this.name} not registered! Use @Register before using ${this.name}.vConstructor.`);
+                }
                 return createVDOMElement(localName, arg0, arg1);
             } });
     }

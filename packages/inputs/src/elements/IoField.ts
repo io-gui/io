@@ -102,9 +102,11 @@ export class IoField extends ReactiveElement {
   @Property({value: false, type: Boolean, reflect: true})
   declare invalid: boolean
 
-  // TODO: remove
   @Property({value: false, type: Boolean, reflect: true})
   declare disabled: boolean
+
+  @Property({value: false, type: Boolean, reflect: true})
+  declare hidden: boolean
 
   @Property({value: false, type: Boolean, reflect: true})
   declare pressed: boolean
