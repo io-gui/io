@@ -123,4 +123,4 @@ IoGeometryConvexExample = __decorate([
     Register
 ], IoGeometryConvexExample);
 export { IoGeometryConvexExample };
-export const ioGeometryConvexExample = IoGeometryConvexExample.vConstructor;
+export const ioGeometryConvexExample = (arg0) => IoGeometryConvexExample.vConstructor(arg0);

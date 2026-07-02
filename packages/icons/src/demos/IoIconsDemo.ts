@@ -44,4 +44,4 @@ export class IoIconsDemo extends ReactiveElement {
   }
 }
 Register(IoIconsDemo)
-export const ioIconsDemo = IoIconsDemo.vConstructor
+export const ioIconsDemo = (arg0: any) => IoIconsDemo.vConstructor(arg0)

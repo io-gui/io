@@ -125,4 +125,4 @@ IoVolumePerlinExample = __decorate([
     Register
 ], IoVolumePerlinExample);
 export { IoVolumePerlinExample };
-export const ioVolumePerlinExample = IoVolumePerlinExample.vConstructor;
+export const ioVolumePerlinExample = (arg0) => IoVolumePerlinExample.vConstructor(arg0);

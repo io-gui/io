@@ -456,4 +456,16 @@ describe('ReactiveElement', () => {
 
     warnSpy.mockRestore()
   })
+  it('warns when vConstructor is called via direct-assignment (undefined this)', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    const detached = ReactiveElement.vConstructor
+    detached()
+
+    expect(warnSpy).toHaveBeenCalledWith(
+      'ReactiveElement.vConstructor called without "this".'
+    )
+
+    warnSpy.mockRestore()
+  })
 })

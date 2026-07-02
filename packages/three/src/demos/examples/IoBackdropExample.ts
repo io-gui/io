@@ -132,4 +132,4 @@ export class IoBackdropExample extends IoThreeExample {
 
 }
 
-export const ioBackdropExample = IoBackdropExample.vConstructor
+export const ioBackdropExample = (arg0: any) => IoBackdropExample.vConstructor(arg0)

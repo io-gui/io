@@ -76,4 +76,4 @@ export class IoAnimationGroupsExample extends IoThreeExample {
 
 }
 
-export const ioAnimationGroupsExample = IoAnimationGroupsExample.vConstructor
+export const ioAnimationGroupsExample = (arg0: any) => IoAnimationGroupsExample.vConstructor(arg0)

@@ -84,4 +84,4 @@ export class IoStyleContainer extends ReactiveElement {
 }
 Register(IoStyleContainer)
 
-export const ioStyleContainer = IoStyleContainer.vConstructor
+export const ioStyleContainer = (arg0: any) => IoStyleContainer.vConstructor(arg0)

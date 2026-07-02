@@ -53,6 +53,7 @@ let IoSplit = IoSplit_1 = class IoSplit extends ReactiveElement {
       }
       :host > .io-veil {
         position: absolute;
+        z-index: 1;
         opacity: 0;
         transition: opacity 0.125s ease-out;
         background-color: rgba(0, 0, 0, 1);

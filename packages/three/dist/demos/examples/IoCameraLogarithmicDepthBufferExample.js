@@ -151,4 +151,4 @@ IoCameraLogarithmicDepthBufferExample = __decorate([
     Register
 ], IoCameraLogarithmicDepthBufferExample);
 export { IoCameraLogarithmicDepthBufferExample };
-export const ioCameraLogarithmicDepthBufferExample = IoCameraLogarithmicDepthBufferExample.vConstructor;
+export const ioCameraLogarithmicDepthBufferExample = (arg0) => IoCameraLogarithmicDepthBufferExample.vConstructor(arg0);

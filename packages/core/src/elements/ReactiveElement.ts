@@ -404,8 +404,12 @@ export class ReactiveElement extends HTMLElement {
     // TODO: Define all overloads with type guards.
     // TODO: Test thoroughly.
     Object.defineProperty(ioNodeConstructor, 'vConstructor', {value: function(this: typeof ReactiveElement, arg0?: ReactiveElementProps | VDOMFactoryChildren, arg1?: VDOMFactoryChildren): VDOMElement {
-      debug: if (this !== ioNodeConstructor) {
-        console.warn(`${this.name} not registered! Use @Register before using ${this.name}.vConstructor.`)
+      debug: {
+        if (this === undefined) {
+          console.warn(`${ioNodeConstructor.name}.vConstructor called without "this".`)
+        } else if (this !== ioNodeConstructor) {
+          console.warn(`${this.name} not registered! Use @Register before using ${this.name}.vConstructor.`)
+        }
       }
       return createVDOMElement(localName, arg0 as VDOMFactoryArg, arg1)
     }})
@@ -464,4 +468,4 @@ export const disposeChildren = function(element: ReactiveElement) {
   })
 }
 
-export const reactiveElement = ReactiveElement.vConstructor
+export const reactiveElement = (arg0: ReactiveElementProps | VDOMFactoryChildren, arg1?: VDOMFactoryChildren) => ReactiveElement.vConstructor(arg0, arg1)

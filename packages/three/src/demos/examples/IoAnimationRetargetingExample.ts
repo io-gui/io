@@ -296,4 +296,4 @@ export class IoAnimationRetargetingExample extends IoThreeExample {
 
 }
 
-export const ioAnimationRetargetingExample = IoAnimationRetargetingExample.vConstructor
+export const ioAnimationRetargetingExample = (arg0: any) => IoAnimationRetargetingExample.vConstructor(arg0)

@@ -1,6 +1,6 @@
 import { NudgeDirection, Property, Register } from '@io-gui/core'
 import { ioIcon } from '@io-gui/icons'
-import { IoMenuItem } from './IoMenuItem.js'
+import { IoMenuItem, IoMenuItemProps } from './IoMenuItem.js'
 
 @Register
 export class IoMenuHamburger extends IoMenuItem {
@@ -24,4 +24,4 @@ export class IoMenuHamburger extends IoMenuItem {
     this.render([ioIcon({value: 'io:hamburger'})])
   }
 }
-export const ioMenuHamburger = IoMenuHamburger.vConstructor
+export const ioMenuHamburger = (arg0: IoMenuItemProps) => IoMenuHamburger.vConstructor(arg0)

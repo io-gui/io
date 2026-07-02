@@ -350,4 +350,4 @@ export class IoBenchmarksDemo extends ReactiveElement {
     }
 }
 Register(IoBenchmarksDemo);
-export const ioBenchmarksDemo = IoBenchmarksDemo.vConstructor;
+export const ioBenchmarksDemo = (arg0) => IoBenchmarksDemo.vConstructor(arg0);

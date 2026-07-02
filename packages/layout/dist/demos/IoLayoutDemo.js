@@ -171,4 +171,4 @@ export class IoLayoutDemo extends ReactiveElement {
     }
 }
 Register(IoLayoutDemo);
-export const ioLayoutDemo = IoLayoutDemo.vConstructor;
+export const ioLayoutDemo = (arg0) => IoLayoutDemo.vConstructor(arg0);

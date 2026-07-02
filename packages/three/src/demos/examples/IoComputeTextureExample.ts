@@ -63,4 +63,4 @@ export class IoComputeTextureExample extends IoThreeExample {
 
 }
 
-export const ioComputeTextureExample = IoComputeTextureExample.vConstructor
+export const ioComputeTextureExample = (arg0: any) => IoComputeTextureExample.vConstructor(arg0)

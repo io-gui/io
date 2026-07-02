@@ -149,4 +149,4 @@ IoCameraExample = __decorate([
     Register
 ], IoCameraExample);
 export { IoCameraExample };
-export const ioCameraExample = IoCameraExample.vConstructor;
+export const ioCameraExample = (arg0) => IoCameraExample.vConstructor(arg0);

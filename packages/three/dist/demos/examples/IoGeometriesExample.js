@@ -159,4 +159,4 @@ IoGeometriesExample = __decorate([
     Register
 ], IoGeometriesExample);
 export { IoGeometriesExample };
-export const ioGeometriesExample = IoGeometriesExample.vConstructor;
+export const ioGeometriesExample = (arg0) => IoGeometriesExample.vConstructor(arg0);

@@ -36,4 +36,4 @@ export class TodoApp extends ReactiveElement {
   }
 }
 Register(TodoApp)
-export const todoApp = TodoApp.vConstructor
+export const todoApp = (arg0: any) => TodoApp.vConstructor(arg0)

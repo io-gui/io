@@ -56,4 +56,4 @@ IoAnimationGroupsExample = __decorate([
     Register
 ], IoAnimationGroupsExample);
 export { IoAnimationGroupsExample };
-export const ioAnimationGroupsExample = IoAnimationGroupsExample.vConstructor;
+export const ioAnimationGroupsExample = (arg0) => IoAnimationGroupsExample.vConstructor(arg0);

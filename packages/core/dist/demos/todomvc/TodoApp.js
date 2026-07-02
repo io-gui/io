@@ -38,4 +38,4 @@ __decorate([
     Property($route)
 ], TodoApp.prototype, "route", void 0);
 Register(TodoApp);
-export const todoApp = TodoApp.vConstructor;
+export const todoApp = (arg0) => TodoApp.vConstructor(arg0);

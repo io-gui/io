@@ -5,4 +5,4 @@ export declare class GeometryColorsExample extends ThreeApplet {
 export declare class IoGeometryColorsExample extends IoThreeViewport {
     applet: GeometryColorsExample;
 }
-export declare const ioGeometryColorsExample: (arg0?: import("@io-gui/core").ReactiveElementProps | import("@io-gui/core").VDOMFactoryChildren, arg1?: import("@io-gui/core").VDOMFactoryChildren) => import("@io-gui/core").VDOMElement;
+export declare const ioGeometryColorsExample: (arg0: any) => import("@io-gui/core").VDOMElement;

@@ -114,4 +114,4 @@ export class IoAnimationKeyframesExample extends IoThreeExample {
 
 }
 
-export const ioAnimationKeyframesExample = IoAnimationKeyframesExample.vConstructor
+export const ioAnimationKeyframesExample = (arg0: any) => IoAnimationKeyframesExample.vConstructor(arg0)

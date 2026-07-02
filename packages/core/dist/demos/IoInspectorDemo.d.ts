@@ -9,4 +9,4 @@ export declare class IoInspectorDemo extends ReactiveElement {
     onElementMutated(): void;
     selectedChanged(): void;
 }
-export declare const ioInspectorDemo: (arg0?: import("@io-gui/core").ReactiveElementProps | import("@io-gui/core").VDOMFactoryChildren, arg1?: import("@io-gui/core").VDOMFactoryChildren) => import("@io-gui/core").VDOMElement;
+export declare const ioInspectorDemo: (arg0: any) => import("@io-gui/core").VDOMElement;

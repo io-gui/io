@@ -204,4 +204,4 @@ export class IoGeometriesExample extends IoThreeExample {
 
 }
 
-export const ioGeometriesExample = IoGeometriesExample.vConstructor
+export const ioGeometriesExample = (arg0: any) => IoGeometriesExample.vConstructor(arg0)

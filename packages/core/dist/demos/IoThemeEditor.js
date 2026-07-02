@@ -84,4 +84,4 @@ export class IoThemeEditor extends ReactiveElement {
     }
 }
 Register(IoThemeEditor);
-export const ioThemeEditor = IoThemeEditor.vConstructor;
+export const ioThemeEditor = (arg0) => IoThemeEditor.vConstructor(arg0);

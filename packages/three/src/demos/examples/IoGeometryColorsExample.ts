@@ -133,4 +133,4 @@ export class IoGeometryColorsExample extends IoThreeViewport {
 
 }
 
-export const ioGeometryColorsExample = IoGeometryColorsExample.vConstructor
+export const ioGeometryColorsExample = (arg0: any) => IoGeometryColorsExample.vConstructor(arg0)

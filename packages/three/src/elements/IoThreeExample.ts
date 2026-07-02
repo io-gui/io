@@ -45,4 +45,4 @@ export class IoThreeExample extends ReactiveElement {
 }
 
 Register(IoThreeExample)
-export const ioThreeExample = IoThreeExample.vConstructor
+export const ioThreeExample = (arg0: any) => IoThreeExample.vConstructor(arg0)

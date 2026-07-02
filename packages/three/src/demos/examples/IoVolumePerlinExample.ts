@@ -131,4 +131,4 @@ export class IoVolumePerlinExample extends IoThreeExample {
 
 }
 
-export const ioVolumePerlinExample = IoVolumePerlinExample.vConstructor
+export const ioVolumePerlinExample = (arg0: any) => IoVolumePerlinExample.vConstructor(arg0)

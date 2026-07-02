@@ -157,8 +157,8 @@ let IoPanel = class IoPanel extends ReactiveElement {
             }),
             ioSelector({
                 // TODO: Make caching work with mutable elements
-                caching: 'reactive',
-                // caching: 'none',
+                // caching: 'reactive',
+                caching: 'none',
                 selected: this.panel.getSelected(),
                 elements: this.elements,
                 anchor: '',

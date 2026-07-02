@@ -25,6 +25,7 @@ export class IoDrawer extends ReactiveElement {
       :host {
         pointer-events: auto;
         position: relative;
+        z-index: 1;
       }
       :host[orientation="horizontal"] {
         top: 0;

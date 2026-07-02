@@ -90,4 +90,4 @@ IoBackdropExample = __decorate([
     Register
 ], IoBackdropExample);
 export { IoBackdropExample };
-export const ioBackdropExample = IoBackdropExample.vConstructor;
+export const ioBackdropExample = (arg0) => IoBackdropExample.vConstructor(arg0);

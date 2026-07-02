@@ -71,4 +71,4 @@ export class IoInputsDemo extends ReactiveElement {
     }
 }
 Register(IoInputsDemo);
-export const ioInputsDemo = IoInputsDemo.vConstructor;
+export const ioInputsDemo = (arg0) => IoInputsDemo.vConstructor(arg0);

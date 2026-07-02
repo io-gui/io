@@ -7,5 +7,5 @@ export declare class IoBenchmarksDemo extends ReactiveElement {
     mutated(): void;
     renderGroup(groupName: string, baselineIndex: Map<string, BenchmarkMetrics>): import("@io-gui/core").VDOMElement;
 }
-export declare const ioBenchmarksDemo: (arg0?: import("@io-gui/core").ReactiveElementProps | import("@io-gui/core").VDOMFactoryChildren, arg1?: import("@io-gui/core").VDOMFactoryChildren) => import("@io-gui/core").VDOMElement;
+export declare const ioBenchmarksDemo: (arg0: any) => import("@io-gui/core").VDOMElement;
 export {};

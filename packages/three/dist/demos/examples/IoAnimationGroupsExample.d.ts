@@ -8,4 +8,4 @@ export declare class AnimationGroupsExample extends ThreeApplet {
 export declare class IoAnimationGroupsExample extends IoThreeExample {
     applet: AnimationGroupsExample;
 }
-export declare const ioAnimationGroupsExample: (arg0?: import("@io-gui/core").ReactiveElementProps | import("@io-gui/core").VDOMFactoryChildren, arg1?: import("@io-gui/core").VDOMFactoryChildren) => import("@io-gui/core").VDOMElement;
+export declare const ioAnimationGroupsExample: (arg0: any) => import("@io-gui/core").VDOMElement;

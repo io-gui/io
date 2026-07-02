@@ -132,7 +132,7 @@ class IoSuboptionViewDemo extends ReactiveElement {
   }
 }
 Register(IoSuboptionViewDemo)
-const ioSuboptionViewDemo = IoSuboptionViewDemo.vConstructor
+const ioSuboptionViewDemo = (arg0: any) => IoSuboptionViewDemo.vConstructor(arg0)
 
 class IoItemViewDemo extends ReactiveElement {
   static get Style() {
@@ -174,7 +174,7 @@ class IoItemViewDemo extends ReactiveElement {
   }
 }
 Register(IoItemViewDemo)
-const ioItemViewDemo = IoItemViewDemo.vConstructor
+const ioItemViewDemo = (arg0: any) => IoItemViewDemo.vConstructor(arg0)
 
 class IoMenusDemo extends ReactiveElement {
   static get Style () {
@@ -302,4 +302,7 @@ class IoMenusDemo extends ReactiveElement {
   }
 }
 Register(IoMenusDemo)
-export const ioMenusDemo = IoMenusDemo.vConstructor
+
+const ioMenusDemo = (arg0: any) => IoMenusDemo.vConstructor(arg0)
+
+export { ioMenusDemo }

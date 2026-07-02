@@ -181,4 +181,4 @@ export class IoCameraLogarithmicDepthBufferExample extends IoThreeExample {
 
 }
 
-export const ioCameraLogarithmicDepthBufferExample = IoCameraLogarithmicDepthBufferExample.vConstructor
+export const ioCameraLogarithmicDepthBufferExample = (arg0: any) => IoCameraLogarithmicDepthBufferExample.vConstructor(arg0)

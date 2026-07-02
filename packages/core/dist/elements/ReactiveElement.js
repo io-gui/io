@@ -362,8 +362,13 @@ let ReactiveElement = ReactiveElement_1 = class ReactiveElement extends HTMLElem
         // TODO: Define all overloads with type guards.
         // TODO: Test thoroughly.
         Object.defineProperty(ioNodeConstructor, 'vConstructor', { value: function (arg0, arg1) {
-                debug: if (this !== ioNodeConstructor) {
-                    console.warn(`${this.name} not registered! Use @Register before using ${this.name}.vConstructor.`);
+                debug: {
+                    if (this === undefined) {
+                        console.warn(`${ioNodeConstructor.name}.vConstructor called without "this".`);
+                    }
+                    else if (this !== ioNodeConstructor) {
+                        console.warn(`${this.name} not registered! Use @Register before using ${this.name}.vConstructor.`);
+                    }
                 }
                 return createVDOMElement(localName, arg0, arg1);
             } });

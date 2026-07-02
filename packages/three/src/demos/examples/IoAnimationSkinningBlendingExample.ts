@@ -319,4 +319,4 @@ export class IoAnimationSkinningBlendingExample extends IoThreeExample {
 
 }
 
-export const ioAnimationSkinningBlendingExample = IoAnimationSkinningBlendingExample.vConstructor
+export const ioAnimationSkinningBlendingExample = (arg0: any) => IoAnimationSkinningBlendingExample.vConstructor(arg0)

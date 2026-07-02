@@ -126,4 +126,4 @@ export class IoNavigationDemo extends ReactiveElement {
     }
 }
 Register(IoNavigationDemo);
-export const ioNavigationDemo = IoNavigationDemo.vConstructor;
+export const ioNavigationDemo = (arg0) => IoNavigationDemo.vConstructor(arg0);

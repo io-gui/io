@@ -60,4 +60,4 @@ export class IoColorsDemo extends ReactiveElement {
     }
 }
 Register(IoColorsDemo);
-export const ioColorsDemo = IoColorsDemo.vConstructor;
+export const ioColorsDemo = (arg0) => IoColorsDemo.vConstructor(arg0);

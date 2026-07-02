@@ -182,4 +182,4 @@ export class IoCameraExample extends IoThreeExample {
 
 }
 
-export const ioCameraExample = IoCameraExample.vConstructor
+export const ioCameraExample = (arg0: any) => IoCameraExample.vConstructor(arg0)

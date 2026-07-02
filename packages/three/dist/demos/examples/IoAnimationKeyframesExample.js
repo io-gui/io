@@ -104,4 +104,4 @@ IoAnimationKeyframesExample = __decorate([
     Register
 ], IoAnimationKeyframesExample);
 export { IoAnimationKeyframesExample };
-export const ioAnimationKeyframesExample = IoAnimationKeyframesExample.vConstructor;
+export const ioAnimationKeyframesExample = (arg0) => IoAnimationKeyframesExample.vConstructor(arg0);

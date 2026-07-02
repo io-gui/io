@@ -121,4 +121,4 @@ IoAnimationRetargetingReadyplayerExample = __decorate([
     Register
 ], IoAnimationRetargetingReadyplayerExample);
 export { IoAnimationRetargetingReadyplayerExample };
-export const ioAnimationRetargetingReadyplayerExample = IoAnimationRetargetingReadyplayerExample.vConstructor;
+export const ioAnimationRetargetingReadyplayerExample = (arg0) => IoAnimationRetargetingReadyplayerExample.vConstructor(arg0);

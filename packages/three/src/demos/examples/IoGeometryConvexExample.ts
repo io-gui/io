@@ -161,4 +161,4 @@ export class IoGeometryConvexExample extends IoThreeExample {
 
 }
 
-export const ioGeometryConvexExample = IoGeometryConvexExample.vConstructor
+export const ioGeometryConvexExample = (arg0: any) => IoGeometryConvexExample.vConstructor(arg0)

@@ -61,4 +61,4 @@ IoComputeTextureExample = __decorate([
     Register
 ], IoComputeTextureExample);
 export { IoComputeTextureExample };
-export const ioComputeTextureExample = IoComputeTextureExample.vConstructor;
+export const ioComputeTextureExample = (arg0) => IoComputeTextureExample.vConstructor(arg0);

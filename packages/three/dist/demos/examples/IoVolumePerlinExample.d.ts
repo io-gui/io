@@ -12,4 +12,4 @@ export declare class IoVolumePerlinExample extends IoThreeExample {
     applet: VolumePerlinExample;
     ready(): void;
 }
-export declare const ioVolumePerlinExample: (arg0?: import("@io-gui/core").ReactiveElementProps | import("@io-gui/core").VDOMFactoryChildren, arg1?: import("@io-gui/core").VDOMFactoryChildren) => import("@io-gui/core").VDOMElement;
+export declare const ioVolumePerlinExample: (arg0: any) => import("@io-gui/core").VDOMElement;

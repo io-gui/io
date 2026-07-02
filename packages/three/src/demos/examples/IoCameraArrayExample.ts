@@ -119,4 +119,4 @@ export class IoCameraArrayExample extends IoThreeViewport {
 
 }
 
-export const ioCameraArrayExample = IoCameraArrayExample.vConstructor
+export const ioCameraArrayExample = (arg0: any) => IoCameraArrayExample.vConstructor(arg0)

@@ -72,4 +72,4 @@ export class IoSlidersDemo extends ReactiveElement {
     }
 }
 Register(IoSlidersDemo);
-export const ioSlidersDemo = IoSlidersDemo.vConstructor;
+export const ioSlidersDemo = (arg0) => IoSlidersDemo.vConstructor(arg0);

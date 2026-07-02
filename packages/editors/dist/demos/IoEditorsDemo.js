@@ -163,4 +163,4 @@ __decorate([
         } })
 ], IoEditorsDemo.prototype, "object", void 0);
 Register(IoEditorsDemo);
-export const ioEditorsDemo = IoEditorsDemo.vConstructor;
+export const ioEditorsDemo = (arg0) => IoEditorsDemo.vConstructor(arg0);

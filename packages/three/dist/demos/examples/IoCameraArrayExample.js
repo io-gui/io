@@ -89,4 +89,4 @@ IoCameraArrayExample = __decorate([
     Register
 ], IoCameraArrayExample);
 export { IoCameraArrayExample };
-export const ioCameraArrayExample = IoCameraArrayExample.vConstructor;
+export const ioCameraArrayExample = (arg0) => IoCameraArrayExample.vConstructor(arg0);

@@ -159,4 +159,4 @@ export class IoEditorsDemo extends ReactiveElement {
   }
 }
 Register(IoEditorsDemo)
-export const ioEditorsDemo = IoEditorsDemo.vConstructor
+export const ioEditorsDemo = (arg0: any) => IoEditorsDemo.vConstructor(arg0)

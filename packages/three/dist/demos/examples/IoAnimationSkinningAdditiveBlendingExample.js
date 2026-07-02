@@ -246,4 +246,4 @@ IoAnimationSkinningAdditiveBlendingExample = __decorate([
     Register
 ], IoAnimationSkinningAdditiveBlendingExample);
 export { IoAnimationSkinningAdditiveBlendingExample };
-export const ioAnimationSkinningAdditiveBlendingExample = IoAnimationSkinningAdditiveBlendingExample.vConstructor;
+export const ioAnimationSkinningAdditiveBlendingExample = (arg0) => IoAnimationSkinningAdditiveBlendingExample.vConstructor(arg0);

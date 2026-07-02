@@ -220,4 +220,4 @@ IoAnimationRetargetingExample = __decorate([
     Register
 ], IoAnimationRetargetingExample);
 export { IoAnimationRetargetingExample };
-export const ioAnimationRetargetingExample = IoAnimationRetargetingExample.vConstructor;
+export const ioAnimationRetargetingExample = (arg0) => IoAnimationRetargetingExample.vConstructor(arg0);

@@ -102,4 +102,4 @@ IoGeometryColorsExample = __decorate([
     Register
 ], IoGeometryColorsExample);
 export { IoGeometryColorsExample };
-export const ioGeometryColorsExample = IoGeometryColorsExample.vConstructor;
+export const ioGeometryColorsExample = (arg0) => IoGeometryColorsExample.vConstructor(arg0);
