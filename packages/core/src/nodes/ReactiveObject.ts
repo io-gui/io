@@ -516,7 +516,7 @@ export function dispose(node: ReactiveNode) {
 
   node._properties.forEach((property) => {
     if (property.value instanceof NodeArray) {
-      property.value.dispose()
+      property.value.dispose(true)
     }
   })
 

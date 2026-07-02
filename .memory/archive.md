@@ -97,3 +97,14 @@ User wants the "three parent/child relations" gap sold as a real feature (not a 
 
 ### polygone.art AssetInfo types (Jun 30)
 Added `src/asset-info.ts`. Initial enums were hallucinated; corrected to Poly API v1 (20201006): license/visibility/formatType/colorSpace from poly-api.json. Nested types PolyFile/Format/PresentationParams/Quaternion. AssetInfo = blob mirror shape (name, authorId, tags, likes + Poly fields).
+
+### Layout grill-with-docs (Jul 2)
+Grilling session on @io-gui/layout. User chose scope=target_incremental (define target+docs now, apply refactor incrementally), then skipped remaining forks → adopted my recommendations.
+Docs created: root CONTEXT-MAP.md (Core+Layout contexts); packages/layout/CONTEXT.md (glossary: Split/Panel/Tab/Orientation/Flex/Content element/Selection/Consolidation/Normalization/Split direction/Divider/Drawer/Overflow); packages/layout/docs/adr/0001 (structural logic belongs in models, seam=DOM-dependency), 0002 (proposed: reactive per-Split normalize() in childrenMutated replacing io-panel-remove/io-split-remove/io-split-consolidate DOM events).
+Key finding — REAL BUG (fixed): IoTab drag used `this.closest('io-split[root]')` but NO element ever sets a `root` attribute → detectDropTargets skipped in production, drops silently no-op. Tests passed only because they set dropTarget manually. Fixed by walking ancestors to outermost io-split in IoTab.onPointermove.
+Other fixes: nodes/flex.ts (DEFAULT_FLEX + isValidFlex) centralizes duplicated flex regex; Panel.flexChanged logged "Split:" (copy-paste) → "Panel:"; models use DEFAULT_FLEX const.
+Findings NOT yet fixed (candidate future work): fat elements hold structural ops (moveTabToSplit/convertToSplit/consolidateChild/ensureOneHasFlexGrow/add/removeTab); invariants scattered; IoTabDragIconSingleton holds IoPanel refs (leak/removed-mid-drag risk); tab `id` dual role (identity + content key); parseFlexBasis magic 240 default; Split.dispose sets children.length=0 without recursive dispose. 411 layout tests pass.
+
+### Layout grill session #2 (Jul 2)
+[decision] Root identity: user chose EXPLICIT Layout model + IoLayout view over my rec (b: derived root-ness via _parents). Rationale space: Layout gives tree-scope ops/invariants an owner (moveTab across panels, "panel survives", maybe elements pool, persistence root). Term "Layout" added to packages/layout/CONTEXT.md. ADR deferred until Layout responsibilities pinned.
+[decision] Disposal: NodeArray.dispose(deep=true) default; ReactiveObject.dispose(true) on NodeArray props; dispose(false) for shallow detach. Removed Split/Panel/MenuOption pre-clear of arrays (blocked deep cascade). 901 core+layout tests pass.

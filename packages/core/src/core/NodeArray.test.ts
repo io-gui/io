@@ -621,6 +621,36 @@ describe('NodeArray', () => {
       observer.dispose()
       item2.dispose()
     })
+
+    it('Should dispose items when deep is true (default)', () => {
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
+      array.push(item1, item2)
+
+      array.dispose()
+
+      expect(item1._disposed).toBe(true)
+      expect(item2._disposed).toBe(true)
+
+      parent.dispose()
+    })
+
+    it('Should not dispose items when deep is false', () => {
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item = new LabelNode({label: 'a'})
+      array.push(item)
+
+      array.dispose(false)
+
+      expect(array.length).toBe(0)
+      expect(item._disposed).toBeUndefined()
+
+      parent.dispose()
+      item.dispose()
+    })
   })
 })
 

@@ -318,7 +318,7 @@ export class NodeArray<N extends ReactiveObject> extends Array<N> {
     }
   }
 
-  dispose() {
+  dispose(deep = true) {
     const nodes = [...this]
     for (const item of nodes) {
       if (isReactiveNode(item)) {
@@ -329,8 +329,13 @@ export class NodeArray<N extends ReactiveObject> extends Array<N> {
     this.withInternalOperation(() => {
       super.splice(0, this.length)
     })
-    // TODO: Reconsider if nodes in NodeArray should be disposed automatically
-    // for (const node of nodes) node.dispose()
     this._observers.clear()
+    if (deep) {
+      for (const node of nodes) {
+        if (isReactiveNode(node) && !node._disposed) {
+          node.dispose()
+        }
+      }
+    }
   }
 }

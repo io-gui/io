@@ -1,6 +1,5 @@
 import { Register, Property, ReactiveElement, ReactiveElementProps, VDOMElement, div, ThemeSingleton } from '@io-gui/core'
 import { ioIcon } from '@io-gui/icons'
-import { MenuOption } from '@io-gui/menus'
 import { Split } from '../nodes/Split.js'
 import { Panel } from '../nodes/Panel.js'
 import { IoSplit, ioSplit, parseFlexBasis } from './IoSplit.js'
@@ -15,7 +14,6 @@ export type IoDrawerProps = ReactiveElementProps & {
   parent: IoSplit
   child: Split | Panel | null
   elements: VDOMElement[]
-  addMenuOption?: MenuOption
 }
 
 @Register
@@ -134,9 +132,6 @@ export class IoDrawer extends ReactiveElement {
   @Property(Array)
   declare elements: VDOMElement[]
 
-  @Property({type: MenuOption})
-  declare addMenuOption: MenuOption | undefined
-
   constructor(args: IoDrawerProps) {
     super(args)
   }
@@ -179,14 +174,12 @@ export class IoDrawer extends ReactiveElement {
         split: this.child,
         style: style,
         elements: this.elements,
-        addMenuOption: this.addMenuOption,
       })
     } else if (this.child instanceof Panel) {
       childVDOM = ioPanel({
         panel: this.child,
         style: style,
         elements: this.elements,
-        addMenuOption: this.addMenuOption,
       })
     }
 

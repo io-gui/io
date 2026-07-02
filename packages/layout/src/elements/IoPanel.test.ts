@@ -1,7 +1,6 @@
 //@ts-nocheck
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { IoPanel, IoSplit, Split, Panel, Tab } from '@io-gui/layout'
-import { MenuOption } from '@io-gui/menus'
 
 describe('IoPanel', () => {
   let panel: Panel
@@ -560,7 +559,7 @@ describe('IoPanel', () => {
   })
 })
 
-describe('Auto-generate addMenuOption', () => {
+describe('Add tab menu from elements pool', () => {
   let layout: IoSplit
   let container: HTMLElement
   let ioPanel: IoPanel
@@ -576,31 +575,7 @@ describe('Auto-generate addMenuOption', () => {
     container.remove()
   })
 
-  it('should use provided addMenuOption when it has options', () => {
-    const split = new Split({
-      type: 'split',
-      children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }]
-    })
-
-    const customMenuOption = new MenuOption({
-      options: [{ id: 'custom-option', label: 'Custom' }]
-    })
-
-    layout = new IoSplit({
-      split,
-      elements: [{ tag: 'div', props: { id: 'element1' } }],
-      addMenuOption: customMenuOption,
-    })
-    container.appendChild(layout)
-
-    ioPanel = layout.querySelector('io-panel') as IoPanel
-    const result = ioPanel.getAddMenuOption()
-
-    expect(result).toBe(customMenuOption)
-    expect(result?.options[0].id).toBe('custom-option')
-  })
-
-  it('should auto-generate addMenuOption from element IDs when not provided', () => {
+  it('should build add menu from element IDs', () => {
     const split = new Split({
       type: 'split',
       children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }]
@@ -742,29 +717,6 @@ describe('Auto-generate addMenuOption', () => {
     expect(result?.options[0].id).toBe('element2')
   })
 
-  it('should prefer empty addMenuOption over auto-generation when explicitly set', () => {
-    const split = new Split({
-      type: 'split',
-      children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }]
-    })
-
-    // Empty MenuOption with no options
-    const emptyMenuOption = new MenuOption({ options: [] })
-
-    layout = new IoSplit({
-      split,
-      elements: [{ tag: 'div', props: { id: 'element1' } }],
-      addMenuOption: emptyMenuOption,
-    })
-    container.appendChild(layout)
-
-    ioPanel = layout.querySelector('io-panel') as IoPanel
-    const result = ioPanel.getAddMenuOption()
-
-    // Should auto-generate since empty addMenuOption.options
-    expect(result?.options.length).toBe(1)
-    expect(result?.options[0].id).toBe('element1')
-  })
 })
 
 describe('IoPanel Factory Function', () => {

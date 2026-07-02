@@ -27,7 +27,11 @@
 
 ## Open Design Questions
 
-(none yet)
+### @io-gui/layout target architecture (ADRs in packages/layout/docs/adr)
+- **Seam = DOM-dependency** (ADR-0001): pure structural ops → Split/Panel models; only geometry/hit-test/focus stay on IoSplit/IoPanel elements. Currently violated — elements are fat. Migration incremental.
+- **Reactive normalize()** (ADR-0002, proposed): each Split normalizes its own invariants in childrenMutated (guarded+debounced), cascading up via nested-mutation surfacing; delete the 3 io-*-remove/consolidate DOM events. Not implemented.
+- Layout invariants (enforce in model): no empty Split/Panel; no single-child Split (consolidate); ≥1 growing child; exactly 1 selected tab per non-empty panel; ≥1 panel survives; unique tab id per panel.
+- Watch: `io-split[root]` selector is dead (no element sets `root`) — IoTab now walks to outermost io-split instead. Prefer that over reintroducing the attribute.
 
 ## Package-Specific Notes
 

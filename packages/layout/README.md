@@ -411,10 +411,10 @@ This maintains a minimal tree structure and prevents unnecessary nesting.
 Divider resize operations update element `style.flex` immediately for visual feedback, but model `flex` properties are only updated on `io-divider-move-end`. This prevents excessive mutation events during drag.
 
 ### Overflow Detection Timing
-`IoTabs.tabsMutated()` resets `overflow = -1` and calls `onResized()` to recalculate. The overflow detection uses a hysteresis of 32px to prevent flickering:
+`IoTabs.tabsMutated()` resets `overflow = -1` and calls `onResized()` to recalculate. It compares the last rendered child's right edge to the container's, and uses a hysteresis of 32px to prevent flickering:
 ```typescript
 if (this.overflow === -1) {
-  if (addMenuRect.right > rect.right) {
+  if (lastElementRect.right > rect.right) {
     this.overflow = rect.width
   }
 } else if (rect.width > (this.overflow + 32)) {

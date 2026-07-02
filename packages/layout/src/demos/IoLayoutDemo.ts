@@ -3,7 +3,6 @@ import { Register, ReactiveElement, div, h1, h4, p, Storage as $ } from '@io-gui
 import { ioSplit, Split } from '@io-gui/layout'
 import { ioCollapsible } from '@io-gui/navigation'
 import { ioMarkdown } from '@io-gui/markdown'
-import { MenuOption } from '@io-gui/menus'
 
 
 const VERSION = 1
@@ -146,30 +145,6 @@ export class IoLayoutDemo extends ReactiveElement {
             h4({'data-heading': 'Section 5'}, 'Section 5'), p(lorem(100)),
           ]),
         ],
-        addMenuOption:  new MenuOption({
-          id: 'addMenuOption',
-          mode: 'none',
-          options: [
-            {id: 'Docs', mode: 'none', options: [
-              {id: 'Doc 1', icon: 'io:numeric-1-box', mode: 'none'},
-              {id: 'Doc 2', icon: 'io:numeric-2-box', mode: 'none'},
-              {id: 'Doc 3', icon: 'io:numeric-3-box', mode: 'none'},
-              {id: 'Doc 4', icon: 'io:numeric-4-box', mode: 'none'},
-            ]},
-            {id: 'Demos', mode: 'none', options: [
-              {id: 'Inputs', mode: 'none', icon: 'io:toggle_on'},
-              {id: 'Icons', mode: 'none', icon: 'io:image'},
-              {id: 'Sliders', mode: 'none', icon: 'io:sliders'},
-              {id: 'Colors', mode: 'none', icon: 'io:color_palette'},
-              {id: 'Editors', mode: 'none', icon: 'io:developer'},
-              {id: 'Menus', mode: 'none', icon: 'io:hamburger'},
-              {id: 'Navigation', mode: 'none', icon: 'io:dashboard'},
-              {id: 'Theme Editor', icon: 'io:tune', mode: 'none'},
-              {id: 'Element Inspector', icon: 'io:visibility', mode: 'none'},
-            ]},
-          ],
-        }),
-        // split: split,
         split: $({key: `io-layout-demo-split-${VERSION}`, storage: 'local', value: split})
       })
     ])

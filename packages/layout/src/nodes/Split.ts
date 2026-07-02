@@ -1,5 +1,6 @@
 import { ReactiveObject, NodeArray, Property, Register } from '@io-gui/core'
 import { Panel, PanelProps } from './Panel.js'
+import { DEFAULT_FLEX, isValidFlex } from './flex.js'
 
 export type SplitOrientation = 'horizontal' | 'vertical'
 
@@ -37,7 +38,7 @@ export class Split extends ReactiveObject {
   @Property({type: String, value: 'horizontal'})
   declare orientation: SplitOrientation
 
-  @Property({type: String, value: '1 1 auto'})
+  @Property({type: String, value: DEFAULT_FLEX})
   declare flex: string
 
   constructor(args: SplitProps) {
@@ -63,8 +64,7 @@ export class Split extends ReactiveObject {
     this.dispatchMutation()
   }
   flexChanged() {
-    const flexRegex = /^[\d.]+\s+[\d.]+\s+(?:auto|[\d.]+(?:px|%))$/
-    if (!flexRegex.test(this.flex)) {
+    if (!isValidFlex(this.flex)) {
       debug: {
         console.error(`Split: Invalid flex value "${this.flex}". Expected a valid CSS flex value.`)
       }
@@ -77,7 +77,7 @@ export class Split extends ReactiveObject {
       children: this.children.map((child: Split | Panel) => child.toJSON()),
     }
     if (this.orientation !== 'horizontal') json.orientation = this.orientation
-    if (this.flex !== '1 1 auto') json.flex = this.flex
+    if (this.flex !== DEFAULT_FLEX) json.flex = this.flex
     return json
   }
   override applyJSON(json: SplitProps) {
@@ -92,12 +92,8 @@ export class Split extends ReactiveObject {
     this.setProperties({
       children: consolidated.children,
       orientation: consolidated.orientation,
-      flex: json.flex ?? '1 1 auto',
+      flex: json.flex ?? DEFAULT_FLEX,
     })
     return this
-  }
-  override dispose() {
-    this.children.length = 0
-    super.dispose()
   }
 }

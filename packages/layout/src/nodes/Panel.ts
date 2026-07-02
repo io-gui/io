@@ -1,5 +1,6 @@
 import { ReactiveObject, NodeArray, Property, Register } from '@io-gui/core'
 import { Tab, TabProps } from './Tab.js'
+import { DEFAULT_FLEX, isValidFlex } from './flex.js'
 
 export type PanelProps = {
   type: 'panel'
@@ -27,7 +28,7 @@ export class Panel extends ReactiveObject {
   @Property({type: NodeArray, init: 'this'})
   declare tabs: NodeArray<Tab>
 
-  @Property({type: String, value: '1 1 auto'})
+  @Property({type: String, value: DEFAULT_FLEX})
   declare flex: string
 
   constructor(args: PanelProps) {
@@ -77,10 +78,9 @@ export class Panel extends ReactiveObject {
     this.tabs.dispatchMutation()
   }
   flexChanged() {
-    const flexRegex = /^[\d.]+\s+[\d.]+\s+(?:auto|[\d.]+(?:px|%))$/
-    if (!flexRegex.test(this.flex)) {
+    if (!isValidFlex(this.flex)) {
       debug: {
-        console.error(`Split: Invalid flex value "${this.flex}". Expected a valid CSS flex value.`)
+        console.error(`Panel: Invalid flex value "${this.flex}". Expected a valid CSS flex value.`)
       }
       this.flex = '0 1 auto'
     }
@@ -90,7 +90,7 @@ export class Panel extends ReactiveObject {
       type: 'panel',
       tabs: this.tabs.map(tab => tab.toJSON()),
     }
-    if (this.flex !== '1 1 auto') json.flex = this.flex
+    if (this.flex !== DEFAULT_FLEX) json.flex = this.flex
     return json
   }
   override applyJSON(json: PanelProps) {
@@ -102,12 +102,8 @@ export class Panel extends ReactiveObject {
     const uniqueTabs = deduplicateTabs(json.tabs, 'Panel.fromJSON')
     this.setProperties({
       tabs: uniqueTabs.map(tab => new Tab(tab)),
-      flex: json.flex ?? '1 1 auto',
+      flex: json.flex ?? DEFAULT_FLEX,
     })
     return this
-  }
-  override dispose() {
-    this.tabs.length = 0
-    super.dispose()
   }
 }

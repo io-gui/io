@@ -743,8 +743,7 @@ describe('Split', () => {
       vi.useRealTimers()
     })
 
-    it('should dispose nested splits', () => {
-      // Root needs 2+ children to prevent consolidation
+    it('should dispose nested splits and panels recursively', () => {
       const split = new Split({
         type: 'split',
         children: [
@@ -759,18 +758,27 @@ describe('Split', () => {
         ]
       })
 
-      // Get reference to children array before disposal
       const childrenRef = split.children
-
-      expect(childrenRef.length).toBe(2)
-      expect(childrenRef[0]).toBeInstanceOf(Panel)
-      expect(childrenRef[1]).toBeInstanceOf(Split)
+      const rootPanel = childrenRef[0] as Panel
+      const nestedSplit = childrenRef[1] as Split
+      const nestedChildrenRef = nestedSplit.children
+      const nestedPanel1 = nestedChildrenRef[0]
+      const nestedPanel2 = nestedChildrenRef[1]
+      const rootTab = rootPanel.tabs[0]
+      const nestedTab1 = nestedPanel1.tabs[0]
+      const nestedTab2 = nestedPanel2.tabs[0]
 
       split.dispose()
 
-      // Children array is cleared during disposal
-      expect(childrenRef.length).toBe(0)
       expect(split._disposed).toBe(true)
+      expect(childrenRef.length).toBe(0)
+      expect(rootPanel._disposed).toBe(true)
+      expect(nestedSplit._disposed).toBe(true)
+      expect(nestedPanel1._disposed).toBe(true)
+      expect(nestedPanel2._disposed).toBe(true)
+      expect(rootTab._disposed).toBe(true)
+      expect(nestedTab1._disposed).toBe(true)
+      expect(nestedTab2._disposed).toBe(true)
     })
 
   })

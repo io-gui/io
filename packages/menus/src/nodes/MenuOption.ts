@@ -312,8 +312,4 @@ export class MenuOption extends ReactiveObject {
       }
     }
   }
-  override dispose() {
-    this.options.length = 0 // TODO: test magic!
-    super.dispose()
-  }
 }

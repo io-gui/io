@@ -1,5 +1,4 @@
 import { Register, Property, VDOMElement, ReactiveElement, ReactiveElementProps, ThemeSingleton, div, WithBinding } from '@io-gui/core'
-import { MenuOption } from '@io-gui/menus'
 import { IoPanel, ioPanel } from './IoPanel.js'
 import { ioDivider } from './IoDivider.js'
 import { ioDrawer, IoDrawer } from './IoDrawer.js'
@@ -27,7 +26,6 @@ export type SplitDirection = 'none' | 'left' | 'right' | 'top' | 'bottom' | 'cen
 export type IoSplitProps = ReactiveElementProps & {
   split: WithBinding<Split>
   elements: VDOMElement[]
-  addMenuOption?: MenuOption
   editable?: boolean
 }
 
@@ -92,9 +90,6 @@ export class IoSplit extends ReactiveElement {
 
   @Property({type: Object, value: null})
   declare trailingDrawer: Split | Panel | null
-
-  @Property({type: MenuOption})
-  declare addMenuOption: MenuOption | undefined
 
   @Property({type: Boolean, value: true, reflect: true})
   declare hasVisibleFlexGrow: boolean
@@ -407,7 +402,6 @@ export class IoSplit extends ReactiveElement {
           style: {flex: child.flex},
           class: isLastVisible ? 'io-split-last-visible' : '',
           elements: this.elements,
-          addMenuOption: this.addMenuOption,
         }))
       } else if (child instanceof Panel) {
         vChildren.push(ioPanel({
@@ -415,7 +409,6 @@ export class IoSplit extends ReactiveElement {
           style: {flex: child.flex},
           class: isLastVisible ? 'io-split-last-visible' : '',
           elements: this.elements,
-          addMenuOption: this.addMenuOption,
         }))
       } else debug: {
         console.warn('IOSplit: Invalid child type', child)
@@ -438,7 +431,6 @@ export class IoSplit extends ReactiveElement {
         parent: this,
         child: this.leadingDrawer,
         elements: this.elements,
-        addMenuOption: this.addMenuOption,
       }))
     }
     if (this.trailingDrawer !== null) {
@@ -448,7 +440,6 @@ export class IoSplit extends ReactiveElement {
         parent: this,
         child: this.trailingDrawer,
         elements: this.elements,
-        addMenuOption: this.addMenuOption,
       }))
     }
 

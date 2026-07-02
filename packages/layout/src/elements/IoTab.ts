@@ -127,7 +127,12 @@ export class IoTab extends IoField {
     event.preventDefault()
     if (event.buttons !== 1) return
     const panel = this.parentElement!.parentElement as IoPanel
-    const root = this.closest('io-split[root]') as IoSplit
+    let root = this.closest('io-split') as IoSplit | null
+    let ancestor = root?.parentElement?.closest('io-split') as IoSplit | null
+    while (ancestor) {
+      root = ancestor
+      ancestor = ancestor.parentElement?.closest('io-split') as IoSplit | null
+    }
     IoTabDragIconSingleton.updateDrag(this.tab, panel, event.clientX, event.clientY, root)
   }
   override onPointerup(event: PointerEvent) {

@@ -1,4 +1,4 @@
-import { Register, ReactiveElement, VDOMElement, ReactiveElementProps, Property, Field, CallbackFunction } from '@io-gui/core'
+import { Register, ReactiveElement, VDOMElement, ReactiveElementProps, Property, CallbackFunction } from '@io-gui/core'
 import { ioSelector } from '@io-gui/navigation'
 import { IoMenuItem, MenuOption } from '@io-gui/menus'
 import { ioTabs } from './IoTabs.js'
@@ -9,7 +9,6 @@ import { Panel } from '../nodes/Panel.js'
 export type IoPanelProps = ReactiveElementProps & {
   panel: Panel
   elements: VDOMElement[]
-  addMenuOption?: MenuOption
 }
 
 @Register
@@ -30,9 +29,6 @@ export class IoPanel extends ReactiveElement {
 
   @Property(Array)
   declare elements: VDOMElement[]
-
-  @Field({type: MenuOption})
-  declare addMenuOption: MenuOption | undefined
 
   static override get Listeners() {
     return {
@@ -141,9 +137,6 @@ export class IoPanel extends ReactiveElement {
     this.debounce(this.mutated)
   }
   getAddMenuOption(): MenuOption | undefined {
-    if (this.addMenuOption && this.addMenuOption.options?.length > 0) {
-      return this.addMenuOption
-    }
     if (!this.elements || this.elements.length === 0) return undefined
 
     const existingTabIds = new Set(this.panel.tabs.map(tab => tab.id))

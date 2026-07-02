@@ -588,15 +588,22 @@ describe('Panel', () => {
       vi.useRealTimers()
     })
 
-    it('should be marked as disposed', () => {
+    it('should dispose tabs recursively', () => {
       const panel = new Panel({
         type: 'panel',
-        tabs: [{ id: 'tab1' }]
+        tabs: [{ id: 'tab1' }, { id: 'tab2' }]
       })
+
+      const tabsRef = panel.tabs
+      const tab1 = tabsRef[0]
+      const tab2 = tabsRef[1]
 
       panel.dispose()
 
       expect(panel._disposed).toBe(true)
+      expect(tabsRef.length).toBe(0)
+      expect(tab1._disposed).toBe(true)
+      expect(tab2._disposed).toBe(true)
     })
 
   })
