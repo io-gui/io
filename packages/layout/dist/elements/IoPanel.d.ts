@@ -1,32 +1,23 @@
 import { ReactiveElement, VDOMElement, ReactiveElementProps } from '@io-gui/core';
-import { MenuOption } from '@io-gui/menus';
-import { SplitDirection } from './IoSplit.js';
 import { Tab } from '../nodes/Tab.js';
 import { Panel } from '../nodes/Panel.js';
-export type IoPanelProps = ReactiveElementProps & {
+import { Layout } from '../nodes/Layout.js';
+export type IoPanelData = ReactiveElementProps & {
     panel: Panel;
     elements: VDOMElement[];
-    addMenuOption?: MenuOption;
 };
 export declare class IoPanel extends ReactiveElement {
     static get Style(): string;
     panel: Panel;
     elements: VDOMElement[];
-    addMenuOption: MenuOption | undefined;
     static get Listeners(): {
-        'io-edit-tab': string;
+        'io-tab-action': string;
     };
-    onEditTab(event: CustomEvent): void;
-    onNewTabClicked(event: CustomEvent): void;
-    selectIndex(index: number): void;
+    get layout(): Layout;
+    onTabAction(event: CustomEvent): void;
     selectTab(tab: Tab): void;
-    moveTabToSplit(sourcePanel: IoPanel, tab: Tab, direction: SplitDirection): void;
-    addTab(tab: Tab, index?: number): void;
-    removeTab(tab: Tab): void;
-    moveTab(tab: Tab, index: number): void;
     focusTabDebounced(index: number): void;
     panelMutated(): void;
-    getAddMenuOption(): MenuOption | undefined;
     mutated(): void;
 }
-export declare const ioPanel: (arg0: IoPanelProps) => VDOMElement;
+export declare const ioPanel: (arg0: IoPanelData) => VDOMElement;

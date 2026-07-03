@@ -33,6 +33,22 @@ class ItemstNode extends ReactiveObject {
   declare items: LabelNode[]
 }
 
+@Register
+class OwnerNode extends ReactiveObject {
+  static get Properties(): PropertyDefinitions {
+    return {items: {type: NodeArray, init: 'this'}}
+  }
+  declare items: NodeArray<LabelNode>
+}
+
+@Register
+class ConsumerNode extends ReactiveObject {
+  static get Properties(): PropertyDefinitions {
+    return {items: {type: NodeArray, init: 'this'}}
+  }
+  declare items: NodeArray<LabelNode>
+}
+
 describe('NodeArray', () => {
   describe('fill()', () => {
     it('Should fill entire array with a value', () => {
@@ -595,6 +611,21 @@ describe('NodeArray', () => {
       parent.dispose()
       item.dispose()
       item2.dispose()
+    })
+
+    it('Should not dispose shared NodeArray when a borrowing node is disposed', () => {
+      // Regression: drawer io-tabs disposal must not wipe panel.tabs still owned by Panel.
+      const owner = new OwnerNode()
+      owner.items.push(new LabelNode({label: 'a'}))
+
+      const consumer = new ConsumerNode()
+      consumer.setProperty('items', owner.items)
+      consumer.dispose()
+
+      expect(owner.items.length).toBe(1)
+      expect(owner.items[0].label).toBe('a')
+
+      owner.dispose()
     })
 
     it('Should clear additional observers', () => {

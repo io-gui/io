@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { NodeArray } from '@io-gui/core'
-import { Panel, PanelProps, Tab, TabProps } from '@io-gui/layout'
+import { Panel, PanelData, Tab, TabData } from '@io-gui/layout'
 
 describe('Panel', () => {
 
@@ -25,6 +25,8 @@ describe('Panel', () => {
       expect(panel.tabs.length).toBe(1)
       expect(panel.tabs[0]).toBeInstanceOf(Tab)
       expect(panel.tabs[0].id).toBe('tab1')
+      expect(panel.tabs[0].selected).toBe(true)
+      expect(panel.getSelected()).toBe('tab1')
     })
 
     it('should construct with multiple tabs', () => {
@@ -43,18 +45,6 @@ describe('Panel', () => {
       expect(panel.tabs[2].id).toBe('tab3')
     })
 
-    it('should auto-select first tab when none selected', () => {
-      const panel = new Panel({
-        type: 'panel',
-        tabs: [
-          { id: 'tab1' },
-          { id: 'tab2' }
-        ]
-      })
-
-      expect(panel.tabs[0].selected).toBe(true)
-      expect(panel.tabs[1].selected).toBe(false)
-    })
 
     it('should preserve explicit selection', () => {
       const panel = new Panel({
@@ -84,36 +74,25 @@ describe('Panel', () => {
       expect(panel.tabs[1].selected).toBe(true)
     })
 
-    it('should default flex to "1 1 auto"', () => {
+    it('should default size to "auto"', () => {
       const panel = new Panel({
         type: 'panel',
         tabs: [{ id: 'tab1' }]
       })
 
-      expect(panel.flex).toBe('1 1 auto')
+      expect(panel.size).toBe('auto')
     })
 
-    it('should accept custom flex value', () => {
+    it('should accept custom size value', () => {
       const panel = new Panel({
         type: 'panel',
         tabs: [{ id: 'tab1' }],
-        flex: '0 0 300px'
+        size: '300px'
       })
 
-      expect(panel.flex).toBe('0 0 300px')
+      expect(panel.size).toBe('300px')
     })
 
-    it('should create independent Tab instances (not shared)', () => {
-      const tabProps: TabProps = { id: 'shared' }
-      const panel = new Panel({
-        type: 'panel',
-        tabs: [tabProps, tabProps]
-      })
-
-      // Should have only one tab instance
-      expect(panel.tabs.length).toBe(1)
-      expect(panel.tabs[0].id).toBe('shared')
-    })
 
     it('should preserve all tab properties', () => {
       const panel = new Panel({
@@ -148,14 +127,6 @@ describe('Panel', () => {
       expect(panel.getSelected()).toBe('tab2')
     })
 
-    it('should return first tab id when auto-selected', () => {
-      const panel = new Panel({
-        type: 'panel',
-        tabs: [{ id: 'first' }, { id: 'second' }]
-      })
-
-      expect(panel.getSelected()).toBe('first')
-    })
 
     it('should return empty string when no tabs', () => {
       const panel = new Panel({
@@ -171,7 +142,8 @@ describe('Panel', () => {
         type: 'panel',
         tabs: [{ id: 'tab1' }]
       })
-      // Manually deselect
+      expect(panel.getSelected()).toBe('tab1')
+
       panel.tabs[0].selected = false
 
       expect(panel.getSelected()).toBe('')
@@ -334,13 +306,13 @@ describe('Panel', () => {
           { id: 'tab1', label: 'Tab 1' },
           { id: 'tab2', selected: true }
         ],
-        flex: '0 0 200px'
+        size: '200px'
       })
 
       const json = panel.toJSON()
 
       expect(json.type).toBe('panel')
-      expect(json.flex).toBe('0 0 200px')
+      expect(json.size).toBe('200px')
       expect(json.tabs).toHaveLength(2)
       expect(json.tabs[0].id).toBe('tab1')
       expect(json.tabs[0].label).toBe('Tab 1')
@@ -387,7 +359,7 @@ describe('Panel', () => {
           { id: 'restored1', label: 'Restored' },
           { id: 'restored2', selected: true }
         ],
-        flex: '0 0 400px'
+        size: '400px'
       })
 
       expect(panel.tabs.length).toBe(2)
@@ -395,7 +367,7 @@ describe('Panel', () => {
       expect(panel.tabs[0].label).toBe('Restored')
       expect(panel.tabs[1].id).toBe('restored2')
       expect(panel.tabs[1].selected).toBe(true)
-      expect(panel.flex).toBe('0 0 400px')
+      expect(panel.size).toBe('400px')
     })
 
     it('should replace existing tabs', () => {
@@ -413,19 +385,19 @@ describe('Panel', () => {
       expect(panel.tabs[0].id).toBe('new1')
     })
 
-    it('should default flex when not in JSON', () => {
+    it('should default size when not in JSON', () => {
       const panel = new Panel({
         type: 'panel',
         tabs: [{ id: 'test' }],
-        flex: '0 0 100px'
+        size: '100px'
       })
 
       panel.applyJSON({
         type: 'panel',
         tabs: [{ id: 'restored' }]
-      } as PanelProps)
+      } as PanelData)
 
-      expect(panel.flex).toBe('1 1 auto')
+      expect(panel.size).toBe('auto')
     })
 
     it('should return self for chaining', () => {
@@ -442,28 +414,6 @@ describe('Panel', () => {
       expect(result).toBe(panel)
     })
 
-    it('should collapse duplicate tab ids in applyJSON', () => {
-
-      const panel = new Panel({
-        type: 'panel',
-        tabs: [{ id: 'original' }]
-      })
-
-      panel.applyJSON({
-        type: 'panel',
-        tabs: [
-          { id: 'dup', label: 'First' },
-          { id: 'dup', label: 'Second' },
-          { id: 'other' }
-        ]
-      })
-
-      expect(panel.tabs.length).toBe(2)
-      expect(panel.tabs[0].id).toBe('dup')
-      expect(panel.tabs[0].label).toBe('First')
-      expect(panel.tabs[1].id).toBe('other')
-
-    })
 
   })
 
@@ -476,7 +426,7 @@ describe('Panel', () => {
           { id: 'tab1', label: 'Label 1', icon: 'icon1' },
           { id: 'tab2', label: 'Label 2', selected: true }
         ],
-        flex: '0 0 250px'
+        size: '250px'
       })
 
       const json = original.toJSON()
@@ -487,7 +437,7 @@ describe('Panel', () => {
       restored.applyJSON(json)
 
       expect(restored.tabs.length).toBe(original.tabs.length)
-      expect(restored.flex).toBe(original.flex)
+      expect(restored.size).toBe(original.size)
 
       for (let i = 0; i < original.tabs.length; i++) {
         expect(restored.tabs[i].id).toBe(original.tabs[i].id)
@@ -504,7 +454,7 @@ describe('Panel', () => {
           { id: 'rt1' },
           { id: 'rt2', selected: true }
         ],
-        flex: '0 0 150px'
+        size: '150px'
       })
 
       const json1 = original.toJSON()
@@ -608,6 +558,21 @@ describe('Panel', () => {
 
   })
 
+  // describe('structural methods', () => {
+  //   it('moveTab reorders and selects tab', () => {
+  //     const panel = new Panel({
+  //       type: 'panel',
+  //       tabs: [{ id: 'a', selected: true }, { id: 'b' }, { id: 'c' }],
+  //     })
+  //     const tabA = panel.tabs[0]
+
+  //     panel.moveTab(tabA, 2)
+
+  //     expect(panel.tabs[2].id).toBe('a')
+  //     expect(panel.getSelected()).toBe('a')
+  //   })
+  // })
+
   describe('Tab Array Operations', () => {
 
     it('should allow adding tabs via push', () => {
@@ -693,7 +658,7 @@ describe('Panel', () => {
   describe('Edge Cases', () => {
 
     it('should handle panel with many tabs', () => {
-      const tabs: TabProps[] = []
+      const tabs: TabData[] = []
       for (let i = 0; i < 100; i++) {
         tabs.push({ id: `tab${i}` })
       }
@@ -701,7 +666,6 @@ describe('Panel', () => {
       const panel = new Panel({ type: 'panel', tabs })
 
       expect(panel.tabs.length).toBe(100)
-      expect(panel.tabs[0].selected).toBe(true)
       expect(panel.tabs[99].id).toBe('tab99')
     })
 
@@ -740,43 +704,6 @@ describe('Panel', () => {
       expect(panel.tabs[0].selected).toBe(true)
     })
 
-    it('should collapse duplicate tab ids', () => {
-
-      const panel = new Panel({
-        type: 'panel',
-        tabs: [
-          { id: 'same', label: 'First' },
-          { id: 'same', label: 'Second' }
-        ]
-      })
-
-      // Duplicates should be collapsed to one (keeping first)
-      expect(panel.tabs.length).toBe(1)
-      expect(panel.tabs[0].id).toBe('same')
-      expect(panel.tabs[0].label).toBe('First')
-
-    })
-
-    it('should collapse multiple duplicates', () => {
-
-      const panel = new Panel({
-        type: 'panel',
-        tabs: [
-          { id: 'a' },
-          { id: 'b' },
-          { id: 'a' },  // duplicate
-          { id: 'c' },
-          { id: 'b' },  // duplicate
-          { id: 'a' }   // duplicate
-        ]
-      })
-
-      expect(panel.tabs.length).toBe(3)
-      expect(panel.tabs[0].id).toBe('a')
-      expect(panel.tabs[1].id).toBe('b')
-      expect(panel.tabs[2].id).toBe('c')
-
-    })
 
   })
 

@@ -45,4 +45,4 @@ __decorate([
     Property({ type: ThreeApplet, init: null })
 ], IoThreeExample.prototype, "applet", void 0);
 Register(IoThreeExample);
-export const ioThreeExample = IoThreeExample.vConstructor;
+export const ioThreeExample = (arg0) => IoThreeExample.vConstructor(arg0);

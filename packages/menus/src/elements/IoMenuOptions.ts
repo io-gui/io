@@ -230,6 +230,12 @@ export class IoMenuOptions extends ReactiveElement {
       nudge(this, this.$parent, this.direction, true)
     }
   }
+  focusFirstOption() {
+    const firstOption = this.querySelector('io-menu-item')
+    if (firstOption) {
+      (firstOption as IoMenuItem).focus()
+    }
+  }
   override mutated() {
     const vChildren: VDOMElement[] = this.widget ? [this.widget] : []
     if (this.searchable) {

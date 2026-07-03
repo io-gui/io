@@ -168,6 +168,7 @@ itemsMutated() {
 - `fill()` and `copyWithin()` are unsupported (log warning)
 - Setting `length` to extend array logs warning
 - Item listeners are automatically managed on add/remove
+- **Shared references**: assigning the same `NodeArray` to another node's property is fine for rendering; only the constructor owner disposes it when that owner is disposed
 
 ---
 

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { Tab, TabProps } from '@io-gui/layout'
+import { Tab, TabData } from '@io-gui/layout'
 
 describe('Tab', () => {
 
@@ -230,21 +230,21 @@ describe('Tab', () => {
 
     it('should default label to id when not in JSON', () => {
       const tab = new Tab({ id: 'placeholder' })
-      tab.applyJSON({ id: 'no-label' } as TabProps)
+      tab.applyJSON({ id: 'no-label' } as TabData)
 
       expect(tab.label).toBe('no-label')
     })
 
     it('should default icon to empty string when not in JSON', () => {
       const tab = new Tab({ id: 'placeholder' })
-      tab.applyJSON({ id: 'no-icon' } as TabProps)
+      tab.applyJSON({ id: 'no-icon' } as TabData)
 
       expect(tab.icon).toBe('')
     })
 
     it('should default selected to false when not in JSON', () => {
       const tab = new Tab({ id: 'placeholder', selected: true })
-      tab.applyJSON({ id: 'no-selected' } as TabProps)
+      tab.applyJSON({ id: 'no-selected' } as TabData)
 
       expect(tab.selected).toBe(false)
     })

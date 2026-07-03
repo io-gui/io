@@ -1,5 +1,4 @@
 import { ReactiveElement, ReactiveElementProps, VDOMElement } from '@io-gui/core';
-import { MenuOption } from '@io-gui/menus';
 import { Split } from '../nodes/Split.js';
 import { Panel } from '../nodes/Panel.js';
 import { IoSplit } from './IoSplit.js';
@@ -11,7 +10,6 @@ export type IoDrawerProps = ReactiveElementProps & {
     parent: IoSplit;
     child: Split | Panel | null;
     elements: VDOMElement[];
-    addMenuOption?: MenuOption;
 };
 export declare class IoDrawer extends ReactiveElement {
     static get Style(): string;
@@ -21,9 +19,9 @@ export declare class IoDrawer extends ReactiveElement {
     parent: IoSplit;
     child: Split | Panel;
     elements: VDOMElement[];
-    addMenuOption: MenuOption | undefined;
     constructor(args: IoDrawerProps);
-    onClick(event: MouseEvent): void;
+    onToggleExpanded(event: MouseEvent): void;
+    onStopPropagation(event: MouseEvent): void;
     expandedChanged(): void;
     childMutated(): void;
     mutated(): void;

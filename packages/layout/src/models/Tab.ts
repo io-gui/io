@@ -1,6 +1,6 @@
 import { ReactiveObject, Property, Register } from '@io-gui/core'
 
-export type TabProps = {
+export type TabData = {
   id: string
   label?: string
   icon?: string
@@ -22,31 +22,27 @@ export class Tab extends ReactiveObject {
   @Property({type: Boolean, value: false})
   declare selected: boolean
 
-  constructor(args: TabProps) {
-    debug: {
-      if (!args.id) {
-        console.error('Tab: construction error - empty id')
-      }
-    }
-    super({
-      ...args,
-      label: args.label ? args.label : args.id,
-    })
+  constructor(data: TabData) {
+    super()
+    this.applyJSON(data)
   }
-  override toJSON(): TabProps {
-    const json: TabProps = { id: this.id }
+
+  override toJSON(): TabData {
+    const json: TabData = { id: this.id }
     if (this.label !== this.id) json.label = this.label
     if (this.icon) json.icon = this.icon
     if (this.selected) json.selected = this.selected
     return json
   }
-  override applyJSON(json: TabProps) {
+
+  override applyJSON(data: TabData) {
     this.setProperties({
-      id: json.id,
-      label: json.label ? json.label : json.id,
-      icon: json.icon ? json.icon : '',
-      selected: json.selected ? json.selected : false,
+      id: data.id,
+      label: data.label ? data.label : data.id,
+      icon: data.icon ? data.icon : '',
+      selected: data.selected ? data.selected : false,
     })
     return this
   }
+
 }

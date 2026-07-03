@@ -1,8 +1,8 @@
 import { NudgeDirection } from '@io-gui/core';
-import { IoMenuItem } from './IoMenuItem.js';
+import { IoMenuItem, IoMenuItemProps } from './IoMenuItem.js';
 export declare class IoMenuHamburger extends IoMenuItem {
     static get Style(): string;
     direction: NudgeDirection;
     mutated(): void;
 }
-export declare const ioMenuHamburger: (arg0?: import("@io-gui/core").ReactiveElementProps | import("@io-gui/core").VDOMFactoryChildren, arg1?: import("@io-gui/core").VDOMFactoryChildren) => import("@io-gui/core").VDOMElement;
+export declare const ioMenuHamburger: (arg0: IoMenuItemProps) => import("@io-gui/core").VDOMElement;

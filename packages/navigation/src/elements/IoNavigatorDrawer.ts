@@ -19,6 +19,7 @@ export class IoNavigatorDrawer extends ReactiveElement {
         top: 0;
         bottom: 0;
         width: var(--io_fieldHeight) !important;
+        z-index: 1;
       }
 
       :host > .io-drawer-content {

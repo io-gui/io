@@ -22,10 +22,33 @@ renderer.heading = function ({ text, depth }) {
     return `<h${depth} data-heading="${text}">${text}</h${depth}>`;
 };
 marked.setOptions({ renderer });
+const TRUSTED_IFRAME_HOSTS = new Set([
+    'www.youtube.com',
+    'youtube.com',
+    'player.vimeo.com',
+]);
+function trustedIframeSrc(src) {
+    if (!src)
+        return false;
+    try {
+        return TRUSTED_IFRAME_HOSTS.has(new URL(src).hostname);
+    }
+    catch {
+        return false;
+    }
+}
 const PURIFY_CONFIG = {
     ADD_TAGS: ['iframe'],
     ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'],
 };
+purify.addHook('uponSanitizeElement', (node, event) => {
+    if (event.tagName !== 'iframe')
+        return;
+    const element = node;
+    if (trustedIframeSrc(element.getAttribute('src')))
+        return;
+    element.parentNode?.removeChild(element);
+});
 function strip(innerHTML, strip) {
     for (let i = 0; i < strip.length; i++) {
         innerHTML = innerHTML.replace(new RegExp(strip[i], 'g'), '');
@@ -172,16 +195,26 @@ let IoMarkdown = class IoMarkdown extends ReactiveElement {
         this.style.setProperty('--io-code-size', width + 'px');
     }
     srcChanged() {
+        // Capture at fetch start — drawer/layout VDOM may dispose this element before the promise settles.
+        const src = this.src;
+        const sanitize = this.sanitize;
+        const stripList = this.strip;
         this.loading = true;
         this.innerHTML = '';
-        void fetch(this.src)
+        void fetch(src)
             .then(response => response.text())
             .then(markdown => {
+            if (this._disposed || this.src !== src)
+                return;
             let md = marked.parse(markdown);
-            if (this.sanitize)
+            if (sanitize)
                 md = purify.sanitize(md, PURIFY_CONFIG);
-            this.innerHTML = strip(md, this.strip);
+            this.innerHTML = strip(md, stripList);
             this.loading = false;
+        })
+            .catch(() => {
+            if (!this._disposed)
+                this.loading = false;
         });
     }
 };

@@ -440,8 +440,9 @@ export function dispose(node) {
     if (node._disposed)
         return;
     node._properties.forEach((property) => {
-        if (property.value instanceof NodeArray) {
-            property.value.dispose();
+        // NodeArray may be shared across nodes. only the owner disposes it.
+        if (property.value instanceof NodeArray && property.value.node === node) {
+            property.value.dispose(true);
         }
     });
     detachChildParents(node);

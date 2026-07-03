@@ -24,7 +24,7 @@ import {
 import { hashBlur } from 'three/addons/tsl/display/hashBlur.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { ThreeApplet, IoThreeExample, ThreeAppletProps, ioThreeViewport, ioVector3 } from '@io-gui/three'
-import { ioSplit, Split } from '@io-gui/layout'
+import { ioLayout, Layout } from '@io-gui/layout'
 import { ioPropertyEditor } from '@io-gui/editors'
 import { ioOptionSelect, MenuOption } from '@io-gui/menus'
 
@@ -156,7 +156,7 @@ export class IoBackdropAreaExample extends IoThreeExample {
 
   override ready() {
     this.render([
-      ioSplit({
+      ioLayout({
         elements: [
           ioThreeViewport({id: 'Top', applet: this.applet, cameraSelect: 'top'}),
           ioThreeViewport({id: 'Left', applet: this.applet, cameraSelect: 'left'}),
@@ -175,41 +175,42 @@ export class IoBackdropAreaExample extends IoThreeExample {
             ]
           })
         ],
-        split: new Split({
-          type: 'split',
-          orientation: 'horizontal',
-          children: [
-            {
-              type: 'split',
-              flex: '2 1 auto',
-              orientation: 'vertical',
-              children: [
-                {
-                  type: 'split',
-                  flex: '1 1 50%',
-                  orientation: 'horizontal',
-                  children: [
-                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'Top'}]},
-                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'Left'}]}
-                  ]
-                },
-                {
-                  type: 'split',
-                  flex: '1 1 50%',
-                  orientation: 'horizontal',
-                  children: [
-                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'Back'}]},
-                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'SceneCamera'}]},
-                  ]
-                }
-              ]
-            },
-            {
-              type: 'panel',
-              flex: '0 0 280px',
-              tabs: [{id: 'PropertyEditor'}]
-            }
-          ]
+        model: new Layout({
+          child: {
+            type: 'split',
+            orientation: 'horizontal',
+            children: [
+              {
+                type: 'split',
+                orientation: 'vertical',
+                children: [
+                  {
+                    type: 'split',
+                    size: '50%',
+                    orientation: 'horizontal',
+                    children: [
+                      {type: 'panel',size: '50%',tabs: [{id: 'Top'}]},
+                      {type: 'panel',size: '50%',tabs: [{id: 'Left'}]}
+                    ]
+                  },
+                  {
+                    type: 'split',
+                    size: '50%',
+                    orientation: 'horizontal',
+                    children: [
+                      {type: 'panel',size: '50%',tabs: [{id: 'Back'}]},
+                      {type: 'panel',size: '50%',tabs: [{id: 'SceneCamera'}]},
+                    ]
+                  }
+                ]
+              },
+              {
+                type: 'panel',
+                size: '280px',
+                tabs: [{id: 'PropertyEditor'}]
+              }
+            ]
+          }
         })
       })
     ])

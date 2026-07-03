@@ -261,10 +261,6 @@ let MenuOption = MenuOption_1 = class MenuOption extends ReactiveObject {
             }
         }
     }
-    dispose() {
-        this.options.length = 0; // TODO: test magic!
-        super.dispose();
-    }
 };
 __decorate([
     Property({ value: '', type: String })

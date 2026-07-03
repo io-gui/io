@@ -1,5 +1,5 @@
 import { ReactiveObject } from '@io-gui/core';
-export type TabProps = {
+export type TabData = {
     id: string;
     label?: string;
     icon?: string;
@@ -10,7 +10,7 @@ export declare class Tab extends ReactiveObject {
     label: string;
     icon: string;
     selected: boolean;
-    constructor(args: TabProps);
-    toJSON(): TabProps;
-    applyJSON(json: TabProps): this;
+    constructor(data: TabData);
+    toJSON(): TabData;
+    applyJSON(data: TabData): this;
 }

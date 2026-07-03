@@ -31,4 +31,4 @@ IoMenuHamburger = __decorate([
     Register
 ], IoMenuHamburger);
 export { IoMenuHamburger };
-export const ioMenuHamburger = IoMenuHamburger.vConstructor;
+export const ioMenuHamburger = (arg0) => IoMenuHamburger.vConstructor(arg0);

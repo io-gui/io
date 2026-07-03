@@ -1,9 +1,9 @@
 //@ts-nocheck
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { IoDrawer, ioDrawer } from '@io-gui/layout'
-import { Panel } from '../nodes/Panel.js'
-import { Split } from '../nodes/Split.js'
-import { Tab } from '../nodes/Tab.js'
+import { Panel } from '../models/Panel.js'
+import { Split } from '../models/Split.js'
+import { Tab } from '../models/Tab.js'
 
 describe('IoDrawer', () => {
   let drawer: IoDrawer
@@ -18,14 +18,14 @@ describe('IoDrawer', () => {
     panel = new Panel({
       type: 'panel',
       tabs: [new Tab({ id: 'tab1', label: 'Tab 1' })],
-      flex: '0 0 200px'
+      size: '200px'
     })
 
     drawer = new IoDrawer({
       orientation: 'horizontal',
       direction: 'leading',
       expanded: false,
-      child: panel,
+      model: panel,
       elements: [],
     })
     container.appendChild(drawer)
@@ -49,8 +49,8 @@ describe('IoDrawer', () => {
       expect(drawer.expanded).toBe(false)
     })
 
-    it('should construct with child property', () => {
-      expect(drawer.child).toBe(panel)
+    it('should construct with model property', () => {
+      expect(drawer.model).toBe(panel)
     })
 
     it('should construct with vertical orientation', () => {
@@ -58,7 +58,7 @@ describe('IoDrawer', () => {
         orientation: 'vertical',
         direction: 'trailing',
         expanded: true,
-        child: panel,
+        model: panel,
         elements: [],
       })
       container.appendChild(verticalDrawer)
@@ -99,7 +99,7 @@ describe('IoDrawer', () => {
 
   describe('Rendering', () => {
     it('should render handle element', () => {
-      const handle = drawer.querySelector('.io-drawer-handle')
+      const handle = drawer.querySelector('io-drawer-handle')
       expect(handle).not.toBeNull()
     })
 
@@ -109,7 +109,7 @@ describe('IoDrawer', () => {
     })
 
     it('should render icon in handle', () => {
-      const icon = drawer.querySelector('.io-drawer-handle io-icon')
+      const icon = drawer.querySelector('io-drawer-handle io-icon')
       expect(icon).not.toBeNull()
     })
 
@@ -127,7 +127,7 @@ describe('IoDrawer', () => {
           { type: 'panel', tabs: [{ id: 'b', label: 'B' }] },
         ]
       })
-      drawer.child = split
+      drawer.model = split
 
       const splitElement = drawer.querySelector('.io-drawer-content io-split')
       expect(splitElement).not.toBeNull()
@@ -142,7 +142,7 @@ describe('IoDrawer', () => {
         orientation: 'horizontal',
         direction: 'trailing',
         expanded: false,
-        child: panel,
+        model: panel,
         elements: [],
       })
       container.appendChild(trailingDrawer)
@@ -167,10 +167,10 @@ describe('IoDrawer', () => {
     })
   })
 
-  describe('Child Mutation', () => {
-    it('should re-render on child mutation', () => {
+  describe('Model Mutation', () => {
+    it('should re-render on model mutation', () => {
       const renderSpy = vi.spyOn(drawer, 'render')
-      drawer.childMutated()
+      drawer.modelMutated()
       expect(renderSpy).toHaveBeenCalled()
     })
   })
@@ -190,7 +190,7 @@ describe('IoDrawer Factory Function', () => {
       orientation: 'horizontal',
       direction: 'leading',
       expanded: false,
-      child: panel,
+      model: panel,
       elements: [],
     })
 

@@ -1,20 +1,19 @@
 import { ReactiveObject, NodeArray } from '@io-gui/core';
-import { Tab, TabProps } from './Tab.js';
-export type PanelProps = {
+import { Tab, TabData } from './Tab.js';
+import { LayoutSizeData } from '../utils/layoutSize.js';
+export type PanelData = {
     type: 'panel';
-    tabs: Array<TabProps>;
-    flex?: string;
-};
+    tabs: Array<TabData>;
+} & LayoutSizeData;
 export declare class Panel extends ReactiveObject {
     tabs: NodeArray<Tab>;
-    flex: string;
-    constructor(args: PanelProps);
+    size: string;
+    constructor(data: PanelData);
     tabsMutated(): void;
     onTabsMutatedDebounced(): void;
     getSelected(): string;
     setSelected(id: string): void;
-    flexChanged(): void;
-    toJSON(): PanelProps;
-    applyJSON(json: PanelProps): this;
-    dispose(): void;
+    sizeChanged(): void;
+    toJSON(): PanelData;
+    applyJSON(data: PanelData): this;
 }

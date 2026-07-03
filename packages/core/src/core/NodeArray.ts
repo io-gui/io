@@ -13,6 +13,10 @@ import { isReactiveNode, type ReactiveNode } from './ReactiveCore.js'
  * Items must be {@link ReactiveObject} instances. The returned value from the
  * constructor is a proxied array — always use that reference, not the raw instance.
  *
+ * Views may assign the same `NodeArray` to a reactive property for rendering.
+ * Only {@link ReactiveObject.dispose} on the **owner** (`node` passed
+ * to the constructor) may call {@link NodeArray.dispose}; borrowers must not destroy shared model data.
+ *
  * @example
  * ```ts
  * @Property({ type: NodeArray, init: null })
@@ -318,6 +322,7 @@ export class NodeArray<N extends ReactiveObject> extends Array<N> {
     }
   }
 
+  /** Clears items and observers. Called from owner {@link ReactiveObject.dispose} only — not by nodes that borrow this array. */
   dispose(deep = true) {
     const nodes = [...this]
     for (const item of nodes) {

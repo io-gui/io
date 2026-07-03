@@ -9,7 +9,7 @@ import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.j
 import { plane, klein, mobius } from 'three/addons/geometries/ParametricFunctions.js';
 import { Register, Property } from '@io-gui/core';
 import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
-import { Split, ioSplit } from '@io-gui/layout';
+import { Layout, ioLayout } from '@io-gui/layout';
 import { ioPropertyEditor, ioObject } from '@io-gui/editors';
 let GeometriesExample = class GeometriesExample extends ThreeApplet {
     geometries = [];
@@ -120,7 +120,7 @@ export { GeometriesExample };
 let IoGeometriesExample = class IoGeometriesExample extends IoThreeExample {
     ready() {
         this.render([
-            ioSplit({
+            ioLayout({
                 elements: [
                     ioThreeViewport({ id: 'Top', applet: this.applet, cameraSelect: 'top' }),
                     ioPropertyEditor({ id: 'PropertyEditor', value: this.applet, properties: ['material', 'geometries'], config: [
@@ -129,26 +129,27 @@ let IoGeometriesExample = class IoGeometriesExample extends IoThreeExample {
                             [MeshPhongMaterial, ioPropertyEditor({ label: '_hidden_', properties: ['wireframe'] })],
                         ] })
                 ],
-                split: new Split({
-                    type: 'split',
-                    orientation: 'horizontal',
-                    children: [
-                        {
-                            type: 'split',
-                            flex: '2 1 auto',
-                            orientation: 'vertical',
-                            children: [
-                                { type: 'panel', flex: '1 1 100%', tabs: [{ id: 'Top' }] },
-                            ]
-                        },
-                        {
-                            type: 'panel',
-                            flex: '0 0 320px',
-                            tabs: [{ id: 'PropertyEditor' }]
-                        }
-                    ]
+                layout: new Layout({
+                    child: {
+                        type: 'split',
+                        orientation: 'horizontal',
+                        children: [
+                            {
+                                type: 'split',
+                                orientation: 'vertical',
+                                children: [
+                                    { type: 'panel', size: '100%', tabs: [{ id: 'Top' }] },
+                                ]
+                            },
+                            {
+                                type: 'panel',
+                                size: '320px',
+                                tabs: [{ id: 'PropertyEditor' }]
+                            }
+                        ]
+                    }
                 })
-            })
+            }),
         ]);
     }
 };

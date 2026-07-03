@@ -5,20 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register, Property, span } from '@io-gui/core';
-import { IoField, ioString, ioButton } from '@io-gui/inputs';
-import { IoContextEditorSingleton } from '@io-gui/editors';
-import { IconsetDB, ioIcon } from '@io-gui/icons';
-import { MenuOption, ioOptionSelect } from '@io-gui/menus';
+import { IoField } from '@io-gui/inputs';
+import { ioIcon } from '@io-gui/icons';
 import { Tab } from '../nodes/Tab.js';
-import { IoTabDragIconSingleton } from './IoTabDragIcon.js';
-const icons = [];
-for (const set of Object.keys(IconsetDB)) {
-    for (const icon of Object.keys(IconsetDB[set])) {
-        const id = `${set}:${icon}`;
-        icons.push({ value: id, id: icon, icon: id });
-    }
-}
-const iconOptions = ioOptionSelect({ selectBy: 'value', label: 'Icon', option: new MenuOption({ options: icons }) });
 // TODO: fix and improve keyboard navigation in all cases.
 let IoTab = class IoTab extends IoField {
     static get Style() {
@@ -56,14 +45,6 @@ let IoTab = class IoTab extends IoField {
       :host > .io-icon:not([value=' ']) {
         margin: 0 var(--io_spacing2) 0 0;
       }
-      :host > .io-tab-drop-marker {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        background-color: var(--io_bgColorBlue);
-        border-bottom-right-radius: var(--io_borderRadius);
-      }
       :host > span {
         padding: 0 var(--io_spacing);
         overflow: hidden; 
@@ -76,103 +57,21 @@ let IoTab = class IoTab extends IoField {
       }
     `;
     }
-    static get Listeners() {
-        return {
-            'click': 'preventDefault',
-            'contextmenu': 'onContextMenu',
-        };
-    }
     constructor(args) { super(args); }
     onResized() {
         const span = this.querySelector('span');
         this.overflow = span.scrollWidth > span.clientWidth;
     }
-    onTouchmove(event) {
-        event.preventDefault();
-    }
-    preventDefault(event) {
-        event.stopPropagation();
-        event.preventDefault();
-    }
-    // TODO: test on iOS
-    onContextMenu(event) {
-        event.stopPropagation();
-        event.preventDefault();
-        this.expandContextEditor();
-    }
-    onPointerdown(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.setPointerCapture(event.pointerId);
-        IoTabDragIconSingleton.setStartPosition(event.clientX, event.clientY);
-        super.onPointerdown(event);
-        if (event.buttons === 1) {
-            this.focus();
-        }
-    }
-    onPointermove(event) {
-        event.preventDefault();
-        if (event.buttons !== 1)
-            return;
-        const panel = this.parentElement.parentElement;
-        const root = this.closest('io-split[root]');
-        IoTabDragIconSingleton.updateDrag(this.tab, panel, event.clientX, event.clientY, root);
-    }
-    onPointerup(event) {
-        event.preventDefault();
-        super.onPointerup(event);
-        this.releasePointerCapture(event.pointerId);
-        if (IoTabDragIconSingleton.dragging) {
-            IoTabDragIconSingleton.endDrag();
-        }
-        else {
-            this.onClick();
-        }
-    }
-    onPointercancel(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        super.onPointercancel(event);
-        IoTabDragIconSingleton.cancelDrag();
-    }
-    onPointerleave(event) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
     onClick() {
-        this.dispatch('io-edit-tab', { tab: this.tab, key: 'Select' }, true);
-    }
-    onDeleteClick() {
-        this.dispatch('io-edit-tab', { tab: this.tab, key: 'Backspace' }, true);
-    }
-    expandContextEditor() {
-        const deleteAction = () => {
-            IoContextEditorSingleton.expanded = false;
-            this.onDeleteClick();
-        };
-        IoContextEditorSingleton.expand({
-            source: this,
-            direction: 'down',
-            value: this.tab,
-            properties: ['label', 'icon'],
-            config: [
-                ['label', ioString({ live: true })],
-                ['icon', iconOptions],
-            ],
-            widget: ioButton({ label: 'Delete Tab', icon: 'io:close', action: deleteAction }),
-        });
+        this.dispatch('io-tab-action', { tab: this.tab, action: 'Select' }, true);
     }
     onKeydown(event) {
-        if (event.shiftKey && ['Backspace', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
-            event.preventDefault();
-            this.dispatch('io-edit-tab', { tab: this.tab, key: event.key }, true);
-        }
-        else if (event.shiftKey && event.key === 'Enter') {
-            this.expandContextEditor();
-        }
-        else {
-            super.onKeydown(event);
-        }
+        // if (event.shiftKey && ['Backspace', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
+        //   event.preventDefault()
+        //   this.dispatch('io-tab-action', {tab: this.tab, action: event.key}, true)
+        // } else {
+        // }
+        super.onKeydown(event);
     }
     tabMutated() {
         this.mutated();
@@ -181,7 +80,6 @@ let IoTab = class IoTab extends IoField {
         this.setAttribute('selected', this.tab.selected);
         this.setAttribute('title', this.tab.label);
         this.render([
-            this.tab.selected ? span({ class: 'io-tab-drop-marker' }) : null,
             this.tab.icon ? ioIcon({ value: this.tab.icon }) : null,
             span({ class: 'io-tab-label' }, this.tab.label),
         ]);

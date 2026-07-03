@@ -26,9 +26,13 @@ _Avoid_: page, sheet, card
 The axis a `Split` lays its children along — `horizontal` (a row) or `vertical` (a column).
 _Avoid_: axis, layout, flow
 
-**Flex**:
-A child's size within its parent `Split`, stored as the CSS `flex` shorthand `<grow> <shrink> <basis>`. A child either grows to fill space (grow > 0) or holds a fixed basis (grow 0). Each `Split` keeps at least one child with grow > 0 in the model. When a drawer hides children, the view separately tracks whether any **visible** child grows — a presentation concern, not a model invariant.
-_Avoid_: size, weight, ratio, span
+**Size**:
+A child's size within its parent `Split`. Stored as `size` (`"auto"`, a pixel length, or a percentage). `"auto"` grows to fill remaining space (`flex: 1 1 auto`); fixed values hold a basis (`flex: 0 1 <size>`). Each `Split` keeps at least one child with `size: "auto"` in the model. When a drawer hides children, the view separately tracks whether any **visible** child has auto size — a presentation concern, not a model invariant.
+_Avoid_: flex, weight, ratio, span
+
+**MinSize**:
+The minimum space a child needs before drawer collapse. Stored as a pixel length or percentage, default `"240px"`. Decoupled from `size` — a wide panel can collapse to a narrow drawer handle.
+_Avoid_: flex-basis, drawer size
 
 ### Content
 
@@ -73,7 +77,7 @@ The draggable handle between two `Split` children that resizes the pair.
 _Avoid_: splitter, gutter, resizer, handle
 
 **Drawer**:
-A child pushed to a `Split`'s leading or trailing edge and collapsed behind a handle when the split is too small to fit all children at their minimum size; it slides open over the content.
+A child pushed to a `Split`'s leading or trailing edge and collapsed behind a handle when the split is too small to fit all children at their minimum size; it slides open over the content. Drawer views render the same `Panel`/`Split` models as inline children — disposing drawer chrome must not dispose shared model collections (e.g. `Panel.tabs`).
 _Avoid_: sidebar, panel, flyout, tray
 
 **Overflow (tab)**:

@@ -13,7 +13,7 @@ describe('IoTab', () => {
     document.body.appendChild(container)
 
     tab = new Tab({ id: 'test-tab', label: 'Test Tab', icon: 'io:test' })
-    ioTab = new IoTab({ tab })
+    ioTab = new IoTab({ model: tab })
     container.appendChild(ioTab)
   })
 
@@ -34,7 +34,7 @@ describe('IoTab', () => {
 
   describe('Construction', () => {
     it('should construct with a Tab domain model', () => {
-      expect(ioTab.tab).toBe(tab)
+      expect(ioTab.model).toBe(tab)
     })
 
     it('should have expected default properties', () => {
@@ -43,8 +43,8 @@ describe('IoTab', () => {
 
     it('should set tab property as reactive', () => {
       const newTab = new Tab({ id: 'new-tab' })
-      ioTab.tab = newTab
-      expect(ioTab.tab).toBe(newTab)
+      ioTab.model = newTab
+      expect(ioTab.model).toBe(newTab)
       newTab.dispose()
     })
   })
@@ -89,7 +89,7 @@ describe('IoTab', () => {
 
     it('should not render icon when tab has no icon', () => {
       const noIconTab = new Tab({ id: 'no-icon' })
-      const noIconIoTab = new IoTab({ tab: noIconTab })
+      const noIconIoTab = new IoTab({ model: noIconTab })
       container.appendChild(noIconIoTab)
 
       const icon = noIconIoTab.querySelector('.io-icon') as HTMLElement
@@ -101,9 +101,9 @@ describe('IoTab', () => {
   })
 
   describe('Tab Mutation Handling', () => {
-    it('should call changed when tabMutated is invoked', () => {
+    it('should call changed when modelMutated is invoked', () => {
       const changedSpy = vi.spyOn(ioTab, 'mutated')
-      ioTab.tabMutated()
+      ioTab.modelMutated()
       expect(changedSpy).toHaveBeenCalledTimes(1)
     })
   })
@@ -149,17 +149,6 @@ describe('IoTab', () => {
       expect(stopSpy).toHaveBeenCalled()
       expect(preventSpy).toHaveBeenCalled()
     })
-
-    it('should stop propagation and prevent default on contextmenu', () => {
-      const event = new MouseEvent('contextmenu', { bubbles: true, cancelable: true })
-      const stopSpy = vi.spyOn(event, 'stopPropagation')
-      const preventSpy = vi.spyOn(event, 'preventDefault')
-
-      ioTab.preventDefault(event)
-
-      expect(stopSpy).toHaveBeenCalled()
-      expect(preventSpy).toHaveBeenCalled()
-    })
   })
 
   describe('Pointer Events - Basic', () => {
@@ -193,20 +182,6 @@ describe('IoTab', () => {
       ioTab.onPointerdown(event)
 
       expect(focusSpy).toHaveBeenCalled()
-    })
-
-    it('should expand context editor on contextmenu', () => {
-      const expandSpy = vi.spyOn(ioTab, 'expandContextEditor')
-      const event = new MouseEvent('contextmenu', {
-        clientX: 100,
-        clientY: 100,
-        bubbles: true,
-        cancelable: true,
-      })
-
-      ioTab.onContextMenu(event)
-
-      expect(expandSpy).toHaveBeenCalled()
     })
 
     it('should release pointer capture on pointerup', () => {
@@ -515,9 +490,9 @@ describe('IoTab', () => {
   })
 
   describe('Click Behavior', () => {
-    it('should dispatch io-edit-tab with Select key on click when not dragging', () => {
+    it('should dispatch io-tab-action with Select key on click when not dragging', () => {
       const handler = vi.fn()
-      ioTab.addEventListener('io-edit-tab', handler)
+      ioTab.addEventListener('io-tab-action', handler)
 
       ioTab.onClick()
 
@@ -584,9 +559,9 @@ describe('IoTab', () => {
   })
 
   describe('Delete Click', () => {
-    it('should dispatch io-edit-tab with Backspace key on delete click', () => {
+    it('should dispatch io-tab-action with Backspace key on delete click', () => {
       const handler = vi.fn()
-      ioTab.addEventListener('io-edit-tab', handler)
+      ioTab.addEventListener('io-tab-action', handler)
 
       ioTab.onDeleteClick()
 
@@ -600,9 +575,9 @@ describe('IoTab', () => {
     const shiftKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End']
 
     shiftKeys.forEach(key => {
-      it(`should dispatch io-edit-tab on Shift+${key}`, () => {
+      it(`should dispatch io-tab-action on Shift+${key}`, () => {
         const handler = vi.fn()
-        ioTab.addEventListener('io-edit-tab', handler)
+        ioTab.addEventListener('io-tab-action', handler)
 
         const event = new KeyboardEvent('keydown', {
           key,
@@ -621,24 +596,9 @@ describe('IoTab', () => {
       })
     })
 
-    it('should expand context editor on Shift+Enter', () => {
-      const expandSpy = vi.spyOn(ioTab, 'expandContextEditor')
-
-      const event = new KeyboardEvent('keydown', {
-        key: 'Enter',
-        shiftKey: true,
-        bubbles: true,
-        cancelable: true,
-      })
-
-      ioTab.onKeydown(event)
-
-      expect(expandSpy).toHaveBeenCalled()
-    })
-
-    it('should NOT dispatch io-edit-tab without Shift modifier', () => {
+    it('should NOT dispatch io-tab-action without Shift modifier', () => {
       const handler = vi.fn()
-      ioTab.addEventListener('io-edit-tab', handler)
+      ioTab.addEventListener('io-tab-action', handler)
 
       const event = new KeyboardEvent('keydown', {
         key: 'Backspace',
@@ -653,9 +613,9 @@ describe('IoTab', () => {
     })
 
     it('should call super.onKeydown for non-shift keys', () => {
-      // Just verify it doesn't throw and doesn't dispatch io-edit-tab
+      // Just verify it doesn't throw and doesn't dispatch io-tab-action
       const handler = vi.fn()
-      ioTab.addEventListener('io-edit-tab', handler)
+      ioTab.addEventListener('io-tab-action', handler)
 
       const event = new KeyboardEvent('keydown', {
         key: 'Tab',
@@ -666,16 +626,6 @@ describe('IoTab', () => {
 
       expect(() => ioTab.onKeydown(event)).not.toThrow()
       expect(handler).not.toHaveBeenCalled()
-    })
-  })
-
-  describe('Context Editor', () => {
-    it('should have expandContextEditor method', () => {
-      expect(typeof ioTab.expandContextEditor).toBe('function')
-    })
-
-    it('should expand context editor without throwing', () => {
-      expect(() => ioTab.expandContextEditor()).not.toThrow()
     })
   })
 
@@ -721,7 +671,7 @@ describe('IoTab', () => {
   describe('Edge Cases', () => {
     it('should handle tab with empty label', () => {
       const emptyLabelTab = new Tab({ id: 'empty-label', label: '' })
-      const emptyLabelIoTab = new IoTab({ tab: emptyLabelTab })
+      const emptyLabelIoTab = new IoTab({ model: emptyLabelTab })
       container.appendChild(emptyLabelIoTab)
 
       const span = emptyLabelIoTab.querySelector('.io-tab-label')
@@ -735,7 +685,7 @@ describe('IoTab', () => {
     it('should handle tab with very long label', () => {
       const longLabel = 'A'.repeat(500)
       const longTab = new Tab({ id: 'long', label: longLabel })
-      const longIoTab = new IoTab({ tab: longTab })
+      const longIoTab = new IoTab({ model: longTab })
       container.appendChild(longIoTab)
 
       const span = longIoTab.querySelector('.io-tab-label')
@@ -747,7 +697,7 @@ describe('IoTab', () => {
 
     it('should handle tab with unicode characters', () => {
       const unicodeTab = new Tab({ id: 'unicode', label: '日本語タブ 🎉' })
-      const unicodeIoTab = new IoTab({ tab: unicodeTab })
+      const unicodeIoTab = new IoTab({ model: unicodeTab })
       container.appendChild(unicodeIoTab)
 
       const span = unicodeIoTab.querySelector('.io-tab-label')
@@ -768,9 +718,9 @@ describe('IoTab', () => {
 
     it('should handle changing tab reference', () => {
       const newTab = new Tab({ id: 'new-tab', label: 'New Tab' })
-      ioTab.tab = newTab
+      ioTab.model = newTab
 
-      expect(ioTab.tab).toBe(newTab)
+      expect(ioTab.model).toBe(newTab)
       const span = ioTab.querySelector('.io-tab-label')
       expect(span?.textContent).toBe('New Tab')
 
@@ -788,7 +738,6 @@ describe('IoTab', () => {
     it('should have Listeners getter', () => {
       expect(IoTab.Listeners).toBeDefined()
       expect(IoTab.Listeners.click).toBe('preventDefault')
-      expect(IoTab.Listeners.contextmenu).toBe('onContextMenu')
     })
   })
 
@@ -823,7 +772,7 @@ describe('IoTab Factory Function', () => {
   it('should create virtual constructor from factory', async () => {
     const { ioTab, Tab } = await import('@io-gui/layout')
     const tab = new Tab({ id: 'factory-test' })
-    const vdom = ioTab({ tab })
+    const vdom = ioTab({ model: tab })
 
     expect(vdom).toBeDefined()
     expect(vdom.tag).toBe('io-tab')

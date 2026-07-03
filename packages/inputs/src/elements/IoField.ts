@@ -129,10 +129,16 @@ export class IoField extends ReactiveElement {
       'pointerdown': 'onPointerdown',
       'touchstart': ['onTouchstart', {passive: false}] as ListenerDefinition,
       'click': 'onClick',
+      'contextmenu': 'onContextMenu',
     }
   }
 
   constructor(args: IoFieldProps = {}) { super(args) }
+
+  onContextMenu(event: MouseEvent) {
+    event.preventDefault()
+    event.stopPropagation()
+  }
 
   onFocus(event: FocusEvent) {
     this.addEventListener('blur', this.onBlur)
@@ -190,6 +196,7 @@ export class IoField extends ReactiveElement {
   }
   onTouchmove(event: TouchEvent) {
     event.stopPropagation()
+    event.preventDefault()
   }
   onTouchend(event: TouchEvent) {
     event.stopPropagation()

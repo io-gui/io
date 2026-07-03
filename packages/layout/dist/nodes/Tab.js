@@ -6,16 +6,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { ReactiveObject, Property, Register } from '@io-gui/core';
 let Tab = class Tab extends ReactiveObject {
-    constructor(args) {
-        debug: {
-            if (!args.id) {
-                console.error('Tab: construction error - empty id');
-            }
-        }
-        super({
-            ...args,
-            label: args.label ? args.label : args.id,
-        });
+    constructor(data) {
+        super();
+        this.applyJSON(data);
     }
     toJSON() {
         const json = { id: this.id };
@@ -27,12 +20,12 @@ let Tab = class Tab extends ReactiveObject {
             json.selected = this.selected;
         return json;
     }
-    applyJSON(json) {
+    applyJSON(data) {
         this.setProperties({
-            id: json.id,
-            label: json.label ? json.label : json.id,
-            icon: json.icon ? json.icon : '',
-            selected: json.selected ? json.selected : false,
+            id: data.id,
+            label: data.label ? data.label : data.id,
+            icon: data.icon ? data.icon : '',
+            selected: data.selected ? data.selected : false,
         });
         return this;
     }

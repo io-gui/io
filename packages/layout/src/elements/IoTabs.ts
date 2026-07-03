@@ -1,16 +1,15 @@
 import { Register, ReactiveElement, ReactiveElementProps, Property, NodeArray } from '@io-gui/core'
-import { MenuOption, ioMenuItem } from '@io-gui/menus'
 import { ioTab } from './IoTab.js'
-import { ioTabsHamburger } from './IoTabsHamburger.js'
-import { Tab } from '../nodes/Tab.js'
+import { Tab } from '../models/Tab.js'
+import { ioButton } from '@io-gui/inputs'
 
 export type IoTabsProps = ReactiveElementProps & {
   tabs: Array<Tab>
-  addMenuOption?: MenuOption
 }
 
 @Register
 export class IoTabs extends ReactiveElement {
+
   static override get Style() {
     return /* css */`
       :host {
@@ -20,37 +19,27 @@ export class IoTabs extends ReactiveElement {
         padding-right: var(--io_spacing);
         border-bottom: var(--io_border);
         border-bottom-color: var(--io_borderColorStrong);
+        background-color: var(--io_bgColorLight);
       }
       :host io-tab {
         margin-bottom: calc(-1 * var(--io_borderWidth));
         transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      :host:not([overflow="-1"]) io-tab {
-        /* TODO: make niceer animations */
-        pointer-events: none;
-        opacity: 0;
-      }
-      :host[overflow="-1"] io-tabs-hamburger {
-        /* TODO: make niceer animations */
-        display: none;
-      }
-      :host > io-tabs-hamburger {
-        margin-bottom: var(--io_spacing);
-      }
-      :host > io-menu-item {
+      :host io-button {
+        flex: 0 0 auto;
+        background-image: none !important;
+        border-color: transparent !important;
+        box-shadow: none !important;
         margin-left: auto;
-        flex-shrink: 0;
-        opacity: 0.125;
-        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity linear 0.2s;
+        opacity: 0.2;
       }
-      :host > io-menu-item:focus,
-      :host > io-menu-item:hover {
-        opacity: 1;
+      :host io-button[pressed] {
+        border-color: transparent !important;
+        opacity: 1 !important;
       }
-      :host > io-menu-item > .label,
-      :host > io-menu-item > .icon,
-      :host > io-menu-item > .hasmore {
-        display: none;
+
+      :host:hover io-button {
+        opacity: 0.5;
       }
     `
   }
@@ -58,47 +47,22 @@ export class IoTabs extends ReactiveElement {
   @Property({type: NodeArray, init: 'this'})
   declare tabs: NodeArray<Tab>
 
-  @Property({type: Number, value: -1, reflect: true})
-  declare overflow: number
-
-  @Property({type: MenuOption})
-  declare addMenuOption: MenuOption | undefined
-
-  constructor(args: IoTabsProps) { super(args) }
+  constructor(args: IoTabsProps) {
+    super(args)
+  }
 
   tabsMutated() {
     this.mutated()
-    this.overflow = -1
-    this.onResized()
   }
 
-  onResized() {
-    const lastElement = this.children[this.children.length - 1]
-    if (!lastElement) return
-
-    const rect = this.getBoundingClientRect()
-    const lastElementRect = lastElement.getBoundingClientRect()
-
-    if (this.overflow === -1) {
-      if (lastElementRect.right > rect.right) {
-        this.overflow = rect.width
-      }
-    } else if (rect.width > (this.overflow + 32)) {
-      this.overflow = -1
-    }
+  onAddTab() {
+    this.dispatch('io-add-tab-clicked', undefined, true)
   }
 
   override mutated() {
-    const hasOptions = this.addMenuOption && this.addMenuOption.options?.length > 0
     this.render([
-      ioTabsHamburger({tabs: this.tabs}),
-      ...this.tabs.map(tab => ioTab({tab: tab})),
-      hasOptions ?ioMenuItem({
-        class: 'io-tabs-add-tab',
-        icon: 'io:box_fill_plus',
-        direction: 'down',
-        option: this.addMenuOption,
-      }) : null,
+      ...this.tabs.map(tab => ioTab({model: tab})),
+      ioButton({icon: 'io:layer_add', action: this.onAddTab}),
     ])
   }
 }

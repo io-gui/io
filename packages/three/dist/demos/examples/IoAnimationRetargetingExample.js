@@ -10,7 +10,7 @@ import { color, screenUV, hue, reflector, time, Fn, vec2, length, atan, float, s
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
-import { ioSplit, Split } from '@io-gui/layout';
+import { ioLayout, Layout } from '@io-gui/layout';
 const loadGltf = (url) => new Promise((resolve, reject) => {
     new GLTFLoader().load(url, resolve, undefined, reject);
 });
@@ -178,36 +178,38 @@ export { AnimationRetargetingExample };
 let IoAnimationRetargetingExample = class IoAnimationRetargetingExample extends IoThreeExample {
     ready() {
         this.render([
-            ioSplit({
+            ioLayout({
                 elements: [
                     ioThreeViewport({ id: 'Top', applet: this.applet, cameraSelect: 'top' }),
                     ioThreeViewport({ id: 'Left', applet: this.applet, cameraSelect: 'left' }),
                     ioThreeViewport({ id: 'Back', applet: this.applet, cameraSelect: 'back' }),
                     ioThreeViewport({ id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene' }),
                 ],
-                split: new Split({
-                    type: 'split',
-                    orientation: 'vertical',
-                    children: [
-                        {
-                            type: 'split',
-                            flex: '1 1 60px',
-                            orientation: 'horizontal',
-                            children: [
-                                { type: 'panel', flex: '1 1 60px', tabs: [{ id: 'Top' }] },
-                                { type: 'panel', flex: '1 1 60px', tabs: [{ id: 'Left' }] }
-                            ]
-                        },
-                        {
-                            type: 'split',
-                            flex: '1 1 60px',
-                            orientation: 'horizontal',
-                            children: [
-                                { type: 'panel', flex: '1 1 60px', tabs: [{ id: 'Back' }] },
-                                { type: 'panel', flex: '1 1 60px', tabs: [{ id: 'SceneCamera' }] },
-                            ]
-                        }
-                    ]
+                layout: new Layout({
+                    child: {
+                        type: 'split',
+                        orientation: 'vertical',
+                        children: [
+                            {
+                                type: 'split',
+                                size: '60px auto',
+                                orientation: 'horizontal',
+                                children: [
+                                    { type: 'panel', size: '60px auto', tabs: [{ id: 'Top' }] },
+                                    { type: 'panel', size: '60px auto', tabs: [{ id: 'Left' }] }
+                                ]
+                            },
+                            {
+                                type: 'split',
+                                size: '60px auto',
+                                orientation: 'horizontal',
+                                children: [
+                                    { type: 'panel', size: '60px auto', tabs: [{ id: 'Back' }] },
+                                    { type: 'panel', size: '60px auto', tabs: [{ id: 'SceneCamera' }] },
+                                ]
+                            }
+                        ]
+                    }
                 })
             })
         ]);

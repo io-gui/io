@@ -9,7 +9,7 @@ import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { Register, Property } from '@io-gui/core';
 import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
-import { Split, ioSplit } from '@io-gui/layout';
+import { Layout, ioLayout } from '@io-gui/layout';
 // 1 micrometer to 100 billion light years in one scene, with 1 unit = 1 meter
 const NEAR = 1e-6;
 const FAR = 1e27;
@@ -120,18 +120,20 @@ let IoCameraLogarithmicDepthBufferExample = class IoCameraLogarithmicDepthBuffer
         this.renderer.setPixelRatio(window.devicePixelRatio);
         void this.renderer.init();
         this.render([
-            ioSplit({
+            ioLayout({
                 elements: [
                     ioThreeViewport({ id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene' }),
                     ioThreeViewport({ id: 'SceneCameraLog', applet: this.applet, cameraSelect: 'scene', renderer: this.renderer }),
                 ],
-                split: new Split({
-                    type: 'split',
-                    orientation: 'vertical',
-                    children: [
-                        { type: 'panel', flex: '1 1 120px', tabs: [{ id: 'SceneCamera' }] },
-                        { type: 'panel', flex: '1 1 120px', tabs: [{ id: 'SceneCameraLog' }] },
-                    ]
+                layout: new Layout({
+                    child: {
+                        type: 'split',
+                        orientation: 'vertical',
+                        children: [
+                            { type: 'panel', size: '120px auto', tabs: [{ id: 'SceneCamera' }] },
+                            { type: 'panel', size: '120px auto', tabs: [{ id: 'SceneCameraLog' }] },
+                        ]
+                    }
                 })
             })
         ]);

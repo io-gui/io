@@ -1,13 +1,13 @@
 import { Register, ReactiveElement, VDOMElement, ReactiveElementProps, Property, CallbackFunction } from '@io-gui/core'
 import { ioSelector } from '@io-gui/navigation'
-import { IoMenuItem, MenuOption } from '@io-gui/menus'
 import { ioTabs } from './IoTabs.js'
-import { IoSplit, SplitDirection } from './IoSplit.js'
-import { Tab } from '../nodes/Tab.js'
-import { Panel } from '../nodes/Panel.js'
+import { Tab } from '../models/Tab.js'
+import { Panel } from '../models/Panel.js'
+import { Layout } from '../models/Layout.js'
+import { IoLayout } from './IoLayout.js'
 
-export type IoPanelProps = ReactiveElementProps & {
-  panel: Panel
+export type IoPanelData = ReactiveElementProps & {
+  model: Panel
   elements: VDOMElement[]
 }
 
@@ -20,155 +20,99 @@ export class IoPanel extends ReactiveElement {
         overflow: hidden;
         flex-direction: column;
         flex: 1 1 auto;
+        background-color: var(--io_bgColor);
       }
     `
   }
 
   @Property({type: Object})
-  declare panel: Panel
+  declare model: Panel
 
   @Property(Array)
   declare elements: VDOMElement[]
 
   static override get Listeners() {
     return {
-      'io-edit-tab': 'onEditTab',
+      'io-tab-action': 'onTabAction',
+      'io-add-tab-clicked': 'onAddTabClicked',
     }
   }
 
-  onEditTab(event: CustomEvent) {
+  get layout(): Layout {
+    return (this.closest('io-layout') as IoLayout)!.model
+  }
+
+  onTabAction(event: CustomEvent) {
     event.stopPropagation()
     const tab: Tab = event.detail.tab
-    const key = event.detail.key
-    const index = this.panel.tabs.indexOf(tab)
-    if (index === -1) {
-      debug: console.warn('IoTabs:Tab not found in panel', tab)
-      return
-    }
-    switch (key) {
+    const action = event.detail.action
+    const index = this.model.tabs.indexOf(tab)
+    if (index === -1) return
+    switch (action) {
       case 'Select': {
-        this.selectTab(tab)
+        this.model.setSelected(tab.id)
+        this.debounce(this.focusTabDebounced as CallbackFunction, index)
         break
       }
       case 'Backspace': {
-        this.removeTab(tab)
+        this.model.removeTab(tab)
+        if (this.model.tabs.length > 0) {
+          this.debounce(this.focusTabDebounced as CallbackFunction, Math.min(index, this.model.tabs.length - 1))
+        }
         break
       }
       case 'ArrowLeft': {
-        this.moveTab(tab, index - 1)
+        this.model.moveTab(tab, index - 1)
+        this.debounce(this.focusTabDebounced as CallbackFunction, this.model.tabs.indexOf(tab))
         break
       }
       case 'ArrowRight': {
-        this.moveTab(tab, index + 1)
+        this.model.moveTab(tab, index + 1)
+        this.debounce(this.focusTabDebounced as CallbackFunction, this.model.tabs.indexOf(tab))
         break
       }
     }
   }
-  onNewTabClicked(event: CustomEvent) {
+
+  onAddTabClicked(event: CustomEvent) {
     event.stopPropagation()
-    const option: MenuOption = event.detail.option
-    if (option.id && option.options.length === 0) {
-      const tab = new Tab({id: option.id, label: option.label, icon: option.icon})
-      this.addTab(tab)
-      const addMenuOption = this.querySelector('.io-tabs-add-tab') as IoMenuItem
-      if (addMenuOption) addMenuOption.expanded = false
+    this.dispatch('io-add-tab-request', {model: this.model}, true)
+  }
+
+  focusTab(id: string) {
+    const tab = this.model.tabs.find(tab => tab.id === id)
+    if (tab) {
+      this.debounce(this.focusTabDebounced as CallbackFunction, this.model.tabs.indexOf(tab))
     }
   }
-  selectIndex(index: number) {
-    index = Math.min(index, this.panel.tabs.length - 1)
-    this.panel.setSelected(this.panel.tabs[index].id)
-    this.debounce(this.focusTabDebounced as CallbackFunction, index)
-  }
-  selectTab(tab: Tab) {
-    const index = this.panel.tabs.indexOf(tab)
-    this.panel.setSelected(tab.id)
-    this.debounce(this.focusTabDebounced as CallbackFunction, index)
-  }
-  moveTabToSplit(sourcePanel: IoPanel, tab: Tab, direction: SplitDirection) {
-    const parentSplit = this.parentElement as IoSplit
-    if (direction === 'center') {
-      sourcePanel.removeTab(tab)
-      this.addTab(tab)
-    } else {
-      parentSplit.moveTabToSplit(sourcePanel, this.panel, tab, direction)
-    }
-  }
-  addTab(tab: Tab, index?: number) {
-    const existingIndex = this.panel.tabs.findIndex(t => t.id === tab.id)
-    if (existingIndex !== -1) {
-      console.warn(`IoPanel.addTab: Duplicate tab id "${tab.id}", removing duplicate tab.`)
-      this.panel.tabs.splice(existingIndex, 1)
-    }
-    index = index ?? this.panel.tabs.length
-    index = Math.min(index, this.panel.tabs.length)
-    this.panel.tabs.splice(index, 0, tab)
-    this.selectIndex(index)
-  }
-  removeTab(tab: Tab) {
-    const index = this.panel.tabs.indexOf(tab)
-    this.panel.tabs.splice(index, 1)
-    if (this.panel.tabs.length > 0) {
-      const newIndex = Math.min(index, this.panel.tabs.length - 1)
-      this.selectIndex(newIndex)
-    } else {
-      const parentSplit = this.parentElement as IoSplit
-      const isRootPanel = !(parentSplit.parentElement instanceof IoSplit) &&
-        parentSplit.split.children.length === 1
-      // If this is the last panel at root level, don't remove
-      if (!isRootPanel) {
-        this.dispatch('io-panel-remove', {panel: this.panel}, true)
-      }
-    }
-  }
-  moveTab(tab: Tab, index: number) {
-    index = Math.max(Math.min(index, this.panel.tabs.length - 1), 0)
-    const currIndex = this.panel.tabs.findIndex(t => t.id === tab.id)
-    this.panel.tabs.splice(currIndex, 1)
-    index = Math.min(index, this.panel.tabs.length)
-    this.panel.tabs.splice(index, 0, tab)
-    this.selectIndex(index)
-  }
+
   focusTabDebounced(index: number) {
     const tabs = Array.from(this.querySelectorAll('io-tab')) as HTMLElement[]
     index = Math.min(index, tabs.length - 1)
     if (tabs[index]) tabs[index].focus()
   }
-  panelMutated() {
+
+  modelMutated() {
     this.debounce(this.mutated)
   }
-  getAddMenuOption(): MenuOption | undefined {
-    if (!this.elements || this.elements.length === 0) return undefined
 
-    const existingTabIds = new Set(this.panel.tabs.map(tab => tab.id))
-    const options = this.elements
-      .filter(el => el.props?.id && !existingTabIds.has(el.props.id))
-      .map(el => new MenuOption({
-        id: el.props!.id,
-        label: el.props!.label ?? el.props!.id,
-        icon: el.props!.icon ?? '',
-      }))
-
-    if (options.length === 0) return undefined
-    return new MenuOption({options})
-  }
   override mutated() {
     this.render([
       ioTabs({
-        tabs: this.panel.tabs,
-        addMenuOption: this.getAddMenuOption(),
-        '@io-menu-option-clicked': this.onNewTabClicked,
+        tabs: this.model.tabs,
       }),
       ioSelector({
-        // TODO: Make caching work with mutable elements
-        // caching: 'reactive',
-        caching: 'none',
-        selected: this.panel.getSelected(),
+        // TODO: Investigate caching for edge cases
+        caching: 'reactive',
+        selected: this.model.getSelected(),
         elements: this.elements,
         anchor: '',
       })
     ])
   }
+
 }
-export const ioPanel = function(arg0: IoPanelProps) {
+
+export const ioPanel = function(arg0: IoPanelData) {
   return IoPanel.vConstructor(arg0)
 }

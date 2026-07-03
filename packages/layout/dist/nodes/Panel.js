@@ -6,34 +6,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { ReactiveObject, NodeArray, Property, Register } from '@io-gui/core';
 import { Tab } from './Tab.js';
-function deduplicateTabs(tabs, context) {
-    const seenIds = new Set();
-    const uniqueTabs = [];
-    for (const tab of tabs) {
-        if (seenIds.has(tab.id)) {
-            console.warn(`${context}: Duplicate tab id "${tab.id}" - keeping first occurrence`);
-        }
-        else {
-            seenIds.add(tab.id);
-            uniqueTabs.push(tab);
-        }
-    }
-    return uniqueTabs;
-}
+import { DEFAULT_SIZE, applyLayoutSizeProps, isValidSize, layoutSizeToJSON, } from '../utils/layoutSize.js';
+// IMPORTANT: Do not remove commented out code. It is used in the future.
 let Panel = class Panel extends ReactiveObject {
-    constructor(args) {
-        debug: {
-            if (args.type !== 'panel') {
-                console.error(`Panel: Invalid type "${args.type}". Expected "panel".`);
-            }
-        }
-        args = { ...args };
-        args.tabs = deduplicateTabs(args.tabs, 'Panel');
-        if (args.tabs.length > 0 && !args.tabs.find(tab => tab.selected)) {
-            args.tabs[0].selected = true;
-        }
-        args.tabs = args.tabs.map(tab => new Tab({ ...tab }));
-        super(args);
+    constructor(data) {
+        super();
+        this.applyJSON(data);
     }
     tabsMutated() {
         this.debounce(this.onTabsMutatedDebounced);
@@ -53,7 +31,6 @@ let Panel = class Panel extends ReactiveObject {
         return selected;
     }
     setSelected(id) {
-        // TODO Test and reconsider withInternalOperation
         this.tabs.withInternalOperation(() => {
             for (let i = 0; i < this.tabs.length; i++) {
                 const item = this.tabs[i];
@@ -67,48 +44,95 @@ let Panel = class Panel extends ReactiveObject {
         });
         this.tabs.dispatchMutation();
     }
-    flexChanged() {
-        const flexRegex = /^[\d.]+\s+[\d.]+\s+(?:auto|[\d.]+(?:px|%))$/;
-        if (!flexRegex.test(this.flex)) {
+    // addTab(tab: Tab, index?: number) {
+    //   const existingIndex = this.tabs.findIndex(t => t.id === tab.id)
+    //   if (existingIndex !== -1) {
+    //     console.warn(`Panel.addTab: Duplicate tab id "${tab.id}", removing duplicate tab.`)
+    //     this.tabs.splice(existingIndex, 1)
+    //   }
+    //   index = index ?? this.tabs.length
+    //   index = Math.min(index, this.tabs.length)
+    //   this.tabs.splice(index, 0, tab)
+    //   this.selectIndex(index)
+    // }
+    // removeTab(tab: Tab) {
+    //   const index = this.tabs.indexOf(tab)
+    //   if (index === -1) return
+    //   this.tabs.splice(index, 1)
+    //   if (this.tabs.length > 0) {
+    //     const newIndex = Math.min(index, this.tabs.length - 1)
+    //     this.selectIndex(newIndex)
+    //   } else {
+    //     this.notifyParentSplitNormalize()
+    //   }
+    // }
+    // moveTab(tab: Tab, index: number) {
+    //   index = Math.max(Math.min(index, this.tabs.length - 1), 0)
+    //   const currIndex = this.tabs.findIndex(t => t.id === tab.id)
+    //   if (currIndex === -1) return
+    //   this.tabs.splice(currIndex, 1)
+    //   index = Math.min(index, this.tabs.length)
+    //   this.tabs.splice(index, 0, tab)
+    //   this.selectIndex(index)
+    // }
+    // selectIndex(index: number) {
+    //   index = Math.min(index, this.tabs.length - 1)
+    //   if (index >= 0 && this.tabs.length > 0) {
+    //     this.setSelected(this.tabs[index].id)
+    //   }
+    // }
+    // notifyParentSplitNormalize() {
+    //   let node: ReactiveNode | undefined = this
+    //   while (node) {
+    //     let splitParent: Split | undefined
+    //     for (let i = 0; i < node._parents.length; i++) {
+    //       const parent = node._parents[i]
+    //       if (isSplitNode(parent as LayoutChild)) {
+    //         splitParent = parent as Split
+    //         break
+    //       }
+    //     }
+    //     if (!splitParent) break
+    //     splitParent.normalize()
+    //     node = splitParent
+    //   }
+    // }
+    sizeChanged() {
+        if (!isValidSize(this.size)) {
             debug: {
-                console.error(`Split: Invalid flex value "${this.flex}". Expected a valid CSS flex value.`);
+                console.error(`Panel: Invalid size value "${this.size}". Expected "auto", "Npx", "N%", or "Npx auto" / "N% auto".`);
             }
-            this.flex = '0 1 auto';
+            this.size = DEFAULT_SIZE;
         }
     }
     toJSON() {
-        const json = {
+        const data = {
             type: 'panel',
             tabs: this.tabs.map(tab => tab.toJSON()),
+            ...layoutSizeToJSON(this),
         };
-        if (this.flex !== '1 1 auto')
-            json.flex = this.flex;
-        return json;
+        return data;
     }
-    applyJSON(json) {
-        debug: {
-            if (json.type !== 'panel') {
-                console.error(`Panel.fromJSON: Invalid type "${json.type}". Expected "panel".`);
-            }
+    applyJSON(data) {
+        const tabs = data.tabs.map(tab => new Tab(tab));
+        if (tabs.length > 0 && !tabs.some(tab => tab.selected && tab.id)) {
+            const first = tabs.find(tab => tab.id);
+            if (first)
+                first.selected = true;
         }
-        const uniqueTabs = deduplicateTabs(json.tabs, 'Panel.fromJSON');
         this.setProperties({
-            tabs: uniqueTabs.map(tab => new Tab(tab)),
-            flex: json.flex ?? '1 1 auto',
+            tabs,
+            ...applyLayoutSizeProps(data),
         });
         return this;
-    }
-    dispose() {
-        this.tabs.length = 0;
-        super.dispose();
     }
 };
 __decorate([
     Property({ type: NodeArray, init: 'this' })
 ], Panel.prototype, "tabs", void 0);
 __decorate([
-    Property({ type: String, value: '1 1 auto' })
-], Panel.prototype, "flex", void 0);
+    Property({ type: String, value: DEFAULT_SIZE })
+], Panel.prototype, "size", void 0);
 Panel = __decorate([
     Register
 ], Panel);

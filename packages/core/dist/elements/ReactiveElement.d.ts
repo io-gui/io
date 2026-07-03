@@ -129,5 +129,5 @@ export declare const clearNativeElementChildren: (element: HTMLElement) => void;
  * @param {ReactiveElement} element - Element to dispose children of.
  */
 export declare const disposeChildren: (element: ReactiveElement) => void;
-export declare const reactiveElement: (arg0?: ReactiveElementProps | VDOMFactoryChildren, arg1?: VDOMFactoryChildren) => VDOMElement;
+export declare const reactiveElement: (arg0: ReactiveElementProps | VDOMFactoryChildren, arg1?: VDOMFactoryChildren) => VDOMElement;
 export {};

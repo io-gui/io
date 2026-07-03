@@ -53,5 +53,4 @@ export declare class MenuOption extends ReactiveObject {
     toJSON(): Json;
     fromJSON(json: MenuOptionProps): this;
     mutated(): void;
-    dispose(): void;
 }

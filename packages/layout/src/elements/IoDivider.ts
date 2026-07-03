@@ -13,18 +13,26 @@ export class IoDivider extends ReactiveElement {
         flex: 0 0 var(--io_spacing3);
         background-color: var(--io_colorLight);
         border-style: solid;
-        border-width: 0 var(--io_borderWidth);
         border-color: var(--io_color);
-        cursor: col-resize;
         @apply --io-unselectable;
+        z-index: 1;
+      }
+      :host[orientation='horizontal'] {
+        width: var(--io_spacing3);
+        cursor: col-resize;
+        border-width: 0 var(--io_borderWidth);
+      }
+      :host[orientation='vertical'] {
+        height: var(--io_spacing3);
+        cursor: row-resize;
+        border-width: var(--io_borderWidth) 0;
+      }
+      :host:hover {
+        border-style: dashed;
       }
       :host[pressed] {
         border-color: var(--io_borderColorBlue);
         background-color: var(--io_bgColorBlue);
-      }
-      :host[pressed]:before,
-      :host[pressed]:after {
-        background-color: var(--io_colorWhite);
       }
       :host:before,
       :host:after {
@@ -38,29 +46,41 @@ export class IoDivider extends ReactiveElement {
         width: var(--io_fieldHeight);
         height: var(--io_spacing);
         background-color: var(--io_color);
-        transform: translate(-50%, -50%) rotate(90deg);
         border-radius: var(--io_spacing);
         opacity: 0.5;
       }
       :host[orientation='vertical']:before {
         transform: translate(-50%, -50%);
       }
-      :host:after {
-        width: var(--io_fieldHeight);
-        height: var(--io_fieldHeight);
-        background-color: var(--io_color);
-        transform: translate(-50%, -50%) rotate(45deg);
-        border-radius: 25%;
-      }
-      :host[orientation='vertical'] {
-        cursor: row-resize;
-        border-width: var(--io_borderWidth) 0;
-      }
-      :host:hover {
-        border-style: dashed;
+      :host[orientation='horizontal']:before {
+        transform: translate(-50%, -50%) rotate(90deg);
       }
       :host:hover:before {
         opacity: 1;
+      }
+      :host[pressed]:before {
+        background-color: var(--io_colorWhite);
+      }
+      :host:after {
+        background-color: var(--io_color);
+        border-radius: 50px;
+        transform: translate(-50%, -50%)
+      }
+      :host[orientation='vertical']:after {
+        width: 150px;
+        height: 10px;
+      }
+      :host[orientation='horizontal']:after {
+        width: 10px;
+        height: 150px;
+      }
+      :host:hover[orientation='vertical']:after {
+        width: 150px;
+        height: 20px;
+      }
+      :host:hover[orientation='horizontal']:after {
+        width: 20px;
+        height: 150px;
       }
     `
   }
@@ -75,10 +95,16 @@ export class IoDivider extends ReactiveElement {
     return {
       'pointerdown': 'onPointerdown',
       'touchstart': ['onTouchstart', {passive: false}] as ListenerDefinition,
+      'contextmenu': 'onContextmenuDisable',
     }
   }
 
   constructor(args: IoDividerProps) { super(args) }
+
+  onContextmenuDisable(event: MouseEvent) {
+    event.preventDefault()
+    event.stopPropagation()
+  }
 
   onPointerdown(event: PointerEvent) {
     event.preventDefault()

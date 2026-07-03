@@ -5,34 +5,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { ReactiveObject, NodeArray, Property, Register } from '@io-gui/core';
-import { Panel } from './Panel.js';
-function createChild(child) {
-    return child.type === 'panel' ? new Panel(child) : new Split(child);
-}
-function consolidateChildren(children, orientation) {
-    let result = children;
-    let resultOrientation = orientation;
-    while (result.length === 1 && result[0] instanceof Split) {
-        const soleChild = result[0];
-        resultOrientation = soleChild.orientation;
-        result = [...soleChild.children];
-    }
-    return { children: result, orientation: resultOrientation };
-}
+import { DEFAULT_SIZE, applyLayoutSizeProps, isValidSize, layoutSizeToJSON, } from '../utils/layoutSize.js';
+import { createLayoutChild } from './Layout.js';
 let Split = class Split extends ReactiveObject {
-    constructor(args) {
-        debug: {
-            if (args.type !== 'split') {
-                console.error(`Split: Invalid type "${args.type}". Expected "split".`);
-            }
-        }
-        const processedChildren = args.children.map(createChild);
-        const consolidated = consolidateChildren(processedChildren, args.orientation ?? 'horizontal');
-        super({
-            ...args,
-            children: consolidated.children,
-            orientation: consolidated.orientation,
-        });
+    constructor(data) {
+        super();
+        this.applyJSON(data);
     }
     childrenMutated() {
         this.debounce(this.onChildrenMutatedDebounced);
@@ -40,44 +18,83 @@ let Split = class Split extends ReactiveObject {
     onChildrenMutatedDebounced() {
         this.dispatchMutation();
     }
-    flexChanged() {
-        const flexRegex = /^[\d.]+\s+[\d.]+\s+(?:auto|[\d.]+(?:px|%))$/;
-        if (!flexRegex.test(this.flex)) {
+    // IMPORTANT: Do not remove commented out code. It is used in the future.
+    // normalize() {
+    //   let changed = true
+    //   while (changed) {
+    //     changed = false
+    //     for (let i = 0; i < this.children.length; i++) {
+    //       const child = this.children[i]
+    //       if (isSplitNode(child)) {
+    //         const lengthBefore = child.children.length
+    //         child.normalize()
+    //         if (child.children.length !== lengthBefore) changed = true
+    //       }
+    //     }
+    //     this.children.withInternalOperation(() => {
+    //       for (let i = this.children.length; i--;) {
+    //         const child = this.children[i]
+    //         if (isPanelNode(child) && child.tabs.length === 0) {
+    //           this.children.splice(i, 1)
+    //           changed = true
+    //         }
+    //       }
+    //       for (let i = this.children.length; i--;) {
+    //         const child = this.children[i]
+    //         if (isSplitNode(child) && child.children.length === 0) {
+    //           this.children.splice(i, 1)
+    //           changed = true
+    //         }
+    //       }
+    //       for (let i = this.children.length; i--;) {
+    //         const child = this.children[i]
+    //         if (isSplitNode(child) && child.children.length === 1) {
+    //           this.consolidateChildAt(i, child)
+    //           changed = true
+    //         }
+    //       }
+    //       ensureOneChildHasAutoSize(this.children)
+    //     })
+    //   }
+    // }
+    // consolidateChildAt(index: number, childSplit: Split) {
+    //   this.children.withInternalOperation(() => {
+    //     const soleChild = childSplit.children[0]
+    //     if (isPanelNode(soleChild)) {
+    //       soleChild.size = 'auto'
+    //       this.children.splice(index, 1, soleChild)
+    //     } else if (isSplitNode(soleChild)) {
+    //       this.orientation = soleChild.orientation
+    //       this.children.splice(index, 1, ...soleChild.children)
+    //       ensureOneChildHasAutoSize(this.children)
+    //     }
+    //   })
+    // }
+    sizeChanged() {
+        if (!isValidSize(this.size)) {
             debug: {
-                console.error(`Split: Invalid flex value "${this.flex}". Expected a valid CSS flex value.`);
+                console.error(`Split: Invalid size value "${this.size}". Expected "auto", "Npx", "N%", or "Npx auto" / "N% auto".`);
             }
-            this.flex = '0 1 auto';
+            this.size = DEFAULT_SIZE;
         }
     }
     toJSON() {
         const json = {
             type: 'split',
             children: this.children.map((child) => child.toJSON()),
+            ...layoutSizeToJSON(this),
         };
         if (this.orientation !== 'horizontal')
             json.orientation = this.orientation;
-        if (this.flex !== '1 1 auto')
-            json.flex = this.flex;
         return json;
     }
-    applyJSON(json) {
-        debug: {
-            if (json.type !== 'split') {
-                console.error(`Split.fromJSON: Invalid type "${json.type}". Expected "split".`);
-            }
-        }
-        const processedChildren = json.children.map(createChild);
-        const consolidated = consolidateChildren(processedChildren, json.orientation ?? 'horizontal');
+    applyJSON(data) {
         this.setProperties({
-            children: consolidated.children,
-            orientation: consolidated.orientation,
-            flex: json.flex ?? '1 1 auto',
+            children: data.children.map(createLayoutChild),
+            orientation: data.orientation ?? 'horizontal',
+            ...applyLayoutSizeProps(data),
         });
         return this;
-    }
-    dispose() {
-        this.children.length = 0;
-        super.dispose();
     }
 };
 __decorate([
@@ -87,8 +104,8 @@ __decorate([
     Property({ type: String, value: 'horizontal' })
 ], Split.prototype, "orientation", void 0);
 __decorate([
-    Property({ type: String, value: '1 1 auto' })
-], Split.prototype, "flex", void 0);
+    Property({ type: String, value: DEFAULT_SIZE })
+], Split.prototype, "size", void 0);
 Split = __decorate([
     Register
 ], Split);

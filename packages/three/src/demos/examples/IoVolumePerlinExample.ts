@@ -5,7 +5,7 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js'
 import { Register, Property } from '@io-gui/core'
 import { ThreeApplet, IoThreeExample, ThreeAppletProps, ioThreeViewport } from '@io-gui/three'
 import { ioPropertyEditor } from '@io-gui/editors'
-import { ioSplit, Split } from '@io-gui/layout'
+import { ioLayout, Layout } from '@io-gui/layout'
 import { ioNumberSlider } from '@io-gui/sliders'
 
 @Register
@@ -94,7 +94,7 @@ export class IoVolumePerlinExample extends IoThreeExample {
   override ready() {
 
     this.render([
-      ioSplit({
+      ioLayout({
         elements: [
           ioThreeViewport({id: 'Perspective', applet: this.applet, cameraSelect: 'perspective'}),
           ioPropertyEditor({id: 'PropertyEditor', value: this.applet,
@@ -105,24 +105,25 @@ export class IoVolumePerlinExample extends IoThreeExample {
             ]
           })
         ],
-        split: new Split({
-          type: 'split',
-          orientation: 'horizontal',
-          children: [
-            {
-              type: 'split',
-              flex: '2 1 auto',
-              orientation: 'vertical',
-              children: [
-                {type: 'panel',flex: '1 1 100%',tabs: [{id: 'Perspective'}]},
-              ]
-            },
-            {
-              type: 'panel',
-              flex: '0 0 320px',
-              tabs: [{id: 'PropertyEditor'}]
-            }
-          ]
+        model: new Layout({
+          child: {
+            type: 'split',
+            orientation: 'horizontal',
+            children: [
+              {
+                type: 'split',
+                orientation: 'vertical',
+                children: [
+                  {type: 'panel',size: '100%',tabs: [{id: 'Perspective'}]},
+                ]
+              },
+              {
+                type: 'panel',
+                size: '320px',
+                tabs: [{id: 'PropertyEditor'}]
+              }
+            ]
+          }
         })
       })
     ])

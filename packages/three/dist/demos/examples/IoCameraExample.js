@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { PerspectiveCamera, OrthographicCamera, Group, BufferGeometry, Float32BufferAttribute, MathUtils, Mesh, MeshBasicMaterial, Points, PointsMaterial, SphereGeometry } from 'three/webgpu';
 import { Register, Property } from '@io-gui/core';
-import { Split, ioSplit } from '@io-gui/layout';
+import { Layout, ioLayout } from '@io-gui/layout';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { ioPropertyEditor, registerEditorConfig, ioObject } from '@io-gui/editors';
 import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
@@ -108,35 +108,37 @@ registerEditorConfig(CameraExample, [
 let IoCameraExample = class IoCameraExample extends IoThreeExample {
     ready() {
         this.render([
-            ioSplit({
+            ioLayout({
                 elements: [
                     ioThreeViewport({ id: 'Perspective', applet: this.applet, cameraSelect: 'perspective' }),
                     ioThreeViewport({ id: 'ScenePerspective', applet: this.applet, cameraSelect: 'scene:perspective' }),
                     ioThreeViewport({ id: 'SceneOrthographic', applet: this.applet, cameraSelect: 'scene:orthographic' }),
                     ioPropertyEditor({ id: 'PropertyEditor', value: this.applet, properties: ['perspectiveCamera', 'orthographicCamera'] })
                 ],
-                split: new Split({
-                    type: 'split',
-                    orientation: 'horizontal',
-                    children: [
-                        {
-                            type: 'panel', flex: '1 1 33.33%', tabs: [{ id: 'Perspective' }]
-                        },
-                        {
-                            type: 'split',
-                            flex: '1 1 33.33%',
-                            orientation: 'vertical',
-                            children: [
-                                { type: 'panel', flex: '1 1 33.33%', tabs: [{ id: 'ScenePerspective' }] },
-                                { type: 'panel', flex: '1 1 33.33%', tabs: [{ id: 'SceneOrthographic' }] },
-                            ]
-                        },
-                        {
-                            type: 'panel',
-                            flex: '0 0 280px',
-                            tabs: [{ id: 'PropertyEditor' }]
-                        }
-                    ]
+                layout: new Layout({
+                    child: {
+                        type: 'split',
+                        orientation: 'horizontal',
+                        children: [
+                            {
+                                type: 'panel', size: '33.33%', tabs: [{ id: 'Perspective' }]
+                            },
+                            {
+                                type: 'split',
+                                size: '33.33%',
+                                orientation: 'vertical',
+                                children: [
+                                    { type: 'panel', size: '33.33%', tabs: [{ id: 'ScenePerspective' }] },
+                                    { type: 'panel', size: '33.33%', tabs: [{ id: 'SceneOrthographic' }] },
+                                ]
+                            },
+                            {
+                                type: 'panel',
+                                size: '280px',
+                                tabs: [{ id: 'PropertyEditor' }]
+                            }
+                        ]
+                    }
                 })
             })
         ]);

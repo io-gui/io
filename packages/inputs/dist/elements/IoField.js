@@ -145,6 +145,7 @@ let IoField = class IoField extends ReactiveElement {
     }
     onTouchmove(event) {
         event.stopPropagation();
+        event.preventDefault();
     }
     onTouchend(event) {
         event.stopPropagation();

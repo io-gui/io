@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # Structural invariants are enforced by reactive normalization on Split and Layout, not DOM events

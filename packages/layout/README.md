@@ -1,33 +1,36 @@
 # @io-gui/layout
 
-A reactive, drag-and-drop tabbed panel layout system built on Io-Gui's reactive architecture. IoSplit enables IDE-like split panel interfaces where users can arrange, resize, and reorganize content through intuitive drag-and-drop interactions.
+A reactive, drag-and-drop tabbed panel layout system built on Io-Gui's reactive architecture. `IoLayout` enables IDE-like split panel interfaces where users can arrange, resize, and reorganize content through intuitive drag-and-drop interactions.
 
 See [live examples here](https://iogui.dev/io/#path=Demos,Layout)
 
 ## Overview
 
-IoSplit implements a **nested tree structure** for layout management:
+`IoLayout` is the entry point. It renders a **`Layout`** root whose child is a tree of **`Split`** and **`Panel`** models:
 
 ```
-IoSplit (root)
-  ├── IoSplit (nested)
-  │   ├── IoPanel
-  │   │   └── IoTabs → IoTab[]
-  │   └── IoDivider
-  │   └── IoPanel
-  └── IoDivider
-  └── IoPanel
+IoLayout (root view)
+  └── IoSplit | IoPanel  ← layout.child
+        ├── IoSplit (nested)
+        │   ├── IoPanel → IoTabs → IoTab[]
+        │   ├── IoDivider
+        │   └── IoPanel
+        ├── IoDivider
+        └── IoPanel
 ```
 
-The system separates **domain models** (data) from **elements** (UI), following Io-Gui's reactive architecture:
+The system separates **domain models** (structure and invariants) from **elements** (geometry and gestures):
 
 | Domain Model | Element | Purpose |
 |--------------|---------|---------|
-| `Split` | `IoSplit` | Container that arranges children horizontally or vertically |
-| `Panel` | `IoPanel` | Container for tabs with content selection |
-| `Tab` | `IoTab` | Individual tab with id, label, and icon |
+| `Layout` | `IoLayout` | Root; tree-wide ops (`moveTab`), root normalization |
+| `Split` | `IoSplit` | Arranges children horizontally or vertically; `normalize()` |
+| `Panel` | `IoPanel` | Tab container; `addTab`, `removeTab`, `moveTab`, selection |
+| `Tab` | `IoTab` | Tab handle with id, label, icon |
 
-This split is a concrete use of Io-Gui's **cross-domain reactivity**: `Split`, `Panel`, and `Tab` are non-DOM `ReactiveObject` models that own the layout state, while `IoSplit`, `IoPanel`, and `IoTab` render it. The models and elements live in one shared reactive graph, so a mutation on a `Tab` deep in the tree bubbles up through the model graph and across the object/element boundary to the elements that render it — without the model holding any DOM reference. See the core [deep dive](https://iogui.dev/io/#path=Docs,Deep%20Dive) "Cross-Domain Reactivity" section for the underlying mechanism.
+`IoLayout.elements` is the application-provided **elements pool** (VDOM descriptors). It is not persisted — the host supplies it when mounting. The add-tab menu is derived from pool entries whose content id is not already open in that panel.
+
+This split is a concrete use of Io-Gui's **cross-domain reactivity**: models own state and behavior; elements render and forward gestures. See the core [deep dive](https://iogui.dev/io/#path=Docs,Deep%20Dive) "Cross-Domain Reactivity" section for the underlying mechanism.
 
 ## Domain Models
 
@@ -51,13 +54,14 @@ type TabProps = {
 
 ### Panel
 
-A container holding an array of tabs with flex sizing.
+A container holding an array of tabs with size properties.
 
 ```typescript
 type PanelProps = {
   type: 'panel'  // Required type discriminator
   tabs: Array<TabProps>
-  flex?: string  // CSS flex value, defaults to '1 1 100%'
+  size?: string     // 'auto' | 'Npx' | 'N%', defaults to 'auto'
+  minSize?: string  // 'Npx' | 'N%', defaults to '240px'
 }
 ```
 
@@ -65,7 +69,8 @@ type PanelProps = {
 - Constructor auto-selects the first tab if none are selected
 - `tabs` is a `NodeArray<Tab>` with reactive mutation tracking
 - `getSelected()` / `setSelected(id)` manage tab selection
-- `setSelected()` uses `withInternalOperation()` to batch property changes before dispatching a single mutation event
+- `addTab(tab, index?)`, `removeTab(tab)`, `moveTab(tab, index)` — structural tab ops (dedupe id within panel, reselect on remove)
+- Empty panel triggers parent `Split.normalize()` up the ancestor chain
 
 ### Split
 
@@ -79,18 +84,50 @@ type SplitProps = {
   type: 'split'                   // Required type discriminator
   children: Array<SplitProps | PanelProps>
   orientation?: SplitOrientation  // defaults to 'horizontal'
-  flex?: string                   // defaults to '1 1 100%'
+  size?: string                   // defaults to 'auto'
+  minSize?: string                // defaults to '240px'
 }
 ```
 
 **Key behaviors:**
 - Constructor validates that `type === 'split'` and throws an error otherwise
 - Constructor recursively instantiates child Splits and Panels based on the `type` property
-- **Construction-time consolidation**: If a Split has only one child that is also a Split, the constructor automatically adopts that child's children and orientation. This prevents unnecessary nesting and is applied recursively.
+- **Construction-time consolidation**: If a Split has only one child that is also a Split, the constructor automatically adopts that child's children and orientation
+- `normalize()` — synchronous repair: drop empty children, consolidate single-child nested splits, ensure one child has auto size
 - Children are stored in a `NodeArray<Split | Panel>`
-- Mutation events from children bubble up through debounced handlers
+
+### Layout
+
+The root model for a whole arrangement.
+
+```typescript
+type LayoutProps = {
+  type: 'layout'
+  version?: number  // current wire format: 2
+  child: SplitProps | PanelProps
+}
+```
+
+**Key behaviors:**
+- Single reactive `child: Split | Panel` (not a `NodeArray`)
+- `moveTab(tab, targetPanel, direction, sourcePanel?)` — tree-wide tab moves (center merge or edge split)
+- `findPanel(tab)` — locate the panel holding a tab
+- `normalize()` — root invariants: promote lone child after split consolidation; keep terminal empty panel
+- `hydrateLayout(json)` / `Layout.applyJSON()` accept both `{ type: 'layout', child: ... }` and legacy root `SplitProps | PanelProps`
 
 ## Elements
+
+### IoLayout
+
+Root view. Renders `ioSplit` or `ioPanel` from `layout.child`.
+
+```typescript
+ioLayout({
+  layout: layoutModel,
+  elements: contentPool,
+  editable?: boolean,
+})
+```
 
 ### IoSplit
 
@@ -98,16 +135,13 @@ Renders a Split model as a flex container with children and dividers.
 
 **Key responsibilities:**
 - Renders child `IoSplit` or `IoPanel` elements interleaved with `IoDivider` elements
-- Handles divider resize events (`io-divider-move`, `io-divider-move-end`)
-- Manages panel/split removal and conversion
-- Coordinates tab drag-and-drop operations that create new splits
+- Handles divider resize events (`io-divider-move`, `io-divider-move-end`) and writes size to the model
+- Drawer collapse when space is insufficient; `hasVisibleAutoSize` for CSS fallback when auto-size child is in a collapsed drawer
 
 **Event listeners:**
-- `io-divider-move` - Updates flex values during drag
-- `io-divider-move-end` - Persists flex values to the model
-- `io-panel-remove` - Removes empty panels, may trigger split removal or consolidation
-- `io-split-remove` - Removes empty splits from parent, may trigger consolidation
-- `io-split-consolidate` - Consolidates single-child splits (replacing split with its sole child)
+- `io-divider-move` — Updates flex CSS during drag
+- `io-divider-move-end` — Persists size values to the model, then `split.normalize()`
+- `io-drawer-expanded-changed` — Manages drawer veil state
 
 ### IoPanel
 
@@ -115,17 +149,16 @@ Renders a Panel model with tabs and content.
 
 **Key responsibilities:**
 - Renders `IoTabs` header and `IoSelector` content area
-- Handles tab editing events (select, remove, reorder)
-- Manages drag-and-drop tab operations
+- Handles tab editing events (select, remove, reorder) by delegating to `Panel` methods
+- `moveTabToSplit(sourcePanel, tab, direction)` delegates to `layout.moveTab()` (resolves `layout` from prop or `closest('io-layout')`)
 
-**Tab operations:**
-- `selectTab(tab)` / `selectIndex(index)` - Change selection
-- `addTab(tab, index?)` - Add tab, removes duplicate ids first
-- `removeTab(tab)` - Remove tab, dispatch removal if panel becomes empty
-- `moveTab(tab, index)` - Reorder within panel
-- `moveTabToSplit(sourcePanel, tab, direction)` - Move to adjacent panel or create new split
+**Tab operations** (view wrappers around model):
+- `selectTab(tab)` / `selectIndex(index)` — Change selection and focus
+- `addTab(tab, index?)` — Delegates to `panel.addTab`
+- `removeTab(tab)` — Delegates to `panel.removeTab`
+- `moveTab(tab, index)` — Delegates to `panel.moveTab`
 
-**Edge case:** The last tab in the last panel of a layout cannot be removed (prevents empty layouts).
+**Root survival:** When the last tab of the last panel is removed, `Layout.normalize()` keeps an empty terminal panel.
 
 ### IoTabs
 
@@ -151,6 +184,7 @@ Individual tab element extending `IoField` for click/keyboard interactions.
 **Drag behavior:**
 - Captures pointer on `pointerdown`
 - Initiates drag after 10px movement threshold
+- Resolves drag root via `closest('io-layout')`
 - Updates `IoTabDragIconSingleton` with current position
 - Detects drop targets by iterating all `io-tabs` and `io-panel` elements
 - Calculates drop position (index or split direction) based on cursor position
@@ -165,9 +199,9 @@ Resizable divider between split children.
 - Visual feedback via `pressed` attribute
 
 **Resize algorithm (in IoSplit):**
-- Tracks fixed-size (`0 0 Npx`) vs flex-size (`1 1 N%`) panels
-- First/last dividers set adjacent panel to fixed size
-- Middle dividers adjust two adjacent flex panels proportionally
+- Maps model `size` to CSS flex via `sizeToFlex()`
+- Divider drag sets adjacent panels to fixed pixel flex for visual feedback
+- On drag end, measured sizes are persisted as `size: 'Npx'` on the model
 - Enforces minimum sizes based on `ThemeSingleton.fieldHeight`
 
 ## Supporting Singletons
@@ -250,7 +284,7 @@ Parent elements receive mutation, may propagate up
 
 4. pointerup
    → If dropIndex !== -1: addTab to target panel
-   → If splitDirection !== 'none': moveTabToSplit
+   → If splitDirection !== 'none': layout.moveTab via IoTabDragIconSingleton
    → Reset singleton state
 ```
 
@@ -261,26 +295,23 @@ Parent elements receive mutation, may propagate up
 | `io-edit-tab` | IoTab | `{ tab, key }` | Tab editing commands |
 | `io-divider-move` | IoDivider | `{ index, clientX, clientY }` | Resize in progress |
 | `io-divider-move-end` | IoDivider | `{ index, clientX, clientY }` | Resize complete |
-| `io-panel-remove` | IoPanel | `{ panel }` | Panel became empty |
-| `io-split-remove` | IoSplit | `{ split }` | Split became empty |
-| `io-split-consolidate` | IoSplit | `{ split }` | Split has single child, needs consolidation |
-| `io-menu-option-clicked` | IoMenuItem | `{ option }` | Add new tab from menu |
+| `io-menu-option-clicked` | IoMenuItem | `{ option }` | Add new tab from elements pool |
 
 ## Important Considerations
 
 ### Multiple Layout Instances
 
-IoSplit uses **global singletons** for drag-and-drop functionality:
+IoLayout uses **global singletons** for drag-and-drop functionality:
 
 - `IoTabDragIconSingleton` - Shows tab icon at cursor during drag
 - `IoTabDropRectSingleton` - Shows drop target preview
 - `IoTabsHamburgerMenuSingleton` - Overflow menu for hidden tabs
 
-**Limitations when using multiple `IoSplit` instances on the same page:**
+**Limitations when using multiple `IoLayout` instances on the same page:**
 
-1. **One drag operation at a time** - Singletons are shared globally, so only one tab drag can occur across all layout instances simultaneously
-2. **Drop target scoping** - Drop targets are scoped to the IoSplit ancestor of the dragged tab. Tabs cannot be dragged between separate IoSplit instances.
-3. **Shared hamburger menu** - The overflow menu is shared, though it correctly displays tabs from whichever panel triggered it
+1. **One drag operation at a time** — Singletons are shared globally
+2. **Drop target scoping** — Drop targets are scoped to the `io-layout` subtree of the dragged tab
+3. **Shared hamburger menu** — The overflow menu is shared
 
 This architecture works well for the common case of a single layout per page. For multiple independent layouts, be aware of the shared drag state.
 
@@ -317,18 +348,32 @@ However, consider that:
 
 Panels have enforced minimum size `ThemeSingleton.fieldHeight * 4` during resize operations to prevent them from becoming unusably small. These values scale with the theme's `fieldHeight` setting, ensuring usability across different display densities and theme configurations.
 
-**Note:** These minimums apply during user resize operations via IoDivider. Programmatically setting smaller flex values is possible but may result in cramped UI.
+**Note:** These minimums apply during user resize operations via IoDivider. Programmatically setting smaller `size` values is possible but may result in cramped UI.
 
 ### Storage and Serialization
 
 When using `Storage` for layout persistence, understanding what gets serialized helps avoid unexpected behavior.
 
 **What IS persisted:**
-- Layout structure (nested splits and panels)
-- Split orientations (`'horizontal'` or `'vertical'`)
-- Panel flex values (only if different from default `'1 1 100%'`)
-- Tab data: `id`, `label` (if different from id), `icon` (if set), `selected` state
-- All nested children recursively
+- `Layout` envelope: `{ type: 'layout', version: 2, child: SplitProps | PanelProps }`
+- Layout structure (nested splits and panels), orientations, size/minSize values, tab data
+- Legacy root `SplitProps` / `PanelProps` without the envelope are wrapped on hydrate
+
+**Wire format example:**
+```typescript
+{
+  type: 'layout',
+  version: 2,
+  child: {
+    type: 'split',
+    children: [{
+      type: 'panel',
+      size: '200px',
+      tabs: [{ id: 'A' }]
+    }]
+  }
+}
+```
 
 **What is NOT persisted:**
 - Transient drag state (`IoTabDragIconSingleton` properties)
@@ -342,10 +387,11 @@ When using `Storage` for layout persistence, understanding what gets serialized 
 new Split({
   type: 'split',
   orientation: 'horizontal',  // default, omitted in JSON
-  flex: '1 1 100%',          // default, omitted in JSON
+  size: 'auto',              // default, omitted in JSON
+  minSize: '240px',          // default, omitted in JSON
   children: [{
     type: 'panel',
-    flex: '0 0 200px',       // non-default, included
+    size: '200px',           // non-default, included
     tabs: [{ id: 'A', label: 'A' }]  // label equals id, omitted
   }]
 })
@@ -378,37 +424,15 @@ addTab(tab: Tab, index?: number) {
 ```
 
 ### Split Consolidation
-When a split ends up with only one child, it should be consolidated:
 
-**At construction time:** The Split constructor automatically consolidates if initialized with only one child that is a Split:
-```typescript
-// This structure:
-new Split({
-  type: 'split',
-  children: [{
-    type: 'split',
-    orientation: 'horizontal',
-    children: [...]
-  }]
-})
-// Becomes a single split with the inner children and orientation
-```
+When a split ends up with only one child, it is consolidated into its parent — synchronously via `Split.normalize()` and `Layout.normalize()`, not DOM events.
 
-**At runtime:** When panel/split removal leaves only one child:
-```typescript
-if (this.split.children.length === 1) {
-  this.dispatch('io-split-consolidate', {split: this.split}, true)
-}
-```
+**At construction time:** The Split constructor consolidates when initialized with only one child that is a Split.
 
-The parent IoSplit handles `io-split-consolidate` via `consolidateChild()`:
-- If the sole child is a **Panel**: Replace the split with that panel
-- If the sole child is a **Split**: Adopt the child's children and orientation
+**At runtime:** Structural methods (`Panel.removeTab`, `Layout.moveTab`, divider resize end) call `normalize()` on affected splits. Each split drops empty children, hoists single-child nested splits, and ensures one child has auto size. `Layout.normalize()` promotes a lone child to `layout.child` and keeps a terminal empty panel when the tree would otherwise have no panels.
 
-This maintains a minimal tree structure and prevents unnecessary nesting.
-
-### Flex Value Persistence
-Divider resize operations update element `style.flex` immediately for visual feedback, but model `flex` properties are only updated on `io-divider-move-end`. This prevents excessive mutation events during drag.
+### Size Value Persistence
+Divider resize operations update element `style.flex` immediately for visual feedback, but model `size` properties are only updated on `io-divider-move-end`. This prevents excessive mutation events during drag.
 
 ### Overflow Detection Timing
 `IoTabs.tabsMutated()` resets `overflow = -1` and calls `onResized()` to recalculate. It compares the last rendered child's right edge to the container's, and uses a hysteresis of 32px to prevent flickering:
@@ -451,21 +475,27 @@ This batches rapid changes (e.g., multiple tab property updates) into single upd
 
 ### Known Limitations (TODOs in code)
 
-1. **Flex-grow preservation**: When removing the middle flex panel from three panels, remaining fixed panels don't fill space
+1. **Auto-size preservation**: When removing the middle auto-size panel from three panels, remaining fixed panels don't fill space
 2. **Arrow Up/Down tab movement**: Cross-panel tab movement via keyboard not implemented
 3. **Hamburger animations**: Overflow transition animations marked for improvement
 
 ## Storage Integration
 
-IoLayout integrates with Io-Gui's `Storage` system for persistence:
+`IoLayout` integrates with Io-Gui's `Storage` system for persistence:
 
 ```typescript
 import { Storage as $ } from '@io-gui/core'
+import { Layout, ioLayout } from '@io-gui/layout'
+
+const defaultLayout = new Layout({
+  type: 'layout',
+  child: { type: 'split', children: [...] },
+})
 
 ioLayout({
-  split: $({ key: 'layout', storage: 'local', value: defaultSplit }),
-  // ...
+  layout: $({ key: 'my-layout-v2', storage: 'local', value: defaultLayout }),
+  elements: contentPool,
 })
 ```
 
-The `Split.toJSON()` / `fromJSON()` methods enable serialization of the entire layout tree including all nested splits, panels, tabs, and flex values.
+`Layout.toJSON()` serializes the v2 envelope. `Layout.applyJSON()` and `hydrateLayout()` accept both the envelope and legacy root split/panel JSON saved before the migration.

@@ -433,4 +433,4 @@ export const disposeChildren = function (element) {
         }
     });
 };
-export const reactiveElement = ReactiveElement.vConstructor;
+export const reactiveElement = (arg0, arg1) => ReactiveElement.vConstructor(arg0, arg1);

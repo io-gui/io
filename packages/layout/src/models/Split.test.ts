@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { NodeArray } from '@io-gui/core'
-import { Split, SplitProps, Panel } from '@io-gui/layout'
+import { Split, SplitData, Panel, Layout } from '@io-gui/layout'
 
 describe('Split', () => {
 
@@ -75,138 +75,36 @@ describe('Split', () => {
       expect(split.orientation).toBe('vertical')
     })
 
-    it('should default flex to "1 1 auto"', () => {
+    it('should default size to "auto"', () => {
       const split = new Split({
         type: 'split',
         children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }]
       })
 
-      expect(split.flex).toBe('1 1 auto')
+      expect(split.size).toBe('auto')
     })
 
-    it('should accept custom flex value', () => {
+    it('should accept custom size value', () => {
       const split = new Split({
         type: 'split',
-        flex: '0 0 400px',
+        size: '400px',
         children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }]
       })
 
-      expect(split.flex).toBe('0 0 400px')
+      expect(split.size).toBe('400px')
     })
 
-    it('should preserve child flex values', () => {
+    it('should preserve child size values', () => {
       const split = new Split({
         type: 'split',
         children: [
-          { type: 'panel', tabs: [{ id: 'tab1' }], flex: '0 0 200px' },
-          { type: 'panel', tabs: [{ id: 'tab2' }], flex: '1 1 auto' }
+          { type: 'panel', tabs: [{ id: 'tab1' }], size: '200px' },
+          { type: 'panel', tabs: [{ id: 'tab2' }] }
         ]
       })
 
-      expect((split.children[0] as Panel).flex).toBe('0 0 200px')
-      expect((split.children[1] as Panel).flex).toBe('1 1 auto')
-    })
-
-  })
-
-  describe('Construction Consolidation', () => {
-    // Note: More consolidation tests exist in IoSplit.test.ts
-
-    it('should consolidate when single child is a Split', () => {
-      const split = new Split({
-        type: 'split',
-        children: [
-          {
-            type: 'split',
-            orientation: 'vertical',
-            children: [
-              { type: 'panel', tabs: [{ id: 'tab1' }] },
-              { type: 'panel', tabs: [{ id: 'tab2' }] }
-            ]
-          }
-        ]
-      })
-
-      // Should adopt child's children and orientation
-      expect(split.children.length).toBe(2)
-      expect(split.orientation).toBe('vertical')
-      expect(split.children[0]).toBeInstanceOf(Panel)
-      expect(split.children[1]).toBeInstanceOf(Panel)
-    })
-
-    it('should NOT consolidate when single child is a Panel', () => {
-      const split = new Split({
-        type: 'split',
-        children: [
-          { type: 'panel', tabs: [{ id: 'tab1' }] }
-        ]
-      })
-
-      expect(split.children.length).toBe(1)
-      expect(split.children[0]).toBeInstanceOf(Panel)
-    })
-
-    it('should NOT consolidate when multiple children', () => {
-      const split = new Split({
-        type: 'split',
-        children: [
-          { type: 'panel', tabs: [{ id: 'tab1' }] },
-          {
-            type: 'split',
-            children: [{ type: 'panel', tabs: [{ id: 'tab2' }] }]
-          }
-        ]
-      })
-
-      expect(split.children.length).toBe(2)
-      expect(split.children[0]).toBeInstanceOf(Panel)
-      expect(split.children[1]).toBeInstanceOf(Split)
-    })
-
-    it('should consolidate multiple levels of single-child splits', () => {
-      const split = new Split({
-        type: 'split',
-        children: [
-          {
-            type: 'split',
-            orientation: 'vertical',
-            children: [
-              {
-                type: 'split',
-                orientation: 'horizontal',
-                children: [
-                  { type: 'panel', tabs: [{ id: 'deep' }] },
-                  { type: 'panel', tabs: [{ id: 'deep2' }] }
-                ]
-              }
-            ]
-          }
-        ]
-      })
-
-      // Should flatten to innermost multi-child split
-      expect(split.children.length).toBe(2)
-      expect(split.orientation).toBe('horizontal')
-    })
-
-    it('should adopt innermost orientation during consolidation', () => {
-      const split = new Split({
-        type: 'split',
-        orientation: 'horizontal', // outer
-        children: [
-          {
-            type: 'split',
-            orientation: 'vertical', // inner
-            children: [
-              { type: 'panel', tabs: [{ id: 'tab1' }] },
-              { type: 'panel', tabs: [{ id: 'tab2' }] }
-            ]
-          }
-        ]
-      })
-
-      // Should use inner orientation
-      expect(split.orientation).toBe('vertical')
+      expect((split.children[0] as Panel).size).toBe('200px')
+      expect((split.children[1] as Panel).size).toBe('auto')
     })
 
   })
@@ -321,7 +219,7 @@ describe('Split', () => {
         children: [
           { type: 'panel', tabs: [{ id: 'tab1' }] }
         ],
-        flex: '1 1 auto'
+        size: 'auto'
       })
 
       const json = split.toJSON()
@@ -329,7 +227,7 @@ describe('Split', () => {
       expect(json.type).toBe('split')
       // Default values are omitted for compact serialization
       expect(json.orientation).toBeUndefined()
-      expect(json.flex).toBeUndefined()
+      expect(json.size).toBeUndefined()
       expect(json.children).toHaveLength(1)
       expect(json.children[0].type).toBe('panel')
     })
@@ -346,16 +244,16 @@ describe('Split', () => {
       expect(json.orientation).toBe('vertical')
     })
 
-    it('should include non-default flex in JSON', () => {
+    it('should include non-default size in JSON', () => {
       const split = new Split({
         type: 'split',
-        flex: '0 0 300px',
+        size: '300px',
         children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }]
       })
 
       const json = split.toJSON()
 
-      expect(json.flex).toBe('0 0 300px')
+      expect(json.size).toBe('300px')
     })
 
     it('should serialize nested splits', () => {
@@ -379,8 +277,8 @@ describe('Split', () => {
       expect(json.children.length).toBe(2)
       expect(json.children[0].type).toBe('panel')
       expect(json.children[1].type).toBe('split')
-      expect((json.children[1] as SplitProps).orientation).toBe('vertical')
-      expect((json.children[1] as SplitProps).children.length).toBe(2)
+      expect((json.children[1] as SplitData).orientation).toBe('vertical')
+      expect((json.children[1] as SplitData).children.length).toBe(2)
     })
 
     it('should produce plain objects (not instances)', () => {
@@ -395,21 +293,21 @@ describe('Split', () => {
       expect(json.children[0]).not.toBeInstanceOf(Panel)
     })
 
-    it('should preserve all child flex values', () => {
+    it('should preserve all child size values', () => {
       const split = new Split({
         type: 'split',
         children: [
-          { type: 'panel', tabs: [{ id: 't1' }], flex: '0 0 100px' },
-          { type: 'panel', tabs: [{ id: 't2' }], flex: '1 1 auto' },
-          { type: 'panel', tabs: [{ id: 't3' }], flex: '0 0 200px' }
+          { type: 'panel', tabs: [{ id: 't1' }], size: '100px' },
+          { type: 'panel', tabs: [{ id: 't2' }] },
+          { type: 'panel', tabs: [{ id: 't3' }], size: '200px' }
         ]
       })
 
       const json = split.toJSON()
 
-      expect(json.children[0].flex).toBe('0 0 100px')
-      expect(json.children[1].flex).toBeUndefined() // '1 1 auto' is default, omitted
-      expect(json.children[2].flex).toBe('0 0 200px')
+      expect(json.children[0].size).toBe('100px')
+      expect(json.children[1].size).toBeUndefined()
+      expect(json.children[2].size).toBe('200px')
     })
 
   })
@@ -425,7 +323,7 @@ describe('Split', () => {
       split.applyJSON({
         type: 'split',
         orientation: 'vertical',
-        flex: '0 0 500px',
+        size: '500px',
         children: [
           { type: 'panel', tabs: [{ id: 'restored1' }] },
           { type: 'panel', tabs: [{ id: 'restored2' }] }
@@ -433,7 +331,7 @@ describe('Split', () => {
       })
 
       expect(split.orientation).toBe('vertical')
-      expect(split.flex).toBe('0 0 500px')
+      expect(split.size).toBe('500px')
       expect(split.children.length).toBe(2)
       expect((split.children[0] as Panel).tabs[0].id).toBe('restored1')
       expect((split.children[1] as Panel).tabs[0].id).toBe('restored2')
@@ -475,24 +373,24 @@ describe('Split', () => {
       split.applyJSON({
         type: 'split',
         children: [{ type: 'panel', tabs: [{ id: 'restored' }] }]
-      } as SplitProps)
+      } as SplitData)
 
       expect(split.orientation).toBe('horizontal')
     })
 
-    it('should default flex when not in JSON', () => {
+    it('should default size when not in JSON', () => {
       const split = new Split({
         type: 'split',
-        flex: '0 0 100px',
+        size: '100px',
         children: [{ type: 'panel', tabs: [{ id: 'test' }] }]
       })
 
       split.applyJSON({
         type: 'split',
         children: [{ type: 'panel', tabs: [{ id: 'restored' }] }]
-      } as SplitProps)
+      } as SplitData)
 
-      expect(split.flex).toBe('1 1 auto')
+      expect(split.size).toBe('auto')
     })
 
     it('should return self for chaining', () => {
@@ -509,66 +407,6 @@ describe('Split', () => {
       expect(result).toBe(split)
     })
 
-    it('should consolidate single-child splits in applyJSON', () => {
-      const split = new Split({
-        type: 'split',
-        children: [{ type: 'panel', tabs: [{ id: 'original' }] }]
-      })
-
-      // JSON has a nested structure that should be consolidated
-      split.applyJSON({
-        type: 'split',
-        children: [
-          {
-            type: 'split',
-            orientation: 'vertical',
-            children: [
-              { type: 'panel', tabs: [{ id: 'p1' }] },
-              { type: 'panel', tabs: [{ id: 'p2' }] }
-            ]
-          }
-        ]
-      })
-
-      // Should consolidate: adopt inner split's children and orientation
-      expect(split.children.length).toBe(2)
-      expect(split.children[0]).toBeInstanceOf(Panel)
-      expect(split.children[1]).toBeInstanceOf(Panel)
-      expect(split.orientation).toBe('vertical')
-    })
-
-    it('should consolidate multiple levels of nesting in applyJSON', () => {
-      const split = new Split({
-        type: 'split',
-        children: [{ type: 'panel', tabs: [{ id: 'original' }] }]
-      })
-
-      // Deeply nested structure
-      split.applyJSON({
-        type: 'split',
-        children: [
-          {
-            type: 'split',
-            orientation: 'vertical',
-            children: [
-              {
-                type: 'split',
-                orientation: 'horizontal',
-                children: [
-                  { type: 'panel', tabs: [{ id: 'deep1' }] },
-                  { type: 'panel', tabs: [{ id: 'deep2' }] }
-                ]
-              }
-            ]
-          }
-        ]
-      })
-
-      // Should flatten to innermost multi-child level
-      expect(split.children.length).toBe(2)
-      expect(split.orientation).toBe('horizontal')
-    })
-
   })
 
   describe('Serialization Roundtrip', () => {
@@ -577,10 +415,10 @@ describe('Split', () => {
       const original = new Split({
         type: 'split',
         orientation: 'vertical',
-        flex: '0 0 300px',
+        size: '300px',
         children: [
-          { type: 'panel', tabs: [{ id: 'tab1', label: 'Tab 1' }], flex: '1 1 auto' },
-          { type: 'panel', tabs: [{ id: 'tab2', selected: true }], flex: '0 0 100px' }
+          { type: 'panel', tabs: [{ id: 'tab1', label: 'Tab 1' }] },
+          { type: 'panel', tabs: [{ id: 'tab2', selected: true }], size: '100px' }
         ]
       })
 
@@ -592,7 +430,7 @@ describe('Split', () => {
       restored.applyJSON(json)
 
       expect(restored.orientation).toBe(original.orientation)
-      expect(restored.flex).toBe(original.flex)
+      expect(restored.size).toBe(original.size)
       expect(restored.children.length).toBe(original.children.length)
     })
 
@@ -601,16 +439,16 @@ describe('Split', () => {
         type: 'split',
         orientation: 'horizontal',
         children: [
-          { type: 'panel', tabs: [{ id: 'sidebar' }], flex: '0 0 200px' },
+          { type: 'panel', tabs: [{ id: 'sidebar' }], size: '200px' },
           {
             type: 'split',
             orientation: 'vertical',
             children: [
               { type: 'panel', tabs: [{ id: 'main' }] },
-              { type: 'panel', tabs: [{ id: 'console' }], flex: '0 0 150px' }
+              { type: 'panel', tabs: [{ id: 'console' }], size: '150px' }
             ]
           },
-          { type: 'panel', tabs: [{ id: 'properties' }], flex: '0 0 250px' }
+          { type: 'panel', tabs: [{ id: 'properties' }], size: '250px' }
         ]
       })
 
@@ -765,8 +603,8 @@ describe('Split', () => {
       const nestedPanel1 = nestedChildrenRef[0]
       const nestedPanel2 = nestedChildrenRef[1]
       const rootTab = rootPanel.tabs[0]
-      const nestedTab1 = nestedPanel1.tabs[0]
-      const nestedTab2 = nestedPanel2.tabs[0]
+      const nestedTab1 = (nestedPanel1 as Panel).tabs[0]
+      const nestedTab2 = (nestedPanel2 as Panel).tabs[0]
 
       split.dispose()
 
@@ -965,16 +803,15 @@ describe('Split', () => {
       expect(split.orientation).toBe('vertical')
     })
 
-    it('should allow changing flex after construction', () => {
+    it('should allow changing size after construction', () => {
       const split = new Split({
         type: 'split',
-        flex: '1 1 auto',
         children: [{ type: 'panel', tabs: [{ id: 'test' }] }]
       })
 
-      split.flex = '0 0 500px'
+      split.size = '500px'
 
-      expect(split.flex).toBe('0 0 500px')
+      expect(split.size).toBe('500px')
     })
 
     it('should handle mixed orientation in nested structure', () => {
@@ -1009,5 +846,71 @@ describe('Split', () => {
 
   })
 
+  describe('normalize', () => {
+
+    it('should transplant split size onto sole panel when consolidating nested split', () => {
+      const layout = new Layout({
+        child: {
+          type: 'split',
+          children: [
+            {
+              type: 'split',
+              size: '350px',
+              orientation: 'vertical',
+              children: [
+                {
+                  type: 'panel',
+                  size: '260px',
+                  tabs: [
+                    { id: 'Inputs' },
+                    { id: 'Sliders' },
+                    { id: 'Colors' },
+                  ],
+                },
+                {
+                  type: 'panel',
+                  tabs: [
+                    { id: 'Getting Started' },
+                    { id: 'Deep Dive' },
+                  ],
+                },
+              ],
+            },
+            {
+              type: 'split',
+              orientation: 'vertical',
+              children: [
+                { type: 'panel', tabs: [{ id: 'Editors' }] },
+                { type: 'panel', size: '280px', tabs: [{ id: 'Icons' }] },
+              ],
+            },
+            {
+              type: 'panel',
+              size: '330px',
+              tabs: [{ id: 'Theme Editor' }],
+            },
+          ],
+        },
+      })
+
+      const rootSplit = layout.child as Split
+      const innerSplit = rootSplit.children[0] as Split
+      const panelToEmpty = innerSplit.children[0] as Panel
+
+      while (panelToEmpty.tabs.length > 0) {
+        panelToEmpty.removeTab(panelToEmpty.tabs[0])
+      }
+
+      layout.normalize()
+
+      expect(rootSplit.children.length).toBe(3)
+      expect(rootSplit.children[0]).toBeInstanceOf(Panel)
+      expect((rootSplit.children[0] as Panel).tabs[0].id).toBe('Getting Started')
+      expect((rootSplit.children[0] as Panel).size).toBe('350px')
+    })
+
+  })
+
 })
+
 

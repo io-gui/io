@@ -61,6 +61,21 @@ describe('IoMarkdown', () => {
     expect(element.innerHTML).not.toContain('<iframe')
   })
 
+  it('should not throw when fetch completes after dispose', async () => {
+    let resolveText!: (value: string) => void
+    const textPromise = new Promise<string>(resolve => { resolveText = resolve })
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      text: () => textPromise,
+    } as Response)
+
+    element.src = 'slow.md'
+    await Promise.resolve()
+
+    element.dispose()
+    resolveText('# Title')
+    await textPromise
+  })
+
   it('keeps raw html when sanitize is disabled', async () => {
     element.sanitize = false
     vi.spyOn(globalThis, 'fetch').mockResolvedValue({

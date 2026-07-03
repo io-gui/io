@@ -5,9 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register, ReactiveElement, Property, NodeArray } from '@io-gui/core';
-import { MenuOption, ioMenuItem } from '@io-gui/menus';
 import { ioTab } from './IoTab.js';
-import { ioTabsHamburger } from './IoTabsHamburger.js';
 let IoTabs = class IoTabs extends ReactiveElement {
     static get Style() {
         return /* css */ `
@@ -23,79 +21,23 @@ let IoTabs = class IoTabs extends ReactiveElement {
         margin-bottom: calc(-1 * var(--io_borderWidth));
         transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      :host:not([overflow="-1"]) io-tab {
-        /* TODO: make niceer animations */
-        pointer-events: none;
-        opacity: 0;
-      }
-      :host[overflow="-1"] io-tabs-hamburger {
-        /* TODO: make niceer animations */
-        display: none;
-      }
-      :host > io-tabs-hamburger {
-        margin-bottom: var(--io_spacing);
-      }
-      :host > io-menu-item {
-        margin-left: auto;
-        flex-shrink: 0;
-        opacity: 0.125;
-        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity linear 0.2s;
-      }
-      :host > io-menu-item:focus,
-      :host > io-menu-item:hover {
-        opacity: 1;
-      }
-      :host > io-menu-item > .label,
-      :host > io-menu-item > .icon,
-      :host > io-menu-item > .hasmore {
-        display: none;
-      }
     `;
     }
-    constructor(args) { super(args); }
+    constructor(args) {
+        super(args);
+    }
     tabsMutated() {
         this.mutated();
-        this.overflow = -1;
-        this.onResized();
-    }
-    onResized() {
-        const lastElement = this.children[this.children.length - 1];
-        if (!lastElement)
-            return;
-        const rect = this.getBoundingClientRect();
-        const lastElementRect = lastElement.getBoundingClientRect();
-        if (this.overflow === -1) {
-            if (lastElementRect.right > rect.right) {
-                this.overflow = rect.width;
-            }
-        }
-        else if (rect.width > (this.overflow + 32)) {
-            this.overflow = -1;
-        }
     }
     mutated() {
-        const hasOptions = this.addMenuOption && this.addMenuOption.options?.length > 0;
         this.render([
-            ioTabsHamburger({ tabs: this.tabs }),
             ...this.tabs.map(tab => ioTab({ tab: tab })),
-            hasOptions ? ioMenuItem({
-                class: 'io-tabs-add-tab',
-                icon: 'io:box_fill_plus',
-                direction: 'down',
-                option: this.addMenuOption,
-            }) : null,
         ]);
     }
 };
 __decorate([
     Property({ type: NodeArray, init: 'this' })
 ], IoTabs.prototype, "tabs", void 0);
-__decorate([
-    Property({ type: Number, value: -1, reflect: true })
-], IoTabs.prototype, "overflow", void 0);
-__decorate([
-    Property({ type: MenuOption })
-], IoTabs.prototype, "addMenuOption", void 0);
 IoTabs = __decorate([
     Register
 ], IoTabs);
