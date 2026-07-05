@@ -217,12 +217,12 @@ export class IoDrawer extends ReactiveElement {
   onDividerMoveEnd(event: CustomEvent) {
     event.stopPropagation()
     this.removeAttribute('dragging')
-    
+
     const child = this.$['child'] as IoSplit | IoPanel
-    
+
     const currentDrawerSize = parseFloat(this.style.getPropertyValue('--io_drawerSize'))
     child.model.size = `${currentDrawerSize}px`
-    
+
     this.parent.updateVisibleAutoSize()
     this.parent.debounce(this.parent.calculateCollapsedDrawersDebounced)
   }

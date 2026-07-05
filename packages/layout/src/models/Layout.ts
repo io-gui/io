@@ -39,7 +39,7 @@ export class Layout extends ReactiveObject {
     this.dispatchMutation()
     this.normalize()
   }
-  
+
   normalize() {
     if (isSplitNode(this.child)) {
       this.child.normalize()

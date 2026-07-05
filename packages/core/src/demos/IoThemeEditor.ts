@@ -1,7 +1,7 @@
 //@ts-nocheck
 import { Register, ReactiveElement, ThemeSingleton, $ThemeID, THEMES, span } from '@io-gui/core'
 import { MenuOption, ioOptionSelect } from '@io-gui/menus'
-import { ioButton, ioField } from '@io-gui/inputs'
+import { ioButton } from '@io-gui/inputs'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioColorRgba } from '@io-gui/colors'
 

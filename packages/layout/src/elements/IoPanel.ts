@@ -3,8 +3,6 @@ import { ioSelector } from '@io-gui/navigation'
 import { ioTabs } from './IoTabs.js'
 import { Tab } from '../models/Tab.js'
 import { Panel } from '../models/Panel.js'
-import { Layout } from '../models/Layout.js'
-import { IoLayout } from './IoLayout.js'
 
 export type IoPanelData = ReactiveElementProps & {
   model: Panel
@@ -36,10 +34,6 @@ export class IoPanel extends ReactiveElement {
       'io-tab-action': 'onTabAction',
       'io-add-tab-clicked': 'onAddTabClicked',
     }
-  }
-
-  get layout(): Layout {
-    return (this.closest('io-layout') as IoLayout)!.model
   }
 
   onTabAction(event: CustomEvent) {

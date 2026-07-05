@@ -41,3 +41,9 @@
 - Bug: WebKit applies `:host[loading]:after` to elements without `[loading]` until attr toggled
 - Known WebKit quirk: attribute selector + pseudo-element needs non-pseudo `[attr]` rule + explicit `:not([attr]):after` reset
 - Fix in IoSelector + IoMarkdown: `--io-loading: 1` on `:host[loading]`, `content:none;display:none` on `:host:not([loading]):after`
+
+## 2026-07-05 Layout test/doc drift
+
+- IoPanel.test: removed calls to deleted element methods `selectTab`/`moveTab`; use `panel.setSelected` + `io-tab-action` events
+- README rewritten: `model` not `layout`, actual event payloads, no IoTabDragIcon/hamburger/hydrateLayout fiction, drag noted as not wired
+- vitest packages/layout: 257/257 green

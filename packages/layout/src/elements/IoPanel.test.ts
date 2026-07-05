@@ -68,9 +68,8 @@ describe('IoPanel', () => {
       expect(panel.getSelected()).toBe('tab1')
     })
 
-    it('should select tab by selectTab method', () => {
-      const tab2 = panel.tabs[1]
-      ioPanel.selectTab(tab2)
+    it('should select tab via model setSelected', () => {
+      panel.setSelected('tab2')
       expect(panel.getSelected()).toBe('tab2')
     })
 
@@ -135,7 +134,11 @@ describe('IoPanel', () => {
 
     it('should select moved tab after reordering', () => {
       const tab2 = panel.tabs[1]
-      ioPanel.moveTab(tab2, 0)
+      const event = new CustomEvent('io-tab-action', {
+        detail: { tab: tab2, action: 'ArrowLeft' },
+        bubbles: true,
+      })
+      ioPanel.dispatchEvent(event)
       expect(panel.getSelected()).toBe('tab2')
     })
   })

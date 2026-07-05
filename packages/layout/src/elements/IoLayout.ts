@@ -33,7 +33,7 @@ export class IoLayout extends ReactiveElement {
 
   @Property(Array)
   declare elements: VDOMElement[]
-  
+
   // TODO: Improve once MenuOption models have better (de)serialization
   @Property({type: IoMenuOptions, init: null})
   declare $addMenu: IoMenuOptions
@@ -62,7 +62,7 @@ export class IoLayout extends ReactiveElement {
     this.$addMenu.expanded = true
     this.$addMenu.focusFirstOption()
   }
-  
+
   addTab(element: VDOMElement) {
     if (this._targetPanelModel) {
       this._targetPanelModel.addTab(new Tab({
@@ -78,7 +78,7 @@ export class IoLayout extends ReactiveElement {
     this.mutated()
   }
 
-  elementsChanged() {  
+  elementsChanged() {
     this.elementsMutated()
   }
 
