@@ -221,7 +221,7 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
       const panel = rootSplit.children[0] as Panel
 
       // Initially tab1 is selected
-      expect(panel.getSelected()).toBe('tab1')
+      expect(panel.getSelectedID()).toBe('tab1')
 
       // Get second tab and click without drag
       const tabs = layout.querySelectorAll('io-tab') as NodeListOf<IoTab>
@@ -247,7 +247,7 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
       tab2Element.onPointerup(upEvent)
 
       // Tab 2 should be selected via click
-      expect(panel.getSelected()).toBe('tab2')
+      expect(panel.getSelectedID()).toBe('tab2')
     })
   })
 

@@ -65,12 +65,12 @@ describe('IoPanel', () => {
 
   describe('Tab Selection', () => {
     it('should select first tab by default', () => {
-      expect(panel.getSelected()).toBe('tab1')
+      expect(panel.getSelectedID()).toBe('tab1')
     })
 
-    it('should select tab via model setSelected', () => {
-      panel.setSelected('tab2')
-      expect(panel.getSelected()).toBe('tab2')
+    it('should select tab via model setSelectedID', () => {
+      panel.setSelectedID('tab2')
+      expect(panel.getSelectedID()).toBe('tab2')
     })
 
     it('should select tab via io-tab-action event with Select action', () => {
@@ -79,7 +79,7 @@ describe('IoPanel', () => {
         bubbles: true,
       })
       ioPanel.dispatchEvent(event)
-      expect(panel.getSelected()).toBe('tab2')
+      expect(panel.getSelectedID()).toBe('tab2')
     })
   })
 
@@ -139,7 +139,7 @@ describe('IoPanel', () => {
         bubbles: true,
       })
       ioPanel.dispatchEvent(event)
-      expect(panel.getSelected()).toBe('tab2')
+      expect(panel.getSelectedID()).toBe('tab2')
     })
   })
 
@@ -181,7 +181,7 @@ describe('IoPanel', () => {
       ioPanel.onTabAction(event)
 
       expect(panel.tabs.length).toBe(3)
-      expect(panel.getSelected()).toBe('tab1')
+      expect(panel.getSelectedID()).toBe('tab1')
     })
   })
 
@@ -241,7 +241,7 @@ describe('IoPanel', () => {
     })
 
     it('should update io-selector selected value', () => {
-      panel.setSelected('tab2')
+      panel.setSelectedID('tab2')
       ioPanel.mutated()
 
       const selector = ioPanel.querySelector('io-selector')

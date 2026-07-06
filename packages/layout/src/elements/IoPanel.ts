@@ -33,6 +33,7 @@ export class IoPanel extends ReactiveElement {
     return {
       'io-tab-action': 'onTabAction',
       'io-add-tab-clicked': 'onAddTabClicked',
+      'io-panel-tab-selected': 'onPanelTabSelected'
     }
   }
 
@@ -44,40 +45,32 @@ export class IoPanel extends ReactiveElement {
     if (index === -1) return
     switch (action) {
       case 'Select': {
-        this.model.setSelected(tab.id)
-        this.debounce(this.focusTabDebounced as CallbackFunction, index)
+        this.model.selectByIndex(index)
         break
       }
       case 'Backspace': {
         this.model.removeTab(tab)
-        if (this.model.tabs.length > 0) {
-          this.debounce(this.focusTabDebounced as CallbackFunction, Math.min(index, this.model.tabs.length - 1))
-        }
         break
       }
       case 'ArrowLeft': {
         this.model.moveTab(tab, index - 1)
-        this.debounce(this.focusTabDebounced as CallbackFunction, this.model.tabs.indexOf(tab))
         break
       }
       case 'ArrowRight': {
         this.model.moveTab(tab, index + 1)
-        this.debounce(this.focusTabDebounced as CallbackFunction, this.model.tabs.indexOf(tab))
         break
       }
     }
+  }
+
+  onPanelTabSelected(event: CustomEvent) {
+    event.stopPropagation()
+    this.debounce(this.focusTabDebounced as CallbackFunction, event.detail.index)
   }
 
   onAddTabClicked(event: CustomEvent) {
     event.stopPropagation()
     this.dispatch('io-add-tab-request', {model: this.model}, true)
-  }
-
-  focusTab(id: string) {
-    const tab = this.model.tabs.find(tab => tab.id === id)
-    if (tab) {
-      this.debounce(this.focusTabDebounced as CallbackFunction, this.model.tabs.indexOf(tab))
-    }
   }
 
   focusTabDebounced(index: number) {
@@ -98,7 +91,7 @@ export class IoPanel extends ReactiveElement {
       ioSelector({
         // TODO: Investigate caching for edge cases
         caching: 'reactive',
-        selected: this.model.getSelected(),
+        selected: this.model.selectedID,
         elements: this.elements,
         anchor: '',
       })

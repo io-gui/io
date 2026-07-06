@@ -26,7 +26,7 @@ describe('Panel', () => {
       expect(panel.tabs[0]).toBeInstanceOf(Tab)
       expect(panel.tabs[0].id).toBe('tab1')
       expect(panel.tabs[0].selected).toBe(true)
-      expect(panel.getSelected()).toBe('tab1')
+      expect(panel.getSelectedID()).toBe('tab1')
     })
 
     it('should construct with multiple tabs', () => {
@@ -113,7 +113,7 @@ describe('Panel', () => {
 
   })
 
-  describe('Tab Selection - getSelected', () => {
+  describe('Tab Selection - getSelectedID', () => {
 
     it('should return id of selected tab', () => {
       const panel = new Panel({
@@ -124,7 +124,7 @@ describe('Panel', () => {
         ]
       })
 
-      expect(panel.getSelected()).toBe('tab2')
+      expect(panel.getSelectedID()).toBe('tab2')
     })
 
 
@@ -134,7 +134,7 @@ describe('Panel', () => {
         tabs: []
       })
 
-      expect(panel.getSelected()).toBe('')
+      expect(panel.getSelectedID()).toBe('')
     })
 
     it('should return empty string when no tab is selected', () => {
@@ -142,11 +142,11 @@ describe('Panel', () => {
         type: 'panel',
         tabs: [{ id: 'tab1' }]
       })
-      expect(panel.getSelected()).toBe('tab1')
+      expect(panel.getSelectedID()).toBe('tab1')
 
       panel.tabs[0].selected = false
 
-      expect(panel.getSelected()).toBe('')
+      expect(panel.getSelectedID()).toBe('')
     })
 
     it('should return first selected when multiple selected (edge case)', () => {
@@ -158,13 +158,13 @@ describe('Panel', () => {
         ]
       })
 
-      // getSelected returns first match
-      expect(panel.getSelected()).toBe('tab1')
+      // getSelectedID returns first match
+      expect(panel.getSelectedID()).toBe('tab1')
     })
 
   })
 
-  describe('Tab Selection - setSelected', () => {
+  describe('Tab Selection - setSelectedID', () => {
 
     it('should select tab by id', () => {
       const panel = new Panel({
@@ -176,7 +176,7 @@ describe('Panel', () => {
         ]
       })
 
-      panel.setSelected('tab2')
+      panel.setSelectedID('tab2')
 
       expect(panel.tabs[0].selected).toBe(false)
       expect(panel.tabs[1].selected).toBe(true)
@@ -194,7 +194,7 @@ describe('Panel', () => {
 
       expect(panel.tabs[0].selected).toBe(true)
 
-      panel.setSelected('tab2')
+      panel.setSelectedID('tab2')
 
       expect(panel.tabs[0].selected).toBe(false)
       expect(panel.tabs[1].selected).toBe(true)
@@ -206,7 +206,7 @@ describe('Panel', () => {
         tabs: [{ id: 'tab1', selected: true }]
       })
 
-      panel.setSelected('tab1')
+      panel.setSelectedID('tab1')
 
       expect(panel.tabs[0].selected).toBe(true)
     })
@@ -220,7 +220,7 @@ describe('Panel', () => {
         ]
       })
 
-      panel.setSelected('nonexistent')
+      panel.setSelectedID('nonexistent')
 
       expect(panel.tabs[0].selected).toBe(false)
       expect(panel.tabs[1].selected).toBe(false)
@@ -232,7 +232,7 @@ describe('Panel', () => {
         tabs: [{ id: 'tab1', selected: true }]
       })
 
-      panel.setSelected('')
+      panel.setSelectedID('')
 
       expect(panel.tabs[0].selected).toBe(false)
     })
@@ -275,10 +275,10 @@ describe('Panel', () => {
       expect(mutationHandler).toHaveBeenCalled()
     })
 
-    it('should dispatch mutation on setSelected', () => {
-      panel.setSelected('tab2')
+    it('should dispatch mutation on setSelectedID', () => {
+      panel.setSelectedID('tab2')
 
-      // setSelected calls dispatchMutation directly
+      // setSelectedID calls dispatchMutation directly
       vi.advanceTimersByTime(10)
 
       expect(mutationHandler).toHaveBeenCalled()
@@ -569,7 +569,7 @@ describe('Panel', () => {
   //     panel.moveTab(tabA, 2)
 
   //     expect(panel.tabs[2].id).toBe('a')
-  //     expect(panel.getSelected()).toBe('a')
+  //     expect(panel.getSelectedID()).toBe('a')
   //   })
   // })
 
@@ -678,12 +678,12 @@ describe('Panel', () => {
         ]
       })
 
-      // getSelected returns first selected with non-empty id
+      // getSelectedID returns first selected with non-empty id
       panel.tabs[0].selected = true
       panel.tabs[1].selected = false
 
-      // Empty id should return empty string from getSelected
-      expect(panel.getSelected()).toBe('')
+      // Empty id should return empty string from getSelectedID
+      expect(panel.getSelectedID()).toBe('')
     })
 
     it('should maintain selection state through array modifications', () => {

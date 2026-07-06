@@ -25,8 +25,7 @@ export class IoTab extends IoField {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
         border-color: var(--io_borderColorLight);
-        padding-right: calc(var(--io_lineHeight) / 2);
-        padding-left: calc(var(--io_lineHeight) / 2);
+        padding: var(--io_spacing2);
         border-bottom-color: var(--io_borderColorStrong);
       }
       :host[pressed] {
@@ -42,9 +41,6 @@ export class IoTab extends IoField {
       :host[selected]:focus {
         color: var(--io_colorWhite);
       }
-      :host > io-icon:not([value=' ']) {
-        margin: 0 var(--io_spacing2) 0 0;
-      }
       :host > span {
         padding: 0 var(--io_spacing);
         overflow: hidden; 
@@ -54,6 +50,23 @@ export class IoTab extends IoField {
         pointer-events: none;
         display: inline-block;
         white-space: nowrap;
+      }
+      :host > .io-tab-icon {
+        margin: 0 var(--io_spacing) 0 var(--io_spacing) !important;
+      }
+      :host > .io-tab-close {
+        pointer-events: auto;
+        opacity: 0;
+        margin: 0 var(--io_spacing) 0 0 !important;
+        transform: scale(0.6);
+      }
+      :host:hover > .io-tab-close {
+        opacity: 1;
+        transform: scale(0.5);
+      }
+      :host > .io-tab-close:hover {
+        transform: scale(0.6);
+        fill: var(--io_colorStrong);
       }
     `
   }
@@ -75,6 +88,15 @@ export class IoTab extends IoField {
     this.dispatch('io-tab-action', {tab: this.model, action: 'Select'}, true)
   }
 
+  stopPropagation(event: PointerEvent) {
+    event.stopPropagation()
+  }
+
+  onClose(event: PointerEvent) {
+    event.stopPropagation()
+    this.dispatch('io-tab-action', {tab: this.model, action: 'Backspace'}, true)
+  }
+
   override onKeydown(event: KeyboardEvent) {
     if (event.shiftKey && ['Backspace', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
       event.preventDefault()
@@ -92,8 +114,12 @@ export class IoTab extends IoField {
     this.setAttribute('selected', this.model.selected)
     this.setAttribute('title', this.model.label)
     this.render([
-      this.model.icon ? ioIcon({value: this.model.icon}) : null,
+      this.model.icon ? ioIcon({value: this.model.icon, class: 'io-tab-icon'}) : null,
       span({class: 'io-tab-label'}, this.model.label),
+      ioIcon({value: 'io:close', class: 'io-tab-close',
+        '@pointerdown': this.stopPropagation,
+        '@click': this.onClose
+      })
     ])
   }
 }

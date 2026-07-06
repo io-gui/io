@@ -35,30 +35,14 @@ export class Panel extends ReactiveObject {
     this.dispatchMutation()
   }
 
-  getSelected() {
-    let selected = ''
+  get selectedID() {
     for (let i = 0; i < this.tabs.length; i++) {
       const item = this.tabs[i]
       if (item.selected && item.id) {
-        selected = item.id
-        break
+        return item.id
       }
     }
-    return selected
-  }
-
-  setSelected(id: string) {
-    this.tabs.withInternalOperation(() => {
-      for (let i = 0; i < this.tabs.length; i++) {
-        const item = this.tabs[i]
-        if (item.id === id) {
-          item.selected = true
-        } else {
-          item.selected = false
-        }
-      }
-    })
-    this.tabs.dispatchMutation()
+    return ''
   }
 
   addTab(tab: Tab, index?: number) {
@@ -70,7 +54,7 @@ export class Panel extends ReactiveObject {
     index = index ?? this.tabs.length
     index = Math.min(index, this.tabs.length)
     this.tabs.splice(index, 0, tab)
-    this.selectIndex(index)
+    this.selectByIndex(index)
   }
 
   removeTab(tab: Tab) {
@@ -79,25 +63,32 @@ export class Panel extends ReactiveObject {
     this.tabs.splice(index, 1)
     if (this.tabs.length > 0) {
       const newIndex = Math.min(index, this.tabs.length - 1)
-      this.selectIndex(newIndex)
+      this.selectByIndex(newIndex)
     }
   }
 
   moveTab(tab: Tab, index: number) {
-    index = Math.max(Math.min(index, this.tabs.length - 1), 0)
     const currIndex = this.tabs.findIndex(t => t.id === tab.id)
     if (currIndex === -1) return
     this.tabs.splice(currIndex, 1)
     index = Math.min(index, this.tabs.length)
     this.tabs.splice(index, 0, tab)
-    this.selectIndex(index)
+    this.selectByIndex(index)
   }
 
-  selectIndex(index: number) {
-    index = Math.min(index, this.tabs.length - 1)
-    if (index >= 0 && this.tabs.length > 0) {
-      this.setSelected(this.tabs[index].id)
-    }
+  selectByIndex(index: number) {
+    this.tabs.withInternalOperation(() => {
+      for (let i = 0; i < this.tabs.length; i++) {
+        const item = this.tabs[i]
+        if (i === index) {
+          item.selected = true
+        } else {
+          item.selected = false
+        }
+      }
+    })
+    this.tabs.dispatchMutation()
+    this.dispatch('io-panel-tab-selected', {index}, true)
   }
 
   sizeChanged() {

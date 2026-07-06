@@ -3,7 +3,7 @@ import { Layout } from '../models/Layout.js'
 import { Split } from '../models/Split.js'
 import { Panel } from '../models/Panel.js'
 import { ioSplit } from './IoSplit.js'
-import { ioPanel, IoPanel } from './IoPanel.js'
+import { ioPanel } from './IoPanel.js'
 import { IoMenuOptions, MenuOption } from '@io-gui/menus'
 import { Tab } from '../models/Tab.js'
 
@@ -38,7 +38,6 @@ export class IoLayout extends ReactiveElement {
   @Property({type: IoMenuOptions, init: null})
   declare $addMenu: IoMenuOptions
 
-  private _targetPanelEl: IoPanel | null = null
   private _targetPanelModel: Panel | null = null
 
   static override get Listeners(): ListenerDefinitions {
@@ -54,7 +53,6 @@ export class IoLayout extends ReactiveElement {
 
   onAddTabRequest(event: CustomEvent) {
     event.stopPropagation()
-    this._targetPanelEl = event.target as IoPanel
     this._targetPanelModel = event.detail.model as Panel
     const rect = (event.target as HTMLElement).getBoundingClientRect()
     this.$addMenu.style.right = `${window.innerWidth - rect.right}px`
@@ -70,7 +68,6 @@ export class IoLayout extends ReactiveElement {
         label: element.props?.label || '',
         icon: element.props?.icon || '',
       }))
-      this._targetPanelEl!.focusTab(element.props?.id)
     }
   }
 
