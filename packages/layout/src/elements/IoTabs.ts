@@ -23,7 +23,6 @@ export class IoTabs extends ReactiveElement {
       }
       :host io-tab {
         margin-bottom: calc(-1 * var(--io_borderWidth));
-        transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
       }
       :host io-button {
         flex: 0 0 auto;
@@ -32,14 +31,15 @@ export class IoTabs extends ReactiveElement {
         box-shadow: none !important;
         margin-left: auto;
         opacity: 0.2;
+        transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      :host io-button[pressed] {
-        border-color: transparent !important;
-        opacity: 1 !important;
-      }
-
       :host:hover io-button {
         opacity: 0.5;
+      }
+      :host io-button:hover {
+        border-color: transparent !important;
+        box-shadow: none !important;
+        opacity: 1 !important;
       }
     `
   }

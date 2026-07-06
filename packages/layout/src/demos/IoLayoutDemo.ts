@@ -73,7 +73,7 @@ const defaultLayout = new Layout({
   },
 })
 
-const $layoutStorage = $({key: `io-layout-demo-${VERSION}`, storage: 'local', value: defaultLayout})
+const $layoutStorage = $({key: `io-layout-demo-${VERSION}`, storage: 'none', value: defaultLayout})
 
 @Register
 export class IoLayoutDemo extends ReactiveElement {

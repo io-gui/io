@@ -20,6 +20,8 @@ export function isSplitNode(node: LayoutChild): node is Split {
   return (node as Split).children !== undefined
 }
 
+export type SplitDirection = 'top' | 'bottom' | 'left' | 'right' | 'center'
+
 @Register
 export class Layout extends ReactiveObject {
 
@@ -72,13 +74,17 @@ export class Layout extends ReactiveObject {
     return null
   }
 
-  moveTab(tab: Tab, targetPanel: Panel, direction: 'top' | 'bottom' | 'left' | 'right' | 'center', sourcePanel?: Panel) {
-    const source = sourcePanel ?? this.findPanelWithTab(this.child, tab)
+  moveTab(tab: Tab, targetPanel: Panel, direction: SplitDirection, tabIndex: number) {
+    const source = this.findPanelWithTab(this.child, tab)
     if (!source) return
 
     if (direction === 'center') {
-      source.removeTab(tab)
-      targetPanel.addTab(tab)
+      if (source === targetPanel) {
+        source.moveTab(tab, tabIndex)
+      } else {
+        source.removeTab(tab)
+        targetPanel.addTab(tab, tabIndex)
+      }
       return
     }
 

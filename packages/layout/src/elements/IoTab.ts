@@ -7,6 +7,24 @@ export type IoTabData = IoFieldProps & {
   model: Tab
 }
 
+export type TabActions = 'select' | 'delete' | 'move-left' | 'move-right' | 'move-start' | 'move-end'
+export type TabDragPhase = 'start' | 'move' | 'end' | 'cancel'
+
+function keyToAction(key: string): TabActions | undefined {
+  switch (key) {
+    case 'Backspace':
+      return 'delete'
+    case 'ArrowLeft':
+      return 'move-left'
+    case 'ArrowRight':
+      return 'move-right'
+    case 'Home':
+      return 'move-start'
+    case 'End':
+      return 'move-end'
+  }
+}
+
 // TODO: fix and improve keyboard navigation in all cases.
 @Register
 export class IoTab extends IoField {
@@ -77,6 +95,9 @@ export class IoTab extends IoField {
   @Property({type: Boolean, reflect: true})
   declare overflow: boolean
 
+  private _pointerDown: [number, number] = [0, 0]
+  private _dragging: boolean = false
+
   constructor(args: IoTabData) { super(args) }
 
   onResized() {
@@ -84,8 +105,49 @@ export class IoTab extends IoField {
     this.overflow = span.scrollWidth > span.clientWidth
   }
 
+  override onPointerdown(event: PointerEvent) {
+    super.onPointerdown(event)
+    this._pointerDown = [event.clientX, event.clientY]
+    this._dragging = false
+  }
+  
+  override onPointermove(event: PointerEvent): void {
+    if (this._dragging) {
+      this.dispatchDrag('move', event.clientX, event.clientY)
+    } else {
+      const [x, y] = this._pointerDown
+      const distance = Math.sqrt((x - event.clientX) ** 2 + (y - event.clientY) ** 2)
+      if (distance > 10) {
+        this._dragging = true
+        this.dispatchDrag('start', event.clientX, event.clientY)
+      }
+    }
+    super.onPointermove(event)
+  }
+  override onPointercancel(event: PointerEvent) {
+    super.onPointercancel(event)
+    this.dispatchDrag('cancel', event.clientX, event.clientY)
+  }
+  override onPointerleave(event: PointerEvent) {
+    super.onPointerleave(event)
+    this.dispatchDrag('cancel', event.clientX, event.clientY)
+  }
+  override onPointerup(event: PointerEvent) {
+    super.onPointerup(event)
+    this.dispatchDrag('end', event.clientX, event.clientY)
+  }
+
   override onClick() {
-    this.dispatch('io-tab-action', {tab: this.model, action: 'Select'}, true)
+    if (this._dragging) return
+    this.dispatchAction('select')
+  }
+
+  dispatchAction(action: TabActions) {
+    this.dispatch('io-tab-action', {model: this.model, action}, true)
+  }
+
+  dispatchDrag(phase: TabDragPhase, x: number, y: number) {
+    this.dispatch('io-tab-drag', {model: this.model, phase, x, y}, true)
   }
 
   stopPropagation(event: PointerEvent) {
@@ -94,13 +156,14 @@ export class IoTab extends IoField {
 
   onClose(event: PointerEvent) {
     event.stopPropagation()
-    this.dispatch('io-tab-action', {tab: this.model, action: 'Backspace'}, true)
+    this.dispatchAction('delete')
   }
 
   override onKeydown(event: KeyboardEvent) {
-    if (event.shiftKey && ['Backspace', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
+    const action = keyToAction(event.key)
+    if (event.shiftKey && action !== undefined) {
       event.preventDefault()
-      this.dispatch('io-tab-action', {tab: this.model, action: event.key}, true)
+      this.dispatchAction(action)
     } else {
       super.onKeydown(event)
     }

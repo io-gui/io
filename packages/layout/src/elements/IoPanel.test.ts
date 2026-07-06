@@ -65,29 +65,29 @@ describe('IoPanel', () => {
 
   describe('Tab Selection', () => {
     it('should select first tab by default', () => {
-      expect(panel.getSelectedID()).toBe('tab1')
+      expect(panel.selectedID).toBe('tab1')
     })
 
-    it('should select tab via model setSelectedID', () => {
-      panel.setSelectedID('tab2')
-      expect(panel.getSelectedID()).toBe('tab2')
+    it('should select tab via model selectByIndex', () => {
+      panel.selectByIndex(1)
+      expect(panel.selectedID).toBe('tab2')
     })
 
-    it('should select tab via io-tab-action event with Select action', () => {
+    it('should select tab via io-tab-action event with select action', () => {
       const event = new CustomEvent('io-tab-action', {
-        detail: { tab: panel.tabs[1], action: 'Select' },
+        detail: { model: panel.tabs[1], action: 'select' },
         bubbles: true,
       })
       ioPanel.dispatchEvent(event)
-      expect(panel.getSelectedID()).toBe('tab2')
+      expect(panel.selectedID).toBe('tab2')
     })
   })
 
   describe('Tab Reordering', () => {
-    it('should move tab left via ArrowLeft action', () => {
+    it('should move tab left via move-left action', () => {
       const tab2 = panel.tabs[1]
       const event = new CustomEvent('io-tab-action', {
-        detail: { tab: tab2, action: 'ArrowLeft' },
+        detail: { model: tab2, action: 'move-left' },
         bubbles: true,
       })
       ioPanel.dispatchEvent(event)
@@ -97,10 +97,10 @@ describe('IoPanel', () => {
       expect(panel.tabs[2].id).toBe('tab3')
     })
 
-    it('should move tab right via ArrowRight action', () => {
+    it('should move tab right via move-right action', () => {
       const tab2 = panel.tabs[1]
       const event = new CustomEvent('io-tab-action', {
-        detail: { tab: tab2, action: 'ArrowRight' },
+        detail: { model: tab2, action: 'move-right' },
         bubbles: true,
       })
       ioPanel.dispatchEvent(event)
@@ -110,10 +110,10 @@ describe('IoPanel', () => {
       expect(panel.tabs[2].id).toBe('tab2')
     })
 
-    it('should clamp move to start of array', () => {
+    it('should keep tab at start via move-start action', () => {
       const tab1 = panel.tabs[0]
       const event = new CustomEvent('io-tab-action', {
-        detail: { tab: tab1, action: 'ArrowLeft' },
+        detail: { model: tab1, action: 'move-start' },
         bubbles: true,
       })
       ioPanel.dispatchEvent(event)
@@ -121,10 +121,10 @@ describe('IoPanel', () => {
       expect(panel.tabs[0].id).toBe('tab1')
     })
 
-    it('should clamp move to end of array', () => {
+    it('should keep tab at end via move-end action', () => {
       const tab3 = panel.tabs[2]
       const event = new CustomEvent('io-tab-action', {
-        detail: { tab: tab3, action: 'ArrowRight' },
+        detail: { model: tab3, action: 'move-end' },
         bubbles: true,
       })
       ioPanel.dispatchEvent(event)
@@ -135,11 +135,11 @@ describe('IoPanel', () => {
     it('should select moved tab after reordering', () => {
       const tab2 = panel.tabs[1]
       const event = new CustomEvent('io-tab-action', {
-        detail: { tab: tab2, action: 'ArrowLeft' },
+        detail: { model: tab2, action: 'move-left' },
         bubbles: true,
       })
       ioPanel.dispatchEvent(event)
-      expect(panel.getSelectedID()).toBe('tab2')
+      expect(panel.selectedID).toBe('tab2')
     })
   })
 
@@ -161,7 +161,7 @@ describe('IoPanel', () => {
   describe('Event Handling', () => {
     it('should stop propagation on io-tab-action event', () => {
       const event = new CustomEvent('io-tab-action', {
-        detail: { tab: panel.tabs[0], action: 'Select' },
+        detail: { model: panel.tabs[0], action: 'select' },
         bubbles: true,
       })
       const stopSpy = vi.spyOn(event, 'stopPropagation')
@@ -175,13 +175,13 @@ describe('IoPanel', () => {
       const unknownTab = new Tab({ id: 'unknown' })
 
       const event = new CustomEvent('io-tab-action', {
-        detail: { tab: unknownTab, action: 'Select' },
+        detail: { model: unknownTab, action: 'select' },
         bubbles: true,
       })
       ioPanel.onTabAction(event)
 
       expect(panel.tabs.length).toBe(3)
-      expect(panel.getSelectedID()).toBe('tab1')
+      expect(panel.selectedID).toBe('tab1')
     })
   })
 
@@ -241,7 +241,7 @@ describe('IoPanel', () => {
     })
 
     it('should update io-selector selected value', () => {
-      panel.setSelectedID('tab2')
+      panel.selectByIndex(1)
       ioPanel.mutated()
 
       const selector = ioPanel.querySelector('io-selector')
@@ -293,4 +293,3 @@ describe('IoPanel Factory Function', () => {
     expect(vdom.tag).toBe('io-panel')
   })
 })
-

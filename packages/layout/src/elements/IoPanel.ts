@@ -3,6 +3,7 @@ import { ioSelector } from '@io-gui/navigation'
 import { ioTabs } from './IoTabs.js'
 import { Tab } from '../models/Tab.js'
 import { Panel } from '../models/Panel.js'
+import { TabActions } from './IoTab.js'
 
 export type IoPanelData = ReactiveElementProps & {
   model: Panel
@@ -39,25 +40,33 @@ export class IoPanel extends ReactiveElement {
 
   onTabAction(event: CustomEvent) {
     event.stopPropagation()
-    const tab: Tab = event.detail.tab
-    const action = event.detail.action
-    const index = this.model.tabs.indexOf(tab)
+    const tabModel: Tab = event.detail.model
+    const action = event.detail.action as TabActions
+    const index = this.model.tabs.indexOf(tabModel)
     if (index === -1) return
     switch (action) {
-      case 'Select': {
+      case 'select': {
         this.model.selectByIndex(index)
         break
       }
-      case 'Backspace': {
-        this.model.removeTab(tab)
+      case 'delete': {
+        this.model.removeTab(tabModel)
         break
       }
-      case 'ArrowLeft': {
-        this.model.moveTab(tab, index - 1)
+      case 'move-left': {
+        this.model.moveTab(tabModel, index - 1)
         break
       }
-      case 'ArrowRight': {
-        this.model.moveTab(tab, index + 1)
+      case 'move-right': {
+        this.model.moveTab(tabModel, index + 1)
+        break
+      }
+      case 'move-start': {
+        this.model.moveTab(tabModel, 0)
+        break
+      }
+      case 'move-end': {
+        this.model.moveTab(tabModel, this.model.tabs.length - 1)
         break
       }
     }
