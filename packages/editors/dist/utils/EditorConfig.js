@@ -141,8 +141,7 @@ const CONFIGS = new Map([
             ['themeID', ioOptionSelect({ option: new MenuOption({ options: ['light', 'dark'] }) })],
             ['spacing2', ioField({ disabled: true })],
             ['spacing3', ioField({ disabled: true })],
-            ['spacing5', ioField({ disabled: true })],
-            ['spacing8', ioField({ disabled: true })],
+            ['spacing4', ioField({ disabled: true })],
             ['fieldHeight', ioField({ disabled: true })],
             [Color, ioColorRgba()],
         ]]

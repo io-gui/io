@@ -47,3 +47,12 @@
 - IoPanel.test: removed calls to deleted element methods `selectTab`/`moveTab`; use `panel.setSelected` + `io-tab-action` events
 - README rewritten: `model` not `layout`, actual event payloads, no IoTabDragIcon/hamburger/hydrateLayout fiction, drag noted as not wired
 - vitest packages/layout: 257/257 green
+
+## 2026-07-06 Layout drag refactor tests restored
+
+- Brought back IoTab.test.ts + IoSplit.integration.test.ts (deleted .pending)
+- Old singleton tests (IoTabDragIconSingleton, IoTabDropRectSingleton) → IoLayout.$tabDragGhost + io-tab-drag events
+- Action payload: `{model, action}` not `{tab, key}`; Panel.selectedID not getSelectedID()
+- selected attr: hasAttribute not getAttribute string values
+- setDropTarget doesn't sync dropIndex property — test marker DOM instead
+- packages/layout: 321/321 green

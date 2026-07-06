@@ -39,7 +39,7 @@ export class IoMenuTreeBranch extends ReactiveElement {
       border: none;
       border-left: var(--io_border);
       border-color: var(--io_colorLight);
-      margin-left: var(--io_spacing5);
+      margin-left: var(--io_spacing4);
     }
     `
   }
