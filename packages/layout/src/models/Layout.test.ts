@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import { DEFAULT_SIZE } from '../utils/layoutSize.js'
 import { Layout } from './Layout.js'
 import { Split, SplitData } from './Split.js'
 import { Panel } from './Panel.js'
@@ -137,6 +138,30 @@ describe('Layout', () => {
       expect(rootSplit.children.length).toBe(2)
       expect((rootSplit.children[0] as Panel).tabs[0].id).toBe('b')
       expect(rootSplit.children[1]).toBe(rootPanel)
+    })
+
+    it('inherits target panel size when converting to split', () => {
+      const layout = new Layout({
+        child: {
+          type: 'split',
+          orientation: 'vertical',
+          children: [
+            { type: 'panel', tabs: [{ id: 'a', label: 'A' }, { id: 'drag', label: 'Drag' }] },
+            { type: 'panel', tabs: [{ id: 'b', label: 'B' }], size: '300px' },
+          ],
+        },
+      })
+
+      const rootSplit = layout.child as Split
+      const panelA = rootSplit.children[0] as Panel
+      const panelB = rootSplit.children[1] as Panel
+      const tab = panelA.tabs.find(t => t.id === 'drag') as Tab
+
+      layout.moveTab(tab, panelB, 'left', 0)
+
+      const bSlot = rootSplit.children[1] as Split
+      expect(bSlot.size).toBe('300px')
+      expect(panelB.size).toBe(DEFAULT_SIZE)
     })
 
     it('places new panel first when dropping top on a non-first panel in horizontal split', () => {

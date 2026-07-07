@@ -1,4 +1,5 @@
 import { ReactiveObject, Property, Register } from '@io-gui/core'
+import { DEFAULT_SIZE } from '../utils/layoutSize.js'
 import { Panel, PanelData } from './Panel.js'
 import { Split, SplitData, SplitOrientation } from './Split.js'
 import { Tab } from './Tab.js'
@@ -142,6 +143,8 @@ export class Layout extends ReactiveObject {
   convertToSplit(parentSplit: Split, panel: Panel, first: Panel, second: Panel, orientation: SplitOrientation) {
     const index = parentSplit.children.indexOf(panel)
     const newSplit = new Split({ type: 'split', orientation, children: [] })
+    newSplit.size = panel.size
+    panel.size = DEFAULT_SIZE
     newSplit.children.push(first, second)
     parentSplit.children.splice(index, 1, newSplit)
   }

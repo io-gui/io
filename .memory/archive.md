@@ -108,3 +108,9 @@
 - Bug: IoLayout onTabDrag move only called setDropTarget when getDropTarget non-null — pointer leaving all panels left stale marker
 - Fix: always call setDropTarget(this._dropTarget) in move branch (null clears marker)
 - Test: IoSplit.integration — drag over panel then move to (-100,-100), assert marker reset
+
+## 2026-07-07 inherit-size-on-convert-to-split
+
+- Bug: convertToSplit created new Split with default auto size — 300px panel jumped to flex-grow on edge drop
+- Fix: newSplit.size = panel.size; panel.size = DEFAULT_SIZE (ensureOneChildHasAutoSize keeps invariant)
+- Test: Layout.test.ts edge-drop onto 300px panel asserts split inherits size, panel resets to auto

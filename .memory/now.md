@@ -1,3 +1,3 @@
 # Current Focus
 
-Layout plan todo `clear-drop-marker-on-leave` done.
+Layout plan todo `inherit-size-on-convert-to-split` done.

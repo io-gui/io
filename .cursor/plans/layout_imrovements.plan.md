@@ -31,7 +31,7 @@ todos:
     status: pending
   - id: inherit-size-on-convert-to-split
     content: "Bug: Inherit target panel size when converting to split (prevent layout jump)"
-    status: pending
+    status: completed
   - id: resolve-normalization-contract
     content: "Arch: Resolve normalization contract — synchronous per CONTEXT.md or debounced per code"
     status: pending
