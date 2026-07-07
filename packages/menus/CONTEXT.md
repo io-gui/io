@@ -1,0 +1,21 @@
+# Menus
+
+The `@io-gui/menus` context: hierarchical trees of selectable options and the elements that present them as dropdowns, menu bars, context menus, and trees. (Naming scheme under active revision — being aligned with Layout's model/view convention.)
+
+## Language
+
+**Menu**:
+The root model of a whole menu tree. Owns everything tree-scoped: selection tracking (`selectedID`, `path`), default selection, serialization, and invariants no single Option can see. Every menu tree has exactly one Menu. (Being introduced — today the root is just another `MenuOption`.)
+_Avoid_: root option, menu tree, manager
+
+**Selection scope**:
+The `select`-mode children of any one Option form a group in which at most one is selected; the parent enforces this in one place. `mode` stays per-child, so actions, toggles, and a radio cluster can share a parent. A Menu's `selectedID`/`path` are derived from the chain of selected scopes starting at the root.
+_Avoid_: radio group, exclusive group
+
+**Option**:
+One node of a Menu's tree — an id/label/value with an interaction `mode` (`select` | `toggle` | `none`), an optional `action`, and optionally nested child options. Both branches and leaves are Options; tree-scoped state belongs on the Menu.
+_Avoid_: item, entry, choice
+
+**Id**:
+An Option's identifier, unique across its whole Menu (a Menu invariant, debug-enforced). `label` and `value` default to it.
+_Avoid_: key, name

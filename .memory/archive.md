@@ -65,3 +65,17 @@
 - Added 3 Layout.test.ts tests (inner consolidation, spread hoist, root collapse)
 - Core hardening deferred: NodeArray removal detachChildParents + disconnectPropertyValue would help but spread-hoist still needs layout cleanup
 - packages/layout: 324/324 green
+
+## 2026-07-07 Layout improvements plan todos
+
+- Reviewed `.cursor/plans/layout_imrovements.plan.md` — solid plan, 21 items, good priority order
+- Added YAML frontmatter todos (was empty) + Todo id links in each body section
+- Clusters: moveTab bugs (1-2), drag lifecycle (4-5-7), model bugs (3,6,9,10), arch/doc drift (11-14), cleanup/perf (15-21)
+- Soft deps noted: 11 before 20, 17 makes 8 testable
+
+## 2026-07-07 fix-edge-drop-left-top
+
+- Bug: Layout.moveTab perpendicular branch used `newIndex === -1` to decide panel order in convertToSplit — only true for left/top on index-0 panel; other indices placed new panel after target (wrong side)
+- Fix: gate on `['left','top'].includes(direction)` instead
+- Tests: vertical split left-drop on panel B; horizontal split top-drop on panel B — assert new panel first in perpendicular split
+- packages/layout: 329/329 green

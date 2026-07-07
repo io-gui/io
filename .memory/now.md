@@ -1,3 +1,3 @@
 # Current Focus
 
-Stale `_parents` fixed. io-core hardening: NodeArray.disconnectItem + disconnectPropertyValue detachNodeParents. Layout spread-hoist still explicit.
+Layout plan todo `fix-edge-drop-left-top` done — perpendicular branch uses direction not newIndex===-1.

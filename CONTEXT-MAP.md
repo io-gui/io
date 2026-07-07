@@ -6,6 +6,7 @@ Io-Gui has one foundational context (the reactive core) plus application-domain 
 
 - [Core](./CONTEXT.md) — the shared reactive system: properties, change/mutation propagation, bindings, rendering. Every other context is built from these primitives.
 - [Layout](./packages/layout/CONTEXT.md) — IDE-like tabbed, split, drag-and-drop panel layouts (`@io-gui/layout`).
+- [Menus](./packages/menus/CONTEXT.md) — hierarchical option trees presented as dropdowns, menu bars, context menus, and trees (`@io-gui/menus`).
 
 ## Relationships
 

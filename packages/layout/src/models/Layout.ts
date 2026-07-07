@@ -106,7 +106,7 @@ export class Layout extends ReactiveObject {
     } else if (targetPanel.tabs.length > 1 || targetPanel !== source) {
 
       source.removeTab(tab)
-      if (newIndex === -1) {
+      if (['left', 'top'].includes(direction)) {
         this.convertToSplit(parentSplit, targetPanel, new Panel({ type: 'panel', tabs: [tab] }), targetPanel, orientation)
       } else {
         this.convertToSplit(parentSplit, targetPanel, targetPanel, new Panel({ type: 'panel', tabs: [tab] }), orientation)

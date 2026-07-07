@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { Layout } from './Layout.js'
 import { Split, SplitData } from './Split.js'
 import { Panel } from './Panel.js'
+import { Tab } from './Tab.js'
 
 describe('Layout', () => {
 
@@ -64,6 +65,66 @@ describe('Layout', () => {
     const restored = new Layout(json)
     expect(isPanelNode(restored.child)).toBe(true)
     expect((restored.child as Panel).tabs[0].label).toBe('Only Tab')
+  })
+
+  describe('moveTab edge-drop', () => {
+
+    it('places new panel first when dropping left on a non-first panel in vertical split', () => {
+      const layout = new Layout({
+        child: {
+          type: 'split',
+          orientation: 'vertical',
+          children: [
+            { type: 'panel', tabs: [{ id: 'a', label: 'A' }, { id: 'drag', label: 'Drag' }] },
+            { type: 'panel', tabs: [{ id: 'b', label: 'B' }] },
+          ],
+        },
+      })
+
+      const rootSplit = layout.child as Split
+      const panelA = rootSplit.children[0] as Panel
+      const panelB = rootSplit.children[1] as Panel
+      const tab = panelA.tabs.find(t => t.id === 'drag') as Tab
+
+      layout.moveTab(tab, panelB, 'left', 0)
+
+      const bSlot = rootSplit.children[1]
+      expect(isSplitNode(bSlot)).toBe(true)
+      const horizontalSplit = bSlot as Split
+      expect(horizontalSplit.orientation).toBe('horizontal')
+      expect(horizontalSplit.children.length).toBe(2)
+      expect((horizontalSplit.children[0] as Panel).tabs[0].id).toBe('drag')
+      expect(horizontalSplit.children[1]).toBe(panelB)
+    })
+
+    it('places new panel first when dropping top on a non-first panel in horizontal split', () => {
+      const layout = new Layout({
+        child: {
+          type: 'split',
+          orientation: 'horizontal',
+          children: [
+            { type: 'panel', tabs: [{ id: 'a', label: 'A' }, { id: 'drag', label: 'Drag' }] },
+            { type: 'panel', tabs: [{ id: 'b', label: 'B' }] },
+          ],
+        },
+      })
+
+      const rootSplit = layout.child as Split
+      const panelA = rootSplit.children[0] as Panel
+      const panelB = rootSplit.children[1] as Panel
+      const tab = panelA.tabs.find(t => t.id === 'drag') as Tab
+
+      layout.moveTab(tab, panelB, 'top', 0)
+
+      const bSlot = rootSplit.children[1]
+      expect(isSplitNode(bSlot)).toBe(true)
+      const verticalSplit = bSlot as Split
+      expect(verticalSplit.orientation).toBe('vertical')
+      expect(verticalSplit.children.length).toBe(2)
+      expect((verticalSplit.children[0] as Panel).tabs[0].id).toBe('drag')
+      expect(verticalSplit.children[1]).toBe(panelB)
+    })
+
   })
 
   describe('findParentSplit after normalize', () => {
