@@ -114,3 +114,19 @@
 - Bug: convertToSplit created new Split with default auto size — 300px panel jumped to flex-grow on edge drop
 - Fix: newSplit.size = panel.size; panel.size = DEFAULT_SIZE (ensureOneChildHasAutoSize keeps invariant)
 - Test: Layout.test.ts edge-drop onto 300px panel asserts split inherits size, panel resets to auto
+
+## 2026-07-07 fix-drag-cancel-lifecycle
+
+- Bug: IoTab dispatched end/cancel unconditionally; IoLayout ignored cancel phase — stale _dropTarget caused moveTab on later plain click
+- Fix IoTab: only dispatch move/end/cancel when _dragging; reset _dragging on end/cancel
+- Fix IoLayout: cancel branch + endDrag() helper (teardown without moveTab)
+- Tests: IoTab.test.ts — plain click no end, cancel collapses ghost, canceled drag + plain click no tab reorder
+- packages/layout 343 tests pass
+
+## 2026-07-07 fix-consolidate-orientation-flip
+
+- Bug: consolidateChildAt always inlined sole-child Split + adopted its orientation — horizontal [A, S] with vertical S2 became vertical [A, B, C]
+- Fix: replace redundant split with sole child when orientations differ and parent has siblings; inline only when orientations match or parent has one child
+- Test: Split.test.ts horizontal [A, splitS→splitS2 vertical [B,C]] normalize keeps horizontal + splitS2
+- CONTEXT.md Consolidation entry updated
+- packages/layout 339 tests pass

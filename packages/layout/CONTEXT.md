@@ -59,7 +59,7 @@ _Avoid_: active tab, current tab
 ### Structure operations
 
 **Consolidation**:
-Collapsing a redundant `Split` — one that has a single child — into its parent, so the tree never nests without branching. The parent adopts the lone child (or the lone child-split's own children and orientation). When the parent is the `Layout`, the lone child becomes the layout's child directly — a `Panel` stays a `Panel`, not wrapped in a one-child `Split`.
+Collapsing a redundant `Split` — one that has a single child — into its parent, so the tree never nests without branching. The parent replaces the redundant split with its lone child; when the lone child is a `Split` with a different orientation and the parent has siblings, the inner split is kept rather than inlined (so the parent orientation is preserved). When orientations match, or the parent has only that one child, the parent may adopt the lone child-split's grandchildren and orientation instead. When the parent is the `Layout`, the lone child becomes the layout's child directly — a `Panel` stays a `Panel`, not wrapped in a one-child `Split`.
 _Avoid_: flatten, merge, simplify
 
 **Normalization**:

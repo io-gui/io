@@ -848,6 +848,42 @@ describe('Split', () => {
 
   describe('normalize', () => {
 
+    it('should not flip parent orientation when consolidating nested split with siblings', () => {
+      const split = new Split({
+        type: 'split',
+        orientation: 'horizontal',
+        children: [
+          { type: 'panel', tabs: [{ id: 'A' }] },
+          {
+            type: 'split',
+            children: [
+              {
+                type: 'split',
+                orientation: 'vertical',
+                children: [
+                  { type: 'panel', tabs: [{ id: 'B' }] },
+                  { type: 'panel', tabs: [{ id: 'C' }] },
+                ],
+              },
+            ],
+          },
+        ],
+      })
+
+      split.normalize()
+
+      expect(split.orientation).toBe('horizontal')
+      expect(split.children.length).toBe(2)
+      expect(split.children[0]).toBeInstanceOf(Panel)
+      expect((split.children[0] as Panel).tabs[0].id).toBe('A')
+      expect(split.children[1]).toBeInstanceOf(Split)
+      const splitS2 = split.children[1] as Split
+      expect(splitS2.orientation).toBe('vertical')
+      expect(splitS2.children.length).toBe(2)
+      expect((splitS2.children[0] as Panel).tabs[0].id).toBe('B')
+      expect((splitS2.children[1] as Panel).tabs[0].id).toBe('C')
+    })
+
     it('should transplant split size onto sole panel when consolidating nested split', () => {
       const layout = new Layout({
         child: {

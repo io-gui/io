@@ -20,6 +20,14 @@ _Avoid_: item, entry, choice
 An Option's identifier, unique across its whole Menu (a Menu invariant, debug-enforced). May not contain a comma — the Path separator. `label` and `value` default to it.
 _Avoid_: key, name
 
+**IoMenu / IoOption (paired views)**:
+The two views paired with the models, Layout-style: `IoOption` renders one Option; `IoMenu` renders an expanded selection scope as a list (its `model` is the Menu or the branch Option whose children it shows). Every menus element holds its model in a property named `model`.
+_Avoid_: IoMenuItem, IoMenuOptions, `option` (as a view property name)
+
+**Entry point**:
+A chrome element that summons or hosts a Menu in a distinct interaction pattern — dropdown (`IoOptionSelect`), right-click (`IoContextMenu`), hamburger (`IoMenuHamburger`), inline tree (`IoMenuTree`). Descriptively named, not model-paired; each takes `model: Menu`.
+_Avoid_: wrapper, host, launcher
+
 **Path**:
 The comma-joined chain of selected Ids from the Menu root through nested selection scopes to the deepest selected Option. Derived from selection but writable: writing a Path selects the deepest Id that still exists (stale-tolerant restore). `selectedID` is its leaf, also writable; `selectedIDImmediate` (a scope's selected child) is read-only derived.
 _Avoid_: route, trail, selection chain

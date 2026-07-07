@@ -1,3 +1,3 @@
 # Current Focus
 
-Layout plan todo `inherit-size-on-convert-to-split` done.
+Layout plan todo `fix-consolidate-orientation-flip` done.

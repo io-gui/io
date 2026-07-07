@@ -89,10 +89,17 @@ export class Split extends ReactiveObject {
         soleChild.size = childSplit.size
         this.children.splice(index, 1, soleChild)
       } else if (isSplitNode(soleChild)) {
-        this.orientation = soleChild.orientation
-        detachNodeParents(soleChild)
-        this.children.splice(index, 1, ...soleChild.children)
-        ensureOneChildHasAutoSize(this.children)
+        const orientationsMatch = this.orientation === soleChild.orientation
+        const parentHasOneChild = this.children.length === 1
+        if (orientationsMatch || parentHasOneChild) {
+          if (parentHasOneChild) this.orientation = soleChild.orientation
+          detachNodeParents(soleChild)
+          this.children.splice(index, 1, ...soleChild.children)
+          ensureOneChildHasAutoSize(this.children)
+        } else {
+          soleChild.size = childSplit.size
+          this.children.splice(index, 1, soleChild)
+        }
       }
     })
   }
