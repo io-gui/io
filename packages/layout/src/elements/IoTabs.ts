@@ -21,8 +21,14 @@ export class IoTabs extends ReactiveElement {
         border-bottom-color: var(--io_borderColorStrong);
         background-color: var(--io_bgColorLight);
       }
+      :host:has(io-tab:focus) {
+        border-bottom-color: var(--io_colorWhite) !important;
+      }
       :host io-tab {
-        margin-bottom: calc(-1 * var(--io_borderWidth));
+        margin-bottom: calc(-1.25 * var(--io_borderWidth));
+      }
+      :host io-tab:not([selected]) {
+        margin-bottom: 0;
       }
       :host io-button {
         flex: 0 0 auto;

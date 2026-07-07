@@ -111,12 +111,15 @@ export class IoLayout extends ReactiveElement {
   getDropTarget(x: number, y: number): DropTarget | null {
     let result: DropTarget | null = null
     this.querySelectorAll('io-panel').forEach(panel => {
-      const rect = panel.getBoundingClientRect()
+      const panelEl = panel as IoPanel
+      const rect = panelEl.getBoundingClientRect()
       if (x > rect.left && x < rect.right && y > rect.top && y < rect.bottom) {
-        const tabs = [...panel.querySelectorAll('io-tab')] as IoTab[]
+        const tabs = [...panelEl.querySelectorAll('io-tab')] as IoTab[]
         const tabRects = tabs.map(tab => tab.getBoundingClientRect())
         let dropIndex = tabs.length
         let splitDirection: SplitDirection = 'center'
+
+        const dropSelfSingle = (panelEl.model.tabs.length === 1) && (panelEl.model.tabs[0].id === this.$tabDragGhost.model.id)
 
         const matchingTabIndex = tabs.findIndex(tab => tab.model.id === this.$tabDragGhost.model.id)
         if (matchingTabIndex !== -1) {
@@ -128,7 +131,7 @@ export class IoLayout extends ReactiveElement {
 
           dropIndex = pickedTabIndex
 
-        } else if (y > tabRects[0].bottom) {
+        } else if (y > tabRects[0].bottom && !dropSelfSingle) {
 
           const ndcX = ((x - rect.left) / rect.width) * 2 - 1
           const ndcY = ((y - rect.top) / rect.height) * 2 - 1
@@ -156,9 +159,7 @@ export class IoLayout extends ReactiveElement {
               }
             }
           }
-
         }
-
 
         result = {
           panel: panel as IoPanel,

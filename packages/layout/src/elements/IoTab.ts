@@ -44,10 +44,15 @@ export class IoTab extends IoField {
         border-bottom-right-radius: 0;
         border-color: var(--io_borderColorLight);
         padding: var(--io_spacing2);
-        border-bottom-color: var(--io_borderColorStrong);
+        border-bottom-color: transparent !important;
+      }
+      :host:focus {
+        outline: none !important;
+        border-bottom-color: transparent !important;
       }
       :host[pressed] {
         border-color: unset !important;
+        border-bottom-color: transparent !important;
         box-shadow: unset !important;
       }
       :host[selected] {

@@ -52,7 +52,7 @@ export class Panel extends ReactiveObject {
       this.tabs.splice(existingIndex, 1)
     }
     index = index ?? this.tabs.length
-    index = Math.min(index, this.tabs.length)
+    index = Math.min(Math.max(index, 0), this.tabs.length)
     this.tabs.splice(index, 0, tab)
     this.selectByIndex(index)
   }
@@ -71,7 +71,7 @@ export class Panel extends ReactiveObject {
     const currIndex = this.tabs.findIndex(t => t.id === tab.id)
     if (currIndex === -1) return
     this.tabs.splice(currIndex, 1)
-    index = Math.min(index, this.tabs.length)
+    index = Math.min(Math.max(index, 0), this.tabs.length)
     this.tabs.splice(index, 0, tab)
     this.selectByIndex(index)
   }
