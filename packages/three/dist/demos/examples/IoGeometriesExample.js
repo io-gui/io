@@ -129,7 +129,7 @@ let IoGeometriesExample = class IoGeometriesExample extends IoThreeExample {
                             [MeshPhongMaterial, ioPropertyEditor({ label: '_hidden_', properties: ['wireframe'] })],
                         ] })
                 ],
-                layout: new Layout({
+                model: new Layout({
                     child: {
                         type: 'split',
                         orientation: 'horizontal',

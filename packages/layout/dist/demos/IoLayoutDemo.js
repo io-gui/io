@@ -1,9 +1,15 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 //@ts-nocheck
 import { Register, ReactiveElement, div, h1, h4, p, Storage as $ } from '@io-gui/core';
 import { ioLayout, Layout } from '@io-gui/layout';
 import { ioCollapsible } from '@io-gui/navigation';
 import { ioMarkdown } from '@io-gui/markdown';
-const VERSION = 2;
+const VERSION = 3;
 function lorem(length) {
     const words = 'Lorem ipsum dolor sit amet consectetur adipiscing elit Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'.split(' ');
     let lorem = '';
@@ -13,7 +19,6 @@ function lorem(length) {
     return lorem;
 }
 const defaultLayout = new Layout({
-    type: 'layout',
     child: {
         type: 'split',
         children: [
@@ -26,16 +31,16 @@ const defaultLayout = new Layout({
                         type: 'panel',
                         size: '260px',
                         tabs: [
-                            { id: 'Inputs', icon: 'io:toggle_on' },
+                            { id: 'Inputs', icon: 'io:inputs' },
                             { id: 'Sliders', icon: 'io:sliders' },
-                            { id: 'Colors', icon: 'io:color_palette' },
+                            { id: 'Colors', icon: 'io:colors' },
                         ],
                     },
                     {
                         type: 'panel',
                         tabs: [
-                            { id: 'Getting Started' },
-                            { id: 'Deep Dive' },
+                            { id: 'Getting Started', icon: 'io:book' },
+                            { id: 'Deep Dive', icon: 'io:book' },
                         ]
                     }
                 ],
@@ -47,14 +52,14 @@ const defaultLayout = new Layout({
                     {
                         type: 'panel',
                         tabs: [
-                            { id: 'Editors', icon: 'io:developer' }
+                            { id: 'Editors', icon: 'io:editors' }
                         ]
                     },
                     {
                         type: 'panel',
                         size: '280px',
                         tabs: [
-                            { id: 'Icons', icon: 'io:image' }
+                            { id: 'Icons', icon: 'io:icons' }
                         ]
                     },
                 ]
@@ -63,13 +68,14 @@ const defaultLayout = new Layout({
                 type: 'panel',
                 size: '330px',
                 tabs: [
-                    { id: 'Theme Editor', icon: 'io:tune' }
+                    { id: 'Theme Editor', icon: 'io:theme' }
                 ],
             }
         ]
     },
 });
-export class IoLayoutDemo extends ReactiveElement {
+const $layoutStorage = $({ key: `io-layout-demo-${VERSION}`, storage: 'none', value: defaultLayout });
+let IoLayoutDemo = class IoLayoutDemo extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -88,18 +94,17 @@ export class IoLayoutDemo extends ReactiveElement {
         this.render([
             ioLayout({
                 elements: [
-                    { tag: 'io-inputs-demo', props: { id: 'Inputs', import: './packages/inputs/dist/demos/IoInputsDemo.js' } },
-                    { tag: 'io-icons-demo', props: { id: 'Icons', import: './packages/icons/dist/demos/IoIconsDemo.js' } },
-                    { tag: 'io-sliders-demo', props: { id: 'Sliders', import: './packages/sliders/dist/demos/IoSlidersDemo.js' } },
-                    { tag: 'io-colors-demo', props: { id: 'Colors', import: './packages/colors/dist/demos/IoColorsDemo.js' } },
-                    { tag: 'io-editors-demo', props: { id: 'Editors', import: './packages/editors/dist/demos/IoEditorsDemo.js' } },
-                    { tag: 'io-menus-demo', props: { id: 'Menus', import: './packages/menus/dist/demos/IoMenusDemo.js' } },
-                    { tag: 'io-navigation-demo', props: { id: 'Navigation', import: './packages/navigation/dist/demos/IoNavigationDemo.js' } },
-                    { tag: 'io-theme-editor', props: { id: 'Theme Editor', import: './packages/core/dist/demos/IoThemeEditor.js' } },
-                    { tag: 'io-element-inspector-demo', props: { id: 'Element Inspector', import: './packages/core/dist/demos/ReactiveElementInspectorDemo.js' } },
-                    ioMarkdown({ id: 'Getting Started', strip: ['https://iogui.dev/io/'], sanitize: false, src: './docs/quick-start.md' }),
-                    ioMarkdown({ id: 'Deep Dive', strip: ['https://iogui.dev/io/'], sanitize: false, src: './docs/deep-dive.md' }),
-                    div({ id: 'Doc 1' }, [
+                    { tag: 'io-inputs-demo', props: { id: 'Inputs', icon: 'io:inputs', import: './packages/inputs/dist/demos/IoInputsDemo.js' } },
+                    { tag: 'io-icons-demo', props: { id: 'Icons', icon: 'io:icons', import: './packages/icons/dist/demos/IoIconsDemo.js' } },
+                    { tag: 'io-sliders-demo', props: { id: 'Sliders', icon: 'io:sliders', import: './packages/sliders/dist/demos/IoSlidersDemo.js' } },
+                    { tag: 'io-colors-demo', props: { id: 'Colors', icon: 'io:colors', import: './packages/colors/dist/demos/IoColorsDemo.js' } },
+                    { tag: 'io-editors-demo', props: { id: 'Editors', icon: 'io:editors', import: './packages/editors/dist/demos/IoEditorsDemo.js' } },
+                    { tag: 'io-menus-demo', props: { id: 'Menus', icon: 'io:menus', import: './packages/menus/dist/demos/IoMenusDemo.js' } },
+                    { tag: 'io-navigation-demo', props: { id: 'Navigation', icon: 'io:navigation', import: './packages/navigation/dist/demos/IoNavigationDemo.js' } },
+                    { tag: 'io-theme-editor', props: { id: 'Theme Editor', icon: 'io:theme', import: './packages/core/dist/demos/IoThemeEditor.js' } },
+                    ioMarkdown({ id: 'Getting Started', icon: 'io:book', strip: ['https://iogui.dev/io/'], sanitize: false, src: './docs/quick-start.md' }),
+                    ioMarkdown({ id: 'Deep Dive', icon: 'io:book', strip: ['https://iogui.dev/io/'], sanitize: false, src: './docs/deep-dive.md' }),
+                    div({ id: 'Doc 1', icon: 'io:book' }, [
                         h1({ 'data-heading': 'Doc 1' }, 'Doc 1'),
                         h4({ 'data-heading': 'Section 1' }, 'Section 1'), p(lorem(100)),
                         h4({ 'data-heading': 'Section 2' }, 'Section 2'), p(lorem(100)),
@@ -115,7 +120,7 @@ export class IoLayoutDemo extends ReactiveElement {
                             })
                         ])
                     ]),
-                    div({ id: 'Doc 2', icon: 'io:numeric-2-box' }, [
+                    div({ id: 'Doc 2', icon: 'io:book' }, [
                         h1({ 'data-heading': 'Doc 2' }, 'Doc 2'),
                         h4({ 'data-heading': 'Section 1' }, 'Section 1'), p(lorem(100)),
                         h4({ 'data-heading': 'Section 2' }, 'Section 2'), p(lorem(100)),
@@ -125,13 +130,13 @@ export class IoLayoutDemo extends ReactiveElement {
                         h4({ 'data-heading': 'Section 6' }, 'Section 6'), p(lorem(100)),
                         h4({ 'data-heading': 'Section 7' }, 'Section 7'), p(lorem(100)),
                     ]),
-                    div({ id: 'Doc 3', icon: 'io:numeric-3-box' }, [
+                    div({ id: 'Doc 3', icon: 'io:book' }, [
                         h1({ 'data-heading': 'Doc 3' }, 'Doc 3'),
                         h4({ 'data-heading': 'Section 1' }, 'Section 1'), p(lorem(100)),
                         h4({ 'data-heading': 'Section 2' }, 'Section 2'), p(lorem(100)),
                         h4({ 'data-heading': 'Section 3' }, 'Section 3'), p(lorem(100)),
                     ]),
-                    div({ id: 'Doc 4', icon: 'io:numeric-4-box' }, [
+                    div({ id: 'Doc 4', icon: 'io:book' }, [
                         h1({ 'data-heading': 'Doc 4' }, 'Doc 4'),
                         h4({ 'data-heading': 'Section 1' }, 'Section 1'), p(lorem(100)),
                         h4({ 'data-heading': 'Section 2' }, 'Section 2'), p(lorem(100)),
@@ -140,10 +145,13 @@ export class IoLayoutDemo extends ReactiveElement {
                         h4({ 'data-heading': 'Section 5' }, 'Section 5'), p(lorem(100)),
                     ]),
                 ],
-                layout: $({ key: `io-layout-demo-${VERSION}`, storage: 'none', value: defaultLayout }),
+                model: $layoutStorage
             })
         ]);
     }
-}
-Register(IoLayoutDemo);
+};
+IoLayoutDemo = __decorate([
+    Register
+], IoLayoutDemo);
+export { IoLayoutDemo };
 export const ioLayoutDemo = (arg0) => IoLayoutDemo.vConstructor(arg0);

@@ -24,6 +24,7 @@ export declare class IoField extends ReactiveElement {
     tabIndex: number;
     static get Listeners(): ListenerDefinitions;
     constructor(args?: IoFieldProps);
+    onContextMenu(event: MouseEvent): void;
     onFocus(event: FocusEvent): void;
     onBlur(event: FocusEvent): void;
     onPointerdown(event: PointerEvent): void;

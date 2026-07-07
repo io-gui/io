@@ -300,6 +300,7 @@ function disconnectPropertyValue(node, prop, oldValue) {
     if (!hasValueAtOtherProperty(node, prop, oldValue)) {
         prop.observer.stop(oldValue);
         if (isReactiveNode(oldValue) && !oldValue._disposed) {
+            detachNodeParents(oldValue);
             oldValue.removeParent(node);
         }
     }

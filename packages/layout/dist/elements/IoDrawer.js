@@ -5,18 +5,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register, Property, ReactiveElement, div, ThemeSingleton } from '@io-gui/core';
-import { ioIcon } from '@io-gui/icons';
-import { Split } from '../nodes/Split.js';
-import { Panel } from '../nodes/Panel.js';
+import { Split } from '../models/Split.js';
+import { Panel } from '../models/Panel.js';
 import { ioSplit } from './IoSplit.js';
-import { parseSizeBudgetPx } from '../utils/layoutSize.js';
+import { DEFAULT_MIN_SIZE_PX, parseSizeBudgetPx } from '../utils/layoutSize.js';
 import { ioPanel } from './IoPanel.js';
 import { ioDivider } from './IoDivider.js';
+import { ioDrawerHandle } from './IoDrawerHandle.js';
 let IoDrawer = class IoDrawer extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
-        --io_drawerHandleSize: calc(var(--io_lineHeight) + var(--io_borderWidth) * 2);
         pointer-events: none;
         position: absolute;
         top: 0;
@@ -28,10 +27,10 @@ let IoDrawer = class IoDrawer extends ReactiveElement {
         overflow: hidden;
       }
       :host[orientation="horizontal"] {
-        flex-direction: row;
+        flex-direction: column;
       }
       :host[orientation="vertical"] {
-        flex-direction: column;
+        flex-direction: row;
       }
 
       :host > .io-drawer-veil {
@@ -49,13 +48,29 @@ let IoDrawer = class IoDrawer extends ReactiveElement {
         backdrop-filter: blur(3px);
       }
 
+      :host:not([expanded]) io-divider {
+        opacity: 0;
+        pointer-events: none;
+      }
+
       :host > .io-drawer-content {
+        pointer-events: auto;
         position: relative;
         display: flex;
-        overflow: visible;
-        transition: transform 0.125s ease-out;
-        justify-content: flex-end;
         background-color: var(--io_bgColorStrong);
+        box-sizing: border-box;
+      }
+      :host[direction="leading"] > .io-drawer-content {
+        justify-content: flex-start;
+        align-self: flex-start;
+      }
+      :host[direction="trailing"] > .io-drawer-content {
+        justify-content: flex-end;
+        align-self: flex-end;
+      }
+      
+      :host:not([dragging]) > .io-drawer-content {
+        transition: transform 0.125s ease-out;
       }
 
       :host > .io-drawer-content > .io-drawer-child {
@@ -73,72 +88,64 @@ let IoDrawer = class IoDrawer extends ReactiveElement {
 
       :host[orientation="horizontal"] > .io-drawer-content {
         height: 100%;
-        flex-direction: row;
       }
       :host[orientation="vertical"] > .io-drawer-content {
-        position: absolute;
         width: 100%;
-        flex-direction: column;
       }
 
-      :host > .io-drawer-content > .io-drawer-handle {
-        pointer-events: auto;
-        display: flex;
-        overflow: hidden;
-        flex-basis: var(--io_drawerHandleSize);
-        align-items: center;
-        background-color: var(--io_bgColorLight);
-        border: var(--io_border);
-        border-color: var(--io_borderColorStrong);
-        @apply --io-unselectable;
-        z-index: 2;
-      }
-      :host[orientation="horizontal"] > .io-drawer-content > .io-drawer-handle {
-        border-top: 0;
-        border-bottom: 0;
-        flex-direction: row;
-      }
       :host[orientation="horizontal"][direction="leading"] > .io-drawer-content {
-        margin-left: calc(-1 * var(--io_drawerSize) - var(--io_drawerHandleSize) - var(--io_spacing3));
-        transform: translateX(calc(var(--io_drawerHandleSize) * 1));
         flex-direction: row-reverse;
       }
-      :host[orientation="horizontal"][direction="leading"][expanded] > .io-drawer-content {
-        transform: translateX(calc(var(--io_drawerSize) + var(--io_drawerHandleSize)));
-      }
-
       :host[orientation="horizontal"][direction="trailing"] > .io-drawer-content {
-        margin-left: 100%;
-        transform: translateX(calc(var(--io_drawerHandleSize) * -1));
+        flex-direction: row;
       }
-      :host[orientation="horizontal"][direction="trailing"][expanded] > .io-drawer-content {
-        transform: translateX(calc(var(--io_drawerSize) * -1 - var(--io_drawerHandleSize)));
+      :host:not([expanded])[orientation="horizontal"][direction="leading"] > .io-drawer-content {
+        transform: translateX(calc(var(--io_drawerSize) * -1 - var(--io_spacing3) - var(--io_borderWidth)));
+      }
+      :host:not([expanded])[orientation="horizontal"][direction="trailing"] > .io-drawer-content {
+        transform: translateX(calc(var(--io_drawerSize) * 1 + var(--io_spacing3) + var(--io_borderWidth)));
       }
 
-      :host[orientation="vertical"] > .io-drawer-content > .io-drawer-handle {
-        border-left: 0;
-        border-right: 0;
-        flex-direction: column;
-      }
+      /* TODO: Simplify calculated values */
       :host[orientation="vertical"][direction="leading"] > .io-drawer-content {
-        margin-top: auto;
-        transform: translateY(calc(var(--io_drawerHandleSize) - 100%));
         flex-direction: column-reverse;
       }
-      :host[orientation="vertical"][direction="leading"][expanded] > .io-drawer-content {
-        transform: translateY(calc(var(--io_drawerSize) + var(--io_drawerHandleSize) - 100%));
-      }
-      :host[orientation="vertical"][direction="trailing"] > .io-drawer-content > .io-drawer-child {
-        margin-bottom: auto;
-      }
       :host[orientation="vertical"][direction="trailing"] > .io-drawer-content {
-        height: 100%;
-        transform: translateY(calc(100% - var(--io_drawerHandleSize)));
+        flex-direction: column;
       }
-      :host[orientation="vertical"][direction="trailing"][expanded] > .io-drawer-content {
-        transform: translateY(calc(100% - var(--io_drawerHandleSize) - var(--io_drawerSize)));
+      :host:not([expanded])[orientation="vertical"][direction="leading"] > .io-drawer-content {
+        transform: translateY(calc(var(--io_drawerSize) * -1 - var(--io_spacing3) - var(--io_borderWidth)));
+      }
+      :host:not([expanded])[orientation="vertical"][direction="trailing"] > .io-drawer-content {
+        transform: translateY(calc(var(--io_drawerSize) * 1 + var(--io_spacing3) + var(--io_borderWidth)));
       }
     `;
+    }
+    static get Listeners() {
+        return {
+            'io-divider-move': 'onDividerMove',
+            'io-divider-move-end': 'onDividerMoveEnd',
+            'io-drawer-toggle': 'onToggleExpanded',
+        };
+    }
+    get availableSize() {
+        const parent = this.parent;
+        if (parent) {
+            const parentRect = parent.getBoundingClientRect();
+            return this.orientation === 'horizontal' ? parentRect.width : parentRect.height;
+        }
+        return Infinity;
+    }
+    get maxDrawerSize() {
+        const handleSize = ThemeSingleton.lineHeight - ThemeSingleton.borderWidth;
+        const dividerSize = ThemeSingleton.spacing3;
+        return this.availableSize - handleSize * 2 - dividerSize;
+    }
+    setDrawerSizeCssVar(size) {
+        const clampedSize = Math.max(DEFAULT_MIN_SIZE_PX, Math.min(size, this.maxDrawerSize));
+        this.style.setProperty('--io_drawerSize', `${clampedSize}px`);
+        // const drawerHandleSize = ThemeSingleton.lineHeight + ThemeSingleton.borderWidth * 2;
+        // this.style.setProperty('--io_drawerHandleSize', `${drawerHandleSize}px`)
     }
     constructor(args) {
         super(args);
@@ -147,64 +154,70 @@ let IoDrawer = class IoDrawer extends ReactiveElement {
         event.preventDefault();
         event.stopPropagation();
         this.expanded = !this.expanded;
+        if (this.expanded) {
+            this.parent.collapseDrawers(this);
+        }
     }
-    onStopPropagation(event) {
-        event.preventDefault();
+    onDividerMove(event) {
         event.stopPropagation();
+        this.setAttribute('dragging', 'true');
+        const dividerHalfSize = ThemeSingleton.spacing3 / 2;
+        const child = this.$['child'];
+        const childRect = child.getBoundingClientRect();
+        const leftOffset = childRect.left - dividerHalfSize - event.detail.clientX;
+        const topOffset = childRect.top - dividerHalfSize - event.detail.clientY;
+        const rightOffset = event.detail.clientX - childRect.right + dividerHalfSize;
+        const bottomOffset = event.detail.clientY - childRect.bottom + dividerHalfSize;
+        const sizeOffset = this.orientation === 'horizontal'
+            ? this.direction === 'leading' ? rightOffset : leftOffset
+            : this.direction === 'leading' ? bottomOffset : topOffset;
+        const currentDrawerSize = parseFloat(this.style.getPropertyValue('--io_drawerSize'));
+        // Temporary CSS-only sizing. Model size will be updated in onDividerMoveEnd.
+        this.setDrawerSizeCssVar(currentDrawerSize + sizeOffset);
     }
-    expandedChanged() {
-        this.dispatch('io-drawer-expanded-changed', { element: this }, true);
+    onDividerMoveEnd(event) {
+        event.stopPropagation();
+        this.removeAttribute('dragging');
+        const child = this.$['child'];
+        const currentDrawerSize = parseFloat(this.style.getPropertyValue('--io_drawerSize'));
+        child.model.size = `${currentDrawerSize}px`;
+        this.parent.updateVisibleAutoSize();
+        this.parent.debounce(this.parent.calculateCollapsedDrawersDebounced);
     }
-    childMutated() {
+    modelMutated() {
         this.mutated();
     }
     mutated() {
-        if (!this.child) {
+        if (!this.model) {
             this.render([]);
             return;
         }
-        let availableSize = Infinity;
-        const parent = this.parent;
-        if (parent) {
-            const parentRect = parent.getBoundingClientRect();
-            availableSize = this.orientation === 'horizontal' ? parentRect.width : parentRect.height;
-        }
-        const handleSize = ThemeSingleton.lineHeight - ThemeSingleton.borderWidth;
-        const dividerSize = ThemeSingleton.spacing3;
-        const minSize = availableSize - handleSize * 2 - dividerSize;
-        const drawerSize = Math.min(parseSizeBudgetPx(this.child.size, availableSize), minSize);
-        this.style.setProperty('--io_drawerSize', `${drawerSize}px`);
+        this.setDrawerSizeCssVar(parseSizeBudgetPx(this.model.size, this.availableSize));
         let childVDOM = null;
-        if (this.child instanceof Split) {
+        if (this.model instanceof Split) {
             childVDOM = ioSplit({
-                split: this.child,
+                id: 'child',
+                model: this.model,
                 elements: this.elements,
             });
         }
-        else if (this.child instanceof Panel) {
+        else if (this.model instanceof Panel) {
             childVDOM = ioPanel({
-                panel: this.child,
+                id: 'child',
+                model: this.model,
                 elements: this.elements,
             });
         }
-        const icon = {
-            horizontal: {
-                leading: this.expanded ? 'io:triangle_left' : 'io:triangle_right',
-                trailing: this.expanded ? 'io:triangle_right' : 'io:triangle_left',
-            },
-            vertical: {
-                leading: this.expanded ? 'io:triangle_up' : 'io:triangle_down',
-                trailing: this.expanded ? 'io:triangle_down' : 'io:triangle_up',
-            }
-        }[this.orientation][this.direction];
         this.render([
             div({ class: 'io-drawer-veil', '@click': this.onToggleExpanded }),
             div({ class: 'io-drawer-content' }, [
-                div({ class: 'io-drawer-handle', '@click': this.onToggleExpanded }, [
-                    ioIcon({ value: icon, size: 'small' })
-                ]),
+                ioDrawerHandle({
+                    orientation: this.orientation,
+                    direction: this.direction,
+                    expanded: this.expanded,
+                }),
                 ioDivider({ orientation: this.orientation }),
-                div({ class: 'io-drawer-child', '@click': this.onStopPropagation }, [
+                div({ class: 'io-drawer-child' }, [
                     childVDOM,
                 ])
             ])
@@ -225,7 +238,7 @@ __decorate([
 ], IoDrawer.prototype, "parent", void 0);
 __decorate([
     Property({ type: Object })
-], IoDrawer.prototype, "child", void 0);
+], IoDrawer.prototype, "model", void 0);
 __decorate([
     Property(Array)
 ], IoDrawer.prototype, "elements", void 0);

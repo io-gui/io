@@ -95,7 +95,7 @@ let IoVolumePerlinExample = class IoVolumePerlinExample extends IoThreeExample {
                         ]
                     })
                 ],
-                layout: new Layout({
+                model: new Layout({
                     child: {
                         type: 'split',
                         orientation: 'horizontal',

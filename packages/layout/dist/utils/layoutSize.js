@@ -1,7 +1,13 @@
 export const DEFAULT_SIZE = 'auto';
 export const DEFAULT_AUTO_BUDGET_PX = 240;
+export const DEFAULT_MIN_SIZE_PX = 24;
 const AUTO_SIZE_REGEX = /^[\d.]+(?:px|%)\s+auto$/;
 const SIZE_REGEX = /^(?:auto|[\d.]+(?:px|%)(?:\s+auto)?)$/;
+export function sizeToPx(size) {
+    if (isAutoSize(size))
+        return DEFAULT_AUTO_BUDGET_PX;
+    return parseLengthPx(size, 100);
+}
 export function sizeToFlex(size) {
     if (isAutoSize(size))
         return '1 1 auto';

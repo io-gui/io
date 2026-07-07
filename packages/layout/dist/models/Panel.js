@@ -7,7 +7,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { ReactiveObject, NodeArray, Property, Register } from '@io-gui/core';
 import { Tab } from './Tab.js';
 import { DEFAULT_SIZE, applyLayoutSizeProps, isValidSize, layoutSizeToJSON, } from '../utils/layoutSize.js';
-// IMPORTANT: Do not remove commented out code. It is used in the future.
 let Panel = class Panel extends ReactiveObject {
     constructor(data) {
         super();
@@ -19,22 +18,50 @@ let Panel = class Panel extends ReactiveObject {
     onTabsMutatedDebounced() {
         this.dispatchMutation();
     }
-    getSelected() {
-        let selected = '';
+    get selectedID() {
         for (let i = 0; i < this.tabs.length; i++) {
             const item = this.tabs[i];
             if (item.selected && item.id) {
-                selected = item.id;
-                break;
+                return item.id;
             }
         }
-        return selected;
+        return '';
     }
-    setSelected(id) {
+    addTab(tab, index) {
+        const existingIndex = this.tabs.findIndex(t => t.id === tab.id);
+        if (existingIndex !== -1) {
+            console.warn(`Panel.addTab: Duplicate tab id "${tab.id}", removing duplicate tab.`);
+            this.tabs.splice(existingIndex, 1);
+        }
+        index = index ?? this.tabs.length;
+        index = Math.min(Math.max(index, 0), this.tabs.length);
+        this.tabs.splice(index, 0, tab);
+        this.selectByIndex(index);
+    }
+    removeTab(tab) {
+        const index = this.tabs.indexOf(tab);
+        if (index === -1)
+            return;
+        this.tabs.splice(index, 1);
+        if (this.tabs.length > 0) {
+            const newIndex = Math.min(index, this.tabs.length - 1);
+            this.selectByIndex(newIndex);
+        }
+    }
+    moveTab(tab, index) {
+        const currIndex = this.tabs.findIndex(t => t.id === tab.id);
+        if (currIndex === -1)
+            return;
+        this.tabs.splice(currIndex, 1);
+        index = Math.min(Math.max(index, 0), this.tabs.length);
+        this.tabs.splice(index, 0, tab);
+        this.selectByIndex(index);
+    }
+    selectByIndex(index) {
         this.tabs.withInternalOperation(() => {
             for (let i = 0; i < this.tabs.length; i++) {
                 const item = this.tabs[i];
-                if (item.id === id) {
+                if (i === index) {
                     item.selected = true;
                 }
                 else {
@@ -43,60 +70,8 @@ let Panel = class Panel extends ReactiveObject {
             }
         });
         this.tabs.dispatchMutation();
+        this.dispatch('io-panel-tab-selected', { index }, true);
     }
-    // addTab(tab: Tab, index?: number) {
-    //   const existingIndex = this.tabs.findIndex(t => t.id === tab.id)
-    //   if (existingIndex !== -1) {
-    //     console.warn(`Panel.addTab: Duplicate tab id "${tab.id}", removing duplicate tab.`)
-    //     this.tabs.splice(existingIndex, 1)
-    //   }
-    //   index = index ?? this.tabs.length
-    //   index = Math.min(index, this.tabs.length)
-    //   this.tabs.splice(index, 0, tab)
-    //   this.selectIndex(index)
-    // }
-    // removeTab(tab: Tab) {
-    //   const index = this.tabs.indexOf(tab)
-    //   if (index === -1) return
-    //   this.tabs.splice(index, 1)
-    //   if (this.tabs.length > 0) {
-    //     const newIndex = Math.min(index, this.tabs.length - 1)
-    //     this.selectIndex(newIndex)
-    //   } else {
-    //     this.notifyParentSplitNormalize()
-    //   }
-    // }
-    // moveTab(tab: Tab, index: number) {
-    //   index = Math.max(Math.min(index, this.tabs.length - 1), 0)
-    //   const currIndex = this.tabs.findIndex(t => t.id === tab.id)
-    //   if (currIndex === -1) return
-    //   this.tabs.splice(currIndex, 1)
-    //   index = Math.min(index, this.tabs.length)
-    //   this.tabs.splice(index, 0, tab)
-    //   this.selectIndex(index)
-    // }
-    // selectIndex(index: number) {
-    //   index = Math.min(index, this.tabs.length - 1)
-    //   if (index >= 0 && this.tabs.length > 0) {
-    //     this.setSelected(this.tabs[index].id)
-    //   }
-    // }
-    // notifyParentSplitNormalize() {
-    //   let node: ReactiveNode | undefined = this
-    //   while (node) {
-    //     let splitParent: Split | undefined
-    //     for (let i = 0; i < node._parents.length; i++) {
-    //       const parent = node._parents[i]
-    //       if (isSplitNode(parent as LayoutChild)) {
-    //         splitParent = parent as Split
-    //         break
-    //       }
-    //     }
-    //     if (!splitParent) break
-    //     splitParent.normalize()
-    //     node = splitParent
-    //   }
-    // }
     sizeChanged() {
         if (!isValidSize(this.size)) {
             debug: {

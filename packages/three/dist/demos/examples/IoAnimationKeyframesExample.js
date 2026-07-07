@@ -68,7 +68,7 @@ let IoAnimationKeyframesExample = class IoAnimationKeyframesExample extends IoTh
                     ioThreeViewport({ id: 'Perspective', applet: this.applet, cameraSelect: 'perspective' }),
                     ioThreeViewport({ id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene' }),
                 ],
-                layout: new Layout({
+                model: new Layout({
                     child: {
                         type: 'split',
                         orientation: 'vertical',

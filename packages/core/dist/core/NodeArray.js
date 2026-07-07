@@ -1,4 +1,4 @@
-import { isReactiveNode } from './ReactiveCore.js';
+import { detachNodeParents, isReactiveNode } from './ReactiveCore.js';
 /**
  * Reactive array of {@link ReactiveObject} items owned by a parent node or element.
  *
@@ -67,8 +67,7 @@ export class NodeArray extends Array {
                             for (let i = newLength; i < oldLength; i++) {
                                 const item = target[i];
                                 if (isReactiveNode(item)) {
-                                    item.removeEventListener('io-mutation', self.itemMutated);
-                                    item.removeParent(self.node);
+                                    self.disconnectItem(item);
                                 }
                             }
                         }
@@ -87,8 +86,7 @@ export class NodeArray extends Array {
                     // TODO Prevent adding to index greater than length?
                     const oldValue = target[index];
                     if (isReactiveNode(oldValue) && !self._isInternalOperation) {
-                        oldValue.removeEventListener('io-mutation', self.itemMutated);
-                        oldValue.removeParent(self.node);
+                        self.disconnectItem(oldValue);
                     }
                     target[index] = value;
                     if (isReactiveNode(value) && !self._isInternalOperation) {
@@ -106,6 +104,11 @@ export class NodeArray extends Array {
         Object.defineProperty(this, 'proxy', { value: proxy, enumerable: false, configurable: false });
         return proxy;
     }
+    disconnectItem(item) {
+        item.removeEventListener('io-mutation', this.itemMutated);
+        detachNodeParents(item);
+        item.removeParent(this.node);
+    }
     /** Run array mutations without dispatching `io-mutation` until complete. */
     withInternalOperation(operation) {
         this._isInternalOperation = true;
@@ -121,8 +124,7 @@ export class NodeArray extends Array {
             for (let i = start; i < start + deleteCount; i++) {
                 const item = this[i];
                 if (isReactiveNode(item)) {
-                    item.removeEventListener('io-mutation', this.itemMutated);
-                    item.removeParent(this.node);
+                    this.disconnectItem(item);
                 }
             }
             const result = super.splice(start, deleteCount, ...items);
@@ -173,8 +175,7 @@ export class NodeArray extends Array {
         return this.withInternalOperation(() => {
             const item = super.pop();
             if (item !== undefined && isReactiveNode(item)) {
-                item.removeEventListener('io-mutation', this.itemMutated);
-                item.removeParent(this.node);
+                this.disconnectItem(item);
             }
             if (item !== undefined)
                 this.dispatchMutation();
@@ -185,8 +186,7 @@ export class NodeArray extends Array {
         return this.withInternalOperation(() => {
             const item = super.shift();
             if (item !== undefined && isReactiveNode(item)) {
-                item.removeEventListener('io-mutation', this.itemMutated);
-                item.removeParent(this.node);
+                this.disconnectItem(item);
             }
             if (item !== undefined)
                 this.dispatchMutation();
@@ -223,8 +223,7 @@ export class NodeArray extends Array {
             for (let i = actualStart; i < actualEnd; i++) {
                 const oldItem = this[i];
                 if (oldItem !== undefined && isReactiveNode(oldItem)) {
-                    oldItem.removeEventListener('io-mutation', this.itemMutated);
-                    oldItem.removeParent(this.node);
+                    this.disconnectItem(oldItem);
                 }
             }
             super.fill(value, actualStart, actualEnd);
@@ -260,8 +259,7 @@ export class NodeArray extends Array {
             for (let i = actualTarget; i < actualTarget + count; i++) {
                 const oldItem = this[i];
                 if (oldItem !== undefined && isReactiveNode(oldItem)) {
-                    oldItem.removeEventListener('io-mutation', this.itemMutated);
-                    oldItem.removeParent(this.node);
+                    this.disconnectItem(oldItem);
                 }
             }
             super.copyWithin(actualTarget, actualStart, actualEnd);
@@ -319,8 +317,7 @@ export class NodeArray extends Array {
         const nodes = [...this];
         for (const item of nodes) {
             if (isReactiveNode(item)) {
-                item.removeEventListener('io-mutation', this.itemMutated);
-                item.removeParent(this.node);
+                this.disconnectItem(item);
             }
         }
         this.withInternalOperation(() => {

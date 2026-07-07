@@ -15,88 +15,77 @@ let IoPanel = class IoPanel extends ReactiveElement {
         overflow: hidden;
         flex-direction: column;
         flex: 1 1 auto;
+        background-color: var(--io_bgColor);
       }
     `;
     }
     static get Listeners() {
         return {
             'io-tab-action': 'onTabAction',
+            'io-add-tab-clicked': 'onAddTabClicked',
+            'io-panel-tab-selected': 'onPanelTabSelected'
         };
-    }
-    get layout() {
-        return this.closest('io-layout').layout;
     }
     onTabAction(event) {
         event.stopPropagation();
-        const tab = event.detail.tab;
+        const tabModel = event.detail.model;
         const action = event.detail.action;
+        const index = this.model.tabs.indexOf(tabModel);
+        if (index === -1)
+            return;
         switch (action) {
-            case 'Select': {
-                this.selectTab(tab);
+            case 'select': {
+                this.model.selectByIndex(index);
                 break;
             }
-            // case 'Backspace': {
-            //   this.removeTab(tab)
-            //   break
-            // }
-            // case 'ArrowLeft': {
-            //   this.moveTab(tab, index - 1)
-            //   break
-            // }
-            // case 'ArrowRight': {
-            //   this.moveTab(tab, index + 1)
-            //   break
-            // }
+            case 'delete': {
+                this.model.removeTab(tabModel);
+                break;
+            }
+            case 'move-left': {
+                this.model.moveTab(tabModel, index - 1);
+                break;
+            }
+            case 'move-right': {
+                this.model.moveTab(tabModel, index + 1);
+                break;
+            }
+            case 'move-start': {
+                this.model.moveTab(tabModel, 0);
+                break;
+            }
+            case 'move-end': {
+                this.model.moveTab(tabModel, this.model.tabs.length - 1);
+                break;
+            }
         }
     }
-    selectTab(tab) {
-        const index = this.panel.tabs.indexOf(tab);
-        this.panel.setSelected(tab.id);
-        this.debounce(this.focusTabDebounced, index);
+    onPanelTabSelected(event) {
+        event.stopPropagation();
+        this.debounce(this.focusTabDebounced, event.detail.index);
     }
-    // moveTabToSplit(sourcePanel: IoPanel, tab: Tab, direction: SplitDirection) {
-    //   const layout = this.layout
-    //   if (direction === 'center') {
-    //     sourcePanel.panel.removeTab(tab)
-    //     this.panel.addTab(tab)
-    //   } else if (layout) {
-    //     layout.moveTab(tab, this.panel, direction, sourcePanel.panel)
-    //   }
-    // }
-    // addTab(tab: Tab, index?: number) {
-    //   this.panel.addTab(tab, index)
-    //   this.debounce(this.focusTabDebounced as CallbackFunction, this.panel.tabs.indexOf(tab))
-    // }
-    // removeTab(tab: Tab) {
-    //   const index = this.panel.tabs.indexOf(tab)
-    //   this.panel.removeTab(tab)
-    //   if (this.panel.tabs.length > 0) {
-    //     this.debounce(this.focusTabDebounced as CallbackFunction, Math.min(index, this.panel.tabs.length - 1))
-    //   }
-    // }
-    // moveTab(tab: Tab, index: number) {
-    //   this.panel.moveTab(tab, index)
-    //   this.debounce(this.focusTabDebounced as CallbackFunction, this.panel.tabs.indexOf(tab))
-    // }
+    onAddTabClicked(event) {
+        event.stopPropagation();
+        this.dispatch('io-add-tab-request', { model: this.model }, true);
+    }
     focusTabDebounced(index) {
         const tabs = Array.from(this.querySelectorAll('io-tab'));
         index = Math.min(index, tabs.length - 1);
         if (tabs[index])
             tabs[index].focus();
     }
-    panelMutated() {
+    modelMutated() {
         this.debounce(this.mutated);
     }
     mutated() {
         this.render([
             ioTabs({
-                tabs: this.panel.tabs,
+                tabs: this.model.tabs,
             }),
             ioSelector({
-                // TODO: Make caching work with mutable elements
-                // caching: 'reactive',
-                caching: 'none',
-                selected: this.panel.getSelected(),
+                // TODO: Investigate caching for edge cases
+                caching: 'reactive',
+                selected: this.model.selectedID,
                 elements: this.elements,
                 anchor: '',
             })
@@ -105,7 +94,7 @@ let IoPanel = class IoPanel extends ReactiveElement {
 };
 __decorate([
     Property({ type: Object })
-], IoPanel.prototype, "panel", void 0);
+], IoPanel.prototype, "model", void 0);
 __decorate([
     Property(Array)
 ], IoPanel.prototype, "elements", void 0);

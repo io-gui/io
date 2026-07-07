@@ -24,12 +24,13 @@
  */
 export * from './elements/IoDivider.js';
 export * from './elements/IoDrawer.js';
+export * from './elements/IoDrawerHandle.js';
 export * from './elements/IoLayout.js';
 export * from './elements/IoPanel.js';
 export * from './elements/IoSplit.js';
 export * from './elements/IoTab.js';
 export * from './elements/IoTabs.js';
-export * from './nodes/Layout.js';
-export * from './nodes/Panel.js';
-export * from './nodes/Split.js';
-export * from './nodes/Tab.js';
+export * from './models/Layout.js';
+export * from './models/Panel.js';
+export * from './models/Split.js';
+export * from './models/Tab.js';

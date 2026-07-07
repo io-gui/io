@@ -14,6 +14,8 @@ export declare class Split extends ReactiveObject {
     constructor(data: SplitData);
     childrenMutated(): void;
     onChildrenMutatedDebounced(): void;
+    normalize(): void;
+    consolidateChildAt(index: number, childSplit: Split): void;
     sizeChanged(): void;
     toJSON(): SplitData;
     applyJSON(data: SplitData): this;

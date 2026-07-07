@@ -191,6 +191,12 @@ let IoMenuOptions = class IoMenuOptions extends ReactiveElement {
             nudge(this, this.$parent, this.direction, true);
         }
     }
+    focusFirstOption() {
+        const firstOption = this.querySelector('io-menu-item');
+        if (firstOption) {
+            firstOption.focus();
+        }
+    }
     mutated() {
         const vChildren = this.widget ? [this.widget] : [];
         if (this.searchable) {

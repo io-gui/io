@@ -171,6 +171,13 @@ let IoMarkdown = class IoMarkdown extends ReactiveElement {
       @keyframes spinner {
         to {transform: rotate(360deg);}
       }
+      :host[loading] {
+        --io-loading: 1;
+      }
+      :host:not([loading]):after {
+        content: none;
+        display: none;
+      }
       :host[loading]:after {
         content: '';
         box-sizing: border-box;

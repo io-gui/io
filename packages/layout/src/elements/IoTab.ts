@@ -115,7 +115,7 @@ export class IoTab extends IoField {
     this._pointerDown = [event.clientX, event.clientY]
     this._dragging = false
   }
-  
+
   override onPointermove(event: PointerEvent): void {
     if (this._dragging) {
       this.dispatchDrag('move', event.clientX, event.clientY)

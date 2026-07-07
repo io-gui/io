@@ -170,7 +170,7 @@ export class Theme extends ReactiveObject {
   override mutated() {
     this.fieldHeight = this.lineHeight + 2 * (this.spacing + this.borderWidth)
     this.spacing2 = this.spacing * 2
-    this.spacing3 = this.spacing * 3  
+    this.spacing3 = this.spacing * 3
     this.spacing4 = this.spacing * 4
     for (const key of themeKeys) {
       const value = this[key as keyof this]

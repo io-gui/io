@@ -48,6 +48,10 @@ let IoSelector = class IoSelector extends ReactiveElement {
           transform: rotate(360deg);
         }
       }
+      :host:not([loading]):after {
+        content: none;
+        display: none;
+      }
       :host[loading]:after {
         content: '';
         box-sizing: border-box;

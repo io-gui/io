@@ -115,7 +115,7 @@ let IoCameraExample = class IoCameraExample extends IoThreeExample {
                     ioThreeViewport({ id: 'SceneOrthographic', applet: this.applet, cameraSelect: 'scene:orthographic' }),
                     ioPropertyEditor({ id: 'PropertyEditor', value: this.applet, properties: ['perspectiveCamera', 'orthographicCamera'] })
                 ],
-                layout: new Layout({
+                model: new Layout({
                     child: {
                         type: 'split',
                         orientation: 'horizontal',

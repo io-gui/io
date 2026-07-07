@@ -88,7 +88,7 @@ let IoGeometryConvexExample = class IoGeometryConvexExample extends IoThreeExamp
                     ioThreeViewport({ id: 'Front', applet: this.applet, cameraSelect: 'front' }),
                     ioThreeViewport({ id: 'Perspective', applet: this.applet, cameraSelect: 'perspective' }),
                 ],
-                layout: new Layout({
+                model: new Layout({
                     child: {
                         type: 'split',
                         orientation: 'vertical',

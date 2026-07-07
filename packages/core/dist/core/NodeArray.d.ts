@@ -32,6 +32,7 @@ export declare class NodeArray<N extends ReactiveObject> extends Array<N> {
     setItemType(item: N): void;
     /** @param node Owner that receives mutation events for this collection. */
     constructor(node: ReactiveObject, ...args: N[]);
+    private disconnectItem;
     /** Run array mutations without dispatching `io-mutation` until complete. */
     withInternalOperation<T>(operation: () => T): T;
     splice(start: number, deleteCount: number, ...items: N[]): N[];

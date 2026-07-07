@@ -86,9 +86,14 @@ let IoField = class IoField extends ReactiveElement {
             'pointerdown': 'onPointerdown',
             'touchstart': ['onTouchstart', { passive: false }],
             'click': 'onClick',
+            'contextmenu': 'onContextMenu',
         };
     }
     constructor(args = {}) { super(args); }
+    onContextMenu(event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
     onFocus(event) {
         this.addEventListener('blur', this.onBlur);
         this.addEventListener('keydown', this.onKeydown);

@@ -9,8 +9,10 @@ export declare class IoDivider extends ReactiveElement {
     static get Listeners(): {
         pointerdown: string;
         touchstart: ListenerDefinition;
+        contextmenu: string;
     };
     constructor(args: IoDividerProps);
+    onContextmenuDisable(event: MouseEvent): void;
     onPointerdown(event: PointerEvent): void;
     onPointermove(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;

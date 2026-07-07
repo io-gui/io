@@ -185,7 +185,7 @@ let IoAnimationRetargetingExample = class IoAnimationRetargetingExample extends 
                     ioThreeViewport({ id: 'Back', applet: this.applet, cameraSelect: 'back' }),
                     ioThreeViewport({ id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene' }),
                 ],
-                layout: new Layout({
+                model: new Layout({
                     child: {
                         type: 'split',
                         orientation: 'vertical',

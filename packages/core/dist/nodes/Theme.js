@@ -21,8 +21,7 @@ export const THEMES = {
         spacing: 2,
         spacing2: 0,
         spacing3: 0,
-        spacing5: 0,
-        spacing8: 0,
+        spacing4: 0,
         lineHeight: 20,
         fontSize: 14,
         fieldHeight: 0,
@@ -57,21 +56,20 @@ export const THEMES = {
         spacing: 2,
         spacing2: 0,
         spacing3: 0,
-        spacing5: 0,
-        spacing8: 0,
+        spacing4: 0,
         lineHeight: 20,
         fontSize: 14,
         fieldHeight: 0,
         borderRadius: 2,
         borderWidth: 1,
-        borderColor: Color.toHex(0.5, 0.5, 0.5),
-        borderColorLight: Color.toHex(0.3, 0.3, 0.3),
+        borderColor: Color.toHex(0.4, 0.4, 0.4),
+        borderColorLight: Color.toHex(0.1, 0.1, 0.1),
         borderColorStrong: Color.toHex(0, 0, 0),
         borderColorRed: Color.toHex(1, 0.2, 0),
         borderColorBlue: Color.toHex(0.4, 0.5, 0.9),
         borderColorGreen: Color.toHex(0, 0.6, 0.1),
         bgColor: Color.toHex(0.2, 0.2, 0.2),
-        bgColorStrong: Color.toHex(0.15, 0.15, 0.15),
+        bgColorStrong: Color.toHex(0.3, 0.3, 0.3),
         bgColorLight: Color.toHex(0.25, 0.25, 0.25),
         bgColorRed: Color.toHex(0.7, 0.2, 0.1),
         bgColorGreen: Color.toHex(0.1, 0.5, 0.2),
@@ -130,8 +128,7 @@ let Theme = class Theme extends ReactiveObject {
         this.fieldHeight = this.lineHeight + 2 * (this.spacing + this.borderWidth);
         this.spacing2 = this.spacing * 2;
         this.spacing3 = this.spacing * 3;
-        this.spacing5 = this.spacing * 5;
-        this.spacing8 = this.spacing * 8;
+        this.spacing4 = this.spacing * 4;
         for (const key of themeKeys) {
             const value = this[key];
             const cssValue = (value instanceof Color) ? value.toCss() : `${value}px`;
@@ -168,7 +165,7 @@ function createThemeStyleDeclaration() {
 const ThemeSingleton = new Theme().applyJSON(THEMES[$ThemeID.value]);
 export const $Theme = $({
     value: ThemeSingleton,
-    storage: 'local',
+    storage: 'none',
     key: 'io-theme-' + THEME_VERSION
 });
 $ThemeID.node.addEventListener('value-changed', (event) => {

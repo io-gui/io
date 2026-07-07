@@ -1,8 +1,8 @@
-import { Property, ReactiveElement, ReactiveElementProps, Register, ThemeSingleton, div } from "@io-gui/core";
-import { IoTab, ioTab } from "./IoTab";
-import { Tab } from "../models/Tab";
-import { IoPanel } from "./IoPanel";
-import { SplitDirection } from "../models/Layout";
+import { Property, ReactiveElement, ReactiveElementProps, Register, ThemeSingleton, div } from '@io-gui/core'
+import { IoTab, ioTab } from './IoTab'
+import { Tab } from '../models/Tab'
+import { IoPanel } from './IoPanel'
+import { SplitDirection } from '../models/Layout'
 
 export type DropTarget = {
   panel: IoPanel
@@ -130,7 +130,7 @@ export class IoTabDragGhost extends ReactiveElement {
         tabInsertMarkerOffset = tabRect.left - target.panelRect.left
       } else if (target.dropIndex === target.tabRects.length) {
         const lastTabRect = target.tabRects[target.tabRects.length - 1]
-        let lastRectOffset = lastTabRect.right - target.panelRect.left
+        const lastRectOffset = lastTabRect.right - target.panelRect.left
         tabInsertMarkerOffset = lastRectOffset + ThemeSingleton.spacing
       }
 

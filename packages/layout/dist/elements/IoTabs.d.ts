@@ -1,5 +1,5 @@
 import { ReactiveElement, ReactiveElementProps, NodeArray } from '@io-gui/core';
-import { Tab } from '../nodes/Tab.js';
+import { Tab } from '../models/Tab.js';
 export type IoTabsProps = ReactiveElementProps & {
     tabs: Array<Tab>;
 };
@@ -8,6 +8,7 @@ export declare class IoTabs extends ReactiveElement {
     tabs: NodeArray<Tab>;
     constructor(args: IoTabsProps);
     tabsMutated(): void;
+    onAddTab(): void;
     mutated(): void;
 }
 export declare const ioTabs: (arg0: IoTabsProps) => import("@io-gui/core").VDOMElement;

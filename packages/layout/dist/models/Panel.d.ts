@@ -11,8 +11,11 @@ export declare class Panel extends ReactiveObject {
     constructor(data: PanelData);
     tabsMutated(): void;
     onTabsMutatedDebounced(): void;
-    getSelected(): string;
-    setSelected(id: string): void;
+    get selectedID(): string;
+    addTab(tab: Tab, index?: number): void;
+    removeTab(tab: Tab): void;
+    moveTab(tab: Tab, index: number): void;
+    selectByIndex(index: number): void;
     sizeChanged(): void;
     toJSON(): PanelData;
     applyJSON(data: PanelData): this;

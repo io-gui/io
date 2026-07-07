@@ -12,8 +12,7 @@ export declare class Theme extends ReactiveObject {
     spacing: number;
     spacing2: number;
     spacing3: number;
-    spacing5: number;
-    spacing8: number;
+    spacing4: number;
     lineHeight: number;
     fontSize: number;
     fieldHeight: number;

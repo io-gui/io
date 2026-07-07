@@ -4,15 +4,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var IoSplit_1;
 import { Register, Property, ReactiveElement, ThemeSingleton } from '@io-gui/core';
 import { ioPanel } from './IoPanel.js';
 import { ioDivider } from './IoDivider.js';
 import { ioDrawer } from './IoDrawer.js';
-import { Split } from '../nodes/Split.js';
-import { Panel } from '../nodes/Panel.js';
+import { Split } from '../models/Split.js';
+import { Panel } from '../models/Panel.js';
 import { isAutoSize, parseSizeBudgetPx, sizeToFlex } from '../utils/layoutSize.js';
-let IoSplit = IoSplit_1 = class IoSplit extends ReactiveElement {
+let IoSplit = class IoSplit extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -50,10 +49,8 @@ let IoSplit = IoSplit_1 = class IoSplit extends ReactiveElement {
         return {
             'io-divider-move': 'onDividerMove',
             'io-divider-move-end': 'onDividerMoveEnd',
-            'io-drawer-expanded-changed': 'onDrawerExpandedChanged',
         };
     }
-    // TODO: Make sure one panel is available even when all tabs are removed.
     constructor(args) {
         super(args);
     }
@@ -67,8 +64,15 @@ let IoSplit = IoSplit_1 = class IoSplit extends ReactiveElement {
         const rect = this.getBoundingClientRect();
         if (rect.width === 0 && rect.height === 0)
             return;
-        const split = this.split;
+        const split = this.model;
         const children = split.children;
+        if (children.length === 0) {
+            this.setProperties({
+                leadingCollapsedChildModel: null,
+                trailingCollapsedChildModel: null,
+            });
+            return;
+        }
         const orientation = split.orientation;
         let size;
         let minSize = 0;
@@ -100,73 +104,94 @@ let IoSplit = IoSplit_1 = class IoSplit extends ReactiveElement {
         if (size < minSize) {
             if (children.length >= 3 && size < (minSize - collapsedSize)) {
                 this.setProperties({
-                    leadingDrawer: children[0],
-                    trailingDrawer: children[lastIndex],
+                    leadingCollapsedChildModel: children[0],
+                    trailingCollapsedChildModel: children[lastIndex],
                 });
             }
             else if (children.length >= 2) {
                 if (collapsePriority === 'start') {
                     this.setProperties({
-                        leadingDrawer: children[0],
-                        trailingDrawer: null,
+                        leadingCollapsedChildModel: children[0],
+                        trailingCollapsedChildModel: null,
                     });
                 }
                 else {
                     this.setProperties({
-                        leadingDrawer: null,
-                        trailingDrawer: children[lastIndex],
+                        leadingCollapsedChildModel: null,
+                        trailingCollapsedChildModel: children[lastIndex],
                     });
                 }
             }
         }
         else {
             this.setProperties({
-                leadingDrawer: null,
-                trailingDrawer: null,
+                leadingCollapsedChildModel: null,
+                trailingCollapsedChildModel: null,
             });
         }
     }
     onDividerMove(event) {
         event.stopPropagation();
-        const orientation = this.split.orientation;
+        const orientation = this.model.orientation;
         const dividerSize = ThemeSingleton.spacing3;
         const minSize = ThemeSingleton.fieldHeight * 4;
-        const leftSplit = event.detail.element.previousElementSibling;
-        const rightSplit = event.detail.element.nextElementSibling;
-        const leftRect = leftSplit.getBoundingClientRect();
-        const rightRect = rightSplit.getBoundingClientRect();
+        const prevSibling = event.detail.element.previousElementSibling;
+        const nextSibling = event.detail.element.nextElementSibling;
+        const prevRect = prevSibling.getBoundingClientRect();
+        const nextRect = nextSibling.getBoundingClientRect();
         const combinedSize = orientation === 'horizontal'
-            ? leftRect.width + rightRect.width
-            : leftRect.height + rightRect.height;
-        const pointerPos = orientation === 'horizontal'
-            ? event.detail.clientX - leftRect.left - dividerSize / 2
-            : event.detail.clientY - leftRect.top - dividerSize / 2;
-        const leftSize = Math.max(minSize, Math.min(combinedSize - minSize, pointerPos));
-        const rightSize = combinedSize - leftSize;
-        leftSplit.style.setProperty('flex', `0 0 ${leftSize}px`);
-        rightSplit.style.setProperty('flex', `0 0 ${rightSize}px`);
+            ? prevRect.width + nextRect.width
+            : prevRect.height + nextRect.height;
+        const dividerPos = orientation === 'horizontal'
+            ? event.detail.clientX - prevRect.left - dividerSize / 2
+            : event.detail.clientY - prevRect.top - dividerSize / 2;
+        const prevTargetSize = Math.max(minSize, Math.min(combinedSize - minSize, dividerPos));
+        const nextTargetSize = combinedSize - prevTargetSize;
+        // Temporary CSS-only sizing. Model size will be updated in onDividerMoveEnd.
+        prevSibling.style.setProperty('flex', `0 0 ${prevTargetSize}px`);
+        nextSibling.style.setProperty('flex', `0 0 ${nextTargetSize}px`);
     }
     onDividerMoveEnd(event) {
         event.stopPropagation();
-        const orientation = this.split.orientation;
-        const childrenElements = this.querySelectorAll(':scope > io-split, :scope > io-panel');
-        for (let i = 0; i < childrenElements.length; i++) {
-            const child = childrenElements[i];
-            const childmodel = child instanceof IoSplit_1 ? child.split : child.panel;
-            const childRect = child.getBoundingClientRect();
-            const childSize = orientation === 'horizontal' ? childRect.width : childRect.height;
-            // TODO: Consider preserving % units
-            childmodel.size = `${childSize}px`;
+        const orientation = this.model.orientation;
+        const prevSibling = event.detail.element.previousElementSibling;
+        const nextSibling = event.detail.element.nextElementSibling;
+        const prevRect = prevSibling.getBoundingClientRect();
+        const nextRect = nextSibling.getBoundingClientRect();
+        // Copy target sizes from the DOM to the model.
+        const prevTargetSize = orientation === 'horizontal' ? prevRect.width : prevRect.height;
+        const nextTargetSize = orientation === 'horizontal' ? nextRect.width : nextRect.height;
+        const prevModel = prevSibling.model;
+        const nextModel = nextSibling.model;
+        const prevIsAutoSize = isAutoSize(prevModel.size);
+        const nextIsAutoSize = isAutoSize(nextModel.size);
+        // TODO: Consider preserving % units
+        if (!prevIsAutoSize) {
+            prevModel.size = `${prevTargetSize}px`;
         }
-        // this.split.normalize() // IMPORTANT: Do not remove commented out code. It is used in the future.
+        if (!nextIsAutoSize) {
+            nextModel.size = `${nextTargetSize}px`;
+        }
+        // TODO: Test this logic. Consider extrating to layoutSize.ts
+        if (prevIsAutoSize && nextIsAutoSize) {
+            const length = this.model.children.length;
+            const prevIndex = this.model.children.indexOf(prevModel);
+            const nextIndex = this.model.children.indexOf(nextModel);
+            const prevIndexDist = Math.abs(prevIndex - length / 2);
+            const nextIndexDist = Math.abs(nextIndex - length / 2);
+            const closerToEdgeIndex = prevIndexDist < nextIndexDist ? prevIndex : nextIndex;
+            const closerToEdgeTargetSize = prevIndexDist < nextIndexDist ? prevTargetSize : nextTargetSize;
+            const closerToEdgeModel = this.model.children[closerToEdgeIndex];
+            closerToEdgeModel.size = `${closerToEdgeTargetSize}px`;
+        }
         this.updateVisibleAutoSize();
         this.debounce(this.calculateCollapsedDrawersDebounced);
     }
     updateVisibleAutoSize() {
-        this.hasVisibleAutoSize = this.split.children.some((child, i) => {
-            if (i === 0 && this.leadingDrawer !== null)
+        this.hasVisibleAutoSize = this.model.children.some((child, i) => {
+            if (i === 0 && this.leadingCollapsedChildModel !== null)
                 return false;
-            if (i === this.split.children.length - 1 && this.trailingDrawer !== null)
+            if (i === this.model.children.length - 1 && this.trailingCollapsedChildModel !== null)
                 return false;
             return isAutoSize(child.size);
         });
@@ -174,55 +199,45 @@ let IoSplit = IoSplit_1 = class IoSplit extends ReactiveElement {
     ensureOneHasAutoSize() {
         this.updateVisibleAutoSize();
     }
-    onDrawerExpandedChanged(event) {
-        event.stopPropagation();
-        const srcDrawer = event.detail.element;
-        if (srcDrawer.expanded) {
-            const drawers = [...this.querySelectorAll(':scope > io-drawer')];
-            drawers.forEach(drawer => drawer !== srcDrawer && (drawer.expanded = false));
-        }
+    leadingCollapsedChildModelChanged() {
+        this.collapseDrawers();
     }
-    collapseAllDrawers() {
-        const drawers = [...this.querySelectorAll(':scope > io-drawer')];
-        drawers.forEach(drawer => drawer.expanded = false);
-    }
-    leadingDrawerChanged() {
-        this.collapseAllDrawers();
-    }
-    trailingDrawerChanged() {
-        this.collapseAllDrawers();
+    trailingCollapsedChildModelChanged() {
+        this.collapseDrawers();
     }
     onVeilClick(event) {
         event.stopPropagation();
-        this.collapseAllDrawers();
+        this.collapseDrawers();
     }
-    splitMutated() {
+    collapseDrawers(except) {
+        const drawers = [...this.querySelectorAll(':scope > io-drawer')];
+        drawers.forEach(drawer => drawer !== except && (drawer.expanded = false));
+    }
+    modelMutated() {
         this.calculateCollapsedDrawers();
         this.updateVisibleAutoSize();
         this.mutated();
     }
-    splitChanged() {
+    modelChanged() {
         this.calculateCollapsedDrawers();
     }
     mutated() {
         this.updateVisibleAutoSize();
-        this.setAttribute('orientation', this.split.orientation);
-        const childCount = this.split.children.length;
+        this.setAttribute('orientation', this.model.orientation);
+        const childCount = this.model.children.length;
         const lastIndex = childCount - 1;
-        const orientation = this.split.orientation;
+        const orientation = this.model.orientation;
         const vChildren = [];
         for (let i = 0; i < childCount; i++) {
-            if (i === 0 && this.leadingDrawer !== null) {
+            if (i === 0 && this.leadingCollapsedChildModel !== null)
                 continue;
-            }
-            if (i === lastIndex && this.trailingDrawer !== null) {
+            if (i === lastIndex && this.trailingCollapsedChildModel !== null)
                 continue;
-            }
-            const isLastVisible = (i === lastIndex - 1 && this.trailingDrawer !== null) || (i === lastIndex && this.trailingDrawer === null);
-            const child = this.split.children[i];
+            const isLastVisible = (i === lastIndex - 1 && this.trailingCollapsedChildModel !== null) || (i === lastIndex && this.trailingCollapsedChildModel === null);
+            const child = this.model.children[i];
             if (child instanceof Split) {
                 vChildren.push(ioSplit({
-                    split: child,
+                    model: child,
                     style: { flex: sizeToFlex(child.size) },
                     class: isLastVisible ? 'io-split-last-visible' : '',
                     elements: this.elements,
@@ -230,7 +245,7 @@ let IoSplit = IoSplit_1 = class IoSplit extends ReactiveElement {
             }
             else if (child instanceof Panel) {
                 vChildren.push(ioPanel({
-                    panel: child,
+                    model: child,
                     style: { flex: sizeToFlex(child.size) },
                     class: isLastVisible ? 'io-split-last-visible' : '',
                     elements: this.elements,
@@ -242,21 +257,21 @@ let IoSplit = IoSplit_1 = class IoSplit extends ReactiveElement {
                 }));
             }
         }
-        if (this.leadingDrawer !== null) {
+        if (this.leadingCollapsedChildModel !== null) {
             vChildren.push(ioDrawer({
                 orientation: orientation,
                 direction: 'leading',
                 parent: this,
-                child: this.leadingDrawer,
+                model: this.leadingCollapsedChildModel,
                 elements: this.elements,
             }));
         }
-        if (this.trailingDrawer !== null) {
+        if (this.trailingCollapsedChildModel !== null) {
             vChildren.push(ioDrawer({
                 orientation: orientation,
                 direction: 'trailing',
                 parent: this,
-                child: this.trailingDrawer,
+                model: this.trailingCollapsedChildModel,
                 elements: this.elements,
             }));
         }
@@ -265,23 +280,23 @@ let IoSplit = IoSplit_1 = class IoSplit extends ReactiveElement {
 };
 __decorate([
     Property({ type: Object })
-], IoSplit.prototype, "split", void 0);
+], IoSplit.prototype, "model", void 0);
 __decorate([
     Property(Array)
 ], IoSplit.prototype, "elements", void 0);
 __decorate([
     Property({ type: Object, value: null })
-], IoSplit.prototype, "leadingDrawer", void 0);
+], IoSplit.prototype, "leadingCollapsedChildModel", void 0);
 __decorate([
     Property({ type: Object, value: null })
-], IoSplit.prototype, "trailingDrawer", void 0);
+], IoSplit.prototype, "trailingCollapsedChildModel", void 0);
 __decorate([
     Property({ type: Boolean, value: true, reflect: true })
 ], IoSplit.prototype, "hasVisibleAutoSize", void 0);
 __decorate([
     Property({ type: Boolean, value: false, reflect: true })
 ], IoSplit.prototype, "showVeil", void 0);
-IoSplit = IoSplit_1 = __decorate([
+IoSplit = __decorate([
     Register
 ], IoSplit);
 export { IoSplit };

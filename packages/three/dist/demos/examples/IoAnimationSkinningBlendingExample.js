@@ -219,7 +219,7 @@ let IoAnimationSkinningBlendingExample = class IoAnimationSkinningBlendingExampl
                         }
                     })
                 ],
-                layout: new Layout({
+                model: new Layout({
                     child: {
                         type: 'split',
                         orientation: 'horizontal',

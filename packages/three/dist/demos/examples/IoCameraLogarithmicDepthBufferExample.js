@@ -125,7 +125,7 @@ let IoCameraLogarithmicDepthBufferExample = class IoCameraLogarithmicDepthBuffer
                     ioThreeViewport({ id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene' }),
                     ioThreeViewport({ id: 'SceneCameraLog', applet: this.applet, cameraSelect: 'scene', renderer: this.renderer }),
                 ],
-                layout: new Layout({
+                model: new Layout({
                     child: {
                         type: 'split',
                         orientation: 'vertical',

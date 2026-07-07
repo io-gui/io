@@ -134,7 +134,7 @@ let IoBackdropAreaExample = class IoBackdropAreaExample extends IoThreeExample {
                         ]
                     })
                 ],
-                layout: new Layout({
+                model: new Layout({
                     child: {
                         type: 'split',
                         orientation: 'horizontal',

@@ -2,7 +2,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { IoTab, Tab, IoLayout, Layout } from '@io-gui/layout'
 
-function mountTabInLayout(container: HTMLElement, tabData: { id: string, label?: string, icon?: string, selected?: boolean }) {
+function mountTabInLayout(container: HTMLElement, tabData: { id: string; label?: string; icon?: string; selected?: boolean }) {
   const layoutModel = new Layout({
     child: {
       type: 'split',

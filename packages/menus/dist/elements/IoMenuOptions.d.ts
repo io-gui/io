@@ -43,6 +43,7 @@ export declare class IoMenuOptions extends ReactiveElement {
     expandedChanged(): void;
     searchChanged(): void;
     onExpandInOverlay(): void;
+    focusFirstOption(): void;
     mutated(): void;
 }
 export declare const ioMenuOptions: (arg0?: IoMenuOptionsProps) => VDOMElement;
