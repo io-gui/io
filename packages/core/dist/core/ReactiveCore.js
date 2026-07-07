@@ -41,7 +41,7 @@ export function removeParent(child, parent) {
         debug: console.warn('ReactiveNode.removeParent(): Parent not found!', child, parent);
     }
 }
-export function detachChildParents(owner) {
+export function detachNodeParents(owner) {
     for (let i = owner._children.length; i--;) {
         const child = owner._children[i];
         if (isReactiveNode(child) && !child._disposed) {

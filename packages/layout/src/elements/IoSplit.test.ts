@@ -1,7 +1,7 @@
 //@ts-nocheck
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { nextFrame } from '@io-gui/core'
-import { Split, IoSplit } from '@io-gui/layout'
+import { Split, IoSplit, Layout, Panel } from '@io-gui/layout'
 
 describe('IoSplit View Element', () => {
   let layout: IoSplit
@@ -210,6 +210,61 @@ describe('IoSplit View Element', () => {
         expect(panel.querySelectorAll('io-tab').length).toBeGreaterThan(0)
         expect(panel.getBoundingClientRect().width).toBeGreaterThan(0)
       })
+    })
+  })
+
+  describe('calculateCollapsedDrawers', () => {
+    it('Should not throw when model children is empty', () => {
+      const split = new Split({
+        type: 'split',
+        children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }],
+      })
+
+      layout = new IoSplit({ model: split, elements: [] })
+      container.style.cssText = 'position:fixed;width:800px;height:400px;'
+      container.appendChild(layout)
+
+      split.children.splice(0, split.children.length)
+
+      expect(() => layout.calculateCollapsedDrawers()).not.toThrow()
+      expect(layout.leadingCollapsedChildModel).toBeNull()
+      expect(layout.trailingCollapsedChildModel).toBeNull()
+    })
+
+    it('Should not throw when nested split consolidates sole panel child', async () => {
+      const layoutModel = new Layout({
+        child: {
+          type: 'split',
+          children: [
+            {
+              type: 'split',
+              size: '350px',
+              children: [
+                { type: 'panel', tabs: [{ id: 'Inputs' }] },
+                { type: 'panel', tabs: [{ id: 'Getting Started' }] },
+              ],
+            },
+            { type: 'panel', tabs: [{ id: 'Theme Editor' }] },
+          ],
+        },
+      })
+
+      const rootSplit = layoutModel.child as Split
+      const innerSplit = rootSplit.children[0] as Split
+      const innerIoSplit = new IoSplit({ model: innerSplit, elements: [] })
+      container.style.cssText = 'position:fixed;width:800px;height:400px;'
+      container.appendChild(innerIoSplit)
+      await nextFrame()
+
+      const panelToEmpty = innerSplit.children[0] as Panel
+      while (panelToEmpty.tabs.length > 0) {
+        panelToEmpty.removeTab(panelToEmpty.tabs[0])
+      }
+
+      expect(() => layoutModel.normalize()).not.toThrow()
+      await nextFrame()
+
+      innerIoSplit.remove()
     })
   })
 

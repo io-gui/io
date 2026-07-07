@@ -56,3 +56,12 @@
 - selected attr: hasAttribute not getAttribute string values
 - setDropTarget doesn't sync dropIndex property — test marker DOM instead
 - packages/layout: 321/321 green
+
+## 2026-07-07 Stale _parents after layout normalize
+
+- Bug: consolidateChildAt + Layout root collapse hoisted nodes via splice without unlinking from intermediate split; findParentSplit returned first stale split in _parents
+- Fix Split.consolidateChildAt: clear childSplit.children before hoist; detachChildParents(soleChild) on spread branch
+- Fix Layout.normalize: clear rootSplit.children before promoting sole child to layout.child
+- Added 3 Layout.test.ts tests (inner consolidation, spread hoist, root collapse)
+- Core hardening deferred: NodeArray removal detachChildParents + disconnectPropertyValue would help but spread-hoist still needs layout cleanup
+- packages/layout: 324/324 green

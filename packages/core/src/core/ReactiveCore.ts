@@ -56,7 +56,7 @@ export function removeParent(child: ReactiveNode, parent: ReactiveNode) {
   }
 }
 
-export function detachChildParents(owner: ReactiveNode) {
+export function detachNodeParents(owner: ReactiveNode) {
   for (let i = owner._children.length; i--;) {
     const child = owner._children[i]
     if (isReactiveNode(child) && !child._disposed) {

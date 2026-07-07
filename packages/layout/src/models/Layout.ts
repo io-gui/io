@@ -98,30 +98,23 @@ export class Layout extends ReactiveObject {
     const index = parentSplit.children.indexOf(targetPanel)
     let newIndex = ['left', 'top'].includes(direction) ? index - 1 : index + 1
 
-    console.log('convertToSplit',parentSplit, parentSplit.orientation, orientation, direction)
-
     if (parentSplit.orientation === orientation) {
       newIndex = Math.max(0, newIndex)
-      parentSplit.children.splice(newIndex, 0, new Panel({ type: 'panel', tabs: [tab] }))
       source.removeTab(tab)
+      parentSplit.children.splice(newIndex, 0, new Panel({ type: 'panel', tabs: [tab] }))
 
     } else if (targetPanel.tabs.length > 1 || targetPanel !== source) {
 
-      console.log('convertToSplit', parentSplit, targetPanel, newIndex)
+      source.removeTab(tab)
       if (newIndex === -1) {
-        console.log('convertToSplit', parentSplit, targetPanel, new Panel({ type: 'panel', tabs: [tab] }), targetPanel, orientation)
         this.convertToSplit(parentSplit, targetPanel, new Panel({ type: 'panel', tabs: [tab] }), targetPanel, orientation)
       } else {
-        console.log('convertToSplit', parentSplit, targetPanel, targetPanel, new Panel({ type: 'panel', tabs: [tab] }), orientation)
         this.convertToSplit(parentSplit, targetPanel, targetPanel, new Panel({ type: 'panel', tabs: [tab] }), orientation)
       }
-
-      source.removeTab(tab)
     }
   }
 
   findParentSplit(panel: Panel): Split | null {
-    console.log(panel._parents)
     for (let i = 0; i < panel._parents.length; i++) {
       const parent = panel._parents[i]
       if (isSplitNode(parent as LayoutChild)) {

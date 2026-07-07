@@ -116,6 +116,6 @@ export declare function bind(node: ReactiveNode, name: string): Binding<unknown>
 /** Disposes and removes the binding for the named reactive property. */
 export declare function unbind<TNode extends ReactiveNode, K extends keyof TNode & string>(node: TNode, name: K): void;
 export declare function unbind(node: ReactiveNode, name: string): void;
-export { detachChildParents } from '../core/ReactiveCore.js';
+export { detachNodeParents } from '../core/ReactiveCore.js';
 /** Tears down bindings, listeners, queues, and parent links for a reactive owner. */
 export declare function dispose(node: ReactiveNode): void;

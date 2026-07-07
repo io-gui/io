@@ -49,6 +49,22 @@ class ConsumerNode extends ReactiveObject {
   declare items: NodeArray<LabelNode>
 }
 
+@Register
+class ContainerNode extends ReactiveObject {
+  static get Properties(): PropertyDefinitions {
+    return { items: { type: NodeArray, init: 'this' } }
+  }
+  declare items: NodeArray<LabelNode>
+}
+
+@Register
+class GroupNode extends ReactiveObject {
+  static get Properties(): PropertyDefinitions {
+    return { groups: { type: NodeArray, init: 'this' } }
+  }
+  declare groups: NodeArray<ContainerNode>
+}
+
 describe('NodeArray', () => {
   describe('fill()', () => {
     it('Should fill entire array with a value', () => {
@@ -398,6 +414,25 @@ describe('NodeArray', () => {
       expect(item1._parents.includes(parent)).toBe(true)
       expect(item2._parents.includes(parent)).toBe(false)
       expect(item3._parents.includes(parent)).toBe(true)
+
+      parent.dispose()
+    })
+
+    it('Should detach nested children when removing container from NodeArray', () => {
+      const parent = new GroupNode()
+      const container = new ContainerNode()
+      const leaf = new LabelNode({ label: 'leaf' })
+      container.items.push(leaf)
+      parent.groups.push(container)
+
+      expect(leaf._parents.includes(container)).toBe(true)
+
+      const replacement = new ContainerNode()
+      parent.groups.splice(0, 1, replacement)
+
+      expect(leaf._parents.includes(container)).toBe(false)
+      expect(container._parents.includes(parent)).toBe(false)
+      expect(replacement._parents.includes(parent)).toBe(true)
 
       parent.dispose()
     })

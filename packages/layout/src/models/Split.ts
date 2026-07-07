@@ -1,4 +1,4 @@
-import { ReactiveObject, NodeArray, Property, Register } from '@io-gui/core'
+import { ReactiveObject, NodeArray, Property, Register, detachNodeParents } from '@io-gui/core'
 import { Panel, PanelData } from './Panel.js'
 import {
   DEFAULT_SIZE,
@@ -90,6 +90,7 @@ export class Split extends ReactiveObject {
         this.children.splice(index, 1, soleChild)
       } else if (isSplitNode(soleChild)) {
         this.orientation = soleChild.orientation
+        detachNodeParents(soleChild)
         this.children.splice(index, 1, ...soleChild.children)
         ensureOneChildHasAutoSize(this.children)
       }

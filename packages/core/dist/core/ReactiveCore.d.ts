@@ -19,4 +19,4 @@ export type DisposableInternals = {
 };
 export declare function addParent(child: ReactiveNode, parent: ReactiveNode): void;
 export declare function removeParent(child: ReactiveNode, parent: ReactiveNode): void;
-export declare function detachChildParents(owner: ReactiveNode): void;
+export declare function detachNodeParents(owner: ReactiveNode): void;

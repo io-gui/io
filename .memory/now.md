@@ -1,3 +1,3 @@
 # Current Focus
 
-Layout tests restored: IoTab.test.ts + IoSplit.integration.test.ts updated for refactor (io-tab-drag events, IoTabDragGhost, model/action payload, selectedID).
+Stale `_parents` fixed. io-core hardening: NodeArray.disconnectItem + disconnectPropertyValue detachNodeParents. Layout spread-hoist still explicit.

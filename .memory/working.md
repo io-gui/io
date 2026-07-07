@@ -32,6 +32,7 @@
 - **Reactive normalize()** (ADR-0002, proposed): each Split normalizes its own invariants in childrenMutated (guarded+debounced), cascading up via nested-mutation surfacing; delete the 3 io-*-remove/consolidate DOM events. Not implemented.
 - Layout invariants (enforce in model): no empty Split/Panel; no single-child Split (consolidate); ≥1 growing child; exactly 1 selected tab per non-empty panel; ≥1 panel survives; unique tab id per panel.
 - Watch: `io-split[root]` selector is dead (no element sets `root`) — IoTab now walks to outermost io-split instead. Prefer that over reintroducing the attribute.
+- **Hoist/consolidate `_parents` cleanup**: io-core now calls `detachNodeParents` on NodeArray removal + `disconnectPropertyValue`. Layout panel hoist + root collapse rely on that; spread-hoist still needs explicit `detachNodeParents(soleChild)` in `consolidateChildAt`. Never empty NodeArray during hoist while IoSplit bound — crashes `calculateCollapsedDrawers`.
 
 ## Package-Specific Notes
 

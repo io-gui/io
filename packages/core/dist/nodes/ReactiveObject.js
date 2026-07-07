@@ -11,7 +11,7 @@ import { Binding } from '../core/Binding.js';
 import { PropertyInstance, removeSelfMutationListener, removeWindowMutationListener } from '../core/Property.js';
 import { NodeArray } from '../core/NodeArray.js';
 import { throttle, debounce, clearNodeCallbacks } from '../core/FrameScheduler.js';
-import { addParent, detachChildParents, initReactiveNodeInternals, isReactiveNode, removeParent } from '../core/ReactiveCore.js';
+import { addParent, detachNodeParents, initReactiveNodeInternals, isReactiveNode, removeParent } from '../core/ReactiveCore.js';
 import { Property } from '../decorators/Property.js';
 import { ReactiveElement } from '../elements/ReactiveElement.js';
 /** Instantiates a property type constructor with runtime constructor arguments. */
@@ -431,7 +431,7 @@ export function unbind(node, name) {
     const property = node._properties.get(name);
     property?.binding?.removeTarget(node, name);
 }
-export { detachChildParents } from '../core/ReactiveCore.js';
+export { detachNodeParents } from '../core/ReactiveCore.js';
 /** Tears down bindings, listeners, queues, and parent links for a reactive owner. */
 export function dispose(node) {
     debug: if (node._disposed) {
@@ -445,7 +445,7 @@ export function dispose(node) {
             property.value.dispose(true);
         }
     });
-    detachChildParents(node);
+    detachNodeParents(node);
     clearNodeCallbacks(node);
     const mutable = node;
     node._bindings.forEach((binding, name) => {

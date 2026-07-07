@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { NodeArray } from '@io-gui/core'
-import { Panel, PanelData, Tab, TabData } from '@io-gui/layout'
+import { Panel, PanelData, Tab, TabData, Split } from '@io-gui/layout'
 
 describe('Panel', () => {
 
@@ -503,6 +503,24 @@ describe('Panel', () => {
       // But tabs are NOT disposed - still usable
       expect(tab1._disposed).toBeUndefined()
       expect(tab2._disposed).toBeUndefined()
+    })
+
+    it('should remove tab after panel was detached from split parent', () => {
+      const split = new Split({
+        type: 'split',
+        children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }],
+      })
+      const panel = split.children[0] as Panel
+      const tab = panel.tabs[0]
+
+      split.children.splice(0, 1)
+
+      expect(tab._parents).not.toContain(panel)
+      expect(panel.tabs).toContain(tab)
+
+      panel.removeTab(tab)
+
+      expect(panel.tabs.length).toBe(0)
     })
 
     it('should dispatch mutation when tabs cleared via length', () => {

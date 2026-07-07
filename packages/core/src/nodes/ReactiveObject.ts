@@ -6,7 +6,7 @@ import { PropertyInstance, PropertyDefinitionLoose, removeSelfMutationListener, 
 import type { EventDispatcher } from '../core/EventDispatcher.js'
 import { NodeArray } from '../core/NodeArray.js'
 import { throttle, debounce, clearNodeCallbacks, CallbackFunction } from '../core/FrameScheduler.js'
-import { addParent, detachChildParents, initReactiveNodeInternals, isReactiveNode, removeParent, DisposableInternals, type ReactiveNode } from '../core/ReactiveCore.js'
+import { addParent, detachNodeParents, initReactiveNodeInternals, isReactiveNode, removeParent, DisposableInternals, type ReactiveNode } from '../core/ReactiveCore.js'
 import { Property } from '../decorators/Property.js'
 import { ReactiveElement } from '../elements/ReactiveElement.js'
 import type { ListenerDefinitionLoose, AnyEventListener } from '../core/EventDispatcher.js'
@@ -372,7 +372,8 @@ function disconnectPropertyValue(node: ReactiveNode, prop: PropertyInstance, old
   if (!hasValueAtOtherProperty(node, prop, oldValue)) {
     prop.observer.stop(oldValue)
     if (isReactiveNode(oldValue) && !oldValue._disposed) {
-      (oldValue as ReactiveNode).removeParent(node)
+      detachNodeParents(oldValue)
+      oldValue.removeParent(node)
     }
   } else {
     prop.observer.observing = false
@@ -505,7 +506,7 @@ export function unbind(node: ReactiveNode, name: string): void {
   const property = node._properties.get(name)
   property?.binding?.removeTarget(node, name)
 }
-export { detachChildParents } from '../core/ReactiveCore.js'
+export { detachNodeParents } from '../core/ReactiveCore.js'
 /** Tears down bindings, listeners, queues, and parent links for a reactive owner. */
 export function dispose(node: ReactiveNode) {
   debug: if (node._disposed) {
@@ -521,7 +522,7 @@ export function dispose(node: ReactiveNode) {
     }
   })
 
-  detachChildParents(node)
+  detachNodeParents(node)
   clearNodeCallbacks(node)
 
   const mutable = node as DisposableInternals

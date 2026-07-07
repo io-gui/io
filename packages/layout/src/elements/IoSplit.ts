@@ -92,6 +92,13 @@ export class IoSplit extends ReactiveElement {
 
     const split = this.model
     const children = split.children
+    if (children.length === 0) {
+      this.setProperties({
+        leadingCollapsedChildModel: null,
+        trailingCollapsedChildModel: null,
+      })
+      return
+    }
     const orientation = split.orientation
     let size: number | undefined
     let minSize = 0

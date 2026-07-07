@@ -113,6 +113,48 @@ describe('ReactiveObject', () => {
     parent.dispose()
     child.dispose()
   })
+  it('Should detach property subtree when replacing object property value', () => {
+    @Register
+    class LeafNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
+        return { label: '' }
+      }
+      declare label: string
+    }
+
+    @Register
+    class SplitLikeNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
+        return { child: { type: NodeArray, init: 'this' } }
+      }
+      declare child: NodeArray<LeafNode>
+    }
+
+    @Register
+    class RootNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
+        return { child: { type: Object, init: null } }
+      }
+      declare child: SplitLikeNode | LeafNode | null
+    }
+
+    const root = new RootNode()
+    const split = new SplitLikeNode()
+    const leaf = new LeafNode({ label: 'leaf' })
+    split.child.push(leaf)
+    root.child = split
+
+    expect(leaf._parents.includes(split)).toBe(true)
+    expect(split._parents.includes(root)).toBe(true)
+
+    root.child = leaf
+
+    expect(leaf._parents.includes(split)).toBe(false)
+    expect(split._parents.includes(root)).toBe(false)
+    expect(leaf._parents.includes(root)).toBe(true)
+
+    root.dispose()
+  })
   it('Should register reactive property definitions with correct defaults', () => {
     @Register
     class TestNode extends ReactiveObject {
