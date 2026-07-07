@@ -88,13 +88,28 @@ export class Layout extends ReactiveObject {
       return
     }
 
-    const parentSplit = this.findParentSplit(targetPanel)
-    if (!parentSplit) return
-
     let orientation: SplitOrientation = 'horizontal'
     if (direction === 'top' || direction === 'bottom') {
       orientation = 'vertical'
     }
+
+    const parentSplit = this.findParentSplit(targetPanel)
+    if (!parentSplit) {
+      if (targetPanel !== this.child) return
+      if (!(targetPanel.tabs.length > 1 || targetPanel !== source)) return
+
+      source.removeTab(tab)
+      const newPanel = new Panel({ type: 'panel', tabs: [tab] })
+      const newSplit = new Split({ type: 'split', orientation, children: [] })
+      if (['left', 'top'].includes(direction)) {
+        newSplit.children.push(newPanel, targetPanel)
+      } else {
+        newSplit.children.push(targetPanel, newPanel)
+      }
+      this.child = newSplit
+      return
+    }
+
     const index = parentSplit.children.indexOf(targetPanel)
     let newIndex = ['left', 'top'].includes(direction) ? index - 1 : index + 1
 
@@ -117,8 +132,8 @@ export class Layout extends ReactiveObject {
   findParentSplit(panel: Panel): Split | null {
     for (let i = 0; i < panel._parents.length; i++) {
       const parent = panel._parents[i]
-      if (isSplitNode(parent as LayoutChild)) {
-        return parent as Split
+      if (parent instanceof Split) {
+        return parent
       }
     }
     return null

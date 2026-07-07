@@ -97,6 +97,48 @@ describe('Layout', () => {
       expect(horizontalSplit.children[1]).toBe(panelB)
     })
 
+    it('splits lone root panel when dropping right', () => {
+      const layout = new Layout({
+        child: {
+          type: 'panel',
+          tabs: [{ id: 'a', label: 'A' }, { id: 'b', label: 'B' }],
+        },
+      })
+
+      const rootPanel = layout.child as Panel
+      const tabB = rootPanel.tabs.find(t => t.id === 'b') as Tab
+
+      layout.moveTab(tabB, rootPanel, 'right', 0)
+
+      expect(isSplitNode(layout.child)).toBe(true)
+      const rootSplit = layout.child as Split
+      expect(rootSplit.orientation).toBe('horizontal')
+      expect(rootSplit.children.length).toBe(2)
+      expect(rootSplit.children[0]).toBe(rootPanel)
+      expect((rootSplit.children[1] as Panel).tabs[0].id).toBe('b')
+    })
+
+    it('splits lone root panel when dropping top', () => {
+      const layout = new Layout({
+        child: {
+          type: 'panel',
+          tabs: [{ id: 'a', label: 'A' }, { id: 'b', label: 'B' }],
+        },
+      })
+
+      const rootPanel = layout.child as Panel
+      const tabB = rootPanel.tabs.find(t => t.id === 'b') as Tab
+
+      layout.moveTab(tabB, rootPanel, 'top', 0)
+
+      expect(isSplitNode(layout.child)).toBe(true)
+      const rootSplit = layout.child as Split
+      expect(rootSplit.orientation).toBe('vertical')
+      expect(rootSplit.children.length).toBe(2)
+      expect((rootSplit.children[0] as Panel).tabs[0].id).toBe('b')
+      expect(rootSplit.children[1]).toBe(rootPanel)
+    })
+
     it('places new panel first when dropping top on a non-first panel in horizontal split', () => {
       const layout = new Layout({
         child: {
@@ -200,6 +242,24 @@ describe('Layout', () => {
       expect(layout.findParentSplit(panelB)).toBe(innerSplit)
       expect(splitParents(panelA)).toEqual([innerSplit])
       expect(splitParents(panelB)).toEqual([innerSplit])
+    })
+
+    it('should skip non-Split parents that expose a children collection', () => {
+      const layout = new Layout({
+        child: {
+          type: 'split',
+          children: [
+            { type: 'panel', tabs: [{ id: 'a' }] },
+          ],
+        },
+      })
+
+      const rootSplit = layout.child as Split
+      const panel = rootSplit.children[0] as Panel
+      const domLikeParent = { children: document.createElement('div').children }
+      panel.addParent(domLikeParent as unknown as Split)
+
+      expect(layout.findParentSplit(panel)).toBe(rootSplit)
     })
 
     it('should return null after root collapse to lone panel', () => {

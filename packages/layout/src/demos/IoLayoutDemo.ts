@@ -20,48 +20,48 @@ const defaultLayout = new Layout({
   child: {
     type: 'split',
     children: [
-      {
-        type: 'split',
-        size: '350px',
-        orientation: 'vertical',
-        children: [
-          {
-            type: 'panel',
-            size: '260px',
-            tabs: [
-              {id: 'Inputs', icon: 'io:inputs'},
-              {id: 'Sliders', icon: 'io:sliders'},
-              {id: 'Colors', icon: 'io:colors'},
-            ],
-          },
-          {
-            type: 'panel',
-            tabs: [
-              {id: 'Getting Started', icon: 'io:book'},
-              {id: 'Deep Dive', icon: 'io:book'},
-            ]
-          }
-        ],
-      },
-      {
-        type: 'split',
-        orientation: 'vertical',
-        children: [
-          {
-            type: 'panel',
-            tabs: [
-              {id: 'Editors', icon: 'io:editors'}
-            ]
-          },
-          {
-            type: 'panel',
-            size: '280px',
-            tabs: [
-              {id: 'Icons', icon: 'io:icons'}
-            ]
-          },
-        ]
-      },
+      // {
+      //   type: 'split',
+      //   size: '350px',
+      //   orientation: 'vertical',
+      //   children: [
+      //     {
+      //       type: 'panel',
+      //       size: '260px',
+      //       tabs: [
+      //         {id: 'Inputs', icon: 'io:inputs'},
+      //         {id: 'Sliders', icon: 'io:sliders'},
+      //         {id: 'Colors', icon: 'io:colors'},
+      //       ],
+      //     },
+      //     {
+      //       type: 'panel',
+      //       tabs: [
+      //         {id: 'Getting Started', icon: 'io:book'},
+      //         {id: 'Deep Dive', icon: 'io:book'},
+      //       ]
+      //     }
+      //   ],
+      // },
+      // {
+      //   type: 'split',
+      //   orientation: 'vertical',
+      //   children: [
+      //     {
+      //       type: 'panel',
+      //       tabs: [
+      //         {id: 'Editors', icon: 'io:editors'}
+      //       ]
+      //     },
+      //     {
+      //       type: 'panel',
+      //       size: '280px',
+      //       tabs: [
+      //         {id: 'Icons', icon: 'io:icons'}
+      //       ]
+      //     },
+      //   ]
+      // },
       {
         type: 'panel',
         size: '330px',

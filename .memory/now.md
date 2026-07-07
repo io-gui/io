@@ -1,3 +1,3 @@
 # Current Focus
 
-Layout plan todo `fix-edge-drop-left-top` done — perpendicular branch uses direction not newIndex===-1.
+Layout plan todo `support-lone-root-edge-drop` done — lone root panel edge-drop wraps root in new Split.

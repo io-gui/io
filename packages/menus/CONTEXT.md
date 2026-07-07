@@ -17,5 +17,9 @@ One node of a Menu's tree — an id/label/value with an interaction `mode` (`sel
 _Avoid_: item, entry, choice
 
 **Id**:
-An Option's identifier, unique across its whole Menu (a Menu invariant, debug-enforced). `label` and `value` default to it.
+An Option's identifier, unique across its whole Menu (a Menu invariant, debug-enforced). May not contain a comma — the Path separator. `label` and `value` default to it.
 _Avoid_: key, name
+
+**Path**:
+The comma-joined chain of selected Ids from the Menu root through nested selection scopes to the deepest selected Option. Derived from selection but writable: writing a Path selects the deepest Id that still exists (stale-tolerant restore). `selectedID` is its leaf, also writable; `selectedIDImmediate` (a scope's selected child) is read-only derived.
+_Avoid_: route, trail, selection chain

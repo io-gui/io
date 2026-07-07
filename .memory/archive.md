@@ -79,3 +79,17 @@
 - Fix: gate on `['left','top'].includes(direction)` instead
 - Tests: vertical split left-drop on panel B; horizontal split top-drop on panel B — assert new panel first in perpendicular split
 - packages/layout: 329/329 green
+
+## 2026-07-07 support-lone-root-edge-drop
+
+- Bug: moveTab returned early when findParentSplit null — lone root Panel could never edge-split
+- Fix: when targetPanel === this.child, wrap root in new Split with direction-ordered panels; same degenerate guard as perpendicular branch (single tab same panel)
+- Tests: lone root [a,b] moveTab right → horizontal split tab b second; top → vertical split tab b first
+- packages/layout: all green
+
+## 2026-07-07 findParentSplit instanceof fix
+
+- Runtime: moveTab crashed `parentSplit.children.indexOf is not a function` after lone-root split in browser
+- Cause: findParentSplit used isSplitNode duck check; IoPanel (HTMLElement) has `.children` HTMLCollection — no indexOf, matched before model Split
+- Fix: findParentSplit uses `parent instanceof Split`
+- Test: dom-like parent in _parents before real Split — still returns model Split

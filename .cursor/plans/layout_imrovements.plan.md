@@ -7,7 +7,7 @@ todos:
     status: completed
   - id: support-lone-root-edge-drop
     content: "Bug: Support edge-drop splitting of a lone root panel (findParentSplit null case)"
-    status: pending
+    status: completed
   - id: fix-remove-tab-selection
     content: "Bug: Fix Panel.removeTab stealing selection from unrelated tab"
     status: pending
