@@ -1,5 +1,5 @@
-import { ThemeSingleton } from "@io-gui/core"
-import { SplitDirection } from "../types/SplitDirection.js"
+import { ThemeSingleton } from '@io-gui/core'
+import { SplitDirection } from '../types/SplitDirection.js'
 
 export function resolveSplitEdge(x: number, y: number, panelRect: DOMRect, tabRects: DOMRect[]): SplitDirection {
   const ndcX = ((x - panelRect.left) / panelRect.width) * 2 - 1

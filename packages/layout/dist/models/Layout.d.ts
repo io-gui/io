@@ -1,4 +1,5 @@
 import { ReactiveObject } from '@io-gui/core';
+import { SplitDirection } from '../types/SplitDirection.js';
 import { Panel, PanelData } from './Panel.js';
 import { Split, SplitData, SplitOrientation } from './Split.js';
 import { Tab } from './Tab.js';
@@ -8,9 +9,6 @@ export type LayoutData = {
     child: LayoutChildData;
 };
 export declare function createLayoutChild(child: SplitData | PanelData): Split | Panel;
-export declare function isPanelNode(node: LayoutChild): node is Panel;
-export declare function isSplitNode(node: LayoutChild): node is Split;
-export type SplitDirection = 'top' | 'bottom' | 'left' | 'right' | 'center';
 export declare class Layout extends ReactiveObject {
     child: LayoutChild;
     constructor(data: LayoutData);

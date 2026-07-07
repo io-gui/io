@@ -5,8 +5,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Property, ReactiveElement, Register, ThemeSingleton, div } from '@io-gui/core';
-import { ioTab } from './IoTab';
-import { Tab } from '../models/Tab';
+import { Tab } from '../models/Tab.js';
+import { ioTab } from './IoTab.js';
 const SPLIT_MARKER_SIZE = 120; // pixels
 let IoTabDragGhost = class IoTabDragGhost extends ReactiveElement {
     static get Style() {
@@ -24,7 +24,6 @@ let IoTabDragGhost = class IoTabDragGhost extends ReactiveElement {
         box-shadow: var(--io_shadow);
       }
       :host > #drop-marker {
-        transition: top 0.1s ease-in-out, left 0.1s ease-in-out, width 0.1s ease-in-out, height 0.1s ease-in-out;
         position: fixed;
         display: flex;
         flex-direction: column;
@@ -48,7 +47,6 @@ let IoTabDragGhost = class IoTabDragGhost extends ReactiveElement {
         margin-bottom: calc(var(--io_spacing) * -1);
         background-color: var(--io_bgColorStrong);
         border-radius: var(--io_borderRadius) var(--io_borderRadius) 0 0;
-        transition: margin-left 0.1s ease-in-out;
       }
       :host > #drop-marker > #drop-marker-content {
         flex: 1 1 0;
@@ -108,6 +106,7 @@ let IoTabDragGhost = class IoTabDragGhost extends ReactiveElement {
                 const lastRectOffset = lastTabRect.right - target.panelRect.left;
                 tabInsertMarkerOffset = lastRectOffset + ThemeSingleton.spacing;
             }
+            this.$['drop-marker'].style.display = 'flex';
             this.$['drop-marker'].style.left = `${target.panelRect.left}px`;
             this.$['drop-marker'].style.top = `${target.panelRect.top}px`;
             this.$['drop-marker'].style.width = `${target.panelRect.width}px`;
@@ -117,6 +116,7 @@ let IoTabDragGhost = class IoTabDragGhost extends ReactiveElement {
         }
         else {
             this.splitDirection = 'center';
+            this.$['drop-marker'].style.display = 'none';
             this.$['drop-marker'].style.left = '0px';
             this.$['drop-marker'].style.top = '0px';
             this.$['drop-marker'].style.width = '100%';

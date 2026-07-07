@@ -26,6 +26,7 @@ export declare class NodeArray<N extends ReactiveObject> extends Array<N> {
     node: ReactiveObject;
     private proxy;
     private _isInternalOperation;
+    private _pendingDispatch;
     private _observers;
     _itemType: ReactiveObjectConstructor | undefined;
     static get [Symbol.species](): ArrayConstructor;
@@ -33,7 +34,7 @@ export declare class NodeArray<N extends ReactiveObject> extends Array<N> {
     /** @param node Owner that receives mutation events for this collection. */
     constructor(node: ReactiveObject, ...args: N[]);
     private disconnectItem;
-    /** Run array mutations without dispatching `io-mutation` until complete. */
+    /** Run array mutations without dispatching `io-mutation` until the outermost batch completes. */
     withInternalOperation<T>(operation: () => T): T;
     splice(start: number, deleteCount: number, ...items: N[]): N[];
     push(...items: N[]): number;

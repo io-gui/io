@@ -32,6 +32,9 @@ let Panel = class Panel extends ReactiveObject {
         if (existingIndex !== -1) {
             console.warn(`Panel.addTab: Duplicate tab id "${tab.id}", removing duplicate tab.`);
             this.tabs.splice(existingIndex, 1);
+            if (index !== undefined && existingIndex < index) {
+                index--;
+            }
         }
         index = index ?? this.tabs.length;
         index = Math.min(Math.max(index, 0), this.tabs.length);
@@ -42,8 +45,9 @@ let Panel = class Panel extends ReactiveObject {
         const index = this.tabs.indexOf(tab);
         if (index === -1)
             return;
+        const wasSelected = tab.selected;
         this.tabs.splice(index, 1);
-        if (this.tabs.length > 0) {
+        if (this.tabs.length > 0 && (wasSelected || !this.tabs.some(t => t.selected))) {
             const newIndex = Math.min(index, this.tabs.length - 1);
             this.selectByIndex(newIndex);
         }

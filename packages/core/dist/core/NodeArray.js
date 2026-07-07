@@ -24,6 +24,7 @@ import { detachNodeParents, isReactiveNode } from './ReactiveCore.js';
 export class NodeArray extends Array {
     node;
     _isInternalOperation = false;
+    _pendingDispatch = false;
     _observers = new Set();
     static get [Symbol.species]() { return Array; }
     setItemType(item) {
@@ -61,8 +62,8 @@ export class NodeArray extends Array {
             set(target, property, value) {
                 if (property === 'length') {
                     const newLength = Number(value);
+                    const oldLength = target.length;
                     if (!self._isInternalOperation) {
-                        const oldLength = target.length;
                         if (newLength < oldLength) {
                             for (let i = newLength; i < oldLength; i++) {
                                 const item = target[i];
@@ -77,7 +78,7 @@ export class NodeArray extends Array {
                         }
                     }
                     target.length = newLength;
-                    if (!self._isInternalOperation)
+                    if (newLength !== oldLength)
                         self.dispatchMutation();
                     return true;
                 }
@@ -93,7 +94,7 @@ export class NodeArray extends Array {
                         value.addEventListener('io-mutation', self.itemMutated);
                         value.addParent(self.node);
                     }
-                    if (!self._isInternalOperation)
+                    if (oldValue !== value)
                         self.dispatchMutation();
                     return true;
                 }
@@ -109,14 +110,19 @@ export class NodeArray extends Array {
         detachNodeParents(item);
         item.removeParent(this.node);
     }
-    /** Run array mutations without dispatching `io-mutation` until complete. */
+    /** Run array mutations without dispatching `io-mutation` until the outermost batch completes. */
     withInternalOperation(operation) {
+        const wasInternal = this._isInternalOperation;
         this._isInternalOperation = true;
         try {
             return operation();
         }
         finally {
-            this._isInternalOperation = false;
+            this._isInternalOperation = wasInternal;
+            if (!wasInternal && this._pendingDispatch) {
+                this._pendingDispatch = false;
+                this.dispatchMutation();
+            }
         }
     }
     splice(start, deleteCount, ...items) {
@@ -288,6 +294,10 @@ export class NodeArray extends Array {
         }
     }
     dispatchMutation() {
+        if (this._isInternalOperation) {
+            this._pendingDispatch = true;
+            return;
+        }
         for (const observer of this._observers) {
             observer.dispatch('io-mutation', { object: this.proxy });
         }
@@ -320,9 +330,14 @@ export class NodeArray extends Array {
                 this.disconnectItem(item);
             }
         }
-        this.withInternalOperation(() => {
+        const wasInternal = this._isInternalOperation;
+        this._isInternalOperation = true;
+        try {
             super.splice(0, this.length);
-        });
+        }
+        finally {
+            this._isInternalOperation = wasInternal;
+        }
         this._observers.clear();
         if (deep) {
             for (const node of nodes) {

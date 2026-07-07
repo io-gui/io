@@ -18,7 +18,7 @@ describe('Layout', () => {
       },
     })
 
-    expect(isSplitNode(layout.child)).toBe(true)
+    expect(layout.child instanceof Split).toBe(true)
     expect((layout.child as Split).children.length).toBe(2)
   })
 
@@ -30,7 +30,7 @@ describe('Layout', () => {
       },
     })
 
-    expect(isPanelNode(layout.child)).toBe(true)
+    expect(layout.child instanceof Panel).toBe(true)
     expect((layout.child as Panel).tabs[0].id).toBe('solo')
   })
 
@@ -48,7 +48,7 @@ describe('Layout', () => {
     expect((json.child as SplitData).orientation).toBe('vertical')
 
     const restored = new Layout(json)
-    expect(isSplitNode(restored.child)).toBe(true)
+    expect(restored.child instanceof Split).toBe(true)
     expect((restored.child as Split).orientation).toBe('vertical')
   })
 
@@ -64,7 +64,7 @@ describe('Layout', () => {
     expect(json.child.type).toBe('panel')
 
     const restored = new Layout(json)
-    expect(isPanelNode(restored.child)).toBe(true)
+    expect(restored.child instanceof Panel).toBe(true)
     expect((restored.child as Panel).tabs[0].label).toBe('Only Tab')
   })
 
@@ -90,7 +90,7 @@ describe('Layout', () => {
       layout.moveTab(tab, panelB, 'left', 0)
 
       const bSlot = rootSplit.children[1]
-      expect(isSplitNode(bSlot)).toBe(true)
+      expect(bSlot instanceof Split).toBe(true)
       const horizontalSplit = bSlot as Split
       expect(horizontalSplit.orientation).toBe('horizontal')
       expect(horizontalSplit.children.length).toBe(2)
@@ -111,7 +111,7 @@ describe('Layout', () => {
 
       layout.moveTab(tabB, rootPanel, 'right', 0)
 
-      expect(isSplitNode(layout.child)).toBe(true)
+      expect(layout.child instanceof Split).toBe(true)
       const rootSplit = layout.child as Split
       expect(rootSplit.orientation).toBe('horizontal')
       expect(rootSplit.children.length).toBe(2)
@@ -132,7 +132,7 @@ describe('Layout', () => {
 
       layout.moveTab(tabB, rootPanel, 'top', 0)
 
-      expect(isSplitNode(layout.child)).toBe(true)
+      expect(layout.child instanceof Split).toBe(true)
       const rootSplit = layout.child as Split
       expect(rootSplit.orientation).toBe('vertical')
       expect(rootSplit.children.length).toBe(2)
@@ -184,7 +184,7 @@ describe('Layout', () => {
       layout.moveTab(tab, panelB, 'top', 0)
 
       const bSlot = rootSplit.children[1]
-      expect(isSplitNode(bSlot)).toBe(true)
+      expect(bSlot instanceof Split).toBe(true)
       const verticalSplit = bSlot as Split
       expect(verticalSplit.orientation).toBe('vertical')
       expect(verticalSplit.children.length).toBe(2)
@@ -299,7 +299,7 @@ describe('Layout', () => {
 
       const panel = layout.child as Panel
 
-      expect(isPanelNode(layout.child)).toBe(true)
+      expect(layout.child instanceof Panel).toBe(true)
       expect(layout.findParentSplit(panel)).toBe(null)
       expect(splitParents(panel).length).toBe(0)
       expect(panel._parents).toContain(layout)
@@ -309,13 +309,6 @@ describe('Layout', () => {
 
 })
 
-function isPanelNode(node: Split | Panel): node is Panel {
-  return (node as Panel).tabs !== undefined
-}
-
-function isSplitNode(node: Split | Panel): node is Split {
-  return (node as Split).children !== undefined
-}
 
 function splitParents(panel: Panel): Split[] {
   return panel._parents.filter(p => (p as Split).children !== undefined) as Split[]

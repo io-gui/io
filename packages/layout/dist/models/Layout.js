@@ -5,16 +5,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { ReactiveObject, Property, Register } from '@io-gui/core';
+import { DEFAULT_SIZE } from '../utils/layoutSize.js';
 import { Panel } from './Panel.js';
 import { Split } from './Split.js';
 export function createLayoutChild(child) {
     return child.type === 'panel' ? new Panel(child) : new Split(child);
-}
-export function isPanelNode(node) {
-    return node.tabs !== undefined;
-}
-export function isSplitNode(node) {
-    return node.children !== undefined;
 }
 let Layout = class Layout extends ReactiveObject {
     constructor(data) {
@@ -29,7 +24,7 @@ let Layout = class Layout extends ReactiveObject {
         this.normalize();
     }
     normalize() {
-        if (isSplitNode(this.child)) {
+        if (this.child instanceof Split) {
             this.child.normalize();
             if (this.child.children.length === 1) {
                 this.child = this.child.children[0];
@@ -38,12 +33,12 @@ let Layout = class Layout extends ReactiveObject {
                 this.child = new Panel({ type: 'panel', tabs: [] });
             }
         }
-        if (isSplitNode(this.child) && !this.containsPanel(this.child)) {
+        if (this.child instanceof Split && !this.containsPanel(this.child)) {
             this.child = new Panel({ type: 'panel', tabs: [] });
         }
     }
     containsPanel(node) {
-        if (isPanelNode(node))
+        if (node instanceof Panel)
             return true;
         for (let i = 0; i < node.children.length; i++) {
             if (this.containsPanel(node.children[i]))
@@ -52,7 +47,7 @@ let Layout = class Layout extends ReactiveObject {
         return false;
     }
     findPanelWithTab(node, tab) {
-        if (isPanelNode(node))
+        if (node instanceof Panel)
             return node.tabs.includes(tab) ? node : null;
         // Recursively search through split's children
         for (let i = 0; i < node.children.length; i++) {
@@ -76,12 +71,27 @@ let Layout = class Layout extends ReactiveObject {
             }
             return;
         }
-        const parentSplit = this.findParentSplit(targetPanel);
-        if (!parentSplit)
-            return;
         let orientation = 'horizontal';
         if (direction === 'top' || direction === 'bottom') {
             orientation = 'vertical';
+        }
+        const parentSplit = this.findParentSplit(targetPanel);
+        if (!parentSplit) {
+            if (targetPanel !== this.child)
+                return;
+            if (!(targetPanel.tabs.length > 1 || targetPanel !== source))
+                return;
+            source.removeTab(tab);
+            const newPanel = new Panel({ type: 'panel', tabs: [tab] });
+            const newSplit = new Split({ type: 'split', orientation, children: [] });
+            if (['left', 'top'].includes(direction)) {
+                newSplit.children.push(newPanel, targetPanel);
+            }
+            else {
+                newSplit.children.push(targetPanel, newPanel);
+            }
+            this.child = newSplit;
+            return;
         }
         const index = parentSplit.children.indexOf(targetPanel);
         let newIndex = ['left', 'top'].includes(direction) ? index - 1 : index + 1;
@@ -92,7 +102,7 @@ let Layout = class Layout extends ReactiveObject {
         }
         else if (targetPanel.tabs.length > 1 || targetPanel !== source) {
             source.removeTab(tab);
-            if (newIndex === -1) {
+            if (['left', 'top'].includes(direction)) {
                 this.convertToSplit(parentSplit, targetPanel, new Panel({ type: 'panel', tabs: [tab] }), targetPanel, orientation);
             }
             else {
@@ -103,7 +113,7 @@ let Layout = class Layout extends ReactiveObject {
     findParentSplit(panel) {
         for (let i = 0; i < panel._parents.length; i++) {
             const parent = panel._parents[i];
-            if (isSplitNode(parent)) {
+            if (parent instanceof Split) {
                 return parent;
             }
         }
@@ -112,6 +122,8 @@ let Layout = class Layout extends ReactiveObject {
     convertToSplit(parentSplit, panel, first, second, orientation) {
         const index = parentSplit.children.indexOf(panel);
         const newSplit = new Split({ type: 'split', orientation, children: [] });
+        newSplit.size = panel.size;
+        panel.size = DEFAULT_SIZE;
         newSplit.children.push(first, second);
         parentSplit.children.splice(index, 1, newSplit);
     }

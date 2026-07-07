@@ -8,7 +8,7 @@ import {
   layoutSizeToJSON,
   ensureOneChildHasAutoSize,
 } from '../utils/layoutSize.js'
-import { createLayoutChild, isPanelNode, isSplitNode } from './Layout.js'
+import { createLayoutChild } from './Layout.js'
 
 export type SplitOrientation = 'horizontal' | 'vertical'
 
@@ -49,7 +49,7 @@ export class Split extends ReactiveObject {
       changed = false
       for (let i = 0; i < this.children.length; i++) {
         const child = this.children[i]
-        if (isSplitNode(child)) {
+        if (child instanceof Split) {
           const lengthBefore = child.children.length
           child.normalize()
           if (child.children.length !== lengthBefore) changed = true
@@ -58,21 +58,21 @@ export class Split extends ReactiveObject {
       this.children.withInternalOperation(() => {
         for (let i = this.children.length; i--;) {
           const child = this.children[i]
-          if (isPanelNode(child) && child.tabs.length === 0) {
+          if (child instanceof Panel && child.tabs.length === 0) {
             this.children.splice(i, 1)
             changed = true
           }
         }
         for (let i = this.children.length; i--;) {
           const child = this.children[i]
-          if (isSplitNode(child) && child.children.length === 0) {
+          if (child instanceof Split && child.children.length === 0) {
             this.children.splice(i, 1)
             changed = true
           }
         }
         for (let i = this.children.length; i--;) {
           const child = this.children[i]
-          if (isSplitNode(child) && child.children.length === 1) {
+          if (child instanceof Split && child.children.length === 1) {
             this.consolidateChildAt(i, child)
             changed = true
           }
@@ -85,10 +85,10 @@ export class Split extends ReactiveObject {
   consolidateChildAt(index: number, childSplit: Split) {
     this.children.withInternalOperation(() => {
       const soleChild = childSplit.children[0]
-      if (isPanelNode(soleChild)) {
+      if (soleChild instanceof Panel) {
         soleChild.size = childSplit.size
         this.children.splice(index, 1, soleChild)
-      } else if (isSplitNode(soleChild)) {
+      } else if (soleChild instanceof Split) {
         const orientationsMatch = this.orientation === soleChild.orientation
         const parentHasOneChild = this.children.length === 1
         if (orientationsMatch || parentHasOneChild) {

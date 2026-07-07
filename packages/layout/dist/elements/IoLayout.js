@@ -12,6 +12,7 @@ import { ioPanel } from './IoPanel.js';
 import { IoMenuOptions, MenuOption } from '@io-gui/menus';
 import { Tab } from '../models/Tab.js';
 import { IoTabDragGhost } from './IoTabDragGhost.js';
+import { resolveDropIndex, resolveSplitEdge } from '../utils/dropZone.js';
 let IoLayout = class IoLayout extends ReactiveElement {
     static get Style() {
         return /* css */ `
@@ -54,6 +55,7 @@ let IoLayout = class IoLayout extends ReactiveElement {
                 label: element.props?.label || '',
                 icon: element.props?.icon || '',
             }));
+            this._targetPanelModel = null;
         }
     }
     onTabDrag(event) {
@@ -68,9 +70,7 @@ let IoLayout = class IoLayout extends ReactiveElement {
         }
         else if (phase === 'move') {
             this._dropTarget = this.getDropTarget(event.detail.x, event.detail.y);
-            if (this._dropTarget) {
-                this.$tabDragGhost.setDropTarget(this._dropTarget);
-            }
+            this.$tabDragGhost.setDropTarget(this._dropTarget);
             this.$tabDragGhost.style.left = `${event.detail.x}px`;
             this.$tabDragGhost.style.top = `${event.detail.y}px`;
         }
@@ -86,65 +86,42 @@ let IoLayout = class IoLayout extends ReactiveElement {
         }
     }
     getDropTarget(x, y) {
-        let result = null;
-        this.querySelectorAll('io-panel').forEach(panel => {
-            const panelEl = panel;
-            const rect = panelEl.getBoundingClientRect();
-            if (x > rect.left && x < rect.right && y > rect.top && y < rect.bottom) {
-                const tabs = [...panelEl.querySelectorAll('io-tab')];
+        const panels = [...this.querySelectorAll('io-panel')];
+        for (const panel of panels) {
+            const panelRect = panel.getBoundingClientRect();
+            if (x > panelRect.left && x < panelRect.right && y > panelRect.top && y < panelRect.bottom) {
+                const tabs = [...panel.querySelectorAll('io-tab')];
                 const tabRects = tabs.map(tab => tab.getBoundingClientRect());
                 let dropIndex = tabs.length;
-                let splitDirection = 'center';
-                const dropSelfSingle = (panelEl.model.tabs.length === 1) && (panelEl.model.tabs[0].id === this.$tabDragGhost.model.id);
-                const matchingTabIndex = tabs.findIndex(tab => tab.model.id === this.$tabDragGhost.model.id);
-                if (matchingTabIndex !== -1) {
-                    dropIndex = matchingTabIndex;
+                let splitDirection = resolveSplitEdge(x, y, panelRect, tabRects);
+                const dropSelfSingle = (panel.model.tabs.length === 1) && (panel.model.tabs[0].id === this.$tabDragGhost.model.id);
+                if (dropSelfSingle) {
+                    splitDirection = 'center';
+                    dropIndex = 0;
                 }
-                const s = ThemeSingleton.spacing;
-                const pickedTabIndex = tabRects.findIndex(rect => (x + s) > rect.left && (x - s) < rect.right && (y + s) > rect.top && (y - s) < rect.bottom);
-                if (pickedTabIndex !== -1) {
-                    dropIndex = pickedTabIndex;
-                }
-                else if (y > tabRects[0].bottom && !dropSelfSingle) {
-                    const ndcX = ((x - rect.left) / rect.width) * 2 - 1;
-                    const ndcY = ((y - rect.top) / rect.height) * 2 - 1;
-                    const absX = Math.abs(ndcX);
-                    const absY = Math.abs(ndcY);
-                    const ndcTabHeight = tabRects[0].height / rect.height * 2;
-                    if ((absX > 0.8 || absY > 0.8 || ndcY < (-0.8 + ndcTabHeight)) && absX < 1 && absY < 1) {
-                        if (absX > absY) {
-                            if (ndcX > 0) {
-                                dropIndex = -1;
-                                splitDirection = 'right';
-                            }
-                            else {
-                                dropIndex = -1;
-                                splitDirection = 'left';
-                            }
-                        }
-                        else {
-                            if (ndcY > 0) {
-                                dropIndex = -1;
-                                splitDirection = 'bottom';
-                            }
-                            else {
-                                dropIndex = -1;
-                                splitDirection = 'top';
-                            }
-                        }
+                else if (tabRects.length > 0) {
+                    const duplicateTabIndex = tabs.findIndex(tab => tab.model.id === this.$tabDragGhost.model.id);
+                    if (duplicateTabIndex !== -1) {
+                        dropIndex = duplicateTabIndex;
+                        splitDirection = 'center';
+                    }
+                    const pickedTabIndex = resolveDropIndex(x, y, tabRects);
+                    if (pickedTabIndex !== -1) {
+                        dropIndex = pickedTabIndex;
+                        splitDirection = 'center';
                     }
                 }
-                result = {
+                return {
                     panel: panel,
-                    panelRect: rect,
+                    panelRect: panelRect,
                     tabs: tabs,
                     tabRects: tabRects,
                     dropIndex: dropIndex,
                     splitDirection: splitDirection,
                 };
             }
-        });
-        return result;
+        }
+        return null;
     }
     modelMutated() {
         this.mutated();
@@ -185,7 +162,9 @@ let IoLayout = class IoLayout extends ReactiveElement {
     }
     dispose() {
         Overlay.removeChild(this.$addMenu);
+        Overlay.removeChild(this.$tabDragGhost);
         this.$addMenu.dispose();
+        this.$tabDragGhost.dispose();
         super.dispose();
     }
 };

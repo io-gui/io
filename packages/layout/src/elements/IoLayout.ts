@@ -142,7 +142,7 @@ export class IoLayout extends ReactiveElement {
 
           const pickedTabIndex = resolveDropIndex(x, y, tabRects)
 
-          if (pickedTabIndex !== -1) {  
+          if (pickedTabIndex !== -1) {
             dropIndex = pickedTabIndex
             splitDirection = 'center'
           }

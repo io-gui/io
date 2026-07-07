@@ -14,14 +14,6 @@ export function createLayoutChild(child: SplitData | PanelData): Split | Panel {
   return child.type === 'panel' ? new Panel(child) : new Split(child)
 }
 
-export function isPanelNode(node: LayoutChild): node is Panel {
-  return (node as Panel).tabs !== undefined
-}
-
-export function isSplitNode(node: LayoutChild): node is Split {
-  return (node as Split).children !== undefined
-}
-
 @Register
 export class Layout extends ReactiveObject {
 
@@ -43,7 +35,7 @@ export class Layout extends ReactiveObject {
   }
 
   normalize() {
-    if (isSplitNode(this.child)) {
+    if (this.child instanceof Split) {
       this.child.normalize()
       if (this.child.children.length === 1) {
         this.child = this.child.children[0]
@@ -51,13 +43,13 @@ export class Layout extends ReactiveObject {
         this.child = new Panel({ type: 'panel', tabs: [] })
       }
     }
-    if (isSplitNode(this.child) && !this.containsPanel(this.child)) {
+    if (this.child instanceof Split && !this.containsPanel(this.child)) {
       this.child = new Panel({ type: 'panel', tabs: [] })
     }
   }
 
   containsPanel(node: LayoutChild): boolean {
-    if (isPanelNode(node)) return true
+    if (node instanceof Panel) return true
     for (let i = 0; i < node.children.length; i++) {
       if (this.containsPanel(node.children[i])) return true
     }
@@ -65,7 +57,7 @@ export class Layout extends ReactiveObject {
   }
 
   findPanelWithTab(node: LayoutChild, tab: Tab): Panel | null {
-    if (isPanelNode(node)) return node.tabs.includes(tab) ? node : null
+    if (node instanceof Panel) return node.tabs.includes(tab) ? node : null
     // Recursively search through split's children
     for (let i = 0; i < node.children.length; i++) {
       const found = this.findPanelWithTab(node.children[i], tab)

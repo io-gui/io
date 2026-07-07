@@ -1,8 +1,8 @@
 import { ReactiveElement, ReactiveElementProps } from '@io-gui/core';
-import { IoTab } from './IoTab';
-import { Tab } from '../models/Tab';
-import { IoPanel } from './IoPanel';
-import { SplitDirection } from '../models/Layout';
+import { Tab } from '../models/Tab.js';
+import { SplitDirection } from '../types/SplitDirection.js';
+import { IoPanel } from './IoPanel.js';
+import { IoTab } from './IoTab.js';
 export type DropTarget = {
     panel: IoPanel;
     panelRect: DOMRect;
