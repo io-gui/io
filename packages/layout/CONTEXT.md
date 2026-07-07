@@ -30,9 +30,9 @@ _Avoid_: axis, layout, flow
 A child's size within its parent `Split`. Stored as `size` (`"auto"`, a pixel length, or a percentage). `"auto"` grows to fill remaining space (`flex: 1 1 auto`); fixed values hold a basis (`flex: 0 1 <size>`). Each `Split` keeps at least one child with `size: "auto"` in the model. When a drawer hides children, the view separately tracks whether any **visible** child has auto size — a presentation concern, not a model invariant.
 _Avoid_: flex, weight, ratio, span
 
-**MinSize**:
-The minimum space a child needs before drawer collapse. Stored as a pixel length or percentage, default `"240px"`. Decoupled from `size` — a wide panel can collapse to a narrow drawer handle.
-_Avoid_: flex-basis, drawer size
+**Size budget**:
+The minimum space a child needs before drawer collapse, derived at view time from its `size` — not a separate model property. `IoSplit.calculateCollapsedDrawers` sums each child's budget via `parseSizeBudgetPx`: `"auto"` uses `240px` (`DEFAULT_AUTO_BUDGET_PX`); a fixed `"Npx"` / `"N%"` uses that value; `"Npx auto"` / `"N% auto"` uses the fixed part as the budget while the child still grows. When the split is smaller than the sum, leading and/or trailing children collapse into drawers. The drawer handle itself clamps to at least `24px` (`DEFAULT_MIN_SIZE_PX`). A per-child `minSize` property decoupled from `size` is planned but not implemented.
+_Avoid_: flex-basis, drawer size, minSize
 
 ### Content
 
@@ -63,7 +63,7 @@ Collapsing a redundant `Split` — one that has a single child — into its pare
 _Avoid_: flatten, merge, simplify
 
 **Normalization**:
-Restoring invariants after a structural edit, **synchronously** — the tree is well-formed when each public model method returns. Each `Split` normalizes locally: no empty children, no single-child splits (consolidate), and at least one child that grows. The `Layout` normalizes at the root: when the last tab of the last panel is removed, an empty `Panel` survives as the terminal state. Runs inside a re-entrancy guard so repairs do not loop. Render scheduling stays debounced separately.
+Restoring invariants after a structural edit — no empty children, no single-child splits (consolidate), and at least one child that grows. Each `Split` normalizes locally; the `Layout` normalizes at the root (when the last tab of the last panel is removed, an empty `Panel` survives as the terminal state). Triggered **debounced** from `Layout.childMutated` (two frames): `dispatchMutation()` runs first, then `normalize()`. Between a structural mutator returning and that debounced pass, observers may briefly see an un-normalized tree (empty panels, single-child splits). Render scheduling stays debounced separately. Synchronous normalization with a re-entrancy guard is planned but not implemented.
 _Avoid_: cleanup, repair, fixup, validate
 
 **Split direction**:
@@ -80,10 +80,14 @@ _Avoid_: splitter, gutter, resizer, handle
 A child pushed to a `Split`'s leading or trailing edge and collapsed behind a handle when the split is too small to fit all children at their minimum size; it slides open over the content. Drawer views render the same `Panel`/`Split` models as inline children — disposing drawer chrome must not dispose shared model collections (e.g. `Panel.tabs`).
 _Avoid_: sidebar, panel, flyout, tray
 
-**Overflow (tab)**:
-The state of an `IoTabs` bar whose tabs exceed its width, which hides the tabs behind a hamburger menu listing them vertically.
+**Overflow (tab label)**:
+Per-tab label truncation in `IoTab`: when the label text exceeds the tab's width, `overflow` is set and the label ellipsizes. This is independent of the tab bar width.
+_Avoid_: collapse, hidden tabs
+
+**Overflow (tab bar)** _(planned)_:
+When an `IoTabs` bar is narrower than its tabs, hide overflow tabs behind a hamburger menu listing them vertically. Not implemented — tabs currently render inline regardless of bar width.
 _Avoid_: collapse, hidden tabs
 
 **Drag scope**:
-The set of panels that can receive a dragged tab — the whole tree under one `Layout`. Tabs cannot be dropped outside the layout that started the drag. One tab drag runs at a time page-wide (shared drag singleton); sufficient for single-workspace apps.
+The set of panels that can receive a dragged tab — the whole tree under one `Layout`. Tabs cannot be dropped outside the layout that started the drag. Each `IoLayout` owns its own `IoTabDragGhost` in the overlay (not a page-wide shared singleton). A shared drag singleton is planned but not implemented.
 _Avoid_: drop region, drag boundary

@@ -17,8 +17,12 @@ One node of a Menu's tree — an id/label/value with an interaction `mode` (`sel
 _Avoid_: item, entry, choice
 
 **Id**:
-An Option's identifier, unique across its whole Menu (a Menu invariant, debug-enforced). May not contain a comma — the Path separator. `label` and `value` default to it.
+An Option's identifier, unique across its whole Menu (a Menu invariant, debug-enforced). May not contain a comma — the Path separator. The only way Options are addressed. `label` and `value` default to it.
 _Avoid_: key, name
+
+**Value**:
+Opaque payload data carried by an Option — delivered to its `action`, read off the selected Option, legitimately shareable between Options. Never an address: selection and lookup key on Id only. Entry points may *match* an app-bound value to an Option at their boundary, but that resolves to an Id.
+_Avoid_: selector, key
 
 **IoMenu / IoOption (paired views)**:
 The two views paired with the models, Layout-style: `IoOption` renders one Option; `IoMenu` renders an expanded selection scope as a list (its `model` is the Menu or the branch Option whose children it shows). Every menus element holds its model in a property named `model`.

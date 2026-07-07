@@ -79,6 +79,7 @@ export class IoLayout extends ReactiveElement {
         label: element.props?.label || '',
         icon: element.props?.icon || '',
       }))
+      this._targetPanelModel = null
     }
   }
 

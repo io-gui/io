@@ -1,3 +1,3 @@
 # Current Focus
 
-Layout plan todo `guard-zero-tab-drop-target` done.
+Layout plan arch todos done — CONTEXT.md aligned to implementation (debounced normalize, size budget, overflow/drag roadmap).

@@ -34,13 +34,13 @@ todos:
     status: completed
   - id: resolve-normalization-contract
     content: "Arch: Resolve normalization contract — synchronous per CONTEXT.md or debounced per code"
-    status: pending
+    status: completed
   - id: reconcile-min-size-concept
     content: "Arch: Reconcile MinSize concept — implement minSize property or update CONTEXT.md"
-    status: pending
+    status: completed
   - id: reconcile-tab-overflow-menu
     content: "Arch: Reconcile tab-overflow hamburger menu — implement or mark roadmap in CONTEXT.md"
-    status: pending
+    status: completed
   - id: fix-nodearray-internal-op
     content: "Arch (core): Fix NodeArray.withInternalOperation re-entrancy and dispatch semantics"
     status: pending
@@ -49,7 +49,7 @@ todos:
     status: completed
   - id: cache-drop-target-hit-testing
     content: "Perf: Cache drop-target hit-testing data for duration of drag"
-    status: pending
+    status: cancelled
   - id: extract-drop-zone-utility
     content: "Improvement: Extract drop-zone geometry into pure tested utility (dropZone.ts)"
     status: completed
@@ -58,7 +58,7 @@ todos:
     status: completed
   - id: clear-target-panel-on-menu-close
     content: "Improvement: Clear _targetPanelModel when add-tab menu closes"
-    status: pending
+    status: completed
   - id: normalize-after-move-tab
     content: "Improvement: Call normalize() synchronously at end of Layout.moveTab (depends on todo 11)"
     status: pending

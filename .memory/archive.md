@@ -167,3 +167,11 @@
 - IoLayout.getDropTarget delegates geometry to resolveDropZone; DOM hit-test loop stays in element
 - dropZone.test.ts: zero tabs, 5 directions, tab strip band, spacing hit box, self-single-tab, boundary values, dragged-tab matching
 - 356 layout tests pass
+
+## 2026-07-07 layout CONTEXT.md arch alignment (doc drift)
+
+- User chose update CONTEXT to match code, not implement missing features
+- Normalization: doc now says debounced (2 frames), dispatchMutation before normalize(), brief un-normalized window; sync+re-entrancy guard marked planned
+- MinSize → Size budget: derived from `size` via parseSizeBudgetPx; DEFAULT_AUTO_BUDGET_PX 240, DEFAULT_MIN_SIZE_PX 24 for drawer handle; per-child minSize property marked planned
+- Overflow: split into tab-label (IoTab.overflow ellipsis, implemented) vs tab-bar hamburger (planned, not implemented)
+- Drag scope: each IoLayout owns IoTabDragGhost; shared singleton marked planned
