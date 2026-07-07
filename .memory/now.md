@@ -1,3 +1,3 @@
 # Current Focus
 
-Layout plan todos `fix-remove-tab-selection` + `dispose-tab-drag-ghost` done.
+Layout plan todo `clear-drop-marker-on-leave` done.

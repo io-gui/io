@@ -91,9 +91,7 @@ export class IoLayout extends ReactiveElement {
       this.$tabDragGhost.expanded = true
     } else if (phase === 'move') {
       this._dropTarget = this.getDropTarget(event.detail.x, event.detail.y)
-      if (this._dropTarget) {
-        this.$tabDragGhost.setDropTarget(this._dropTarget)
-      }
+      this.$tabDragGhost.setDropTarget(this._dropTarget)
       this.$tabDragGhost.style.left = `${event.detail.x}px`
       this.$tabDragGhost.style.top = `${event.detail.y}px`
     } else if (phase === 'end') {

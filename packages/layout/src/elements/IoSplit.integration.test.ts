@@ -414,6 +414,35 @@ describe('IoSplit Integration - Drag Drop Flows', () => {
       expect(layout.$tabDragGhost.splitDirection).toBe('center')
       expect(layout.$tabDragGhost.dropIndex).toBe(-1)
     })
+
+    it('should clear drop marker when pointer leaves all panels during drag', () => {
+      const ioTab = layout.querySelector('io-tab') as IoTab
+      const ioPanel = layout.querySelector('io-panel') as IoPanel
+      const panelRect = ioPanel.getBoundingClientRect()
+      const overPanelX = panelRect.left + panelRect.width / 2
+      const overPanelY = panelRect.top + 20
+
+      ioTab.onPointerdown(createPointerEvent('pointerdown', {
+        clientX: overPanelX,
+        clientY: overPanelY,
+      }))
+
+      ioTab.onPointermove(createPointerEvent('pointermove', {
+        clientX: overPanelX + 15,
+        clientY: overPanelY,
+      }))
+
+      expect(layout.$tabDragGhost.expanded).toBe(true)
+      expect(layout.$tabDragGhost.$['drop-marker-tab'].style.width).not.toBe('0px')
+
+      ioTab.onPointermove(createPointerEvent('pointermove', {
+        clientX: -100,
+        clientY: -100,
+      }))
+
+      expect(layout.$tabDragGhost.splitDirection).toBe('center')
+      expect(layout.$tabDragGhost.$['drop-marker-tab'].style.width).toBe('0px')
+    })
   })
 
   describe('Edge Cases and Error Handling', () => {

@@ -22,7 +22,7 @@ todos:
     status: pending
   - id: clear-drop-marker-on-leave
     content: "Bug: Clear drop marker when pointer leaves all panels during drag"
-    status: pending
+    status: completed
   - id: guard-zero-tab-drop-target
     content: "Bug: Guard getDropTarget against panels with zero tabs (crash hardening)"
     status: pending

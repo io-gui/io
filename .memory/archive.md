@@ -102,3 +102,9 @@
 - Fix: mirror addMenu teardown for tabDragGhost
 - Tests: Panel.removeTab selection regression x3; IoLayout.test.ts dispose ghost from overlay
 - packages/layout: all green
+
+## 2026-07-07 clear-drop-marker-on-leave
+
+- Bug: IoLayout onTabDrag move only called setDropTarget when getDropTarget non-null — pointer leaving all panels left stale marker
+- Fix: always call setDropTarget(this._dropTarget) in move branch (null clears marker)
+- Test: IoSplit.integration — drag over panel then move to (-100,-100), assert marker reset
