@@ -884,6 +884,39 @@ describe('Split', () => {
       expect((splitS2.children[1] as Panel).tabs[0].id).toBe('C')
     })
 
+    it('should coalesce children mutations during normalize into one dispatch per batch', () => {
+      const split = new Split({
+        type: 'split',
+        orientation: 'horizontal',
+        children: [
+          { type: 'panel', tabs: [] },
+          {
+            type: 'split',
+            children: [
+              { type: 'panel', tabs: [{ id: 'B' }] },
+            ],
+          },
+          { type: 'panel', tabs: [{ id: 'A' }] },
+        ],
+      })
+
+      const childrenMutationHandler = vi.fn()
+      const onChildrenMutation = ((event: CustomEvent) => {
+        if (event.detail.object === split.children) childrenMutationHandler()
+      }) as EventListener
+      split.addEventListener('io-mutation', onChildrenMutation)
+
+      split.normalize()
+
+      expect(childrenMutationHandler).toHaveBeenCalledTimes(1)
+      expect(split.children.length).toBe(2)
+      expect((split.children[0] as Panel).tabs[0].id).toBe('B')
+      expect((split.children[1] as Panel).tabs[0].id).toBe('A')
+
+      split.removeEventListener('io-mutation', onChildrenMutation)
+      split.dispose()
+    })
+
     it('should transplant split size onto sole panel when consolidating nested split', () => {
       const layout = new Layout({
         child: {

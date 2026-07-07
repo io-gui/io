@@ -26,6 +26,7 @@ import { detachNodeParents, isReactiveNode, type ReactiveNode } from './Reactive
 export class NodeArray<N extends ReactiveObject> extends Array<N> {
   declare private proxy: typeof Proxy
   private _isInternalOperation = false
+  private _pendingDispatch = false
   private _observers = new Set<ReactiveNode>()
   declare _itemType: ReactiveObjectConstructor | undefined
 
@@ -71,8 +72,8 @@ export class NodeArray<N extends ReactiveObject> extends Array<N> {
       set(target: NodeArray<N>, property: string | symbol, value: unknown) {
         if (property === 'length') {
           const newLength = Number(value)
+          const oldLength = target.length
           if (!self._isInternalOperation) {
-            const oldLength = target.length
             if (newLength < oldLength) {
               for (let i = newLength; i < oldLength; i++) {
                 const item = target[i]
@@ -86,7 +87,7 @@ export class NodeArray<N extends ReactiveObject> extends Array<N> {
             }
           }
           target.length = newLength
-          if (!self._isInternalOperation) self.dispatchMutation()
+          if (newLength !== oldLength) self.dispatchMutation()
           return true
         }
         const index = Number(property)
@@ -101,7 +102,7 @@ export class NodeArray<N extends ReactiveObject> extends Array<N> {
             value.addEventListener('io-mutation', self.itemMutated)
             value.addParent(self.node)
           }
-          if (!self._isInternalOperation) self.dispatchMutation()
+          if (oldValue !== value) self.dispatchMutation()
           return true
         }
         Reflect.set(target, property, value)
@@ -116,13 +117,18 @@ export class NodeArray<N extends ReactiveObject> extends Array<N> {
     detachNodeParents(item)
     item.removeParent(this.node)
   }
-  /** Run array mutations without dispatching `io-mutation` until complete. */
+  /** Run array mutations without dispatching `io-mutation` until the outermost batch completes. */
   withInternalOperation<T>(operation: () => T): T {
+    const wasInternal = this._isInternalOperation
     this._isInternalOperation = true
     try {
       return operation()
     } finally {
-      this._isInternalOperation = false
+      this._isInternalOperation = wasInternal
+      if (!wasInternal && this._pendingDispatch) {
+        this._pendingDispatch = false
+        this.dispatchMutation()
+      }
     }
   }
   override splice(start: number, deleteCount: number, ...items: N[]): N[] {
@@ -296,6 +302,10 @@ export class NodeArray<N extends ReactiveObject> extends Array<N> {
     }
   }
   dispatchMutation() {
+    if (this._isInternalOperation) {
+      this._pendingDispatch = true
+      return
+    }
     for (const observer of this._observers) {
       observer.dispatch('io-mutation', {object: this.proxy})
     }
@@ -328,9 +338,13 @@ export class NodeArray<N extends ReactiveObject> extends Array<N> {
         this.disconnectItem(item)
       }
     }
-    this.withInternalOperation(() => {
+    const wasInternal = this._isInternalOperation
+    this._isInternalOperation = true
+    try {
       super.splice(0, this.length)
-    })
+    } finally {
+      this._isInternalOperation = wasInternal
+    }
     this._observers.clear()
     if (deep) {
       for (const node of nodes) {

@@ -1,3 +1,3 @@
 # Current Focus
 
-Layout plan arch todos done — CONTEXT.md aligned to implementation (debounced normalize, size budget, overflow/drag roadmap).
+Completed: fix-nodearray-internal-op — NodeArray.withInternalOperation re-entrancy + coalesced dispatch.

@@ -43,7 +43,7 @@ todos:
     status: completed
   - id: fix-nodearray-internal-op
     content: "Arch (core): Fix NodeArray.withInternalOperation re-entrancy and dispatch semantics"
-    status: pending
+    status: completed
   - id: unify-split-direction-types
     content: "Cleanup: Unify duplicate SplitDirection types (types/ vs Layout.ts)"
     status: completed

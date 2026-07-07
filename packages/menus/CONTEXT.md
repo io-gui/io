@@ -5,8 +5,12 @@ The `@io-gui/menus` context: hierarchical trees of selectable options and the el
 ## Language
 
 **Menu**:
-The root model of a whole menu tree. Owns everything tree-scoped: selection tracking (`selectedID`, `path`), default selection, serialization, and invariants no single Option can see. Every menu tree has exactly one Menu. Its JSON form is structure only (ids, labels, icons, hints, modes, nesting) — selection persists separately through Path/`selectedID` bindings. (Being introduced — today the root is just another `MenuOption`.)
+The root model of a whole menu tree. Owns everything tree-scoped: selection tracking (`selectedID`, `path`), tree Disclosure (`expandedIDs`), default selection, serialization, and invariants no single Option can see. Every menu tree has exactly one Menu. Its JSON form is structure only (ids, labels, icons, hints, modes, nesting) — selection persists separately through Path/`selectedID` bindings. (Being introduced — today the root is just another `MenuOption`.)
 _Avoid_: root option, menu tree, manager
+
+**Mode**:
+How an Option responds to Activation: `select` (persistent, exclusive within its scope), `toggle` (persistent, independent), `none` (transient command). Defaulted by inference: an Option with an `action` defaults to `none`; one without defaults to `select`. An explicit mode always wins.
+_Avoid_: type, kind, behavior
 
 **Selection scope**:
 The `select`-mode children of any one Option form a group in which at most one is selected; the parent enforces this in one place. `mode` stays per-child, so actions, toggles, and a radio cluster can share a parent. A Menu's `selectedID`/`path` are derived from the chain of selected scopes starting at the root.
@@ -23,6 +27,18 @@ _Avoid_: key, name
 **Value**:
 Opaque payload data carried by an Option — delivered to its `action`, read off the selected Option, legitimately shareable between Options. Never an address: selection and lookup key on Id only. Entry points may *match* an app-bound value to an Option at their boundary, but that resolves to an Id.
 _Avoid_: selector, key
+
+**Expansion**:
+Transient view state: whether an Option's submenu is currently popped open (in the overlay, or inline while a menu bar is engaged). Hover/keyboard-driven, never persisted, never on the model.
+_Avoid_: open, disclosure (for overlays)
+
+**Disclosure**:
+Persistent tree state: which branch Options an inline tree shows expanded. Menu-level (`expandedIDs`) — a derived-but-writable projection like Path, persisted through a single host-chosen storage binding.
+_Avoid_: expansion (for trees), collapsible state
+
+**Activation**:
+A user committing an Option — running its action, flipping its toggle, or making a selection. The one public synthetic event: `io-option-clicked`. Selection *state* has no public events — apps observe it by binding `selectedID`/Path. Chrome geometry events (e.g. tree resize) are element-internal, not domain API.
+_Avoid_: click (as a domain term), commit, trigger
 
 **IoMenu / IoOption (paired views)**:
 The two views paired with the models, Layout-style: `IoOption` renders one Option; `IoMenu` renders an expanded selection scope as a list (its `model` is the Menu or the branch Option whose children it shows). Every menus element holds its model in a property named `model`.

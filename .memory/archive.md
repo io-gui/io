@@ -175,3 +175,10 @@
 - MinSize → Size budget: derived from `size` via parseSizeBudgetPx; DEFAULT_AUTO_BUDGET_PX 240, DEFAULT_MIN_SIZE_PX 24 for drawer handle; per-child minSize property marked planned
 - Overflow: split into tab-label (IoTab.overflow ellipsis, implemented) vs tab-bar hamburger (planned, not implemented)
 - Drag scope: each IoLayout owns IoTabDragGhost; shared singleton marked planned
+
+## 2026-07-07 NodeArray.withInternalOperation fix [core/arch]
+- Problem: not re-entrant (inner finally cleared flag); method mutators dispatched despite outer batch wrapper
+- Fix: save/restore `_isInternalOperation`; `dispatchMutation` defers via `_pendingDispatch`; outermost `withInternalOperation` flushes once
+- Proxy traps route through `dispatchMutation` for coalescing
+- dispose uses manual flag (no flush) to stay silent
+- Tests: NodeArray.test withInternalOperation suite; Split.test normalize coalesce dispatch

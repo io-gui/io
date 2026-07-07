@@ -718,5 +718,96 @@ describe('NodeArray', () => {
       item.dispose()
     })
   })
+
+  describe('withInternalOperation()', () => {
+
+    it('Should coalesce dispatches from method mutators into a single io-mutation', () => {
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
+      const item3 = new LabelNode({label: 'c'})
+      array.push(item1, item2, item3)
+
+      const handler = vi.fn()
+      parent.addEventListener('io-mutation', handler)
+
+      array.withInternalOperation(() => {
+        array.splice(1, 1)
+        array.splice(0, 1, new LabelNode({label: 'x'}))
+      })
+
+      expect(handler).toHaveBeenCalledTimes(1)
+
+      parent.removeEventListener('io-mutation', handler)
+      parent.dispose()
+    })
+
+    it('Should preserve suppression through nested withInternalOperation', () => {
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
+      const item3 = new LabelNode({label: 'c'})
+      array.push(item1, item2, item3)
+
+      const handler = vi.fn()
+      parent.addEventListener('io-mutation', handler)
+
+      array.withInternalOperation(() => {
+        array.withInternalOperation(() => {
+          array.splice(0, 1)
+        })
+        array.splice(1, 1)
+      })
+
+      expect(handler).toHaveBeenCalledTimes(1)
+
+      parent.removeEventListener('io-mutation', handler)
+      parent.dispose()
+    })
+
+    it('Should suppress proxy-trap dispatch until the outermost batch completes', () => {
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      const item1 = new LabelNode({label: 'a'})
+      const item2 = new LabelNode({label: 'b'})
+      array.push(item1, item2)
+
+      const handler = vi.fn()
+      parent.addEventListener('io-mutation', handler)
+
+      array.withInternalOperation(() => {
+        array[0] = new LabelNode({label: 'x'})
+        array.withInternalOperation(() => {
+          array[1] = new LabelNode({label: 'y'})
+        })
+      })
+
+      expect(handler).toHaveBeenCalledTimes(1)
+
+      parent.removeEventListener('io-mutation', handler)
+      parent.dispose()
+    })
+
+    it('Should not dispatch when an internal batch makes no mutations', () => {
+      const parent = new ItemstNode()
+      const array = new NodeArray<LabelNode>(parent)
+      array.push(new LabelNode({label: 'a'}))
+
+      const handler = vi.fn()
+      parent.addEventListener('io-mutation', handler)
+
+      array.withInternalOperation(() => {
+        array.withInternalOperation(() => {})
+      })
+
+      expect(handler).not.toHaveBeenCalled()
+
+      parent.removeEventListener('io-mutation', handler)
+      parent.dispose()
+    })
+
+  })
 })
 
