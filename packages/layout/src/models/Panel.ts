@@ -50,6 +50,9 @@ export class Panel extends ReactiveObject {
     if (existingIndex !== -1) {
       console.warn(`Panel.addTab: Duplicate tab id "${tab.id}", removing duplicate tab.`)
       this.tabs.splice(existingIndex, 1)
+      if (index !== undefined && existingIndex < index) {
+        index--
+      }
     }
     index = index ?? this.tabs.length
     index = Math.min(Math.max(index, 0), this.tabs.length)

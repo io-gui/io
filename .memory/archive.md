@@ -130,3 +130,40 @@
 - Test: Split.test.ts horizontal [A, splitS→splitS2 vertical [B,C]] normalize keeps horizontal + splitS2
 - CONTEXT.md Consolidation entry updated
 - packages/layout 339 tests pass
+
+## 2026-07-07 fix-add-tab-index-after-dedup
+
+- Bug: Panel.addTab removed duplicate by id then inserted at caller index computed pre-removal — tab landed one slot too far right when duplicate was before insertion point
+- Fix: decrement index when existingIndex < index after splice remove
+- Test: Panel.test.ts [X,A,B] addTab(X,2) → [A,X,B]
+- packages/layout 340 tests pass
+
+## 2026-07-07 unify-split-direction-types + normalize-io-tab-drag-ghost-imports
+
+- SplitDirection: single def in types/SplitDirection.ts (includes 'none' for ghost idle)
+- Removed duplicate export from Layout.ts; Layout imports from types
+- IoLayout, IoTabDragGhost import from types/SplitDirection.js
+- index.ts re-exports SplitDirection
+- IoTabDragGhost imports normalized to .js extensions
+- packages/layout tests pass
+
+## 2026-07-07 guard-zero-tab-drop-target
+
+- Bug: getDropTarget read tabRects[0] without checking tabs.length — empty panel crashed during drag hit-test
+- Fix: short-circuit when tabRects.length === 0 — skip tab-strip test, use NDC edge logic on whole panel; ndcTabHeight = 0 when no tabs
+- Test: IoLayout.test.ts zero-tab panel getDropTarget does not throw
+- packages/layout IoLayout.test.ts 2 tests pass
+
+## 2026-07-07 guard-zero-tab-drop-target
+
+- Bug: getDropTarget read tabRects[0] without checking tabs.length — empty panel crashed during drag hit-test
+- Fix: short-circuit when tabRects.length === 0 — skip tab-strip test, use NDC edge logic on whole panel; ndcTabHeight = 0 when no tabs
+- Test: IoLayout.test.ts zero-tab panel getDropTarget does not throw
+- packages/layout IoLayout.test.ts 2 tests pass
+
+## 2026-07-07 extract-drop-zone-utility
+
+- New `packages/layout/src/utils/dropZone.ts`: `resolveDropZone()` pure fn + `EDGE_ZONE_THRESHOLD`/`EDGE_ZONE_OUTER_BOUND` constants
+- IoLayout.getDropTarget delegates geometry to resolveDropZone; DOM hit-test loop stays in element
+- dropZone.test.ts: zero tabs, 5 directions, tab strip band, spacing hit box, self-single-tab, boundary values, dragged-tab matching
+- 356 layout tests pass

@@ -578,6 +578,29 @@ describe('Panel', () => {
   //   })
   // })
 
+  describe('addTab', () => {
+
+    it('should adjust insertion index after removing duplicate before insertion point', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'x' },
+          { id: 'a' },
+          { id: 'b' },
+        ],
+      })
+
+      panel.addTab(new Tab({ id: 'x' }), 2)
+
+      expect(panel.tabs.length).toBe(3)
+      expect(panel.tabs[0].id).toBe('a')
+      expect(panel.tabs[1].id).toBe('x')
+      expect(panel.tabs[2].id).toBe('b')
+      expect(panel.tabs[1].selected).toBe(true)
+    })
+
+  })
+
   describe('removeTab', () => {
 
     it('should preserve selection when removing an unselected tab', () => {

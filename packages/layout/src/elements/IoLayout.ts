@@ -1,5 +1,6 @@
 import { Register, Property, VDOMElement, ReactiveElement, ReactiveElementProps, WithBinding, ListenerDefinitions, IoOverlaySingleton as Overlay, ThemeSingleton } from '@io-gui/core'
-import { Layout, SplitDirection } from '../models/Layout.js'
+import { Layout } from '../models/Layout.js'
+import { SplitDirection } from '../types/SplitDirection.js'
 import { Split } from '../models/Split.js'
 import { Panel } from '../models/Panel.js'
 import { ioSplit } from './IoSplit.js'
@@ -9,6 +10,7 @@ import { Tab } from '../models/Tab.js'
 import { IoTab, TabDragPhase } from './IoTab.js'
 import { IoTabDragGhost } from './IoTabDragGhost.js'
 import { DropTarget } from './IoTabDragGhost.js'
+import { resolveDropIndex, resolveSplitEdge } from '../utils/dropZone.js'
 
 export type IoLayoutData = ReactiveElementProps & {
   model: WithBinding<Layout>
@@ -107,69 +109,55 @@ export class IoLayout extends ReactiveElement {
   }
 
   getDropTarget(x: number, y: number): DropTarget | null {
-    let result: DropTarget | null = null
-    this.querySelectorAll('io-panel').forEach(panel => {
-      const dropPanelEl = panel as IoPanel
-      const rect = dropPanelEl.getBoundingClientRect()
-      if (x > rect.left && x < rect.right && y > rect.top && y < rect.bottom) {
-        const tabs = [...dropPanelEl.querySelectorAll('io-tab')] as IoTab[]
+
+    const panels = [...this.querySelectorAll('io-panel')] as IoPanel[]
+
+    for (const panel of panels) {
+
+      const panelRect = panel.getBoundingClientRect()
+
+      if (x > panelRect.left && x < panelRect.right && y > panelRect.top && y < panelRect.bottom) {
+        const tabs = [...panel.querySelectorAll('io-tab')] as IoTab[]
         const tabRects = tabs.map(tab => tab.getBoundingClientRect())
         let dropIndex = tabs.length
-        let splitDirection: SplitDirection = 'center'
 
-        const dropSelfSingle = (dropPanelEl.model.tabs.length === 1) && (dropPanelEl.model.tabs[0].id === this.$tabDragGhost.model.id)
+        let splitDirection: SplitDirection = resolveSplitEdge(x, y, panelRect, tabRects)
 
-        const matchingTabIndex = tabs.findIndex(tab => tab.model.id === this.$tabDragGhost.model.id)
-        if (matchingTabIndex !== -1) {
-          dropIndex = matchingTabIndex
-        }
-        const s = ThemeSingleton.spacing
-        const pickedTabIndex = tabRects.findIndex(rect => (x + s) > rect.left && (x - s) < rect.right && (y + s) > rect.top && (y - s) < rect.bottom)
-        if (pickedTabIndex !== -1) {
+        const dropSelfSingle = (panel.model.tabs.length === 1) && (panel.model.tabs[0].id === this.$tabDragGhost.model.id)
 
-          dropIndex = pickedTabIndex
+        if (dropSelfSingle) {
 
-        } else if (y > tabRects[0].bottom && !dropSelfSingle) {
+          splitDirection = 'center'
+          dropIndex = 0
 
-          const ndcX = ((x - rect.left) / rect.width) * 2 - 1
-          const ndcY = ((y - rect.top) / rect.height) * 2 - 1
-          const absX = Math.abs(ndcX)
-          const absY = Math.abs(ndcY)
+        } else if (tabRects.length > 0) {
 
-          const ndcTabHeight = tabRects[0].height / rect.height * 2
+          const duplicateTabIndex = tabs.findIndex(tab => tab.model.id === this.$tabDragGhost.model.id)
 
-          if ((absX > 0.8 || absY > 0.8 || ndcY < (-0.8 + ndcTabHeight)) && absX < 1 && absY < 1) {
-            if (absX > absY) {
-              if (ndcX > 0) {
-                dropIndex = -1
-                splitDirection = 'right'
-              } else {
-                dropIndex = -1
-                splitDirection = 'left'
-              }
-            } else {
-              if (ndcY > 0) {
-                dropIndex = -1
-                splitDirection = 'bottom'
-              } else {
-                dropIndex = -1
-                splitDirection = 'top'
-              }
-            }
+          if (duplicateTabIndex !== -1) {
+            dropIndex = duplicateTabIndex
+            splitDirection = 'center'
+          }
+
+          const pickedTabIndex = resolveDropIndex(x, y, tabRects)
+
+          if (pickedTabIndex !== -1) {  
+            dropIndex = pickedTabIndex
+            splitDirection = 'center'
           }
         }
 
-        result = {
+        return {
           panel: panel as IoPanel,
-          panelRect: rect,
+          panelRect: panelRect,
           tabs: tabs,
           tabRects: tabRects,
           dropIndex: dropIndex,
           splitDirection: splitDirection,
         }
       }
-    })
-    return result
+    }
+    return null
   }
 
   modelMutated() {

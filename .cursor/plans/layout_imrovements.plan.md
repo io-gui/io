@@ -25,10 +25,10 @@ todos:
     status: completed
   - id: guard-zero-tab-drop-target
     content: "Bug: Guard getDropTarget against panels with zero tabs (crash hardening)"
-    status: pending
+    status: completed
   - id: fix-add-tab-index-after-dedup
     content: "Bug: Adjust Panel.addTab insertion index after duplicate removal"
-    status: pending
+    status: completed
   - id: inherit-size-on-convert-to-split
     content: "Bug: Inherit target panel size when converting to split (prevent layout jump)"
     status: completed
@@ -46,16 +46,16 @@ todos:
     status: pending
   - id: unify-split-direction-types
     content: "Cleanup: Unify duplicate SplitDirection types (types/ vs Layout.ts)"
-    status: pending
+    status: completed
   - id: cache-drop-target-hit-testing
     content: "Perf: Cache drop-target hit-testing data for duration of drag"
     status: pending
   - id: extract-drop-zone-utility
     content: "Improvement: Extract drop-zone geometry into pure tested utility (dropZone.ts)"
-    status: pending
+    status: completed
   - id: normalize-io-tab-drag-ghost-imports
     content: "Cleanup: Normalize import style in IoTabDragGhost (.js extensions)"
-    status: pending
+    status: completed
   - id: clear-target-panel-on-menu-close
     content: "Improvement: Clear _targetPanelModel when add-tab menu closes"
     status: pending

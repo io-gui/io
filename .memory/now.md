@@ -1,3 +1,3 @@
 # Current Focus
 
-Layout plan todo `fix-consolidate-orientation-flip` done.
+Layout plan todo `guard-zero-tab-drop-target` done.

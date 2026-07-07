@@ -36,3 +36,5 @@ export * from './models/Layout.js'
 export * from './models/Panel.js'
 export * from './models/Split.js'
 export * from './models/Tab.js'
+
+export * from './types/SplitDirection.js'

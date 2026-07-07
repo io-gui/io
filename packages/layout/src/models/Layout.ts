@@ -1,4 +1,5 @@
 import { ReactiveObject, Property, Register } from '@io-gui/core'
+import { SplitDirection } from '../types/SplitDirection.js'
 import { DEFAULT_SIZE } from '../utils/layoutSize.js'
 import { Panel, PanelData } from './Panel.js'
 import { Split, SplitData, SplitOrientation } from './Split.js'
@@ -20,8 +21,6 @@ export function isPanelNode(node: LayoutChild): node is Panel {
 export function isSplitNode(node: LayoutChild): node is Split {
   return (node as Split).children !== undefined
 }
-
-export type SplitDirection = 'top' | 'bottom' | 'left' | 'right' | 'center'
 
 @Register
 export class Layout extends ReactiveObject {
