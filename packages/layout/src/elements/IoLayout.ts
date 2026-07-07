@@ -216,7 +216,9 @@ export class IoLayout extends ReactiveElement {
 
   override dispose() {
     Overlay.removeChild(this.$addMenu as HTMLElement)
+    Overlay.removeChild(this.$tabDragGhost as HTMLElement)
     this.$addMenu.dispose()
+    this.$tabDragGhost.dispose()
     super.dispose()
   }
 

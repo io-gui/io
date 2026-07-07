@@ -60,8 +60,9 @@ export class Panel extends ReactiveObject {
   removeTab(tab: Tab) {
     const index = this.tabs.indexOf(tab)
     if (index === -1) return
+    const wasSelected = tab.selected
     this.tabs.splice(index, 1)
-    if (this.tabs.length > 0) {
+    if (this.tabs.length > 0 && (wasSelected || !this.tabs.some(t => t.selected))) {
       const newIndex = Math.min(index, this.tabs.length - 1)
       this.selectByIndex(newIndex)
     }

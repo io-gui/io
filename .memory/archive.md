@@ -93,3 +93,12 @@
 - Cause: findParentSplit used isSplitNode duck check; IoPanel (HTMLElement) has `.children` HTMLCollection — no indexOf, matched before model Split
 - Fix: findParentSplit uses `parent instanceof Split`
 - Test: dom-like parent in _parents before real Split — still returns model Split
+
+## 2026-07-07 fix-remove-tab-selection + dispose-tab-drag-ghost
+
+- Panel.removeTab always called selectByIndex after splice — closing unselected tab re-selected wrong tab (e.g. remove C from [A*,B,C] selected B)
+- Fix: only selectByIndex when removed tab was selected OR no tab remains selected
+- IoLayout.dispose removed $addMenu but not $tabDragGhost — overlay leak each mount/unmount
+- Fix: mirror addMenu teardown for tabDragGhost
+- Tests: Panel.removeTab selection regression x3; IoLayout.test.ts dispose ghost from overlay
+- packages/layout: all green

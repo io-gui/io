@@ -10,13 +10,13 @@ todos:
     status: completed
   - id: fix-remove-tab-selection
     content: "Bug: Fix Panel.removeTab stealing selection from unrelated tab"
-    status: pending
+    status: completed
   - id: fix-drag-cancel-lifecycle
     content: "Bug: Handle cancel drag phase; stop dispatching end on plain clicks (IoTab + IoLayout)"
     status: pending
   - id: dispose-tab-drag-ghost
     content: "Bug: Dispose and remove $tabDragGhost in IoLayout.dispose (overlay leak)"
-    status: pending
+    status: completed
   - id: fix-consolidate-orientation-flip
     content: "Bug: Fix Split.consolidateChildAt flipping parent orientation when parent has siblings"
     status: pending

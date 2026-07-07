@@ -578,6 +578,64 @@ describe('Panel', () => {
   //   })
   // })
 
+  describe('removeTab', () => {
+
+    it('should preserve selection when removing an unselected tab', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'a', selected: true },
+          { id: 'b' },
+          { id: 'c' },
+        ],
+      })
+
+      panel.removeTab(panel.tabs[2])
+
+      expect(panel.tabs.length).toBe(2)
+      expect(panel.tabs[0].id).toBe('a')
+      expect(panel.tabs[0].selected).toBe(true)
+      expect(panel.selectedID).toBe('a')
+    })
+
+    it('should select nearest neighbor when removing the selected tab', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'a', selected: true },
+          { id: 'b' },
+          { id: 'c' },
+        ],
+      })
+
+      panel.removeTab(panel.tabs[0])
+
+      expect(panel.tabs.length).toBe(2)
+      expect(panel.tabs[0].id).toBe('b')
+      expect(panel.tabs[0].selected).toBe(true)
+      expect(panel.selectedID).toBe('b')
+    })
+
+    it('should select previous tab when removing the last selected tab', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'a' },
+          { id: 'b' },
+          { id: 'c', selected: true },
+        ],
+      })
+
+      panel.removeTab(panel.tabs[2])
+
+      expect(panel.tabs.length).toBe(2)
+      expect(panel.tabs[1].id).toBe('b')
+      expect(panel.tabs[1].selected).toBe(true)
+      expect(panel.selectedID).toBe('b')
+    })
+
+  })
+
   describe('Tab Array Operations', () => {
 
     it('should allow adding tabs via push', () => {
