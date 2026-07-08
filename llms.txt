@@ -1,0 +1,56 @@
+# Io-Gui
+
+> Io-Gui is a multi-paradigm reactive web UI framework with zero runtime dependencies. Plain data models (`ReactiveObject`) and custom DOM elements (`ReactiveElement`) are vertices in a single reactive graph, so changes, mutations, and events propagate across the object/element boundary — reactivity is not tied to DOM placement. Written in TypeScript, distributed as `@io-gui/*` packages, usable without any build step.
+
+Why use it: you need reactive state that spans data models and DOM elements without a framework boundary between them — e.g. an editor, inspector, or IDE-like tool where one model drives many views. A model can parent a DOM element (and vice versa), nodes can have multiple parents, and a visited-set circuit breaker makes diamonds and cycles in the graph safe.
+
+How to use it: extend `ReactiveObject` for models and `ReactiveElement` for views; apply `@Register` to every subclass; declare reactive state with `@Property` (or `static Properties`) and non-reactive constructor-initialized values with `@Field`; wire two-way sync with `bind(node, 'prop')`; persist state via `Storage` bindings. Elements render via a virtual DOM of tag functions (`span(...)`, `div(...)`) returned from `render()`.
+
+Where to find context, in reading order:
+
+[Repository](https://github.com/io-gui/io/)
+
+1. `CONTEXT.md` — the pinned vocabulary of the reactive core (change vs. mutation, graph, Property vs. Field, Binding, Register). Read this first; the terms are used precisely everywhere else.
+2. `CONTEXT-MAP.md` — how the modeled contexts (Core, Layout, Menus) relate to each other.
+3. `docs/quick-start.md` then `docs/deep-dive.md` — usage and architecture.
+4. `packages/**/docs/adr/` — records of the reasoning behind architectural design decisions.
+
+## Docs
+
+- [Quick Start](docs/quick-start.md): importing Io-Gui, making elements and nodes, properties, bindings, styling
+- [Deep Dive](docs/deep-dive.md): the reactive architecture — property system, data flow, dispatcher, lifecycle
+- [Core Context](CONTEXT.md): canonical definitions of the framework's terms; disambiguates change/mutation, Property/Field, graph/DOM/VDOM parenthood
+- [Context Map](CONTEXT-MAP.md): index of modeled contexts and the dependencies between them
+- [Layout Context](packages/layout/CONTEXT.md): vocabulary of the layout system (Split/Panel/Tab models and their views)
+- [Menus Context](packages/menus/CONTEXT.md): vocabulary of the menu system (Menu/Option models, dropdowns, menu bars, trees)
+
+## Architecture Decisions
+
+- [ReactiveNode is the graph union](docs/adr/0001-reactivenode-is-the-graph-union.md)
+- [mutated() catch-all; nested mutations do not bubble](docs/adr/0002-mutated-catch-all-and-non-bubbling-nested-mutations.md)
+- [Property is reactive, Field is plain](docs/adr/0003-property-is-reactive-field-is-plain.md)
+- [Graph-attaching factories return Bindings](docs/adr/0004-graph-attaching-factories-return-bindings.md)
+
+## Packages
+
+- [@io-gui/core](packages/core/): the reactive system — ReactiveObject, ReactiveElement, properties, bindings, VDOM, theming; everything else builds on this
+- [@io-gui/inputs](packages/inputs/): basic input elements (buttons, switches, string/number fields)
+- [@io-gui/sliders](packages/sliders/): slider elements
+- [@io-gui/colors](packages/colors/): color pickers and editors
+- [@io-gui/menus](packages/menus/): hierarchical option trees as dropdowns, menu bars, context menus, trees
+- [@io-gui/navigation](packages/navigation/): navigator elements that present a Menu and mirror its selection
+- [@io-gui/layout](packages/layout/): IDE-like tabbed, split, drag-and-drop panel layouts
+- [@io-gui/editors](packages/editors/): object inspector elements
+- [@io-gui/markdown](packages/markdown/): markdown viewer element
+- [@io-gui/icons](packages/icons/): icon set
+- [@io-gui/three](packages/three/): Three.js UI elements
+
+## Source
+
+- [Core source](packages/core/src/): `nodes/` and `elements/` hold the base classes, `core/` the property/binding/dispatch machinery, `vdom/` the tag functions, `decorators/` Register/Property/Field
+- [API reference](docs/generated/api/): TypeDoc-generated API docs (regenerate with `pnpm docs:api`)
+
+## Optional
+
+- [README](README.md): project overview and development setup (pnpm, vite, vitest)
+- [Live docs site](https://iogui.dev/io/): rendered quick start, deep dive, and demos
