@@ -22,8 +22,23 @@ import { Option } from './Option.js';
  */
 let Menu = class Menu extends Option {
     _syncingSelection = false;
-    constructor(args = {}) {
+    constructor(args) {
+        if (typeof args === 'object') {
+            if (args.id === undefined)
+                args.id = 'root';
+        }
         super(args);
+        // Tree-scoped props — not part of an Option's wire format.
+        if (typeof args === 'object') {
+            if (args.expandedIDs !== undefined)
+                this.setProperty('expandedIDs', args.expandedIDs, true);
+            if (args.selectedID !== undefined)
+                this.setProperty('selectedID', args.selectedID, true);
+            // Path last — it is the more specific selection entry point.
+            if (args.path !== undefined)
+                this.setProperty('path', args.path, true);
+            this.dispatchQueue();
+        }
     }
     selectedIDChanged() {
         if (this._syncingSelection)

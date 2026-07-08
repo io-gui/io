@@ -1,5 +1,6 @@
-import { ReactiveObject, WithBinding, NodeArray, Json } from '@io-gui/core';
+import { ReactiveObject, NodeArray, Json, WithBinding } from '@io-gui/core';
 export type OptionMode = 'select' | 'toggle' | 'none';
+export type OptionPrimitiveData = string | number | boolean | null;
 export type OptionData = {
     id?: string;
     value?: Json;
@@ -9,20 +10,12 @@ export type OptionData = {
     disabled?: boolean;
     hidden?: boolean;
     mode?: OptionMode;
-    options?: OptionData[];
+    options?: Array<OptionPrimitiveData | OptionData>;
 };
-export type OptionProps = {
-    id?: string;
-    value?: any;
-    label?: WithBinding<string>;
-    icon?: string;
-    hint?: WithBinding<string>;
-    action?: (value?: any) => void;
-    mode?: OptionMode;
-    disabled?: boolean;
-    hidden?: boolean;
+export type OptionProps = OptionData & {
+    options?: Array<OptionPrimitiveData | OptionData | OptionProps | Option>;
     selected?: WithBinding<boolean>;
-    options?: Array<string | number | boolean | null | undefined | OptionProps | Option>;
+    action?: (value?: any) => void;
 };
 /**
  * One node of a Menu's tree. Carries local state only (id, value, label, icon,
@@ -40,14 +33,14 @@ export declare class Option extends ReactiveObject {
     hint: string;
     disabled: boolean;
     hidden: boolean;
-    action?: (value?: any) => void;
     mode: OptionMode;
-    selected: boolean;
     options: NodeArray<Option>;
+    action?: (value?: any) => void;
+    selected: boolean;
     static get Listeners(): {
         'option-selected-changed': string;
     };
-    constructor(args: string | number | boolean | null | undefined | OptionProps);
+    constructor(args: OptionPrimitiveData | OptionProps);
     getAllOptions(): Option[];
     findOptionByValue(value: any): Option | undefined;
     findOptionById(id: string): Option | undefined;
@@ -61,5 +54,5 @@ export declare class Option extends ReactiveObject {
     optionsMutated(): void;
     mutated(): void;
     toJSON(): OptionData;
-    applyJSON(json: OptionData): this;
+    applyJSON(json: OptionPrimitiveData | OptionData): this;
 }

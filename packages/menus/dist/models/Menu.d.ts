@@ -1,5 +1,10 @@
 import { WithBinding } from '@io-gui/core';
-import { Option, OptionProps } from './Option.js';
+import { Option, OptionProps, OptionData } from './Option.js';
+export type MenuData = OptionData & {
+    selectedID?: string;
+    path?: string;
+    expandedIDs?: string;
+};
 export type MenuProps = OptionProps & {
     selectedID?: WithBinding<string>;
     path?: WithBinding<string>;
@@ -24,7 +29,7 @@ export declare class Menu extends Option {
     path: string;
     expandedIDs: string;
     private _syncingSelection;
-    constructor(args?: string | MenuProps);
+    constructor(args: MenuProps);
     selectedIDChanged(): void;
     pathChanged(): void;
     updatePaths(): void;
