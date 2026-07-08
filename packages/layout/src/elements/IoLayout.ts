@@ -5,7 +5,7 @@ import { Split } from '../models/Split.js'
 import { Panel } from '../models/Panel.js'
 import { ioSplit } from './IoSplit.js'
 import { ioPanel, IoPanel } from './IoPanel.js'
-import { IoMenuOptions, MenuOption } from '@io-gui/menus'
+import { IoMenu, Menu } from '@io-gui/menus'
 import { Tab } from '../models/Tab.js'
 import { IoTab, TabDragPhase } from './IoTab.js'
 import { IoTabDragGhost } from './IoTabDragGhost.js'
@@ -39,9 +39,9 @@ export class IoLayout extends ReactiveElement {
   @Property(Array)
   declare elements: VDOMElement[]
 
-  // TODO: Improve once MenuOption models have better (de)serialization
-  @Property({type: IoMenuOptions, init: null})
-  declare $addMenu: IoMenuOptions
+  // TODO: Improve once Menu models have better (de)serialization
+  @Property({type: IoMenu, init: null})
+  declare $addMenu: IoMenu
 
   @Property({type: IoTabDragGhost, init: null})
   declare $tabDragGhost: IoTabDragGhost
@@ -170,8 +170,8 @@ export class IoLayout extends ReactiveElement {
   }
 
   elementsMutated() {
-    // TODO: Improve once MenuOption models have better (de)serialization
-    this.$addMenu.option = new MenuOption({
+    // TODO: Improve once Menu models have better (de)serialization
+    this.$addMenu.model = new Menu({
       id: 'root',
       options: this.elements.map(element => ({
         id: element.props?.id,

@@ -1,20 +1,20 @@
 import { Register, ReactiveElement, Change, Property, ReactiveElementProps, WithBinding, Field } from '@io-gui/core'
-import { MenuOption } from '../nodes/MenuOption.js'
-import { ioMenuItem } from './IoMenuItem.js'
-
-export type SelectBy = 'value' | 'id'
+import { Menu } from '../models/Menu.js'
+import { ioOption } from './IoOption.js'
 
 export type IoOptionSelectProps = ReactiveElementProps & {
-  option: MenuOption
+  model?: Menu
   value?: WithBinding<any>
   label?: string
   icon?: string
-  selectBy?: SelectBy
 }
 
 /**
- * Option select element. Similar to `IoMenuItem`, except it is displayed as a button and uses `options` property instead of ~~`option.options`~~  and it is `selectable` by default. It displays selected `value` or `label` followed by the `â–¾` character.
- * When clicked or activated by space/enter key, it expands a menu with selectable options.
+ * Entry point that presents a Menu as a dropdown button. It displays the selected option's label
+ * followed by the `▾` character and expands the menu when clicked or activated by space/enter key.
+ *
+ * `value` is payload, not identity: it mirrors the selected Option's `value`. Writing `value`
+ * matches it to an Option at this boundary and selects that Option by its id.
  **/
 @Register
 export class IoOptionSelect extends ReactiveElement {
@@ -30,7 +30,7 @@ export class IoOptionSelect extends ReactiveElement {
       background-image: var(--io_gradientOutset);
       text-align: left;
     }
-    :host > io-menu-item {
+    :host > io-option {
       margin: calc(-1 * var(--io_borderWidth));
       background-color: transparent !important;
       border-color: transparent !important;
@@ -47,12 +47,8 @@ export class IoOptionSelect extends ReactiveElement {
   @Property('')
   declare icon: string
 
-  // TODO: consider deprecating
-  @Property('value')
-  declare selectBy: SelectBy
-
-  @Property({type: MenuOption})
-  declare option: MenuOption
+  @Property({type: Menu})
+  declare model: Menu
 
   @Field('button')
   declare role: string
@@ -61,13 +57,11 @@ export class IoOptionSelect extends ReactiveElement {
     super(args)
   }
 
-  // TODO: Consider triggering inputValue() only by user-input!
-  onOptionSelected(event: CustomEvent) {
+  onSelectedIDChanged() {
     if (this._disposed) return
-    if (this.selectBy === 'value') {
-      this.inputValue(event.detail.option.value)
-    } else if (this.selectBy === 'id') {
-      this.inputValue(event.detail.option.id)
+    const selectedOption = this.model.findOptionById(this.model.selectedID)
+    if (selectedOption && selectedOption !== this.model) {
+      this.inputValue(selectedOption.value)
     }
   }
   inputValue(value: any) {
@@ -77,43 +71,41 @@ export class IoOptionSelect extends ReactiveElement {
       this.dispatch('value-input', {value: value, oldValue: oldValue}, false)
     }
   }
-  optionChanged(change: Change) {
-    if (change.oldValue) {
-      (change.oldValue as MenuOption).removeEventListener('option-selected', this.onOptionSelected)
-    }
-    if (change.value) {
-      (change.value as MenuOption).addEventListener('option-selected', this.onOptionSelected)
-    }
-
-    //TODO: Cleanup and test
-    if (this.value === undefined) {
-      const selectedID = this.option.selectedID
-      const selectedItem = this.option.findItemById(selectedID)
-      if (this.selectBy === 'value') {
-        if (selectedItem) {
-          this.value = selectedItem.value
-        }
-      } else if (this.selectBy === 'id') {
-        if (selectedItem) {
-          this.value = selectedItem.id
-        }
-      }
+  valueChanged() {
+    if (this.value === undefined) return
+    // Boundary value→Option matching: resolve the app-bound value to an Option and select it by id.
+    const option = this.model?.findOptionByValue(this.value)
+    if (option && option !== this.model && !option.selected) {
+      option.selected = true
     }
   }
-  optionMutated() {
+  modelChanged(change: Change) {
+    if (change.oldValue) {
+      (change.oldValue as Menu).removeEventListener('selectedID-changed', this.onSelectedIDChanged)
+    }
+    if (change.value) {
+      (change.value as Menu).addEventListener('selectedID-changed', this.onSelectedIDChanged)
+    }
+    if (this.value === undefined) {
+      const selectedOption = this.model.findOptionById(this.model.selectedID)
+      if (selectedOption && selectedOption !== this.model) {
+        this.value = selectedOption.value
+      }
+    } else {
+      this.valueChanged()
+    }
+  }
+  modelMutated() {
     this.mutated()
   }
   override mutated() {
-    let selectedItem
     let label = this.label
-    if (this.selectBy === 'value') {
-      selectedItem = this.option.findItemByValue(this.value)
-      label = selectedItem ? selectedItem.label : String(this.value)
-    } else if (this.selectBy === 'id') {
-      selectedItem = this.option.findItemById(this.value)
-      label = selectedItem ? selectedItem.label : String(this.value)
+    if (!label) {
+      const selectedOption = this.model.findOptionById(this.model.selectedID)
+      const valueOption = selectedOption && selectedOption !== this.model ? selectedOption : this.model.findOptionByValue(this.value)
+      label = valueOption && valueOption !== this.model ? valueOption.label : String(this.value)
     }
-    this.render([ioMenuItem({option: this.option, label: label, icon: this.icon, direction: 'down'})])
+    this.render([ioOption({model: this.model, label: label, icon: this.icon, direction: 'down'})])
   }
 }
 export const ioOptionSelect = function(arg0: IoOptionSelectProps) {

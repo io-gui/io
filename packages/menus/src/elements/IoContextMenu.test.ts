@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { IoContextMenu, MenuOption } from '@io-gui/menus'
+import { IoContextMenu, Menu } from '@io-gui/menus'
 
 describe('IoContextMenu', () => {
   let parent: HTMLElement
-  let option: MenuOption
+  let model: Menu
   let menu: IoContextMenu
 
   beforeEach(() => {
@@ -11,24 +11,24 @@ describe('IoContextMenu', () => {
     parent.style.display = 'none'
     document.body.appendChild(parent)
 
-    option = new MenuOption({ id: 'ctx', options: [{ id: 'a', label: 'Action' }] })
-    menu = new IoContextMenu({ option, button: 0 })
+    model = new Menu({ id: 'ctx', options: [{ id: 'a', label: 'Action' }] })
+    menu = new IoContextMenu({ model, button: 0 })
     parent.appendChild(menu as HTMLElement)
   })
 
   afterEach(() => {
     menu.remove()
     parent.remove()
-    option.dispose()
+    model.dispose()
   })
 
   it('starts collapsed', () => {
     expect(menu.expanded).toBe(false)
   })
 
-  it('creates IoMenuOptions child', () => {
-    expect(menu.$options).toBeDefined()
-    expect(menu.$options.option).toBe(option)
+  it('creates IoMenu child', () => {
+    expect(menu.$menu).toBeDefined()
+    expect(menu.$menu.model).toBe(model)
   })
 
   it('expands on matching pointerdown', () => {
@@ -46,7 +46,7 @@ describe('IoContextMenu', () => {
   })
 
   it('prevents default contextmenu when button is 2', () => {
-    const menu2 = new IoContextMenu({ option, button: 2 })
+    const menu2 = new IoContextMenu({ model, button: 2 })
     parent.appendChild(menu2 as HTMLElement)
 
     const event = new MouseEvent('contextmenu', { bubbles: true, cancelable: true })

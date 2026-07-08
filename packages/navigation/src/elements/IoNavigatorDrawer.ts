@@ -112,12 +112,12 @@ export class IoNavigatorDrawer extends ReactiveElement {
 
   static override get Listeners() {
     return {
-      'io-menu-option-clicked': 'onMenuOptionClicked',
+      'io-option-clicked': 'onOptionClicked',
       'io-menu-tree-resized': 'onMenuTreeResized',
     }
   }
 
-  onMenuOptionClicked() {
+  onOptionClicked() {
     this.expanded = false
   }
 

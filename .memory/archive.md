@@ -182,3 +182,8 @@
 - Proxy traps route through `dispatchMutation` for coalescing
 - dispose uses manual flag (no flush) to stay silent
 - Tests: NodeArray.test withInternalOperation suite; Split.test normalize coalesce dispatch
+
+## 2026-07-08 — restore layout ADRs
+- User asked restore packages/layout/docs/adr from git
+- Deleted in b094b89a "Finished 3 adrs"; restored from parent ebca04dc via git checkout
+- 3 files staged: 0001–0003 layout ADRs

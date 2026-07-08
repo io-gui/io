@@ -1,20 +1,20 @@
 //@ts-nocheck
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { nextFrame } from '@io-gui/core'
-import { MenuOption } from '@io-gui/menus'
+import { Menu } from '@io-gui/menus'
 import { IoNavigator, ioNavigator, IoSelector } from '@io-gui/navigation'
 
 describe('IoNavigator', () => {
   let container: HTMLElement
   let navigator: IoNavigator
-  let option: MenuOption
+  let model: Menu
 
   beforeEach(() => {
     container = document.createElement('div')
     container.style.display = 'none'
     document.body.appendChild(container)
 
-    option = new MenuOption({
+    model = new Menu({
       id: 'root',
       options: [
         { id: 'page1', label: 'Page 1' },
@@ -38,7 +38,7 @@ describe('IoNavigator', () => {
     })
 
     it('should have default property values', async () => {
-      navigator = new IoNavigator({ option })
+      navigator = new IoNavigator({ model })
       container.appendChild(navigator)
 
       await nextFrame()
@@ -55,7 +55,7 @@ describe('IoNavigator', () => {
     it('should accept constructor arguments', () => {
       const elements = [{ tag: 'div', props: { id: 'page1' } }]
       navigator = new IoNavigator({
-        option,
+        model,
         elements,
         menu: 'top',
         depth: 2,
@@ -79,30 +79,58 @@ describe('IoNavigator', () => {
   })
 
   describe('Menu positions', () => {
-    it('should render io-menu-options for top menu', async () => {
-      navigator = new IoNavigator({ option, elements: [], menu: 'top' })
+    it('should render io-menu for top menu', async () => {
+      navigator = new IoNavigator({ model, elements: [], menu: 'top' })
       container.appendChild(navigator)
 
       await nextFrame()
 
-      expect(navigator.querySelector('io-menu-options')).toBeTruthy()
+      expect(navigator.querySelector('io-menu')).toBeTruthy()
       expect(navigator.querySelector('io-menu-tree')).toBeNull()
       expect(navigator.querySelector('io-selector')).toBeTruthy()
     })
 
     it('should render io-menu-tree for left menu', async () => {
-      navigator = new IoNavigator({ option, elements: [], menu: 'left' })
+      navigator = new IoNavigator({ model, elements: [], menu: 'left' })
       container.appendChild(navigator)
 
       await nextFrame()
 
       expect(navigator.querySelector('io-menu-tree')).toBeTruthy()
-      expect(navigator.querySelector('io-menu-options')).toBeNull()
+      expect(navigator.querySelector('io-menu')).toBeNull()
       expect(navigator.querySelector('io-selector')).toBeTruthy()
     })
 
+    it('should render only the routed selector for none menu', async () => {
+      navigator = new IoNavigator({ model, elements: [], menu: 'none' })
+      container.appendChild(navigator)
+
+      await nextFrame()
+
+      expect(navigator.querySelector('io-selector')).toBeTruthy()
+      expect(navigator.querySelector('io-menu')).toBeNull()
+      expect(navigator.querySelector('io-menu-tree')).toBeNull()
+    })
+
+    it('should route the selector by scope selection for none menu', async () => {
+      model.selectDefault()
+      navigator = new IoNavigator({ model, elements: [], menu: 'none', select: 'shallow' })
+      container.appendChild(navigator)
+
+      await nextFrame()
+
+      const selector = navigator.querySelector('io-selector') as IoSelector
+      expect(selector.selected).toBe(model.getSelectedIDImmediate())
+
+      model.options[1].selected = true
+      navigator.modelMutated()
+      await nextFrame()
+
+      expect(selector.selected).toBe('page2')
+    })
+
     it('should reflect menu attribute', () => {
-      navigator = new IoNavigator({ option, elements: [], menu: 'left' })
+      navigator = new IoNavigator({ model, elements: [], menu: 'left' })
       container.appendChild(navigator)
 
       expect(navigator.getAttribute('menu')).toBe('left')
@@ -112,7 +140,7 @@ describe('IoNavigator', () => {
     })
 
     it('should place selector before menu-tree for left position', async () => {
-      navigator = new IoNavigator({ option, elements: [], menu: 'left' })
+      navigator = new IoNavigator({ model, elements: [], menu: 'left' })
       container.appendChild(navigator)
 
       await nextFrame()
@@ -124,30 +152,30 @@ describe('IoNavigator', () => {
   })
 
   describe('Select modes', () => {
-    it('should use selectedIDImmediate for shallow select', async () => {
-      option.selectDefault()
-      navigator = new IoNavigator({ option, elements: [], select: 'shallow' })
+    it('should use immediate scope selection for shallow select', async () => {
+      model.selectDefault()
+      navigator = new IoNavigator({ model, elements: [], select: 'shallow' })
       container.appendChild(navigator)
 
       await nextFrame()
 
       const selector = navigator.querySelector('io-selector') as IoSelector
-      expect(selector.selected).toBe(option.selectedIDImmediate)
+      expect(selector.selected).toBe(model.getSelectedIDImmediate())
     })
 
     it('should use selectedID for deep select', async () => {
-      option.selectDefault()
-      navigator = new IoNavigator({ option, elements: [], select: 'deep' })
+      model.selectDefault()
+      navigator = new IoNavigator({ model, elements: [], select: 'deep' })
       container.appendChild(navigator)
 
       await nextFrame()
 
       const selector = navigator.querySelector('io-selector') as IoSelector
-      expect(selector.selected).toBe(option.selectedID)
+      expect(selector.selected).toBe(model.selectedID)
     })
 
     it('should use "*" for all select', async () => {
-      navigator = new IoNavigator({ option, elements: [], select: 'all' })
+      navigator = new IoNavigator({ model, elements: [], select: 'all' })
       container.appendChild(navigator)
 
       await nextFrame()
@@ -157,7 +185,7 @@ describe('IoNavigator', () => {
     })
 
     it('should use empty string for none select', async () => {
-      navigator = new IoNavigator({ option, elements: [], select: 'none' })
+      navigator = new IoNavigator({ model, elements: [], select: 'none' })
       container.appendChild(navigator)
 
       await nextFrame()
@@ -173,7 +201,7 @@ describe('IoNavigator', () => {
         { tag: 'div', props: { id: 'page1' } },
         { tag: 'span', props: { id: 'page2' } }
       ]
-      navigator = new IoNavigator({ option, elements })
+      navigator = new IoNavigator({ model, elements })
       container.appendChild(navigator)
 
       await nextFrame()
@@ -183,7 +211,7 @@ describe('IoNavigator', () => {
     })
 
     it('should pass caching mode to io-selector', async () => {
-      navigator = new IoNavigator({ option, elements: [], caching: 'proactive' })
+      navigator = new IoNavigator({ model, elements: [], caching: 'proactive' })
       container.appendChild(navigator)
 
       await nextFrame()
@@ -195,7 +223,7 @@ describe('IoNavigator', () => {
 
   describe('Anchor binding', () => {
     it('should bind anchor to io-selector', async () => {
-      navigator = new IoNavigator({ option, elements: [], anchor: 'section1' })
+      navigator = new IoNavigator({ model, elements: [], anchor: 'section1' })
       container.appendChild(navigator)
 
       await nextFrame()
@@ -212,7 +240,7 @@ describe('IoNavigator', () => {
 
   describe('Depth property', () => {
     it('should pass depth to menu components', async () => {
-      navigator = new IoNavigator({ option, elements: [], menu: 'left', depth: 2 })
+      navigator = new IoNavigator({ model, elements: [], menu: 'left', depth: 2 })
       container.appendChild(navigator)
 
       await nextFrame()
@@ -222,10 +250,10 @@ describe('IoNavigator', () => {
     })
   })
 
-  describe('Option mutation', () => {
-    it('should re-render when option is mutated', async () => {
-      option.selectDefault()
-      navigator = new IoNavigator({ option, elements: [], select: 'shallow' })
+  describe('Model mutation', () => {
+    it('should re-render when model is mutated', async () => {
+      model.selectDefault()
+      navigator = new IoNavigator({ model, elements: [], select: 'shallow' })
       container.appendChild(navigator)
 
       await nextFrame()
@@ -233,8 +261,8 @@ describe('IoNavigator', () => {
       const selector = navigator.querySelector('io-selector') as IoSelector
       const initialSelected = selector.selected
 
-      option.options[1].selected = true
-      navigator.optionMutated()
+      model.options[1].selected = true
+      navigator.modelMutated()
       await nextFrame()
 
       expect(selector.selected).not.toBe(initialSelected)
@@ -247,7 +275,7 @@ describe('IoNavigator', () => {
     })
 
     it('should create virtual constructor from factory', () => {
-      const vdom = ioNavigator({ option, menu: 'top' })
+      const vdom = ioNavigator({ model, menu: 'top' })
 
       expect(vdom).toBeDefined()
       expect(vdom.tag).toBe('io-navigator')

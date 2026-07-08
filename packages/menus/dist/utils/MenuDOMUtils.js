@@ -1,12 +1,12 @@
 import { IoOverlaySingleton } from '@io-gui/core';
-const MenuElementTags = ['io-menu-item', 'io-menu-options', 'io-menu-hamburger', 'io-option-select', 'io-string', 'io-menu-tree'];
+const MenuElementTags = ['io-option', 'io-menu', 'io-menu-hamburger', 'io-option-select', 'io-string', 'io-menu-tree'];
 const MenuElementTagsSelector = MenuElementTags.join(', ');
-export function getHoveredMenuItem(event) {
-    const options = Array.from(IoOverlaySingleton.querySelectorAll('io-menu-item, io-menu-options'));
+export function getHoveredOption(event) {
+    const options = Array.from(IoOverlaySingleton.querySelectorAll('io-option, io-menu'));
     const hovered = [];
     if (IoOverlaySingleton.expanded) {
         for (let i = options.length; i--;) {
-            if (isPointerAboveIoMenuItem(event, options[i]))
+            if (isPointerAboveIoOption(event, options[i]))
                 hovered.push(options[i]);
         }
     }
@@ -20,20 +20,20 @@ export function getHoveredMenuItem(event) {
                 if (aDepth < bDepth)
                     return -1;
             }
-            if (a.localName === 'io-menu-item')
+            if (a.localName === 'io-option')
                 return 1;
-            if (b.localName === 'io-menu-item')
+            if (b.localName === 'io-option')
                 return -1;
             return 0;
         });
         const first = hovered[0];
         const second = hovered[1];
-        if (first.localName === 'io-menu-item') {
+        if (first.localName === 'io-option') {
             return first;
-            // NOTE: This effectively blocks picking io-menu-item behind io-menu-options.
+            // NOTE: This effectively blocks picking io-option behind io-menu.
         }
-        else if (first.localName === 'io-menu-options' && second) {
-            if (second.localName === 'io-menu-item' && second.depth === first.depth) {
+        else if (first.localName === 'io-menu' && second) {
+            if (second.localName === 'io-option' && second.depth === first.depth) {
                 return second;
             }
         }
@@ -43,9 +43,9 @@ export function getHoveredMenuItem(event) {
 export function getMenuDescendants(element) {
     const descendants = [];
     const menuElement = element;
-    if (menuElement.$options) {
-        descendants.push(menuElement.$options);
-        const options = menuElement.$options.querySelectorAll(MenuElementTagsSelector);
+    if (menuElement.$menu) {
+        descendants.push(menuElement.$menu);
+        const options = menuElement.$menu.querySelectorAll(MenuElementTagsSelector);
         for (let i = options.length; i--;) {
             descendants.push(options[i]);
             descendants.push(...getMenuDescendants(options[i]));
@@ -77,9 +77,9 @@ export function getMenuChildren(element) {
         children.push(options[i]);
     }
     const menuElement = element;
-    if (menuElement.$options) {
-        children.push(menuElement.$options);
-        const options = menuElement.$options.querySelectorAll(MenuElementTagsSelector);
+    if (menuElement.$menu) {
+        children.push(menuElement.$menu);
+        const options = menuElement.$menu.querySelectorAll(MenuElementTagsSelector);
         for (let i = options.length; i--;) {
             children.push(options[i]);
         }
@@ -101,7 +101,7 @@ export function getMenuRoot(element) {
     }
     return root;
 }
-export function isPointerAboveIoMenuItem(event, element) {
+export function isPointerAboveIoOption(event, element) {
     if (MenuElementTags.indexOf(element.localName) !== -1) {
         if (!element.disabled) {
             if (element.parentElement !== IoOverlaySingleton && element.parentElement.expanded) {

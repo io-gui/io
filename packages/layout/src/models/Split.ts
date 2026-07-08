@@ -2,7 +2,6 @@ import { ReactiveObject, NodeArray, Property, Register, detachNodeParents } from
 import { Panel, PanelData } from './Panel.js'
 import {
   DEFAULT_SIZE,
-  LayoutSizeData,
   applyLayoutSizeProps,
   isValidSize,
   layoutSizeToJSON,
@@ -16,7 +15,8 @@ export type SplitData = {
   type: 'split'
   children: Array<SplitData | PanelData>
   orientation?: SplitOrientation
-} & LayoutSizeData
+  size?: string
+}
 
 @Register
 export class Split extends ReactiveObject {

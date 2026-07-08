@@ -1,37 +1,37 @@
 import { WithBinding, NudgeDirection, ListenerDefinitions } from '@io-gui/core';
 import { IoField, IoFieldProps } from '@io-gui/inputs';
-import { MenuOption } from '../nodes/MenuOption.js';
-import { IoMenuOptions } from './IoMenuOptions.js';
+import { Option } from '../models/Option.js';
+import { IoMenu } from './IoMenu.js';
 import { IoMenuTree } from './IoMenuTree.js';
 export declare function onOverlayPointerdown(event: PointerEvent): void;
 export declare function onOverlayPointermove(event: PointerEvent): void;
 export declare function onOverlayPointeup(event: PointerEvent): void;
-export type IoMenuItemProps = IoFieldProps & {
-    option?: MenuOption;
+export type IoOptionProps = IoFieldProps & {
+    model?: Option;
     label?: string;
     expanded?: WithBinding<boolean>;
     direction?: NudgeDirection;
     depth?: number;
-    $parent?: IoMenuOptions | IoMenuTree;
+    $parent?: IoMenu | IoMenuTree;
 };
 /**
- * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions`
- * from the `option.options` array. Options are expand in the direction specified by `direction` property.
- * If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected`
- * attribute is set on menu options whose `option.value` matches selected value.
+ * The view paired with one `Option` model. It displays `model.icon`, `model.label` and `model.hint`
+ * and creates an expandable `IoMenu` from the `model.options` array. Options expand in the direction
+ * specified by the `direction` property. Activating an option dispatches `io-option-clicked` from the
+ * menu root element — the single public menus event; selection state is observed via model properties.
  **/
-export declare class IoMenuItem extends IoField {
+export declare class IoOption extends IoField {
     static get Style(): string;
-    option: MenuOption;
+    model: Option;
     label: string;
     expanded: boolean;
     direction: NudgeDirection;
     depth: number;
     contentEditable: string;
-    $parent?: IoMenuOptions | IoMenuTree;
-    $options?: IoMenuOptions;
+    $parent?: IoMenu | IoMenuTree;
+    $menu?: IoMenu;
     static get Listeners(): ListenerDefinitions;
-    constructor(args?: IoMenuItemProps);
+    constructor(args?: IoOptionProps);
     preventDefault(event: Event): void;
     get hasmore(): boolean | 0;
     get inoverlay(): boolean;
@@ -48,10 +48,10 @@ export declare class IoMenuItem extends IoField {
     onKeydown(event: KeyboardEvent): void;
     collapse(): void;
     collapseRoot(): void;
-    optionChanged(): void;
-    optionMutated(): void;
-    initOptions(): void;
+    modelChanged(): void;
+    modelMutated(): void;
+    initMenu(): void;
     mutated(): void;
     dispose(): void;
 }
-export declare const ioMenuItem: (arg0?: IoMenuItemProps) => import("@io-gui/core").VDOMElement;
+export declare const ioOption: (arg0?: IoOptionProps) => import("@io-gui/core").VDOMElement;

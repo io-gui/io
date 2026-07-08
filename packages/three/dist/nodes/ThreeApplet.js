@@ -8,7 +8,7 @@ import { Register, ReactiveObject, Property } from '@io-gui/core';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
 import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, Timer, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene } from 'three/webgpu';
-import { ioOptionSelect, MenuOption } from '@io-gui/menus';
+import { ioOptionSelect, Menu } from '@io-gui/menus';
 const _playingApplets = [];
 function rAFLoop() {
     for (const applet of _playingApplets) {
@@ -87,7 +87,7 @@ ThreeApplet = __decorate([
 export { ThreeApplet };
 registerEditorConfig(ThreeApplet, [
     ['toneMappingExposure', ioNumberSlider({ min: 0, max: 3, step: 0.01, exponent: 2 })],
-    ['toneMapping', ioOptionSelect({ option: new MenuOption({ options: [
+    ['toneMapping', ioOptionSelect({ model: new Menu({ options: [
                     { value: NoToneMapping, id: 'NoToneMapping' },
                     { value: LinearToneMapping, id: 'LinearToneMapping' },
                     { value: ReinhardToneMapping, id: 'ReinhardToneMapping' },

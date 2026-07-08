@@ -1,10 +1,10 @@
 import { ReactiveElement, VDOMElement, ReactiveElementProps, WithBinding } from '@io-gui/core';
-import { MenuOption } from '@io-gui/menus';
+import { Menu, Option } from '@io-gui/menus';
 import { CachingType } from './IoSelector.js';
 export type SelectType = 'shallow' | 'deep' | 'all' | 'none';
-export type MenuPosition = 'top' | 'left';
+export type MenuPosition = 'top' | 'left' | 'none';
 export type IoNavigatorProps = ReactiveElementProps & {
-    option?: MenuOption;
+    model?: Menu | Option;
     elements?: VDOMElement[];
     widget?: VDOMElement;
     menu?: MenuPosition;
@@ -17,7 +17,7 @@ export type IoNavigatorProps = ReactiveElementProps & {
 export declare class IoNavigator extends ReactiveElement {
     static get Style(): string;
     elements: VDOMElement[];
-    option: MenuOption;
+    model: Menu | Option;
     widget: VDOMElement | null;
     menu: MenuPosition;
     depth: number;
@@ -38,7 +38,7 @@ export declare class IoNavigator extends ReactiveElement {
     onVeilClick(event: MouseEvent): void;
     collapsedChanged(): void;
     menuChanged(): void;
-    optionMutated(): void;
+    modelMutated(): void;
     mutated(): void;
 }
 export declare const ioNavigator: (arg0?: IoNavigatorProps) => VDOMElement;

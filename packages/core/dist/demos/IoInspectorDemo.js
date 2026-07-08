@@ -4,11 +4,10 @@ import { ioInspector } from '@io-gui/editors';
 import { ioField, ioNumber, ioString, ioBoolean, ioSwitch, ioButton } from '@io-gui/inputs';
 import { ioSlider, ioSliderRange, ioSlider2d, ioNumberSlider, ioNumberSliderRange } from '@io-gui/sliders';
 import { ioIcon } from '@io-gui/icons';
-import { ioOptionSelect, MenuOption } from '@io-gui/menus';
+import { ioOptionSelect, Menu } from '@io-gui/menus';
 import { ioColorRgba, ioColorSlider, ioColorSwatch, ioColorPicker } from '@io-gui/colors';
 import { ioStyleContainer } from './IoStyleContainer.js';
-// TODO: Implement IDs in menu options. use ID for selection
-const option = new MenuOption({
+const menu = new Menu({
     options: [{
             id: 'native',
             options: [
@@ -112,7 +111,7 @@ export class IoInspectorDemo extends ReactiveElement {
     }
     static get Properties() {
         return {
-            selected: option.bind('selectedID'),
+            selected: menu.bind('selectedID'),
         };
     }
     ready() {
@@ -126,13 +125,9 @@ export class IoInspectorDemo extends ReactiveElement {
         if (oldElement)
             oldElement.removeEventListener('io-mutation', this.onElementMutated);
         if (this.selected) {
-            const vElement = option.findItemById(this.selected).value;
+            const vElement = menu.findOptionById(this.selected).value;
             this.render([
-                ioOptionSelect({
-                    value: this.bind('selected'),
-                    option: option,
-                    selectBy: 'id'
-                }),
+                ioOptionSelect({ model: menu }),
                 div({ class: 'element-wrap' }, [vElement]),
                 pre([
                     code({ id: 'element-html', style: { display: 'block', whiteSpace: 'pre-wrap' } }),

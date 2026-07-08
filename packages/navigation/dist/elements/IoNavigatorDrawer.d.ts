@@ -12,10 +12,10 @@ export declare class IoNavigatorDrawer extends ReactiveElement {
     menuContent: VDOMElement;
     constructor(args: IoNavigatorDrawerProps);
     static get Listeners(): {
-        'io-menu-option-clicked': string;
+        'io-option-clicked': string;
         'io-menu-tree-resized': string;
     };
-    onMenuOptionClicked(): void;
+    onOptionClicked(): void;
     onMenuTreeResized(): void;
     onClick(event: MouseEvent): void;
     expandedChanged(): void;

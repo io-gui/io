@@ -12,7 +12,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { ThreeApplet, IoThreeExample, ioThreeViewport, ioVector3 } from '@io-gui/three';
 import { ioLayout, Layout } from '@io-gui/layout';
 import { ioPropertyEditor } from '@io-gui/editors';
-import { ioOptionSelect, MenuOption } from '@io-gui/menus';
+import { ioOptionSelect, Menu } from '@io-gui/menus';
 let BackdropAreaExample = class BackdropAreaExample extends ThreeApplet {
     mixer;
     box;
@@ -125,10 +125,9 @@ let IoBackdropAreaExample = class IoBackdropAreaExample extends IoThreeExample {
                         properties: ['material', 'boxScale'],
                         config: [
                             ['material', ioOptionSelect({
-                                    option: new MenuOption({
+                                    model: new Menu({
                                         options: ['blurred', 'depth', 'checker', 'pixel']
                                     }),
-                                    selectBy: 'id'
                                 })],
                             [Vector3, ioVector3({ linkable: true })]
                         ]

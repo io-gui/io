@@ -1,9 +1,10 @@
 import { ReactiveElement, VDOMElement, NudgeDirection, ReactiveElementProps, WithBinding, ListenerDefinition } from '@io-gui/core';
-import { MenuOption } from '../nodes/MenuOption.js';
-import { IoMenuItem } from './IoMenuItem.js';
+import { Option } from '../models/Option.js';
+import { Menu } from '../models/Menu.js';
+import { IoOption } from './IoOption.js';
 import { IoContextMenu } from './IoContextMenu.js';
-export type IoMenuOptionsProps = ReactiveElementProps & {
-    option?: MenuOption;
+export type IoMenuProps = ReactiveElementProps & {
+    model?: Menu | Option;
     expanded?: WithBinding<boolean>;
     horizontal?: boolean;
     searchable?: boolean;
@@ -11,14 +12,16 @@ export type IoMenuOptionsProps = ReactiveElementProps & {
     direction?: NudgeDirection;
     depth?: number;
     widget?: VDOMElement | null;
-    $parent?: IoMenuItem | IoContextMenu;
+    $parent?: IoOption | IoContextMenu;
 };
 /**
- * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu options are displayed in horizontal direction.
+ * The view paired with an expanded selection scope: it renders a list of `IoOption` elements from
+ * its model's `options`. The model is the `Menu` root or the branch `Option` whose children it shows.
+ * If the `horizontal` property is set, options are displayed in a horizontal direction (menu bar).
  **/
-export declare class IoMenuOptions extends ReactiveElement {
+export declare class IoMenu extends ReactiveElement {
     static get Style(): string;
-    option: MenuOption;
+    model: Menu | Option;
     expanded: boolean;
     horizontal: boolean;
     searchable: boolean;
@@ -27,14 +30,14 @@ export declare class IoMenuOptions extends ReactiveElement {
     depth: number;
     overflow: string;
     widget: VDOMElement | null;
-    $parent?: IoMenuItem;
+    $parent?: IoOption;
     role: string;
     static get Listeners(): {
         touchstart: ListenerDefinition;
         'io-focus-to': string;
     };
     get inoverlay(): boolean;
-    constructor(args?: IoMenuOptionsProps);
+    constructor(args?: IoMenuProps);
     stopPropagation(event: TouchEvent): void;
     connectedCallback(): void;
     disconnectedCallback(): void;
@@ -46,4 +49,4 @@ export declare class IoMenuOptions extends ReactiveElement {
     focusFirstOption(): void;
     mutated(): void;
 }
-export declare const ioMenuOptions: (arg0?: IoMenuOptionsProps) => VDOMElement;
+export declare const ioMenu: (arg0?: IoMenuProps) => VDOMElement;

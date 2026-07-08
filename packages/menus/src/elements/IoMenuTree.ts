@@ -1,42 +1,39 @@
-import { Register, ReactiveElement, Property, VDOMElement, Storage as $, ReactiveElementProps, WithBinding, Field } from '@io-gui/core'
+import { Register, ReactiveElement, Property, VDOMElement, ReactiveElementProps, WithBinding, Field } from '@io-gui/core'
 import { ioField, ioString } from '@io-gui/inputs'
-import { MenuOption } from '../nodes/MenuOption.js'
-import { ioMenuItem, IoMenuItem } from './IoMenuItem.js'
+import { Option } from '../models/Option.js'
+import { Menu } from '../models/Menu.js'
+import { ioOption, IoOption } from './IoOption.js'
 import { ioMenuTreeBranch } from './IoMenuTreeBranch.js'
-import { searchMenuOption } from '../utils/MenuNodeUtils.js'
+import { searchOptions } from '../utils/MenuNodeUtils.js'
 
-function genObjectStorageID(object: MenuOption) {
-  const string = JSON.stringify(object)
-  let hash = 0
-  for (let i = 0; i < string.length; i++) {
-    hash = Math.imul(31, hash) + string.charCodeAt(i) | 0
-  }
-  return 'io-local-state-' + String(hash)
-}
-
-function addMenuOptionsOrTreeBranches(option: MenuOption, depth: number, d = 0) {
+function addOptionsOrTreeBranches(model: Menu | Option, menu: Menu | undefined, depth: number, d = 0) {
   const elements: VDOMElement[] = []
-  if (d <= depth) for (let i = 0; i < option.options.length; i++) {
-    const subOption = option.options[i] as MenuOption
+  if (d <= depth) for (let i = 0; i < model.options.length; i++) {
+    const subOption = model.options[i] as Option
     if (subOption.options.length) {
-      const collapsibleState = $({value: false, storage: 'local', key: genObjectStorageID(subOption)})
-      if (subOption.selected === true) collapsibleState.value = true
-      elements.push(ioMenuTreeBranch({option: subOption, depth: d, expanded: collapsibleState}))
+      // Selected branches disclose themselves; the rest follow the Menu's persistent disclosure state.
+      const expanded = subOption.selected || (menu ? menu.isDisclosed(subOption.id) : false)
+      elements.push(ioMenuTreeBranch({model: subOption, depth: d, expanded: expanded, $menu: menu}))
     } else {
-      elements.push(ioMenuItem({option: subOption, depth: d}))
+      elements.push(ioOption({model: subOption, depth: d}))
     }
   }
   return elements
 }
 
 export type IoMenuTreeProps = ReactiveElementProps & {
-  option?: MenuOption
+  model?: Menu | Option
   searchable?: boolean
   search?: WithBinding<string>
   depth?: number
   widget?: VDOMElement | null
+  $menu?: Menu
 }
 
+/**
+ * Entry point that presents a Menu as an inline tree with collapsible branches. Branch disclosure is
+ * tree-scoped state on the Menu (`expandedIDs`) — persist it by binding that property to storage.
+ **/
 @Register
 export class IoMenuTree extends ReactiveElement {
 
@@ -56,14 +53,14 @@ export class IoMenuTree extends ReactiveElement {
     :host io-menu-tree {
       padding: 0 !important;
     }
-    :host > io-menu-item {
+    :host > io-option {
       padding-left: var(--io_spacing);
       padding-right: var(--io_spacing3);
     }
-    :host > io-menu-item[selected] {
+    :host > io-option[selected] {
       border-color: transparent var(--io_colorBlue) transparent transparent;
     }
-    :host > io-menu-item:before {
+    :host > io-option:before {
       display: inline-block;
       width: var(--io_fontSize);
       content: ""
@@ -71,8 +68,8 @@ export class IoMenuTree extends ReactiveElement {
     `
   }
 
-  @Property({type: MenuOption})
-  declare option: MenuOption
+  @Property({type: Option})
+  declare model: Menu | Option
 
   @Property({value: false, type: Boolean})
   declare searchable: boolean
@@ -87,19 +84,25 @@ export class IoMenuTree extends ReactiveElement {
   declare widget: VDOMElement | null
 
   @Field()
-  declare $parent?: IoMenuItem
+  declare $parent?: IoOption
+
+  @Field()
+  declare $menu?: Menu
 
   @Field('listbox')
   declare role: string
 
   constructor(args: IoMenuTreeProps = {}) { super(args) }
 
+  get menu(): Menu | undefined {
+    return this.$menu ?? (this.model instanceof Menu ? this.model : undefined)
+  }
+
   onResized() {
     this.dispatch('io-menu-tree-resized', {element: this}, true)
   }
 
-  // TODO: Test
-  optionMutated() {
+  modelMutated() {
     this.mutated()
   }
 
@@ -117,15 +120,15 @@ export class IoMenuTree extends ReactiveElement {
     }
 
     if (this.search) {
-      const filteredItems = searchMenuOption(this.option, this.search, this.depth)
-      if (filteredItems.length === 0) {
+      const filteredOptions = searchOptions(this.model, this.search, this.depth)
+      if (filteredOptions.length === 0) {
         vChildren.push(ioField({label: 'No matches'}))
-      } else for (let i = 0; i < filteredItems.length; i++) {
-        vChildren.push(ioMenuItem({option: filteredItems[i], depth: 0}))
+      } else for (let i = 0; i < filteredOptions.length; i++) {
+        vChildren.push(ioOption({model: filteredOptions[i], depth: 0}))
       }
 
     } else {
-      vChildren.push(...addMenuOptionsOrTreeBranches(this.option, this.depth))
+      vChildren.push(...addOptionsOrTreeBranches(this.model, this.menu, this.depth))
     }
 
     this.render(vChildren)

@@ -1,23 +1,23 @@
 //@ts-nocheck
 import { Register, ReactiveElement, div, span } from '@io-gui/core';
-import { MenuOption, ioMenuTree, ioMenuItem, ioMenuOptions, ioContextMenu, ioOptionSelect } from '@io-gui/menus';
+import { Option, Menu, ioMenuTree, ioOption, ioMenu, ioContextMenu, ioOptionSelect } from '@io-gui/menus';
 import { ioSwitch, ioField, ioBoolean } from '@io-gui/inputs';
 // TODO: remove dependencies on io-navigation.
 import '@io-gui/navigation';
 import '@io-gui/icons';
-const numberItems = new MenuOption({ id: 'numbers', options: [
-        { id: 'zero', value: 0, hint: 'Number(0)', icon: 'io:numeric-0-box' },
-        { id: 'one', value: 1, hint: 'Number(1)', icon: 'io:numeric-1-box' },
-        { id: 'two', value: 2, hint: 'Number(2)', icon: 'io:numeric-2-box' },
-        { id: 'three', value: 3, hint: 'Number(3)', icon: 'io:numeric-3-box' },
-        { id: 'four', value: 4, hint: 'Number(4)', icon: 'io:numeric-4-box' },
+const numberMenu = new Menu({ id: 'numbers', options: [
+        { id: 'zero', value: 0, hint: 'Number(0)', icon: 'io:label' },
+        { id: 'one', value: 1, hint: 'Number(1)', icon: 'io:label' },
+        { id: 'two', value: 2, hint: 'Number(2)', icon: 'io:label' },
+        { id: 'three', value: 3, hint: 'Number(3)', icon: 'io:label' },
+        { id: 'four', value: 4, hint: 'Number(4)', icon: 'io:label' },
     ] });
-const colorOptions = new MenuOption({ id: 'colors', options: [
-        { id: 'Red', icon: '❤️', options: ['Red1', 'Red2', 'Red3'].map(item => new MenuOption({ id: item, value: item })) },
-        { id: 'Green', icon: '💚', options: ['Green1', 'Green2', 'Green3'].map(item => new MenuOption({ id: item, value: item })) },
-        { id: 'Blue', icon: '💙', options: ['Blue1', 'Blue2', 'Blue3'].map(item => new MenuOption({ id: item, value: item })) },
+const colorMenu = new Menu({ id: 'colors', options: [
+        { id: 'Red', icon: 'io:circle_fill_red', options: ['Red1', 'Red2', 'Red3'].map(id => new Option({ id: id, value: id })) },
+        { id: 'Green', icon: 'io:circle_fill_green', options: ['Green1', 'Green2', 'Green3'].map(id => new Option({ id: id, value: id })) },
+        { id: 'Blue', icon: 'io:circle_fill_blue', options: ['Blue1', 'Blue2', 'Blue3'].map(id => new Option({ id: id, value: id })) },
     ] });
-const optionDeep = new MenuOption({ id: 'deep', options: [
+const deepMenu = new Menu({ id: 'deep', options: [
         { id: 'Deep Menu', options: [
                 { id: 'Level 1/1', hint: 'One' },
                 { id: 'Level 1/2', hint: 'Two' },
@@ -49,8 +49,8 @@ const optionDeep = new MenuOption({ id: 'deep', options: [
                 { id: 'Level 1/4', hint: 'Four' },
             ] },
     ] });
-// TODO: consider initializing long option only when needed.
-const optionLong = new MenuOption({ id: 'long', options: [
+// TODO: consider initializing long menu only when needed.
+const longMenu = new Menu({ id: 'long', options: [
         'apple', 'banana', 'cherry', 'dolphin', 'elephant', 'flamingo', 'giraffe', 'hamburger', 'igloo', 'jaguar',
         'kangaroo', 'lemon', 'mango', 'nectarine', 'octopus', 'penguin', 'quilt', 'rainbow', 'sunflower', 'tiger',
         'umbrella', 'violin', 'watermelon', 'xylophone', 'yacht', 'zebra', 'astronaut', 'butterfly', 'crocodile', 'diamond',
@@ -104,23 +104,25 @@ class IoSuboptionViewDemo extends ReactiveElement {
     }
     static get Properties() {
         return {
-            option: {
-                type: MenuOption,
+            model: {
+                type: Option,
             },
         };
     }
-    optionMutated() {
+    modelMutated() {
         this.mutated();
     }
     mutated() {
         const vChildren = [];
-        for (let i = 0; i < this.option.options.length; i++) {
-            vChildren.push(ioItemViewDemo({ option: this.option.options[i] }));
+        for (let i = 0; i < this.model.options.length; i++) {
+            vChildren.push(ioItemViewDemo({ model: this.model.options[i] }));
         }
+        // Tree-scoped selection state (selectedID, path) lives on the Menu root only.
+        const isMenu = this.model instanceof Menu;
         this.render([
             div([
-                this.option.selectedID ? span({ class: 'selected' }, `selected: ${this.option.selectedID}`) : null,
-                this.option.path ? span({ class: 'path' }, `path: ${this.option.path}`) : null,
+                this.model.getSelectedIDImmediate() ? span({ class: 'selected' }, `selected: ${this.model.getSelectedIDImmediate()}`) : null,
+                isMenu && this.model.path ? span({ class: 'path' }, `path: ${this.model.path}`) : null,
             ]),
             ...vChildren
         ]);
@@ -143,28 +145,28 @@ class IoItemViewDemo extends ReactiveElement {
     }
     static get Properties() {
         return {
-            option: {
-                type: MenuOption,
+            model: {
+                type: Option,
             },
         };
     }
-    optionMutated() {
+    modelMutated() {
         this.mutated();
     }
     mutated() {
         let selectElement = null;
-        if (this.option.mode === 'toggle') {
-            selectElement = ioBoolean({ value: this.option.bind('selected'), true: 'io:box_fill_checked', false: 'io:box' });
+        if (this.model.mode === 'toggle') {
+            selectElement = ioBoolean({ value: this.model.bind('selected'), true: 'io:box_fill_checked', false: 'io:box' });
         }
-        else if (this.option.mode === 'select') {
-            selectElement = ioSwitch({ value: this.option.bind('selected') });
+        else if (this.model.mode === 'select') {
+            selectElement = ioSwitch({ value: this.model.bind('selected') });
         }
         this.render([
             div([
                 selectElement,
-                ioField({ value: this.option.label, inert: true, appearance: 'neutral' }),
+                ioField({ value: this.model.label, inert: true, appearance: 'neutral' }),
             ]),
-            this.option.options.length ? ioSuboptionViewDemo({ option: this.option }) : null
+            this.model.options.length ? ioSuboptionViewDemo({ model: this.model }) : null
         ]);
     }
 }
@@ -187,7 +189,7 @@ class IoMenusDemo extends ReactiveElement {
         overflow: hidden;
         margin-bottom: var(--io_spacing);
       }
-      :host > io-menu-item {
+      :host > io-option {
         align-self: flex-start;
       }
       :host .row > *:not(:last-child) {
@@ -205,71 +207,71 @@ class IoMenusDemo extends ReactiveElement {
         this.render([
             ioMenuTree({
                 searchable: true,
-                option: optionDeep,
+                model: deepMenu,
             }),
-            ioMenuItem({ label: 'menu item', option: new MenuOption({ id: 'item', value: 'item' }) }),
-            ioMenuItem({ option: new MenuOption({
-                    id: 'item with hint/label/icon',
+            ioOption({ label: 'menu option', model: new Option({ id: 'item', value: 'item' }) }),
+            ioOption({ model: new Option({
+                    id: 'option with hint/label/icon',
                     selected: true,
                     value: 'value',
                     hint: 'hint',
-                    label: 'menu item label',
+                    label: 'menu option label',
                     icon: 'io:code',
                 }) }),
-            ioMenuItem({ label: 'menu item', option: new MenuOption({
-                    id: 'item with label override from element',
+            ioOption({ label: 'menu option', model: new Option({
+                    id: 'option with label override from element',
                     selected: false,
                     value: 'value',
                     hint: 'hint',
-                    label: 'menu item label',
+                    label: 'menu option label',
                     icon: 'io:circle_fill_plus',
                 }) }),
-            ioMenuOptions({
+            ioMenu({
                 horizontal: true,
                 searchable: true,
-                option: numberItems,
+                model: numberMenu,
             }),
-            ioMenuOptions({
+            ioMenu({
                 horizontal: true,
-                option: colorOptions,
+                model: colorMenu,
             }),
             div({ class: 'row' }, [
-                ioMenuOptions({
+                ioMenu({
                     searchable: true,
-                    option: numberItems,
+                    model: numberMenu,
                 }),
-                ioMenuOptions({
-                    option: new MenuOption({
+                ioMenu({
+                    model: new Menu({
                         id: 'reversed',
-                        options: [...numberItems.options].reverse(),
+                        options: [...numberMenu.options].reverse(),
                     }),
                 }),
-                ioMenuOptions({
-                    option: colorOptions,
+                ioMenu({
+                    model: colorMenu,
                 }),
-                ioMenuOptions({
-                    option: optionDeep,
+                ioMenu({
+                    model: deepMenu,
                 }),
                 ioOptionSelect({
                     label: 'Long Menu Select',
-                    option: optionLong,
+                    model: longMenu,
                 }),
             ]),
             div({ class: 'contextArea' }, [
                 span('Context Area'),
                 ioContextMenu({
-                    option: new MenuOption({ id: 'context', options: [...optionDeep.options, ...numberItems.options, ...colorOptions.options] }),
+                    model: new Menu({ id: 'context', options: [...deepMenu.options, ...numberMenu.options, ...colorMenu.options] }),
                 }),
                 ioContextMenu({
-                    option: new MenuOption({ id: 'context2', options: [...colorOptions.options] }),
+                    model: new Menu({ id: 'context2', options: [...colorMenu.options] }),
                     button: 1,
                 }),
                 ioContextMenu({
-                    option: optionLong,
+                    model: longMenu,
                     button: 2,
                 }),
             ]),
-            ioSuboptionViewDemo({ option: new MenuOption({ id: 'optionsview', options: [
+            ioSuboptionViewDemo({ model: new Menu({ id: 'optionsview', options: [
                         { id: 'home' },
                         { id: 'food', options: [
                                 { id: 'fruits', options: [

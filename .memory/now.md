@@ -1,3 +1,3 @@
 # Current Focus
 
-Completed: fix-nodearray-internal-op — NodeArray.withInternalOperation re-entrancy + coalesced dispatch.
+Updated layout ADRs 0001–0003: removed historical/deprecated vocab, status completed.

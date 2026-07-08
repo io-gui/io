@@ -1,9 +1,9 @@
 import { Register, Property, Field, IoOverlaySingleton as Overlay, span, WithBinding, NudgeDirection, ListenerDefinitions } from '@io-gui/core'
 import { IoField, IoFieldProps } from '@io-gui/inputs'
 import { ioIcon } from '@io-gui/icons'
-import { IoMenuElementType, getMenuRoot, getMenuAncestors, getMenuDescendants, getMenuSiblings, getHoveredMenuItem } from '../utils/MenuDOMUtils.js'
-import { MenuOption } from '../nodes/MenuOption.js'
-import { IoMenuOptions } from './IoMenuOptions.js'
+import { IoMenuElementType, getMenuRoot, getMenuAncestors, getMenuDescendants, getMenuSiblings, getHoveredOption } from '../utils/MenuDOMUtils.js'
+import { Option } from '../models/Option.js'
+import { IoMenu } from './IoMenu.js'
 import { IoMenuTree } from './IoMenuTree.js'
 
 let timeoutOpen: ReturnType<typeof setTimeout> | undefined = undefined
@@ -18,10 +18,10 @@ export function onOverlayPointerdown(event: PointerEvent) {
 
 export function onOverlayPointermove(event: PointerEvent) {
   clearTimeout(timeoutOpen)
-  hovered = getHoveredMenuItem(event)
+  hovered = getHoveredOption(event)
   if (hovered && hovered !== prevHovered) {
     const v = Math.abs(event.movementY) - Math.abs(event.movementX)
-    const h = (hovered.parentElement as IoMenuOptions)?.horizontal
+    const h = (hovered.parentElement as IoMenu)?.horizontal
     if (prevHovered?.parentElement !== hovered.parentElement) {
       prevHovered = hovered
       hovered.focus()
@@ -43,25 +43,25 @@ export function onOverlayPointeup(event: PointerEvent) {
 
 Overlay.addEventListener('pointermove', onOverlayPointermove)
 
-export type IoMenuItemProps = IoFieldProps & {
-  option?: MenuOption
+export type IoOptionProps = IoFieldProps & {
+  model?: Option
   label?: string
   expanded?: WithBinding<boolean>
   direction?: NudgeDirection
   depth?: number
-  $parent?: IoMenuOptions | IoMenuTree
+  $parent?: IoMenu | IoMenuTree
 }
 
 /**
- * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions`
- * from the `option.options` array. Options are expand in the direction specified by `direction` property.
- * If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected`
- * attribute is set on menu options whose `option.value` matches selected value.
+ * The view paired with one `Option` model. It displays `model.icon`, `model.label` and `model.hint`
+ * and creates an expandable `IoMenu` from the `model.options` array. Options expand in the direction
+ * specified by the `direction` property. Activating an option dispatches `io-option-clicked` from the
+ * menu root element — the single public menus event; selection state is observed via model properties.
  **/
 
 // TODO: fix and improve keyboard navigation in all cases.
 @Register
-export class IoMenuItem extends IoField {
+export class IoOption extends IoField {
   static override get Style() {
     return /* css */`
       :host > * {
@@ -83,8 +83,8 @@ export class IoMenuItem extends IoField {
     `
   }
 
-  @Property({type: MenuOption})
-  declare option: MenuOption
+  @Property({type: Option})
+  declare model: Option
 
   @Field('')
   declare label: string
@@ -102,9 +102,9 @@ export class IoMenuItem extends IoField {
   declare contentEditable: string
 
   @Field()
-  declare $parent?: IoMenuOptions | IoMenuTree
+  declare $parent?: IoMenu | IoMenuTree
 
-  declare $options?: IoMenuOptions
+  declare $menu?: IoMenu
 
   static override get Listeners(): ListenerDefinitions {
     return {
@@ -114,28 +114,28 @@ export class IoMenuItem extends IoField {
     }
   }
 
-  constructor(args: IoMenuItemProps = {}) { super(args) }
+  constructor(args: IoOptionProps = {}) { super(args) }
 
   preventDefault(event: Event) {
     event.stopPropagation()
     event.preventDefault()
   }
   get hasmore() {
-    return this.option.options.length && this.depth > 0
+    return this.model.options.length && this.depth > 0
   }
   get inoverlay() {
     return Overlay.contains(this.parentElement?.parentElement as HTMLElement)
   }
   override connectedCallback() {
     super.connectedCallback()
-    if (this.$options) Overlay.appendChild(this.$options as HTMLElement)
+    if (this.$menu) Overlay.appendChild(this.$menu as HTMLElement)
   }
   override disconnectedCallback() {
     super.disconnectedCallback()
-    if (this.$options) Overlay.removeChild(this.$options as HTMLElement)
+    if (this.$menu) Overlay.removeChild(this.$menu as HTMLElement)
   }
   override onClick() {
-    const o = this.option
+    const o = this.model
     if (this.hasmore) {
       if (!this.expanded) this.expanded = true
       return
@@ -151,13 +151,11 @@ export class IoMenuItem extends IoField {
           o.selectDefault()
         } else {
           o.selected = true
-          // TODO: figure out OptionSelect value input with NodeArray options
-          // o.dispatch('option-selected', {option: o}, true);
         }
         this.collapseRoot()
       }
     }
-    getMenuRoot(this).dispatch('io-menu-option-clicked', {option: o}, true)
+    getMenuRoot(this).dispatch('io-option-clicked', {option: o}, true)
   }
   override onPointerdown(event: PointerEvent) {
     super.onPointerdown(event)
@@ -188,7 +186,7 @@ export class IoMenuItem extends IoField {
     const $allitems = getMenuDescendants(getMenuRoot(this))
     const $ancestoritems = getMenuAncestors(this)
     for (let i = $allitems.length; i--;) {
-      if ($allitems[i] !== this && $allitems[i] !== this.$options && $ancestoritems.indexOf($allitems[i]) === -1 && ($allitems[i] as any).expanded) {
+      if ($allitems[i] !== this && $allitems[i] !== this.$menu && $ancestoritems.indexOf($allitems[i]) === -1 && ($allitems[i] as any).expanded) {
         ($allitems[i] as any).collapse()
       }
     }
@@ -208,12 +206,12 @@ export class IoMenuItem extends IoField {
     const ancestorIsFocused = ancestors.some(ancestor => ancestor === document.activeElement as unknown as IoMenuElementType)
     const nothingIsFocused = document.activeElement === document.body
 
-    const fucusLeftOverlay = !Overlay.contains(document.activeElement)
+    const focusLeftOverlay = !Overlay.contains(document.activeElement)
 
     if (descendantIsFocused || nothingIsFocused) return
     if (ancestorIsFocused || siblingIsFocused) {
       this.collapse()
-    } else if (fucusLeftOverlay) {
+    } else if (focusLeftOverlay) {
       this.collapseRoot()
     }
   }
@@ -226,9 +224,9 @@ export class IoMenuItem extends IoField {
     let optionsAreBelow = false
     let optionsAreLeft = false
     let optionsAreRight = false
-    if (this.expanded && this.$options) {
+    if (this.expanded && this.$menu) {
       const rect = this.getBoundingClientRect()
-      const optionsRect = this.$options.getBoundingClientRect()
+      const optionsRect = this.$menu.getBoundingClientRect()
       optionsAreAbove = rect.top > optionsRect.top
       optionsAreBelow = rect.bottom < optionsRect.bottom
       optionsAreLeft = rect.left > optionsRect.left
@@ -290,10 +288,10 @@ export class IoMenuItem extends IoField {
           break
         case 'In':
           if (this.hasmore) this.expanded = true
-          if (this.$options && this.$options.children.length) {
-            const option = this.$options!.querySelector('[selected]') as IoMenuItem
+          if (this.$menu && this.$menu.children.length) {
+            const option = this.$menu!.querySelector('[selected]') as IoOption
             if (option) option.focus()
-            else (this.$options!.children[0] as IoMenuItem).focus()
+            else (this.$menu!.children[0] as IoOption).focus()
           }
           break
         case 'Out':
@@ -318,60 +316,56 @@ export class IoMenuItem extends IoField {
   collapseRoot() {
     (getMenuRoot(this) as any).collapse()
   }
-  optionChanged() {
+  modelChanged() {
     this.setProperties({
-      selected: this.option.selected,
-      disabled: this.option.disabled,
-      hidden: this.option.hidden,
+      selected: this.model.selected,
+      disabled: this.model.disabled,
+      hidden: this.model.hidden,
     })
-    this.initOptions()
+    this.initMenu()
   }
-  optionMutated() {
+  modelMutated() {
     this.setProperties({
-      selected: this.option.selected,
-      disabled: this.option.disabled,
-      hidden: this.option.hidden,
+      selected: this.model.selected,
+      disabled: this.model.disabled,
+      hidden: this.model.hidden,
     })
     this.mutated()
   }
-  initOptions() {
-    if (this.option.options && this.depth > 0) {
-      if (this.$options === undefined) {
-        this.$options = new IoMenuOptions({
+  initMenu() {
+    if (this.model.options && this.depth > 0) {
+      if (this.$menu === undefined) {
+        this.$menu = new IoMenu({
           expanded: this.bind('expanded'),
           depth: this.depth - 1,
-          option: this.option,
+          model: this.model,
           direction: this.direction,
           $parent: this,
         })
       } else {
-        this.$options.option = this.option
+        this.$menu.model = this.model
       }
     }
   }
   override mutated() {
-    const icon = this.icon || this.option.icon
-    const label = this.label || this.option.label
+    const icon = this.icon || this.model.icon
+    const label = this.label || this.model.label
 
     this.render([
       this.hasmore && this.direction === 'left' ? ioIcon({value: 'io:triangle_left', class: 'hasmore'}) : null,
       this.hasmore && this.direction === 'up' ? ioIcon({value: 'io:triangle_up', class: 'hasmore'}) : null,
       icon ? ioIcon({value: icon}) : null,
       label ? span({class: 'label'}, label) : null,
-      this.option.hint ? span({class: 'hint'}, this.option.hint) : null,
+      this.model.hint ? span({class: 'hint'}, this.model.hint) : null,
       this.hasmore && this.direction === 'right' ? ioIcon({value: 'io:triangle_right', class: 'hasmore'}) : null,
       this.hasmore && this.direction === 'down' ? ioIcon({value: 'io:triangle_down', class: 'hasmore'}) : null,
     ])
   }
   override dispose() {
     super.dispose()
-    delete this.$options
+    delete this.$menu
   }
 }
-export const ioMenuItem = function(arg0?: IoMenuItemProps) {
-  return IoMenuItem.vConstructor(arg0)
+export const ioOption = function(arg0?: IoOptionProps) {
+  return IoOption.vConstructor(arg0)
 }
-
-
-
-

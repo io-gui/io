@@ -191,14 +191,14 @@
         iframe,
         h4,
       } from "@io-gui/core";
-      import { IoNavigator, ioNavigator, ioSelector } from "@io-gui/navigation";
-      import { MenuOption, ioMenuTree } from "@io-gui/menus";
+      import { IoNavigator, ioNavigator } from "@io-gui/navigation";
+      import { Menu, ioMenuTree } from "@io-gui/menus";
       import { ioMarkdown } from "@io-gui/markdown";
       import { ioIcon } from "@io-gui/icons";
 
       $.permit();
 
-      const MENU_OPTION = new MenuOption({
+      const MENU = new Menu({
         id: "root",
         options: [
           { id: "About" },
@@ -320,7 +320,7 @@
         role: "main",
         class: "main",
         menu: "top",
-        option: MENU_OPTION,
+        model: MENU,
         caching: "proactive",
         depth: 2,
         widget: ioIcon({
@@ -330,11 +330,11 @@
         }),
         elements: [
           ioMarkdown({ id: "About", strip: [siteRoot], src: "./README.md" }),
-          ioSelector({
+          ioNavigator({
             id: "Docs",
-            selected: MENU_OPTION.findItemById("Docs").bind(
-              "selectedIDImmediate",
-            ),
+            menu: "none",
+            select: "shallow",
+            model: MENU.findOptionById("Docs"),
             caching: "proactive",
             elements: [
               ioNavigator({
@@ -342,11 +342,8 @@
                 class: "navigator",
                 select: "all",
                 widget: h4({ class: "heading" }, "Table of Contents"),
-                option:
-                  MENU_OPTION.findItemById("Docs").findItemById("Quick Start"),
-                anchor: MENU_OPTION.findItemById("Docs")
-                  .findItemById("Quick Start")
-                  .bind("selectedID"),
+                model: MENU.findOptionById("Docs").findOptionById("Quick Start"),
+                anchor: MENU.bind("selectedID"),
                 elements: [
                   ioMarkdown({
                     strip: [siteRoot],
@@ -360,11 +357,8 @@
                 class: "navigator",
                 select: "all",
                 widget: h4({ class: "heading" }, "Table of Contents"),
-                option:
-                  MENU_OPTION.findItemById("Docs").findItemById("Deep Dive"),
-                anchor: MENU_OPTION.findItemById("Docs")
-                  .findItemById("Deep Dive")
-                  .bind("selectedID"),
+                model: MENU.findOptionById("Docs").findOptionById("Deep Dive"),
+                anchor: MENU.bind("selectedID"),
                 elements: [
                   ioMarkdown({
                     strip: [siteRoot],
@@ -378,17 +372,14 @@
                 class: "navigator",
                 select: "all",
                 widget: h4({ class: "heading" }, "Table of Contents"),
-                option:
-                  MENU_OPTION.findItemById("Docs").findItemById("Packages"),
-                anchor: MENU_OPTION.findItemById("Docs")
-                  .findItemById("Packages")
-                  .bind("selectedID"),
+                model: MENU.findOptionById("Docs").findOptionById("Packages"),
+                anchor: MENU.bind("selectedID"),
                 elements: [
-                  ioSelector({
+                  ioNavigator({
                     id: "Packages",
-                    selected: MENU_OPTION.findItemById("Packages").bind(
-                      "selectedIDImmediate",
-                    ),
+                    menu: "none",
+                    select: "shallow",
+                    model: MENU.findOptionById("Packages"),
                     caching: "proactive",
                     elements: [
                       ioMarkdown({
@@ -452,11 +443,11 @@
               }),
             ],
           }),
-          ioSelector({
+          ioNavigator({
             id: "Demos",
-            selected: MENU_OPTION.findItemById("Demos").bind(
-              "selectedIDImmediate",
-            ),
+            menu: "none",
+            select: "shallow",
+            model: MENU.findOptionById("Demos"),
             caching: "proactive",
             elements: [
               {
@@ -520,7 +511,7 @@
                 id: "Three",
                 class: "navigator",
                 widget: h4({ class: "heading" }, "Three.js Examples"),
-                option: MENU_OPTION.findItemById("Demos").findItemById("Three"),
+                model: MENU.findOptionById("Demos").findOptionById("Three"),
                 select: "deep",
                 caching: "reactive",
                 elements: [
