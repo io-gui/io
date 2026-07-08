@@ -207,7 +207,7 @@ export class IoPropertyEditor extends ReactiveElement {
 
           const isIoObject = tag === 'io-object'
           if (isIoObject) {
-            finalProps.label = finalProps.label ||id + ': ' + (value as object)?.constructor?.name || String(value)
+            finalProps.label = finalProps.label || id + ': ' + ((value as object)?.constructor?.name || String(value))
           }
 
           // TODO: Document and reconsider this

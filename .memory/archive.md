@@ -1,5 +1,10 @@
 # Archive
 
+## 2026-07-08 CONSTANT_CONDITION fixes
+
+- IoPropertyEditor: label expr `id + ': ' + name || String(value)` → parens so fallback applies to constructor name not whole concat
+- IoBuildGeometry: removed redundant `geometry &&` after early return on !geometry
+
 ## 2026-07-03 Layout size reflector
 
 - Replaced domain `flex` string with `size` (default auto) + `minSize` (default 240px)

@@ -75,7 +75,7 @@ export class IoBuildGeometry extends ReactiveElement {
       this.render([])
       return
     }
-    const hasParameters = geometry && (geometry as any).parameters
+    const hasParameters = !!(geometry as any).parameters
     const hasIndexNormalsUv = geometry.index && geometry.attributes.position && geometry.attributes.normal && geometry.attributes.uv
     this.render([
       ioPropertyEditor({
