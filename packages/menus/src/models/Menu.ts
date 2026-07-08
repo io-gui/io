@@ -47,7 +47,7 @@ export class Menu extends Option {
   constructor(args: MenuProps) {
 
     if (typeof args === 'object') {
-      if (args.id !== undefined) args.id = 'root'
+      if (args.id === undefined) args.id = 'root'
     }
 
     super(args as OptionProps)

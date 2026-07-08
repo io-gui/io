@@ -182,16 +182,14 @@ export class Option extends ReactiveObject {
     }
   }
   optionsMutated() {
+    const selectedOptions = this.options.filter(option => option.mode === 'select' && option.selected)
+    for (let i = 1; i < selectedOptions.length; i++) {
+      debug: console.warn('Duplicate selected options with mode "select" found!', selectedOptions)
+      selectedOptions[i].selected = false
+    }
     const hasSelected = this.options.some(option => option.selected && option.mode === 'select')
     if (this.mode === 'select' && hasSelected && this.options.length) {
       this.setProperty('selected', true)
-    }
-    debug: {
-      const selectedOptions = this.options.filter(option => option.mode === 'select' && option.selected)
-      for (let i = 1; i < selectedOptions.length; i++) {
-        // TODO: This is irrelevant since select is no longer serialized.
-        console.warn('Duplicate selected options with mode "select" found!', selectedOptions)
-      }
     }
     this.dispatchMutation()
   }
