@@ -33,7 +33,7 @@ The `select`-mode children of any one Option form a group in which at most one i
 _Avoid_: radio group, exclusive group
 
 **Path**:
-The comma-joined chain of selected Ids from the Menu root through nested selection scopes to the deepest selected Option. Derived from selection but writable: writing a Path selects the deepest Id that still exists (stale-tolerant restore). `selectedID` is its leaf, also writable; `selectedIDImmediate` (a scope's selected child) is read-only derived.
+The comma-joined chain of selected Ids from the Menu root through nested selection scopes to the deepest selected Option. Derived from selection but writable: writing a Path selects the deepest Id that still exists (stale-tolerant restore). `selectedID` is its leaf, also writable. A scope's selected child is derived on demand via `getSelectedIDImmediate()` — never stored, never bound.
 _Avoid_: route, trail, selection chain
 
 **Default selection**:

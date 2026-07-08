@@ -51,18 +51,18 @@ describe('Menu', () => {
     expect(menu.options[1].options[0].selected).toBe(true)
     expect(menu.options[1].options[0].options[0].selected).toBe(true)
     expect(menu.selectedID).toBe('apples')
-    expect(menu.selectedIDImmediate).toBe('food')
+    expect(menu.getSelectedIDImmediate()).toBe('food')
     expect(menu.path).toBe('food,fruits,apples')
-    expect(menu.options[1].selectedIDImmediate).toBe('fruits')
-    expect(menu.options[1].options[0].selectedIDImmediate).toBe('apples')
+    expect(menu.options[1].getSelectedIDImmediate()).toBe('fruits')
+    expect(menu.options[1].options[0].getSelectedIDImmediate()).toBe('apples')
 
     menu.options[1].options[0].options[0].selected = false
 
-    expect(menu.options[1].options[0].selectedIDImmediate).toBe('')
+    expect(menu.options[1].options[0].getSelectedIDImmediate()).toBe('')
     expect(menu.selectedID).toBe('fruits')
-    expect(menu.selectedIDImmediate).toBe('food')
+    expect(menu.getSelectedIDImmediate()).toBe('food')
     expect(menu.path).toBe('food,fruits')
-    expect(menu.options[1].selectedIDImmediate).toBe('fruits')
+    expect(menu.options[1].getSelectedIDImmediate()).toBe('fruits')
 
     menu.options[0].selected = true
 
@@ -71,10 +71,10 @@ describe('Menu', () => {
     expect(menu.options[1].options[0].selected).toBe(false)
     expect(menu.options[1].options[0].options[0].selected).toBe(false)
     expect(menu.selectedID).toBe('home')
-    expect(menu.selectedIDImmediate).toBe('home')
+    expect(menu.getSelectedIDImmediate()).toBe('home')
     expect(menu.path).toBe('home')
-    expect(menu.options[1].selectedIDImmediate).toBe('')
-    expect(menu.options[1].options[0].selectedIDImmediate).toBe('')
+    expect(menu.options[1].getSelectedIDImmediate()).toBe('')
+    expect(menu.options[1].options[0].getSelectedIDImmediate()).toBe('')
   })
   it('Should select options when selectedID is written', () => {
     const menu = new Menu({id: 'root', options: [
@@ -88,9 +88,9 @@ describe('Menu', () => {
 
     menu.selectedID = '2.1'
     expect(menu.options[0].selected).toBe(false)
-    expect(menu.options[0].selectedIDImmediate).toBe('')
+    expect(menu.options[0].getSelectedIDImmediate()).toBe('')
     expect(menu.options[1].selected).toBe(true)
-    expect(menu.options[1].selectedIDImmediate).toBe('2.1')
+    expect(menu.options[1].getSelectedIDImmediate()).toBe('2.1')
     expect(menu.path).toBe('2,2.1')
   })
   it('Should unselect all when selectedID matches no option', () => {
@@ -112,7 +112,7 @@ describe('Menu', () => {
     expect(menu.selected).toBe(true)
     expect(menu.path).toBe('food,fruits,apples')
     expect(menu.selectedID).toBe('apples')
-    expect(menu.selectedIDImmediate).toBe('food')
+    expect(menu.getSelectedIDImmediate()).toBe('food')
     expect(menu.options[1].options[0].options[0].selected).toBe(true)
   })
   it('Should update paths when selecting sibling after path-based initialization', () => {
@@ -134,10 +134,10 @@ describe('Menu', () => {
     const menu = new Menu({...foodMenuArgs, path: 'food,fruits,misspelled'})
 
     expect(menu.selected).toBe(true)
-    expect(menu.selectedIDImmediate).toBe('food')
+    expect(menu.getSelectedIDImmediate()).toBe('food')
     expect(menu.options[1].selected).toBe(true)
     expect(menu.options[1].options[0].selected).toBe(true)
-    expect(menu.options[1].options[0].selectedIDImmediate).toBe('')
+    expect(menu.options[1].options[0].getSelectedIDImmediate()).toBe('')
     expect(menu.path).toBe('food,fruits')
   })
   it('Should resolve full path when an intermediate segment is invalid', () => {
@@ -145,7 +145,7 @@ describe('Menu', () => {
 
     expect(menu.selected).toBe(true)
     expect(menu.path).toBe('food,fruits,mangos')
-    expect(menu.options[1].options[0].selectedIDImmediate).toBe('mangos')
+    expect(menu.options[1].options[0].getSelectedIDImmediate()).toBe('mangos')
   })
   it('Should not select anything when no path segment is valid', () => {
     const menu = new Menu({id: 'root', options: [
@@ -169,11 +169,11 @@ describe('Menu', () => {
 
     menu.options[1].selected = true
     expect(menu.selectedID).toBe('animals')
-    expect(menu.selectedIDImmediate).toBe('animals')
+    expect(menu.getSelectedIDImmediate()).toBe('animals')
 
     menu.options[0].selected = true
     expect(menu.selectedID).toBe('')
-    expect(menu.selectedIDImmediate).toBe('')
+    expect(menu.getSelectedIDImmediate()).toBe('')
     expect(menu.options[0].selected).toBe(true)
     expect(menu.options[1].selected).toBe(false)
   })

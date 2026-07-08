@@ -100,7 +100,7 @@ new Menu({options: [...], selectedID: $({key: 'nav', storage: 'local', value: 'h
 new Menu({options: [...], expandedIDs: $({key: 'nav-expanded', storage: 'local', value: ''})})
 ```
 
-`Option.selectedIDImmediate` (the id of a scope's selected child) is read-only derived — observe it, don't write it.
+The id of a scope's selected child is derived on demand via `Option.getSelectedIDImmediate()` — a method, not a stored property. Views observe it through mutation events; bindings are reserved for the writable entry points (`selectedID`, `path`, `expandedIDs`).
 
 ### Methods
 

@@ -5,7 +5,7 @@ import { ioNavigatorDrawer, IoNavigatorDrawer } from './IoNavigatorDrawer.js'
 
 export type SelectType = 'shallow' | 'deep' | 'all' | 'none'
 
-export type MenuPosition = 'top' | 'left'
+export type MenuPosition = 'top' | 'left' | 'none'
 
 export type IoNavigatorProps = ReactiveElementProps & {
   model?: Menu | Option
@@ -116,7 +116,7 @@ export class IoNavigator extends ReactiveElement {
   }
 
   calculateCollapsed() {
-    if (this.menu === 'top') {
+    if (this.menu !== 'left') {
       this.collapsed = false
       return
     }
@@ -162,8 +162,9 @@ export class IoNavigator extends ReactiveElement {
       depth: this.depth
     }
 
+    // Selection is derived from the model scope on mutation — no bound projection properties.
     let selected = ''
-    if (this.select === 'shallow') selected = this.model.selectedIDImmediate
+    if (this.select === 'shallow') selected = this.model.getSelectedIDImmediate()
     if (this.select === 'deep') {
       // Derived deep selection — works for Menu roots and branch Options alike.
       const chain = this.model.getSelectedChain()
@@ -175,7 +176,9 @@ export class IoNavigator extends ReactiveElement {
     const selectorElement = ioSelector({selected: selected, anchor: this.bind('anchor'), caching: this.caching, elements: this.elements})
     const veil = div({class: 'io-veil', '@click': this.onVeilClick})
 
-    if (this.menu === 'top') {
+    if (this.menu === 'none') {
+      this.render([selectorElement])
+    } else if (this.menu === 'top') {
       this.render([
         selectorElement,
         ioMenu({horizontal: true, ...sharedMenuConfig}),

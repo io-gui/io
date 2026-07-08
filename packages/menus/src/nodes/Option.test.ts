@@ -28,7 +28,7 @@ describe('Option', () => {
     expect(option.action).toBe(undefined)
     expect(option.mode).toBe('select')
     expect(option.selected).toBe(false)
-    expect(option.selectedIDImmediate).toBe('')
+    expect(option.getSelectedIDImmediate()).toBe('')
     expect(option.options).toBeInstanceOf(NodeArray)
     expect(option.options.length).toBe(0)
   })
@@ -79,7 +79,7 @@ describe('Option', () => {
     expect(typeof option.action).toBe('function')
     expect(option.mode).toBe('select')
     expect(option.selected).toBe(true)
-    expect(option.selectedIDImmediate).toBe('two')
+    expect(option.getSelectedIDImmediate()).toBe('two')
     expect(option.options).toBeInstanceOf(NodeArray)
     expect(option.options.length).toBe(3)
     expect(option.options[0].id).toBe('two')
@@ -118,17 +118,17 @@ describe('Option', () => {
     expect(option.options[1].options[0].selected).toBe(false)
     expect(option.options[1].options[1].selected).toBe(false)
   })
-  it('Should update selectedIDImmediate when selection changes', () => {
+  it('Should derive selectedIDImmediate when selection changes', () => {
     const option = new Option(testOptionArgs)
     option.selectDefault()
-    expect(option.selectedIDImmediate).toBe('1')
-    expect(option.options[0].selectedIDImmediate).toBe('1.1')
-    expect(option.options[1].selectedIDImmediate).toBe('')
+    expect(option.getSelectedIDImmediate()).toBe('1')
+    expect(option.options[0].getSelectedIDImmediate()).toBe('1.1')
+    expect(option.options[1].getSelectedIDImmediate()).toBe('')
 
     option.options[1].options[1].selected = true
-    expect(option.selectedIDImmediate).toBe('2')
-    expect(option.options[0].selectedIDImmediate).toBe('')
-    expect(option.options[1].selectedIDImmediate).toBe('2.2')
+    expect(option.getSelectedIDImmediate()).toBe('2')
+    expect(option.options[0].getSelectedIDImmediate()).toBe('')
+    expect(option.options[1].getSelectedIDImmediate()).toBe('2.2')
   })
   it('Should enforce selection scope: selecting a sibling deselects other select-mode siblings', () => {
     const option = new Option({id: 'root', options: [
@@ -153,7 +153,7 @@ describe('Option', () => {
 
     option.options[0].selected = false
     expect(option.options[0].options[0].selected).toBe(false)
-    expect(option.selectedIDImmediate).toBe('')
+    expect(option.getSelectedIDImmediate()).toBe('')
   })
   it('Should find child option before root when ids match', () => {
     const option = new Option({

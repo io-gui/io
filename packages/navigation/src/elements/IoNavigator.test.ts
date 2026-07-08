@@ -55,7 +55,7 @@ describe('IoNavigator', () => {
     it('should accept constructor arguments', () => {
       const elements = [{ tag: 'div', props: { id: 'page1' } }]
       navigator = new IoNavigator({
-        option,
+        model,
         elements,
         menu: 'top',
         depth: 2,
@@ -101,6 +101,34 @@ describe('IoNavigator', () => {
       expect(navigator.querySelector('io-selector')).toBeTruthy()
     })
 
+    it('should render only the routed selector for none menu', async () => {
+      navigator = new IoNavigator({ model, elements: [], menu: 'none' })
+      container.appendChild(navigator)
+
+      await nextFrame()
+
+      expect(navigator.querySelector('io-selector')).toBeTruthy()
+      expect(navigator.querySelector('io-menu')).toBeNull()
+      expect(navigator.querySelector('io-menu-tree')).toBeNull()
+    })
+
+    it('should route the selector by scope selection for none menu', async () => {
+      model.selectDefault()
+      navigator = new IoNavigator({ model, elements: [], menu: 'none', select: 'shallow' })
+      container.appendChild(navigator)
+
+      await nextFrame()
+
+      const selector = navigator.querySelector('io-selector') as IoSelector
+      expect(selector.selected).toBe(model.getSelectedIDImmediate())
+
+      model.options[1].selected = true
+      navigator.modelMutated()
+      await nextFrame()
+
+      expect(selector.selected).toBe('page2')
+    })
+
     it('should reflect menu attribute', () => {
       navigator = new IoNavigator({ model, elements: [], menu: 'left' })
       container.appendChild(navigator)
@@ -124,7 +152,7 @@ describe('IoNavigator', () => {
   })
 
   describe('Select modes', () => {
-    it('should use selectedIDImmediate for shallow select', async () => {
+    it('should use immediate scope selection for shallow select', async () => {
       model.selectDefault()
       navigator = new IoNavigator({ model, elements: [], select: 'shallow' })
       container.appendChild(navigator)
@@ -132,7 +160,7 @@ describe('IoNavigator', () => {
       await nextFrame()
 
       const selector = navigator.querySelector('io-selector') as IoSelector
-      expect(selector.selected).toBe(model.selectedIDImmediate)
+      expect(selector.selected).toBe(model.getSelectedIDImmediate())
     })
 
     it('should use selectedID for deep select', async () => {

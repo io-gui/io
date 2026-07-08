@@ -8,7 +8,7 @@ See [live examples here](https://iogui.dev/io/#path=Demos,Navigation)
 
 ```
 IoNavigator
-├── IoMenuOptions | IoMenuTree (navigation menu)
+├── IoMenu | IoMenuTree (navigation menu, optional)
 └── IoSelector (content display)
     └── selected element from elements[]
 
@@ -25,9 +25,9 @@ Full navigation component combining menu and content selector.
 
 ```typescript
 type IoNavigatorProps = {
-  option: MenuOption            // Navigation options
+  model: Menu | Option          // Navigation menu scope
   elements: VDOMElement[]       // Content elements matched by id
-  menu?: 'top' | 'left' | 'right'  // Menu position
+  menu?: 'top' | 'left' | 'none'   // Menu position ('none' renders only the routed selector)
   depth?: number                // Menu expansion depth
   select?: 'shallow' | 'deep' | 'all' | 'none'
   caching?: 'proactive' | 'reactive' | 'none'
@@ -39,14 +39,14 @@ type IoNavigatorProps = {
 **Menu positions:**
 | Position | Layout | Menu Type |
 |----------|--------|-----------|
-| `top` | Column | `IoMenuOptions` (horizontal) |
+| `top` | Column | `IoMenu` (horizontal) |
 | `left` | Row | `IoMenuTree` |
-| `right` | Row | `IoMenuTree` |
+| `none` | — | No menu; selector routed by the model scope |
 
 **Selection modes:**
 | Mode | Behavior |
 |------|----------|
-| `shallow` | Shows `selectedIDImmediate` (direct child) |
+| `shallow` | Shows the scope's immediate selection (direct child) |
 | `deep` | Shows final `selectedID` in tree |
 | `all` | Shows all elements (`*`) |
 | `none` | Shows nothing |
@@ -55,7 +55,7 @@ type IoNavigatorProps = {
 ```typescript
 new IoNavigator({
   menu: 'left',
-  option: new MenuOption({
+  model: new Menu({
     mode: 'select',
     options: [
       { id: 'Home', selected: true },
@@ -173,9 +173,9 @@ ioCollapsible({
 ## Data Flow
 
 ```
-MenuOption selection changes
+Menu selection changes
     ↓
-IoNavigator.optionMutated()
+IoNavigator.modelMutated()
     ↓
 Determines selected id based on 'select' mode
     ↓

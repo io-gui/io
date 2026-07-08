@@ -39,11 +39,12 @@ describe('IoOptionSelect', () => {
   it('takes the initially selected option value when value is undefined', () => {
     const preselected = new Menu({
       id: 'root',
-      selectedID: 'two',
       options: [
         { id: 'one', value: 1, label: 'One' },
         { id: 'two', value: 2, label: 'Two' },
       ],
+      // NOTE: selection entry points apply in arg order — options must come first.
+      selectedID: 'two',
     })
     const select = new IoOptionSelect({ model: preselected })
     document.body.appendChild(select as HTMLElement)

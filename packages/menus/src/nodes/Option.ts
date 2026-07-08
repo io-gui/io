@@ -57,10 +57,6 @@ export class Option extends ReactiveObject {
   @Property({value: false, type: Boolean})
   declare selected: boolean
 
-  // TODO: Consider implementing readonly in core
-  @Property({value: '', type: String})
-  declare readonly selectedIDImmediate: string
-
   @Property({type: NodeArray, init: 'this'})
   declare options: NodeArray<Option>
 
@@ -83,7 +79,8 @@ export class Option extends ReactiveObject {
     args = { ...args }
     args.id = args.id ?? ''
     args.label = args.label ?? args.id
-    args.value = args.value ?? args.id
+    // Default value to id only when absent — null/false are valid payloads.
+    if (args.value === undefined) args.value = args.id
     // An Option with an action is a transient command unless told otherwise.
     if (args.mode === undefined && typeof args.action === 'function') {
       args.mode = 'none'
@@ -144,12 +141,7 @@ export class Option extends ReactiveObject {
     }
     this.dispatch('option-selected-changed', {option: this}, true)
   }
-  // TODO: Consider implementing readonly in core
-  selectedIDImmediateChanged() {
-    debug: if (this.selectedIDImmediate !== this.getSelectedIDImmediate()) {
-      console.warn('"selectedIDImmediate" is read-only derived — write "selected" on the option instead!', this)
-    }
-  }
+  // Derived: the id of this scope's selected child ('' when none).
   getSelectedIDImmediate() {
     let selected = ''
     for (let i = 0; i < this.options.length; i++) {
@@ -188,10 +180,6 @@ export class Option extends ReactiveObject {
         }
       }
     }
-    const hasSelected = this.options.some(option => option.selected && option.mode === 'select')
-    if (!hasSelected) {
-      this.setProperty('selectedIDImmediate', '')
-    }
   }
   unselectSuboptions() {
     for (let i = 0; i < this.options.length; i++) {
@@ -205,12 +193,7 @@ export class Option extends ReactiveObject {
   optionsMutated() {
     const hasSelected = this.options.some(option => option.selected && option.mode === 'select')
     if (this.mode === 'select' && hasSelected && this.options.length) {
-      this.setProperties({
-        selected: true,
-        selectedIDImmediate: this.getSelectedIDImmediate(),
-      })
-    } else if (!hasSelected) {
-      this.setProperty('selectedIDImmediate', '')
+      this.setProperty('selected', true)
     }
     this.dispatchMutation()
   }

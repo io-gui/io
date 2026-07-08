@@ -126,7 +126,7 @@ class IoSuboptionViewDemo extends ReactiveElement {
     const isMenu = this.model instanceof Menu
     this.render([
       div([
-        this.model.selectedIDImmediate ? span({class: 'selected'}, `selected: ${this.model.selectedIDImmediate}`) : null,
+        this.model.getSelectedIDImmediate() ? span({class: 'selected'}, `selected: ${this.model.getSelectedIDImmediate()}`) : null,
         isMenu && this.model.path ? span({class: 'path'}, `path: ${this.model.path}`) : null,
       ]),
       ...vChildren
