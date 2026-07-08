@@ -180,6 +180,7 @@ let Option = Option_1 = class Option extends ReactiveObject {
             hidden: this.hidden,
             // action: N/A for serialization
             mode: this.mode,
+            // selected: N/A for serialization
             options: this.options.map(option => option.toJSON()),
         };
     }
@@ -194,7 +195,7 @@ let Option = Option_1 = class Option extends ReactiveObject {
             hidden: json.hidden ?? false,
             // action: N/A for serialization
             mode: json.mode ?? 'select',
-            // selected: deliberately not read — selection is not part of the JSON form.
+            // selected: N/A for serialization
             options: json.options?.map(option => (option instanceof Option_1) ? option : new Option_1(option)) ?? [],
         });
         return this;
