@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { Register, ReactiveElement, Property, IoOverlaySingleton as Overlay, Field, nudge, span } from '@io-gui/core';
 import { ioField, ioString } from '@io-gui/inputs';
-import { Option } from '../nodes/Option.js';
+import { Option } from '../models/Option.js';
 import { ioOption } from './IoOption.js';
 import { getMenuDescendants, getMenuSiblings } from '../utils/MenuDOMUtils.js';
 import { searchOptions } from '../utils/MenuNodeUtils.js';

@@ -1,6 +1,6 @@
 import { WithBinding, NudgeDirection, ListenerDefinitions } from '@io-gui/core';
 import { IoField, IoFieldProps } from '@io-gui/inputs';
-import { Option } from '../nodes/Option.js';
+import { Option } from '../models/Option.js';
 import { IoMenu } from './IoMenu.js';
 import { IoMenuTree } from './IoMenuTree.js';
 export declare function onOverlayPointerdown(event: PointerEvent): void;

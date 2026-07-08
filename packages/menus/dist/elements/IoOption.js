@@ -8,7 +8,7 @@ import { Register, Property, Field, IoOverlaySingleton as Overlay, span } from '
 import { IoField } from '@io-gui/inputs';
 import { ioIcon } from '@io-gui/icons';
 import { getMenuRoot, getMenuAncestors, getMenuDescendants, getMenuSiblings, getHoveredOption } from '../utils/MenuDOMUtils.js';
-import { Option } from '../nodes/Option.js';
+import { Option } from '../models/Option.js';
 import { IoMenu } from './IoMenu.js';
 let timeoutOpen = undefined;
 let hovered;

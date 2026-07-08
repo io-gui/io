@@ -1,5 +1,16 @@
 import { ReactiveObject, WithBinding, NodeArray, Json } from '@io-gui/core';
 export type OptionMode = 'select' | 'toggle' | 'none';
+export type OptionData = {
+    id?: string;
+    value?: Json;
+    label?: string;
+    icon?: string;
+    hint?: string;
+    disabled?: boolean;
+    hidden?: boolean;
+    mode?: OptionMode;
+    options?: OptionData[];
+};
 export type OptionProps = {
     id?: string;
     value?: any;
@@ -49,6 +60,6 @@ export declare class Option extends ReactiveObject {
     unselectSuboptions(): void;
     optionsMutated(): void;
     mutated(): void;
-    toJSON(): Json;
-    fromJSON(json: OptionProps): this;
+    toJSON(): OptionData;
+    applyJSON(json: OptionData): this;
 }

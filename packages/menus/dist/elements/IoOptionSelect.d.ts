@@ -1,30 +1,31 @@
 import { ReactiveElement, Change, ReactiveElementProps, WithBinding } from '@io-gui/core';
-import { MenuOption } from '../nodes/MenuOption.js';
-export type SelectBy = 'value' | 'id';
+import { Menu } from '../models/Menu.js';
 export type IoOptionSelectProps = ReactiveElementProps & {
-    option: MenuOption;
+    model?: Menu;
     value?: WithBinding<any>;
     label?: string;
     icon?: string;
-    selectBy?: SelectBy;
 };
 /**
- * Option select element. Similar to `IoMenuItem`, except it is displayed as a button and uses `options` property instead of ~~`option.options`~~  and it is `selectable` by default. It displays selected `value` or `label` followed by the `â–¾` character.
- * When clicked or activated by space/enter key, it expands a menu with selectable options.
+ * Entry point that presents a Menu as a dropdown button. It displays the selected option's label
+ * followed by the `▾` character and expands the menu when clicked or activated by space/enter key.
+ *
+ * `value` is payload, not identity: it mirrors the selected Option's `value`. Writing `value`
+ * matches it to an Option at this boundary and selects that Option by its id.
  **/
 export declare class IoOptionSelect extends ReactiveElement {
     static get Style(): string;
     value: any;
     label: string;
     icon: string;
-    selectBy: SelectBy;
-    option: MenuOption;
+    model: Menu;
     role: string;
     constructor(args: IoOptionSelectProps);
-    onOptionSelected(event: CustomEvent): void;
+    onSelectedIDChanged(): void;
     inputValue(value: any): void;
-    optionChanged(change: Change): void;
-    optionMutated(): void;
+    valueChanged(): void;
+    modelChanged(change: Change): void;
+    modelMutated(): void;
     mutated(): void;
 }
 export declare const ioOptionSelect: (arg0: IoOptionSelectProps) => import("@io-gui/core").VDOMElement;

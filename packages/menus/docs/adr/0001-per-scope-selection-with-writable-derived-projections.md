@@ -12,4 +12,4 @@ A menu tree mixes actions, toggles, and radio clusters under the same parent, so
 
 - Ids must be unique per Menu and may not contain a comma (Path separator); both debug-enforced.
 - Writable-but-derived properties look unusual; this is deliberate, not a sync bug to "fix" into read-only.
-- Menu JSON round-trips drop selection by design (`fromJSON` must not read `selected`); authoring Props remain a richer format than JSON (initial `selected`, `action` functions).
+- Menu JSON round-trips drop selection by design (`applyJSON` must not read `selected`); authoring Props remain a richer format than JSON (initial `selected`, `action` functions).

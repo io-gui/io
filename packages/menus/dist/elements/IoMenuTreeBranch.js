@@ -6,11 +6,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { ReactiveElement, Register, Property, Field, clearFocusBacktrack } from '@io-gui/core';
 import { ioBoolean } from '@io-gui/inputs';
-import { MenuOption } from '../nodes/MenuOption.js';
+import { Option } from '../models/Option.js';
 import { ioMenuTree } from './IoMenuTree.js';
 /**
- * An element with collapsible content.
- * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
+ * A collapsible branch inside an `IoMenuTree`. Toggling it writes through to the Menu's
+ * tree-scoped disclosure state (`expandedIDs`) when a Menu is available.
  **/
 let IoMenuTreeBranch = class IoMenuTreeBranch extends ReactiveElement {
     static get Style() {
@@ -41,17 +41,20 @@ let IoMenuTreeBranch = class IoMenuTreeBranch extends ReactiveElement {
     }
     `;
     }
-    optionMutated() {
-        if (this.option.selected)
-            this.expanded = this.option.selected;
+    modelMutated() {
+        if (this.model.selected)
+            this.expanded = this.model.selected;
     }
     expandedChanged() {
         clearFocusBacktrack();
+        if (this.$menu && this.model.id) {
+            this.$menu.setDisclosed(this.model.id, this.expanded);
+        }
     }
     mutated() {
         this.render([
-            ioBoolean({ icon: this.option.icon, true: this.option.label, false: this.option.label, value: this.bind('expanded') }),
-            this.expanded ? ioMenuTree({ option: this.option, depth: this.depth + 1 }) : null,
+            ioBoolean({ icon: this.model.icon, true: this.model.label, false: this.model.label, value: this.bind('expanded') }),
+            this.expanded ? ioMenuTree({ model: this.model, depth: this.depth + 1, $menu: this.$menu }) : null,
         ]);
     }
 };
@@ -59,11 +62,14 @@ __decorate([
     Property(Number)
 ], IoMenuTreeBranch.prototype, "depth", void 0);
 __decorate([
-    Property({ type: MenuOption })
-], IoMenuTreeBranch.prototype, "option", void 0);
+    Property({ type: Option })
+], IoMenuTreeBranch.prototype, "model", void 0);
 __decorate([
     Property({ value: false, type: Boolean, reflect: true })
 ], IoMenuTreeBranch.prototype, "expanded", void 0);
+__decorate([
+    Field()
+], IoMenuTreeBranch.prototype, "$menu", void 0);
 __decorate([
     Field('region')
 ], IoMenuTreeBranch.prototype, "role", void 0);

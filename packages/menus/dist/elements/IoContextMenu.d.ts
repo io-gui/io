@@ -1,8 +1,8 @@
 import { ReactiveElement, ReactiveElementProps, WithBinding } from '@io-gui/core';
-import { IoMenuOptions } from './IoMenuOptions.js';
-import { MenuOption } from '../nodes/MenuOption.js';
+import { IoMenu } from './IoMenu.js';
+import { Menu } from '../models/Menu.js';
 export type IoContextMenuProps = ReactiveElementProps & {
-    option: MenuOption;
+    model: Menu;
     expanded?: WithBinding<boolean>;
     button?: number;
 };
@@ -14,16 +14,16 @@ export type IoContextMenuProps = ReactiveElementProps & {
  * `parentElement` as long as the `button` properties are different.
  **/
 export declare class IoContextMenu extends ReactiveElement {
-    option: MenuOption;
+    model: Menu;
     expanded: boolean;
     button: number;
-    $options: IoMenuOptions;
+    $menu: IoMenu;
     _contextTimeout: ReturnType<typeof setTimeout>;
     _listenerParent: HTMLElement | null;
     static get Properties(): any;
     constructor(args: IoContextMenuProps);
     init(): void;
-    optionChanged(): void;
+    modelChanged(): void;
     connectedCallback(): void;
     disconnectedCallback(): void;
     releasePointerListeners(): void;

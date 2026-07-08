@@ -3,7 +3,7 @@ import { detachNodeParents, isReactiveNode } from './ReactiveCore.js';
  * Reactive array of {@link ReactiveObject} items owned by a parent node or element.
  *
  * Use `NodeArray` as the type for reactive properties that hold collections of child
- * nodes (for example `MenuOption.options`). The constructor registers the owner as
+ * nodes (for example `Option.options`). The constructor registers the owner as
  * an observer; mutating methods (`push`, `splice`, indexed assignment, etc.) wire
  * parent/child links and dispatch `io-mutation` on the owner so change
  * handlers like `optionsMutated()` run automatically.
@@ -18,7 +18,7 @@ import { detachNodeParents, isReactiveNode } from './ReactiveCore.js';
  * @example
  * ```ts
  * @Property({ type: NodeArray, init: null })
- * declare options: NodeArray<MenuOption>
+ * declare options: NodeArray<Option>
  * ```
  */
 export class NodeArray extends Array {

@@ -1,5 +1,5 @@
 import { Register, ReactiveElement, Change, Property, ReactiveElementProps, WithBinding, Field } from '@io-gui/core'
-import { Menu } from '../nodes/Menu.js'
+import { Menu } from '../models/Menu.js'
 import { ioOption } from './IoOption.js'
 
 export type IoOptionSelectProps = ReactiveElementProps & {

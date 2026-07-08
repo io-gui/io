@@ -1,2 +1,2 @@
-import { MenuOption } from '../nodes/MenuOption.js';
-export declare function searchMenuOption(option: MenuOption, search: string, depth?: number, d?: number): MenuOption[];
+import { Option } from '../models/Option.js';
+export declare function searchOptions(option: Option, search: string, depth?: number, d?: number): Option[];

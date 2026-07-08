@@ -1,6 +1,6 @@
 import { ReactiveElement, VDOMElement, NudgeDirection, ReactiveElementProps, WithBinding, ListenerDefinition } from '@io-gui/core';
-import { Option } from '../nodes/Option.js';
-import { Menu } from '../nodes/Menu.js';
+import { Option } from '../models/Option.js';
+import { Menu } from '../models/Menu.js';
 import { IoOption } from './IoOption.js';
 import { IoContextMenu } from './IoContextMenu.js';
 export type IoMenuProps = ReactiveElementProps & {

@@ -1,7 +1,7 @@
 import { Register, ReactiveElement, Property, IoOverlaySingleton as Overlay, ReactiveElementProps, WithBinding } from '@io-gui/core'
 import { IoMenu } from './IoMenu.js'
 import { onOverlayPointerdown, onOverlayPointermove, onOverlayPointeup } from './IoOption.js'
-import { Menu } from '../nodes/Menu.js'
+import { Menu } from '../models/Menu.js'
 
 export type IoContextMenuProps = ReactiveElementProps & {
   model: Menu

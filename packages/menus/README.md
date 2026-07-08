@@ -110,7 +110,7 @@ The id of a scope's selected child is derived on demand via `Option.getSelectedI
 | `findOptionById(id)` | Find option by id (children-first) |
 | `findOptionByValue(value)` | Find option by value (children-first) |
 | `selectDefault()` | Select the default (first select-mode) branch chain |
-| `toJSON()` / `fromJSON()` | Serialization — **structure only**, never selection |
+| `toJSON()` / `applyJSON()` | Serialization — **structure only**, never selection (ADR 0003) |
 | `isDisclosed(id)` / `setDisclosed(id, bool)` | Menu only: tree branch disclosure |
 
 ## Elements

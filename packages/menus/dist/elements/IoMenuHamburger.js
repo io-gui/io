@@ -6,8 +6,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { Property, Register } from '@io-gui/core';
 import { ioIcon } from '@io-gui/icons';
-import { IoMenuItem } from './IoMenuItem.js';
-let IoMenuHamburger = class IoMenuHamburger extends IoMenuItem {
+import { IoOption } from './IoOption.js';
+let IoMenuHamburger = class IoMenuHamburger extends IoOption {
     static get Style() {
         return /* css */ `
       :host {

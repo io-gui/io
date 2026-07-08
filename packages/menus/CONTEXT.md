@@ -7,7 +7,7 @@ The `@io-gui/menus` context: hierarchical trees of selectable options and the el
 ### Model
 
 **Menu**:
-The root model of a whole menu tree. Owns everything tree-scoped: selection tracking (`selectedID`, `path`), tree Disclosure (`expandedIDs`), default selection, serialization, and invariants no single Option can see. Every menu tree has exactly one Menu. Its JSON form is structure only (ids, labels, icons, hints, modes, nesting) — selection persists separately through Path/`selectedID` bindings.
+The root model of a whole menu tree. Owns everything tree-scoped: selection tracking (`selectedID`, `path`), tree Disclosure (`expandedIDs`), default selection, serialization, and invariants no single Option can see. Every menu tree has exactly one Menu. Its JSON form is structure only (ids, labels, icons, hints, modes, nesting) — selection persists separately through Path/`selectedID` bindings (ADR 0003).
 _Avoid_: root option, menu tree, manager
 
 **Option**:

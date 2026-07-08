@@ -1,7 +1,7 @@
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
 import { ioNumber, ioSwitch } from '@io-gui/inputs';
 import { ioNumberSlider } from '@io-gui/sliders';
-import { ioOptionSelect, MenuOption } from '@io-gui/menus';
+import { ioOptionSelect, Menu } from '@io-gui/menus';
 import { Texture, 
 // Mapping
 UVMapping, CubeReflectionMapping, CubeRefractionMapping, EquirectangularReflectionMapping, EquirectangularRefractionMapping, CubeUVReflectionMapping, 
@@ -16,7 +16,7 @@ UnsignedByteType, ByteType, ShortType, UnsignedShortType, IntType, UnsignedIntTy
 // ColorSpace
 NoColorSpace, SRGBColorSpace, LinearSRGBColorSpace, } from 'three/webgpu';
 registerEditorConfig(Texture, [
-    ['mapping', ioOptionSelect({ selectBy: 'value', option: new MenuOption({ options: [
+    ['mapping', ioOptionSelect({ model: new Menu({ options: [
                     { value: UVMapping, id: 'UV' },
                     { value: CubeReflectionMapping, id: 'Cube Reflection' },
                     { value: CubeRefractionMapping, id: 'Cube Refraction' },
@@ -25,21 +25,21 @@ registerEditorConfig(Texture, [
                     { value: CubeUVReflectionMapping, id: 'CubeUV Reflection' },
                 ] }) })],
     ['channel', ioNumber({ min: 0, max: 3, step: 1 })],
-    ['wrapS', ioOptionSelect({ selectBy: 'value', option: new MenuOption({ options: [
+    ['wrapS', ioOptionSelect({ model: new Menu({ options: [
                     { value: ClampToEdgeWrapping, id: 'Clamp' },
                     { value: RepeatWrapping, id: 'Repeat' },
                     { value: MirroredRepeatWrapping, id: 'Mirrored' },
                 ] }) })],
-    ['wrapT', ioOptionSelect({ selectBy: 'value', option: new MenuOption({ options: [
+    ['wrapT', ioOptionSelect({ model: new Menu({ options: [
                     { value: ClampToEdgeWrapping, id: 'Clamp' },
                     { value: RepeatWrapping, id: 'Repeat' },
                     { value: MirroredRepeatWrapping, id: 'Mirrored' },
                 ] }) })],
-    ['magFilter', ioOptionSelect({ selectBy: 'value', option: new MenuOption({ options: [
+    ['magFilter', ioOptionSelect({ model: new Menu({ options: [
                     { value: NearestFilter, id: 'Nearest' },
                     { value: LinearFilter, id: 'Linear' },
                 ] }) })],
-    ['minFilter', ioOptionSelect({ selectBy: 'value', option: new MenuOption({ options: [
+    ['minFilter', ioOptionSelect({ model: new Menu({ options: [
                     { value: NearestFilter, id: 'Nearest' },
                     { value: NearestMipmapNearestFilter, id: 'Nearest Mipmap Nearest' },
                     { value: NearestMipmapLinearFilter, id: 'Nearest Mipmap Linear' },
@@ -48,7 +48,7 @@ registerEditorConfig(Texture, [
                     { value: LinearMipmapLinearFilter, id: 'Linear Mipmap Linear' },
                 ] }) })],
     ['anisotropy', ioNumberSlider({ min: 1, max: 16, step: 1 })],
-    ['format', ioOptionSelect({ selectBy: 'value', option: new MenuOption({ options: [
+    ['format', ioOptionSelect({ model: new Menu({ options: [
                     { value: AlphaFormat, id: 'Alpha' },
                     { value: RGBFormat, id: 'RGB' },
                     { value: RGBAFormat, id: 'RGBA' },
@@ -57,7 +57,7 @@ registerEditorConfig(Texture, [
                     { value: RedFormat, id: 'Red' },
                     { value: RGFormat, id: 'RG' },
                 ] }) })],
-    ['type', ioOptionSelect({ selectBy: 'value', option: new MenuOption({ options: [
+    ['type', ioOptionSelect({ model: new Menu({ options: [
                     { value: UnsignedByteType, id: 'Unsigned Byte' },
                     { value: ByteType, id: 'Byte' },
                     { value: ShortType, id: 'Short' },
@@ -67,13 +67,13 @@ registerEditorConfig(Texture, [
                     { value: FloatType, id: 'Float' },
                     { value: HalfFloatType, id: 'Half Float' },
                 ] }) })],
-    ['colorSpace', ioOptionSelect({ selectBy: 'value', option: new MenuOption({ options: [
+    ['colorSpace', ioOptionSelect({ model: new Menu({ options: [
                     { value: NoColorSpace, id: 'None' },
                     { value: SRGBColorSpace, id: 'sRGB' },
                     { value: LinearSRGBColorSpace, id: 'Linear sRGB' },
                 ] }) })],
     ['rotation', ioNumberSlider({ min: -Math.PI, max: Math.PI, step: 0.01 })],
-    ['unpackAlignment', ioOptionSelect({ selectBy: 'value', option: new MenuOption({ options: [
+    ['unpackAlignment', ioOptionSelect({ model: new Menu({ options: [
                     { value: 1, id: '1 (byte)' },
                     { value: 2, id: '2 (even)' },
                     { value: 4, id: '4 (word)' },

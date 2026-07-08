@@ -1,6 +1,6 @@
 import { VDOMElement, ReactiveElement, ReactiveElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
 import { Layout } from '../models/Layout.js';
-import { IoMenuOptions } from '@io-gui/menus';
+import { IoMenu } from '@io-gui/menus';
 import { IoTabDragGhost } from './IoTabDragGhost.js';
 import { DropTarget } from './IoTabDragGhost.js';
 export type IoLayoutData = ReactiveElementProps & {
@@ -11,7 +11,7 @@ export declare class IoLayout extends ReactiveElement {
     static get Style(): string;
     model: Layout;
     elements: VDOMElement[];
-    $addMenu: IoMenuOptions;
+    $addMenu: IoMenu;
     $tabDragGhost: IoTabDragGhost;
     private _targetPanelModel;
     private _dropTarget;

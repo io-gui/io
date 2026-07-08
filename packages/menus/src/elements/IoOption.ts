@@ -2,7 +2,7 @@ import { Register, Property, Field, IoOverlaySingleton as Overlay, span, WithBin
 import { IoField, IoFieldProps } from '@io-gui/inputs'
 import { ioIcon } from '@io-gui/icons'
 import { IoMenuElementType, getMenuRoot, getMenuAncestors, getMenuDescendants, getMenuSiblings, getHoveredOption } from '../utils/MenuDOMUtils.js'
-import { Option } from '../nodes/Option.js'
+import { Option } from '../models/Option.js'
 import { IoMenu } from './IoMenu.js'
 import { IoMenuTree } from './IoMenuTree.js'
 

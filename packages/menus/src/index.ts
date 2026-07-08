@@ -23,8 +23,8 @@
  * THE SOFTWARE.
  */
 
-export * from './nodes/Option.js'
-export * from './nodes/Menu.js'
+export * from './models/Option.js'
+export * from './models/Menu.js'
 export * from './elements/IoMenuHamburger.js'
 export * from './elements/IoOption.js'
 export * from './elements/IoMenuTree.js'

@@ -1,4 +1,4 @@
-import { Option } from '../nodes/Option.js'
+import { Option } from '../models/Option.js'
 
 function matchOption(option: Option, search: string) {
   if (option.options.length) return false

@@ -1,7 +1,7 @@
 import { ReactiveElement, Register, Property, ReactiveElementProps, WithBinding, Field, clearFocusBacktrack } from '@io-gui/core'
 import { ioBoolean } from '@io-gui/inputs'
-import { Option } from '../nodes/Option.js'
-import { Menu } from '../nodes/Menu.js'
+import { Option } from '../models/Option.js'
+import { Menu } from '../models/Menu.js'
 import { ioMenuTree } from './IoMenuTree.js'
 
 export type IoMenuTreeBranchProps = ReactiveElementProps & {

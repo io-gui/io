@@ -1,10 +1,10 @@
 import { ReactiveObject, NodeArray } from '@io-gui/core';
 import { Tab, TabData } from './Tab.js';
-import { LayoutSizeData } from '../utils/layoutSize.js';
 export type PanelData = {
     type: 'panel';
     tabs: Array<TabData>;
-} & LayoutSizeData;
+    size?: string;
+};
 export declare class Panel extends ReactiveObject {
     tabs: NodeArray<Tab>;
     size: string;

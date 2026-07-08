@@ -254,7 +254,7 @@ export function getEditorConfig(object: object, propertyConfigs: PropertyConfig[
       for (const [key, value] of Object.entries(props)) {
         // TODO: Generalize for other objects that should be cloned / unique.
         if (value instanceof Menu) {
-          props[key] = new Menu({}).fromJSON(value.toJSON() as JsonObject) as MenuProps
+          props[key] = new Menu({}).applyJSON(value.toJSON() as JsonObject) as MenuProps
         }
       }
     }

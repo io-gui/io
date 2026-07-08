@@ -180,7 +180,7 @@ describe('Option', () => {
     expect('selected' in json).toBe(false)
     expect('selected' in json.options[0]).toBe(false)
 
-    const restored = new Option({}).fromJSON({...json, selected: true} as any)
+    const restored = new Option({}).applyJSON({...json, selected: true} as any)
     expect(restored.id).toBe('root')
     expect(restored.options.length).toBe(2)
     expect(restored.selected).toBe(false)

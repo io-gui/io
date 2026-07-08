@@ -9,7 +9,7 @@ import { Split } from '../models/Split.js';
 import { Panel } from '../models/Panel.js';
 import { ioSplit } from './IoSplit.js';
 import { ioPanel } from './IoPanel.js';
-import { IoMenuOptions, MenuOption } from '@io-gui/menus';
+import { IoMenu, Menu } from '@io-gui/menus';
 import { Tab } from '../models/Tab.js';
 import { IoTabDragGhost } from './IoTabDragGhost.js';
 import { resolveDropIndex, resolveSplitEdge } from '../utils/dropZone.js';
@@ -130,8 +130,8 @@ let IoLayout = class IoLayout extends ReactiveElement {
         this.elementsMutated();
     }
     elementsMutated() {
-        // TODO: Improve once MenuOption models have better (de)serialization
-        this.$addMenu.option = new MenuOption({
+        // TODO: Improve once Menu models have better (de)serialization
+        this.$addMenu.model = new Menu({
             id: 'root',
             options: this.elements.map(element => ({
                 id: element.props?.id,
@@ -175,7 +175,7 @@ __decorate([
     Property(Array)
 ], IoLayout.prototype, "elements", void 0);
 __decorate([
-    Property({ type: IoMenuOptions, init: null })
+    Property({ type: IoMenu, init: null })
 ], IoLayout.prototype, "$addMenu", void 0);
 __decorate([
     Property({ type: IoTabDragGhost, init: null })

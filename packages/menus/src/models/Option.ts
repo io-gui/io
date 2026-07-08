@@ -2,6 +2,19 @@ import { ReactiveObject, Register, Property, WithBinding, NodeArray, Json } from
 
 export type OptionMode = 'select' | 'toggle' | 'none'
 
+// Wire format — structure only; `action` and selection state are not serialized.
+export type OptionData = {
+  id?: string
+  value?: Json
+  label?: string
+  icon?: string
+  hint?: string
+  disabled?: boolean
+  hidden?: boolean
+  mode?: OptionMode
+  options?: OptionData[]
+}
+
 export type OptionProps = {
   id?: string
   value?: any
@@ -213,7 +226,7 @@ export class Option extends ReactiveObject {
   }
 
   // Structure only — selection is not part of an Option's serialized form.
-  override toJSON(): Json {
+  override toJSON(): OptionData {
     return {
       id: this.id,
       value: this.value,
@@ -224,10 +237,11 @@ export class Option extends ReactiveObject {
       hidden: this.hidden,
       // action: N/A for serialization
       mode: this.mode,
+      // selected: N/A for serialization
       options: this.options.map(option => option.toJSON()),
     }
   }
-  fromJSON(json: OptionProps) {
+  override applyJSON(json: OptionData) {
     this.setProperties({
       id: json.id,
       value: json.value ?? undefined,
@@ -238,7 +252,7 @@ export class Option extends ReactiveObject {
       hidden: json.hidden ?? false,
       // action: N/A for serialization
       mode: json.mode ?? 'select',
-      // selected: deliberately not read — selection is not part of the JSON form.
+      // selected: N/A for serialization
       options: json.options?.map(option => (option instanceof Option) ? option : new Option(option)) ?? [],
     })
     return this

@@ -1,21 +1,24 @@
 import { ReactiveElement, ReactiveElementProps, WithBinding } from '@io-gui/core';
-import { MenuOption } from '../nodes/MenuOption.js';
+import { Option } from '../models/Option.js';
+import { Menu } from '../models/Menu.js';
 export type IoMenuTreeBranchProps = ReactiveElementProps & {
     depth?: number;
-    option?: MenuOption;
+    model?: Option;
     expanded?: WithBinding<boolean>;
+    $menu?: Menu;
 };
 /**
- * An element with collapsible content.
- * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
+ * A collapsible branch inside an `IoMenuTree`. Toggling it writes through to the Menu's
+ * tree-scoped disclosure state (`expandedIDs`) when a Menu is available.
  **/
 export declare class IoMenuTreeBranch extends ReactiveElement {
     static get Style(): string;
     depth: number;
-    option: MenuOption;
+    model: Option;
     expanded: boolean;
+    $menu?: Menu;
     role: string;
-    optionMutated(): void;
+    modelMutated(): void;
     expandedChanged(): void;
     mutated(): void;
 }
