@@ -157,6 +157,7 @@ describe('Option', () => {
   })
   it('Should find child option before root when ids match', () => {
     const option = new Option({
+      id: '',
       options: [{id: '', label: 'all', value: ''}],
     })
     expect(option.findOptionById('')).toBe(option.options[0])
@@ -180,7 +181,7 @@ describe('Option', () => {
     expect('selected' in json).toBe(false)
     expect('selected' in json.options[0]).toBe(false)
 
-    const restored = new Option({}).applyJSON({...json, selected: true} as any)
+    const restored = new Option({id: 'restored'}).applyJSON({...json, selected: true} as any)
     expect(restored.id).toBe('root')
     expect(restored.options.length).toBe(2)
     expect(restored.selected).toBe(false)

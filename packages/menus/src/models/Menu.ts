@@ -1,5 +1,11 @@
 import { Register, Property, WithBinding } from '@io-gui/core'
-import { Option, OptionProps } from './Option.js'
+import { Option, OptionProps, OptionData } from './Option.js'
+
+export type MenuData = OptionData & {
+  selectedID?: string
+  path?: string
+  expandedIDs?: string
+}
 
 export type MenuProps = OptionProps & {
   selectedID?: WithBinding<string>
@@ -38,8 +44,22 @@ export class Menu extends Option {
 
   private _syncingSelection = false
 
-  constructor(args: string | MenuProps = {}) {
-    super(args)
+  constructor(args: MenuProps) {
+
+    if (typeof args === 'object') {
+      if (args.id !== undefined) args.id = 'root'
+    }
+
+    super(args as OptionProps)
+
+    // Tree-scoped props — not part of an Option's wire format.
+    if (typeof args === 'object') {
+      if (args.expandedIDs !== undefined) this.setProperty('expandedIDs', args.expandedIDs, true)
+      if (args.selectedID !== undefined) this.setProperty('selectedID', args.selectedID, true)
+      // Path last — it is the more specific selection entry point.
+      if (args.path !== undefined) this.setProperty('path', args.path, true)
+      this.dispatchQueue()
+    }
   }
   selectedIDChanged() {
     if (this._syncingSelection) return

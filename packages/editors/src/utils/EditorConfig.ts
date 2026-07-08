@@ -13,7 +13,7 @@ export type PropertyConfigMap = Map<PropertyIdentifier, VDOMElement>
 export type PropertyConfigRecord = Record<string, VDOMElement>
 export type EditorConfig = Map<AnyConstructor, PropertyConfig[]>
 
-function makeSelect(options: Array<string | number | boolean | null | undefined | OptionProps>) {
+function makeSelect(options: Array<string | number | boolean | null | OptionProps>) {
   for (let i = 0; i < options.length; i++) {
     if (options[i] === null) options[i] = {value: null, id: 'Null'}
   }

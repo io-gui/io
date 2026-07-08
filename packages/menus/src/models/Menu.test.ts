@@ -160,6 +160,7 @@ describe('Menu', () => {
   })
   it('Should update selectedID when selecting an option with empty id', () => {
     const menu = new Menu({
+      id: 'root',
       options: [
         {id: '', label: 'all', value: ''},
         {id: 'animals', label: 'animals'},
@@ -179,6 +180,7 @@ describe('Menu', () => {
   })
   it('Should update selection when selectedID is set to empty string externally', () => {
     const menu = new Menu({
+      id: 'root',
       options: [
         {id: '', label: 'all', value: ''},
         {id: 'animals', label: 'animals'},

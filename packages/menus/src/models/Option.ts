@@ -1,6 +1,8 @@
-import { ReactiveObject, Register, Property, WithBinding, NodeArray, Json } from '@io-gui/core'
+import { ReactiveObject, Register, Property, NodeArray, Json, WithBinding } from '@io-gui/core'
 
 export type OptionMode = 'select' | 'toggle' | 'none'
+
+export type OptionPrimitiveData = string | number | boolean | null
 
 // Wire format — structure only; `action` and selection state are not serialized.
 export type OptionData = {
@@ -12,21 +14,13 @@ export type OptionData = {
   disabled?: boolean
   hidden?: boolean
   mode?: OptionMode
-  options?: OptionData[]
+  options?: Array<OptionPrimitiveData | OptionData>
 }
 
-export type OptionProps = {
-  id?: string
-  value?: any
-  label?: WithBinding<string>
-  icon?: string
-  hint?: WithBinding<string>
-  action?: (value?: any) => void
-  mode?: OptionMode
-  disabled?: boolean
-  hidden?: boolean
+export type OptionProps = OptionData & {
+  options?: Array<OptionPrimitiveData | OptionData | OptionProps | Option>
   selected?: WithBinding<boolean>
-  options?: Array<string | number | boolean | null | undefined | OptionProps | Option>
+  action?: (value?: any) => void
 }
 
 /**
@@ -61,17 +55,17 @@ export class Option extends ReactiveObject {
   @Property({value: false, type: Boolean})
   declare hidden: boolean
 
-  @Property()
-  declare action?: (value?: any) => void
-
   @Property({value: 'select', type: String})
   declare mode: OptionMode
 
-  @Property({value: false, type: Boolean})
-  declare selected: boolean
-
   @Property({type: NodeArray, init: 'this'})
   declare options: NodeArray<Option>
+
+  @Property()
+  declare action?: (value?: any) => void
+
+  @Property({value: false, type: Boolean})
+  declare selected: boolean
 
   static override get Listeners() {
     return {
@@ -80,40 +74,24 @@ export class Option extends ReactiveObject {
     }
   }
 
-  constructor(args: string | number | boolean | null | undefined | OptionProps) {
+  constructor(args: OptionPrimitiveData | OptionProps) {
+    super()
+    this.applyJSON(args as OptionPrimitiveData | OptionData)
 
-    if (typeof args === 'string' || typeof args === 'number' || typeof args === 'boolean' || args === null || args === undefined) {
-      args = {
-        id: String(args),
-        value: args,
+    // `action` and `selected` are props-only — never part of the wire format.
+    if (!!args && typeof args === 'object') {
+      if (typeof args.action === 'function') {
+        // An Option with an action is a transient command unless told otherwise.
+        if (args.mode === undefined) {
+          this.setProperty('mode', 'none', true)
+        }
+        this.setProperty('action', args.action, true)
       }
+      if (args.selected !== undefined) {
+        this.setProperty('selected', args.selected, true)
+      }
+      this.dispatchQueue()
     }
-
-    args = { ...args }
-    args.id = args.id ?? ''
-    args.label = args.label ?? args.id
-    // Default value to id only when absent — null/false are valid payloads.
-    if (args.value === undefined) args.value = args.id
-    // An Option with an action is a transient command unless told otherwise.
-    if (args.mode === undefined && typeof args.action === 'function') {
-      args.mode = 'none'
-    }
-    args.options = args.options ?? []
-    args.options = args.options.map(option => {
-      return (option instanceof Option) ? option : new Option(option)
-    })
-
-    const selectedOptions = (args.options as Option[]).filter(option => option.mode === 'select' && option.selected)
-    for (let i = 1; i < selectedOptions.length; i++) {
-      debug: console.warn('Duplicate selected options with mode "select" found!', selectedOptions)
-      selectedOptions[i].selected = false
-    }
-
-    debug: if ((args.id as string).indexOf(',') !== -1) {
-      console.warn(`Option id "${args.id}" may not contain a comma — it is the Path separator!`)
-    }
-
-    super(args as OptionProps)
   }
   getAllOptions() {
     const options: Option[] = [this]
@@ -208,11 +186,21 @@ export class Option extends ReactiveObject {
     if (this.mode === 'select' && hasSelected && this.options.length) {
       this.setProperty('selected', true)
     }
+    debug: {
+      const selectedOptions = this.options.filter(option => option.mode === 'select' && option.selected)
+      for (let i = 1; i < selectedOptions.length; i++) {
+        // TODO: This is irrelevant since select is no longer serialized.
+        console.warn('Duplicate selected options with mode "select" found!', selectedOptions)
+      }
+    }
     this.dispatchMutation()
   }
 
   override mutated() {
     debug: {
+      if (this.icon !== '' && this.icon.indexOf(':') === -1) {
+        console.warn(`Option icon "${this.icon}" must contain a colon — it is the Iconset selector!`, this)
+      }
       if (['select', 'toggle', 'none'].indexOf(this.mode) === -1) {
         console.warn(`Unknown "mode" property "${this.mode}"!`, this)
       }
@@ -222,12 +210,15 @@ export class Option extends ReactiveObject {
       if (this.action && typeof this.action !== 'function') {
         console.warn(`Invalid type "${typeof this.action}" of "action" property!`, this)
       }
+      if (this.id.indexOf(',') !== -1) {
+        console.warn(`Option id "${this.id}" may not contain a comma — it is the Path separator!`)
+      }
     }
   }
 
   // Structure only — selection is not part of an Option's serialized form.
   override toJSON(): OptionData {
-    return {
+    const json: OptionData = {
       id: this.id,
       value: this.value,
       label: this.label,
@@ -235,25 +226,38 @@ export class Option extends ReactiveObject {
       hint: this.hint,
       disabled: this.disabled,
       hidden: this.hidden,
-      // action: N/A for serialization
       mode: this.mode,
-      // selected: N/A for serialization
       options: this.options.map(option => option.toJSON()),
     }
+    if (json.value === json.id) delete json.value
+    if (json.label === json.id) delete json.label
+    if (json.id === '') delete json.id
+    if (json.icon === '') delete json.icon
+    if (json.hint === '') delete json.hint
+    if (json.disabled === false) delete json.disabled
+    if (json.hidden === false) delete json.hidden
+    if (json.mode === 'select') delete json.mode
+    return json
   }
-  override applyJSON(json: OptionData) {
+  override applyJSON(json: OptionPrimitiveData | OptionData) {
+    if (typeof json === 'string' || typeof json === 'number' || typeof json === 'boolean' || json === null) {
+      json = { id: String(json), value: json } as OptionData
+    }
+    if (json.id === undefined) json.id = ''
+
     this.setProperties({
       id: json.id,
-      value: json.value ?? undefined,
+      // Default value to id only when absent — null/false are valid payloads.
+      value: json.value !== undefined ? json.value : json.id,
       label: json.label ?? json.id,
       icon: json.icon ?? '',
       hint: json.hint ?? '',
       disabled: json.disabled ?? false,
       hidden: json.hidden ?? false,
-      // action: N/A for serialization
       mode: json.mode ?? 'select',
-      // selected: N/A for serialization
       options: json.options?.map(option => (option instanceof Option) ? option : new Option(option)) ?? [],
+      // action: N/A for serialization
+      // selected: N/A for serialization
     })
     return this
   }
