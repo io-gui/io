@@ -1,6 +1,6 @@
 import { Register } from '../decorators/Register.js'
-import { ReactiveProperty } from '../decorators/Property.js'
-import { ReactivePropertyDefinitions, ReactiveNode, ReactivityType } from '../nodes/ReactiveNode.js'
+import { Property } from '../decorators/Property.js'
+import { PropertyDefinitions, ReactiveObject, DispatchTiming } from '../nodes/ReactiveObject.js'
 import { Storage as $ } from '../nodes/Storage.js'
 import { Color } from '../core/Color.js'
 import { adoptDocumentStylesheet } from '../core/Style.js'
@@ -13,7 +13,6 @@ export const $ThemeID = $({
   key: 'theme-' + THEME_VERSION
 })
 
-
 export type ThemeJSON = Record<string, number>
 
 export const THEMES: Record<string, ThemeJSON> = {
@@ -21,8 +20,7 @@ export const THEMES: Record<string, ThemeJSON> = {
     spacing: 2,
     spacing2: 0,
     spacing3: 0,
-    spacing5: 0,
-    spacing8: 0,
+    spacing4: 0,
     lineHeight: 20,
     fontSize: 14,
     fieldHeight: 0,
@@ -57,21 +55,20 @@ export const THEMES: Record<string, ThemeJSON> = {
     spacing: 2,
     spacing2: 0,
     spacing3: 0,
-    spacing5: 0,
-    spacing8: 0,
+    spacing4: 0,
     lineHeight: 20,
     fontSize: 14,
     fieldHeight: 0,
     borderRadius: 2,
     borderWidth: 1,
-    borderColor: Color.toHex(0.5, 0.5, 0.5),
-    borderColorLight: Color.toHex(0.3, 0.3, 0.3),
+    borderColor: Color.toHex(0.4, 0.4, 0.4),
+    borderColorLight: Color.toHex(0.1, 0.1, 0.1),
     borderColorStrong: Color.toHex(0, 0, 0),
     borderColorRed: Color.toHex(1, 0.2, 0),
     borderColorBlue: Color.toHex(0.4, 0.5, 0.9),
     borderColorGreen: Color.toHex(0, 0.6, 0.1),
     bgColor: Color.toHex(0.2, 0.2, 0.2),
-    bgColorStrong: Color.toHex(0.15, 0.15, 0.15),
+    bgColorStrong: Color.toHex(0.3, 0.3, 0.3),
     bgColorLight: Color.toHex(0.25, 0.25, 0.25),
     bgColorRed: Color.toHex(0.7, 0.2, 0.1),
     bgColorGreen: Color.toHex(0.1, 0.5, 0.2),
@@ -102,9 +99,9 @@ function isThemeColorKey(key: string): boolean {
  * @see ThemeSingleton
  */
 @Register
-export class Theme extends ReactiveNode {
-  static override get ReactiveProperties(): ReactivePropertyDefinitions {
-    const props: ReactivePropertyDefinitions = {}
+export class Theme extends ReactiveObject {
+  static override get Properties(): PropertyDefinitions {
+    const props: PropertyDefinitions = {}
     for (const key of themeKeys) {
       if (isThemeColorKey(key)) {
         props[key] = {type: Color, init: [0, 0, 0, 1]}
@@ -118,8 +115,7 @@ export class Theme extends ReactiveNode {
   declare spacing: number
   declare spacing2: number
   declare spacing3: number
-  declare spacing5: number
-  declare spacing8: number
+  declare spacing4: number
   declare lineHeight: number
   declare fontSize: number
   declare fieldHeight: number
@@ -150,13 +146,13 @@ export class Theme extends ReactiveNode {
   declare gradientColorEnd: Color
   declare shadowColor: Color
 
-  @ReactiveProperty('debounced')
-  declare reactivity: ReactivityType
+  @Property('debounced')
+  declare dispatchTiming: DispatchTiming
 
   override onPropertyMutated(event: CustomEvent) {
     const mutated = super.onPropertyMutated(event)
     if (mutated) {
-      this.changed()
+      this.mutated()
       this.dispatchMutation()
       return true
     }
@@ -171,13 +167,11 @@ export class Theme extends ReactiveNode {
     this.fontSize = Math.min(this.lineHeight, this.fontSize)
   }
 
-  override changed() {
+  override mutated() {
     this.fieldHeight = this.lineHeight + 2 * (this.spacing + this.borderWidth)
     this.spacing2 = this.spacing * 2
     this.spacing3 = this.spacing * 3
-    this.spacing5 = this.spacing * 5
-    this.spacing8 = this.spacing * 8
-
+    this.spacing4 = this.spacing * 4
     for (const key of themeKeys) {
       const value = this[key as keyof this]
       const cssValue = (value instanceof Color) ? value.toCss() : `${value}px`
@@ -212,7 +206,7 @@ const ThemeSingleton = new Theme().applyJSON(THEMES[$ThemeID.value as keyof type
 
 export const $Theme = $({
   value: ThemeSingleton,
-  storage: 'local',
+  storage: 'none',
   key: 'io-theme-' + THEME_VERSION
 })
 

@@ -7,4 +7,3 @@ registerEditorGroups(AnimationObjectGroup, {
 registerEditorConfig(Object, [
     [AnimationObjectGroup, ioObject()],
 ]);
-//# sourceMappingURL=AnimationObjectGroup.js.map

@@ -16,4 +16,3 @@
 //   Quality: ['bias', 'normalBias', 'radius', 'blurSamples', 'mapSize', 'mapType'],
 //   Data: ['map', 'mapPass', 'matrix'],
 // })
-//# sourceMappingURL=LightShadow.js.map

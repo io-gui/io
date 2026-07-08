@@ -1,9 +1,18 @@
-import { IoElement } from '../elements/IoElement.js';
+export declare const TEXT_TAG = "#text";
+export type VDOMChild = VDOMElement | string | null;
+export type VDOMFactoryChildren = Array<VDOMChild> | string;
 export type VDOMElement = {
     tag: string;
     props?: Record<string, any>;
-    children?: Array<VDOMElement | null> | string;
+    children?: Array<VDOMChild>;
 };
+export declare const normalizeVDOMChildren: (children: VDOMFactoryChildren) => Array<VDOMChild>;
+export type VDOMFactoryArg = Record<string, any> | VDOMFactoryChildren;
+export declare const createVDOMElement: (tag: string, arg0?: VDOMFactoryArg, arg1?: VDOMFactoryChildren) => VDOMElement;
+export declare const getTextVDOMContent: (vDOMElement: VDOMElement) => string;
+export declare const text: (content: string) => VDOMElement;
+export declare const isTextVDOM: (vDOMElement: VDOMElement) => boolean;
+export declare const getNodeVDOMTag: (node: ChildNode) => string;
 type IntegerNumeric = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32;
 type IntegerString = `${IntegerNumeric}`;
 type IntegerAny = IntegerNumeric | IntegerString;
@@ -291,38 +300,12 @@ export declare const applyNativeElementProps: (element: HTMLElement, props: Nati
  * @param {VDOMElement} vDOMElement - Virtual DOM object.
  * @return {HTMLElement} - Created element.
  */
-export declare const constructElement: (vDOMElement: VDOMElement) => HTMLElement;
+export declare const constructElement: (vDOMElement: VDOMElement) => ChildNode;
 /**
  * Filters out null items from a virtual DOM children array.
  * Returns the same array instance when no null items are present to avoid allocation.
  * @param {Array} vChildren - Array of VDOMElement children with possible null items.
  * @return {Array} - Array of VDOMElement children without null items.
  */
-export declare const filterVDOMElements: (vChildren: Array<VDOMElement | null>) => VDOMElement[];
-/**
- * Disposes EventDispatcher on a native VDOM element.
- */
-export declare const releaseEventDispatcher: (element: HTMLElement | IoElement) => void;
-/**
- * Disposes EventDispatchers on element and all element descendants.
- */
-export declare const releaseSubtreeEventDispatchers: (root: HTMLElement) => void;
-/**
- * Clears native element children after releasing orphaned EventDispatchers.
- */
-export declare const clearNativeElementChildren: (element: HTMLElement) => void;
-/**
- * Disposes the element's children.
- * @param {IoElement} element - Element to dispose children of.
- */
-export declare const disposeChildren: (element: IoElement) => void;
-/**
- * Converts an element to a virtual dom object.
- * NODE: This vDOM contains elements only attributes (not properties).
- * Used for testing but might be useful for other things.
- * @param {IoElement | HTMLElement} element - Element to convert.
- * @return {VDOMElement} - Virtual dom object.
- */
-export declare const toVDOM: (element: IoElement | HTMLElement) => VDOMElement;
+export declare const filterVDOMElements: (vChildren: Array<VDOMChild>) => VDOMElement[];
 export {};
-//# sourceMappingURL=VDOM.d.ts.map

@@ -1,32 +1,30 @@
 import { IoField, IoFieldProps } from '@io-gui/inputs';
-import { Tab } from '../nodes/Tab.js';
-export type IoTabProps = IoFieldProps & {
-    tab: Tab;
+import { Tab } from '../models/Tab.js';
+export type IoTabData = IoFieldProps & {
+    model: Tab;
 };
+export type TabActions = 'select' | 'delete' | 'move-left' | 'move-right' | 'move-start' | 'move-end';
+export type TabDragPhase = 'start' | 'move' | 'end' | 'cancel';
 export declare class IoTab extends IoField {
     static get Style(): string;
-    tab: Tab;
+    model: Tab;
     overflow: boolean;
-    static get Listeners(): {
-        click: string;
-        contextmenu: string;
-    };
-    constructor(args: IoTabProps);
+    private _pointerDown;
+    private _dragging;
+    constructor(args: IoTabData);
     onResized(): void;
-    onTouchmove(event: TouchEvent): void;
-    preventDefault(event: Event): void;
-    onContextMenu(event: MouseEvent): void;
     onPointerdown(event: PointerEvent): void;
     onPointermove(event: PointerEvent): void;
-    onPointerup(event: PointerEvent): void;
     onPointercancel(event: PointerEvent): void;
     onPointerleave(event: PointerEvent): void;
+    onPointerup(event: PointerEvent): void;
     onClick(): void;
-    onDeleteClick(): void;
-    expandContextEditor(): void;
+    dispatchAction(action: TabActions): void;
+    dispatchDrag(phase: TabDragPhase, x: number, y: number): void;
+    stopPropagation(event: PointerEvent): void;
+    onClose(event: PointerEvent): void;
     onKeydown(event: KeyboardEvent): void;
-    tabMutated(): void;
-    changed(): void;
+    modelMutated(): void;
+    mutated(): void;
 }
-export declare const ioTab: (arg0: IoTabProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoTab.d.ts.map
+export declare const ioTab: (arg0: IoTabData) => import("@io-gui/core").VDOMElement;

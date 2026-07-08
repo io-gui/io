@@ -1,5 +1,5 @@
-import { IoElement, IoElementProps, WithBinding } from '@io-gui/core';
-export type IoMarkdownProps = IoElementProps & {
+import { ReactiveElement, ReactiveElementProps, WithBinding } from '@io-gui/core';
+export type IoMarkdownProps = ReactiveElementProps & {
     src?: string;
     strip?: string[];
     loading?: WithBinding<boolean>;
@@ -9,7 +9,7 @@ export type IoMarkdownProps = IoElementProps & {
 /**
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
  */
-export declare class IoMarkdown extends IoElement {
+export declare class IoMarkdown extends ReactiveElement {
     static get Style(): string;
     src: string;
     strip: string[];
@@ -21,4 +21,3 @@ export declare class IoMarkdown extends IoElement {
     srcChanged(): void;
 }
 export declare const ioMarkdown: (arg0?: IoMarkdownProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoMarkdown.d.ts.map

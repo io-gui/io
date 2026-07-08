@@ -1,7 +1,7 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, span, Property, WithBinding, ListenerDefinitions, ListenerDefinition } from '@io-gui/core'
+import { Register, Property, ReactiveElement, ReactiveElementProps, span, Field, WithBinding, ListenerDefinitions, ListenerDefinition } from '@io-gui/core'
 import { ioIcon } from '@io-gui/icons'
 
-export type IoFieldProps = IoElementProps & {
+export type IoFieldProps = ReactiveElementProps & {
   value?: WithBinding<unknown>
   icon?: WithBinding<string>
   label?: WithBinding<string>
@@ -12,7 +12,7 @@ export type IoFieldProps = IoElementProps & {
 }
 
 @Register
-export class IoField extends IoElement {
+export class IoField extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host {
@@ -87,38 +87,40 @@ export class IoField extends IoElement {
     `
   }
 
-  @ReactiveProperty({value: ''})
+  @Property({value: ''})
   declare value: unknown
 
-  @ReactiveProperty({type: String, value: ''})
+  @Property({type: String, value: ''})
   declare icon: string
 
-  @ReactiveProperty({type: String, value: '', reflect: true})
+  @Property({type: String, value: '', reflect: true})
   declare label: string
 
-  @ReactiveProperty({value: false, type: Boolean, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare selected: boolean
 
-  @ReactiveProperty({value: false, type: Boolean, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare invalid: boolean
 
-  // TODO: remove
-  @ReactiveProperty({value: false, type: Boolean, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare disabled: boolean
 
-  @ReactiveProperty({value: false, type: Boolean, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
+  declare hidden: boolean
+
+  @Property({value: false, type: Boolean, reflect: true})
   declare pressed: boolean
 
-  @ReactiveProperty({value: 'neutral', reflect: true})
+  @Property({value: 'neutral', reflect: true})
   declare appearance: 'neutral' | 'inset' | 'outset'
 
-  @ReactiveProperty({value: '', type: String, reflect: true})
+  @Property({value: '', type: String, reflect: true})
   declare pattern: string
 
-  @Property(false)
+  @Field(false)
   declare spellcheck: boolean
 
-  @Property(0)
+  @Field(0)
   declare tabIndex: number
 
   static override get Listeners(): ListenerDefinitions { // TODO: fix listener types
@@ -127,10 +129,16 @@ export class IoField extends IoElement {
       'pointerdown': 'onPointerdown',
       'touchstart': ['onTouchstart', {passive: false}] as ListenerDefinition,
       'click': 'onClick',
+      'contextmenu': 'onContextMenu',
     }
   }
 
   constructor(args: IoFieldProps = {}) { super(args) }
+
+  onContextMenu(event: MouseEvent) {
+    event.preventDefault()
+    event.stopPropagation()
+  }
 
   onFocus(event: FocusEvent) {
     this.addEventListener('blur', this.onBlur)
@@ -188,6 +196,7 @@ export class IoField extends IoElement {
   }
   onTouchmove(event: TouchEvent) {
     event.stopPropagation()
+    event.preventDefault()
   }
   onTouchend(event: TouchEvent) {
     event.stopPropagation()
@@ -285,7 +294,7 @@ export class IoField extends IoElement {
       this.removeAttribute('aria-disabled')
     }
   }
-  override changed() {
+  override mutated() {
     this.render([
       this.icon ? ioIcon({value: this.icon}) : null,
       this.value !== undefined ? span(String(this.value)) : null,

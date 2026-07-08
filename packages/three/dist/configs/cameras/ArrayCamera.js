@@ -4,4 +4,3 @@ registerEditorGroups(ArrayCamera, {
     Main: ['cameras'],
     Hidden: ['_reversedDepth'],
 });
-//# sourceMappingURL=ArrayCamera.js.map

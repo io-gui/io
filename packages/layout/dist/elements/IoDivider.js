@@ -4,8 +4,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, IoElement } from '@io-gui/core';
-let IoDivider = class IoDivider extends IoElement {
+import { Register, Property, ReactiveElement } from '@io-gui/core';
+let IoDivider = class IoDivider extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -13,18 +13,26 @@ let IoDivider = class IoDivider extends IoElement {
         flex: 0 0 var(--io_spacing3);
         background-color: var(--io_colorLight);
         border-style: solid;
-        border-width: 0 var(--io_borderWidth);
         border-color: var(--io_color);
-        cursor: col-resize;
         @apply --io-unselectable;
+        z-index: 1;
+      }
+      :host[orientation='horizontal'] {
+        width: var(--io_spacing3);
+        cursor: col-resize;
+        border-width: 0 var(--io_borderWidth);
+      }
+      :host[orientation='vertical'] {
+        height: var(--io_spacing3);
+        cursor: row-resize;
+        border-width: var(--io_borderWidth) 0;
+      }
+      :host:hover {
+        border-style: dashed;
       }
       :host[pressed] {
         border-color: var(--io_borderColorBlue);
         background-color: var(--io_bgColorBlue);
-      }
-      :host[pressed]:before,
-      :host[pressed]:after {
-        background-color: var(--io_colorWhite);
       }
       :host:before,
       :host:after {
@@ -38,29 +46,41 @@ let IoDivider = class IoDivider extends IoElement {
         width: var(--io_fieldHeight);
         height: var(--io_spacing);
         background-color: var(--io_color);
-        transform: translate(-50%, -50%) rotate(90deg);
         border-radius: var(--io_spacing);
         opacity: 0.5;
       }
       :host[orientation='vertical']:before {
         transform: translate(-50%, -50%);
       }
-      :host:after {
-        width: var(--io_fieldHeight);
-        height: var(--io_fieldHeight);
-        background-color: var(--io_color);
-        transform: translate(-50%, -50%) rotate(45deg);
-        border-radius: 25%;
-      }
-      :host[orientation='vertical'] {
-        cursor: row-resize;
-        border-width: var(--io_borderWidth) 0;
-      }
-      :host:hover {
-        border-style: dashed;
+      :host[orientation='horizontal']:before {
+        transform: translate(-50%, -50%) rotate(90deg);
       }
       :host:hover:before {
         opacity: 1;
+      }
+      :host[pressed]:before {
+        background-color: var(--io_colorWhite);
+      }
+      :host:after {
+        background-color: var(--io_color);
+        border-radius: 50px;
+        transform: translate(-50%, -50%)
+      }
+      :host[orientation='vertical']:after {
+        width: 150px;
+        height: 10px;
+      }
+      :host[orientation='horizontal']:after {
+        width: 10px;
+        height: 150px;
+      }
+      :host:hover[orientation='vertical']:after {
+        width: 150px;
+        height: 20px;
+      }
+      :host:hover[orientation='horizontal']:after {
+        width: 20px;
+        height: 150px;
       }
     `;
     }
@@ -68,9 +88,14 @@ let IoDivider = class IoDivider extends IoElement {
         return {
             'pointerdown': 'onPointerdown',
             'touchstart': ['onTouchstart', { passive: false }],
+            'contextmenu': 'onContextmenuDisable',
         };
     }
     constructor(args) { super(args); }
+    onContextmenuDisable(event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
     onPointerdown(event) {
         event.preventDefault();
         event.stopPropagation();
@@ -122,10 +147,10 @@ let IoDivider = class IoDivider extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+    Property({ value: false, type: Boolean, reflect: true })
 ], IoDivider.prototype, "pressed", void 0);
 __decorate([
-    ReactiveProperty({ value: 'horizontal', type: String, reflect: true })
+    Property({ value: 'horizontal', type: String, reflect: true })
 ], IoDivider.prototype, "orientation", void 0);
 IoDivider = __decorate([
     Register
@@ -134,4 +159,3 @@ export { IoDivider };
 export const ioDivider = function (arg0) {
     return IoDivider.vConstructor(arg0);
 };
-//# sourceMappingURL=IoDivider.js.map

@@ -1,8 +1,8 @@
-import { Register, IoElement, ReactiveProperty, Property, IoElementProps, VDOMElement, ReactiveNode } from '@io-gui/core'
+import { Register, ReactiveElement, Property, Field, ReactiveElementProps, VDOMElement, ReactiveObject } from '@io-gui/core'
 import { ioNumber, ioBoolean } from '@io-gui/inputs'
 import { Vector4 } from 'three/webgpu'
 
-export type IoVectorBaseProps = IoElementProps & {
+export type IoVectorBaseProps = ReactiveElementProps & {
   value?: Vector4
   conversion?: number
   step?: number
@@ -15,7 +15,7 @@ export type IoVectorBaseProps = IoElementProps & {
 }
 
 @Register
-export class IoVectorBase extends IoElement {
+export class IoVectorBase extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host {
@@ -37,34 +37,34 @@ export class IoVectorBase extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: Object, init: null})
+  @Property({type: Object, init: null})
   declare value: object
 
-  @ReactiveProperty(1)
+  @Property(1)
   declare conversion: number
 
-  @ReactiveProperty(0.001)
+  @Property(0.001)
   declare step: number
 
-  @ReactiveProperty(-Infinity)
+  @Property(-Infinity)
   declare min: number
 
-  @ReactiveProperty(Infinity)
+  @Property(Infinity)
   declare max: number
 
-  @ReactiveProperty(false)
+  @Property(false)
   declare linkable: boolean
 
-  @ReactiveProperty(false)
+  @Property(false)
   declare linked: boolean
 
-  @ReactiveProperty(true)
+  @Property(true)
   declare ladder: boolean
 
-  @ReactiveProperty(false)
+  @Property(false)
   declare disabled: boolean
 
-  @Property([])
+  @Field([])
   declare keys: Array<string>
 
   public _ratios: any = {}
@@ -93,15 +93,15 @@ export class IoVectorBase extends IoElement {
         if (k !== id && this._ratios[k]) (value as any)[k] = value[id] * this._ratios[k]
       }
     }
-    if (!(this.value as unknown as ReactiveNode)._isNode) {
+    if (!(this.value as unknown as ReactiveObject)._isReactiveObject) {
       this.dispatchMutation(this.value)
     }
   }
 
   valueMutated() {
-    this.debounce(this.changed)
+    this.debounce(this.mutated)
   }
-  override changed() {
+  override mutated() {
     const vChildren: Array<VDOMElement | null> = []
     for (const k of this.keys) {
       const value = this.value[k as keyof typeof this.value] as number

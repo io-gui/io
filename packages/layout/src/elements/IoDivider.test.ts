@@ -530,7 +530,7 @@ describe('IoDivider', () => {
     })
   })
 
-  describe('Static Properties', () => {
+  describe('Static Fields', () => {
     it('should have Style getter', () => {
       expect(IoDivider.Style).toBeDefined()
       expect(typeof IoDivider.Style).toBe('string')

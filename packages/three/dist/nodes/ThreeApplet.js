@@ -4,11 +4,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveNode, ReactiveProperty } from '@io-gui/core';
+import { Register, ReactiveObject, Property } from '@io-gui/core';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
 import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, Timer, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene } from 'three/webgpu';
-import { ioOptionSelect, MenuOption } from '@io-gui/menus';
+import { ioOptionSelect, Menu } from '@io-gui/menus';
 const _playingApplets = [];
 function rAFLoop() {
     for (const applet of _playingApplets) {
@@ -17,7 +17,7 @@ function rAFLoop() {
     requestAnimationFrame(rAFLoop);
 }
 rAFLoop();
-let ThreeApplet = class ThreeApplet extends ReactiveNode {
+let ThreeApplet = class ThreeApplet extends ReactiveObject {
     _renderer = null;
     _width = 0;
     _height = 0;
@@ -70,16 +70,16 @@ let ThreeApplet = class ThreeApplet extends ReactiveNode {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Scene, init: null })
+    Property({ type: Scene, init: null })
 ], ThreeApplet.prototype, "scene", void 0);
 __decorate([
-    ReactiveProperty({ type: Number, value: 1 })
+    Property({ type: Number, value: 1 })
 ], ThreeApplet.prototype, "toneMappingExposure", void 0);
 __decorate([
-    ReactiveProperty({ type: Number, value: NoToneMapping })
+    Property({ type: Number, value: NoToneMapping })
 ], ThreeApplet.prototype, "toneMapping", void 0);
 __decorate([
-    ReactiveProperty({ type: Boolean, value: false })
+    Property({ type: Boolean, value: false })
 ], ThreeApplet.prototype, "isPlaying", void 0);
 ThreeApplet = __decorate([
     Register
@@ -87,7 +87,7 @@ ThreeApplet = __decorate([
 export { ThreeApplet };
 registerEditorConfig(ThreeApplet, [
     ['toneMappingExposure', ioNumberSlider({ min: 0, max: 3, step: 0.01, exponent: 2 })],
-    ['toneMapping', ioOptionSelect({ option: new MenuOption({ options: [
+    ['toneMapping', ioOptionSelect({ model: new Menu({ options: [
                     { value: NoToneMapping, id: 'NoToneMapping' },
                     { value: LinearToneMapping, id: 'LinearToneMapping' },
                     { value: ReinhardToneMapping, id: 'ReinhardToneMapping' },
@@ -112,4 +112,3 @@ registerEditorGroups(ThreeApplet, {
         '_timer',
     ],
 });
-//# sourceMappingURL=ThreeApplet.js.map

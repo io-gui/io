@@ -1,10 +1,17 @@
-import { ReactiveNode, Register, ReactiveProperty } from '@io-gui/core'
+import { ReactiveObject, Register, Property } from '@io-gui/core'
 
-export class TodoItemModel extends ReactiveNode {
-  @ReactiveProperty({type: String})
+
+export type TodoItemProps = {
+  title: string
+  completed: boolean
+}
+
+export class TodoItemModel extends ReactiveObject {
+
+  @Property({type: String})
   declare title: string
 
-  @ReactiveProperty({type: Boolean})
+  @Property({type: Boolean})
   declare completed: boolean
 
   toggle = () => {
@@ -15,12 +22,5 @@ export class TodoItemModel extends ReactiveNode {
     this.dispatch('delete-item', {item: this}, true)
   }
 
-  override applyJSON(json: any) {
-    this.setProperties({
-      title: json.title ?? '',
-      completed: json.completed ?? false,
-    })
-    return this
-  }
 }
 Register(TodoItemModel)

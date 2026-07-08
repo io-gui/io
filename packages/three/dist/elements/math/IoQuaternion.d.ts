@@ -9,4 +9,3 @@ export declare class IoQuaternion extends IoVectorBase {
     constructor(args: IoQuaternionProps);
 }
 export declare const ioQuaternion: (arg0?: IoQuaternionProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoQuaternion.d.ts.map

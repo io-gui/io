@@ -1,0 +1,795 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { NodeArray } from '@io-gui/core'
+import { Panel, PanelData, Tab, TabData, Split } from '@io-gui/layout'
+
+describe('Panel', () => {
+
+  describe('Construction', () => {
+
+    it('should construct with empty tabs array', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: []
+      })
+
+      expect(panel.tabs.length).toBe(0)
+    })
+
+    it('should construct with single tab', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'tab1' }]
+      })
+
+      expect(panel.tabs).toBeInstanceOf(NodeArray)
+      expect(panel.tabs.length).toBe(1)
+      expect(panel.tabs[0]).toBeInstanceOf(Tab)
+      expect(panel.tabs[0].id).toBe('tab1')
+      expect(panel.tabs[0].selected).toBe(true)
+      expect(panel.selectedID).toBe('tab1')
+    })
+
+    it('should construct with multiple tabs', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'tab1' },
+          { id: 'tab2' },
+          { id: 'tab3' }
+        ]
+      })
+
+      expect(panel.tabs.length).toBe(3)
+      expect(panel.tabs[0].id).toBe('tab1')
+      expect(panel.tabs[1].id).toBe('tab2')
+      expect(panel.tabs[2].id).toBe('tab3')
+    })
+
+
+    it('should preserve explicit selection', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'tab1' },
+          { id: 'tab2', selected: true },
+          { id: 'tab3' }
+        ]
+      })
+
+      expect(panel.tabs[0].selected).toBe(false)
+      expect(panel.tabs[1].selected).toBe(true)
+      expect(panel.tabs[2].selected).toBe(false)
+    })
+
+    it('should not modify selection when one is already selected', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'tab1', selected: false },
+          { id: 'tab2', selected: true }
+        ]
+      })
+
+      expect(panel.tabs[0].selected).toBe(false)
+      expect(panel.tabs[1].selected).toBe(true)
+    })
+
+    it('should default size to "auto"', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'tab1' }]
+      })
+
+      expect(panel.size).toBe('auto')
+    })
+
+    it('should accept custom size value', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'tab1' }],
+        size: '300px'
+      })
+
+      expect(panel.size).toBe('300px')
+    })
+
+
+    it('should preserve all tab properties', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{
+          id: 'full-tab',
+          label: 'Full Label',
+          icon: 'full-icon',
+          selected: true
+        }]
+      })
+
+      expect(panel.tabs[0].id).toBe('full-tab')
+      expect(panel.tabs[0].label).toBe('Full Label')
+      expect(panel.tabs[0].icon).toBe('full-icon')
+      expect(panel.tabs[0].selected).toBe(true)
+    })
+
+  })
+
+  describe('Tab Selection - selectedID', () => {
+
+    it('should return id of selected tab', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'tab1' },
+          { id: 'tab2', selected: true }
+        ]
+      })
+
+      expect(panel.selectedID).toBe('tab2')
+    })
+
+
+    it('should return empty string when no tabs', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: []
+      })
+
+      expect(panel.selectedID).toBe('')
+    })
+
+    it('should return empty string when no tab is selected', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'tab1' }]
+      })
+      expect(panel.selectedID).toBe('tab1')
+
+      panel.tabs[0].selected = false
+
+      expect(panel.selectedID).toBe('')
+    })
+
+    it('should return first selected when multiple selected (edge case)', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'tab1', selected: true },
+          { id: 'tab2', selected: true }
+        ]
+      })
+
+      expect(panel.selectedID).toBe('tab1')
+    })
+
+  })
+
+  describe('Tab Selection - selectByIndex', () => {
+
+    it('should select tab by index', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'tab1' },
+          { id: 'tab2' },
+          { id: 'tab3' }
+        ]
+      })
+
+      panel.selectByIndex(1)
+
+      expect(panel.tabs[0].selected).toBe(false)
+      expect(panel.tabs[1].selected).toBe(true)
+      expect(panel.tabs[2].selected).toBe(false)
+    })
+
+    it('should deselect previous selection', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'tab1', selected: true },
+          { id: 'tab2' }
+        ]
+      })
+
+      expect(panel.tabs[0].selected).toBe(true)
+
+      panel.selectByIndex(1)
+
+      expect(panel.tabs[0].selected).toBe(false)
+      expect(panel.tabs[1].selected).toBe(true)
+    })
+
+    it('should handle selecting already selected tab', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'tab1', selected: true }]
+      })
+
+      panel.selectByIndex(0)
+
+      expect(panel.tabs[0].selected).toBe(true)
+    })
+
+    it('should deselect all when index out of bounds', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'tab1', selected: true },
+          { id: 'tab2' }
+        ]
+      })
+
+      panel.selectByIndex(99)
+
+      expect(panel.tabs[0].selected).toBe(false)
+      expect(panel.tabs[1].selected).toBe(false)
+    })
+
+  })
+
+  describe('Mutation Events', () => {
+    let panel: Panel
+    let mutationHandler: ReturnType<typeof vi.fn>
+
+    beforeEach(() => {
+      vi.useFakeTimers()
+      panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'tab1' }, { id: 'tab2' }]
+      })
+      mutationHandler = vi.fn()
+      panel.addEventListener('io-mutation', mutationHandler as EventListener)
+    })
+
+    afterEach(() => {
+      panel.dispose()
+      vi.useRealTimers()
+    })
+
+    it('should dispatch mutation when tab added via push', () => {
+      panel.tabs.push(new Tab({ id: 'tab3' }))
+
+      // Mutation is debounced
+      vi.advanceTimersByTime(10)
+
+      expect(mutationHandler).toHaveBeenCalled()
+    })
+
+    it('should dispatch mutation when tab removed via splice', () => {
+      panel.tabs.splice(0, 1)
+
+      vi.advanceTimersByTime(10)
+
+      expect(mutationHandler).toHaveBeenCalled()
+    })
+
+    it('should dispatch mutation on selectByIndex', () => {
+      panel.selectByIndex(1)
+
+      vi.advanceTimersByTime(10)
+
+      expect(mutationHandler).toHaveBeenCalled()
+    })
+
+    it('should debounce rapid mutations', () => {
+      panel.tabs.push(new Tab({ id: 'tab3' }))
+      panel.tabs.push(new Tab({ id: 'tab4' }))
+      panel.tabs.push(new Tab({ id: 'tab5' }))
+
+      vi.advanceTimersByTime(10)
+
+      // Should be debounced to fewer calls
+      expect(mutationHandler.mock.calls.length).toBeLessThanOrEqual(3)
+    })
+
+  })
+
+  describe('Serialization - toJSON', () => {
+
+    it('should serialize panel with tabs', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'tab1', label: 'Tab 1' },
+          { id: 'tab2', selected: true }
+        ],
+        size: '200px'
+      })
+
+      const json = panel.toJSON()
+
+      expect(json.type).toBe('panel')
+      expect(json.size).toBe('200px')
+      expect(json.tabs).toHaveLength(2)
+      expect(json.tabs[0].id).toBe('tab1')
+      expect(json.tabs[0].label).toBe('Tab 1')
+      expect(json.tabs[1].id).toBe('tab2')
+      expect(json.tabs[1].selected).toBe(true)
+    })
+
+    it('should serialize empty panel', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: []
+      })
+
+      const json = panel.toJSON()
+
+      expect(json.type).toBe('panel')
+      expect(json.tabs).toEqual([])
+    })
+
+    it('should produce plain objects for tabs', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'tab1' }]
+      })
+
+      const json = panel.toJSON()
+
+      expect(json.tabs[0]).not.toBeInstanceOf(Tab)
+    })
+
+  })
+
+  describe('Deserialization - applyJSON', () => {
+
+    it('should restore panel from JSON', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'placeholder' }]
+      })
+
+      panel.applyJSON({
+        type: 'panel',
+        tabs: [
+          { id: 'restored1', label: 'Restored' },
+          { id: 'restored2', selected: true }
+        ],
+        size: '400px'
+      })
+
+      expect(panel.tabs.length).toBe(2)
+      expect(panel.tabs[0].id).toBe('restored1')
+      expect(panel.tabs[0].label).toBe('Restored')
+      expect(panel.tabs[1].id).toBe('restored2')
+      expect(panel.tabs[1].selected).toBe(true)
+      expect(panel.size).toBe('400px')
+    })
+
+    it('should replace existing tabs', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'old1' }, { id: 'old2' }, { id: 'old3' }]
+      })
+
+      panel.applyJSON({
+        type: 'panel',
+        tabs: [{ id: 'new1' }]
+      })
+
+      expect(panel.tabs.length).toBe(1)
+      expect(panel.tabs[0].id).toBe('new1')
+    })
+
+    it('should default size when not in JSON', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'test' }],
+        size: '100px'
+      })
+
+      panel.applyJSON({
+        type: 'panel',
+        tabs: [{ id: 'restored' }]
+      } as PanelData)
+
+      expect(panel.size).toBe('auto')
+    })
+
+    it('should return self for chaining', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'test' }]
+      })
+
+      const result = panel.applyJSON({
+        type: 'panel',
+        tabs: [{ id: 'chained' }]
+      })
+
+      expect(result).toBe(panel)
+    })
+
+
+  })
+
+  describe('Serialization Roundtrip', () => {
+
+    it('should preserve data through toJSON/applyJSON roundtrip', () => {
+      const original = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'tab1', label: 'Label 1', icon: 'icon1' },
+          { id: 'tab2', label: 'Label 2', selected: true }
+        ],
+        size: '250px'
+      })
+
+      const json = original.toJSON()
+      const restored = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'temp' }]
+      })
+      restored.applyJSON(json)
+
+      expect(restored.tabs.length).toBe(original.tabs.length)
+      expect(restored.size).toBe(original.size)
+
+      for (let i = 0; i < original.tabs.length; i++) {
+        expect(restored.tabs[i].id).toBe(original.tabs[i].id)
+        expect(restored.tabs[i].label).toBe(original.tabs[i].label)
+        expect(restored.tabs[i].icon).toBe(original.tabs[i].icon)
+        expect(restored.tabs[i].selected).toBe(original.tabs[i].selected)
+      }
+    })
+
+    it('should produce identical JSON after roundtrip', () => {
+      const original = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'rt1' },
+          { id: 'rt2', selected: true }
+        ],
+        size: '150px'
+      })
+
+      const json1 = original.toJSON()
+      const restored = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'temp' }]
+      })
+      restored.applyJSON(json1)
+      const json2 = restored.toJSON()
+
+      expect(json2).toEqual(json1)
+    })
+
+  })
+
+  describe('Disposal', () => {
+
+    it('should dispose without error', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'tab1' }, { id: 'tab2' }]
+      })
+
+      expect(() => panel.dispose()).not.toThrow()
+    })
+
+    it('should clear tabs array on dispose', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'tab1' }, { id: 'tab2' }]
+      })
+
+      const tabsRef = panel.tabs
+      panel.dispose()
+
+      expect(tabsRef.length).toBe(0)
+    })
+
+    it('should cleanup parent-child relationships when tabs.length set to 0', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'tab1' }, { id: 'tab2' }]
+      })
+
+      const tab1 = panel.tabs[0]
+      const tab2 = panel.tabs[1]
+
+      // Tabs have panel as parent
+      expect(tab1._parents).toContain(panel)
+      expect(tab2._parents).toContain(panel)
+
+      // Clear tabs via length = 0
+      panel.tabs.length = 0
+
+      // Parent relationships are severed
+      expect(tab1._parents).not.toContain(panel)
+      expect(tab2._parents).not.toContain(panel)
+
+      // But tabs are NOT disposed - still usable
+      expect(tab1._disposed).toBeUndefined()
+      expect(tab2._disposed).toBeUndefined()
+    })
+
+    it('should remove tab after panel was detached from split parent', () => {
+      const split = new Split({
+        type: 'split',
+        children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }],
+      })
+      const panel = split.children[0] as Panel
+      const tab = panel.tabs[0]
+
+      split.children.splice(0, 1)
+
+      expect(tab._parents).not.toContain(panel)
+      expect(panel.tabs).toContain(tab)
+
+      panel.removeTab(tab)
+
+      expect(panel.tabs.length).toBe(0)
+    })
+
+    it('should dispatch mutation when tabs cleared via length', () => {
+      vi.useFakeTimers()
+
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'tab1' }]
+      })
+
+      const mutationHandler = vi.fn()
+      panel.addEventListener('io-mutation', mutationHandler as EventListener)
+
+      panel.tabs.length = 0
+
+      vi.advanceTimersByTime(10)
+
+      expect(mutationHandler).toHaveBeenCalled()
+
+      vi.useRealTimers()
+    })
+
+    it('should dispose tabs recursively', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'tab1' }, { id: 'tab2' }]
+      })
+
+      const tabsRef = panel.tabs
+      const tab1 = tabsRef[0]
+      const tab2 = tabsRef[1]
+
+      panel.dispose()
+
+      expect(panel._disposed).toBe(true)
+      expect(tabsRef.length).toBe(0)
+      expect(tab1._disposed).toBe(true)
+      expect(tab2._disposed).toBe(true)
+    })
+
+  })
+
+  // describe('structural methods', () => {
+  //   it('moveTab reorders and selects tab', () => {
+  //     const panel = new Panel({
+  //       type: 'panel',
+  //       tabs: [{ id: 'a', selected: true }, { id: 'b' }, { id: 'c' }],
+  //     })
+  //     const tabA = panel.tabs[0]
+
+  //     panel.moveTab(tabA, 2)
+
+  //     expect(panel.tabs[2].id).toBe('a')
+  //     expect(panel.getSelectedID()).toBe('a')
+  //   })
+  // })
+
+  describe('addTab', () => {
+
+    it('should adjust insertion index after removing duplicate before insertion point', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'x' },
+          { id: 'a' },
+          { id: 'b' },
+        ],
+      })
+
+      panel.addTab(new Tab({ id: 'x' }), 2)
+
+      expect(panel.tabs.length).toBe(3)
+      expect(panel.tabs[0].id).toBe('a')
+      expect(panel.tabs[1].id).toBe('x')
+      expect(panel.tabs[2].id).toBe('b')
+      expect(panel.tabs[1].selected).toBe(true)
+    })
+
+  })
+
+  describe('removeTab', () => {
+
+    it('should preserve selection when removing an unselected tab', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'a', selected: true },
+          { id: 'b' },
+          { id: 'c' },
+        ],
+      })
+
+      panel.removeTab(panel.tabs[2])
+
+      expect(panel.tabs.length).toBe(2)
+      expect(panel.tabs[0].id).toBe('a')
+      expect(panel.tabs[0].selected).toBe(true)
+      expect(panel.selectedID).toBe('a')
+    })
+
+    it('should select nearest neighbor when removing the selected tab', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'a', selected: true },
+          { id: 'b' },
+          { id: 'c' },
+        ],
+      })
+
+      panel.removeTab(panel.tabs[0])
+
+      expect(panel.tabs.length).toBe(2)
+      expect(panel.tabs[0].id).toBe('b')
+      expect(panel.tabs[0].selected).toBe(true)
+      expect(panel.selectedID).toBe('b')
+    })
+
+    it('should select previous tab when removing the last selected tab', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'a' },
+          { id: 'b' },
+          { id: 'c', selected: true },
+        ],
+      })
+
+      panel.removeTab(panel.tabs[2])
+
+      expect(panel.tabs.length).toBe(2)
+      expect(panel.tabs[1].id).toBe('b')
+      expect(panel.tabs[1].selected).toBe(true)
+      expect(panel.selectedID).toBe('b')
+    })
+
+  })
+
+  describe('Tab Array Operations', () => {
+
+    it('should allow adding tabs via push', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'tab1' }]
+      })
+
+      panel.tabs.push(new Tab({ id: 'tab2' }))
+
+      expect(panel.tabs.length).toBe(2)
+      expect(panel.tabs[1].id).toBe('tab2')
+    })
+
+    it('should allow removing tabs via splice', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'tab1' }, { id: 'tab2' }, { id: 'tab3' }]
+      })
+
+      panel.tabs.splice(1, 1)
+
+      expect(panel.tabs.length).toBe(2)
+      expect(panel.tabs[0].id).toBe('tab1')
+      expect(panel.tabs[1].id).toBe('tab3')
+    })
+
+    it('should allow reordering via splice', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'a' }, { id: 'b' }, { id: 'c' }]
+      })
+
+      // Remove 'b' and insert at beginning
+      const [removed] = panel.tabs.splice(1, 1)
+      panel.tabs.unshift(removed)
+
+      expect(panel.tabs[0].id).toBe('b')
+      expect(panel.tabs[1].id).toBe('a')
+      expect(panel.tabs[2].id).toBe('c')
+    })
+
+    it('should allow pop', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'tab1' }, { id: 'tab2' }]
+      })
+
+      const popped = panel.tabs.pop()
+
+      expect(popped?.id).toBe('tab2')
+      expect(panel.tabs.length).toBe(1)
+    })
+
+    it('should allow shift', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'tab1' }, { id: 'tab2' }]
+      })
+
+      const shifted = panel.tabs.shift()
+
+      expect(shifted?.id).toBe('tab1')
+      expect(panel.tabs.length).toBe(1)
+      expect(panel.tabs[0].id).toBe('tab2')
+    })
+
+    it('should allow unshift', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [{ id: 'tab2' }]
+      })
+
+      panel.tabs.unshift(new Tab({ id: 'tab1' }))
+
+      expect(panel.tabs.length).toBe(2)
+      expect(panel.tabs[0].id).toBe('tab1')
+      expect(panel.tabs[1].id).toBe('tab2')
+    })
+
+  })
+
+  describe('Edge Cases', () => {
+
+    it('should handle panel with many tabs', () => {
+      const tabs: TabData[] = []
+      for (let i = 0; i < 100; i++) {
+        tabs.push({ id: `tab${i}` })
+      }
+
+      const panel = new Panel({ type: 'panel', tabs })
+
+      expect(panel.tabs.length).toBe(100)
+      expect(panel.tabs[99].id).toBe('tab99')
+    })
+
+    it('should handle selection with tabs that have empty ids', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: '' },
+          { id: 'valid' }
+        ]
+      })
+
+      panel.tabs[0].selected = true
+      panel.tabs[1].selected = false
+
+      expect(panel.selectedID).toBe('')
+    })
+
+    it('should maintain selection state through array modifications', () => {
+      const panel = new Panel({
+        type: 'panel',
+        tabs: [
+          { id: 'tab1' },
+          { id: 'tab2', selected: true },
+          { id: 'tab3' }
+        ]
+      })
+
+      // Remove first tab
+      panel.tabs.splice(0, 1)
+
+      // tab2 should still be selected
+      expect(panel.tabs[0].id).toBe('tab2')
+      expect(panel.tabs[0].selected).toBe(true)
+    })
+
+
+  })
+
+})
+

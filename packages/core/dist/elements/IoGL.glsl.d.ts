@@ -15,4 +15,3 @@ export declare const glsl: {
     hsv2rgb: string;
     hsl2rgb: string;
 };
-//# sourceMappingURL=IoGL.glsl.d.ts.map

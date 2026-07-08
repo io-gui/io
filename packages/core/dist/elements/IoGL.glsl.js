@@ -132,4 +132,3 @@ export const glsl = {
     hsv2rgb,
     hsl2rgb,
 };
-//# sourceMappingURL=IoGL.glsl.js.map

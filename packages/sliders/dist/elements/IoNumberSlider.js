@@ -4,13 +4,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty } from '@io-gui/core';
+import { Register, ReactiveElement, Property } from '@io-gui/core';
 import { ioNumber } from '@io-gui/inputs';
 import { ioSlider } from './IoSlider.js';
 /**
  * Input element for `Number` data type combining `IoNumber` and `IoSlider`
  **/
-let IoNumberSlider = class IoNumberSlider extends IoElement {
+let IoNumberSlider = class IoNumberSlider extends ReactiveElement {
     static get Style() {
         return /* css */ `
     :host {
@@ -37,9 +37,9 @@ let IoNumberSlider = class IoNumberSlider extends IoElement {
         this.dispatch('value-input', event.detail, false);
     }
     ready() {
-        this.changed();
+        this.mutated();
     }
-    changed() {
+    mutated() {
         this.render([
             ioNumber({
                 id: 'number',
@@ -63,25 +63,25 @@ let IoNumberSlider = class IoNumberSlider extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ value: 0 })
+    Property({ value: 0 })
 ], IoNumberSlider.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty(0.01)
+    Property(0.01)
 ], IoNumberSlider.prototype, "step", void 0);
 __decorate([
-    ReactiveProperty(0)
+    Property(0)
 ], IoNumberSlider.prototype, "min", void 0);
 __decorate([
-    ReactiveProperty(1)
+    Property(1)
 ], IoNumberSlider.prototype, "max", void 0);
 __decorate([
-    ReactiveProperty(1)
+    Property(1)
 ], IoNumberSlider.prototype, "exponent", void 0);
 __decorate([
-    ReactiveProperty(1)
+    Property(1)
 ], IoNumberSlider.prototype, "conversion", void 0);
 __decorate([
-    ReactiveProperty(false)
+    Property(false)
 ], IoNumberSlider.prototype, "disabled", void 0);
 IoNumberSlider = __decorate([
     Register
@@ -90,4 +90,3 @@ export { IoNumberSlider };
 export const ioNumberSlider = function (arg0) {
     return IoNumberSlider.vConstructor(arg0);
 };
-//# sourceMappingURL=IoNumberSlider.js.map

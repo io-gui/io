@@ -4,21 +4,24 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, span } from '@io-gui/core';
-import { IoField, ioString, ioButton } from '@io-gui/inputs';
-import { IoContextEditorSingleton } from '@io-gui/editors';
-import { IconsetDB, ioIcon } from '@io-gui/icons';
-import { MenuOption, ioOptionSelect } from '@io-gui/menus';
-import { Tab } from '../nodes/Tab.js';
-import { tabDragIconSingleton } from './IoTabDragIcon.js';
-const icons = [];
-for (const set of Object.keys(IconsetDB)) {
-    for (const icon of Object.keys(IconsetDB[set])) {
-        const id = `${set}:${icon}`;
-        icons.push({ value: id, id: icon, icon: id });
+import { Register, Property, span } from '@io-gui/core';
+import { IoField } from '@io-gui/inputs';
+import { ioIcon } from '@io-gui/icons';
+import { Tab } from '../models/Tab.js';
+function keyToAction(key) {
+    switch (key) {
+        case 'Backspace':
+            return 'delete';
+        case 'ArrowLeft':
+            return 'move-left';
+        case 'ArrowRight':
+            return 'move-right';
+        case 'Home':
+            return 'move-start';
+        case 'End':
+            return 'move-end';
     }
 }
-const iconOptions = ioOptionSelect({ selectBy: 'value', label: 'Icon', option: new MenuOption({ options: icons }) });
 // TODO: fix and improve keyboard navigation in all cases.
 let IoTab = class IoTab extends IoField {
     static get Style() {
@@ -32,37 +35,30 @@ let IoTab = class IoTab extends IoField {
         min-width: calc(var(--io_fieldHeight) * 1.25);
         margin: 0;
         margin-right: var(--io_spacing);
-        background-color: var(--io_bgColor) !important;
+        background-color: var(--io_bgColorStrong) !important;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
         border-color: var(--io_borderColorLight);
-        padding-right: calc(var(--io_lineHeight) / 2);
-        padding-left: calc(var(--io_lineHeight) / 2);
-        border-bottom-color: var(--io_borderColorStrong);
+        padding: var(--io_spacing2);
+        border-bottom-color: transparent !important;
+      }
+      :host:focus {
+        outline: none !important;
+        border-bottom-color: transparent !important;
       }
       :host[pressed] {
         border-color: unset !important;
+        border-bottom-color: transparent !important;
         box-shadow: unset !important;
       }
       :host[selected] {
-        color: var(--io_colorStrong);
-        background-color: var(--io_bgColorLight) !important;
+        color: var(--io_color);
+        background-color: var(--io_bgColor) !important;
         border-color: var(--io_borderColorStrong);
-        border-bottom-color: var(--io_bgColorLight);
+        border-bottom-color: var(--io_bgColor);
       }
       :host[selected]:focus {
         color: var(--io_colorWhite);
-      }
-      :host > .io-icon:not([value=' ']) {
-        margin: 0 var(--io_spacing2) 0 0;
-      }
-      :host > .io-tab-drop-marker {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        background-color: var(--io_bgColorBlue);
-        border-bottom-right-radius: var(--io_borderRadius);
       }
       :host > span {
         padding: 0 var(--io_spacing);
@@ -74,124 +70,112 @@ let IoTab = class IoTab extends IoField {
         display: inline-block;
         white-space: nowrap;
       }
+      :host > .io-tab-icon {
+        margin: 0 var(--io_spacing) 0 var(--io_spacing) !important;
+      }
+      :host > .io-tab-close {
+        pointer-events: auto;
+        opacity: 0;
+        margin: 0 var(--io_spacing) 0 0 !important;
+        transform: scale(0.6);
+      }
+      :host:hover > .io-tab-close {
+        opacity: 1;
+        transform: scale(0.5);
+      }
+      :host > .io-tab-close:hover {
+        transform: scale(0.6);
+        fill: var(--io_colorStrong);
+      }
     `;
     }
-    static get Listeners() {
-        return {
-            'click': 'preventDefault',
-            'contextmenu': 'onContextMenu',
-        };
-    }
+    _pointerDown = [0, 0];
+    _dragging = false;
     constructor(args) { super(args); }
     onResized() {
         const span = this.querySelector('span');
         this.overflow = span.scrollWidth > span.clientWidth;
     }
-    onTouchmove(event) {
-        event.preventDefault();
-    }
-    preventDefault(event) {
-        event.stopPropagation();
-        event.preventDefault();
-    }
-    // TODO: test on iOS
-    onContextMenu(event) {
-        event.stopPropagation();
-        event.preventDefault();
-        this.expandContextEditor();
-    }
     onPointerdown(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.setPointerCapture(event.pointerId);
-        tabDragIconSingleton.setStartPosition(event.clientX, event.clientY);
         super.onPointerdown(event);
-        if (event.buttons === 1) {
-            this.focus();
-        }
+        this._pointerDown = [event.clientX, event.clientY];
+        this._dragging = false;
     }
     onPointermove(event) {
-        event.preventDefault();
-        if (event.buttons !== 1)
-            return;
-        const panel = this.parentElement.parentElement;
-        const root = this.closest('io-split[root]');
-        tabDragIconSingleton.updateDrag(this.tab, panel, event.clientX, event.clientY, root);
-    }
-    onPointerup(event) {
-        event.preventDefault();
-        super.onPointerup(event);
-        this.releasePointerCapture(event.pointerId);
-        if (tabDragIconSingleton.dragging) {
-            tabDragIconSingleton.endDrag();
+        if (this._dragging) {
+            this.dispatchDrag('move', event.clientX, event.clientY);
         }
         else {
-            this.onClick();
+            const [x, y] = this._pointerDown;
+            const distance = Math.sqrt((x - event.clientX) ** 2 + (y - event.clientY) ** 2);
+            if (distance > 10) {
+                this._dragging = true;
+                this.dispatchDrag('start', event.clientX, event.clientY);
+            }
         }
+        super.onPointermove(event);
     }
     onPointercancel(event) {
-        event.preventDefault();
-        event.stopPropagation();
         super.onPointercancel(event);
-        tabDragIconSingleton.cancelDrag();
+        this.dispatchDrag('cancel', event.clientX, event.clientY);
     }
     onPointerleave(event) {
-        event.preventDefault();
-        event.stopPropagation();
+        super.onPointerleave(event);
+        this.dispatchDrag('cancel', event.clientX, event.clientY);
+    }
+    onPointerup(event) {
+        super.onPointerup(event);
+        this.dispatchDrag('end', event.clientX, event.clientY);
     }
     onClick() {
-        this.dispatch('io-edit-tab', { tab: this.tab, key: 'Select' }, true);
+        if (this._dragging)
+            return;
+        this.dispatchAction('select');
     }
-    onDeleteClick() {
-        this.dispatch('io-edit-tab', { tab: this.tab, key: 'Backspace' }, true);
+    dispatchAction(action) {
+        this.dispatch('io-tab-action', { model: this.model, action }, true);
     }
-    expandContextEditor() {
-        const deleteAction = () => {
-            IoContextEditorSingleton.expanded = false;
-            this.onDeleteClick();
-        };
-        IoContextEditorSingleton.expand({
-            source: this,
-            direction: 'down',
-            value: this.tab,
-            properties: ['label', 'icon'],
-            config: [
-                ['label', ioString({ live: true })],
-                ['icon', iconOptions],
-            ],
-            widget: ioButton({ label: 'Delete Tab', icon: 'io:close', action: deleteAction }),
-        });
+    dispatchDrag(phase, x, y) {
+        this.dispatch('io-tab-drag', { model: this.model, phase, x, y }, true);
+    }
+    stopPropagation(event) {
+        event.stopPropagation();
+    }
+    onClose(event) {
+        event.stopPropagation();
+        this.dispatchAction('delete');
     }
     onKeydown(event) {
-        if (event.shiftKey && ['Backspace', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
+        const action = keyToAction(event.key);
+        if (event.shiftKey && action !== undefined) {
             event.preventDefault();
-            this.dispatch('io-edit-tab', { tab: this.tab, key: event.key }, true);
-        }
-        else if (event.shiftKey && event.key === 'Enter') {
-            this.expandContextEditor();
+            this.dispatchAction(action);
         }
         else {
             super.onKeydown(event);
         }
     }
-    tabMutated() {
-        this.changed();
+    modelMutated() {
+        this.mutated();
     }
-    changed() {
-        this.setAttribute('selected', this.tab.selected);
-        this.setAttribute('title', this.tab.label);
+    mutated() {
+        this.setAttribute('selected', this.model.selected);
+        this.setAttribute('title', this.model.label);
         this.render([
-            this.tab.selected ? span({ class: 'io-tab-drop-marker' }) : null,
-            this.tab.icon ? ioIcon({ value: this.tab.icon }) : null,
-            span({ class: 'io-tab-label' }, this.tab.label),
+            this.model.icon ? ioIcon({ value: this.model.icon, class: 'io-tab-icon' }) : null,
+            span({ class: 'io-tab-label' }, this.model.label),
+            ioIcon({ value: 'io:close', class: 'io-tab-close',
+                '@pointerdown': this.stopPropagation,
+                '@click': this.onClose
+            })
         ]);
     }
 };
 __decorate([
-    ReactiveProperty({ type: Tab })
-], IoTab.prototype, "tab", void 0);
+    Property({ type: Tab })
+], IoTab.prototype, "model", void 0);
 __decorate([
-    ReactiveProperty({ type: Boolean, reflect: true })
+    Property({ type: Boolean, reflect: true })
 ], IoTab.prototype, "overflow", void 0);
 IoTab = __decorate([
     Register
@@ -200,4 +184,3 @@ export { IoTab };
 export const ioTab = function (arg0) {
     return IoTab.vConstructor(arg0);
 };
-//# sourceMappingURL=IoTab.js.map

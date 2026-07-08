@@ -14,4 +14,3 @@ registerEditorConfig(PlaneGeometry, [
 registerEditorGroups(PlaneGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=PlaneGeometry.js.map

@@ -1,6 +1,5 @@
-import { isReactiveOwner } from './ReactiveCore.js'
-import type { ReactiveNode } from '../nodes/ReactiveNode.js'
-import type { IoElement } from '../elements/IoElement.js'
+import { isReactiveNode } from './ReactiveCore.js'
+import type { ReactiveNode } from './ReactiveCore.js'
 
 export interface Change<T = unknown> {
   property: string
@@ -13,7 +12,7 @@ export interface Changes {
 }
 
 export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
-  readonly target: ReactiveNode | IoElement
+  readonly target: ReactiveNode
   readonly detail: Change
   readonly path: ReactiveNode[]
 }
@@ -21,11 +20,11 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
 type ChangeHandler = (change: Change) => void
 
 /**
- * FIFO property-change queue for {@link ReactiveNode} and {@link IoElement}.
+ * FIFO property-change queue for {@link ReactiveNode}.
  * Coalesces repeated writes to the same property, then dispatches handlers and events.
  */
 export class ChangeQueue {
-  declare readonly node: ReactiveNode | IoElement
+  declare readonly node: ReactiveNode
   #changes = new Map<string, Change>()
   dispatchedChange = false
   dispatching = false
@@ -33,7 +32,7 @@ export class ChangeQueue {
    * Creates change queue for the specified owner instance of `ReactiveNode`.
    * @param {ReactiveNode} node - Owner node.
    */
-  constructor(node: ReactiveNode | IoElement) {
+  constructor(node: ReactiveNode) {
     this.node = node
     Object.defineProperty(this, 'dispatch', {
       value: this.dispatch.bind(this),
@@ -61,7 +60,7 @@ export class ChangeQueue {
       existing.value = value
     }
   }
-  /** Dispatches queued changes, invokes handlers, then `changed()` and mutation dispatch. */
+  /** Dispatches queued changes, invokes handlers, then `mutated()` and mutation dispatch. */
   dispatch() {
     if (this.dispatching === true) {
       debug: console.error('ChangeQueue: dispatching already in progress!')
@@ -111,13 +110,13 @@ export class ChangeQueue {
   }
   #invokeChanged() {
     try {
-      this.node.changed()
+      this.node.mutated()
     } catch (error) {
-      console.error(`Error in ${this.node.constructor.name}.changed():`, error)
+      console.error(`Error in ${this.node.constructor.name}.mutated():`, error)
     }
   }
   #invokeMutation(properties: string[]) {
-    if (isReactiveOwner(this.node)) {
+    if (isReactiveNode(this.node)) {
       this.node.dispatchMutation(this.node, properties)
     }
   }
@@ -128,6 +127,6 @@ export class ChangeQueue {
   dispose() {
     this.#changes.clear()
     Object.defineProperty(this, 'changes', {value: undefined, configurable: true})
-    delete (this as {node?: ReactiveNode | IoElement}).node
+    delete (this as {node?: ReactiveNode}).node
   }
 }

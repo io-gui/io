@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, Property, $ThemeID } from '@io-gui/core';
+import { Register, ReactiveElement, Property, Field, $ThemeID } from '@io-gui/core';
 import { Marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import purify from 'dompurify';
@@ -22,6 +22,33 @@ renderer.heading = function ({ text, depth }) {
     return `<h${depth} data-heading="${text}">${text}</h${depth}>`;
 };
 marked.setOptions({ renderer });
+const TRUSTED_IFRAME_HOSTS = new Set([
+    'www.youtube.com',
+    'youtube.com',
+    'player.vimeo.com',
+]);
+function trustedIframeSrc(src) {
+    if (!src)
+        return false;
+    try {
+        return TRUSTED_IFRAME_HOSTS.has(new URL(src).hostname);
+    }
+    catch {
+        return false;
+    }
+}
+const PURIFY_CONFIG = {
+    ADD_TAGS: ['iframe'],
+    ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'],
+};
+purify.addHook('uponSanitizeElement', (node, event) => {
+    if (event.tagName !== 'iframe')
+        return;
+    const element = node;
+    if (trustedIframeSrc(element.getAttribute('src')))
+        return;
+    element.parentNode?.removeChild(element);
+});
 function strip(innerHTML, strip) {
     for (let i = 0; i < strip.length; i++) {
         innerHTML = innerHTML.replace(new RegExp(strip[i], 'g'), '');
@@ -31,7 +58,7 @@ function strip(innerHTML, strip) {
 /**
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
  */
-let IoMarkdown = class IoMarkdown extends IoElement {
+let IoMarkdown = class IoMarkdown extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -144,6 +171,13 @@ let IoMarkdown = class IoMarkdown extends IoElement {
       @keyframes spinner {
         to {transform: rotate(360deg);}
       }
+      :host[loading] {
+        --io-loading: 1;
+      }
+      :host:not([loading]):after {
+        content: none;
+        display: none;
+      }
       :host[loading]:after {
         content: '';
         box-sizing: border-box;
@@ -168,33 +202,43 @@ let IoMarkdown = class IoMarkdown extends IoElement {
         this.style.setProperty('--io-code-size', width + 'px');
     }
     srcChanged() {
+        // Capture at fetch start — drawer/layout VDOM may dispose this element before the promise settles.
+        const src = this.src;
+        const sanitize = this.sanitize;
+        const stripList = this.strip;
         this.loading = true;
         this.innerHTML = '';
-        void fetch(this.src)
+        void fetch(src)
             .then(response => response.text())
             .then(markdown => {
+            if (this._disposed || this.src !== src)
+                return;
             let md = marked.parse(markdown);
-            if (this.sanitize)
-                md = purify.sanitize(md);
-            this.innerHTML = strip(md, this.strip);
+            if (sanitize)
+                md = purify.sanitize(md, PURIFY_CONFIG);
+            this.innerHTML = strip(md, stripList);
             this.loading = false;
+        })
+            .catch(() => {
+            if (!this._disposed)
+                this.loading = false;
         });
     }
 };
 __decorate([
-    ReactiveProperty({ value: '', reflect: true })
+    Property({ value: '', reflect: true })
 ], IoMarkdown.prototype, "src", void 0);
 __decorate([
-    ReactiveProperty({ type: Array, init: null })
+    Property({ type: Array, init: null })
 ], IoMarkdown.prototype, "strip", void 0);
 __decorate([
-    ReactiveProperty({ value: false, reflect: true })
+    Property({ value: false, reflect: true })
 ], IoMarkdown.prototype, "loading", void 0);
 __decorate([
-    ReactiveProperty(true)
+    Property(true)
 ], IoMarkdown.prototype, "sanitize", void 0);
 __decorate([
-    Property('document')
+    Field('document')
 ], IoMarkdown.prototype, "role", void 0);
 IoMarkdown = __decorate([
     Register
@@ -216,4 +260,3 @@ function setTheme() {
 }
 setTheme();
 $ThemeID.node.addEventListener('value-changed', setTheme);
-//# sourceMappingURL=IoMarkdown.js.map

@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, Property, $ThemeID } from '@io-gui/core'
+import { Register, ReactiveElement, Property, ReactiveElementProps, WithBinding, Field, $ThemeID } from '@io-gui/core'
 import { Marked, type Tokens } from 'marked'
 import { markedHighlight } from 'marked-highlight'
 import purify from 'dompurify'
@@ -23,6 +23,33 @@ renderer.heading = function({ text, depth }: Tokens.Heading) {
 
 marked.setOptions({ renderer })
 
+const TRUSTED_IFRAME_HOSTS = new Set([
+  'www.youtube.com',
+  'youtube.com',
+  'player.vimeo.com',
+])
+
+function trustedIframeSrc(src: string | null) {
+  if (!src) return false
+  try {
+    return TRUSTED_IFRAME_HOSTS.has(new URL(src).hostname)
+  } catch {
+    return false
+  }
+}
+
+const PURIFY_CONFIG = {
+  ADD_TAGS: ['iframe'],
+  ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'],
+}
+
+purify.addHook('uponSanitizeElement', (node, event) => {
+  if (event.tagName !== 'iframe') return
+  const element = node as Element
+  if (trustedIframeSrc(element.getAttribute('src'))) return
+  element.parentNode?.removeChild(element)
+})
+
 function strip(innerHTML: string, strip: string[]) {
   for (let i = 0; i < strip.length; i++) {
     innerHTML = innerHTML.replace(new RegExp(strip[i], 'g'),'')
@@ -30,7 +57,7 @@ function strip(innerHTML: string, strip: string[]) {
   return innerHTML
 }
 
-export type IoMarkdownProps = IoElementProps & {
+export type IoMarkdownProps = ReactiveElementProps & {
   src?: string
   strip?: string[]
   loading?: WithBinding<boolean>
@@ -42,7 +69,7 @@ export type IoMarkdownProps = IoElementProps & {
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
  */
 @Register
-export class IoMarkdown extends IoElement {
+export class IoMarkdown extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host {
@@ -155,6 +182,13 @@ export class IoMarkdown extends IoElement {
       @keyframes spinner {
         to {transform: rotate(360deg);}
       }
+      :host[loading] {
+        --io-loading: 1;
+      }
+      :host:not([loading]):after {
+        content: none;
+        display: none;
+      }
       :host[loading]:after {
         content: '';
         box-sizing: border-box;
@@ -173,19 +207,19 @@ export class IoMarkdown extends IoElement {
     `
   }
 
-  @ReactiveProperty({value: '', reflect: true})
+  @Property({value: '', reflect: true})
   declare src: string
 
-  @ReactiveProperty({type: Array, init: null})
+  @Property({type: Array, init: null})
   declare strip: string[]
 
-  @ReactiveProperty({value: false, reflect: true})
+  @Property({value: false, reflect: true})
   declare loading: boolean
 
-  @ReactiveProperty(true)
+  @Property(true)
   declare sanitize: boolean
 
-  @Property('document')
+  @Field('document')
   declare role: string
 
   constructor(args: IoMarkdownProps = {}) { super(args) }
@@ -197,15 +231,23 @@ export class IoMarkdown extends IoElement {
   }
 
   srcChanged() {
+    // Capture at fetch start — drawer/layout VDOM may dispose this element before the promise settles.
+    const src = this.src
+    const sanitize = this.sanitize
+    const stripList = this.strip
     this.loading = true
     this.innerHTML = ''
-    void fetch(this.src)
+    void fetch(src)
       .then(response => response.text())
       .then(markdown => {
+        if (this._disposed || this.src !== src) return
         let md = marked.parse(markdown) as string
-        if (this.sanitize) md = purify.sanitize(md)
-        this.innerHTML = strip(md, this.strip)
+        if (sanitize) md = purify.sanitize(md, PURIFY_CONFIG)
+        this.innerHTML = strip(md, stripList)
         this.loading = false
+      })
+      .catch(() => {
+        if (!this._disposed) this.loading = false
       })
   }
 }

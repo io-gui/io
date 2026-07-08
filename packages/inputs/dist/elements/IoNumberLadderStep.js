@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, span, Property } from '@io-gui/core';
+import { Register, Property, span, Field } from '@io-gui/core';
 import { IoField } from './IoField.js';
 //TODO: Dont extend IoField.
 let IoNumberLadderStep = class IoNumberLadderStep extends IoField {
@@ -92,22 +92,22 @@ let IoNumberLadderStep = class IoNumberLadderStep extends IoField {
         this.dispatch('ladder-step-collapse', {}, true);
     }
     ready() {
-        this.changed();
+        this.mutated();
     }
-    changed() {
+    mutated() {
         this.render([span(this.label)]);
         this.setAttribute('aria-label', this.label);
         this.setAttribute('aria-valuestep', this.label);
     }
 };
 __decorate([
-    ReactiveProperty({ value: 1, type: Number })
+    Property({ value: 1, type: Number })
 ], IoNumberLadderStep.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty({ value: '', type: String })
+    Property({ value: '', type: String })
 ], IoNumberLadderStep.prototype, "label", void 0);
 __decorate([
-    Property('spinbutton')
+    Field('spinbutton')
 ], IoNumberLadderStep.prototype, "role", void 0);
 IoNumberLadderStep = __decorate([
     Register
@@ -116,4 +116,3 @@ export { IoNumberLadderStep };
 export const ioNumberLadderStep = function (arg0) {
     return IoNumberLadderStep.vConstructor(arg0);
 };
-//# sourceMappingURL=IoNumberLadderStep.js.map

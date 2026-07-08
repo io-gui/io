@@ -1,24 +1,27 @@
-import { IoElement, Register, input, ReactiveProperty, IoElementProps } from '@io-gui/core'
+import { ReactiveElement, Register, input, Property, ReactiveElementProps } from '@io-gui/core'
 import { TodoListModel } from './TodoListModel.js'
 import { TodoItemModel } from './TodoItemModel.js'
 
-type TodoInputProps = IoElementProps & {
+type TodoInputProps = ReactiveElementProps & {
   model?: TodoListModel
 }
 
-export class TodoInput extends IoElement {
+export class TodoInput extends ReactiveElement {
+
   static override get Style() {
     return /* css */`
-    :host {
-      display: contents;
-    }
+      :host {
+        display: contents;
+      }
     `
   }
 
-  @ReactiveProperty({type: TodoListModel})
+  @Property({type: TodoListModel})
   declare model: TodoListModel
 
-  constructor(args: TodoInputProps = {}) { super(args) }
+  constructor(args: TodoInputProps = {}) {
+    super(args)
+  }
 
   onInputKey(event: KeyboardEvent) {
     if (event.key === 'Enter') {
@@ -37,7 +40,7 @@ export class TodoInput extends IoElement {
     }
   }
 
-  override changed() {
+  override ready() {
     this.render([
       input({id: 'input', class: 'new-todo', placeholder: 'What needs to be done?', '@keyup': this.onInputKey, autofocus: true}),
     ])

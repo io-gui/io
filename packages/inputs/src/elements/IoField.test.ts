@@ -13,7 +13,7 @@ describe('IoField.test', () => {
   it('Should initialize properties correctly', () => {
     expect(element.value).toBe('')
     expect(element.selected).toBe(false)
-    expect(element._reactiveProperties.get('value')).toEqual({
+    expect(element._properties.get('value')).toEqual({
       binding: undefined,
       init: undefined,
       reflect: false,
@@ -21,7 +21,7 @@ describe('IoField.test', () => {
       value: '',
       observer: {type: 'none', observing: false},
     })
-    expect(element._reactiveProperties.get('selected')).toEqual({
+    expect(element._properties.get('selected')).toEqual({
       binding: undefined,
       init: undefined,
       reflect: true,

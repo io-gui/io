@@ -4,9 +4,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, IoElement, span, Property } from '@io-gui/core';
+import { Register, Property, ReactiveElement, span, Field } from '@io-gui/core';
 import { ioIcon } from '@io-gui/icons';
-let IoField = class IoField extends IoElement {
+let IoField = class IoField extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -86,9 +86,14 @@ let IoField = class IoField extends IoElement {
             'pointerdown': 'onPointerdown',
             'touchstart': ['onTouchstart', { passive: false }],
             'click': 'onClick',
+            'contextmenu': 'onContextMenu',
         };
     }
     constructor(args = {}) { super(args); }
+    onContextMenu(event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
     onFocus(event) {
         this.addEventListener('blur', this.onBlur);
         this.addEventListener('keydown', this.onKeydown);
@@ -145,6 +150,7 @@ let IoField = class IoField extends IoElement {
     }
     onTouchmove(event) {
         event.stopPropagation();
+        event.preventDefault();
     }
     onTouchend(event) {
         event.stopPropagation();
@@ -245,7 +251,7 @@ let IoField = class IoField extends IoElement {
             this.removeAttribute('aria-disabled');
         }
     }
-    changed() {
+    mutated() {
         this.render([
             this.icon ? ioIcon({ value: this.icon }) : null,
             this.value !== undefined ? span(String(this.value)) : null,
@@ -253,37 +259,40 @@ let IoField = class IoField extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ value: '' })
+    Property({ value: '' })
 ], IoField.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty({ type: String, value: '' })
+    Property({ type: String, value: '' })
 ], IoField.prototype, "icon", void 0);
 __decorate([
-    ReactiveProperty({ type: String, value: '', reflect: true })
+    Property({ type: String, value: '', reflect: true })
 ], IoField.prototype, "label", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+    Property({ value: false, type: Boolean, reflect: true })
 ], IoField.prototype, "selected", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+    Property({ value: false, type: Boolean, reflect: true })
 ], IoField.prototype, "invalid", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+    Property({ value: false, type: Boolean, reflect: true })
 ], IoField.prototype, "disabled", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+    Property({ value: false, type: Boolean, reflect: true })
+], IoField.prototype, "hidden", void 0);
+__decorate([
+    Property({ value: false, type: Boolean, reflect: true })
 ], IoField.prototype, "pressed", void 0);
 __decorate([
-    ReactiveProperty({ value: 'neutral', reflect: true })
+    Property({ value: 'neutral', reflect: true })
 ], IoField.prototype, "appearance", void 0);
 __decorate([
-    ReactiveProperty({ value: '', type: String, reflect: true })
+    Property({ value: '', type: String, reflect: true })
 ], IoField.prototype, "pattern", void 0);
 __decorate([
-    Property(false)
+    Field(false)
 ], IoField.prototype, "spellcheck", void 0);
 __decorate([
-    Property(0)
+    Field(0)
 ], IoField.prototype, "tabIndex", void 0);
 IoField = __decorate([
     Register
@@ -292,4 +301,3 @@ export { IoField };
 export const ioField = function (arg0) {
     return IoField.vConstructor(arg0);
 };
-//# sourceMappingURL=IoField.js.map

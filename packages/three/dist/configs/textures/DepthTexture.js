@@ -1,8 +1,8 @@
 import { registerEditorConfig } from '@io-gui/editors';
-import { ioOptionSelect, MenuOption } from '@io-gui/menus';
+import { ioOptionSelect, Menu } from '@io-gui/menus';
 import { DepthTexture, NeverCompare, LessCompare, EqualCompare, LessEqualCompare, GreaterCompare, NotEqualCompare, GreaterEqualCompare, AlwaysCompare, } from 'three/webgpu';
 registerEditorConfig(DepthTexture, [
-    ['compareFunction', ioOptionSelect({ selectBy: 'value', option: new MenuOption({ options: [
+    ['compareFunction', ioOptionSelect({ model: new Menu({ options: [
                     { value: null, id: 'None' },
                     { value: NeverCompare, id: 'Never' },
                     { value: LessCompare, id: 'Less' },
@@ -14,4 +14,3 @@ registerEditorConfig(DepthTexture, [
                     { value: AlwaysCompare, id: 'Always' },
                 ] }) })],
 ]);
-//# sourceMappingURL=DepthTexture.js.map

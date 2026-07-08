@@ -4,4 +4,3 @@ registerEditorGroups(BatchedMesh, {
     Rendering: ['perObjectFrustumCulled', 'sortObjects', 'customSort', 'boundingBox', 'boundingSphere'],
     Advanced: ['maxInstanceCount', 'instanceCount', 'unusedVertexCount', 'unusedIndexCount'],
 });
-//# sourceMappingURL=BatchedMesh.js.map

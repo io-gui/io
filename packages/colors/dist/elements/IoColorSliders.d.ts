@@ -19,7 +19,7 @@ export declare class IoColorSlider extends IoColorBase {
     channel: 'r' | 'g' | 'b' | 'a' | 'h' | 's' | 'v' | 'l' | 'hs' | 'sv' | 'sl';
     vertical: boolean;
     _onValueInput(event: CustomEvent): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioColorSlider: (arg0?: IoColorSliderProps) => import("@io-gui/core").VDOMElement;
 /**
@@ -120,4 +120,3 @@ export declare class IoColorSliderSl extends IoColorSlider2dBase {
 }
 export declare const ioColorSliderSl: (arg0?: IoColorSliderProps) => import("@io-gui/core").VDOMElement;
 export {};
-//# sourceMappingURL=IoColorSliders.d.ts.map

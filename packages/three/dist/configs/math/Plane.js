@@ -3,4 +3,3 @@ import { Plane } from 'three/webgpu';
 registerEditorConfig(Object, [
     [Plane, ioObject({ labelWidth: '64px' })],
 ]);
-//# sourceMappingURL=Plane.js.map

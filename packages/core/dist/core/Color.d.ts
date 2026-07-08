@@ -13,4 +13,3 @@ export declare class Color {
     toJSON(): number;
     toCss(): string;
 }
-//# sourceMappingURL=Color.d.ts.map

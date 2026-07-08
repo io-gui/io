@@ -18,7 +18,6 @@ export declare class IoButton extends IoField {
     onKeyup(event: KeyboardEvent): void;
     onClick(event: MouseEvent): void;
     ready(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioButton: (arg0?: IoButtonProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoButton.d.ts.map

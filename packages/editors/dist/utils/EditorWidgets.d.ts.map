@@ -1,1 +1,0 @@
-{"version":3,"file":"EditorWidgets.d.ts","sourceRoot":"","sources":["../../src/utils/EditorWidgets.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,cAAc,EAAE,WAAW,EAAE,MAAM,cAAc,CAAA;AAE1D,MAAM,MAAM,aAAa,GAAG,GAAG,CAAC,cAAc,EAAE,WAAW,CAAC,CAAA;AAQ5D,wBAAgB,eAAe,CAAC,MAAM,EAAE,MAAM,GAAG,WAAW,GAAG,IAAI,CAiBlE;AAED,wBAAgB,oBAAoB,CAAC,WAAW,EAAE,cAAc,EAAE,MAAM,EAAE,WAAW,QAEpF"}

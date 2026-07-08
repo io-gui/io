@@ -8,4 +8,3 @@ registerEditorConfig(ExtrudeGeometry, [
 registerEditorGroups(ExtrudeGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=ExtrudeGeometry.js.map

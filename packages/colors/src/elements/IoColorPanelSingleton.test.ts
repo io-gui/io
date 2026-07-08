@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { nextQueue } from '@io-gui/core'
+import { nextFrame } from '@io-gui/core'
 import { IoColorPanelSingleton } from '@io-gui/colors'
 
 const element = IoColorPanelSingleton
@@ -17,7 +17,7 @@ describe('IoColorPanelSingleton.test', () => {
     expect(element.children[2].localName).toBe('io-color-slider')
     expect((element.children[2] as any).channel).toBe('a')
     element.value = {r: 0.5, g: 0.5, b: 0.5}
-    await nextQueue()
+    await nextFrame()
     expect(element.children[2]).toBe(undefined)
   })
 })

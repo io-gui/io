@@ -12,4 +12,3 @@ registerEditorConfig(TetrahedronGeometry, [
 registerEditorGroups(TetrahedronGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=TetrahedronGeometry.js.map

@@ -1,11 +1,11 @@
-import { IoElement, IoElementProps } from '@io-gui/core';
+import { ReactiveElement, ReactiveElementProps } from '@io-gui/core';
 import { TodoItemModel } from './TodoItemModel.js';
 import { TodoListModel } from './TodoListModel.js';
-type TodoItemProps = IoElementProps & {
+type TodoItemProps = ReactiveElementProps & {
     item?: TodoItemModel;
     model?: TodoListModel;
 };
-export declare class TodoItem extends IoElement {
+export declare class TodoItem extends ReactiveElement {
     static get Style(): string;
     item: TodoItemModel;
     model: TodoListModel;
@@ -14,11 +14,10 @@ export declare class TodoItem extends IoElement {
     private _originalTitle;
     constructor(args?: TodoItemProps);
     itemMutated(): void;
-    changed(): void;
+    mutated(): void;
     onStartEdit(): void;
     onBlur(): void;
-    onInputKey(event: CustomEvent): void;
+    onInputKey(event: KeyboardEvent): void;
 }
 export declare const todoItem: (arg0: TodoItemProps) => import("@io-gui/core").VDOMElement;
 export {};
-//# sourceMappingURL=TodoItem.d.ts.map

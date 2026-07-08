@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, div, Property } from '@io-gui/core';
+import { Register, ReactiveElement, Property, div, Field } from '@io-gui/core';
 import { ioButton, ioString } from '@io-gui/inputs';
 import { ioPropertyLink } from './IoPropertyLink.js';
 /**
@@ -12,7 +12,7 @@ import { ioPropertyLink } from './IoPropertyLink.js';
  * When breadcrumb item is clicked or activated by space/enter key, it sets the value to corresponding option value.
  * Optionally, it can trim the `options` array to selected option index.
  **/
-let IoBreadcrumbs = class IoBreadcrumbs extends IoElement {
+let IoBreadcrumbs = class IoBreadcrumbs extends ReactiveElement {
     static get Style() {
         return /* css */ `
     :host {
@@ -80,7 +80,7 @@ let IoBreadcrumbs = class IoBreadcrumbs extends IoElement {
     onClearSearch() {
         this.search = '';
     }
-    changed() {
+    mutated() {
         const vChildren = [];
         if (this._crumbs.length > 1) {
             vChildren.push(ioButton({
@@ -102,16 +102,16 @@ let IoBreadcrumbs = class IoBreadcrumbs extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Object, init: null })
+    Property({ type: Object, init: null })
 ], IoBreadcrumbs.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty({ type: Object, init: null })
+    Property({ type: Object, init: null })
 ], IoBreadcrumbs.prototype, "selected", void 0);
 __decorate([
-    ReactiveProperty({ type: String, reflect: true })
+    Property({ type: String, reflect: true })
 ], IoBreadcrumbs.prototype, "search", void 0);
 __decorate([
-    Property(Array)
+    Field(Array)
 ], IoBreadcrumbs.prototype, "_crumbs", void 0);
 IoBreadcrumbs = __decorate([
     Register
@@ -120,4 +120,3 @@ export { IoBreadcrumbs };
 export const ioBreadcrumbs = function (arg0) {
     return IoBreadcrumbs.vConstructor(arg0);
 };
-//# sourceMappingURL=IoBreadcrumbs.js.map

@@ -1,11 +1,11 @@
 //@ts-nocheck
-import { Register, IoElement, div, ReactiveProperty } from '@io-gui/core'
-import { MenuOption, ioOptionSelect } from '@io-gui/menus'
+import { Register, ReactiveElement, div, Property } from '@io-gui/core'
+import { Menu, ioOptionSelect } from '@io-gui/menus'
 import { ioSlider } from '@io-gui/sliders'
 import { ioString, ioNumber, ioBoolean, ioButton } from '@io-gui/inputs'
 import { ioPropertyEditor, ioInspector, ioObject, IoContextEditorSingleton } from '@io-gui/editors'
 
-export class IoEditorsDemo extends IoElement {
+export class IoEditorsDemo extends ReactiveElement {
   static get Style() {
     return /* css */`
       :host {
@@ -46,7 +46,7 @@ export class IoEditorsDemo extends IoElement {
     `
   }
 
-  @ReactiveProperty({value: {
+  @Property({value: {
     number: 0.5,
     string: 'hello',
     boolean: true,
@@ -73,7 +73,7 @@ export class IoEditorsDemo extends IoElement {
         value: this.object,
         // TODO: this.object.object displays broken "number" slider. Investigate!
         groups: {
-          'Object Properties': ['object', 'array', 'mixedArray'],
+          'Object Fields': ['object', 'array', 'mixedArray'],
         },
         config: [
           [Number, ioSlider({step: 0.1})],
@@ -105,7 +105,7 @@ export class IoEditorsDemo extends IoElement {
           config: [
             [String, ioString({live: true, appearance: 'neutral'})],
             // TODO: fix this. 'number' works but breaks other configs.
-            [Number, ioOptionSelect({option: new MenuOption({
+            [Number, ioOptionSelect({model: new Menu({
               id: 'number',
               options: [
                 {id: 'zero', value: 0},
@@ -140,7 +140,7 @@ export class IoEditorsDemo extends IoElement {
         }),
         ioObject({
           value: this.object,
-          label: 'Object (All Properties)',
+          label: 'Object (All Fields)',
           config: [
             [Array, ioPropertyEditor({labeled: false, class: 'array'})],
           ]
@@ -159,4 +159,4 @@ export class IoEditorsDemo extends IoElement {
   }
 }
 Register(IoEditorsDemo)
-export const ioEditorsDemo = IoEditorsDemo.vConstructor
+export const ioEditorsDemo = (arg0: any) => IoEditorsDemo.vConstructor(arg0)

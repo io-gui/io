@@ -1,8 +1,8 @@
-import { ReactivePropertyInstance, ReactivePropertyDefinition } from '../core/ReactiveProperty.js';
+import { PropertyInstance, PropertyDefinition } from '../core/Property.js';
 import { ThemeSingleton } from '../nodes/Theme.js';
-import { IoElement, IoElementProps } from './IoElement.js';
+import { ReactiveElement, ReactiveElementProps } from './ReactiveElement.js';
 /** WebGL canvas element with shared context and shader program cache. */
-export declare class IoGl extends IoElement {
+export declare class IoGl extends ReactiveElement {
     #private;
     static get Style(): string;
     theme: typeof ThemeSingleton;
@@ -11,18 +11,17 @@ export declare class IoGl extends IoElement {
     static get Vert(): string;
     static get GlUtils(): string;
     static get Frag(): string;
-    initPropertyUniform(name: string, property: ReactivePropertyDefinition): string;
+    initPropertyUniform(name: string, property: PropertyDefinition): string;
     initShader(): WebGLProgram;
-    constructor(args?: IoElementProps);
+    constructor(args?: ReactiveElementProps);
     onResized(): void;
     get ctx(): CanvasRenderingContext2D;
     themeMutated(): void;
-    changed(): void;
+    mutated(): void;
     onRender(): void;
     setShaderProgram(): void;
-    updatePropertyUniform(name: string, property: ReactivePropertyInstance): void;
+    updatePropertyUniform(name: string, property: PropertyInstance): void;
     updateThemeUniforms(): void;
     setUniform(name: string, value: unknown): void;
-    Register(ioNodeConstructor: typeof IoElement): void;
+    Register(ioNodeConstructor: typeof ReactiveElement): void;
 }
-//# sourceMappingURL=IoGL.d.ts.map

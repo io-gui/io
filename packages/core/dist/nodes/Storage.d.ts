@@ -1,6 +1,6 @@
 import { Binding } from '../core/Binding.js';
-import { ReactiveNode, ReactiveNodeProps } from '../nodes/ReactiveNode.js';
-export type StorageProps<T = unknown> = ReactiveNodeProps & {
+import { ReactiveObject, ReactiveObjectProps } from '../nodes/ReactiveObject.js';
+export type StorageProps<T = unknown> = ReactiveObjectProps & {
     key: string;
     value: T;
     default?: T;
@@ -20,7 +20,7 @@ export type StorageProps<T = unknown> = ReactiveNodeProps & {
  *
  * @example Storage({ key: 'theme', value: 'light', storage: 'local' })
  */
-export declare class StorageNode extends ReactiveNode {
+export declare class StorageNode extends ReactiveObject {
     key: string;
     value: unknown;
     storage: 'hash' | 'local' | 'none';
@@ -30,7 +30,7 @@ export declare class StorageNode extends ReactiveNode {
     dispose(): void;
     clearStorage(): void;
     valueMutated(): void;
-    changed(): void;
+    mutated(): void;
     removeValueToHash(): void;
     saveValueToHash(): void;
 }
@@ -39,4 +39,3 @@ export declare const Storage: (<T = unknown>(props: StorageProps<T>) => Binding<
     permit(): void;
     unpermit(): void;
 };
-//# sourceMappingURL=Storage.d.ts.map

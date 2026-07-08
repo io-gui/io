@@ -1,4 +1,4 @@
-import { ReactiveProperty, Register, span } from '@io-gui/core'
+import { Property, Register, span } from '@io-gui/core'
 import { IoButton, IoButtonProps } from '@io-gui/inputs'
 
 interface NamedValue {
@@ -31,20 +31,20 @@ export class IoPropertyLink extends IoButton {
     `
   }
 
-  @ReactiveProperty()
+  @Property()
   declare value: object
 
-  @ReactiveProperty({value: false, type: Boolean})
+  @Property({value: false, type: Boolean})
   declare showName: boolean
 
-  @ReactiveProperty({value: 'neutral', type: String, reflect: true})
+  @Property({value: 'neutral', type: String, reflect: true})
   declare appearance: 'inset' | 'outset' | 'neutral'
 
   valueMutated() {
-    this.changed()
+    this.mutated()
   }
 
-  override changed() {
+  override mutated() {
     let label: string | undefined
     if (this.value instanceof Array) {
       label = `${this.value.constructor.name} (${this.value.length})`

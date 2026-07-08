@@ -1,39 +1,49 @@
-import { isReactiveOwner } from './ReactiveCore.js';
+import { detachNodeParents, isReactiveNode } from './ReactiveCore.js';
 /**
- * Reactive array of {@link ReactiveNode} items owned by a parent node or element.
+ * Reactive array of {@link ReactiveObject} items owned by a parent node or element.
  *
  * Use `NodeArray` as the type for reactive properties that hold collections of child
- * nodes (for example `MenuOption.options`). The constructor registers the owner as
+ * nodes (for example `Option.options`). The constructor registers the owner as
  * an observer; mutating methods (`push`, `splice`, indexed assignment, etc.) wire
- * parent/child links and dispatch `io-object-mutation` on the owner so change
+ * parent/child links and dispatch `io-mutation` on the owner so change
  * handlers like `optionsMutated()` run automatically.
  *
- * Items must be {@link ReactiveNode} instances. The returned value from the
+ * Items must be {@link ReactiveObject} instances. The returned value from the
  * constructor is a proxied array — always use that reference, not the raw instance.
+ *
+ * Views may assign the same `NodeArray` to a reactive property for rendering.
+ * Only {@link ReactiveObject.dispose} on the **owner** (`node` passed
+ * to the constructor) may call {@link NodeArray.dispose}; borrowers must not destroy shared model data.
  *
  * @example
  * ```ts
- * @ReactiveProperty({ type: NodeArray, init: null })
- * declare options: NodeArray<MenuOption>
+ * @Property({ type: NodeArray, init: null })
+ * declare options: NodeArray<Option>
  * ```
  */
 export class NodeArray extends Array {
     node;
     _isInternalOperation = false;
+    _pendingDispatch = false;
     _observers = new Set();
     static get [Symbol.species]() { return Array; }
+    setItemType(item) {
+        if (this._itemType === undefined) {
+            this._itemType = item?.constructor ?? undefined;
+        }
+    }
     /** @param node Owner that receives mutation events for this collection. */
     constructor(node, ...args) {
         super(...args);
         this.node = node;
+        this.setItemType(args[0]); // TODO: test and re-evaluate this!
         // TODO: Avoid creating empty NodeArrays in models!
         // TODO: Test thoroughly! Check initializations with items!
-        // console.log('NodeArray constructor', args);
         this.itemMutated = this.itemMutated.bind(this);
         this.dispatchMutation = this.dispatchMutation.bind(this);
         // Owner is the primary observer
         this._observers.add(node);
-        debug: if (!isReactiveOwner(node)) {
+        debug: if (!isReactiveNode(node)) {
             console.error('NodeArray constructor called with non-node!');
         }
         // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -52,14 +62,13 @@ export class NodeArray extends Array {
             set(target, property, value) {
                 if (property === 'length') {
                     const newLength = Number(value);
+                    const oldLength = target.length;
                     if (!self._isInternalOperation) {
-                        const oldLength = target.length;
                         if (newLength < oldLength) {
                             for (let i = newLength; i < oldLength; i++) {
                                 const item = target[i];
-                                if (isReactiveOwner(item)) {
-                                    item.removeEventListener('io-object-mutation', self.itemMutated);
-                                    item.removeParent(self.node);
+                                if (isReactiveNode(item)) {
+                                    self.disconnectItem(item);
                                 }
                             }
                         }
@@ -69,7 +78,7 @@ export class NodeArray extends Array {
                         }
                     }
                     target.length = newLength;
-                    if (!self._isInternalOperation)
+                    if (newLength !== oldLength)
                         self.dispatchMutation();
                     return true;
                 }
@@ -77,16 +86,15 @@ export class NodeArray extends Array {
                 if (!isNaN(index) && index >= 0) {
                     // TODO Prevent adding to index greater than length?
                     const oldValue = target[index];
-                    if (isReactiveOwner(oldValue) && !self._isInternalOperation) {
-                        oldValue.removeEventListener('io-object-mutation', self.itemMutated);
-                        oldValue.removeParent(self.node);
+                    if (isReactiveNode(oldValue) && !self._isInternalOperation) {
+                        self.disconnectItem(oldValue);
                     }
                     target[index] = value;
-                    if (isReactiveOwner(value) && !self._isInternalOperation) {
-                        value.addEventListener('io-object-mutation', self.itemMutated);
+                    if (isReactiveNode(value) && !self._isInternalOperation) {
+                        value.addEventListener('io-mutation', self.itemMutated);
                         value.addParent(self.node);
                     }
-                    if (!self._isInternalOperation)
+                    if (oldValue !== value)
                         self.dispatchMutation();
                     return true;
                 }
@@ -97,30 +105,40 @@ export class NodeArray extends Array {
         Object.defineProperty(this, 'proxy', { value: proxy, enumerable: false, configurable: false });
         return proxy;
     }
-    /** Run array mutations without dispatching `io-object-mutation` until complete. */
+    disconnectItem(item) {
+        item.removeEventListener('io-mutation', this.itemMutated);
+        detachNodeParents(item);
+        item.removeParent(this.node);
+    }
+    /** Run array mutations without dispatching `io-mutation` until the outermost batch completes. */
     withInternalOperation(operation) {
+        const wasInternal = this._isInternalOperation;
         this._isInternalOperation = true;
         try {
             return operation();
         }
         finally {
-            this._isInternalOperation = false;
+            this._isInternalOperation = wasInternal;
+            if (!wasInternal && this._pendingDispatch) {
+                this._pendingDispatch = false;
+                this.dispatchMutation();
+            }
         }
     }
     splice(start, deleteCount, ...items) {
         return this.withInternalOperation(() => {
             for (let i = start; i < start + deleteCount; i++) {
                 const item = this[i];
-                if (isReactiveOwner(item)) {
-                    item.removeEventListener('io-object-mutation', this.itemMutated);
-                    item.removeParent(this.node);
+                if (isReactiveNode(item)) {
+                    this.disconnectItem(item);
                 }
             }
             const result = super.splice(start, deleteCount, ...items);
             for (let i = start; i < start + items.length; i++) {
                 const item = this[i];
-                if (isReactiveOwner(item)) {
-                    item.addEventListener('io-object-mutation', this.itemMutated);
+                this.setItemType(item); // TODO: test and re-evaluate this!
+                if (isReactiveNode(item)) {
+                    item.addEventListener('io-mutation', this.itemMutated);
                     item.addParent(this.node);
                 }
             }
@@ -133,8 +151,9 @@ export class NodeArray extends Array {
         return this.withInternalOperation(() => {
             const result = super.push(...items);
             for (const item of items) {
-                if (isReactiveOwner(item)) {
-                    item.addEventListener('io-object-mutation', this.itemMutated);
+                this.setItemType(item); // TODO: test and re-evaluate this!
+                if (isReactiveNode(item)) {
+                    item.addEventListener('io-mutation', this.itemMutated);
                     item.addParent(this.node);
                 }
             }
@@ -147,8 +166,9 @@ export class NodeArray extends Array {
         return this.withInternalOperation(() => {
             const result = super.unshift(...items);
             for (const item of items) {
-                if (isReactiveOwner(item)) {
-                    item.addEventListener('io-object-mutation', this.itemMutated);
+                this.setItemType(item); // TODO: test and re-evaluate this!
+                if (isReactiveNode(item)) {
+                    item.addEventListener('io-mutation', this.itemMutated);
                     item.addParent(this.node);
                 }
             }
@@ -160,9 +180,8 @@ export class NodeArray extends Array {
     pop() {
         return this.withInternalOperation(() => {
             const item = super.pop();
-            if (item !== undefined && isReactiveOwner(item)) {
-                item.removeEventListener('io-object-mutation', this.itemMutated);
-                item.removeParent(this.node);
+            if (item !== undefined && isReactiveNode(item)) {
+                this.disconnectItem(item);
             }
             if (item !== undefined)
                 this.dispatchMutation();
@@ -172,9 +191,8 @@ export class NodeArray extends Array {
     shift() {
         return this.withInternalOperation(() => {
             const item = super.shift();
-            if (item !== undefined && isReactiveOwner(item)) {
-                item.removeEventListener('io-object-mutation', this.itemMutated);
-                item.removeParent(this.node);
+            if (item !== undefined && isReactiveNode(item)) {
+                this.disconnectItem(item);
             }
             if (item !== undefined)
                 this.dispatchMutation();
@@ -210,15 +228,14 @@ export class NodeArray extends Array {
                 : Math.min(relativeEnd, len);
             for (let i = actualStart; i < actualEnd; i++) {
                 const oldItem = this[i];
-                if (oldItem !== undefined && isReactiveOwner(oldItem)) {
-                    oldItem.removeEventListener('io-object-mutation', this.itemMutated);
-                    oldItem.removeParent(this.node);
+                if (oldItem !== undefined && isReactiveNode(oldItem)) {
+                    this.disconnectItem(oldItem);
                 }
             }
             super.fill(value, actualStart, actualEnd);
             for (let i = actualStart; i < actualEnd; i++) {
-                if (isReactiveOwner(value)) {
-                    value.addEventListener('io-object-mutation', this.itemMutated);
+                if (isReactiveNode(value)) {
+                    value.addEventListener('io-mutation', this.itemMutated);
                     value.addParent(this.node);
                 }
             }
@@ -247,16 +264,15 @@ export class NodeArray extends Array {
                 return this;
             for (let i = actualTarget; i < actualTarget + count; i++) {
                 const oldItem = this[i];
-                if (oldItem !== undefined && isReactiveOwner(oldItem)) {
-                    oldItem.removeEventListener('io-object-mutation', this.itemMutated);
-                    oldItem.removeParent(this.node);
+                if (oldItem !== undefined && isReactiveNode(oldItem)) {
+                    this.disconnectItem(oldItem);
                 }
             }
             super.copyWithin(actualTarget, actualStart, actualEnd);
             for (let i = actualTarget; i < actualTarget + count; i++) {
                 const item = this[i];
-                if (isReactiveOwner(item)) {
-                    item.addEventListener('io-object-mutation', this.itemMutated);
+                if (isReactiveNode(item)) {
+                    item.addEventListener('io-mutation', this.itemMutated);
                     item.addParent(this.node);
                 }
             }
@@ -274,23 +290,61 @@ export class NodeArray extends Array {
     }
     itemMutated(event) {
         for (const observer of this._observers) {
-            observer.dispatch('io-object-mutation', { object: this.proxy, property: event.detail.index });
+            observer.dispatch('io-mutation', { object: this.proxy, property: event.detail.index });
         }
     }
     dispatchMutation() {
+        if (this._isInternalOperation) {
+            this._pendingDispatch = true;
+            return;
+        }
         for (const observer of this._observers) {
-            observer.dispatch('io-object-mutation', { object: this.proxy });
+            observer.dispatch('io-mutation', { object: this.proxy });
         }
     }
-    /** Serialize each item via its own {@link ReactiveNode.toJSON}. */
+    /** Serialize each item via its own {@link ReactiveObject.toJSON}. */
     toJSON() {
         return this.map((item) => item.toJSON());
     }
-    /** Hydrate each item from wire-format JSON via {@link ReactiveNode.applyJSON}. */
+    /** Hydrate each item from wire-format JSON via {@link ReactiveObject.applyJSON}. */
     applyJSON(json) {
+        // TODO: test this!
+        if (json.length > this.length) {
+            this.splice(this.length, json.length - this.length);
+        }
         for (let i = 0; i < json.length; i++) {
-            this[i].applyJSON(json[i]);
+            if (i >= this.length) {
+                const itemConstructor = this._itemType;
+                this.push(new itemConstructor(json[i]));
+            }
+            else {
+                this[i].applyJSON(json[i]);
+            }
+        }
+    }
+    /** Clears items and observers. Called from owner {@link ReactiveObject.dispose} only — not by nodes that borrow this array. */
+    dispose(deep = true) {
+        const nodes = [...this];
+        for (const item of nodes) {
+            if (isReactiveNode(item)) {
+                this.disconnectItem(item);
+            }
+        }
+        const wasInternal = this._isInternalOperation;
+        this._isInternalOperation = true;
+        try {
+            super.splice(0, this.length);
+        }
+        finally {
+            this._isInternalOperation = wasInternal;
+        }
+        this._observers.clear();
+        if (deep) {
+            for (const node of nodes) {
+                if (isReactiveNode(node) && !node._disposed) {
+                    node.dispose();
+                }
+            }
         }
     }
 }
-//# sourceMappingURL=NodeArray.js.map

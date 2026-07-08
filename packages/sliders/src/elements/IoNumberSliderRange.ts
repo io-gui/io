@@ -1,8 +1,8 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, ReactiveNode } from '@io-gui/core'
+import { Register, ReactiveElement, Property, ReactiveElementProps, WithBinding, ReactiveObject } from '@io-gui/core'
 import {ioNumber} from '@io-gui/inputs'
 import {ioSliderRange} from './IoSliderRange.js'
 
-export type IoNumberSliderRangeProps = IoElementProps & {
+export type IoNumberSliderRangeProps = ReactiveElementProps & {
   value?: WithBinding<[number, number]>
   step?: number
   min?: number
@@ -15,7 +15,7 @@ export type IoNumberSliderRangeProps = IoElementProps & {
  * Input element for `Array(2)` data type combining `IoNumber` and `IoSliderRange`
  **/
 @Register
-export class IoNumberSliderRange extends IoElement {
+export class IoNumberSliderRange extends ReactiveElement {
   static override get Style() {
     return /* css */`
     :host {
@@ -33,22 +33,22 @@ export class IoNumberSliderRange extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: Array, init: [0, 0]})
+  @Property({type: Array, init: [0, 0]})
   declare value: [number, number]
 
-  @ReactiveProperty(0.01)
+  @Property(0.01)
   declare step: number
 
-  @ReactiveProperty(0)
+  @Property(0)
   declare min: number
 
-  @ReactiveProperty(1)
+  @Property(1)
   declare max: number
 
-  @ReactiveProperty(1)
+  @Property(1)
   declare exponent: number
 
-  @ReactiveProperty(1)
+  @Property(1)
   declare conversion: number
 
   constructor(args: IoNumberSliderRangeProps = {}) { super(args) }
@@ -57,20 +57,20 @@ export class IoNumberSliderRange extends IoElement {
     const item = event.composedPath()[0]
     if (item === this.$.number0) this.value[0] = event.detail.value
     if (item === this.$.number1) this.value[1] = event.detail.value
-    if (!(this.value as unknown as ReactiveNode)._isNode) {
+    if (!(this.value as unknown as ReactiveObject)._isReactiveObject) {
       this.dispatchMutation(this.value)
     }
   }
   _onSliderSet(event: CustomEvent) {
     this.value = event.detail.value
-    if (!(this.value as unknown as ReactiveNode)._isNode) {
+    if (!(this.value as unknown as ReactiveObject)._isReactiveObject) {
       this.dispatchMutation(this.value)
     }
   }
   override ready() {
-    this.changed()
+    this.mutated()
   }
-  override changed() {
+  override mutated() {
     this.render([
       ioNumber({
         id: 'number0',

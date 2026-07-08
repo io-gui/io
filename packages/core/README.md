@@ -5,12 +5,15 @@ A lightweight (~25KB gzipped) core reactive library for Io-Gui framework.
 ## Core Classes
 
 ### ReactiveNode
-Reactive `Object` with all Io-Gui features. Use for data models, state containers, and business logic.
+Union type of all graph participants: `ReactiveNode`.
 
-### IoElement
-Reactive `HTMLElement` with ReactiveNode features plus virtual DOM rendering and CSS style management.
+### ReactiveObject
+Reactive `Object` base class for data models, state containers, and business logic.
 
-Both share identical APIs: reactive properties, bindings, event dispatch, change handlers, and lifecycle methods.
+### ReactiveElement
+Reactive `HTMLElement` base class with `ReactiveObject` features plus virtual DOM rendering and CSS style management.
+
+Both concrete bases share identical reactive APIs: properties, bindings, event dispatch, change handlers, and lifecycle methods.
 
 ---
 
@@ -20,8 +23,8 @@ Both share identical APIs: reactive properties, bindings, event dispatch, change
 
 ```typescript
 @Register
-class MyNode extends ReactiveNode {
-  @ReactiveProperty({type: String, value: ''})
+class MyNode extends ReactiveObject {
+  @Property({type: String, value: ''})
   declare label: string
 }
 ```
@@ -32,10 +35,10 @@ Registration triggers `ProtoChain` initialization which aggregates property defi
 
 ## Reactive Properties
 
-Declare with `@ReactiveProperty` decorator or `static get ReactiveProperties()`:
+Declare with `@Property` decorator or `static get Properties()`:
 
 ```typescript
-static get ReactiveProperties() {
+static get Properties() {
   return {
     count: Number,                         // Type only → defaults to 0
     label: '',                             // Value only → infers type
@@ -54,7 +57,7 @@ static get ReactiveProperties() {
 | `value` | Initial value |
 | `type` | Constructor (String, Number, Boolean, Array, Object, ReactiveNode, etc.) |
 | `binding` | Binding object for two-way sync |
-| `reflect` | If `true`, syncs to HTML attribute (IoElement only) |
+| `reflect` | If `true`, syncs to HTML attribute (ReactiveElement only) |
 | `init` | Constructor arguments. Use `null` for empty init, `'this'` for NodeArray |
 
 ### Type Defaults
@@ -66,12 +69,12 @@ static get ReactiveProperties() {
 
 ---
 
-## Non-Reactive Properties
+## Non-Reactive Fields
 
-Use `@Property` decorator or `static get Properties()` for properties that don't need change tracking:
+Use `@Field` decorator or `static get Fields()` for values that should not participate in reactivity:
 
 ```typescript
-@Property(Object)
+@Field(Object)
 declare $: Record<string, HTMLElement> // Common pattern for element refs
 ```
 
@@ -83,21 +86,21 @@ When a reactive property changes:
 
 1. `[propName]Changed(change)` handler is invoked (if defined)
 2. `[propName]-changed` event is dispatched with `{property, value, oldValue}`
-3. `changed()` handler is invoked
-4. `io-object-mutation` event is dispatched for the node
+3. `mutated()` handler is invoked
+4. `io-mutation` event is dispatched for the node
 
 ```typescript
 labelChanged(change: Change) {
   console.log(change.oldValue, '→', change.value)
 }
-changed() {
+mutated() {
   // Called after any property change
 }
 ```
 
-### Reactivity Modes
+### Dispatch Timing
 
-Control dispatch timing via `reactivity` property:
+Control dispatch timing via `dispatchTiming` property:
 
 | Mode | Behavior |
 |------|----------|
@@ -129,11 +132,11 @@ targetNode.prop = binding  // Target syncs to source
 
 ## Object Mutation Observation
 
-### ReactiveNode-typed Properties
+### ReactiveNode-Typed Properties
 Automatically observed. Mutations trigger `[propName]Mutated()` handlers.
 
 ```typescript
-@ReactiveProperty({type: MyReactiveNode, init: null})
+@Property({type: MyReactiveNode, init: null})
 declare data: MyReactiveNode
 
 dataMutated(event: CustomEvent) {
@@ -153,7 +156,7 @@ this.dispatchMutation(this.plainObject)
 A Proxy-wrapped Array that auto-dispatches mutations on all mutating operations (`push`, `splice`, etc.). Items must be `ReactiveNode` instances.
 
 ```typescript
-@ReactiveProperty({type: NodeArray, init: 'this'})
+@Property({type: NodeArray, init: 'this'})
 declare items: NodeArray<MyReactiveNode>
 
 itemsMutated() {
@@ -165,6 +168,7 @@ itemsMutated() {
 - `fill()` and `copyWithin()` are unsupported (log warning)
 - Setting `length` to extend array logs warning
 - Item listeners are automatically managed on add/remove
+- **Shared references**: assigning the same `NodeArray` to another node's property is fine for rendering; only the constructor owner disposes it when that owner is disposed
 
 ---
 
@@ -198,17 +202,17 @@ const element = new MyElement({
 this.dispatch('my-event', {data: 42}, true) // type, detail, bubbles
 ```
 
-### Event Propagation for ReactiveNodes
-Non-DOM ReactiveNodes bubble events through `_parents` array. Add/remove parents with `addParent()`/`removeParent()`.
+### Event Propagation for ReactiveObjects
+Non-DOM `ReactiveObject` instances bubble events through `_parents`. Add/remove parents with `addParent()`/`removeParent()`.
 
 ---
 
-## Virtual DOM (IoElement)
+## Virtual DOM (ReactiveElement)
 
 Render children with `this.render()`:
 
 ```typescript
-changed() {
+mutated() {
   this.render([
     div({class: 'container'}, [
       span({id: 'label'}, this.label),
@@ -228,7 +232,7 @@ changed() {
 
 ---
 
-## Styling (IoElement)
+## Styling (ReactiveElement)
 
 ```typescript
 static get Style() {
@@ -286,9 +290,9 @@ element.prop = myValue // Binding syncs to storage
 |--------|-------------|
 | `init()` | Before property initialization |
 | `ready()` | After construction, before first dispatch |
-| `changed()` | After any reactive property change |
-| `connectedCallback()` | IoElement attached to DOM |
-| `disconnectedCallback()` | IoElement removed from DOM |
+| `mutated()` | After any reactive property change |
+| `connectedCallback()` | ReactiveElement attached to DOM |
+| `disconnectedCallback()` | ReactiveElement removed from DOM |
 | `dispose()` | Manual cleanup (removes listeners, bindings) |
 
 ---
@@ -311,7 +315,7 @@ WebGL-rendered element base class. Properties auto-map to shader uniforms:
 ```typescript
 @Register
 class MyShader extends IoGl {
-  @ReactiveProperty({type: Number, value: 0.5})
+  @Property({type: Number, value: 0.5})
   declare intensity: number // → uniform float uIntensity
 
   static get Frag() {

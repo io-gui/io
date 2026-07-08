@@ -7,4 +7,3 @@ registerEditorConfig(InstancedBufferAttribute, [
 registerEditorGroups(InstancedBufferAttribute, {
     Instancing: ['meshPerAttribute'],
 });
-//# sourceMappingURL=InstancedBufferAttribute.js.map

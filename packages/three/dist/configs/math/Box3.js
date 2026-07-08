@@ -3,4 +3,3 @@ import { Box3 } from 'three/webgpu';
 registerEditorConfig(Object, [
     [Box3, ioObject({ labelWidth: '42px' })],
 ]);
-//# sourceMappingURL=Box3.js.map

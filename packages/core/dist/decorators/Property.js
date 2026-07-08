@@ -1,64 +1,37 @@
 export const propertyDecorators = new WeakMap();
-export const reactivePropertyDecorators = new WeakMap();
 const RESERVED_ELEMENT_PROPERTIES = [
     // TODO: consider adding all native element properties?
     'class', 'style', 'id', 'key', 'children'
 ];
 /**
- * Declares a property and an initial value for a property.
+ * Declares a reactive property and defines its inital value and behavior using a loose or strict definition.
  * @decorator
- * @param {any} initialValue - Initial value.
- * @returns {Function} Property decorator function.
+ * @param {PropertyDefinitionLoose} defLoose - Field definition.
+ * @returns {Function} Field decorator function.
  *
  * @example
  * \@Register
- * class MyClass extends ReactiveNode {
- *   \@Property('default text')
+ * class MyClass extends ReactiveObject {
+ *   \@Property({type: String, value: 'default text', reflect: true})
  *   declare title: string;
  * }
+ *
+ * @example
+ * \@Register
+ * class MyClass extends ReactiveObject {
+ *   \@Property({type: Array, init: [0, 0]})
+ *   declare size: [number, number];
+ * }
  */
-export function Property(initialValue = undefined) {
+export function Property(defLoose = {}) {
     return (target, propertyName) => {
-        if (RESERVED_ELEMENT_PROPERTIES.includes(propertyName) && target._isIoElement) {
+        if (RESERVED_ELEMENT_PROPERTIES.includes(propertyName) && target._isReactiveElement) {
             console.error(`Property ${propertyName} is reserved and cannot be used as a property name.`);
         }
         const constructor = target.constructor;
         const properties = propertyDecorators.get(constructor) || {};
         propertyDecorators.set(constructor, properties);
-        properties[propertyName] = initialValue;
-    };
-}
-;
-/**
- * Declares a reactive property and defines its inital value and behavior using a loose or strict definition.
- * @decorator
- * @param {ReactivePropertyDefinitionLoose} defLoose - Property definition.
- * @returns {Function} Property decorator function.
- *
- * @example
- * \@Register
- * class MyClass extends ReactiveNode {
- *   \@ReactiveProperty({type: String, value: 'default text', reflect: true})
- *   declare title: string;
- * }
- *
- * @example
- * \@Register
- * class MyClass extends ReactiveNode {
- *   \@ReactiveProperty({type: Array, init: [0, 0]})
- *   declare size: [number, number];
- * }
- */
-export function ReactiveProperty(defLoose = {}) {
-    return (target, propertyName) => {
-        if (RESERVED_ELEMENT_PROPERTIES.includes(propertyName) && target._isIoElement) {
-            console.error(`ReactiveProperty ${propertyName} is reserved and cannot be used as a property name.`);
-        }
-        const constructor = target.constructor;
-        const properties = reactivePropertyDecorators.get(constructor) || {};
-        reactivePropertyDecorators.set(constructor, properties);
         properties[propertyName] = defLoose;
     };
 }
 ;
-//# sourceMappingURL=Property.js.map

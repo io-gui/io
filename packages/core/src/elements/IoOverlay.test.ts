@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import { IoOverlaySingleton, IoElement, Register, ReactivePropertyDefinitions, nextQueue } from '@io-gui/core'
+import { IoOverlaySingleton, ReactiveElement, Register, PropertyDefinitions, nextFrame } from '@io-gui/core'
 
 @Register
-class OverlayChild extends IoElement {
-  static override get ReactiveProperties(): ReactivePropertyDefinitions {
+class OverlayChild extends ReactiveElement {
+  static override get Properties(): PropertyDefinitions {
     return { expanded: { type: Boolean, value: false } }
   }
   declare expanded: boolean
@@ -12,7 +12,7 @@ class OverlayChild extends IoElement {
 describe('IoOverlay', () => {
   it('Should initialize properties correctly', () => {
     expect(IoOverlaySingleton.expanded).toEqual(false)
-    expect(IoOverlaySingleton._reactiveProperties.get('expanded')).toEqual({
+    expect(IoOverlaySingleton._properties.get('expanded')).toEqual({
       binding: undefined,
       init: undefined,
       reflect: true,
@@ -25,7 +25,7 @@ describe('IoOverlay', () => {
     const child = new OverlayChild()
     IoOverlaySingleton.appendChild(child as HTMLElement)
     child.expanded = true
-    await nextQueue()
+    await nextFrame()
     expect(IoOverlaySingleton.expanded).toBe(true)
     IoOverlaySingleton.removeChild(child as HTMLElement)
     child.dispose()
@@ -34,9 +34,9 @@ describe('IoOverlay', () => {
     const child = new OverlayChild()
     IoOverlaySingleton.appendChild(child as HTMLElement)
     child.expanded = true
-    await nextQueue()
+    await nextFrame()
     IoOverlaySingleton.expanded = false
-    await nextQueue()
+    await nextFrame()
     expect(child.expanded).toBe(false)
     IoOverlaySingleton.removeChild(child as HTMLElement)
     child.dispose()

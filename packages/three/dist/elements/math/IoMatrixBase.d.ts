@@ -1,12 +1,12 @@
-import { IoElement, IoElementProps } from '@io-gui/core';
-export type IoMatrixBaseProps = IoElementProps & {
+import { ReactiveElement, ReactiveElementProps } from '@io-gui/core';
+export type IoMatrixBaseProps = ReactiveElementProps & {
     value?: number[];
     disabled?: boolean;
 };
 /**
  * Input element for vector arrays and objects.
  **/
-export declare class IoMatrixBase extends IoElement {
+export declare class IoMatrixBase extends ReactiveElement {
     static get Style(): string;
     value: Array<number>;
     disabled: boolean;
@@ -15,6 +15,5 @@ export declare class IoMatrixBase extends IoElement {
     _onNumberValueInput(event: CustomEvent): void;
     valueChanged(): void;
     valueMutated(): void;
-    changed(): void;
+    mutated(): void;
 }
-//# sourceMappingURL=IoMatrixBase.d.ts.map

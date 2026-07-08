@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, span, Property } from '@io-gui/core'
+import { Register, Property, span, Field } from '@io-gui/core'
 import { IoField, IoFieldProps } from './IoField.js'
 
 export type IoNumberLadderStepProps = IoFieldProps & {
@@ -39,13 +39,13 @@ export class IoNumberLadderStep extends IoField {
     `
   }
 
-  @ReactiveProperty({value: 1, type: Number})
+  @Property({value: 1, type: Number})
   declare value: number
 
-  @ReactiveProperty({value: '', type: String})
+  @Property({value: '', type: String})
   declare label: string
 
-  @Property('spinbutton')
+  @Field('spinbutton')
   declare role: string
 
   declare private startX: number
@@ -106,9 +106,9 @@ export class IoNumberLadderStep extends IoField {
     this.dispatch('ladder-step-collapse', {}, true)
   }
   override ready() {
-    this.changed()
+    this.mutated()
   }
-  override changed() {
+  override mutated() {
     this.render([span(this.label)])
     this.setAttribute('aria-label', this.label)
     this.setAttribute('aria-valuestep', this.label)

@@ -2,15 +2,15 @@ import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
 import { ioOptionSelect } from '@io-gui/menus';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { ioNumber } from '@io-gui/inputs';
-import { MenuOption } from '@io-gui/menus';
+import { Menu } from '@io-gui/menus';
 import { AnimationAction, AdditiveAnimationBlendMode, NormalAnimationBlendMode, LoopRepeat, LoopPingPong, LoopOnce, } from 'three/webgpu';
 ///
 registerEditorConfig(AnimationAction, [
-    ['blendMode', ioOptionSelect({ selectBy: 'value', option: new MenuOption({ options: [
+    ['blendMode', ioOptionSelect({ model: new Menu({ options: [
                     { value: AdditiveAnimationBlendMode, id: 'Additive' },
                     { value: NormalAnimationBlendMode, id: 'Normal' },
                 ] }) })],
-    ['loop', ioOptionSelect({ selectBy: 'value', option: new MenuOption({ options: [
+    ['loop', ioOptionSelect({ model: new Menu({ options: [
                     { value: LoopRepeat, id: 'LoopRepeat' },
                     { value: LoopPingPong, id: 'LoopPingPong' },
                     { value: LoopOnce, id: 'LoopOnce' },
@@ -22,4 +22,3 @@ registerEditorConfig(AnimationAction, [
 registerEditorGroups(AnimationAction, {
     Advanced: ['zeroSlopeAtStart', 'zeroSlopeAtEnd', 'clampWhenFinished', 'blendMode', 'loop', 'repetitions', 'timeScale']
 });
-//# sourceMappingURL=AnimationAction.js.map

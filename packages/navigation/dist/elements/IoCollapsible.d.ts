@@ -1,5 +1,5 @@
-import { IoElement, VDOMElement, IoElementProps, WithBinding } from '@io-gui/core';
-export type IoCollapsibleProps = IoElementProps & {
+import { ReactiveElement, VDOMElement, ReactiveElementProps, WithBinding } from '@io-gui/core';
+export type IoCollapsibleProps = ReactiveElementProps & {
     elements?: VDOMElement[];
     label?: string;
     direction?: 'column' | 'row';
@@ -10,7 +10,7 @@ export type IoCollapsibleProps = IoElementProps & {
  * An element with collapsible content.
  * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
  **/
-export declare class IoCollapsible extends IoElement {
+export declare class IoCollapsible extends ReactiveElement {
     static get Style(): string;
     elements: VDOMElement[];
     label: string;
@@ -19,7 +19,6 @@ export declare class IoCollapsible extends IoElement {
     expanded: boolean;
     role: string;
     expandedChanged(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioCollapsible: (arg0?: IoCollapsibleProps) => VDOMElement;
-//# sourceMappingURL=IoCollapsible.d.ts.map

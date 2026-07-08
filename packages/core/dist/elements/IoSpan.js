@@ -4,11 +4,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { ReactiveProperty } from '../decorators/Property.js';
+import { Property } from '../decorators/Property.js';
 import { Register } from '../decorators/Register.js';
-import { IoElement } from './IoElement.js';
+import { ReactiveElement } from './ReactiveElement.js';
 /** Inline text element; `value` updates `innerText`. */
-let IoSpan = class IoSpan extends IoElement {
+let IoSpan = class IoSpan extends ReactiveElement {
     constructor(props) {
         super(props);
     }
@@ -24,7 +24,7 @@ let IoSpan = class IoSpan extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: String, value: '' })
+    Property({ type: String, value: '' })
 ], IoSpan.prototype, "value", void 0);
 IoSpan = __decorate([
     Register
@@ -33,4 +33,3 @@ export { IoSpan };
 export const ioSpan = function (props) {
     return IoSpan.vConstructor(props);
 };
-//# sourceMappingURL=IoSpan.js.map

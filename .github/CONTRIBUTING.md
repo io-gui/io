@@ -33,7 +33,7 @@ This guide assumes you have basic knowledge of TypeScript, HTML, CSS, and Git. I
 
 Io-Gui is organized as a monorepo with the following packages:
 
-- **io-core** - Core framework (Node, IoElement, bindings, event system, Storage, Theme)
+- **io-core** - Core framework (ReactiveObject, ReactiveElement, bindings, event system, Storage, Theme)
 - **io-colors** - Color components and utilities
 - **io-icons** - Icon component and default iconset
 - **io-inputs** - Input components (buttons, fields, switches)
@@ -98,21 +98,22 @@ Io-Gui is organized as a monorepo with the following packages:
 - Don't add dependencies
 
 ### TypeScript Patterns
-- Use decorators (`@Register`, `@ReactiveProperty`, `@Property`)
+- Use decorators (`@Register`, `@Property`, `@Field`)
 - Strong typing with interfaces and type definitions
 - Avoid using `any` whenever possible
-- Import modules with `.js` extensions if they are in the same package e.g. `import { ReactiveNode } from '../nodes/ReactiveNode.js'`
-- Import modules from other package using scoped package name instead e.g. `import { IoElement } from '@io-gui/core'`
+- Import modules with `.js` extensions if they are in the same package e.g. `import { ReactiveObject } from '../nodes/ReactiveObject.js'`
+- Import modules from other package using scoped package name instead e.g. `import { ReactiveElement } from '@io-gui/core'`
 - Virtual DOM factories for Elements are lower-cased. e.g. `ioMarkdown` is a virtual DOM factory for `IoMarkdown` element.
 
 ### Defining New Components
-- Elements extend `IoElement`
-- Nodes (non-DOM Objects) extend `ReactiveNode`
+- Elements extend `ReactiveElement`
+- Nodes (non-DOM Objects) extend `ReactiveObject`
 - Nodes and elements require registration using `Register(IoClassConstructor)` or `@Register` decorator
 - CSS styles defined in static `static get Style()` string
 - CSS selectors have to start with `:host` selector which represents the host element
-- Reactive properties defined in static `static get ReactiveProperties()` object or `@ReactiveProperty` decorators
-- Non-reactive properties defined in static `static get Properties()` object or `@Property` decorators
+- Reactive properties defined in static `static get Properties()` object or `@Property` decorators
+- Non-reactive fields defined in static `static get Fields()` object or `@Field` decorators
+- Nodes and elements share one reactive graph (`_parents`/`_children`), wired by node-valued properties, `NodeArray` items, or explicit `addParent`/`removeParent`. This graph is independent of DOM placement, so a non-DOM model can parent and propagate to an element across the object/element boundary. Events and `io-mutation` bubble through this graph (and, for elements, the DOM tree) with a `visited` set that keeps multi-parent graphs and cycles loop-safe. See the deep dive's "Cross-Domain Reactivity" section before changing parenting or event propagation.
 
 ### Runtime Type Checking
 - Use `debug: {}` labeled scoped blocks to write runtime debug code such as type checking etc
@@ -131,7 +132,7 @@ Io-Gui is organized as a monorepo with the following packages:
 ### DOM Structure
 - Use minimal number of elements in the DOM tree
 - Reactive elements render and manage their own children.
-- Never alter children of an IoElement from outside.
+- Never alter children of an ReactiveElement from outside.
 - Elements render content using virtual DOM for efficient updates
 
 ## Development

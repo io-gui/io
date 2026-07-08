@@ -1,6 +1,6 @@
-import { IoElement } from '@io-gui/core';
+import { ReactiveElement } from '@io-gui/core';
 import { IoColorBase } from './IoColorBase.js';
-type IoColorPanelSource = IoElement & {
+type IoColorPanelSource = ReactiveElement & {
     onPanelValueInput(): void;
 };
 /**
@@ -19,8 +19,7 @@ declare class IoColorPanel extends IoColorBase {
     onKeydown(event: KeyboardEvent): void;
     onIoFocusTo(event: CustomEvent): void;
     onValueInput(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const IoColorPanelSingleton: IoColorPanel;
 export {};
-//# sourceMappingURL=IoColorPanelSingleton.d.ts.map

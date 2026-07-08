@@ -4,9 +4,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { IoElement, Register, span, ul, li, a, button, ReactiveProperty } from '@io-gui/core';
+import { ReactiveElement, Register, span, ul, li, a, button, Property } from '@io-gui/core';
 import { TodoListModel } from './TodoListModel.js';
-export class TodoFooter extends IoElement {
+export class TodoFooter extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host a {
@@ -14,15 +14,18 @@ export class TodoFooter extends IoElement {
       }
     `;
     }
-    constructor(args = {}) { super(args); }
+    constructor(args) {
+        super(args);
+    }
     onRouteClicked(event) {
         const target = event.target;
         this.route = target.innerText.toLowerCase();
     }
     modelMutated() {
-        this.changed();
+        this.mutated();
     }
-    changed() {
+    mutated() {
+        this.style.display = this.model.count ? 'block' : 'none';
         this.render([
             span({ class: 'todo-count' }, String(this.model.activeCount) + (this.model.activeCount === 1 ? ' item' : ' items') + ' left'),
             ul({ class: 'filters' }, [
@@ -35,13 +38,12 @@ export class TodoFooter extends IoElement {
     }
 }
 __decorate([
-    ReactiveProperty({ type: TodoListModel })
+    Property({ type: TodoListModel })
 ], TodoFooter.prototype, "model", void 0);
 __decorate([
-    ReactiveProperty({ value: 'all' })
+    Property({ value: 'all' })
 ], TodoFooter.prototype, "route", void 0);
 Register(TodoFooter);
 export const todoFooter = function (arg0) {
     return TodoFooter.vConstructor(arg0);
 };
-//# sourceMappingURL=TodoFooter.js.map

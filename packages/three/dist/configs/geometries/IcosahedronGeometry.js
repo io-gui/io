@@ -12,4 +12,3 @@ registerEditorConfig(IcosahedronGeometry, [
 registerEditorGroups(IcosahedronGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=IcosahedronGeometry.js.map

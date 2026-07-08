@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture } from 'three/webgpu';
 import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl';
-import { Register, ReactiveProperty } from '@io-gui/core';
+import { Register, Property } from '@io-gui/core';
 import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
 let ComputeTextureExample = class ComputeTextureExample extends ThreeApplet {
     storageTexture;
@@ -55,11 +55,10 @@ let IoComputeTextureExample = class IoComputeTextureExample extends IoThreeExamp
     }
 };
 __decorate([
-    ReactiveProperty({ type: ComputeTextureExample, init: null })
+    Property({ type: ComputeTextureExample, init: null })
 ], IoComputeTextureExample.prototype, "applet", void 0);
 IoComputeTextureExample = __decorate([
     Register
 ], IoComputeTextureExample);
 export { IoComputeTextureExample };
-export const ioComputeTextureExample = IoComputeTextureExample.vConstructor;
-//# sourceMappingURL=IoComputeTextureExample.js.map
+export const ioComputeTextureExample = (arg0) => IoComputeTextureExample.vConstructor(arg0);

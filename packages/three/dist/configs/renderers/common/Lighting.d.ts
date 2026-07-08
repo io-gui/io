@@ -1,1 +1,0 @@
-//# sourceMappingURL=Lighting.d.ts.map

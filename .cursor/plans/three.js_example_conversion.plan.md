@@ -16,10 +16,10 @@ Self-contained HTML files with these characteristics:
 Each file contains two classes:
 
 1. **ThreeApplet** - The 3D scene logic
-2. **IoElement** - The UI wrapper extending `IoThreeExample`
+2. **ReactiveElement** - The UI wrapper extending `IoThreeExample`
 
 ```typescript
-import { Register, ReactiveProperty } from '@io-gui/core'
+import { Register, Property } from '@io-gui/core'
 import { ThreeApplet, IoThreeExample } from '@io-gui/three'
 import { PropertyConfig, PropertyGroups } from '@io-gui/editors'
 
@@ -36,14 +36,14 @@ export class XxxExample extends ThreeApplet {
 
 export class IoXxxExample extends IoThreeExample {
 
-  @ReactiveProperty({type: XxxExample, init: null})
+  @Property({type: XxxExample, init: null})
   declare applet: XxxExample
 
   // Optional: Override uiConfig/uiGroups for custom UI
-  @ReactiveProperty({type: Array})
+  @Property({type: Array})
   declare uiConfig: PropertyConfig[]
 
-  @ReactiveProperty({type: Object})
+  @Property({type: Object})
   declare uiGroups: PropertyGroups
 
   init() {
@@ -82,7 +82,7 @@ Pattern:
 - `OrbitControls` (provided by `ViewCameras`)
 - `window.addEventListener('resize', ...)` handlers
 - WebGPU availability checks
-- GUI/Inspector creation → convert to `uiConfig` on IoElement
+- GUI/Inspector creation → convert to `uiConfig` on ReactiveElement
 
 ### 3. Transform
 
@@ -95,7 +95,7 @@ Pattern:
 | `function animate() {}` | `onAnimate(delta: number) {}` |
 | `function onWindowResize() {}` | `onResized(width, height) {}` |
 | `await renderer.init(); renderer.compute(...)` | `async onRendererInitialized(renderer) { await super...; renderer.compute(...) }` |
-| GUI folder/controls | `uiConfig` and `uiGroups` on IoElement |
+| GUI folder/controls | `uiConfig` and `uiGroups` on ReactiveElement |
 
 ### 4. Preserve
 
@@ -114,17 +114,17 @@ If the example requires custom cameras (not just default perspective/ortho views
 
 ### 6. UI Configuration (uiConfig and uiGroups)
 
-UI configuration is defined on the **IoElement**, not the applet:
+UI configuration is defined on the **ReactiveElement**, not the applet:
 
 ```typescript
 export class IoAnimationExample extends IoThreeExample {
-  @ReactiveProperty({type: AnimationExample, init: null})
+  @Property({type: AnimationExample, init: null})
   declare applet: AnimationExample
 
-  @ReactiveProperty({type: Array})
+  @Property({type: Array})
   declare uiConfig: PropertyConfig[]
 
-  @ReactiveProperty({type: Object})
+  @Property({type: Object})
   declare uiGroups: PropertyGroups
 
   init() {
@@ -168,7 +168,7 @@ export class IoAnimationExample extends IoThreeExample {
 - `onResized()` for aspect-ratio dependent updates
 - `onRendererInitialized()` for compute/async operations
 
-7. **Define IoElement class** - Extend `IoThreeExample`, declare typed applet property
+7. **Define ReactiveElement class** - Extend `IoThreeExample`, declare typed applet property
 
 8. **Convert GUI to uiConfig** - If source has GUI, convert to `uiConfig`/`uiGroups` in `init()`
 

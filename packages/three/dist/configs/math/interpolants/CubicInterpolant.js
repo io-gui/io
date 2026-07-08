@@ -10,4 +10,3 @@ registerEditorGroups(CubicInterpolant, {
     Settings: ['settings'],
     Hidden: ['_cachedIndex', 'DefaultSettings_', '_weightPrev', '_offsetPrev', '_weightNext', '_offsetNext'],
 });
-//# sourceMappingURL=CubicInterpolant.js.map

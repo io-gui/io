@@ -1,6 +1,6 @@
-import { IoElement, VDOMElement, IoElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
+import { ReactiveElement, VDOMElement, ReactiveElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
 export type CachingType = 'proactive' | 'reactive' | 'none';
-export type IoSelectorProps = IoElementProps & {
+export type IoSelectorProps = ReactiveElementProps & {
     elements?: VDOMElement[];
     selected?: WithBinding<string>;
     anchor?: WithBinding<string>;
@@ -8,7 +8,7 @@ export type IoSelectorProps = IoElementProps & {
     loading?: WithBinding<boolean>;
     import?: string;
 };
-export declare class IoSelector extends IoElement {
+export declare class IoSelector extends ReactiveElement {
     static get Style(): string;
     elements: VDOMElement[];
     selected: string;
@@ -36,4 +36,3 @@ export declare class IoSelector extends IoElement {
     dispose(): void;
 }
 export declare const ioSelector: (arg0?: IoSelectorProps) => VDOMElement;
-//# sourceMappingURL=IoSelector.d.ts.map

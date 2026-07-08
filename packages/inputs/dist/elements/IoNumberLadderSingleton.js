@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, IoElement, IoOverlaySingleton, ThemeSingleton, span, Property } from '@io-gui/core';
+import { Register, Property, ReactiveElement, IoOverlaySingleton, ThemeSingleton, span, Field } from '@io-gui/core';
 import { ioNumberLadderStep } from './IoNumberLadderStep.js';
 /**
  * Interactive number ladder.
@@ -14,7 +14,7 @@ import { ioNumberLadderStep } from './IoNumberLadderStep.js';
  * Escape key collapses the ladder and restores the focus to previously focused element.
  * If shift key is pressed, value is rounded to the nearest step incement.
  **/
-let IoNumberLadder = class IoNumberLadder extends IoElement {
+let IoNumberLadder = class IoNumberLadder extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -141,7 +141,7 @@ let IoNumberLadder = class IoNumberLadder extends IoElement {
         }
         this.dispatch('expanded', { value: this.expanded }, true);
     }
-    changed() {
+    mutated() {
         const range = this.max - this.min;
         const hiddenItem = span({ class: 'io-number-ladder-empty' });
         // TODO: unhack
@@ -185,18 +185,18 @@ let IoNumberLadder = class IoNumberLadder extends IoElement {
             steps[i].setAttribute('aria-valuemin', String(this.min));
             steps[i].setAttribute('aria-valuemax', String(this.max));
             steps[i].setAttribute('aria-valuenow', String(this.value));
-            steps[i].changed();
+            steps[i].mutated();
         }
     }
 };
 __decorate([
-    ReactiveProperty({ value: undefined, type: IoElement, init: null })
+    Property({ value: undefined, type: ReactiveElement, init: null })
 ], IoNumberLadder.prototype, "src", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+    Property({ value: false, type: Boolean, reflect: true })
 ], IoNumberLadder.prototype, "expanded", void 0);
 __decorate([
-    Property('listbox')
+    Field('listbox')
 ], IoNumberLadder.prototype, "role", void 0);
 IoNumberLadder = __decorate([
     Register
@@ -205,4 +205,3 @@ export const IoNumberLadderSingleton = new IoNumberLadder();
 setTimeout(() => {
     IoOverlaySingleton.appendChild(IoNumberLadderSingleton);
 }, 100);
-//# sourceMappingURL=IoNumberLadderSingleton.js.map

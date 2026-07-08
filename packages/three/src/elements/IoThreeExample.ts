@@ -1,8 +1,8 @@
-import { Register, IoElement, ReactiveProperty } from '@io-gui/core'
+import { Register, ReactiveElement, Property } from '@io-gui/core'
 import { ioThreeViewport } from '@io-gui/three'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
 
-export class IoThreeExample extends IoElement {
+export class IoThreeExample extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host {
@@ -27,7 +27,7 @@ export class IoThreeExample extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: ThreeApplet, init: null})
+  @Property({type: ThreeApplet, init: null})
   declare applet: ThreeApplet
 
   override ready() {
@@ -45,4 +45,4 @@ export class IoThreeExample extends IoElement {
 }
 
 Register(IoThreeExample)
-export const ioThreeExample = IoThreeExample.vConstructor
+export const ioThreeExample = (arg0: any) => IoThreeExample.vConstructor(arg0)

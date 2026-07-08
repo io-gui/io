@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { AmbientLight, ArrayCamera, CylinderGeometry, DirectionalLight, Mesh, MeshPhongMaterial, PerspectiveCamera, PlaneGeometry, Vector4 } from 'three/webgpu';
-import { Register, ReactiveProperty } from '@io-gui/core';
+import { Register, Property } from '@io-gui/core';
 import { ThreeApplet, IoThreeViewport } from '@io-gui/three';
 const AMOUNT = 6;
 let CameraArrayExample = class CameraArrayExample extends ThreeApplet {
@@ -83,11 +83,10 @@ export { CameraArrayExample };
 let IoCameraArrayExample = class IoCameraArrayExample extends IoThreeViewport {
 };
 __decorate([
-    ReactiveProperty({ type: CameraArrayExample, init: { isPlaying: true } })
+    Property({ type: CameraArrayExample, init: { isPlaying: true } })
 ], IoCameraArrayExample.prototype, "applet", void 0);
 IoCameraArrayExample = __decorate([
     Register
 ], IoCameraArrayExample);
 export { IoCameraArrayExample };
-export const ioCameraArrayExample = IoCameraArrayExample.vConstructor;
-//# sourceMappingURL=IoCameraArrayExample.js.map
+export const ioCameraArrayExample = (arg0) => IoCameraArrayExample.vConstructor(arg0);

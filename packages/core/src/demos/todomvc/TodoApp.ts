@@ -1,4 +1,4 @@
-import { IoElement, Register, Storage as $, section, header, h1, div, p, a, span, ReactiveProperty } from '@io-gui/core'
+import { ReactiveElement, Register, Storage as $, section, header, h1, div, p, a, Property } from '@io-gui/core'
 
 import { TodoListModel } from './TodoListModel.js'
 import { todoInput } from './TodoInput.js'
@@ -9,47 +9,31 @@ $.permit()
 const $route = $({key: 'route', storage: 'hash', value: 'all'})
 const $model = $({key: 'model', storage: 'local', value: new TodoListModel({items: []})})
 
-export class TodoApp extends IoElement {
+export class TodoApp extends ReactiveElement {
 
-  @ReactiveProperty($model)
+  @Property($model)
   declare model: TodoListModel
 
-  @ReactiveProperty($route)
+  @Property($route)
   declare route: string
 
   override ready() {
-    this.changed()
-  }
-
-  modelMutated() {
-    this.changed()
-  }
-
-  override changed() {
     this.render([
       section({class: 'todoapp'}, [
         header({class: 'header'}, [
           h1('todos'),
           todoInput({model: this.model}),
         ]),
-        todoList({class: 'todo-list', model: this.model, route: this.route}),
-        this.model.count ? todoFooter({class: 'footer', model: this.model, route: this.bind('route')}) : null,
+        todoList({class: 'todo-list', model: this.model, route: this.bind('route')}),
+        todoFooter({class: 'footer', model: this.model, route: this.bind('route')}),
       ]),
       div({class: 'info'}, [
         p('Double-click to edit a todo'),
-        p([
-          // TODO: implement text and DOM mixed content rendering
-          span('Created with '),
-          a({href: 'https://iogui.dev', target: '_blank'}, 'Io-Gui'),
-        ]),
-        p([
-          // TODO: implement text and DOM mixed content rendering
-          span('Part of '),
-          a({href: 'http://todomvc.com/', target: '_blank'}, 'TodoMVC')
-        ])
+        p(['Created with ', a({href: 'https://iogui.dev', target: '_blank'}, 'Io-Gui')]),
+        p(['Part of ', a({href: 'http://todomvc.com/', target: '_blank'}, 'TodoMVC')])
       ])
     ])
   }
 }
 Register(TodoApp)
-export const todoApp = TodoApp.vConstructor
+export const todoApp = (arg0: any) => TodoApp.vConstructor(arg0)

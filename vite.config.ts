@@ -46,10 +46,14 @@ export const resolveConfig = {
   ],
 }
 
+const DEV_HOST = 'dev.tabanovic.xyz'
+
 export default defineConfig({
   root: '.',
   server: {
+    host: true,
     port: 3000,
+    allowedHosts: [DEV_HOST],
     watch: {
       ignored: ['**/packages/three/src_examples/**'],
     },

@@ -6,10 +6,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 var IoGl_1;
 import { Register } from '../decorators/Register.js';
-import { ReactiveProperty } from '../decorators/Property.js';
-import { ReactiveNode } from '../nodes/ReactiveNode.js';
+import { Property } from '../decorators/Property.js';
+import { ReactiveObject } from '../nodes/ReactiveObject.js';
 import { ThemeSingleton } from '../nodes/Theme.js';
-import { IoElement } from './IoElement.js';
+import { ReactiveElement } from './ReactiveElement.js';
 import { glsl } from './IoGL.glsl.js';
 import { Color } from '../core/Color.js';
 const canvas = document.createElement('canvas');
@@ -50,7 +50,7 @@ function getUniformLocation(program, name) {
     return locations.get(name) ?? null;
 }
 /** WebGL canvas element with shared context and shader program cache. */
-let IoGl = IoGl_1 = class IoGl extends IoElement {
+let IoGl = IoGl_1 = class IoGl extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -72,8 +72,8 @@ let IoGl = IoGl_1 = class IoGl extends IoElement {
       }
     `;
     }
-    // @ReactiveProperty('throttled')
-    // declare reactivity: ReactivityType
+    // @Property('throttled')
+    // declare dispatchTiming: DispatchTiming
     #needsResize = false;
     #canvas;
     // #counter: HTMLSpanElement;
@@ -137,11 +137,11 @@ let IoGl = IoGl_1 = class IoGl extends IoElement {
         let frag = /* glsl */ `
     #extension GL_OES_standard_derivatives : enable
     precision highp float;\n`;
-        this.theme._reactiveProperties.forEach((property, name) => {
+        this.theme._properties.forEach((property, name) => {
             frag += this.initPropertyUniform('io_' + name, property);
         });
         frag += '\n';
-        this._reactiveProperties.forEach((property, prop) => {
+        this._properties.forEach((property, prop) => {
             const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
             frag += this.initPropertyUniform(name, property);
         });
@@ -177,13 +177,13 @@ let IoGl = IoGl_1 = class IoGl extends IoElement {
         // this.appendChild(this.#counter);
         // TODO: improve code clarity
         this.#vecLengths = {};
-        this.theme._reactiveProperties.forEach((property, name) => {
+        this.theme._properties.forEach((property, name) => {
             // TODO: consider making more type agnostic
             if (property.type === Color) {
                 this.#vecLengths['io_' + name] = 4;
             }
         });
-        this._reactiveProperties.forEach((property, name) => {
+        this._properties.forEach((property, name) => {
             const uname = 'u' + name.charAt(0).toUpperCase() + name.slice(1);
             if (property.type === Array && Array.isArray(property.value)) {
                 this.#vecLengths[uname] = property.value.length;
@@ -236,7 +236,7 @@ let IoGl = IoGl_1 = class IoGl extends IoElement {
         this.updateThemeUniforms();
         this.debounce(this.onRender);
     }
-    changed() {
+    mutated() {
         this.debounce(this.onRender);
     }
     onRender() {
@@ -246,7 +246,7 @@ let IoGl = IoGl_1 = class IoGl extends IoElement {
             return;
         this.setShaderProgram();
         // TODO: dont brute-force uniform update.
-        this._reactiveProperties.forEach((property, name) => {
+        this._properties.forEach((property, name) => {
             const uname = 'u' + name.charAt(0).toUpperCase() + name.slice(1);
             this.updatePropertyUniform(uname, property);
         });
@@ -276,7 +276,7 @@ let IoGl = IoGl_1 = class IoGl extends IoElement {
         this.setUniform(name, property.value);
     }
     updateThemeUniforms() {
-        this.theme._reactiveProperties.forEach((property, name) => {
+        this.theme._properties.forEach((property, name) => {
             this.updatePropertyUniform('io_' + name, property);
         });
     }
@@ -354,16 +354,15 @@ let IoGl = IoGl_1 = class IoGl extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: ReactiveNode, value: ThemeSingleton })
+    Property({ type: ReactiveObject, value: ThemeSingleton })
 ], IoGl.prototype, "theme", void 0);
 __decorate([
-    ReactiveProperty({ type: Array, init: [0, 0] })
+    Property({ type: Array, init: [0, 0] })
 ], IoGl.prototype, "size", void 0);
 __decorate([
-    ReactiveProperty({ type: Number, value: 1 })
+    Property({ type: Number, value: 1 })
 ], IoGl.prototype, "pxRatio", void 0);
 IoGl = IoGl_1 = __decorate([
     Register
 ], IoGl);
 export { IoGl };
-//# sourceMappingURL=IoGL.js.map

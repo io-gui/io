@@ -12,9 +12,9 @@ import {
 } from 'three/webgpu'
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'
-import { Register, ReactiveProperty } from '@io-gui/core'
+import { Register, Property } from '@io-gui/core'
 import { ThreeApplet, IoThreeExample, ioThreeViewport, ThreeAppletProps } from '@io-gui/three'
-import { Split, ioSplit } from '@io-gui/layout'
+import { Layout, ioLayout } from '@io-gui/layout'
 
 // 1 micrometer to 100 billion light years in one scene, with 1 unit = 1 meter
 const NEAR = 1e-6
@@ -144,10 +144,10 @@ export class CameraLogarithmicDepthBufferExample extends ThreeApplet {
 @Register
 export class IoCameraLogarithmicDepthBufferExample extends IoThreeExample {
 
-  @ReactiveProperty({type: CameraLogarithmicDepthBufferExample, init: {isPlaying: true}})
+  @Property({type: CameraLogarithmicDepthBufferExample, init: {isPlaying: true}})
   declare applet: CameraLogarithmicDepthBufferExample
 
-  @ReactiveProperty({type: WebGPURenderer, init: {antialias: true, logarithmicDepthBuffer: true}})
+  @Property({type: WebGPURenderer, init: {antialias: true, logarithmicDepthBuffer: true}})
   declare renderer: WebGPURenderer
 
   override ready() {
@@ -156,18 +156,20 @@ export class IoCameraLogarithmicDepthBufferExample extends IoThreeExample {
     void this.renderer.init()
 
     this.render([
-      ioSplit({
+      ioLayout({
         elements: [
           ioThreeViewport({id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene'}),
           ioThreeViewport({id: 'SceneCameraLog', applet: this.applet, cameraSelect: 'scene', renderer: this.renderer}),
         ],
-        split: new Split({
-          type: 'split',
-          orientation: 'vertical',
-          children: [
-            {type: 'panel',flex: '1 1 120px',tabs: [{id: 'SceneCamera'}]},
-            {type: 'panel',flex: '1 1 120px',tabs: [{id: 'SceneCameraLog'}]},
-          ]
+        model: new Layout({
+          child: {
+            type: 'split',
+            orientation: 'vertical',
+            children: [
+              {type: 'panel',size: '120px auto',tabs: [{id: 'SceneCamera'}]},
+              {type: 'panel',size: '120px auto',tabs: [{id: 'SceneCameraLog'}]},
+            ]
+          }
         })
       })
     ])
@@ -181,4 +183,4 @@ export class IoCameraLogarithmicDepthBufferExample extends IoThreeExample {
 
 }
 
-export const ioCameraLogarithmicDepthBufferExample = IoCameraLogarithmicDepthBufferExample.vConstructor
+export const ioCameraLogarithmicDepthBufferExample = (arg0: any) => IoCameraLogarithmicDepthBufferExample.vConstructor(arg0)

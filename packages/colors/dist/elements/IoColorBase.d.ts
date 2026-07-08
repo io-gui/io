@@ -1,5 +1,5 @@
-import { IoElement, IoElementProps, WithBinding, ReactivityType } from '@io-gui/core';
-export type IoColorBaseProps = IoElementProps & {
+import { ReactiveElement, ReactiveElementProps, WithBinding, DispatchTiming } from '@io-gui/core';
+export type IoColorBaseProps = ReactiveElementProps & {
     value?: WithBinding<{
         r: number;
         g: number;
@@ -7,8 +7,8 @@ export type IoColorBaseProps = IoElementProps & {
         a?: number;
     }>;
 };
-export declare class IoColorBase extends IoElement {
-    reactivity: ReactivityType;
+export declare class IoColorBase extends ReactiveElement {
+    dispatchTiming: DispatchTiming;
     value: {
         r: number;
         g: number;
@@ -25,4 +25,3 @@ export declare class IoColorBase extends IoElement {
     valueFromRgb(): void;
     valueChanged(): void;
 }
-//# sourceMappingURL=IoColorBase.d.ts.map

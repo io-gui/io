@@ -4,11 +4,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { ReactiveProperty, Register } from '@io-gui/core';
+import { Property, Register } from '@io-gui/core';
 import { AnimationAction, AnimationMixer, Color, DirectionalLight, Fog, Group, HemisphereLight, Mesh, MeshPhongMaterial, PerspectiveCamera, PlaneGeometry, } from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
-import { ioSplit, Split } from '@io-gui/layout';
+import { ioLayout, Layout } from '@io-gui/layout';
 import { ioObject, ioPropertyEditor } from '@io-gui/editors';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { ioButton } from '@io-gui/inputs';
@@ -168,13 +168,13 @@ let AnimationSkinningBlendingExample = class AnimationSkinningBlendingExample ex
     }
 };
 __decorate([
-    ReactiveProperty({ type: Boolean, value: false })
+    Property({ type: Boolean, value: false })
 ], AnimationSkinningBlendingExample.prototype, "isActive", void 0);
 __decorate([
-    ReactiveProperty({ type: Boolean, value: false })
+    Property({ type: Boolean, value: false })
 ], AnimationSkinningBlendingExample.prototype, "isPlaying", void 0);
 __decorate([
-    ReactiveProperty({ type: Boolean, value: false })
+    Property({ type: Boolean, value: false })
 ], AnimationSkinningBlendingExample.prototype, "isCrossfading", void 0);
 AnimationSkinningBlendingExample = __decorate([
     Register
@@ -183,7 +183,7 @@ export { AnimationSkinningBlendingExample };
 let IoAnimationSkinningBlendingExample = class IoAnimationSkinningBlendingExample extends IoThreeExample {
     ready() {
         this.render([
-            ioSplit({
+            ioLayout({
                 elements: [
                     ioThreeViewport({ id: 'Top', applet: this.applet, cameraSelect: 'top' }),
                     ioThreeViewport({ id: 'Left', applet: this.applet, cameraSelect: 'left' }),
@@ -219,52 +219,52 @@ let IoAnimationSkinningBlendingExample = class IoAnimationSkinningBlendingExampl
                         }
                     })
                 ],
-                split: new Split({
-                    type: 'split',
-                    orientation: 'horizontal',
-                    children: [
-                        {
-                            type: 'split',
-                            flex: '2 1 auto',
-                            orientation: 'vertical',
-                            children: [
-                                {
-                                    type: 'split',
-                                    flex: '1 1 50%',
-                                    orientation: 'horizontal',
-                                    children: [
-                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Top' }] },
-                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Left' }] }
-                                    ]
-                                },
-                                {
-                                    type: 'split',
-                                    flex: '1 1 50%',
-                                    orientation: 'horizontal',
-                                    children: [
-                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Back' }] },
-                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'SceneCamera' }] },
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            type: 'panel',
-                            flex: '0 0 280px',
-                            tabs: [{ id: 'PropertyEditor' }]
-                        }
-                    ]
+                model: new Layout({
+                    child: {
+                        type: 'split',
+                        orientation: 'horizontal',
+                        children: [
+                            {
+                                type: 'split',
+                                orientation: 'vertical',
+                                children: [
+                                    {
+                                        type: 'split',
+                                        size: '50%',
+                                        orientation: 'horizontal',
+                                        children: [
+                                            { type: 'panel', size: '50%', tabs: [{ id: 'Top' }] },
+                                            { type: 'panel', size: '50%', tabs: [{ id: 'Left' }] }
+                                        ]
+                                    },
+                                    {
+                                        type: 'split',
+                                        size: '50%',
+                                        orientation: 'horizontal',
+                                        children: [
+                                            { type: 'panel', size: '50%', tabs: [{ id: 'Back' }] },
+                                            { type: 'panel', size: '50%', tabs: [{ id: 'SceneCamera' }] },
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                type: 'panel',
+                                size: '280px',
+                                tabs: [{ id: 'PropertyEditor' }]
+                            }
+                        ]
+                    }
                 })
             })
         ]);
     }
 };
 __decorate([
-    ReactiveProperty({ type: AnimationSkinningBlendingExample, init: { isPlaying: true } })
+    Property({ type: AnimationSkinningBlendingExample, init: { isPlaying: true } })
 ], IoAnimationSkinningBlendingExample.prototype, "applet", void 0);
 IoAnimationSkinningBlendingExample = __decorate([
     Register
 ], IoAnimationSkinningBlendingExample);
 export { IoAnimationSkinningBlendingExample };
-export const ioAnimationSkinningBlendingExample = IoAnimationSkinningBlendingExample.vConstructor;
-//# sourceMappingURL=IoAnimationSkinningBlendingExample.js.map
+export const ioAnimationSkinningBlendingExample = (arg0) => IoAnimationSkinningBlendingExample.vConstructor(arg0);

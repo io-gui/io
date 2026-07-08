@@ -14,4 +14,3 @@ registerEditorConfig(LatheGeometry, [
 registerEditorGroups(LatheGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=LatheGeometry.js.map

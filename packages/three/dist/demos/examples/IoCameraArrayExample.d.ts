@@ -11,5 +11,4 @@ export declare class CameraArrayExample extends ThreeApplet {
 export declare class IoCameraArrayExample extends IoThreeViewport {
     applet: CameraArrayExample;
 }
-export declare const ioCameraArrayExample: (arg0?: import("@io-gui/core").IoElementProps | Array<import("@io-gui/core").VDOMElement | null> | string, arg1?: Array<import("@io-gui/core").VDOMElement | null> | string) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoCameraArrayExample.d.ts.map
+export declare const ioCameraArrayExample: (arg0: any) => import("@io-gui/core").VDOMElement;

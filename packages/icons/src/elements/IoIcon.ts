@@ -1,7 +1,7 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps } from '@io-gui/core'
+import { Register, Property, ReactiveElement, ReactiveElementProps } from '@io-gui/core'
 import { IconsetSingleton } from '../nodes/Iconset.js'
 
-export type IoIconProps = IoElementProps & {
+export type IoIconProps = ReactiveElementProps & {
   value: string
   stroke?: boolean
   size?: 'small' | 'medium' | 'large'
@@ -13,7 +13,7 @@ export type IoIconProps = IoElementProps & {
  * Custom SVG assets need to be registered with `IconsetSingleton`.
  **/
 @Register
-export class IoIcon extends IoElement {
+export class IoIcon extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host {
@@ -50,13 +50,13 @@ export class IoIcon extends IoElement {
       }
     `
   }
-  @ReactiveProperty({value: '', type: String, reflect: true})
+  @Property({value: '', type: String, reflect: true})
   declare value: string
 
-  @ReactiveProperty({value: false, type: Boolean, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare stroke: boolean
 
-  @ReactiveProperty({value: 'small', type: String, reflect: true})
+  @Property({value: 'small', type: String, reflect: true})
   declare size: 'small' | 'medium' | 'large'
 
   constructor(args: IoIconProps) { super(args) }

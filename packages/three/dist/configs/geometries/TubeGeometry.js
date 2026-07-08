@@ -16,4 +16,3 @@ registerEditorConfig(TubeGeometry, [
 registerEditorGroups(TubeGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=TubeGeometry.js.map

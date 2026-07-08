@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, Property, WithBinding, nudge, ListenerDefinitions } from '@io-gui/core'
+import { Register, Property, ReactiveElement, ReactiveElementProps, Field, WithBinding, nudge, ListenerDefinitions } from '@io-gui/core'
 import { IoColorPanelSingleton as Panel } from './IoColorPanelSingleton.js'
 import { ioColorSwatch } from './IoColorSwatch.js'
 
@@ -6,12 +6,12 @@ import { ioColorSwatch } from './IoColorSwatch.js'
 // TODO: collapse picker on blur.
 // TODO: fix focus keybord navigation.
 
-export type IoColorPickerProps = IoElementProps &{
+export type IoColorPickerProps = ReactiveElementProps &{
   value: WithBinding<{ r: number; g: number; b: number; a?: number }>
 }
 
 @Register
-export class IoColorPicker extends IoElement {
+export class IoColorPicker extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host {
@@ -32,7 +32,7 @@ export class IoColorPicker extends IoElement {
     `
   }
 
-  @ReactiveProperty({value: {r: 1, g: 1, b: 1, a: 1}})
+  @Property({value: {r: 1, g: 1, b: 1, a: 1}})
   declare value: {r: number; g: number; b: number; a?: number}
 
   static override get Listeners(): ListenerDefinitions {
@@ -42,7 +42,7 @@ export class IoColorPicker extends IoElement {
     }
   }
 
-  @Property(0)
+  @Field(0)
   declare tabIndex: number
 
   get expanded() {

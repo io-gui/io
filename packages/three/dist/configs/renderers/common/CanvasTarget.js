@@ -22,4 +22,3 @@ registerEditorGroups(CanvasTarget, {
         '_scissorTest',
     ],
 });
-//# sourceMappingURL=CanvasTarget.js.map

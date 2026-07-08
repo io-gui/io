@@ -4,4 +4,3 @@ registerEditorGroups(Mesh, {
     Rendering: ['count'],
     Morphing: ['morphTargetInfluences', 'morphTargetDictionary'],
 });
-//# sourceMappingURL=Mesh.js.map

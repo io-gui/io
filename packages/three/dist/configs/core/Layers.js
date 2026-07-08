@@ -10,4 +10,3 @@ registerEditorGroups(Layers, {
 registerEditorConfig(Object, [
     [Layers, ioObject()],
 ]);
-//# sourceMappingURL=Layers.js.map

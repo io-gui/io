@@ -28,7 +28,7 @@ describe('IoNumberLadder.test', () => {
   })
   it('should set innerText to match value with custom step settings', () => {
     element.step = 0.2
-    ladder.changed()
+    ladder.mutated()
     expect($('.io-up1').value).toBe(2)
     expect($('.io-up1').textContent).toBe('2')
     expect($('.io-up2').textContent).toBe('20')
@@ -40,41 +40,41 @@ describe('IoNumberLadder.test', () => {
     expect($('.io-down3')).toBe(null)
     expect($('.io-down4')).toBe(null)
     element.step = 0.02
-    ladder.changed()
+    ladder.mutated()
     expect($('.io-down1').textContent).toBe('0.2')
     expect($('.io-down2').textContent).toBe('0.02')
     expect($('.io-down3')).toBe(null)
     element.step = 0.0001
-    ladder.changed()
+    ladder.mutated()
   })
   it('should set innerText to match value with custom min/max settings', () => {
     element.min = 0
     element.max = 100
-    ladder.changed()
+    ladder.mutated()
     expect($('.io-up1').value).toBe(1)
     expect($('.io-up1').innerText).toBe('1')
     expect($('.io-up2').innerText).toBe('10')
     expect($('.io-up3').innerText).toBe('100')
     expect($('.io-up4')).toBe(null)
     element.max = 1000
-    ladder.changed()
+    ladder.mutated()
     expect($('.io-up4').innerText).toBe('1000')
     element.min = -Infinity
     element.max = Infinity
-    ladder.changed()
+    ladder.mutated()
   })
   it('should set innerText to match value with conversion factor', () => {
     element.conversion = 20
-    ladder.changed()
+    ladder.mutated()
     expect($('.io-up2').value).toBe(10)
     expect($('.io-up2').innerText).toBe('200')
     element.step = 0.2
-    ladder.changed()
+    ladder.mutated()
     expect($('.io-up2').value).toBe(20)
     expect($('.io-up2').innerText).toBe('400')
     element.conversion = 1
     element.step = 0.0001
-    ladder.changed()
+    ladder.mutated()
   })
   it('steps have tabIndex attribute', () => {
     expect($('.io-up1').getAttribute('tabIndex')).toBe('0')
@@ -88,21 +88,21 @@ describe('IoNumberLadder.test', () => {
     expect($('.io-up1').getAttribute('aria-label')).toBe('1')
     expect($('.io-up1').getAttribute('aria-valuestep')).toBe('1')
     element.step = 0.5
-    ladder.changed()
+    ladder.mutated()
     expect($('.io-up1').getAttribute('aria-label')).toBe('5')
     element.value = 0
     element.step = 0.0001
-    ladder.changed()
+    ladder.mutated()
     expect(ladder.getAttribute('aria-invalid')).toBe(null)
     element.value = NaN
-    ladder.changed()
+    ladder.mutated()
     expect(ladder.getAttribute('aria-invalid')).toBe('true')
     element.value = 12
-    ladder.changed()
+    ladder.mutated()
     element.min = 0
     element.max = 24
     element.step = 2
-    ladder.changed()
+    ladder.mutated()
     expect(ladder.getAttribute('aria-valuenow')).toBe('12')
     expect(ladder.getAttribute('aria-valuemin')).toBe('0')
     expect(ladder.getAttribute('aria-valuemax')).toBe('24')
@@ -110,6 +110,6 @@ describe('IoNumberLadder.test', () => {
     element.min = -Infinity
     element.max = Infinity
     element.step = 0.0001
-    ladder.changed()
+    ladder.mutated()
   })
 })

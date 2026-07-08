@@ -1,6 +1,6 @@
-import { IoElement, IoElementProps, WithBinding } from '@io-gui/core';
+import { ReactiveElement, ReactiveElementProps, WithBinding } from '@io-gui/core';
 import { IoNumber } from './IoNumber.js';
-export type IoNumberLadderProps = IoElementProps & {
+export type IoNumberLadderProps = ReactiveElementProps & {
     src?: IoNumber;
     expanded?: WithBinding<boolean>;
 };
@@ -12,7 +12,7 @@ export type IoNumberLadderProps = IoElementProps & {
  * Escape key collapses the ladder and restores the focus to previously focused element.
  * If shift key is pressed, value is rounded to the nearest step incement.
  **/
-declare class IoNumberLadder extends IoElement {
+declare class IoNumberLadder extends ReactiveElement {
     static get Style(): string;
     src?: IoNumber;
     expanded: boolean;
@@ -32,8 +32,7 @@ declare class IoNumberLadder extends IoElement {
     _onLadderStepChange(event: CustomEvent): void;
     onLadderStepCollapse(): void;
     expandedChanged(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const IoNumberLadderSingleton: IoNumberLadder;
 export {};
-//# sourceMappingURL=IoNumberLadderSingleton.d.ts.map

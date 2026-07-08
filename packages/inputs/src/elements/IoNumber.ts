@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, WithBinding, Property } from '@io-gui/core'
+import { Register, Property, WithBinding, Field } from '@io-gui/core'
 import { IoNumberLadderSingleton } from './IoNumberLadderSingleton.js'
 import { IoField, IoFieldProps } from './IoField.js'
 
@@ -39,41 +39,41 @@ export class IoNumber extends IoField {
     `
   }
 
-  @ReactiveProperty({value: 0, type: Number})
+  @Property({value: 0, type: Number})
   declare value: number
 
-  @ReactiveProperty({value: false, type: Boolean})
+  @Property({value: false, type: Boolean})
   declare live: boolean
 
-  @ReactiveProperty({value: 1, type: Number})
+  @Property({value: 1, type: Number})
   declare conversion: number
 
-  @ReactiveProperty({value: 0.0001, type: Number})
+  @Property({value: 0.0001, type: Number})
   declare step: number
 
-  @ReactiveProperty({value: -Infinity, type: Number})
+  @Property({value: -Infinity, type: Number})
   declare min: number
 
-  @ReactiveProperty({value: Infinity, type: Number})
+  @Property({value: Infinity, type: Number})
   declare max: number
 
-  @ReactiveProperty({value: false, type: Boolean})
+  @Property({value: false, type: Boolean})
   declare ladder: boolean
 
-  @ReactiveProperty({value: 'inset', type: String, reflect: true})
+  @Property({value: 'inset', type: String, reflect: true})
   declare appearance: 'neutral' | 'inset' | 'outset'
 
-  @Property('true')
+  @Field('true')
   declare contentEditable: string
 
-  @ReactiveProperty({value: 'pattern="-?[0-9]*?[0-9]*"', type: String, reflect: true})
+  @Property({value: 'pattern="-?[0-9]*?[0-9]*"', type: String, reflect: true})
   declare pattern: string
 
   // TODO: 'decimal' mode on iOS does not display minus and decimal point
-  @Property('text')
+  @Field('text')
   declare inputMode: string
 
-  @Property('textbox')
+  @Field('textbox')
   declare role: string
 
   constructor(args: IoNumberProps = {}) { super(args) }
@@ -220,21 +220,21 @@ export class IoNumber extends IoField {
     const d = Math.max(0, Math.min(100, -Math.floor(Math.log(this.step) / Math.LN10)))
     valueNumber = Number(valueNumber.toFixed(d))
     if (!isNaN(valueNumber)) {
-      this._reactiveProperties.get('invalid')!.value = false
+      this._properties.get('invalid')!.value = false
       this.removeAttribute('invalid')
       this.removeAttribute('aria-invalid')
       this.inputValue(valueNumber)
     } else {
-      this._reactiveProperties.get('invalid')!.value = true
+      this._properties.get('invalid')!.value = true
       this.setAttribute('invalid', 'true')
       this.setAttribute('aria-invalid', 'true')
     }
   }
   override ready() {
     this.disabledChanged()
-    this.changed()
+    this.mutated()
   }
-  override changed() {
+  override mutated() {
     this.setAttribute('aria-valuenow', this.value)
     this.setAttribute('aria-valuemin', this.min)
     this.setAttribute('aria-valuemax', this.max)

@@ -1,4 +1,4 @@
-import { AnyConstructor, ReactiveNode, IoElement } from '@io-gui/core'
+import { AnyConstructor, ReactiveObject, ReactiveElement } from '@io-gui/core'
 
 export const SKIPPED_PROPERTIES = [
   '$',
@@ -49,7 +49,7 @@ export type PropertyGroups = Record<string, Array<PropertyIdentifier>>
 export type PropertyGroupsRecord = Record<string, Array<string>>
 export type EditorGroups = Map<AnyConstructor, PropertyGroups>
 
-const editorGroupsSingleton: EditorGroups = new Map<AnyConstructor, PropertyGroups>([
+const GROUPS: EditorGroups = new Map<AnyConstructor, PropertyGroups>([
   [Object, {
     Hidden: [
       'constructor','hasOwnProperty','isPrototypeOf','propertyIsEnumerable','toString','valueOf','toLocaleString',
@@ -95,18 +95,18 @@ const editorGroupsSingleton: EditorGroups = new Map<AnyConstructor, PropertyGrou
     ],
     Hidden: [],
   }],
-  [ReactiveNode, {
+  [ReactiveObject, {
     Hidden: [
-      'reactivity',
-      '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_parents',
-      '_protochain', '_disposed', '_isNode', '_isIoElement',
+      'dispatchTiming',
+      '_changeQueue', '_properties', '_bindings', '_eventDispatcher', '_parents',
+      '_protochain', '_disposed', '_isReactiveObject', '_isReactiveElement',
     ],
   }],
-  [IoElement, {
+  [ReactiveElement, {
     Hidden: [
-      'reactivity',
-      '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_parents',
-      '_protochain', '_disposed', '_isNode', '_isIoElement',
+      'dispatchTiming',
+      '_changeQueue', '_properties', '_bindings', '_eventDispatcher', '_parents',
+      '_protochain', '_disposed', '_isReactiveObject', '_isReactiveElement',
     ],
   }],
 ])
@@ -173,7 +173,7 @@ export function getEditorGroups(object: object, propertyGroups: PropertyGroups):
     }
   }
 
-  aggregateGroups(editorGroupsSingleton)
+  aggregateGroups(GROUPS)
   aggregateGroups(new Map([[Object, propertyGroups]]))
 
   const allGroupedNonRegexPropertyNames: string[] = []
@@ -242,7 +242,7 @@ export function getEditorGroups(object: object, propertyGroups: PropertyGroups):
         if (g !== g2) {
           for (const key of groupsRecord[g]) {
             if (groupsRecord[g2].includes(key)) {
-              console.warn(`Property "${key}" belongs to multiple groups: "${g}" and "${g2}". Removing from "${g}".`)
+              console.warn(`Field "${key}" belongs to multiple groups: "${g}" and "${g2}". Removing from "${g}".`)
             }
           }
         }
@@ -254,10 +254,10 @@ export function getEditorGroups(object: object, propertyGroups: PropertyGroups):
 }
 
 export function registerEditorGroups(constructor: AnyConstructor, groups: PropertyGroups) {
-  const existingGroups = editorGroupsSingleton.get(constructor) || {}
+  const existingGroups = GROUPS.get(constructor) || {}
   for (const group in groups) {
     existingGroups[group] = existingGroups[group] || []
     existingGroups[group].push(...groups[group])
   }
-  editorGroupsSingleton.set(constructor, existingGroups)
+  GROUPS.set(constructor, existingGroups)
 }

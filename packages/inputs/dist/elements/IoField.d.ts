@@ -1,5 +1,5 @@
-import { IoElement, IoElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
-export type IoFieldProps = IoElementProps & {
+import { ReactiveElement, ReactiveElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
+export type IoFieldProps = ReactiveElementProps & {
     value?: WithBinding<unknown>;
     icon?: WithBinding<string>;
     label?: WithBinding<string>;
@@ -8,7 +8,7 @@ export type IoFieldProps = IoElementProps & {
     appearance?: 'neutral' | 'inset' | 'outset';
     pattern?: string;
 };
-export declare class IoField extends IoElement {
+export declare class IoField extends ReactiveElement {
     static get Style(): string;
     value: unknown;
     icon: string;
@@ -16,6 +16,7 @@ export declare class IoField extends IoElement {
     selected: boolean;
     invalid: boolean;
     disabled: boolean;
+    hidden: boolean;
     pressed: boolean;
     appearance: 'neutral' | 'inset' | 'outset';
     pattern: string;
@@ -23,6 +24,7 @@ export declare class IoField extends IoElement {
     tabIndex: number;
     static get Listeners(): ListenerDefinitions;
     constructor(args?: IoFieldProps);
+    onContextMenu(event: MouseEvent): void;
     onFocus(event: FocusEvent): void;
     onBlur(event: FocusEvent): void;
     onPointerdown(event: PointerEvent): void;
@@ -44,7 +46,6 @@ export declare class IoField extends IoElement {
     selectedChanged(): void;
     invalidChanged(): void;
     disabledChanged(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioField: (arg0: IoFieldProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoField.d.ts.map

@@ -4,10 +4,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, IoOverlaySingleton as Overlay } from '@io-gui/core';
-import { IoMenuOptions } from './IoMenuOptions.js';
-import { onOverlayPointerdown, onOverlayPointermove, onOverlayPointeup } from './IoMenuItem.js';
-import { MenuOption } from '../nodes/MenuOption.js';
+import { Register, ReactiveElement, Property, IoOverlaySingleton as Overlay } from '@io-gui/core';
+import { IoMenu } from './IoMenu.js';
+import { onOverlayPointerdown, onOverlayPointermove, onOverlayPointeup } from './IoOption.js';
+import { Menu } from '../models/Menu.js';
 /**
  * An invisible element that inserts a floating menu when its `parentElement` is clicked.
  * Menu position is set by the pointer by default but it can be configured to expand to the side of the parent element
@@ -15,30 +15,30 @@ import { MenuOption } from '../nodes/MenuOption.js';
  * but it can be configured for other buttons. You can have multiple `IoContextMenu` instances under the same
  * `parentElement` as long as the `button` properties are different.
  **/
-let IoContextMenu = class IoContextMenu extends IoElement {
-    static get ReactiveProperties() {
+let IoContextMenu = class IoContextMenu extends ReactiveElement {
+    static get Properties() {
         return {
-            $options: null,
+            $menu: null,
         };
     }
     constructor(args) {
         super(args);
-        this.$options = new IoMenuOptions({
+        this.$menu = new IoMenu({
             expanded: this.bind('expanded'),
-            option: this.option,
+            model: this.model,
             $parent: this,
         });
     }
     init() {
         this.collapse = this.collapse.bind(this);
     }
-    optionChanged() {
-        if (this.$options)
-            this.$options.option = this.option;
+    modelChanged() {
+        if (this.$menu)
+            this.$menu.model = this.model;
     }
     connectedCallback() {
         super.connectedCallback();
-        Overlay.appendChild(this.$options);
+        Overlay.appendChild(this.$menu);
         this._listenerParent = this.parentElement;
         this._listenerParent.addEventListener('pointerdown', this.onPointerdown);
         this._listenerParent.addEventListener('click', this.onClick);
@@ -48,7 +48,7 @@ let IoContextMenu = class IoContextMenu extends IoElement {
         super.disconnectedCallback();
         this.releasePointerListeners();
         clearTimeout(this._contextTimeout);
-        Overlay.removeChild(this.$options);
+        Overlay.removeChild(this.$menu);
         if (this._listenerParent) {
             this._listenerParent.removeEventListener('pointerdown', this.onPointerdown);
             this._listenerParent.removeEventListener('click', this.onClick);
@@ -73,8 +73,8 @@ let IoContextMenu = class IoContextMenu extends IoElement {
     }
     onPointerdown(event) {
         event.stopPropagation();
-        this.$options.style.left = `${event.clientX}px`;
-        this.$options.style.top = `${event.clientY}px`;
+        this.$menu.style.left = `${event.clientX}px`;
+        this.$menu.style.top = `${event.clientY}px`;
         const parent = this._listenerParent;
         parent.addEventListener('pointermove', this.onPointermove);
         parent.addEventListener('pointerleave', this.onPointerleave);
@@ -123,13 +123,13 @@ let IoContextMenu = class IoContextMenu extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: MenuOption })
-], IoContextMenu.prototype, "option", void 0);
+    Property({ type: Menu })
+], IoContextMenu.prototype, "model", void 0);
 __decorate([
-    ReactiveProperty({ value: false, reflect: true })
+    Property({ value: false, reflect: true })
 ], IoContextMenu.prototype, "expanded", void 0);
 __decorate([
-    ReactiveProperty(0)
+    Property(0)
 ], IoContextMenu.prototype, "button", void 0);
 IoContextMenu = __decorate([
     Register
@@ -138,4 +138,3 @@ export { IoContextMenu };
 export const ioContextMenu = function (arg0) {
     return IoContextMenu.vConstructor(arg0);
 };
-//# sourceMappingURL=IoContextMenu.js.map

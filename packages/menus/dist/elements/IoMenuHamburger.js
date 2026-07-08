@@ -4,10 +4,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { ReactiveProperty, Register } from '@io-gui/core';
+import { Property, Register } from '@io-gui/core';
 import { ioIcon } from '@io-gui/icons';
-import { IoMenuItem } from './IoMenuItem.js';
-let IoMenuHamburger = class IoMenuHamburger extends IoMenuItem {
+import { IoOption } from './IoOption.js';
+let IoMenuHamburger = class IoMenuHamburger extends IoOption {
     static get Style() {
         return /* css */ `
       :host {
@@ -20,16 +20,15 @@ let IoMenuHamburger = class IoMenuHamburger extends IoMenuItem {
       }
     `;
     }
-    changed() {
+    mutated() {
         this.render([ioIcon({ value: 'io:hamburger' })]);
     }
 };
 __decorate([
-    ReactiveProperty({ value: 'down', reflect: true })
+    Property({ value: 'down', reflect: true })
 ], IoMenuHamburger.prototype, "direction", void 0);
 IoMenuHamburger = __decorate([
     Register
 ], IoMenuHamburger);
 export { IoMenuHamburger };
-export const ioMenuHamburger = IoMenuHamburger.vConstructor;
-//# sourceMappingURL=IoMenuHamburger.js.map
+export const ioMenuHamburger = (arg0) => IoMenuHamburger.vConstructor(arg0);

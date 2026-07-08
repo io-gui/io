@@ -1,8 +1,8 @@
 //@ts-nocheck
-import { Register, IoElement, div } from '@io-gui/core'
+import { Register, ReactiveElement, div } from '@io-gui/core'
 import { ioSlider, ioSliderRange, ioSlider2d, ioNumberSlider, ioNumberSliderRange } from '@io-gui/sliders'
 
-export class IoSlidersDemo extends IoElement {
+export class IoSlidersDemo extends ReactiveElement {
   static get Style() {
     return /* css */`
       :host {
@@ -29,7 +29,7 @@ export class IoSlidersDemo extends IoElement {
       }
     `
   }
-  static get ReactiveProperties() {
+  static get Properties() {
     return {
       number: 1,
       array2: [0, 1],
@@ -75,4 +75,4 @@ export class IoSlidersDemo extends IoElement {
 
 Register(IoSlidersDemo)
 
-export const ioSlidersDemo = IoSlidersDemo.vConstructor
+export const ioSlidersDemo = (arg0: any) => IoSlidersDemo.vConstructor(arg0)

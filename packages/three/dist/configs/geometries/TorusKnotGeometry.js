@@ -16,4 +16,3 @@ registerEditorConfig(TorusKnotGeometry, [
 registerEditorGroups(TorusKnotGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=TorusKnotGeometry.js.map

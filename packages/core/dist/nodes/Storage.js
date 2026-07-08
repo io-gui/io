@@ -4,10 +4,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { ReactiveProperty } from '../decorators/Property.js';
+import { Property } from '../decorators/Property.js';
 import { Register } from '../decorators/Register.js';
-import { isIoValue } from '../core/ReactiveCore.js';
-import { ReactiveNode, constructType } from '../nodes/ReactiveNode.js';
+import { isReactiveNode } from '../core/ReactiveCore.js';
+import { ReactiveObject, constructType } from '../nodes/ReactiveObject.js';
 class EmulatedLocalStorage {
     constructor() {
         Object.defineProperty(this, 'store', { value: new Map() });
@@ -97,6 +97,64 @@ const nodes = {
     none: new Map(),
 };
 let hashValues = {};
+// Suppresses hash write-back while values are being applied from the hash.
+let applyingHash = false;
+// First hash write of a turn pushes a history entry; later writes replace it,
+// so a burst of changes stays one navigation step. Reset on next microtask.
+let historyEntryPushedThisTurn = false;
+let turnResetScheduled = false;
+function scheduleHistoryTurnReset() {
+    if (turnResetScheduled)
+        return;
+    turnResetScheduled = true;
+    queueMicrotask(() => {
+        historyEntryPushedThisTurn = false;
+        turnResetScheduled = false;
+    });
+}
+function serializeHashValues(values) {
+    let hashString = '';
+    for (const h in values) {
+        hashString += h + '=' + values[h] + '&';
+    }
+    if (hashString)
+        hashString = hashString.slice(0, -1);
+    return hashString;
+}
+function hashValuesEqual(a, b) {
+    const aKeys = Object.keys(a);
+    const bKeys = Object.keys(b);
+    if (aKeys.length !== bKeys.length)
+        return false;
+    for (const key of aKeys) {
+        if (a[key] !== b[key])
+            return false;
+    }
+    return true;
+}
+/** Writes {@link hashValues} to the location hash, coalescing a turn's writes
+ * into a single history entry. No-ops while applying from the hash or when unchanged. */
+function commitHashValues() {
+    if (applyingHash)
+        return;
+    if (hashValuesEqual(hashValues, parseHash(self.location.hash)))
+        return;
+    const base = self.location.pathname + self.location.search;
+    const hashString = serializeHashValues(hashValues);
+    if (!hashString) {
+        history.replaceState(history.state, '', base);
+        return;
+    }
+    const url = base + '#' + hashString;
+    if (historyEntryPushedThisTurn) {
+        history.replaceState(history.state, '', url);
+    }
+    else {
+        history.pushState(history.state, '', url);
+        historyEntryPushedThisTurn = true;
+        scheduleHistoryTurnReset();
+    }
+}
 /**
  * Persistent reactive value backed by localStorage or location hash.
  *
@@ -111,7 +169,7 @@ let hashValues = {};
  *
  * @example Storage({ key: 'theme', value: 'light', storage: 'local' })
  */
-let StorageNode = class StorageNode extends ReactiveNode {
+let StorageNode = class StorageNode extends ReactiveObject {
     constructor(props) {
         debug: {
             if (typeof props !== 'object') {
@@ -153,7 +211,7 @@ let StorageNode = class StorageNode extends ReactiveNode {
             if (storedValue !== null) {
                 try {
                     const parsed = JSON.parse(storedValue);
-                    if (isIoValue(props.value)) {
+                    if (isReactiveNode(props.value)) {
                         props.value.applyJSON(parsed);
                     }
                     else {
@@ -195,9 +253,9 @@ let StorageNode = class StorageNode extends ReactiveNode {
         nodes[s].delete(this.key);
     }
     valueMutated() {
-        this.debounce(this.changed, undefined, 1);
+        this.debounce(this.mutated, undefined, 1);
     }
-    changed() {
+    mutated() {
         switch (this.storage) {
             case 'hash': {
                 this.saveValueToHash();
@@ -230,17 +288,7 @@ let StorageNode = class StorageNode extends ReactiveNode {
     removeValueToHash() {
         hashValues = parseHash(self.location.hash);
         delete hashValues[this.key];
-        let hashString = '';
-        for (const h in hashValues) {
-            hashString += h + '=' + hashValues[h] + '&';
-        }
-        if (hashString) {
-            hashString = hashString.slice(0, -1);
-            self.location.hash = hashString;
-        }
-        else {
-            history.replaceState('', document.title, self.location.pathname + self.location.search);
-        }
+        commitHashValues();
     }
     saveValueToHash() {
         hashValues = parseHash(self.location.hash);
@@ -269,27 +317,17 @@ let StorageNode = class StorageNode extends ReactiveNode {
                 }
             }
         }
-        let hashString = '';
-        for (const h in hashValues) {
-            hashString += h + '=' + hashValues[h] + '&';
-        }
-        if (hashString) {
-            hashString = hashString.slice(0, -1);
-            self.location.hash = hashString;
-        }
-        else {
-            history.replaceState('', document.title, self.location.pathname + self.location.search);
-        }
+        commitHashValues();
     }
 };
 __decorate([
-    ReactiveProperty({ value: '', type: String })
+    Property({ value: '', type: String })
 ], StorageNode.prototype, "key", void 0);
 __decorate([
-    ReactiveProperty()
+    Property()
 ], StorageNode.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty({ value: 'local', type: String })
+    Property({ value: 'local', type: String })
 ], StorageNode.prototype, "storage", void 0);
 StorageNode = __decorate([
     Register
@@ -322,24 +360,29 @@ function getValueFromHash(key) {
     return hashValues[key] || null;
 }
 function updateAllFromHash() {
-    hashValues = parseHash(self.location.hash);
-    for (const h in hashValues) {
-        if (nodes.hash.has(h)) {
-            const node = nodes.hash.get(h);
-            try {
-                node.value = JSON.parse(hashValues[h]);
+    applyingHash = true;
+    try {
+        hashValues = parseHash(self.location.hash);
+        for (const h in hashValues) {
+            if (nodes.hash.has(h)) {
+                const node = nodes.hash.get(h);
+                try {
+                    node.value = JSON.parse(hashValues[h]);
+                }
+                catch {
+                    node.value = hashValues[h];
+                }
             }
-            catch {
-                node.value = hashValues[h];
+        }
+        for (const [key, node] of nodes.hash.entries()) {
+            if (hashValues[key] === undefined) {
+                node.value = node.default;
             }
         }
     }
-    for (const [key, node] of nodes.hash.entries()) {
-        if (hashValues[key] === undefined) {
-            node.value = node.default;
-        }
+    finally {
+        applyingHash = false;
     }
 }
 self.addEventListener('hashchange', updateAllFromHash, false);
 updateAllFromHash();
-//# sourceMappingURL=Storage.js.map

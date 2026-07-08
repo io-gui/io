@@ -1,8 +1,8 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, div, Property } from '@io-gui/core'
+import { Register, ReactiveElement, Property, ReactiveElementProps, WithBinding, div, Field } from '@io-gui/core'
 import { ioButton, ioString } from '@io-gui/inputs'
 import { ioPropertyLink } from './IoPropertyLink.js'
 
-export type IoBreadcrumbsProps = IoElementProps & {
+export type IoBreadcrumbsProps = ReactiveElementProps & {
   value?: object
   selected?: WithBinding<object>
   search?: WithBinding<string>
@@ -14,7 +14,7 @@ export type IoBreadcrumbsProps = IoElementProps & {
  * Optionally, it can trim the `options` array to selected option index.
  **/
 @Register
-export class IoBreadcrumbs extends IoElement {
+export class IoBreadcrumbs extends ReactiveElement {
   static override get Style() {
     return /* css */`
     :host {
@@ -66,16 +66,16 @@ export class IoBreadcrumbs extends IoElement {
     }
     `
   }
-  @ReactiveProperty({type: Object, init: null})
+  @Property({type: Object, init: null})
   declare value: object
 
-  @ReactiveProperty({type: Object, init: null})
+  @Property({type: Object, init: null})
   declare selected: object
 
-  @ReactiveProperty({type: String, reflect: true})
+  @Property({type: String, reflect: true})
   declare search: string
 
-  @Property(Array)
+  @Field(Array)
   declare _crumbs: Array<object>
 
   valueChanged() {
@@ -93,7 +93,7 @@ export class IoBreadcrumbs extends IoElement {
   onClearSearch() {
     this.search = ''
   }
-  override changed() {
+  override mutated() {
     const vChildren = []
     if (this._crumbs.length > 1) {
       vChildren.push(ioButton({

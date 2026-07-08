@@ -1,8 +1,8 @@
 //@ts-nocheck
-import { Register, IoElement, h3, div } from '@io-gui/core'
+import { Register, ReactiveElement, h3, div } from '@io-gui/core'
 import { IconsetDB, ioIcon } from '@io-gui/icons'
 
-export class IoIconsDemo extends IoElement {
+export class IoIconsDemo extends ReactiveElement {
   static get Style() {
     return /* css */`
       :host {
@@ -44,4 +44,4 @@ export class IoIconsDemo extends IoElement {
   }
 }
 Register(IoIconsDemo)
-export const ioIconsDemo = IoIconsDemo.vConstructor
+export const ioIconsDemo = (arg0: any) => IoIconsDemo.vConstructor(arg0)

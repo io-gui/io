@@ -4,11 +4,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { IoElement, ReactiveProperty, Register, div } from '@io-gui/core';
-import { MenuOption, ioMenuOptions, ioMenuTree } from '@io-gui/menus';
+import { ReactiveElement, Property, Register, div } from '@io-gui/core';
+import { Option, ioMenu, ioMenuTree } from '@io-gui/menus';
 import { ioSelector } from './IoSelector.js';
 import { ioNavigatorDrawer } from './IoNavigatorDrawer.js';
-let IoNavigator = class IoNavigator extends IoElement {
+let IoNavigator = class IoNavigator extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -34,7 +34,7 @@ let IoNavigator = class IoNavigator extends IoElement {
       :host > io-menu-tree {
         border-width: 0 var(--io_borderWidth) 0 0;
       }
-      :host > io-menu-options {
+      :host > io-menu {
         border: none;
         border-bottom: var(--io_border);
         border-radius: 0;
@@ -67,7 +67,7 @@ let IoNavigator = class IoNavigator extends IoElement {
         this.calculateCollapsed();
     }
     calculateCollapsed() {
-        if (this.menu === 'top') {
+        if (this.menu !== 'left') {
             this.collapsed = false;
             return;
         }
@@ -96,30 +96,37 @@ let IoNavigator = class IoNavigator extends IoElement {
     menuChanged() {
         this.calculateCollapsed();
     }
-    optionMutated() {
-        this.changed();
+    modelMutated() {
+        this.mutated();
     }
-    changed() {
+    mutated() {
         const sharedMenuConfig = {
-            option: this.option,
+            model: this.model,
             widget: this.widget,
             depth: this.depth
         };
+        // Selection is derived from the model scope on mutation — no bound projection properties.
         let selected = '';
         if (this.select === 'shallow')
-            selected = this.option.selectedIDImmediate;
-        if (this.select === 'deep')
-            selected = this.option.selectedID;
+            selected = this.model.getSelectedIDImmediate();
+        if (this.select === 'deep') {
+            // Derived deep selection — works for Menu roots and branch Options alike.
+            const chain = this.model.getSelectedChain();
+            selected = chain.length ? chain[chain.length - 1].id : '';
+        }
         if (this.select === 'all')
             selected = '*';
         if (this.select === 'none')
             selected = '';
         const selectorElement = ioSelector({ selected: selected, anchor: this.bind('anchor'), caching: this.caching, elements: this.elements });
         const veil = div({ class: 'io-veil', '@click': this.onVeilClick });
-        if (this.menu === 'top') {
+        if (this.menu === 'none') {
+            this.render([selectorElement]);
+        }
+        else if (this.menu === 'top') {
             this.render([
                 selectorElement,
-                ioMenuOptions({ horizontal: true, ...sharedMenuConfig }),
+                ioMenu({ horizontal: true, ...sharedMenuConfig }),
             ]);
         }
         else if (this.menu === 'left') {
@@ -143,37 +150,37 @@ let IoNavigator = class IoNavigator extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Array, init: null })
+    Property({ type: Array, init: null })
 ], IoNavigator.prototype, "elements", void 0);
 __decorate([
-    ReactiveProperty({ type: MenuOption })
-], IoNavigator.prototype, "option", void 0);
+    Property({ type: Option })
+], IoNavigator.prototype, "model", void 0);
 __decorate([
-    ReactiveProperty(null)
+    Property(null)
 ], IoNavigator.prototype, "widget", void 0);
 __decorate([
-    ReactiveProperty({ value: 'left', type: String, reflect: true })
+    Property({ value: 'left', type: String, reflect: true })
 ], IoNavigator.prototype, "menu", void 0);
 __decorate([
-    ReactiveProperty({ value: Infinity, type: Number })
+    Property({ value: Infinity, type: Number })
 ], IoNavigator.prototype, "depth", void 0);
 __decorate([
-    ReactiveProperty({ value: 'shallow', type: String })
+    Property({ value: 'shallow', type: String })
 ], IoNavigator.prototype, "select", void 0);
 __decorate([
-    ReactiveProperty({ value: 'none', type: String })
+    Property({ value: 'none', type: String })
 ], IoNavigator.prototype, "caching", void 0);
 __decorate([
-    ReactiveProperty({ value: 570, type: Number })
+    Property({ value: 570, type: Number })
 ], IoNavigator.prototype, "minWidth", void 0);
 __decorate([
-    ReactiveProperty({ value: '', type: String })
+    Property({ value: '', type: String })
 ], IoNavigator.prototype, "anchor", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+    Property({ value: false, type: Boolean, reflect: true })
 ], IoNavigator.prototype, "collapsed", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+    Property({ value: false, type: Boolean, reflect: true })
 ], IoNavigator.prototype, "showVeil", void 0);
 IoNavigator = __decorate([
     Register
@@ -182,4 +189,3 @@ export { IoNavigator };
 export const ioNavigator = function (arg0) {
     return IoNavigator.vConstructor(arg0);
 };
-//# sourceMappingURL=IoNavigator.js.map

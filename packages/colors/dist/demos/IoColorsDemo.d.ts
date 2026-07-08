@@ -1,7 +1,7 @@
-import { IoElement } from '@io-gui/core';
-export declare class IoColorsDemo extends IoElement {
+import { ReactiveElement } from '@io-gui/core';
+export declare class IoColorsDemo extends ReactiveElement {
     static get Style(): string;
-    static get ReactiveProperties(): {
+    static get Properties(): {
         rgb: {
             value: {
                 r: number;
@@ -20,5 +20,4 @@ export declare class IoColorsDemo extends IoElement {
     };
     ready(): void;
 }
-export declare const ioColorsDemo: (arg0?: import("@io-gui/core").IoElementProps | Array<import("@io-gui/core").VDOMElement | null> | string, arg1?: Array<import("@io-gui/core").VDOMElement | null> | string) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoColorsDemo.d.ts.map
+export declare const ioColorsDemo: (arg0: any) => import("@io-gui/core").VDOMElement;

@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, Property } from '@io-gui/core';
+import { Register, Property, Field } from '@io-gui/core';
 import { IoField } from './IoField.js';
 /**
  * Input element for `String` data type.
@@ -140,27 +140,27 @@ let IoString = class IoString extends IoField {
     valueChanged() {
         this.invalid = (typeof this.value !== 'string' && this.value !== null && this.value !== undefined);
     }
-    changed() {
+    mutated() {
         this.textNode = String(this.value || '');
     }
 };
 __decorate([
-    ReactiveProperty({ value: '', type: String })
+    Property({ value: '', type: String })
 ], IoString.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean })
+    Property({ value: false, type: Boolean })
 ], IoString.prototype, "live", void 0);
 __decorate([
-    ReactiveProperty({ value: '', type: String, reflect: true })
+    Property({ value: '', type: String, reflect: true })
 ], IoString.prototype, "placeholder", void 0);
 __decorate([
-    ReactiveProperty({ value: 'inset', reflect: true })
+    Property({ value: 'inset', reflect: true })
 ], IoString.prototype, "appearance", void 0);
 __decorate([
-    Property('true')
+    Field('true')
 ], IoString.prototype, "contentEditable", void 0);
 __decorate([
-    Property('textbox')
+    Field('textbox')
 ], IoString.prototype, "role", void 0);
 IoString = __decorate([
     Register
@@ -169,4 +169,3 @@ export { IoString };
 export const ioString = function (arg0) {
     return IoString.vConstructor(arg0);
 };
-//# sourceMappingURL=IoString.js.map

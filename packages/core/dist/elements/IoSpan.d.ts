@@ -1,10 +1,10 @@
-import { WithBinding } from '../nodes/ReactiveNode.js';
-import { IoElement, IoElementProps } from './IoElement.js';
-type IoSpanProps = IoElementProps & {
+import { WithBinding } from '../nodes/ReactiveObject.js';
+import { ReactiveElement, ReactiveElementProps } from './ReactiveElement.js';
+type IoSpanProps = ReactiveElementProps & {
     value?: WithBinding<string>;
 };
 /** Inline text element; `value` updates `innerText`. */
-export declare class IoSpan extends IoElement {
+export declare class IoSpan extends ReactiveElement {
     constructor(props: IoSpanProps);
     static get Style(): string;
     value: string;
@@ -12,4 +12,3 @@ export declare class IoSpan extends IoElement {
 }
 export declare const ioSpan: (props?: IoSpanProps) => import("../index.js").VDOMElement;
 export {};
-//# sourceMappingURL=IoSpan.d.ts.map

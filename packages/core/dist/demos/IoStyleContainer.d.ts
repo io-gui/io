@@ -1,8 +1,8 @@
-import { IoElement, Theme } from '@io-gui/core';
+import { ReactiveElement, Theme } from '@io-gui/core';
 /** @internal Demo: scoped style container for nested elements. */
-export declare class IoStyleContainer extends IoElement {
+export declare class IoStyleContainer extends ReactiveElement {
     static get Style(): string;
-    static get ReactiveProperties(): {
+    static get Properties(): {
         theme: {
             type: typeof Theme;
             value: Theme;
@@ -12,5 +12,4 @@ export declare class IoStyleContainer extends IoElement {
     themeMutated(): void;
     generateWhiteNoise(): void;
 }
-export declare const ioStyleContainer: (arg0?: import("@io-gui/core").IoElementProps | Array<import("@io-gui/core").VDOMElement | null> | string, arg1?: Array<import("@io-gui/core").VDOMElement | null> | string) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoStyleContainer.d.ts.map
+export declare const ioStyleContainer: (arg0: any) => import("@io-gui/core").VDOMElement;

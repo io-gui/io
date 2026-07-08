@@ -4,9 +4,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, Property } from '@io-gui/core';
+import { Register, ReactiveElement, Property, Field } from '@io-gui/core';
 import { ioNumber, ioBoolean } from '@io-gui/inputs';
-let IoVectorBase = class IoVectorBase extends IoElement {
+let IoVectorBase = class IoVectorBase extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -52,14 +52,14 @@ let IoVectorBase = class IoVectorBase extends IoElement {
                     value[k] = value[id] * this._ratios[k];
             }
         }
-        if (!this.value._isNode) {
+        if (!this.value._isReactiveObject) {
             this.dispatchMutation(this.value);
         }
     }
     valueMutated() {
-        this.debounce(this.changed);
+        this.debounce(this.mutated);
     }
-    changed() {
+    mutated() {
         const vChildren = [];
         for (const k of this.keys) {
             const value = this.value[k];
@@ -83,37 +83,36 @@ let IoVectorBase = class IoVectorBase extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Object, init: null })
+    Property({ type: Object, init: null })
 ], IoVectorBase.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty(1)
+    Property(1)
 ], IoVectorBase.prototype, "conversion", void 0);
 __decorate([
-    ReactiveProperty(0.001)
+    Property(0.001)
 ], IoVectorBase.prototype, "step", void 0);
 __decorate([
-    ReactiveProperty(-Infinity)
+    Property(-Infinity)
 ], IoVectorBase.prototype, "min", void 0);
 __decorate([
-    ReactiveProperty(Infinity)
+    Property(Infinity)
 ], IoVectorBase.prototype, "max", void 0);
 __decorate([
-    ReactiveProperty(false)
+    Property(false)
 ], IoVectorBase.prototype, "linkable", void 0);
 __decorate([
-    ReactiveProperty(false)
+    Property(false)
 ], IoVectorBase.prototype, "linked", void 0);
 __decorate([
-    ReactiveProperty(true)
+    Property(true)
 ], IoVectorBase.prototype, "ladder", void 0);
 __decorate([
-    ReactiveProperty(false)
+    Property(false)
 ], IoVectorBase.prototype, "disabled", void 0);
 __decorate([
-    Property([])
+    Field([])
 ], IoVectorBase.prototype, "keys", void 0);
 IoVectorBase = __decorate([
     Register
 ], IoVectorBase);
 export { IoVectorBase };
-//# sourceMappingURL=IoVectorBase.js.map

@@ -12,5 +12,4 @@ export declare class AnimationRetargetingReadyplayerExample extends ThreeApplet 
 export declare class IoAnimationRetargetingReadyplayerExample extends IoThreeExample {
     applet: AnimationRetargetingReadyplayerExample;
 }
-export declare const ioAnimationRetargetingReadyplayerExample: (arg0?: import("@io-gui/core").IoElementProps | Array<import("@io-gui/core").VDOMElement | null> | string, arg1?: Array<import("@io-gui/core").VDOMElement | null> | string) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoAnimationRetargetingReadyplayerExample.d.ts.map
+export declare const ioAnimationRetargetingReadyplayerExample: (arg0: any) => import("@io-gui/core").VDOMElement;

@@ -1,6 +1,5 @@
 import { ChangeEvent } from './ChangeQueue.js';
-import { ReactiveNode } from '../nodes/ReactiveNode.js';
-import { IoElement } from '../elements/IoElement.js';
+import type { ReactiveNode } from './ReactiveCore.js';
 /**
  * Event listener types.
  */
@@ -24,8 +23,8 @@ export interface ChangeEventListener {
 }
 export type IoSyntheticEvent = {
     detail: unknown;
-    target: ReactiveNode | IoElement | EventTarget;
-    path: Array<ReactiveNode | IoElement | EventTarget>;
+    target: ReactiveNode;
+    path: Array<ReactiveNode>;
     stopPropagation(): void;
     stopImmediatePropagation(): void;
 };
@@ -62,27 +61,27 @@ export declare const hardenListenerDefinition: (listenerDefinition: ListenerDefi
  * Converts a listener definition into a normalized Listener tuple.
  * If the first item is a string, it looks up the method on the node.
  *
- * @param {ReactiveNode | IoElement | EventTarget} node - The node instance containing potential method references
+ * @param {ReactiveNode} node - The node instance containing potential method references
  * @param {ListenerDefinition} def - The listener definition to normalize
  * @return {Listener} Normalized [listener, options?] tuple
  */
-export declare const listenerFromDefinition: (node: ReactiveNode | IoElement | EventTarget, def: ListenerDefinition) => Listener;
+export declare const listenerFromDefinition: (node: ReactiveNode, def: ListenerDefinition) => Listener;
 /**
  * Routes proto, prop, and added listeners; bridges DOM and synthetic Io events.
  * Proto listeners use last-wins per event name from {@link ProtoChain}.
  */
 export declare class EventDispatcher {
-    readonly node: ReactiveNode | IoElement | EventTarget;
+    readonly node: ReactiveNode;
     readonly nodeIsEventTarget: boolean;
     readonly protoListeners: Listeners;
     readonly propListeners: Listeners;
     readonly addedListeners: Listeners;
     /**
-     * Creates an instance of `EventDispatcher` for specified `ReactiveNode` instance.
+     * Creates an instance of `EventDispatcher` for specified `ReactiveObject` instance.
      * It initializes `protoListeners` from `ProtoChain`.
-     * @param {ReactiveNode | IoElement | EventTarget} node owner ReactiveNode
+     * @param {ReactiveNode} node owner ReactiveObject
      */
-    constructor(node: ReactiveNode | IoElement | EventTarget);
+    constructor(node: ReactiveNode);
     /**
      * Sets `protoListeners` from `static get Listeners()` definitions aggregated on {@link ProtoChain}.
      *
@@ -91,9 +90,9 @@ export declare class EventDispatcher {
      * This differs from {@link ProtoChain.addListeners}, which merges the full inheritance chain
      * for introspection — runtime dispatch uses a single handler per event name here.
      *
-     * @param node owner ReactiveNode
+     * @param node owner ReactiveObject
      */
-    setProtoListeners(node: ReactiveNode | IoElement): void;
+    setProtoListeners(node: ReactiveNode): void;
     /**
      * Sets `propListeners` specified as inline properties prefixed with "@".
      * It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
@@ -123,9 +122,9 @@ export declare class EventDispatcher {
      * @param {string} name - Name of the event
      * @param {unknown} detail - Event detail data
      * @param {boolean} [bubbles] - Makes event bubble
-     * @param {ReactiveNode | IoElement | EventTarget} [node] - Event target override to dispatch the event from
+     * @param {ReactiveNode} [node] - Event target override to dispatch the event from
      */
-    dispatchEvent(name: string, detail?: unknown, bubbles?: boolean, node?: ReactiveNode | IoElement | EventTarget, path?: Array<ReactiveNode | IoElement | EventTarget>, visited?: Set<ReactiveNode | IoElement | EventTarget>, propagation?: DispatchPropagationState): void;
+    dispatchEvent(name: string, detail?: unknown, bubbles?: boolean, node?: ReactiveNode, path?: Array<ReactiveNode>, visited?: Set<ReactiveNode>, propagation?: DispatchPropagationState): void;
     /**
      * Disconnects all event listeners and removes all references for garbage collection.
      * Use this when node is discarded.
@@ -133,4 +132,3 @@ export declare class EventDispatcher {
     dispose(): void;
 }
 export {};
-//# sourceMappingURL=EventDispatcher.d.ts.map

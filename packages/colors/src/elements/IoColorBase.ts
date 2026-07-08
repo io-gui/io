@@ -1,37 +1,37 @@
-import { IoElement, IoElementProps, ReactiveProperty, Register, WithBinding, ReactivityType } from '@io-gui/core'
+import { ReactiveElement, ReactiveElementProps, Property, Register, WithBinding, DispatchTiming } from '@io-gui/core'
 import { hsl2rgb, rgb2hsl, rgb2hsv, hsv2rgb } from '../lib/color.convert.js'
 
-export type IoColorBaseProps = IoElementProps & {
+export type IoColorBaseProps = ReactiveElementProps & {
   value?: WithBinding<{ r: number; g: number; b: number; a?: number }>
 }
 
 @Register
-export class IoColorBase extends IoElement {
+export class IoColorBase extends ReactiveElement {
 
-  @ReactiveProperty('throttled')
-  declare reactivity: ReactivityType
+  @Property('throttled')
+  declare dispatchTiming: DispatchTiming
 
-  @ReactiveProperty({type: Object, init: {r: 1, g: 1, b: 1, a: 1}})
+  @Property({type: Object, init: {r: 1, g: 1, b: 1, a: 1}})
   declare value: {r: number; g: number; b: number; a?: number}
 
-  @ReactiveProperty({type: Array, init: [1, 1, 1, 1]})
+  @Property({type: Array, init: [1, 1, 1, 1]})
   declare rgba: [number, number, number, number]
 
-  @ReactiveProperty({type: Array, init: [1, 1, 1]})
+  @Property({type: Array, init: [1, 1, 1]})
   declare hsv: [number, number, number]
 
-  @ReactiveProperty({type: Array, init: [1, 1, 1]})
+  @Property({type: Array, init: [1, 1, 1]})
   declare hsl: [number, number, number]
 
   override ready() {
     // this.throttle(this.valueChanged);
     this.valueChanged()
-    this.changed()
+    this.mutated()
   }
   valueMutated() {
     // this.throttle(this.valueChanged);
     this.valueChanged()
-    this.changed()
+    this.mutated()
   }
   rgbFromHsv() {
     const rgb = hsv2rgb([

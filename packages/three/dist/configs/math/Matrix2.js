@@ -7,4 +7,3 @@ registerEditorConfig(Matrix2, [
 registerEditorConfig(Object, [
     [Matrix2, ioObject({ labeled: false, properties: ['elements'] })],
 ]);
-//# sourceMappingURL=Matrix2.js.map

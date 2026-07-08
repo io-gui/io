@@ -1,10 +1,11 @@
 import { ChangeEvent } from './ChangeQueue.js'
-import { ReactiveNode } from '../nodes/ReactiveNode.js'
-import { IoElement } from '../elements/IoElement.js'
+import { ReactiveObject } from '../nodes/ReactiveObject.js'
+import { ReactiveElement } from '../elements/ReactiveElement.js'
+import { ReactiveNode } from './ReactiveCore.js'
 
 // TODO: Improve types!
-type Properties = string[]
-type TargetProperties = WeakMap<ReactiveNode | IoElement, Properties>
+type Fields = string[]
+type TargetProperties = WeakMap<ReactiveNode, Fields>
 
 // This helper checks if both values are NaN because NaN === NaN is false.
 const bothAreNaNs = function(value: unknown, oldValue: unknown) {
@@ -25,14 +26,14 @@ const isTypeCompatible = (type1: unknown, type2: unknown) => {
  * @example binding.addTarget(nodeB, 'value')
  */
 export class Binding<T = unknown> {
-  readonly node: ReactiveNode | IoElement
+  readonly node: ReactiveNode
   readonly property: string
-  readonly targets: Set<ReactiveNode | IoElement> = new Set()
+  readonly targets: Set<ReactiveNode> = new Set()
   readonly targetProperties: TargetProperties = new WeakMap()
-  constructor(node: ReactiveNode | IoElement, property: string) {
+  constructor(node: ReactiveNode, property: string) {
     debug: {
-      if (!(node as ReactiveNode)._isNode && !(node as IoElement)._isIoElement) console.warn('Source node is not a ReactiveNode or IoElement instance!')
-      if (!node._reactiveProperties.has(property)) console.warn(`Source node does not have a reactive property "${property}"!`)
+      if (!(node as ReactiveObject)._isReactiveObject && !(node as ReactiveElement)._isReactiveElement) console.warn('Source node is not a ReactiveObject or ReactiveElement instance!')
+      if (!node._properties.has(property)) console.warn(`Source node does not have a reactive property "${property}"!`)
     }
     this.node = node
     this.property = property
@@ -44,21 +45,21 @@ export class Binding<T = unknown> {
     this.node.setProperty(this.property, value)
   }
   get value(): T {
-    return this.node._reactiveProperties.get(this.property)!.value as T
+    return this.node._properties.get(this.property)!.value as T
   }
   /**
    * Adds a target node and property.
-   * Sets itself as the binding reference on the target `ReactivePropertyInstance`.
+   * Sets itself as the binding reference on the target `PropertyInstance`.
    * Adds a `[propName]-changed` listener to the target node.
-   * @param {ReactiveNode | IoElement} target - Target node
+   * @param {ReactiveNode} target - Target node
    * @param {string} property - Target property
    */
-  addTarget(target: ReactiveNode | IoElement, property: string) {
+  addTarget(target: ReactiveNode, property: string) {
     const targetProps = this.getTargetProperties(target)
 
     debug: {
-      if (!(target as ReactiveNode)._isNode && !(target as IoElement)._isIoElement) console.warn('Target node is not a ReactiveNode or IoElement instance!')
-      if (!target._reactiveProperties.has(property)) console.warn(`Target node does not have a reactive property "${property}"!`)
+      if (!(target as ReactiveObject)._isReactiveObject && !(target as ReactiveElement)._isReactiveElement) console.warn('Target node is not a ReactiveObject or ReactiveElement instance!')
+      if (!target._properties.has(property)) console.warn(`Target node does not have a reactive property "${property}"!`)
       if (targetProps.indexOf(property) !== -1) console.error(`Target property "${property}" already added!`)
     }
 
@@ -66,7 +67,7 @@ export class Binding<T = unknown> {
     if (targetProps.indexOf(property) === -1) {
       targetProps.push(property)
 
-      const targetP = target._reactiveProperties.get(property)!
+      const targetP = target._properties.get(property)!
       if (targetP.binding && targetP.binding !== this) {
         debug: {
           console.warn('Improper usage detected!')
@@ -77,7 +78,7 @@ export class Binding<T = unknown> {
       targetP.binding = this
 
       debug: {
-        const srcP = this.node._reactiveProperties.get(this.property)!
+        const srcP = this.node._properties.get(this.property)!
         const valueMismatch = srcP.value !== undefined && targetP.value !== undefined && typeof srcP.value !== typeof targetP.value
         const typeMismatch = srcP.type !== undefined && targetP.type !== undefined && !isTypeCompatible(srcP.type, targetP.type)
         if (valueMismatch || typeMismatch) {
@@ -94,12 +95,12 @@ export class Binding<T = unknown> {
   /**
    * Removes target node and property.
    * If `property` is not specified, it removes all target properties.
-   * Removes binding reference from the target `ReactivePropertyInstance`.
+   * Removes binding reference from the target `PropertyInstance`.
    * Removes `[propName]-changed` listener from the target node.
-   * @param {ReactiveNode | IoElement} target - Target node
+   * @param {ReactiveNode} target - Target node
    * @param {string} property - Target property
    */
-  removeTarget(target: ReactiveNode | IoElement, property?: string) {
+  removeTarget(target: ReactiveNode, property?: string) {
     const targetProperties = this.getTargetProperties(target)
 
     if (property) {
@@ -110,7 +111,7 @@ export class Binding<T = unknown> {
       }
       targetProperties.splice(i, 1)
 
-      const propertyInstance = target._reactiveProperties.get(property)!
+      const propertyInstance = target._properties.get(property)!
       debug: if (propertyInstance.binding !== this) {
         console.error('Target property has a different binding!')
       }
@@ -121,7 +122,7 @@ export class Binding<T = unknown> {
 
       for (let i = targetProperties.length; i--;) {
         const prop = targetProperties[i]
-        const propertyInstance = target._reactiveProperties.get(prop)!
+        const propertyInstance = target._properties.get(prop)!
         debug: if (propertyInstance.binding !== this) {
           console.error('Target property has a different binding!')
         }
@@ -136,10 +137,10 @@ export class Binding<T = unknown> {
   }
   /**
    * Event handler that updates source property when one of the targets emits `[propName]-changed` event.
-   * @param {ChangeEvent} event - Property change event.
+   * @param {ChangeEvent} event - Field change event.
    */
   onTargetChanged(event: ChangeEvent){
-    debug: if (!this.targets.has(event.target as ReactiveNode | IoElement)) {
+    debug: if (!this.targets.has(event.target as ReactiveNode)) {
       console.error('onTargetChanged() should never fire if target is not accounted for!')
     }
     const oldValue = this.value
@@ -151,7 +152,7 @@ export class Binding<T = unknown> {
   }
   /**
    * Event handler that updates bound properties on target nodes when source node emits `[propName]-changed` event.
-   * @param {ChangeEvent} event - Property change event.
+   * @param {ChangeEvent} event - Field change event.
    */
   onSourceChanged(event: ChangeEvent) {
     debug: if (event.target !== this.node) {
@@ -162,7 +163,7 @@ export class Binding<T = unknown> {
       const targetProperties = this.getTargetProperties(target)
       for (let j = targetProperties.length; j--;) {
         const propName = targetProperties[j]
-        const oldValue = target._reactiveProperties.get(propName)!.value
+        const oldValue = target._properties.get(propName)!.value
         if (oldValue !== value) {
           if (bothAreNaNs(value, oldValue)) continue
           target.setProperty(propName, value)
@@ -172,10 +173,10 @@ export class Binding<T = unknown> {
   }
   /**
    * Returns a list of target properties for specified target node.
-   * @param {ReactiveNode | IoElement} target - Target node.
-   * @return {Properties} list of target property names.
+   * @param {ReactiveNode} target - Target node.
+   * @return {Fields} list of target property names.
    */
-  getTargetProperties(target: ReactiveNode | IoElement): Properties {
+  getTargetProperties(target: ReactiveNode): Fields {
     if (!this.targetProperties.has(target)) this.targetProperties.set(target, [])
     return this.targetProperties.get(target)!
   }
@@ -185,7 +186,7 @@ export class Binding<T = unknown> {
    * @return {string} JSON representation of the binding.
    */
   toJSON() {
-    const targetProperties: Properties[] = []
+    const targetProperties: Fields[] = []
     const targetNames: string[] = []
     for (const target of this.targets) {
       targetNames.push(target.constructor.name)

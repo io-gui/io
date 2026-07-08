@@ -5,4 +5,3 @@ registerEditorGroups(Storage3DTexture, {
         'wrapR',
     ],
 });
-//# sourceMappingURL=Storage3DTexture.js.map

@@ -38,4 +38,3 @@ registerEditorGroups(OrthographicCamera, {
         'zoom',
     ],
 });
-//# sourceMappingURL=OrthographicCamera.js.map

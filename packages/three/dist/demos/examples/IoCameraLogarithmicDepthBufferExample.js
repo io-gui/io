@@ -7,9 +7,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { AmbientLight, Color, DirectionalLight, Group, MathUtils, Mesh, MeshPhongMaterial, PerspectiveCamera, SphereGeometry, WebGPURenderer } from 'three/webgpu';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-import { Register, ReactiveProperty } from '@io-gui/core';
+import { Register, Property } from '@io-gui/core';
 import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
-import { Split, ioSplit } from '@io-gui/layout';
+import { Layout, ioLayout } from '@io-gui/layout';
 // 1 micrometer to 100 billion light years in one scene, with 1 unit = 1 meter
 const NEAR = 1e-6;
 const FAR = 1e27;
@@ -120,18 +120,20 @@ let IoCameraLogarithmicDepthBufferExample = class IoCameraLogarithmicDepthBuffer
         this.renderer.setPixelRatio(window.devicePixelRatio);
         void this.renderer.init();
         this.render([
-            ioSplit({
+            ioLayout({
                 elements: [
                     ioThreeViewport({ id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene' }),
                     ioThreeViewport({ id: 'SceneCameraLog', applet: this.applet, cameraSelect: 'scene', renderer: this.renderer }),
                 ],
-                split: new Split({
-                    type: 'split',
-                    orientation: 'vertical',
-                    children: [
-                        { type: 'panel', flex: '1 1 120px', tabs: [{ id: 'SceneCamera' }] },
-                        { type: 'panel', flex: '1 1 120px', tabs: [{ id: 'SceneCameraLog' }] },
-                    ]
+                model: new Layout({
+                    child: {
+                        type: 'split',
+                        orientation: 'vertical',
+                        children: [
+                            { type: 'panel', size: '120px auto', tabs: [{ id: 'SceneCamera' }] },
+                            { type: 'panel', size: '120px auto', tabs: [{ id: 'SceneCameraLog' }] },
+                        ]
+                    }
                 })
             })
         ]);
@@ -142,14 +144,13 @@ let IoCameraLogarithmicDepthBufferExample = class IoCameraLogarithmicDepthBuffer
     }
 };
 __decorate([
-    ReactiveProperty({ type: CameraLogarithmicDepthBufferExample, init: { isPlaying: true } })
+    Property({ type: CameraLogarithmicDepthBufferExample, init: { isPlaying: true } })
 ], IoCameraLogarithmicDepthBufferExample.prototype, "applet", void 0);
 __decorate([
-    ReactiveProperty({ type: WebGPURenderer, init: { antialias: true, logarithmicDepthBuffer: true } })
+    Property({ type: WebGPURenderer, init: { antialias: true, logarithmicDepthBuffer: true } })
 ], IoCameraLogarithmicDepthBufferExample.prototype, "renderer", void 0);
 IoCameraLogarithmicDepthBufferExample = __decorate([
     Register
 ], IoCameraLogarithmicDepthBufferExample);
 export { IoCameraLogarithmicDepthBufferExample };
-export const ioCameraLogarithmicDepthBufferExample = IoCameraLogarithmicDepthBufferExample.vConstructor;
-//# sourceMappingURL=IoCameraLogarithmicDepthBufferExample.js.map
+export const ioCameraLogarithmicDepthBufferExample = (arg0) => IoCameraLogarithmicDepthBufferExample.vConstructor(arg0);

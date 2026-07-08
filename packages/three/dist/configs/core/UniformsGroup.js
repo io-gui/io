@@ -1,8 +1,8 @@
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
-import { ioOptionSelect, MenuOption } from '@io-gui/menus';
+import { ioOptionSelect, Menu } from '@io-gui/menus';
 import { UniformsGroup, StaticDrawUsage, DynamicDrawUsage, StreamDrawUsage, StaticReadUsage, DynamicReadUsage, StreamReadUsage, StaticCopyUsage, DynamicCopyUsage, StreamCopyUsage, } from 'three/webgpu';
 registerEditorConfig(UniformsGroup, [
-    ['usage', ioOptionSelect({ selectBy: 'value', option: new MenuOption({ options: [
+    ['usage', ioOptionSelect({ model: new Menu({ options: [
                     { value: StaticDrawUsage, id: 'StaticDraw' },
                     { value: DynamicDrawUsage, id: 'DynamicDraw' },
                     { value: StreamDrawUsage, id: 'StreamDraw' },
@@ -18,4 +18,3 @@ registerEditorGroups(UniformsGroup, {
     Main: ['uniforms'],
     Advanced: ['usage'],
 });
-//# sourceMappingURL=UniformsGroup.js.map

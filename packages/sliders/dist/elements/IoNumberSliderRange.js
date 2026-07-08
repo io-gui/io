@@ -4,13 +4,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty } from '@io-gui/core';
+import { Register, ReactiveElement, Property } from '@io-gui/core';
 import { ioNumber } from '@io-gui/inputs';
 import { ioSliderRange } from './IoSliderRange.js';
 /**
  * Input element for `Array(2)` data type combining `IoNumber` and `IoSliderRange`
  **/
-let IoNumberSliderRange = class IoNumberSliderRange extends IoElement {
+let IoNumberSliderRange = class IoNumberSliderRange extends ReactiveElement {
     static get Style() {
         return /* css */ `
     :host {
@@ -34,20 +34,20 @@ let IoNumberSliderRange = class IoNumberSliderRange extends IoElement {
             this.value[0] = event.detail.value;
         if (item === this.$.number1)
             this.value[1] = event.detail.value;
-        if (!this.value._isNode) {
+        if (!this.value._isReactiveObject) {
             this.dispatchMutation(this.value);
         }
     }
     _onSliderSet(event) {
         this.value = event.detail.value;
-        if (!this.value._isNode) {
+        if (!this.value._isReactiveObject) {
             this.dispatchMutation(this.value);
         }
     }
     ready() {
-        this.changed();
+        this.mutated();
     }
-    changed() {
+    mutated() {
         this.render([
             ioNumber({
                 id: 'number0',
@@ -76,22 +76,22 @@ let IoNumberSliderRange = class IoNumberSliderRange extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Array, init: [0, 0] })
+    Property({ type: Array, init: [0, 0] })
 ], IoNumberSliderRange.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty(0.01)
+    Property(0.01)
 ], IoNumberSliderRange.prototype, "step", void 0);
 __decorate([
-    ReactiveProperty(0)
+    Property(0)
 ], IoNumberSliderRange.prototype, "min", void 0);
 __decorate([
-    ReactiveProperty(1)
+    Property(1)
 ], IoNumberSliderRange.prototype, "max", void 0);
 __decorate([
-    ReactiveProperty(1)
+    Property(1)
 ], IoNumberSliderRange.prototype, "exponent", void 0);
 __decorate([
-    ReactiveProperty(1)
+    Property(1)
 ], IoNumberSliderRange.prototype, "conversion", void 0);
 IoNumberSliderRange = __decorate([
     Register
@@ -100,4 +100,3 @@ export { IoNumberSliderRange };
 export const ioNumberSliderRange = function (arg0) {
     return IoNumberSliderRange.vConstructor(arg0);
 };
-//# sourceMappingURL=IoNumberSliderRange.js.map

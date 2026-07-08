@@ -8,9 +8,9 @@ import { AnimationMixer, Color, Object3D, PerspectiveCamera, PMREMGenerator } fr
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-import { Register, ReactiveProperty } from '@io-gui/core';
+import { Register, Property } from '@io-gui/core';
 import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
-import { ioSplit, Split } from '@io-gui/layout';
+import { ioLayout, Layout } from '@io-gui/layout';
 let AnimationKeyframesExample = class AnimationKeyframesExample extends ThreeApplet {
     mixer = new AnimationMixer(new Object3D());
     constructor(args) {
@@ -61,48 +61,48 @@ export { AnimationKeyframesExample };
 let IoAnimationKeyframesExample = class IoAnimationKeyframesExample extends IoThreeExample {
     ready() {
         this.render([
-            ioSplit({
+            ioLayout({
                 elements: [
                     ioThreeViewport({ id: 'Top', applet: this.applet, cameraSelect: 'top' }),
                     ioThreeViewport({ id: 'Left', applet: this.applet, cameraSelect: 'left' }),
                     ioThreeViewport({ id: 'Perspective', applet: this.applet, cameraSelect: 'perspective' }),
                     ioThreeViewport({ id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene' }),
                 ],
-                split: new Split({
-                    type: 'split',
-                    flex: '2 1 auto',
-                    orientation: 'vertical',
-                    children: [
-                        {
-                            type: 'split',
-                            flex: '1 1 50%',
-                            orientation: 'horizontal',
-                            children: [
-                                { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Top' }] },
-                                { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Left' }] }
-                            ]
-                        },
-                        {
-                            type: 'split',
-                            flex: '1 1 50%',
-                            orientation: 'horizontal',
-                            children: [
-                                { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Perspective' }] },
-                                { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'SceneCamera' }] },
-                            ]
-                        }
-                    ]
+                model: new Layout({
+                    child: {
+                        type: 'split',
+                        orientation: 'vertical',
+                        children: [
+                            {
+                                type: 'split',
+                                size: '50%',
+                                orientation: 'horizontal',
+                                children: [
+                                    { type: 'panel', size: '50%', tabs: [{ id: 'Top' }] },
+                                    { type: 'panel', size: '50%', tabs: [{ id: 'Left' }] }
+                                ]
+                            },
+                            {
+                                type: 'split',
+                                size: '50%',
+                                orientation: 'horizontal',
+                                children: [
+                                    { type: 'panel', size: '50%', tabs: [{ id: 'Perspective' }] },
+                                    { type: 'panel', size: '50%', tabs: [{ id: 'SceneCamera' }] },
+                                ]
+                            }
+                        ]
+                    }
                 })
             })
         ]);
     }
 };
 __decorate([
-    ReactiveProperty({ type: AnimationKeyframesExample, init: { isPlaying: true } })
+    Property({ type: AnimationKeyframesExample, init: { isPlaying: true } })
 ], IoAnimationKeyframesExample.prototype, "applet", void 0);
 IoAnimationKeyframesExample = __decorate([
     Register
 ], IoAnimationKeyframesExample);
 export { IoAnimationKeyframesExample };
-export const ioAnimationKeyframesExample = IoAnimationKeyframesExample.vConstructor;
-//# sourceMappingURL=IoAnimationKeyframesExample.js.map
+export const ioAnimationKeyframesExample = (arg0) => IoAnimationKeyframesExample.vConstructor(arg0);

@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { AnimationClip, AnimationMixer, AnimationObjectGroup, BoxGeometry, ColorKeyframeTrack, InterpolateDiscrete, Mesh, MeshBasicMaterial, NumberKeyframeTrack, Quaternion, QuaternionKeyframeTrack, Vector3 } from 'three/webgpu';
-import { Register, ReactiveProperty } from '@io-gui/core';
+import { Register, Property } from '@io-gui/core';
 import { ThreeApplet, IoThreeExample } from '@io-gui/three';
 let AnimationGroupsExample = class AnimationGroupsExample extends ThreeApplet {
     mixer;
@@ -50,11 +50,10 @@ export { AnimationGroupsExample };
 let IoAnimationGroupsExample = class IoAnimationGroupsExample extends IoThreeExample {
 };
 __decorate([
-    ReactiveProperty({ type: AnimationGroupsExample, init: { isPlaying: true } })
+    Property({ type: AnimationGroupsExample, init: { isPlaying: true } })
 ], IoAnimationGroupsExample.prototype, "applet", void 0);
 IoAnimationGroupsExample = __decorate([
     Register
 ], IoAnimationGroupsExample);
 export { IoAnimationGroupsExample };
-export const ioAnimationGroupsExample = IoAnimationGroupsExample.vConstructor;
-//# sourceMappingURL=IoAnimationGroupsExample.js.map
+export const ioAnimationGroupsExample = (arg0) => IoAnimationGroupsExample.vConstructor(arg0);

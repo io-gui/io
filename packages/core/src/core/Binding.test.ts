@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import { Binding, ReactiveNode, Register, ReactivePropertyDefinitions } from '@io-gui/core'
+import { Binding, ReactiveObject, Register, PropertyDefinitions } from '@io-gui/core'
 
 @Register
-class TestNode extends ReactiveNode {
+class TestNode extends ReactiveObject {
   declare prop1: number
-  static override get ReactiveProperties(): ReactivePropertyDefinitions {
+  static override get Properties(): PropertyDefinitions {
     return {
       prop1: 0,
       prop2: 0
@@ -13,9 +13,9 @@ class TestNode extends ReactiveNode {
 }
 
 @Register
-class TestNodeString extends ReactiveNode {
+class TestNodeString extends ReactiveObject {
   declare strProp: string
-  static override get ReactiveProperties(): ReactivePropertyDefinitions {
+  static override get Properties(): PropertyDefinitions {
     return {
       strProp: ''
     }
@@ -87,10 +87,10 @@ describe('Binding', () => {
     expect(binding1.targets.has(dstNode1)).toBe(true)
     expect(binding1.targets.size).toBe(2)
 
-    expect(dstNode0._reactiveProperties.get('prop1')!.binding).toBe(binding0)
-    expect(dstNode0._reactiveProperties.get('prop2')!.binding).toBe(binding1)
-    expect(dstNode1._reactiveProperties.get('prop1')!.binding).toBe(binding1)
-    expect(dstNode1._reactiveProperties.get('prop2')!.binding).toBe(binding1)
+    expect(dstNode0._properties.get('prop1')!.binding).toBe(binding0)
+    expect(dstNode0._properties.get('prop2')!.binding).toBe(binding1)
+    expect(dstNode1._properties.get('prop1')!.binding).toBe(binding1)
+    expect(dstNode1._properties.get('prop2')!.binding).toBe(binding1)
 
     const binding0target0Props = binding0.getTargetProperties(dstNode0)
     const binding0target1Props = binding0.getTargetProperties(dstNode1)
@@ -109,7 +109,7 @@ describe('Binding', () => {
     binding1.removeTarget(dstNode1, 'prop1')
     expect(binding1target1Props[0]).toBe('prop2')
     expect(binding1target1Props.length).toBe(1)
-    expect(dstNode1._reactiveProperties.get('prop1')!.binding).toBe(undefined)
+    expect(dstNode1._properties.get('prop1')!.binding).toBe(undefined)
 
     expect(dstNode1._eventDispatcher.addedListeners).toEqual({
       'prop2-changed': [[binding1.onTargetChanged]]
@@ -117,11 +117,11 @@ describe('Binding', () => {
 
     binding1.addTarget(dstNode1, 'prop1')
     expect(binding1target1Props.length).toBe(2)
-    expect(dstNode1._reactiveProperties.get('prop1')!.binding).toBe(binding1)
+    expect(dstNode1._properties.get('prop1')!.binding).toBe(binding1)
     binding1.removeTarget(dstNode1)
     expect(binding1target1Props.length).toBe(0)
-    expect(dstNode1._reactiveProperties.get('prop1')!.binding).toBe(undefined)
-    expect(dstNode1._reactiveProperties.get('prop2')!.binding).toBe(undefined)
+    expect(dstNode1._properties.get('prop1')!.binding).toBe(undefined)
+    expect(dstNode1._properties.get('prop2')!.binding).toBe(undefined)
 
     expect(dstNode1._eventDispatcher.addedListeners).toEqual({})
   })
@@ -164,7 +164,7 @@ describe('Binding', () => {
     expect(binding.property).toBe(undefined)
     expect(binding.targets).toBe(undefined)
     expect(binding.targetProperties).toBe(undefined)
-    expect(dstNode._reactiveProperties.get('prop1')!.binding).toBe(undefined)
+    expect(dstNode._properties.get('prop1')!.binding).toBe(undefined)
 
     expect(node._eventDispatcher.addedListeners).toEqual({})
 

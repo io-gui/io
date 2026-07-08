@@ -4,14 +4,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, Property } from '@io-gui/core';
-import { MenuOption } from '../nodes/MenuOption.js';
-import { ioMenuItem } from './IoMenuItem.js';
+import { Register, ReactiveElement, Property, Field } from '@io-gui/core';
+import { Menu } from '../models/Menu.js';
+import { ioOption } from './IoOption.js';
 /**
- * Option select element. Similar to `IoMenuItem`, except it is displayed as a button and uses `options` property instead of ~~`option.options`~~  and it is `selectable` by default. It displays selected `value` or `label` followed by the `â–¾` character.
- * When clicked or activated by space/enter key, it expands a menu with selectable options.
+ * Entry point that presents a Menu as a dropdown button. It displays the selected option's label
+ * followed by the `▾` character and expands the menu when clicked or activated by space/enter key.
+ *
+ * `value` is payload, not identity: it mirrors the selected Option's `value`. Writing `value`
+ * matches it to an Option at this boundary and selects that Option by its id.
  **/
-let IoOptionSelect = class IoOptionSelect extends IoElement {
+let IoOptionSelect = class IoOptionSelect extends ReactiveElement {
     static get Style() {
         return /* css */ `
     :host {
@@ -24,7 +27,7 @@ let IoOptionSelect = class IoOptionSelect extends IoElement {
       background-image: var(--io_gradientOutset);
       text-align: left;
     }
-    :host > io-menu-item {
+    :host > io-option {
       margin: calc(-1 * var(--io_borderWidth));
       background-color: transparent !important;
       border-color: transparent !important;
@@ -34,15 +37,12 @@ let IoOptionSelect = class IoOptionSelect extends IoElement {
     constructor(args) {
         super(args);
     }
-    // TODO: Consider triggering inputValue() only by user-input!
-    onOptionSelected(event) {
+    onSelectedIDChanged() {
         if (this._disposed)
             return;
-        if (this.selectBy === 'value') {
-            this.inputValue(event.detail.option.value);
-        }
-        else if (this.selectBy === 'id') {
-            this.inputValue(event.detail.option.id);
+        const selectedOption = this.model.findOptionById(this.model.selectedID);
+        if (selectedOption && selectedOption !== this.model) {
+            this.inputValue(selectedOption.value);
         }
     }
     inputValue(value) {
@@ -52,63 +52,59 @@ let IoOptionSelect = class IoOptionSelect extends IoElement {
             this.dispatch('value-input', { value: value, oldValue: oldValue }, false);
         }
     }
-    optionChanged(change) {
+    valueChanged() {
+        if (this.value === undefined)
+            return;
+        // Boundary value→Option matching: resolve the app-bound value to an Option and select it by id.
+        const option = this.model?.findOptionByValue(this.value);
+        if (option && option !== this.model && !option.selected) {
+            option.selected = true;
+        }
+    }
+    modelChanged(change) {
         if (change.oldValue) {
-            change.oldValue.removeEventListener('option-selected', this.onOptionSelected);
+            change.oldValue.removeEventListener('selectedID-changed', this.onSelectedIDChanged);
         }
         if (change.value) {
-            change.value.addEventListener('option-selected', this.onOptionSelected);
+            change.value.addEventListener('selectedID-changed', this.onSelectedIDChanged);
         }
-        //TODO: Cleanup and test
         if (this.value === undefined) {
-            const selectedID = this.option.selectedID;
-            const selectedItem = this.option.findItemById(selectedID);
-            if (this.selectBy === 'value') {
-                if (selectedItem) {
-                    this.value = selectedItem.value;
-                }
-            }
-            else if (this.selectBy === 'id') {
-                if (selectedItem) {
-                    this.value = selectedItem.id;
-                }
+            const selectedOption = this.model.findOptionById(this.model.selectedID);
+            if (selectedOption && selectedOption !== this.model) {
+                this.value = selectedOption.value;
             }
         }
+        else {
+            this.valueChanged();
+        }
     }
-    optionMutated() {
-        this.changed();
+    modelMutated() {
+        this.mutated();
     }
-    changed() {
-        let selectedItem;
+    mutated() {
         let label = this.label;
-        if (this.selectBy === 'value') {
-            selectedItem = this.option.findItemByValue(this.value);
-            label = selectedItem ? selectedItem.label : String(this.value);
+        if (!label) {
+            const selectedOption = this.model.findOptionById(this.model.selectedID);
+            const valueOption = selectedOption && selectedOption !== this.model ? selectedOption : this.model.findOptionByValue(this.value);
+            label = valueOption && valueOption !== this.model ? valueOption.label : String(this.value);
         }
-        else if (this.selectBy === 'id') {
-            selectedItem = this.option.findItemById(this.value);
-            label = selectedItem ? selectedItem.label : String(this.value);
-        }
-        this.render([ioMenuItem({ option: this.option, label: label, icon: this.icon, direction: 'down' })]);
+        this.render([ioOption({ model: this.model, label: label, icon: this.icon, direction: 'down' })]);
     }
 };
 __decorate([
-    ReactiveProperty({ value: undefined })
+    Property({ value: undefined })
 ], IoOptionSelect.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty('')
+    Property('')
 ], IoOptionSelect.prototype, "label", void 0);
 __decorate([
-    ReactiveProperty('')
+    Property('')
 ], IoOptionSelect.prototype, "icon", void 0);
 __decorate([
-    ReactiveProperty('value')
-], IoOptionSelect.prototype, "selectBy", void 0);
+    Property({ type: Menu })
+], IoOptionSelect.prototype, "model", void 0);
 __decorate([
-    ReactiveProperty({ type: MenuOption })
-], IoOptionSelect.prototype, "option", void 0);
-__decorate([
-    Property('button')
+    Field('button')
 ], IoOptionSelect.prototype, "role", void 0);
 IoOptionSelect = __decorate([
     Register
@@ -117,4 +113,3 @@ export { IoOptionSelect };
 export const ioOptionSelect = function (arg0) {
     return IoOptionSelect.vConstructor(arg0);
 };
-//# sourceMappingURL=IoOptionSelect.js.map

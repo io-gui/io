@@ -1,14 +1,14 @@
-import { IoElement, VDOMElement, ReactiveProperty, IoElementProps, WithBinding, Register, div } from '@io-gui/core'
-import { MenuOption, ioMenuOptions, ioMenuTree } from '@io-gui/menus'
+import { ReactiveElement, VDOMElement, Property, ReactiveElementProps, WithBinding, Register, div } from '@io-gui/core'
+import { Menu, Option, ioMenu, ioMenuTree } from '@io-gui/menus'
 import { CachingType, ioSelector } from './IoSelector.js'
 import { ioNavigatorDrawer, IoNavigatorDrawer } from './IoNavigatorDrawer.js'
 
 export type SelectType = 'shallow' | 'deep' | 'all' | 'none'
 
-export type MenuPosition = 'top' | 'left'
+export type MenuPosition = 'top' | 'left' | 'none'
 
-export type IoNavigatorProps = IoElementProps & {
-  option?: MenuOption
+export type IoNavigatorProps = ReactiveElementProps & {
+  model?: Menu | Option
   elements?: VDOMElement[]
   widget?: VDOMElement
   menu?: MenuPosition
@@ -20,7 +20,7 @@ export type IoNavigatorProps = IoElementProps & {
 }
 
 @Register
-export class IoNavigator extends IoElement {
+export class IoNavigator extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host {
@@ -46,7 +46,7 @@ export class IoNavigator extends IoElement {
       :host > io-menu-tree {
         border-width: 0 var(--io_borderWidth) 0 0;
       }
-      :host > io-menu-options {
+      :host > io-menu {
         border: none;
         border-bottom: var(--io_border);
         border-radius: 0;
@@ -68,37 +68,37 @@ export class IoNavigator extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: Array, init: null})
+  @Property({type: Array, init: null})
   declare elements: VDOMElement[]
 
-  @ReactiveProperty({type: MenuOption})
-  declare option: MenuOption
+  @Property({type: Option})
+  declare model: Menu | Option
 
-  @ReactiveProperty(null)
+  @Property(null)
   declare widget: VDOMElement | null
 
-  @ReactiveProperty({value: 'left', type: String, reflect: true})
+  @Property({value: 'left', type: String, reflect: true})
   declare menu: MenuPosition
 
-  @ReactiveProperty({value: Infinity, type: Number})
+  @Property({value: Infinity, type: Number})
   declare depth: number
 
-  @ReactiveProperty({value: 'shallow', type: String})
+  @Property({value: 'shallow', type: String})
   declare select: SelectType
 
-  @ReactiveProperty({value: 'none', type: String})
+  @Property({value: 'none', type: String})
   declare caching: CachingType
 
-  @ReactiveProperty({value: 570, type: Number})
+  @Property({value: 570, type: Number})
   declare minWidth: number
 
-  @ReactiveProperty({value: '', type: String})
+  @Property({value: '', type: String})
   declare anchor: string
 
-  @ReactiveProperty({value: false, type: Boolean, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare collapsed: boolean
 
-  @ReactiveProperty({value: false, type: Boolean, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare showVeil: boolean
 
   static override get Listeners() {
@@ -116,7 +116,7 @@ export class IoNavigator extends IoElement {
   }
 
   calculateCollapsed() {
-    if (this.menu === 'top') {
+    if (this.menu !== 'left') {
       this.collapsed = false
       return
     }
@@ -151,30 +151,37 @@ export class IoNavigator extends IoElement {
     this.calculateCollapsed()
   }
 
-  optionMutated() {
-    this.changed()
+  modelMutated() {
+    this.mutated()
   }
 
-  override changed() {
+  override mutated() {
     const sharedMenuConfig = {
-      option: this.option,
+      model: this.model,
       widget: this.widget,
       depth: this.depth
     }
 
+    // Selection is derived from the model scope on mutation — no bound projection properties.
     let selected = ''
-    if (this.select === 'shallow') selected = this.option.selectedIDImmediate
-    if (this.select === 'deep') selected = this.option.selectedID
+    if (this.select === 'shallow') selected = this.model.getSelectedIDImmediate()
+    if (this.select === 'deep') {
+      // Derived deep selection — works for Menu roots and branch Options alike.
+      const chain = this.model.getSelectedChain()
+      selected = chain.length ? chain[chain.length - 1].id : ''
+    }
     if (this.select === 'all') selected = '*'
     if (this.select === 'none') selected = ''
 
     const selectorElement = ioSelector({selected: selected, anchor: this.bind('anchor'), caching: this.caching, elements: this.elements})
     const veil = div({class: 'io-veil', '@click': this.onVeilClick})
 
-    if (this.menu === 'top') {
+    if (this.menu === 'none') {
+      this.render([selectorElement])
+    } else if (this.menu === 'top') {
       this.render([
         selectorElement,
-        ioMenuOptions({horizontal: true, ...sharedMenuConfig}),
+        ioMenu({horizontal: true, ...sharedMenuConfig}),
       ])
     } else if (this.menu === 'left') {
       if (this.collapsed) {

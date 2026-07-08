@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest'
-import { ReactiveNode, Register, ListenerDefinitions, EventDispatcher, IoElement, constructElement, releaseEventDispatcher } from '@io-gui/core'
+import { ReactiveObject, Register, ListenerDefinitions, EventDispatcher, ReactiveElement, ReactiveNode, constructElement, releaseEventDispatcher } from '@io-gui/core'
 
 const handlerFunction = (event: CustomEvent) => {
   (event.target as unknown as MockNode1).eventStack.push(`handlerFunction ${event.detail}`)
 }
 
 @Register
-class MockNode1 extends ReactiveNode {
+class MockNode1 extends ReactiveObject {
   eventStack: string[] = []
   static get Listeners(): ListenerDefinitions {
     return {
@@ -86,7 +86,7 @@ describe('EventDispatcher', () => {
   })
   it('Should use last proto listener when multiple definitions exist in ProtoChain', () => {
     @Register
-    class MultiListenerNode extends ReactiveNode {
+    class MultiListenerNode extends ReactiveObject {
       eventStack: string[] = []
       static get Listeners(): ListenerDefinitions {
         return {
@@ -209,7 +209,7 @@ describe('EventDispatcher', () => {
   })
   it('Should add/remove/dispatch events on HTML elements', () => {
     const element = document.createElement('test-div') as TestDiv
-    const eventDispatcher = new EventDispatcher(element)
+    const eventDispatcher = new EventDispatcher(element as unknown as ReactiveNode)
     const handler2 = (event: CustomEvent) => {
       (event.target as unknown as TestDiv).eventStack.push(`handler2 ${event.detail}`)
     }
@@ -237,8 +237,8 @@ describe('EventDispatcher', () => {
     const parentElement = document.createElement('test-div') as TestDiv
     parentElement.id = 'parentElement'
     parentElement.appendChild(element)
-    const eventDispatcher = new EventDispatcher(element)
-    const parentEventDispatcher = new EventDispatcher(parentElement)
+    const eventDispatcher = new EventDispatcher(element as unknown as ReactiveNode)
+    const parentEventDispatcher = new EventDispatcher(parentElement as unknown as ReactiveNode)
     const handler2 = function(this: TestDiv, event: CustomEvent) {
       this.eventStack.push(`handler2 ${event.detail}`)
     }
@@ -261,10 +261,10 @@ describe('EventDispatcher', () => {
   })
   it('Should emit event from specified target', () => {
     const element = document.createElement('div')
-    const eventDispatcher = new EventDispatcher(element)
+    const eventDispatcher = new EventDispatcher(element as unknown as ReactiveNode)
 
     const element2 = document.createElement('test-div') as TestDiv
-    const eventDispatcher2 = new EventDispatcher(element2)
+    const eventDispatcher2 = new EventDispatcher(element2 as unknown as ReactiveNode)
     eventDispatcher2.applyPropListeners({'@event1': 'event1Handler'})
 
     let path: EventTarget[] | null = null
@@ -274,7 +274,7 @@ describe('EventDispatcher', () => {
       target = event.target
     })
 
-    eventDispatcher.dispatchEvent('event1', 1, false, element2)
+    eventDispatcher.dispatchEvent('event1', 1, false, element2 as unknown as ReactiveObject)
     expect(element2.eventStack).toEqual(['event1Handler 1'])
     expect(path).toEqual([element2])
     expect(target).toEqual(element2)
@@ -365,10 +365,10 @@ describe('EventDispatcher', () => {
     expect(stacks.parent).toEqual([])  // Disposed
     expect(stacks.grandparent).toEqual([])  // Not reachable (parent link broken)
   })
-  it('Should bubble events from ReactiveNode to IoElement parent (cross-border bubbling)', () => {
-    // Create a ReactiveNode that will be a child
+  it('Should bubble events from ReactiveObject to ReactiveElement parent (cross-border bubbling)', () => {
+    // Create a ReactiveObject that will be a child
     @Register
-    class ChildNode extends ReactiveNode {
+    class ChildNode extends ReactiveObject {
       eventStack: string[] = []
       static get Listeners(): ListenerDefinitions {
         return {
@@ -380,12 +380,12 @@ describe('EventDispatcher', () => {
       }
     }
 
-    // Create an IoElement that owns the ReactiveNode as a property
+    // Create an ReactiveElement that owns the ReactiveObject as a property
     @Register
-    class ParentElement extends IoElement {
+    class ParentElement extends ReactiveElement {
       eventStack: string[] = []
 
-      static get ReactiveProperties() {
+      static get Properties() {
         return {
           childNode: {type: ChildNode, init: null},
         }
@@ -446,11 +446,11 @@ describe('EventDispatcher', () => {
   })
   it('Should avoid duplicate delivery when synthetic and DOM bubbling overlap', () => {
     @Register
-    class OverlapChildNode extends ReactiveNode {}
+    class OverlapChildNode extends ReactiveObject {}
 
     @Register
-    class OverlapChildElement extends IoElement {
-      static get ReactiveProperties() {
+    class OverlapChildElement extends ReactiveElement {
+      static get Properties() {
         return {
           childNode: {type: OverlapChildNode, init: null},
         }
@@ -459,8 +459,8 @@ describe('EventDispatcher', () => {
     }
 
     @Register
-    class OverlapParentElement extends IoElement {
-      static get ReactiveProperties() {
+    class OverlapParentElement extends ReactiveElement {
+      static get Properties() {
         return {
           childNode: {type: OverlapChildNode, init: null},
         }
@@ -527,9 +527,9 @@ describe('EventDispatcher', () => {
     parent.addParent(root)
     child.addParent(parent)
 
-    let childPath: Array<ReactiveNode | IoElement> = []
-    let parentPath: Array<ReactiveNode | IoElement> = []
-    let rootPath: Array<ReactiveNode | IoElement> = []
+    let childPath: Array<ReactiveNode> = []
+    let parentPath: Array<ReactiveNode> = []
+    let rootPath: Array<ReactiveNode> = []
 
     child._eventDispatcher.addEventListener('path-event', (event) => {
       childPath = [...event.path]
@@ -552,9 +552,9 @@ describe('EventDispatcher', () => {
     child.dispose()
   })
   it('releaseEventDispatcher disposes native element listeners', () => {
-    const element = constructElement({tag: 'div', props: {'@click': () => {}}})
-    expect((element as any)._eventDispatcher).toBeDefined()
+    const element = constructElement({tag: 'div', props: {'@click': () => {}}}) as ReactiveElement
+    expect(element._eventDispatcher).toBeDefined()
     releaseEventDispatcher(element)
-    expect((element as any)._eventDispatcher).toBeUndefined()
+    expect(element._eventDispatcher).toBeUndefined()
   })
 })

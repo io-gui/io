@@ -12,4 +12,3 @@ registerEditorConfig(WireframeGeometry, [
 registerEditorGroups(WireframeGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=WireframeGeometry.js.map

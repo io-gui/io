@@ -38,4 +38,3 @@ registerEditorGroups(PerspectiveCamera, {
         'zoom',
     ]
 });
-//# sourceMappingURL=PerspectiveCamera.js.map

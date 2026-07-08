@@ -22,4 +22,3 @@ export function getEditorWidget(object) {
 export function registerEditorWidget(constructor, widget) {
     editorWidgetsSingleton.set(constructor, widget);
 }
-//# sourceMappingURL=EditorWidgets.js.map

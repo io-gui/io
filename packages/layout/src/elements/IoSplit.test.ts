@@ -1,519 +1,7 @@
 //@ts-nocheck
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { Split, Panel, IoSplit, IoPanel, parseFlexBasis, hasFlexGrow } from '@io-gui/layout'
-
-describe('Flex Utility Functions', () => {
-  describe('parseFlexBasis', () => {
-    it('should return pixel value from flex-basis', () => {
-      expect(parseFlexBasis('0 0 200px')).toBe(200)
-      expect(parseFlexBasis('1 1 300px')).toBe(300)
-      expect(parseFlexBasis('0 1 150px')).toBe(150)
-    })
-
-    it('should return default 240 for auto basis', () => {
-      expect(parseFlexBasis('1 1 auto')).toBe(240)
-    })
-
-    it('should return default 240 for 0 basis', () => {
-      expect(parseFlexBasis('1 1 0')).toBe(240)
-      expect(parseFlexBasis('2 1 0')).toBe(240)
-    })
-
-    it('should handle whitespace variations', () => {
-      expect(parseFlexBasis('  0 0 200px  ')).toBe(200)
-      expect(parseFlexBasis('0  0  200px')).toBe(200)
-    })
-
-    it('should return default 300 for non-pixel values', () => {
-      expect(parseFlexBasis('1 1 50%')).toBe(240)
-      expect(parseFlexBasis('1 1 10em')).toBe(240)
-    })
-  })
-
-  describe('hasFlexGrow', () => {
-    it('should return true when flex-grow > 0', () => {
-      expect(hasFlexGrow('1 1 auto')).toBe(true)
-      expect(hasFlexGrow('2 0 0')).toBe(true)
-      expect(hasFlexGrow('0.5 1 auto')).toBe(true)
-    })
-
-    it('should return false when flex-grow is 0', () => {
-      expect(hasFlexGrow('0 0 200px')).toBe(false)
-      expect(hasFlexGrow('0 1 auto')).toBe(false)
-    })
-
-    it('should handle whitespace variations', () => {
-      expect(hasFlexGrow('  1 1 auto  ')).toBe(true)
-      expect(hasFlexGrow('  0 0 200px  ')).toBe(false)
-    })
-  })
-})
-
-describe('Split Construction Consolidation', () => {
-  it('Should consolidate on construction when root has only 1 child that is a Split', () => {
-    // This mimics the IoThreeDemo structure where the root Split has only 1 child (a Split)
-    const split = new Split({
-      type: 'split',
-      children: [
-        {
-          type: 'split',
-          orientation: 'horizontal',
-          children: [
-            {type: 'panel', tabs: [{id: 'panelA'}]},
-            {type: 'panel', tabs: [{id: 'panelB'}]},
-            {type: 'panel', tabs: [{id: 'panelC'}]}
-          ]
-        }
-      ]
-    })
-
-    // After construction, the root should have adopted the child's children and orientation
-    expect(split.children.length).toBe(3)
-    expect(split.orientation).toBe('horizontal')
-    expect(split.children[0]).toBeInstanceOf(Panel)
-    expect(split.children[1]).toBeInstanceOf(Panel)
-    expect(split.children[2]).toBeInstanceOf(Panel)
-  })
-
-  it('Should consolidate nested single-child splits on construction', () => {
-    // Multiple levels of single-child splits should all consolidate
-    const split = new Split({
-      type: 'split',
-      children: [
-        {
-          type: 'split',
-          orientation: 'vertical',
-          children: [
-            {
-              type: 'split',
-              orientation: 'horizontal',
-              children: [
-                {type: 'panel', tabs: [{id: 'panelA'}]},
-                {type: 'panel', tabs: [{id: 'panelB'}]}
-              ]
-            }
-          ]
-        }
-      ]
-    })
-
-    // Should flatten to just the innermost split's children
-    expect(split.children.length).toBe(2)
-    expect(split.orientation).toBe('horizontal')
-    expect(split.children[0]).toBeInstanceOf(Panel)
-    expect(split.children[1]).toBeInstanceOf(Panel)
-  })
-
-  it('Should NOT consolidate when root has only 1 child that is a Panel', () => {
-    const split = new Split({
-      type: 'split',
-      children: [
-        {type: 'panel', tabs: [{id: 'panelA'}]}
-      ]
-    })
-
-    // Single panel should remain as-is
-    expect(split.children.length).toBe(1)
-    expect(split.children[0]).toBeInstanceOf(Panel)
-  })
-
-  it('Should NOT consolidate when root has multiple children', () => {
-    const split = new Split({
-      type: 'split',
-      children: [
-        {type: 'panel', tabs: [{id: 'panelA'}]},
-        {
-          type: 'split',
-          orientation: 'vertical',
-          children: [{type: 'panel', tabs: [{id: 'panelB'}]}]
-        }
-      ]
-    })
-
-    // Multiple children should not trigger consolidation
-    expect(split.children.length).toBe(2)
-    expect(split.children[0]).toBeInstanceOf(Panel)
-    expect(split.children[1]).toBeInstanceOf(Split)
-  })
-
-  it('Should consolidate complex IoThreeDemo-like structure', () => {
-    // Exact structure from IoThreeDemo
-    const split = new Split({
-      type: 'split',
-      children: [
-        {
-          type: 'split',
-          orientation: 'horizontal',
-          children: [
-            {
-              type: 'panel',
-              flex: '0 0 380px',
-              tabs: [{id: 'AllClasses'}],
-            },
-            {
-              type: 'split',
-              orientation: 'vertical',
-              children: [
-                {
-                  type: 'split',
-                  orientation: 'horizontal',
-                  children: [
-                    {type: 'panel', tabs: [{id: 'Top'}]},
-                    {type: 'panel', tabs: [{id: 'Front'}]},
-                  ]
-                },
-                {
-                  type: 'split',
-                  orientation: 'horizontal',
-                  children: [
-                    {type: 'panel', tabs: [{id: 'Left'}]},
-                    {type: 'panel', tabs: [{id: 'Perspective'}]},
-                  ]
-                },
-              ]
-            },
-            {
-              type: 'panel',
-              flex: '0 0 380px',
-              tabs: [{id: 'ExampleSelector'}],
-            }
-          ]
-        }
-      ]
-    })
-
-    // Root should adopt the only child's children and orientation
-    expect(split.children.length).toBe(3)
-    expect(split.orientation).toBe('horizontal')
-    expect(split.children[0]).toBeInstanceOf(Panel)
-    expect(split.children[0].flex).toBe('0 0 380px')
-    expect(split.children[1]).toBeInstanceOf(Split)
-    expect(split.children[2]).toBeInstanceOf(Panel)
-  })
-})
-
-describe('IoSplit Consolidation', () => {
-  let layout: IoSplit
-  let container: HTMLElement
-
-  beforeEach(() => {
-    container = document.createElement('div')
-    container.style.display = 'none'
-    document.body.appendChild(container)
-  })
-
-  afterEach(() => {
-    if (layout) {
-      layout.remove()
-    }
-    container.remove()
-  })
-
-  it('Should have consolidateChild method defined', () => {
-    const split = new Split({
-      type: 'split',
-      children: [{type: 'panel', tabs: [{id: 'tab1'}]}]
-    })
-    layout = new IoSplit({split, elements: []})
-    container.appendChild(layout)
-
-    expect(typeof layout.consolidateChild).toBe('function')
-  })
-
-  describe('consolidateChild with Panel child', () => {
-    it('Should replace child split with its sole panel', () => {
-      const split = new Split({
-        type: 'split',
-        orientation: 'horizontal',
-        children: [
-          {type: 'panel', tabs: [{id: 'panelA'}]},
-          {
-            type: 'split',
-            orientation: 'vertical',
-            children: [{type: 'panel', tabs: [{id: 'panelB'}]}]
-          }
-        ]
-      })
-
-      layout = new IoSplit({split, elements: []})
-      container.appendChild(layout)
-
-      const childSplit = split.children[1]
-
-      expect(split.children.length).toBe(2)
-      expect(split.children[1]).toBeInstanceOf(Split)
-
-      layout.consolidateChild(childSplit)
-
-      expect(split.children.length).toBe(2)
-      expect(split.children[1]).toBeInstanceOf(Panel)
-      expect(split.children[1].tabs[0].id).toBe('panelB')
-      expect(split.children[1].flex).toBe('1 1 auto')
-    })
-  })
-
-  describe('consolidateChild with Split child', () => {
-    it('Should adopt child split children and orientation', () => {
-      // Create a structure where childSplit has 1 child that is a Split with multiple children
-      // Note: Since construction-time consolidation now happens, we need to create
-      // this structure programmatically after construction
-      const innerSplit = new Split({
-        type: 'split',
-        orientation: 'vertical',
-        children: [
-          {type: 'panel', tabs: [{id: 'panelB'}]},
-          {type: 'panel', tabs: [{id: 'panelC'}]}
-        ]
-      })
-
-      const split = new Split({
-        type: 'split',
-        orientation: 'horizontal',
-        children: [
-          {type: 'panel', tabs: [{id: 'panelA'}]},
-          {type: 'panel', tabs: [{id: 'placeholder'}]}  // Placeholder panel
-        ]
-      })
-
-      // Replace the placeholder with a split that has only 1 child (a Split)
-      const childSplit = new Split({
-        type: 'split',
-        orientation: 'vertical',
-        children: [
-          {type: 'panel', tabs: [{id: 'panelB'}]},  // Dummy to prevent construction consolidation
-          {type: 'panel', tabs: [{id: 'panelC'}]}
-        ]
-      })
-      // Now manually set it to have only 1 child that is a Split
-      childSplit.children.length = 0
-      childSplit.children.push(innerSplit)
-
-      split.children[1] = childSplit
-
-      layout = new IoSplit({split, elements: []})
-      container.appendChild(layout)
-
-      expect(split.children.length).toBe(2)
-      expect(childSplit.children.length).toBe(1)
-      expect(childSplit.children[0]).toBeInstanceOf(Split)
-
-      layout.consolidateChild(childSplit)
-
-      expect(split.children.length).toBe(3)
-      expect(split.orientation).toBe('vertical')
-      expect(split.children[0]).toBeInstanceOf(Panel)
-      expect(split.children[1]).toBeInstanceOf(Panel)
-      expect(split.children[2]).toBeInstanceOf(Panel)
-      expect(split.children[1].tabs[0].id).toBe('panelB')
-      expect(split.children[2].tabs[0].id).toBe('panelC')
-    })
-  })
-
-  describe('Event-driven consolidation', () => {
-    it('Should consolidate via event when dispatched from nested child IoSplit', () => {
-      // Structure: root > childSplit (with only 1 child which is a panel)
-      const split = new Split({
-        type: 'split',
-        orientation: 'horizontal',
-        children: [
-          {type: 'panel', tabs: [{id: 'panelA'}]},
-          {
-            type: 'split',
-            orientation: 'vertical',
-            children: [{type: 'panel', tabs: [{id: 'panelB'}]}]
-          }
-        ]
-      })
-
-      layout = new IoSplit({split, elements: []})
-      container.appendChild(layout)
-
-      const childSplit = split.children[1]
-      // Find the nested io-split element (second io-split in the DOM)
-      const childIoSplit = layout.querySelectorAll('io-split')[0]
-
-      // Dispatch event from child - it should bubble to parent rootSplit
-      childIoSplit.dispatchEvent(new CustomEvent('io-split-consolidate', {
-        detail: {split: childSplit},
-        bubbles: true
-      }))
-
-      // Parent should have consolidated the child split into a panel
-      expect(split.children.length).toBe(2)
-      expect(split.children[0]).toBeInstanceOf(Panel)
-      expect(split.children[1]).toBeInstanceOf(Panel)
-      expect(split.children[1].tabs[0].id).toBe('panelB')
-    })
-
-    it('Should handle nested split consolidation via event', () => {
-      // Structure: root > childSplit (with 1 child which is a Split)
-      // Since construction-time consolidation happens, we create this programmatically
-      const innerSplit = new Split({
-        type: 'split',
-        orientation: 'horizontal',
-        children: [
-          {type: 'panel', tabs: [{id: 'panelB'}]},
-          {type: 'panel', tabs: [{id: 'panelC'}]}
-        ]
-      })
-
-      const childSplit = new Split({
-        type: 'split',
-        orientation: 'vertical',
-        children: [
-          {type: 'panel', tabs: [{id: 'dummy1'}]},
-          {type: 'panel', tabs: [{id: 'dummy2'}]}
-        ]
-      })
-      // Replace with single Split child
-      childSplit.children.length = 0
-      childSplit.children.push(innerSplit)
-
-      const split = new Split({
-        type: 'split',
-        orientation: 'horizontal',
-        children: [
-          {type: 'panel', tabs: [{id: 'panelA'}]},
-          {type: 'panel', tabs: [{id: 'placeholder'}]}
-        ]
-      })
-      split.children[1] = childSplit
-
-      layout = new IoSplit({split, elements: []})
-      container.appendChild(layout)
-
-      // Find the nested io-split element
-      const childIoSplit = layout.querySelectorAll('io-split')[0]
-
-      // Dispatch event from child - it should bubble to parent rootSplit
-      childIoSplit.dispatchEvent(new CustomEvent('io-split-consolidate', {
-        detail: {split: childSplit},
-        bubbles: true
-      }))
-
-      // Parent should have adopted grandchild's children and orientation
-      expect(split.children.length).toBe(3)
-      expect(split.orientation).toBe('horizontal')
-      expect(split.children[0]).toBeInstanceOf(Panel)
-      expect(split.children[1]).toBeInstanceOf(Panel)
-      expect(split.children[2]).toBeInstanceOf(Panel)
-      expect(split.children[1].tabs[0].id).toBe('panelB')
-      expect(split.children[2].tabs[0].id).toBe('panelC')
-    })
-  })
-
-  describe('Edge cases', () => {
-    it('Should preserve flex values when consolidating panels', () => {
-      const split = new Split({
-        type: 'split',
-        orientation: 'horizontal',
-        children: [
-          {type: 'panel', tabs: [{id: 'panelA'}], flex: '0 0 200px'},
-          {
-            type: 'split',
-            orientation: 'vertical',
-            children: [{type: 'panel', tabs: [{id: 'panelB'}], flex: '0 0 300px'}]
-          }
-        ]
-      })
-
-      layout = new IoSplit({split, elements: []})
-      container.appendChild(layout)
-
-      const childSplit = split.children[1]
-
-      layout.consolidateChild(childSplit)
-
-      expect(split.children[0].flex).toBe('0 0 200px')
-      expect(split.children[1].flex).toBe('1 1 auto')
-    })
-
-    it('Should handle consolidation when removing split via io-split-remove', () => {
-      const split = new Split({
-        type: 'split',
-        orientation: 'horizontal',
-        children: [
-          {type: 'panel', tabs: [{id: 'panelA'}]},
-          {
-            type: 'split',
-            orientation: 'vertical',
-            children: [{type: 'panel', tabs: [{id: 'panelB'}]}]
-          },
-          {type: 'panel', tabs: [{id: 'panelC'}]}
-        ]
-      })
-
-      layout = new IoSplit({split, elements: []})
-      container.appendChild(layout)
-
-      expect(split.children.length).toBe(3)
-
-      const childSplit = split.children[1]
-
-      layout.dispatchEvent(new CustomEvent('io-split-remove', {
-        detail: {split: childSplit},
-        bubbles: true
-      }))
-
-      expect(split.children.length).toBe(2)
-      expect(split.children[0]).toBeInstanceOf(Panel)
-      expect(split.children[1]).toBeInstanceOf(Panel)
-    })
-
-    it('Should trigger consolidation on split removal if only one child remains (nested)', () => {
-      // For consolidation to work via events, we need a grandparent structure
-      // root > middleSplit (has childA and childB) > when childA removed, middleSplit consolidates
-      const split = new Split({
-        type: 'split',
-        orientation: 'horizontal',
-        children: [
-          {type: 'panel', tabs: [{id: 'panelRoot'}]},
-          {
-            type: 'split',
-            orientation: 'vertical',
-            children: [
-              {
-                type: 'split',
-                orientation: 'horizontal',
-                children: [{type: 'panel', tabs: [{id: 'panelA'}]}]
-              },
-              {
-                type: 'split',
-                orientation: 'horizontal',
-                children: [{type: 'panel', tabs: [{id: 'panelB'}]}]
-              }
-            ]
-          }
-        ]
-      })
-
-      layout = new IoSplit({split, elements: []})
-      container.appendChild(layout)
-
-      const middleSplit = split.children[1]
-      expect(middleSplit.children.length).toBe(2)
-
-      const childSplitToRemove = middleSplit.children[0]
-
-      // Find the grandchild IoSplit element and dispatch from it
-      const grandchildIoSplit = layout.querySelectorAll('io-split')[1]
-
-      grandchildIoSplit.dispatchEvent(new CustomEvent('io-split-remove', {
-        detail: {split: childSplitToRemove},
-        bubbles: true
-      }))
-
-      // After removal: middleSplit has 1 child (childB which contains panelB)
-      // Consolidation replaces middleSplit in root with childB's contents
-      // Root now has: [panelRoot, panelB]
-      expect(split.children.length).toBe(2)
-      expect(split.children[0]).toBeInstanceOf(Panel)
-      expect(split.children[0].tabs[0].id).toBe('panelRoot')
-      expect(split.children[1]).toBeInstanceOf(Panel)
-      expect(split.children[1].tabs[0].id).toBe('panelB')
-    })
-  })
-})
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
+import { nextFrame } from '@io-gui/core'
+import { Split, IoSplit, Layout, Panel } from '@io-gui/layout'
 
 describe('IoSplit View Element', () => {
   let layout: IoSplit
@@ -532,166 +20,39 @@ describe('IoSplit View Element', () => {
     container.remove()
   })
 
-  describe('moveTabToSplit', () => {
-    it('Should add panel to left when same orientation', () => {
+  describe('updateVisibleAutoSize', () => {
+    it('Should reflect hasVisibleAutoSize when no child grows', () => {
       const split = new Split({
         type: 'split',
-        orientation: 'horizontal',
         children: [
-          {type: 'panel', tabs: [{id: 'tab1'}, {id: 'tab2'}]},
-          {type: 'panel', tabs: [{id: 'tab3'}]}
+          {type: 'panel', tabs: [{id: 'tab1'}], size: '200px'},
+          {type: 'panel', tabs: [{id: 'tab2'}], size: '300px'}
         ]
       })
 
-      layout = new IoSplit({split, elements: []})
+      layout = new IoSplit({model: split, elements: []})
       container.appendChild(layout)
 
-      const sourcePanel = layout.querySelectorAll('io-panel')[0] as IoPanel
-      const targetPanel = split.children[0] as Panel
-      const tab = split.children[0].tabs[1]
+      layout.ensureOneHasAutoSize()
 
-      layout.moveTabToSplit(sourcePanel, targetPanel, tab, 'left')
-
-      expect(split.children.length).toBe(3)
-      expect(split.children[0]).toBeInstanceOf(Panel)
-      expect(split.children[0].tabs[0].id).toBe('tab2')
+      expect(layout.hasVisibleAutoSize).toBe(false)
     })
 
-    it('Should add panel to right when same orientation', () => {
+    it('Should reflect hasVisibleAutoSize when at least one child has auto size', () => {
       const split = new Split({
         type: 'split',
-        orientation: 'horizontal',
         children: [
-          {type: 'panel', tabs: [{id: 'tab1'}, {id: 'tab2'}]},
-          {type: 'panel', tabs: [{id: 'tab3'}]}
-        ]
-      })
-
-      layout = new IoSplit({split, elements: []})
-      container.appendChild(layout)
-
-      const sourcePanel = layout.querySelectorAll('io-panel')[0] as IoPanel
-      const targetPanel = split.children[0] as Panel
-      const tab = split.children[0].tabs[1]
-
-      layout.moveTabToSplit(sourcePanel, targetPanel, tab, 'right')
-
-      expect(split.children.length).toBe(3)
-      expect(split.children[1].tabs[0].id).toBe('tab2')
-    })
-
-    it('Should create nested split for perpendicular direction (top)', () => {
-      const split = new Split({
-        type: 'split',
-        orientation: 'horizontal',
-        children: [
-          {type: 'panel', tabs: [{id: 'tab1'}, {id: 'tab2'}]},
-          {type: 'panel', tabs: [{id: 'tab3'}]}
-        ]
-      })
-
-      layout = new IoSplit({split, elements: []})
-      container.appendChild(layout)
-
-      const sourcePanel = layout.querySelectorAll('io-panel')[0] as IoPanel
-      const targetPanel = split.children[0] as Panel
-      const tab = split.children[0].tabs[1]
-
-      layout.moveTabToSplit(sourcePanel, targetPanel, tab, 'top')
-
-      expect(split.children.length).toBe(2)
-      expect(split.children[0]).toBeInstanceOf(Split)
-      expect(split.children[0].orientation).toBe('vertical')
-    })
-
-    it('Should create nested split for perpendicular direction (bottom)', () => {
-      const split = new Split({
-        type: 'split',
-        orientation: 'horizontal',
-        children: [
-          {type: 'panel', tabs: [{id: 'tab1'}, {id: 'tab2'}]},
-          {type: 'panel', tabs: [{id: 'tab3'}]}
-        ]
-      })
-
-      layout = new IoSplit({split, elements: []})
-      container.appendChild(layout)
-
-      const sourcePanel = layout.querySelectorAll('io-panel')[0] as IoPanel
-      const targetPanel = split.children[0] as Panel
-      const tab = split.children[0].tabs[1]
-
-      layout.moveTabToSplit(sourcePanel, targetPanel, tab, 'bottom')
-
-      expect(split.children.length).toBe(2)
-      expect(split.children[0]).toBeInstanceOf(Split)
-      expect(split.children[0].orientation).toBe('vertical')
-      expect(split.children[0].children[1].tabs[0].id).toBe('tab2')
-    })
-  })
-
-  describe('convertToSplit', () => {
-    it('Should convert panel to split with two children', () => {
-      const split = new Split({
-        type: 'split',
-        orientation: 'horizontal',
-        children: [
-          {type: 'panel', tabs: [{id: 'tab1'}]},
+          {type: 'panel', tabs: [{id: 'tab1'}], size: '200px'},
           {type: 'panel', tabs: [{id: 'tab2'}]}
         ]
       })
 
-      layout = new IoSplit({split, elements: []})
+      layout = new IoSplit({model: split, elements: []})
       container.appendChild(layout)
 
-      const panelToConvert = split.children[0] as Panel
-      const newPanel1 = new Panel({type: 'panel', tabs: [{id: 'new1'}]})
-      const newPanel2 = new Panel({type: 'panel', tabs: [{id: 'new2'}]})
+      layout.ensureOneHasAutoSize()
 
-      layout.convertToSplit(panelToConvert, newPanel1, newPanel2, 'vertical')
-
-      expect(split.children[0]).toBeInstanceOf(Split)
-      expect(split.children[0].orientation).toBe('vertical')
-      expect(split.children[0].children.length).toBe(2)
-      expect(split.children[0].children[0].tabs[0].id).toBe('new1')
-      expect(split.children[0].children[1].tabs[0].id).toBe('new2')
-    })
-  })
-
-  describe('ensureOneHasFlexGrow', () => {
-    it('Should set second child to flex-grow when none have it', () => {
-      const split = new Split({
-        type: 'split',
-        children: [
-          {type: 'panel', tabs: [{id: 'tab1'}], flex: '0 0 200px'},
-          {type: 'panel', tabs: [{id: 'tab2'}], flex: '0 0 300px'}
-        ]
-      })
-
-      layout = new IoSplit({split, elements: []})
-      container.appendChild(layout)
-
-      layout.ensureOneHasFlexGrow()
-
-      expect(split.children[1].flex).toBe('1 1 300px')
-    })
-
-    it('Should not change flex when at least one child has flex-grow', () => {
-      const split = new Split({
-        type: 'split',
-        children: [
-          {type: 'panel', tabs: [{id: 'tab1'}], flex: '0 0 200px'},
-          {type: 'panel', tabs: [{id: 'tab2'}], flex: '1 1 auto'}
-        ]
-      })
-
-      layout = new IoSplit({split, elements: []})
-      container.appendChild(layout)
-
-      layout.ensureOneHasFlexGrow()
-
-      expect(split.children[0].flex).toBe('0 0 200px')
-      expect(split.children[1].flex).toBe('1 1 auto')
+      expect(layout.hasVisibleAutoSize).toBe(true)
     })
   })
 
@@ -705,7 +66,7 @@ describe('IoSplit View Element', () => {
         ]
       })
 
-      layout = new IoSplit({split, elements: []})
+      layout = new IoSplit({model: split, elements: []})
       container.appendChild(layout)
 
       const panels = layout.querySelectorAll('io-panel')
@@ -727,7 +88,7 @@ describe('IoSplit View Element', () => {
         ]
       })
 
-      layout = new IoSplit({split, elements: []})
+      layout = new IoSplit({model: split, elements: []})
       container.appendChild(layout)
 
       const splits = layout.querySelectorAll('io-split')
@@ -744,7 +105,7 @@ describe('IoSplit View Element', () => {
         ]
       })
 
-      layout = new IoSplit({split, elements: []})
+      layout = new IoSplit({model: split, elements: []})
       container.appendChild(layout)
 
       const dividers = layout.querySelectorAll('io-divider')
@@ -761,81 +122,165 @@ describe('IoSplit View Element', () => {
         ]
       })
 
-      layout = new IoSplit({split, elements: []})
+      layout = new IoSplit({model: split, elements: []})
       container.appendChild(layout)
 
       expect(layout.getAttribute('orientation')).toBe('vertical')
     })
   })
 
-  describe('Static Properties', () => {
+  describe('Drawer collapse on resize', () => {
+    async function flushFrames(count = 3) {
+      for (let i = 0; i < count; i++) await nextFrame()
+    }
+
+    it('Should restore all panel content after drawers are removed on expand', async () => {
+      const split = new Split({
+        type: 'split',
+        orientation: 'horizontal',
+        children: [
+          {type: 'panel', tabs: [{id: 'tab1', label: 'Panel 1'}], size: '200px'},
+          {type: 'panel', tabs: [{id: 'tab2', label: 'Panel 2'}]},
+          {type: 'panel', tabs: [{id: 'tab3', label: 'Panel 3'}], size: '200px'},
+        ]
+      })
+
+      layout = new IoSplit({model: split, elements: []})
+      container.style.cssText = 'position:fixed;width:800px;height:400px;'
+      container.appendChild(layout)
+      await flushFrames()
+
+      expect(layout.querySelectorAll(':scope > io-panel').length).toBe(3)
+      expect(layout.querySelectorAll(':scope > io-drawer').length).toBe(0)
+
+      container.style.width = '350px'
+      layout.onResized()
+      await flushFrames()
+
+      expect(layout.leadingCollapsedChildModel).not.toBeNull()
+      expect(layout.trailingCollapsedChildModel).not.toBeNull()
+      expect(layout.querySelectorAll(':scope > io-drawer').length).toBe(2)
+
+      container.style.width = '800px'
+      layout.onResized()
+      await flushFrames()
+
+      expect(layout.leadingCollapsedChildModel).toBeNull()
+      expect(layout.trailingCollapsedChildModel).toBeNull()
+      expect(layout.querySelectorAll(':scope > io-drawer').length).toBe(0)
+
+      const panels = layout.querySelectorAll(':scope > io-panel')
+      expect(panels.length).toBe(3)
+      panels.forEach(panel => {
+        expect(panel.querySelectorAll('io-tab').length).toBeGreaterThan(0)
+        expect(panel.querySelector('io-selector')).not.toBeNull()
+        expect(panel.getBoundingClientRect().width).toBeGreaterThan(0)
+      })
+    })
+
+    it('Should restore leading drawer panel after expand', async () => {
+      const split = new Split({
+        type: 'split',
+        orientation: 'horizontal',
+        children: [
+          {type: 'panel', tabs: [{id: 'tab1', label: 'Panel 1'}], size: '200px'},
+          {type: 'panel', tabs: [{id: 'tab2', label: 'Panel 2'}]},
+        ]
+      })
+
+      layout = new IoSplit({model: split, elements: []})
+      container.style.cssText = 'position:fixed;width:800px;height:400px;'
+      container.appendChild(layout)
+      await flushFrames()
+
+      container.style.width = '250px'
+      layout.onResized()
+      await flushFrames()
+
+      expect(layout.leadingCollapsedChildModel).not.toBeNull()
+
+      container.style.width = '800px'
+      layout.onResized()
+      await flushFrames()
+
+      expect(layout.leadingCollapsedChildModel).toBeNull()
+      const panels = layout.querySelectorAll(':scope > io-panel')
+      expect(panels.length).toBe(2)
+      panels.forEach(panel => {
+        expect(panel.querySelectorAll('io-tab').length).toBeGreaterThan(0)
+        expect(panel.getBoundingClientRect().width).toBeGreaterThan(0)
+      })
+    })
+  })
+
+  describe('calculateCollapsedDrawers', () => {
+    it('Should not throw when model children is empty', () => {
+      const split = new Split({
+        type: 'split',
+        children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }],
+      })
+
+      layout = new IoSplit({ model: split, elements: [] })
+      container.style.cssText = 'position:fixed;width:800px;height:400px;'
+      container.appendChild(layout)
+
+      split.children.splice(0, split.children.length)
+
+      expect(() => layout.calculateCollapsedDrawers()).not.toThrow()
+      expect(layout.leadingCollapsedChildModel).toBeNull()
+      expect(layout.trailingCollapsedChildModel).toBeNull()
+    })
+
+    it('Should not throw when nested split consolidates sole panel child', async () => {
+      const layoutModel = new Layout({
+        child: {
+          type: 'split',
+          children: [
+            {
+              type: 'split',
+              size: '350px',
+              children: [
+                { type: 'panel', tabs: [{ id: 'Inputs' }] },
+                { type: 'panel', tabs: [{ id: 'Getting Started' }] },
+              ],
+            },
+            { type: 'panel', tabs: [{ id: 'Theme Editor' }] },
+          ],
+        },
+      })
+
+      const rootSplit = layoutModel.child as Split
+      const innerSplit = rootSplit.children[0] as Split
+      const innerIoSplit = new IoSplit({ model: innerSplit, elements: [] })
+      container.style.cssText = 'position:fixed;width:800px;height:400px;'
+      container.appendChild(innerIoSplit)
+      await nextFrame()
+
+      const panelToEmpty = innerSplit.children[0] as Panel
+      while (panelToEmpty.tabs.length > 0) {
+        panelToEmpty.removeTab(panelToEmpty.tabs[0])
+      }
+
+      expect(() => layoutModel.normalize()).not.toThrow()
+      await nextFrame()
+
+      innerIoSplit.remove()
+    })
+  })
+
+  describe('Static Fields', () => {
     it('Should have Style getter', () => {
       expect(IoSplit.Style).toBeDefined()
       expect(typeof IoSplit.Style).toBe('string')
       expect(IoSplit.Style).toContain(':host')
       expect(IoSplit.Style).toContain('flex-direction')
+      expect(IoSplit.Style).toContain('hasvisibleautosize')
     })
 
     it('Should have Listeners getter', () => {
       expect(IoSplit.Listeners).toBeDefined()
       expect(IoSplit.Listeners['io-divider-move']).toBe('onDividerMove')
       expect(IoSplit.Listeners['io-divider-move-end']).toBe('onDividerMoveEnd')
-      expect(IoSplit.Listeners['io-panel-remove']).toBe('onPanelRemove')
-      expect(IoSplit.Listeners['io-split-remove']).toBe('onSplitRemove')
-      expect(IoSplit.Listeners['io-split-consolidate']).toBe('onSplitConsolidate')
-    })
-  })
-
-  describe('Panel removal via event', () => {
-    it('Should remove empty panel and dispatch io-split-remove when all children removed', () => {
-      const split = new Split({
-        type: 'split',
-        children: [
-          {type: 'panel', tabs: [{id: 'tab1'}]}
-        ]
-      })
-
-      layout = new IoSplit({split, elements: []})
-      container.appendChild(layout)
-
-      const removeSpy = vi.fn()
-      layout.addEventListener('io-split-remove', removeSpy)
-
-      split.children[0].tabs.length = 0
-
-      const ioPanel = layout.querySelector('io-panel') as IoPanel
-      ioPanel.dispatchEvent(new CustomEvent('io-panel-remove', {
-        detail: {panel: split.children[0]},
-        bubbles: true
-      }))
-
-      expect(removeSpy).toHaveBeenCalled()
-    })
-
-    it('Should dispatch io-split-consolidate when only one child remains', () => {
-      const split = new Split({
-        type: 'split',
-        children: [
-          {type: 'panel', tabs: [{id: 'tab1'}]},
-          {type: 'panel', tabs: [{id: 'tab2'}]}
-        ]
-      })
-
-      layout = new IoSplit({split, elements: []})
-      container.appendChild(layout)
-
-      const consolidateSpy = vi.fn()
-      layout.addEventListener('io-split-consolidate', consolidateSpy)
-
-      split.children[0].tabs.length = 0
-
-      const ioPanel = layout.querySelectorAll('io-panel')[0] as IoPanel
-      ioPanel.dispatchEvent(new CustomEvent('io-panel-remove', {
-        detail: {panel: split.children[0]},
-        bubbles: true
-      }))
-
-      expect(consolidateSpy).toHaveBeenCalled()
     })
   })
 })

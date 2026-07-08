@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty } from '@io-gui/core';
+import { Register, Property } from '@io-gui/core';
 import { IoSliderBase } from './IoSliderBase.js';
 /**
  * Input element for `Array(2)` data type displayed as slider.
@@ -100,16 +100,16 @@ let IoSliderRange = class IoSliderRange extends IoSliderBase {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Array, value: undefined, init: [0, 0] }) // TODO: Remove value: undefined
+    Property({ type: Array, value: undefined, init: [0, 0] }) // TODO: Remove value: undefined
 ], IoSliderRange.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty({ type: Number, value: 0.01 })
+    Property({ type: Number, value: 0.01 })
 ], IoSliderRange.prototype, "step", void 0);
 __decorate([
-    ReactiveProperty({ type: Number, value: 0 })
+    Property({ type: Number, value: 0 })
 ], IoSliderRange.prototype, "min", void 0);
 __decorate([
-    ReactiveProperty({ type: Number, value: 1 })
+    Property({ type: Number, value: 1 })
 ], IoSliderRange.prototype, "max", void 0);
 IoSliderRange = __decorate([
     Register
@@ -118,4 +118,3 @@ export { IoSliderRange };
 export const ioSliderRange = function (arg0) {
     return IoSliderRange.vConstructor(arg0);
 };
-//# sourceMappingURL=IoSliderRange.js.map

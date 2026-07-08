@@ -1,8 +1,8 @@
-import { IoElement, IoElementProps, WithBinding } from '@io-gui/core';
-import { IoMenuOptions } from './IoMenuOptions.js';
-import { MenuOption } from '../nodes/MenuOption.js';
-export type IoContextMenuProps = IoElementProps & {
-    option: MenuOption;
+import { ReactiveElement, ReactiveElementProps, WithBinding } from '@io-gui/core';
+import { IoMenu } from './IoMenu.js';
+import { Menu } from '../models/Menu.js';
+export type IoContextMenuProps = ReactiveElementProps & {
+    model: Menu;
     expanded?: WithBinding<boolean>;
     button?: number;
 };
@@ -13,17 +13,17 @@ export type IoContextMenuProps = IoElementProps & {
  * but it can be configured for other buttons. You can have multiple `IoContextMenu` instances under the same
  * `parentElement` as long as the `button` properties are different.
  **/
-export declare class IoContextMenu extends IoElement {
-    option: MenuOption;
+export declare class IoContextMenu extends ReactiveElement {
+    model: Menu;
     expanded: boolean;
     button: number;
-    $options: IoMenuOptions;
+    $menu: IoMenu;
     _contextTimeout: ReturnType<typeof setTimeout>;
     _listenerParent: HTMLElement | null;
-    static get ReactiveProperties(): any;
+    static get Properties(): any;
     constructor(args: IoContextMenuProps);
     init(): void;
-    optionChanged(): void;
+    modelChanged(): void;
     connectedCallback(): void;
     disconnectedCallback(): void;
     releasePointerListeners(): void;
@@ -36,4 +36,3 @@ export declare class IoContextMenu extends IoElement {
     collapse(): void;
 }
 export declare const ioContextMenu: (arg0?: IoContextMenuProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoContextMenu.d.ts.map

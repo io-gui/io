@@ -8,4 +8,3 @@ registerEditorConfig(RectAreaLight, [
 registerEditorGroups(RectAreaLight, {
     Main: ['width', 'height', 'power'],
 });
-//# sourceMappingURL=RectAreaLight.js.map

@@ -1,8 +1,8 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding } from '@io-gui/core'
+import { Register, ReactiveElement, Property, ReactiveElementProps, WithBinding } from '@io-gui/core'
 import {ioNumber} from '@io-gui/inputs'
 import {ioSlider} from './IoSlider.js'
 
-export type IoNumberSliderProps = IoElementProps & {
+export type IoNumberSliderProps = ReactiveElementProps & {
   value?: WithBinding<number>
   step?: number
   min?: number
@@ -16,7 +16,7 @@ export type IoNumberSliderProps = IoElementProps & {
  * Input element for `Number` data type combining `IoNumber` and `IoSlider`
  **/
 @Register
-export class IoNumberSlider extends IoElement {
+export class IoNumberSlider extends ReactiveElement {
 
   static override get Style() {
     return /* css */`
@@ -34,25 +34,25 @@ export class IoNumberSlider extends IoElement {
     `
   }
 
-  @ReactiveProperty({value: 0})
+  @Property({value: 0})
   declare value: number
 
-  @ReactiveProperty(0.01)
+  @Property(0.01)
   declare step: number
 
-  @ReactiveProperty(0)
+  @Property(0)
   declare min: number
 
-  @ReactiveProperty(1)
+  @Property(1)
   declare max: number
 
-  @ReactiveProperty(1)
+  @Property(1)
   declare exponent: number
 
-  @ReactiveProperty(1)
+  @Property(1)
   declare conversion: number
 
-  @ReactiveProperty(false)
+  @Property(false)
   declare disabled: boolean
 
   constructor(args: IoNumberSliderProps = {}) { super(args) }
@@ -67,9 +67,9 @@ export class IoNumberSlider extends IoElement {
     this.dispatch('value-input', event.detail, false)
   }
   override ready() {
-    this.changed()
+    this.mutated()
   }
-  override changed() {
+  override mutated() {
     this.render([
       ioNumber({
         id: 'number',

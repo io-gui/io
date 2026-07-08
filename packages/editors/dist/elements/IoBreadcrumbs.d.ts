@@ -1,5 +1,5 @@
-import { IoElement, IoElementProps, WithBinding } from '@io-gui/core';
-export type IoBreadcrumbsProps = IoElementProps & {
+import { ReactiveElement, ReactiveElementProps, WithBinding } from '@io-gui/core';
+export type IoBreadcrumbsProps = ReactiveElementProps & {
     value?: object;
     selected?: WithBinding<object>;
     search?: WithBinding<string>;
@@ -9,7 +9,7 @@ export type IoBreadcrumbsProps = IoElementProps & {
  * When breadcrumb item is clicked or activated by space/enter key, it sets the value to corresponding option value.
  * Optionally, it can trim the `options` array to selected option index.
  **/
-export declare class IoBreadcrumbs extends IoElement {
+export declare class IoBreadcrumbs extends ReactiveElement {
     static get Style(): string;
     value: object;
     selected: object;
@@ -18,7 +18,6 @@ export declare class IoBreadcrumbs extends IoElement {
     valueChanged(): void;
     selectedChanged(): void;
     onClearSearch(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioBreadcrumbs: (arg0?: IoBreadcrumbsProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoBreadcrumbs.d.ts.map

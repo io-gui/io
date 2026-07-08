@@ -18,4 +18,3 @@ export declare class IoSlider2d extends IoSliderBase {
     static get Frag(): string;
 }
 export declare const ioSlider2d: (arg0?: IoSlider2dProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoSlider2d.d.ts.map

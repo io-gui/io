@@ -5,9 +5,6 @@
     "moduleResolution": "bundler",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "inlineSources": true,
     "strict": true,
     "strictNullChecks": true,
     "esModuleInterop": true,
@@ -17,7 +14,8 @@
     "noUnusedLocals": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
-    "noImplicitOverride": true
+    "noImplicitOverride": true,
+    "types": []
   },
   "files": [],
   "references": [

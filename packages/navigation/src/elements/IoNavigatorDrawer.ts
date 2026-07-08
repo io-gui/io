@@ -1,16 +1,16 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, VDOMElement, div, ThemeSingleton } from '@io-gui/core'
+import { Register, Property, ReactiveElement, ReactiveElementProps, VDOMElement, div, ThemeSingleton } from '@io-gui/core'
 import { ioIcon } from '@io-gui/icons'
 
 export type DrawerDirection = 'left' | 'right'
 
-export type IoNavigatorDrawerProps = IoElementProps & {
+export type IoNavigatorDrawerProps = ReactiveElementProps & {
   direction: DrawerDirection
   expanded?: boolean
   menuContent: VDOMElement
 }
 
 @Register
-export class IoNavigatorDrawer extends IoElement {
+export class IoNavigatorDrawer extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host {
@@ -19,6 +19,7 @@ export class IoNavigatorDrawer extends IoElement {
         top: 0;
         bottom: 0;
         width: var(--io_fieldHeight) !important;
+        z-index: 1;
       }
 
       :host > .io-drawer-content {
@@ -96,13 +97,13 @@ export class IoNavigatorDrawer extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: String, value: 'left', reflect: true})
+  @Property({type: String, value: 'left', reflect: true})
   declare direction: DrawerDirection
 
-  @ReactiveProperty({type: Boolean, value: false, reflect: true})
+  @Property({type: Boolean, value: false, reflect: true})
   declare expanded: boolean
 
-  @ReactiveProperty({type: Object})
+  @Property({type: Object})
   declare menuContent: VDOMElement
 
   constructor(args: IoNavigatorDrawerProps) {
@@ -111,12 +112,12 @@ export class IoNavigatorDrawer extends IoElement {
 
   static override get Listeners() {
     return {
-      'io-menu-option-clicked': 'onMenuOptionClicked',
+      'io-option-clicked': 'onOptionClicked',
       'io-menu-tree-resized': 'onMenuTreeResized',
     }
   }
 
-  onMenuOptionClicked() {
+  onOptionClicked() {
     this.expanded = false
   }
 
@@ -134,7 +135,7 @@ export class IoNavigatorDrawer extends IoElement {
     this.dispatch('io-drawer-expanded-changed', {element: this}, true)
   }
 
-  override changed() {
+  override mutated() {
     const icon = {
       left: this.expanded ? 'io:triangle_left' : 'io:triangle_right',
       right: this.expanded ? 'io:triangle_right' : 'io:triangle_left',

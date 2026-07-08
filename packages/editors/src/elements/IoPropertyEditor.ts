@@ -1,11 +1,11 @@
-import { IoElement, ReactiveProperty, Register, IoElementProps, ReactiveNode, span, div, HTML_ELEMENTS, VDOMElement } from '@io-gui/core'
+import { ReactiveElement, Property, Register, ReactiveElementProps, ReactiveObject, span, div, HTML_ELEMENTS, VDOMElement } from '@io-gui/core'
 import { IoField } from '@io-gui/inputs'
 import { PropertyConfig, PropertyConfigRecord, getEditorConfig } from '../utils/EditorConfig.js'
 import { PropertyGroups, getEditorGroups, PropertyGroupsRecord, getAllPropertyNames } from '../utils/EditorGroups.js'
 import { getEditorWidget } from '../utils/EditorWidgets.js'
 import { ioObject } from './IoObject.js'
 
-export type IoPropertyEditorProps = IoElementProps & {
+export type IoPropertyEditorProps = ReactiveElementProps & {
   value?: Record<string, any> | any[]
   properties?: string[] | null
   label?: string
@@ -20,7 +20,7 @@ export type IoPropertyEditorProps = IoElementProps & {
  * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
  **/
 @Register
-export class IoPropertyEditor extends IoElement {
+export class IoPropertyEditor extends ReactiveElement {
   static override get Style() {
     return /* css */`
     :host {
@@ -76,31 +76,31 @@ export class IoPropertyEditor extends IoElement {
     `
   }
 
-  // @ReactiveProperty('debounced')
-  // declare reactivity: ReactivityType
+  // @Property('debounced')
+  // declare dispatchTiming: DispatchTiming
 
-  @ReactiveProperty()
+  @Property()
   declare value: object | Array<unknown>
 
-  @ReactiveProperty({type: Array})
+  @Property({type: Array})
   declare properties: string[] | undefined
 
-  @ReactiveProperty({type: String, value: ''})
+  @Property({type: String, value: ''})
   declare label: string
 
-  @ReactiveProperty(true)
+  @Property(true)
   declare labeled: boolean
 
-  @ReactiveProperty('80px')
+  @Property('80px')
   declare labelWidth: string
 
-  @ReactiveProperty({type: Array, init: null})
+  @Property({type: Array, init: null})
   declare config: PropertyConfig[]
 
-  @ReactiveProperty({type: Object, init: null})
+  @Property({type: Object, init: null})
   declare groups: PropertyGroups
 
-  @ReactiveProperty({type: Object})
+  @Property({type: Object})
   declare widget: VDOMElement | undefined | null
 
   private _config: PropertyConfigRecord | null = null
@@ -114,7 +114,7 @@ export class IoPropertyEditor extends IoElement {
     const id = (event.target as HTMLElement).id
     if (id !== undefined) {
       (this.value as Record<string, any>)[id] = event.detail.value
-      if (!(this.value as unknown as ReactiveNode)._isNode) {
+      if (!(this.value as unknown as ReactiveObject)._isReactiveObject) {
         this.dispatchMutation(this.value)
       }
     } else {
@@ -183,16 +183,13 @@ export class IoPropertyEditor extends IoElement {
           const id = properties[i] as keyof typeof this.value
           const value = this.value[id]
           const tag = config[id]!.tag
-          const props = config[id]!.props as (IoElementProps | undefined) || {}
+          const props = config[id]!.props as (ReactiveElementProps | undefined) || {}
 
           const finalProps: any = {id: id, value: value, '@value-input': this._onValueInput}
 
           Object.assign(finalProps, props)
 
-          let children: string | undefined = undefined
-          if (HTML_ELEMENTS.includes(tag) && typeof value === 'string') {
-            children = value
-          }
+          const children = HTML_ELEMENTS.includes(tag) && typeof value === 'string' ? [value] : undefined
 
           if (tag === 'io-object' || tag === 'io-property-editor') {
             finalProps.config = finalProps.config || this.config
@@ -210,7 +207,7 @@ export class IoPropertyEditor extends IoElement {
 
           const isIoObject = tag === 'io-object'
           if (isIoObject) {
-            finalProps.label = finalProps.label ||id + ': ' + (value as object)?.constructor?.name || String(value)
+            finalProps.label = finalProps.label || id + ': ' + ((value as object)?.constructor?.name || String(value))
           }
 
           // TODO: Document and reconsider this
@@ -263,7 +260,7 @@ export class IoPropertyEditor extends IoElement {
   valueMutated() {
     this.throttle(this.changedThrottled)
   }
-  override changed() {
+  override mutated() {
     this.throttle(this.changedThrottled)
   }
   changedThrottled() {

@@ -3,4 +3,3 @@ import { ClippingGroup } from 'three/webgpu';
 registerEditorGroups(ClippingGroup, {
     Main: ['clippingPlanes', 'enabled', 'clipIntersection', 'clipShadows'],
 });
-//# sourceMappingURL=ClippingGroup.js.map

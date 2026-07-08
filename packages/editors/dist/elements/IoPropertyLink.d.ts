@@ -9,7 +9,6 @@ export declare class IoPropertyLink extends IoButton {
     showName: boolean;
     appearance: 'inset' | 'outset' | 'neutral';
     valueMutated(): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioPropertyLink: (arg0?: IoPropertyLinkProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoPropertyLink.d.ts.map

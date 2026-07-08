@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, Property } from '@io-gui/core';
+import { Register, Property, Field } from '@io-gui/core';
 import { Quaternion } from 'three/webgpu';
 import { IoVectorBase } from './IoVectorBase.js';
 let IoQuaternion = class IoQuaternion extends IoVectorBase {
@@ -13,10 +13,10 @@ let IoQuaternion = class IoQuaternion extends IoVectorBase {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Quaternion, init: null })
+    Property({ type: Quaternion, init: null })
 ], IoQuaternion.prototype, "value", void 0);
 __decorate([
-    Property(['x', 'y', 'z', 'w'])
+    Field(['x', 'y', 'z', 'w'])
 ], IoQuaternion.prototype, "keys", void 0);
 IoQuaternion = __decorate([
     Register
@@ -25,4 +25,3 @@ export { IoQuaternion };
 export const ioQuaternion = function (arg0) {
     return IoQuaternion.vConstructor(arg0);
 };
-//# sourceMappingURL=IoQuaternion.js.map

@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import { IoSpan, ReactiveNode, Register, ReactivePropertyDefinitions } from '@io-gui/core'
+import { IoSpan, ReactiveObject, Register, PropertyDefinitions } from '@io-gui/core'
 
 @Register
-class LabelNode extends ReactiveNode {
-  static override get ReactiveProperties(): ReactivePropertyDefinitions {
+class LabelNode extends ReactiveObject {
+  static override get Properties(): PropertyDefinitions {
     return { label: { type: String, value: '' } }
   }
   declare label: string

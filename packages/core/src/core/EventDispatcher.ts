@@ -1,6 +1,7 @@
 import { ChangeEvent } from './ChangeQueue.js'
-import { ReactiveNode } from '../nodes/ReactiveNode.js'
-import { IoElement } from '../elements/IoElement.js'
+import type { ReactiveNode } from './ReactiveCore.js'
+import { ReactiveObject } from '../nodes/ReactiveObject.js'
+import { ReactiveElement } from '../elements/ReactiveElement.js'
 
 // TODO: Improve types!
 
@@ -15,8 +16,8 @@ export interface TouchEventListener { (event: TouchEvent): void }
 export interface ChangeEventListener { (event: ChangeEvent): void }
 export type IoSyntheticEvent = {
   detail: unknown
-  target: ReactiveNode | IoElement | EventTarget
-  path: Array<ReactiveNode | IoElement | EventTarget>
+  target: ReactiveNode
+  path: Array<ReactiveNode>
   stopPropagation(): void
   stopImmediatePropagation(): void
 }
@@ -69,16 +70,16 @@ const LISTENER_OPTIONS = ['capture', 'passive']
  * that was already visited by the current synthetic bubbling dispatch.
  *
  * Edge case:
- * A single logical event can traverse one branch via synthetic ReactiveNode
- * parents, then get converted into a native CustomEvent at an IoElement
+ * A single logical event can traverse one branch via synthetic ReactiveObject
+ * parents, then get converted into a native CustomEvent at an ReactiveElement
  * boundary and bubble through DOM again. Without this guard, shared ancestors
  * can receive the same event twice.
  */
-const hasVisitedDomAncestor = (node: ReactiveNode | IoElement | EventTarget, visited: Set<ReactiveNode | IoElement | EventTarget>) => {
+const hasVisitedDomAncestor = (node: ReactiveNode, visited: Set<ReactiveNode>) => {
   if (!(node instanceof Node)) return false
   let current: Node | null = node.parentNode
   while (current) {
-    if (visited.has(current as unknown as ReactiveNode | IoElement | EventTarget)) return true
+    if (visited.has(current as unknown as ReactiveNode)) return true
     current = current.parentNode
   }
   return false
@@ -88,11 +89,11 @@ const hasVisitedDomAncestor = (node: ReactiveNode | IoElement | EventTarget, vis
  * Converts a listener definition into a normalized Listener tuple.
  * If the first item is a string, it looks up the method on the node.
  *
- * @param {ReactiveNode | IoElement | EventTarget} node - The node instance containing potential method references
+ * @param {ReactiveNode} node - The node instance containing potential method references
  * @param {ListenerDefinition} def - The listener definition to normalize
  * @return {Listener} Normalized [listener, options?] tuple
  */
-export const listenerFromDefinition = (node: ReactiveNode | IoElement | EventTarget, def: ListenerDefinition): Listener => {
+export const listenerFromDefinition = (node: ReactiveNode, def: ListenerDefinition): Listener => {
   const handlerDef = def[0]
   const options = def[1]
 
@@ -125,20 +126,20 @@ export const listenerFromDefinition = (node: ReactiveNode | IoElement | EventTar
  * Proto listeners use last-wins per event name from {@link ProtoChain}.
  */
 export class EventDispatcher {
-  readonly node: ReactiveNode | IoElement | EventTarget
+  readonly node: ReactiveNode
   readonly nodeIsEventTarget: boolean
   readonly protoListeners: Listeners = {}
   readonly propListeners: Listeners = {}
   readonly addedListeners: Listeners = {}
   /**
-   * Creates an instance of `EventDispatcher` for specified `ReactiveNode` instance.
+   * Creates an instance of `EventDispatcher` for specified `ReactiveObject` instance.
    * It initializes `protoListeners` from `ProtoChain`.
-   * @param {ReactiveNode | IoElement | EventTarget} node owner ReactiveNode
+   * @param {ReactiveNode} node owner ReactiveObject
    */
-  constructor(node: ReactiveNode | IoElement | EventTarget) {
+  constructor(node: ReactiveNode) {
     this.node = node
     this.nodeIsEventTarget = node instanceof EventTarget
-    this.setProtoListeners(node as ReactiveNode)
+    this.setProtoListeners(node as ReactiveObject)
   }
 
   /**
@@ -149,9 +150,9 @@ export class EventDispatcher {
    * This differs from {@link ProtoChain.addListeners}, which merges the full inheritance chain
    * for introspection — runtime dispatch uses a single handler per event name here.
    *
-   * @param node owner ReactiveNode
+   * @param node owner ReactiveObject
    */
-  setProtoListeners(node: ReactiveNode | IoElement) {
+  setProtoListeners(node: ReactiveNode) {
     for (const name in node._protochain?.listeners) {
       for (let i = 0; i < node._protochain.listeners[name].length; i++) {
         const listener = listenerFromDefinition(node, node._protochain.listeners[name][i])
@@ -314,10 +315,10 @@ export class EventDispatcher {
    * @param {string} name - Name of the event
    * @param {unknown} detail - Event detail data
    * @param {boolean} [bubbles] - Makes event bubble
-   * @param {ReactiveNode | IoElement | EventTarget} [node] - Event target override to dispatch the event from
+   * @param {ReactiveNode} [node] - Event target override to dispatch the event from
    */
-  dispatchEvent(name: string, detail?: unknown, bubbles = true, node: ReactiveNode | IoElement | EventTarget = this.node, path: Array<ReactiveNode | IoElement | EventTarget> = [], visited: Set<ReactiveNode | IoElement | EventTarget> = new Set(), propagation: DispatchPropagationState = {stopped: false, immediateStopped: false}) {
-    if ((this.node as ReactiveNode)._disposed) return
+  dispatchEvent(name: string, detail?: unknown, bubbles = true, node: ReactiveNode = this.node, path: Array<ReactiveNode> = [], visited: Set<ReactiveNode> = new Set(), propagation: DispatchPropagationState = {stopped: false, immediateStopped: false}) {
+    if ((this.node as ReactiveObject)._disposed) return
     if (visited.has(node)) return
     visited.add(node)
     path.push(node)
@@ -362,7 +363,7 @@ export class EventDispatcher {
       }
       if (bubbles && !propagation.stopped) {
         for (const parent of node._parents) {
-          if (((parent as ReactiveNode)._isNode || (parent as IoElement)._isIoElement) && !parent._disposed && !visited.has(parent)) {
+          if (((parent as ReactiveObject)._isReactiveObject || (parent as ReactiveElement)._isReactiveElement) && !parent._disposed && !visited.has(parent)) {
             parent._eventDispatcher.dispatchEvent(name, detail, bubbles, parent, path, visited, propagation)
           }
         }

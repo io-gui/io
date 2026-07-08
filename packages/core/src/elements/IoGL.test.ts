@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import { IoGl, ReactiveNode, ThemeSingleton, Register, ReactivePropertyDefinitions } from '@io-gui/core'
+import { IoGl, ReactiveObject, ThemeSingleton, Register, PropertyDefinitions } from '@io-gui/core'
 
 @Register
 class IoGlTest extends IoGl {
-  static override get ReactiveProperties(): ReactivePropertyDefinitions {
+  static override get Properties(): PropertyDefinitions {
     return {
       color: { type: Array, init: [0, 0, 0, 0] },
     }
@@ -44,7 +44,7 @@ describe('IoGL', () => {
     expect(element.pxRatio).toBe(window.devicePixelRatio)
     expect(element.theme).toBe(ThemeSingleton)
 
-    expect(element._reactiveProperties.get('size')).toEqual({
+    expect(element._properties.get('size')).toEqual({
       binding: undefined,
       init: [0, 0],
       reflect: false,
@@ -53,7 +53,7 @@ describe('IoGL', () => {
       observer: {type: 'object', observing: true},
     })
 
-    expect(element._reactiveProperties.get('pxRatio')).toEqual({
+    expect(element._properties.get('pxRatio')).toEqual({
       binding: undefined,
       init: undefined,
       reflect: false,
@@ -62,11 +62,11 @@ describe('IoGL', () => {
       observer: {type: 'none', observing: false},
     })
 
-    expect(element._reactiveProperties.get('theme')).toEqual({
+    expect(element._properties.get('theme')).toEqual({
       binding: undefined,
       init: undefined,
       reflect: false,
-      type: ReactiveNode,
+      type: ReactiveObject,
       value: ThemeSingleton,
       observer: {type: 'io', observing: true},
     })
@@ -113,7 +113,7 @@ describe('IoGL', () => {
     expect(color).toEqual(new Uint8ClampedArray([0, 255, 0, 255]))
   })
   it('uniform cache smoke', () => {
-    const colorProp = element._reactiveProperties.get('color')!
+    const colorProp = element._properties.get('color')!
     element.updatePropertyUniform('uColor', colorProp)
     element.updatePropertyUniform('uColor', colorProp)
     expect(() => element.setUniform('uColor', [0, 0, 1, 1])).not.toThrow()

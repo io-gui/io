@@ -74,6 +74,7 @@
           "marked": "./packages/markdown/node_modules/marked/lib/marked.esm.js",
           "marked-highlight": "./packages/markdown/node_modules/marked-highlight/src/index.js",
           "dompurify": "./packages/markdown/node_modules/dompurify/dist/purify.es.mjs",
+					"three": "./packages/three/node_modules/three/build/three.webgpu.js",
 					"three/webgpu": "./packages/three/node_modules/three/build/three.webgpu.js",
 					"three/tsl": "./packages/three/node_modules/three/build/three.tsl.js",
 					"three/addons/": "./packages/three/node_modules/three/examples/jsm/",
@@ -107,11 +108,11 @@
   </head>
   <body>
     <script type="module">
-      import { IoElement, Register, span } from '@io-gui/core'
+      import { ReactiveElement, Register, span } from '@io-gui/core'
       import { ioSlider } from '@io-gui/sliders';
-      import { ioOptionSelect, MenuOption } from '@io-gui/menus';
+      import { ioOptionSelect, Menu } from '@io-gui/menus';
 
-      class MyElement extends IoElement {
+      class MyElement extends ReactiveElement {
 
         static get Style() {
           return /* css */`
@@ -125,7 +126,7 @@
         static get ReactiveProperties() {
           return {
             numberValue: 0,
-            menuOption: {value: new MenuOption({options: [
+            menu: {value: new Menu({options: [
               {id: 'Zero', value: 0},
               {id: 'One', value: 1},
               {id: 'Two', value: 2},
@@ -143,7 +144,7 @@
             ioSlider({value: this.bind('numberValue'), min: -3, max: 3, step: 1}),
             ioOptionSelect({
               value: this.bind('numberValue'),
-              option: this.menuOption
+              model: this.menu
             })
           ]);
         }
@@ -164,7 +165,7 @@
             }),
             ioOptionSelect({
               value: this.numberValue,
-              option: this.menuOption,
+              model: this.menu,
               '@value-input': this.onValueInput,
             })
           ]);

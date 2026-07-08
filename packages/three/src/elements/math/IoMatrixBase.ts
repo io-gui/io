@@ -1,7 +1,7 @@
-import { Register, IoElement, Property, ReactiveProperty, IoElementProps, VDOMElement, ReactiveNode } from '@io-gui/core'
+import { Register, ReactiveElement, Field, Property, ReactiveElementProps, VDOMElement, ReactiveObject } from '@io-gui/core'
 import { ioNumber } from '@io-gui/inputs'
 
-export type IoMatrixBaseProps = IoElementProps & {
+export type IoMatrixBaseProps = ReactiveElementProps & {
   value?: number[]
   disabled?: boolean
 }
@@ -9,7 +9,7 @@ export type IoMatrixBaseProps = IoElementProps & {
  * Input element for vector arrays and objects.
  **/
 @Register
-export class IoMatrixBase extends IoElement {
+export class IoMatrixBase extends ReactiveElement {
   static override get Style() {
     return /* css */`
       :host {
@@ -34,13 +34,13 @@ export class IoMatrixBase extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: Array})
+  @Property({type: Array})
   declare value: Array<number>
 
-  @ReactiveProperty({value: false, type: Boolean})
+  @Property({value: false, type: Boolean})
   declare disabled: boolean
 
-  @Property({type: Array, init: null})
+  @Field({type: Array, init: null})
   declare keys: number[]
 
   constructor(args: IoMatrixBaseProps) {
@@ -50,7 +50,7 @@ export class IoMatrixBase extends IoElement {
   _onNumberValueInput(event: CustomEvent) {
     const item = event.composedPath()[0] as HTMLElement
     this.value[Number(item.id)] = event.detail.value
-    if (!(this.value as unknown as ReactiveNode)._isNode) {
+    if (!(this.value as unknown as ReactiveObject)._isReactiveObject) {
       this.dispatchMutation(this.value)
     }
     // TODO: Rewise and normalize 'value-input' event
@@ -63,9 +63,9 @@ export class IoMatrixBase extends IoElement {
   }
 
   valueMutated() {
-    this.debounce(this.changed)
+    this.debounce(this.mutated)
   }
-  override changed() {
+  override mutated() {
     const vChildren: Array<VDOMElement | null> = []
     for (const k of this.keys) {
       if (this.value[k] !== undefined) {

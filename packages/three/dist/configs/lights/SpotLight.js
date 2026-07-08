@@ -11,4 +11,3 @@ registerEditorConfig(SpotLight, [
 registerEditorGroups(SpotLight, {
     Main: ['target', 'distance', 'angle', 'penumbra', 'decay', 'power', 'map', 'shadow'],
 });
-//# sourceMappingURL=SpotLight.js.map

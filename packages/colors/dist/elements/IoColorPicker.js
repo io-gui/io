@@ -4,10 +4,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, IoElement, Property, nudge } from '@io-gui/core';
+import { Register, Property, ReactiveElement, Field, nudge } from '@io-gui/core';
 import { IoColorPanelSingleton as Panel } from './IoColorPanelSingleton.js';
 import { ioColorSwatch } from './IoColorSwatch.js';
-let IoColorPicker = class IoColorPicker extends IoElement {
+let IoColorPicker = class IoColorPicker extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -90,10 +90,10 @@ let IoColorPicker = class IoColorPicker extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ value: { r: 1, g: 1, b: 1, a: 1 } })
+    Property({ value: { r: 1, g: 1, b: 1, a: 1 } })
 ], IoColorPicker.prototype, "value", void 0);
 __decorate([
-    Property(0)
+    Field(0)
 ], IoColorPicker.prototype, "tabIndex", void 0);
 IoColorPicker = __decorate([
     Register
@@ -102,4 +102,3 @@ export { IoColorPicker };
 export const ioColorPicker = function (arg0) {
     return IoColorPicker.vConstructor(arg0);
 };
-//# sourceMappingURL=IoColorPicker.js.map

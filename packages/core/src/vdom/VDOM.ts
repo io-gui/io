@@ -1,11 +1,57 @@
 import { EventDispatcher } from '../core/EventDispatcher.js'
-import { IoElement } from '../elements/IoElement.js'
+import { ReactiveElement } from '../elements/ReactiveElement.js'
 import { Binding } from '../core/Binding.js'
+
+export const TEXT_TAG = '#text'
+
+export type VDOMChild = VDOMElement | string | null
+
+export type VDOMFactoryChildren = Array<VDOMChild> | string
 
 export type VDOMElement = {
   tag: string
   props?: Record<string, any>
-  children?: Array<VDOMElement | null> | string
+  children?: Array<VDOMChild>
+}
+
+export const normalizeVDOMChildren = function(children: VDOMFactoryChildren): Array<VDOMChild> {
+  return typeof children === 'string' ? [children] : children
+}
+
+export type VDOMFactoryArg = Record<string, any> | VDOMFactoryChildren
+
+export const createVDOMElement = function(tag: string, arg0?: VDOMFactoryArg, arg1?: VDOMFactoryChildren): VDOMElement {
+  const vDOMElement: VDOMElement = {tag}
+  if (arg0 !== undefined) {
+    if (typeof arg0 === 'string') {
+      vDOMElement.children = normalizeVDOMChildren(arg0)
+    } else if (arg0 instanceof Array) {
+      vDOMElement.children = arg0
+    } else if (typeof arg0 === 'object') {
+      vDOMElement.props = arg0
+    }
+    if (arg1 !== undefined) {
+      vDOMElement.children = normalizeVDOMChildren(arg1)
+    }
+  }
+  return vDOMElement
+}
+
+export const getTextVDOMContent = function(vDOMElement: VDOMElement): string {
+  const first = vDOMElement.children?.[0]
+  return typeof first === 'string' ? first : ''
+}
+
+export const text = function(content: string): VDOMElement {
+  return {tag: TEXT_TAG, children: [content]}
+}
+
+export const isTextVDOM = function(vDOMElement: VDOMElement) {
+  return vDOMElement.tag === TEXT_TAG
+}
+
+export const getNodeVDOMTag = function(node: ChildNode) {
+  return node.nodeType === Node.TEXT_NODE ? TEXT_TAG : (node as HTMLElement).localName
 }
 
 type IntegerNumeric = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
@@ -316,9 +362,25 @@ export type NativeElementProps = AriaProps & PropsWithUndefined<{
   textContent?: string
 }>
 
-const defaultPropsMap = new WeakMap<HTMLElement, NativeElementProps>()
+const defaultPropsMap = new WeakMap<HTMLElement, NativeElementProps & {__styleKeys?: Set<string>}>()
 
-// TODO: Fix types. Remove any.
+// TODO: Optimize if possible.
+const applyInlineStyleProps = function(element: HTMLElement, prop: Record<string, string> | undefined, defaults: {__styleKeys?: Set<string>}) {
+  const previousKeys = defaults.__styleKeys ?? new Set<string>()
+  const nextKeys = new Set<string>()
+  if (prop) {
+    for (const s in prop) {
+      element.style.setProperty(s, prop[s])
+      nextKeys.add(s)
+    }
+  }
+  for (const s of previousKeys) {
+    if (!nextKeys.has(s)) element.style.removeProperty(s)
+  }
+  defaults.__styleKeys = nextKeys
+}
+
+// TODO: Improve types. Remove any.
 
 /**
  * Sets native element's properties and attributes.
@@ -347,10 +409,7 @@ export const applyNativeElementProps = function(element: HTMLElement, props: Nat
     if (!Object.hasOwn(defaultPropValues, p)) defaultPropValues[p] = element[p]
 
     if (p === 'style') {
-      for (const s in prop) {
-        // TODO: Consider supporting importance
-        element.style.setProperty(s, prop[s])
-      }
+      applyInlineStyleProps(element, prop as Record<string, string> | undefined, defaultPropValues)
     } else if ((p as any) === 'class') {
       element['className'] = prop
     } else if (p.startsWith('data-')) {
@@ -373,20 +432,26 @@ export const applyNativeElementProps = function(element: HTMLElement, props: Nat
   }
   // Reset properties to defaults if they are not in the props.
   for (const _p in defaultPropValues) {
+    if (_p === '__styleKeys') continue
     const p = _p as keyof NativeElementProps
     if (!Object.hasOwn(props, p)) {
-      (element as any)[p] = defaultPropValues[p]
-      element.removeAttribute(p)
+      if (p === 'style') {
+        applyInlineStyleProps(element, undefined, defaultPropValues)
+        element.removeAttribute(p)
+      } else {
+        (element as any)[p] = defaultPropValues[p]
+        element.removeAttribute(p)
+      }
     }
   }
-  if (!(element as IoElement)._eventDispatcher) {
+  if (!(element as ReactiveElement)._eventDispatcher) {
     Object.defineProperty(
       element,
       '_eventDispatcher',
-      {enumerable: false, configurable: true, value: new EventDispatcher(element as unknown as IoElement)}
+      {enumerable: false, configurable: true, value: new EventDispatcher(element as unknown as ReactiveElement)}
     )
   }
-  (element as IoElement)._eventDispatcher.applyPropListeners(props)
+  (element as ReactiveElement)._eventDispatcher.applyPropListeners(props)
 }
 
 /**
@@ -394,12 +459,15 @@ export const applyNativeElementProps = function(element: HTMLElement, props: Nat
  * @param {VDOMElement} vDOMElement - Virtual DOM object.
  * @return {HTMLElement} - Created element.
  */
-export const constructElement = function(vDOMElement: VDOMElement) {
+export const constructElement = function(vDOMElement: VDOMElement): ChildNode {
+  if (isTextVDOM(vDOMElement)) {
+    return document.createTextNode(getTextVDOMContent(vDOMElement))
+  }
   const props = vDOMElement.props || {}
   let element: HTMLElement
-  // IoElement classes constructed with constructor.
+  // ReactiveElement classes constructed with constructor.
   const ConstructorClass = window.customElements ? window.customElements.get(vDOMElement.tag) : null
-  if (ConstructorClass && (ConstructorClass as any).prototype?._isIoElement) {
+  if (ConstructorClass && (ConstructorClass as any).prototype?._isReactiveElement) {
     element = new ConstructorClass(props) as HTMLElement
   } else {
     // Other element classes constructed with document.createElement.
@@ -418,96 +486,19 @@ export const constructElement = function(vDOMElement: VDOMElement) {
  * @param {Array} vChildren - Array of VDOMElement children with possible null items.
  * @return {Array} - Array of VDOMElement children without null items.
  */
-export const filterVDOMElements = function(vChildren: Array<VDOMElement | null>): VDOMElement[] {
+export const filterVDOMElements = function(vChildren: Array<VDOMChild>): VDOMElement[] {
   for (let i = 0; i < vChildren.length; i++) {
-    if (vChildren[i] === null) {
-      return vChildren.filter(item => item !== null) as VDOMElement[]
+    const child = vChildren[i]
+    if (child === null || typeof child === 'string') {
+      const filtered: VDOMElement[] = []
+      for (let j = 0; j < vChildren.length; j++) {
+        const item = vChildren[j]
+        if (item === null) continue
+        if (typeof item === 'string') filtered.push(text(item))
+        else filtered.push(item)
+      }
+      return filtered
     }
   }
   return vChildren as VDOMElement[]
-}
-
-/**
- * Disposes EventDispatcher on a native VDOM element.
- */
-export const releaseEventDispatcher = function(element: HTMLElement | IoElement) {
-  if ((element as IoElement)._eventDispatcher) {
-    (element as IoElement)._eventDispatcher.dispose()
-    delete (element as any)._eventDispatcher
-  }
-}
-
-/**
- * Disposes EventDispatchers on element and all element descendants.
- */
-export const releaseSubtreeEventDispatchers = function(root: HTMLElement) {
-  const elements = root.querySelectorAll('*')
-  for (let i = elements.length; i--;) {
-    releaseEventDispatcher(elements[i] as HTMLElement)
-  }
-  releaseEventDispatcher(root)
-}
-
-/**
- * Clears native element children after releasing orphaned EventDispatchers.
- */
-export const clearNativeElementChildren = function(element: HTMLElement) {
-  for (let i = element.childNodes.length; i--;) {
-    const child = element.childNodes[i]
-    if (child.nodeType === Node.ELEMENT_NODE) {
-      releaseSubtreeEventDispatchers(child as HTMLElement)
-    }
-  }
-  element.textContent = ''
-}
-
-/**
- * Disposes the element's children.
- * @param {IoElement} element - Element to dispose children of.
- */
-export const disposeChildren = function(element: IoElement) {
-  // NOTE: This rAF ensures that element's change queue is emptied before disposing.
-  requestAnimationFrame(() => {
-    const elements = Array.from(element.querySelectorAll('*')).concat([element]) as IoElement[]
-    for (let i = elements.length; i--;) {
-      if (typeof elements[i].dispose === 'function') {
-        elements[i].dispose()
-      } else {
-        releaseEventDispatcher(elements[i])
-      }
-    }
-  })
-}
-
-const vDOMAttributes = function(element: IoElement | HTMLElement): Record<string, any> {
-  const attributes: Record<string, any> = {}
-  for (let i = 0; i < element.attributes.length; i++) {
-    const name = element.attributes[i].name
-    const value = element.getAttribute(name)
-    if (value !== null) attributes[name] = value
-  }
-  return attributes
-}
-
-const toVDOMChildren = function(htmlCollection: [IoElement | HTMLElement]): VDOMElement[] {
-  const children = []
-  for (let i = 0; i < htmlCollection.length; i++) {
-    children.push(toVDOM(htmlCollection[i]))
-  }
-  return children
-}
-
-/**
- * Converts an element to a virtual dom object.
- * NODE: This vDOM contains elements only attributes (not properties).
- * Used for testing but might be useful for other things.
- * @param {IoElement | HTMLElement} element - Element to convert.
- * @return {VDOMElement} - Virtual dom object.
- */
-export const toVDOM = function(element: IoElement | HTMLElement): VDOMElement {
-  return {
-    tag: element.localName,
-    props: vDOMAttributes(element),
-    children: element.children.length > 0 ? toVDOMChildren((element as any).children) : element.textContent as string
-  }
 }

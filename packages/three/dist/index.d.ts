@@ -37,4 +37,3 @@ export * from './nodes/ThreeApplet.js';
 export * from './nodes/ToolBase.js';
 export * from './nodes/ViewCameras.js';
 import './configs/index.js';
-//# sourceMappingURL=index.d.ts.map

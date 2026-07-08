@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { nextQueue } from '@io-gui/core'
+import { nextFrame } from '@io-gui/core'
 import { IoSliderRange } from '@io-gui/sliders'
 
 const element = new IoSliderRange()
@@ -31,10 +31,10 @@ describe('IoSliderRange', () => {
   it('has a11y attributes', async () => {
     reset()
     expect(element.getAttribute('role')).toBe('slider')
-    await nextQueue()
+    await nextFrame()
     element.min = 0
     expect(element.getAttribute('aria-valuemin')).toBe('0')
-    await nextQueue()
+    await nextFrame()
     element.max = 1
     expect(element.getAttribute('aria-valuemax')).toBe('1')
   })

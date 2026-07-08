@@ -19,5 +19,4 @@ export declare class IoBackdropAreaExample extends IoThreeExample {
     applet: BackdropAreaExample;
     ready(): void;
 }
-export declare const ioBackdropAreaExample: (arg0?: import("@io-gui/core").IoElementProps | Array<import("@io-gui/core").VDOMElement | null> | string, arg1?: Array<import("@io-gui/core").VDOMElement | null> | string) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoBackdropAreaExample.d.ts.map
+export declare const ioBackdropAreaExample: (arg0: any) => import("@io-gui/core").VDOMElement;

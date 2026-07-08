@@ -15,4 +15,3 @@ registerEditorConfig(CapsuleGeometry, [
 registerEditorGroups(CapsuleGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=CapsuleGeometry.js.map

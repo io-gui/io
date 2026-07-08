@@ -22,4 +22,3 @@ export { IoMatrix2 };
 export const ioMatrix2 = function (arg0) {
     return IoMatrix2.vConstructor(arg0);
 };
-//# sourceMappingURL=IoMatrix2.js.map

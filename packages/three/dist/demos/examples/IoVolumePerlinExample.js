@@ -8,10 +8,10 @@ import { Mesh, NodeMaterial, Data3DTexture, RedFormat, LinearFilter, Vector3, Ba
 import { Break, If, vec3, vec4, texture3D, uniform, Fn } from 'three/tsl';
 import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js';
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
-import { Register, ReactiveProperty } from '@io-gui/core';
+import { Register, Property } from '@io-gui/core';
 import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
 import { ioPropertyEditor } from '@io-gui/editors';
-import { ioSplit, Split } from '@io-gui/layout';
+import { ioLayout, Layout } from '@io-gui/layout';
 import { ioNumberSlider } from '@io-gui/sliders';
 let VolumePerlinExample = class VolumePerlinExample extends ThreeApplet {
     thresholdUniform;
@@ -72,10 +72,10 @@ let VolumePerlinExample = class VolumePerlinExample extends ThreeApplet {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Number, value: 0.6 })
+    Property({ type: Number, value: 0.6 })
 ], VolumePerlinExample.prototype, "threshold", void 0);
 __decorate([
-    ReactiveProperty({ type: Number, value: 200 })
+    Property({ type: Number, value: 200 })
 ], VolumePerlinExample.prototype, "steps", void 0);
 VolumePerlinExample = __decorate([
     Register
@@ -84,7 +84,7 @@ export { VolumePerlinExample };
 let IoVolumePerlinExample = class IoVolumePerlinExample extends IoThreeExample {
     ready() {
         this.render([
-            ioSplit({
+            ioLayout({
                 elements: [
                     ioThreeViewport({ id: 'Perspective', applet: this.applet, cameraSelect: 'perspective' }),
                     ioPropertyEditor({ id: 'PropertyEditor', value: this.applet,
@@ -95,35 +95,35 @@ let IoVolumePerlinExample = class IoVolumePerlinExample extends IoThreeExample {
                         ]
                     })
                 ],
-                split: new Split({
-                    type: 'split',
-                    orientation: 'horizontal',
-                    children: [
-                        {
-                            type: 'split',
-                            flex: '2 1 auto',
-                            orientation: 'vertical',
-                            children: [
-                                { type: 'panel', flex: '1 1 100%', tabs: [{ id: 'Perspective' }] },
-                            ]
-                        },
-                        {
-                            type: 'panel',
-                            flex: '0 0 320px',
-                            tabs: [{ id: 'PropertyEditor' }]
-                        }
-                    ]
+                model: new Layout({
+                    child: {
+                        type: 'split',
+                        orientation: 'horizontal',
+                        children: [
+                            {
+                                type: 'split',
+                                orientation: 'vertical',
+                                children: [
+                                    { type: 'panel', size: '100%', tabs: [{ id: 'Perspective' }] },
+                                ]
+                            },
+                            {
+                                type: 'panel',
+                                size: '320px',
+                                tabs: [{ id: 'PropertyEditor' }]
+                            }
+                        ]
+                    }
                 })
             })
         ]);
     }
 };
 __decorate([
-    ReactiveProperty({ type: VolumePerlinExample, init: null })
+    Property({ type: VolumePerlinExample, init: null })
 ], IoVolumePerlinExample.prototype, "applet", void 0);
 IoVolumePerlinExample = __decorate([
     Register
 ], IoVolumePerlinExample);
 export { IoVolumePerlinExample };
-export const ioVolumePerlinExample = IoVolumePerlinExample.vConstructor;
-//# sourceMappingURL=IoVolumePerlinExample.js.map
+export const ioVolumePerlinExample = (arg0) => IoVolumePerlinExample.vConstructor(arg0);

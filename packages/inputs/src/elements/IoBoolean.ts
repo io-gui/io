@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, span, WithBinding, Property } from '@io-gui/core'
+import { Register, Property, span, WithBinding, Field } from '@io-gui/core'
 import { ioIcon } from '@io-gui/icons'
 import { IoField, IoFieldProps } from './IoField.js'
 
@@ -23,16 +23,16 @@ export class IoBoolean extends IoField {
     `
   }
 
-  @ReactiveProperty({value: false, type: Boolean, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare value: boolean
 
-  @ReactiveProperty({value: 'true', type: String})
+  @Property({value: 'true', type: String})
   declare true: string
 
-  @ReactiveProperty({value: 'false', type: String})
+  @Property({value: 'false', type: String})
   declare false: string
 
-  @Property('checkbox')
+  @Field('checkbox')
   declare role: string
 
   constructor(args: IoBooleanProps = {}) { super(args) }
@@ -46,13 +46,13 @@ export class IoBoolean extends IoField {
   }
   override ready() {
     this.valueChanged()
-    this.changed()
+    this.mutated()
   }
   valueChanged() {
     this.invalid = typeof this.value !== 'boolean'
     this.setAttribute('aria-checked', String(!!this.value))
   }
-  override changed() {
+  override mutated() {
     const value = this.value ? this.true : this.false
     this.render([
       this.icon ? ioIcon({value: this.icon}) : null,

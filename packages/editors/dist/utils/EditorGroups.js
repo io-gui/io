@@ -1,4 +1,4 @@
-import { ReactiveNode, IoElement } from '@io-gui/core';
+import { ReactiveObject, ReactiveElement } from '@io-gui/core';
 export const SKIPPED_PROPERTIES = [
     '$',
     'ELEMENT_NODE', 'ATTRIBUTE_NODE', 'TEXT_NODE', 'CDATA_SECTION_NODE', 'ENTITY_REFERENCE_NODE', 'ENTITY_NODE',
@@ -42,7 +42,7 @@ export function getAllPropertyNames(obj) {
     } while ((curr = Object.getPrototypeOf(curr)));
     return allProps;
 }
-const editorGroupsSingleton = new Map([
+const GROUPS = new Map([
     [Object, {
             Hidden: [
                 'constructor', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'toString', 'valueOf', 'toLocaleString',
@@ -88,18 +88,18 @@ const editorGroupsSingleton = new Map([
             ],
             Hidden: [],
         }],
-    [ReactiveNode, {
+    [ReactiveObject, {
             Hidden: [
-                'reactivity',
-                '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_parents',
-                '_protochain', '_disposed', '_isNode', '_isIoElement',
+                'dispatchTiming',
+                '_changeQueue', '_properties', '_bindings', '_eventDispatcher', '_parents',
+                '_protochain', '_disposed', '_isReactiveObject', '_isReactiveElement',
             ],
         }],
-    [IoElement, {
+    [ReactiveElement, {
             Hidden: [
-                'reactivity',
-                '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_parents',
-                '_protochain', '_disposed', '_isNode', '_isIoElement',
+                'dispatchTiming',
+                '_changeQueue', '_properties', '_bindings', '_eventDispatcher', '_parents',
+                '_protochain', '_disposed', '_isReactiveObject', '_isReactiveElement',
             ],
         }],
 ]);
@@ -155,7 +155,7 @@ export function getEditorGroups(object, propertyGroups) {
             }
         }
     }
-    aggregateGroups(editorGroupsSingleton);
+    aggregateGroups(GROUPS);
     aggregateGroups(new Map([[Object, propertyGroups]]));
     const allGroupedNonRegexPropertyNames = [];
     for (const g of Object.keys(aggregatedGroups)) {
@@ -216,7 +216,7 @@ export function getEditorGroups(object, propertyGroups) {
                 if (g !== g2) {
                     for (const key of groupsRecord[g]) {
                         if (groupsRecord[g2].includes(key)) {
-                            console.warn(`Property "${key}" belongs to multiple groups: "${g}" and "${g2}". Removing from "${g}".`);
+                            console.warn(`Field "${key}" belongs to multiple groups: "${g}" and "${g2}". Removing from "${g}".`);
                         }
                     }
                 }
@@ -226,11 +226,10 @@ export function getEditorGroups(object, propertyGroups) {
     return groupsRecord;
 }
 export function registerEditorGroups(constructor, groups) {
-    const existingGroups = editorGroupsSingleton.get(constructor) || {};
+    const existingGroups = GROUPS.get(constructor) || {};
     for (const group in groups) {
         existingGroups[group] = existingGroups[group] || [];
         existingGroups[group].push(...groups[group]);
     }
-    editorGroupsSingleton.set(constructor, existingGroups);
+    GROUPS.set(constructor, existingGroups);
 }
-//# sourceMappingURL=EditorGroups.js.map

@@ -20,4 +20,3 @@ registerEditorGroups(Camera, {
         '_reversedDepth',
     ],
 });
-//# sourceMappingURL=Camera.js.map

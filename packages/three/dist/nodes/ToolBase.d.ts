@@ -1,8 +1,8 @@
-import { ReactiveNode, ReactiveNodeProps } from '@io-gui/core';
+import { ReactiveObject, ReactiveObjectProps } from '@io-gui/core';
 import { IoThreeViewport } from '../elements/IoThreeViewport';
 import { Vector2, Ray } from 'three/webgpu';
 import { ThreeApplet } from './ThreeApplet';
-export type ToolBaseProps = ReactiveNodeProps & {
+export type ToolBaseProps = ReactiveObjectProps & {
     applet: ThreeApplet;
 };
 export interface Pointer3D {
@@ -14,7 +14,7 @@ export interface Pointer3D {
     rayStart: Ray;
     rayMovement: Ray;
 }
-export declare class ToolBase extends ReactiveNode {
+export declare class ToolBase extends ReactiveObject {
     applet: ThreeApplet;
     private readonly _viewports;
     private _activePointers;
@@ -40,4 +40,3 @@ export declare class ToolBase extends ReactiveNode {
     private _removeHoverPointer;
     pointerTo3D(event: PointerEvent): Pointer3D;
 }
-//# sourceMappingURL=ToolBase.d.ts.map

@@ -1,10 +1,10 @@
-import { Register, IoElement, ReactiveProperty, IoOverlaySingleton as Overlay, IoElementProps, WithBinding } from '@io-gui/core'
-import { IoMenuOptions } from './IoMenuOptions.js'
-import { onOverlayPointerdown, onOverlayPointermove, onOverlayPointeup } from './IoMenuItem.js'
-import { MenuOption } from '../nodes/MenuOption.js'
+import { Register, ReactiveElement, Property, IoOverlaySingleton as Overlay, ReactiveElementProps, WithBinding } from '@io-gui/core'
+import { IoMenu } from './IoMenu.js'
+import { onOverlayPointerdown, onOverlayPointermove, onOverlayPointeup } from './IoOption.js'
+import { Menu } from '../models/Menu.js'
 
-export type IoContextMenuProps = IoElementProps & {
-  option: MenuOption
+export type IoContextMenuProps = ReactiveElementProps & {
+  model: Menu
   expanded?: WithBinding<boolean>
   button?: number
 }
@@ -17,32 +17,32 @@ export type IoContextMenuProps = IoElementProps & {
  * `parentElement` as long as the `button` properties are different.
  **/
 @Register
-export class IoContextMenu extends IoElement {
+export class IoContextMenu extends ReactiveElement {
 
-  @ReactiveProperty({type: MenuOption})
-  declare option: MenuOption
+  @Property({type: Menu})
+  declare model: Menu
 
-  @ReactiveProperty({value: false, reflect: true})
+  @Property({value: false, reflect: true})
   declare expanded: boolean
 
-  @ReactiveProperty(0)
+  @Property(0)
   declare button: number
 
-  declare $options: IoMenuOptions
+  declare $menu: IoMenu
   declare _contextTimeout: ReturnType<typeof setTimeout>
   declare _listenerParent: HTMLElement | null
 
-  static override get ReactiveProperties(): any {
+  static override get Properties(): any {
     return {
-      $options: null,
+      $menu: null,
     }
   }
 
   constructor(args: IoContextMenuProps) {
     super(args)
-    this.$options = new IoMenuOptions({
+    this.$menu = new IoMenu({
       expanded: this.bind('expanded'),
-      option: this.option,
+      model: this.model,
       $parent: this,
     })
   }
@@ -51,12 +51,12 @@ export class IoContextMenu extends IoElement {
     this.collapse = this.collapse.bind(this)
   }
 
-  optionChanged() {
-    if (this.$options) this.$options.option = this.option
+  modelChanged() {
+    if (this.$menu) this.$menu.model = this.model
   }
   override connectedCallback() {
     super.connectedCallback()
-    Overlay.appendChild(this.$options as HTMLElement)
+    Overlay.appendChild(this.$menu as HTMLElement)
     this._listenerParent = this.parentElement
     this._listenerParent!.addEventListener('pointerdown', this.onPointerdown)
     this._listenerParent!.addEventListener('click', (this as any).onClick)
@@ -66,7 +66,7 @@ export class IoContextMenu extends IoElement {
     super.disconnectedCallback()
     this.releasePointerListeners()
     clearTimeout(this._contextTimeout)
-    Overlay.removeChild(this.$options as HTMLElement)
+    Overlay.removeChild(this.$menu as HTMLElement)
     if (this._listenerParent) {
       this._listenerParent.removeEventListener('pointerdown', this.onPointerdown)
       this._listenerParent.removeEventListener('click', (this as any).onClick)
@@ -90,8 +90,8 @@ export class IoContextMenu extends IoElement {
   onPointerdown(event: PointerEvent) {
     event.stopPropagation()
 
-    this.$options.style.left = `${event.clientX}px`
-    this.$options.style.top = `${event.clientY}px`
+    this.$menu.style.left = `${event.clientX}px`
+    this.$menu.style.top = `${event.clientY}px`
 
     const parent = this._listenerParent!
     parent.addEventListener('pointermove', this.onPointermove)

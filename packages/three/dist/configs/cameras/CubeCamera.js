@@ -11,4 +11,3 @@ registerEditorGroups(CubeCamera, {
     ],
     Hidden: ['coordinateSystem'],
 });
-//# sourceMappingURL=CubeCamera.js.map

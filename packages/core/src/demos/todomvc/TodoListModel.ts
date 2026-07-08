@@ -1,9 +1,13 @@
-import { ReactiveNode, NodeArray, Register, ReactiveProperty } from '@io-gui/core'
-import { TodoItemModel } from './TodoItemModel.js'
+import { ReactiveObject, NodeArray, Register, Property } from '@io-gui/core'
+import { TodoItemModel, TodoItemProps } from './TodoItemModel.js'
 
-export class TodoListModel extends ReactiveNode {
+export type TodoListProps = {
+  items: TodoItemProps[]
+}
 
-  @ReactiveProperty({type: NodeArray, init: 'this'})
+export class TodoListModel extends ReactiveObject {
+
+  @Property({type: NodeArray, init: 'this'})
   declare items: TodoItemModel[]
 
   static override get Listeners() {
@@ -42,9 +46,8 @@ export class TodoListModel extends ReactiveNode {
     return this.items.every(item => item.completed)
   }
 
-  constructor(args: any) {
-    args = { ...args }
-    args.items = args.items.map((item: any) => new TodoItemModel({...item}))
+  constructor(args: TodoListProps) {
+    args.items = args.items.map(item => new TodoItemModel(item))
     super(args)
   }
 
@@ -60,17 +63,10 @@ export class TodoListModel extends ReactiveNode {
     this.dispatchMutation()
   }
 
-  override toJSON() {
-    return {
-      items: this.items.map(item => item.toJSON()),
-    }
-  }
-
-  override applyJSON(json: any) {
-    this.setProperties({
-      items: json.items.map((item: any) => new TodoItemModel(item)),
-    })
+  override applyJSON(json: TodoListProps) {
+    this.setProperty('items', json.items.map((item) => new TodoItemModel(item)))
     return this
   }
+
 }
 Register(TodoListModel)

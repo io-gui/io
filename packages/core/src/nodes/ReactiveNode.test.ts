@@ -1,9 +1,9 @@
 import { describe, it, expect, vi } from 'vitest'
-import { Change, Binding, ReactiveNode, Register, ReactivePropertyDefinitions, IoElement, ListenerDefinitions, nextQueue, Color, NodeArray, NODES } from '@io-gui/core'
+import { Change, Binding, ReactiveObject, Register, PropertyDefinitions, ReactiveElement, ListenerDefinitions, nextFrame, Color, NodeArray, NODES } from '@io-gui/core'
 
 @Register
-class JsonChildNode extends ReactiveNode {
-  static get ReactiveProperties(): ReactivePropertyDefinitions {
+class JsonChildNode extends ReactiveObject {
+  static get Properties(): PropertyDefinitions {
     return {
       count: { type: Number, value: 3 },
     }
@@ -12,8 +12,8 @@ class JsonChildNode extends ReactiveNode {
 }
 
 @Register
-class JsonNode extends ReactiveNode {
-  static get ReactiveProperties(): ReactivePropertyDefinitions {
+class JsonNode extends ReactiveObject {
+  static get Properties(): PropertyDefinitions {
     return {
       count: { type: Number, value: 5 },
       color: { type: Color, init: [0, 0, 0, 1] },
@@ -27,15 +27,15 @@ class JsonNode extends ReactiveNode {
   declare children: NodeArray<JsonChildNode>
 }
 
-describe('ReactiveNode', () => {
+describe('ReactiveObject', () => {
   it('Should have all core API functions defined', () => {
-    const node = new ReactiveNode()
+    const node = new ReactiveObject()
     expect(typeof node.setProperty).toBe('function')
     expect(typeof node.applyProperties).toBe('function')
     expect(typeof node.setProperties).toBe('function')
     expect(typeof node.toJSON).toBe('function')
     expect(typeof node.applyJSON).toBe('function')
-    expect(typeof node.changed).toBe('function')
+    expect(typeof node.mutated).toBe('function')
     expect(typeof node.queue).toBe('function')
     expect(typeof node.dispatchQueue).toBe('function')
     expect(typeof node.throttle).toBe('function')
@@ -51,20 +51,20 @@ describe('ReactiveNode', () => {
   })
   it('Should detach child parent references on dispose', () => {
     @Register
-    class ParentNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class ParentNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
-          child: { type: ReactiveNode, init: null },
+          child: { type: ReactiveObject, init: null },
           children: { type: NodeArray, init: 'this' },
         }
       }
-      declare child: ReactiveNode
-      declare children: NodeArray<ReactiveNode>
+      declare child: ReactiveObject
+      declare children: NodeArray<ReactiveObject>
     }
 
     const parent = new ParentNode()
-    const child = new ReactiveNode()
-    const arrayChild = new ReactiveNode()
+    const child = new ReactiveObject()
+    const arrayChild = new ReactiveObject()
     parent.child = child
     parent.children.push(arrayChild)
 
@@ -74,14 +74,12 @@ describe('ReactiveNode', () => {
     parent.dispose()
 
     expect(child._parents.includes(parent)).toBe(false)
-    expect(arrayChild._parents.includes(parent)).toBe(false)
     child.dispose()
-    arrayChild.dispose()
   })
-  it('Should wire parent graph for IoElement property values', () => {
+  it('Should wire parent graph for ReactiveElement property values', () => {
     @Register
-    class ChildElement extends IoElement {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class ChildElement extends ReactiveElement {
+      static get Properties(): PropertyDefinitions {
         return {
           label: String,
         }
@@ -90,8 +88,8 @@ describe('ReactiveNode', () => {
     }
 
     @Register
-    class ParentNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class ParentNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           child: { type: ChildElement, init: null },
         }
@@ -104,21 +102,63 @@ describe('ReactiveNode', () => {
 
     parent.child = child
 
-    expect((child as IoElement)._parents.includes(parent)).toBe(true)
+    expect((child as ReactiveElement)._parents.includes(parent)).toBe(true)
     expect(parent._children.includes(child)).toBe(true)
 
     parent.child = null
 
-    expect((child as IoElement)._parents.includes(parent)).toBe(false)
+    expect((child as ReactiveElement)._parents.includes(parent)).toBe(false)
     expect(parent._children.includes(child)).toBe(false)
 
     parent.dispose()
     child.dispose()
   })
+  it('Should detach property subtree when replacing object property value', () => {
+    @Register
+    class LeafNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
+        return { label: '' }
+      }
+      declare label: string
+    }
+
+    @Register
+    class SplitLikeNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
+        return { child: { type: NodeArray, init: 'this' } }
+      }
+      declare child: NodeArray<LeafNode>
+    }
+
+    @Register
+    class RootNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
+        return { child: { type: Object, init: null } }
+      }
+      declare child: SplitLikeNode | LeafNode | null
+    }
+
+    const root = new RootNode()
+    const split = new SplitLikeNode()
+    const leaf = new LeafNode({ label: 'leaf' })
+    split.child.push(leaf)
+    root.child = split
+
+    expect(leaf._parents.includes(split)).toBe(true)
+    expect(split._parents.includes(root)).toBe(true)
+
+    root.child = leaf
+
+    expect(leaf._parents.includes(split)).toBe(false)
+    expect(split._parents.includes(root)).toBe(false)
+    expect(leaf._parents.includes(root)).toBe(true)
+
+    root.dispose()
+  })
   it('Should register reactive property definitions with correct defaults', () => {
     @Register
-    class TestNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           prop0: { type: String },
           prop1: { value: false },
@@ -149,7 +189,7 @@ describe('ReactiveNode', () => {
     expect(node.prop9).toEqual([1, 2, 3])
     expect(node.prop10).toEqual([])
 
-    expect(node._reactiveProperties.get('prop0')).toEqual({
+    expect(node._properties.get('prop0')).toEqual({
       value: '',
       type: String,
       binding: undefined,
@@ -157,7 +197,7 @@ describe('ReactiveNode', () => {
       init: undefined,
       observer: {type: 'none', observing: false},
     })
-    expect(node._reactiveProperties.get('prop1')).toEqual({
+    expect(node._properties.get('prop1')).toEqual({
       value: false,
       type: undefined,
       binding: undefined,
@@ -165,7 +205,7 @@ describe('ReactiveNode', () => {
       init: undefined,
       observer: {type: 'none', observing: false},
     })
-    expect(node._reactiveProperties.get('prop2')).toEqual({
+    expect(node._properties.get('prop2')).toEqual({
       value: -1,
       type: undefined,
       binding: undefined,
@@ -173,7 +213,7 @@ describe('ReactiveNode', () => {
       init: undefined,
       observer: {type: 'none', observing: false},
     })
-    expect(node._reactiveProperties.get('prop3')).toEqual({
+    expect(node._properties.get('prop3')).toEqual({
       value: 0,
       type: Number,
       binding: undefined,
@@ -181,7 +221,7 @@ describe('ReactiveNode', () => {
       init: undefined,
       observer: {type: 'none', observing: false},
     })
-    expect(node._reactiveProperties.get('prop4')).toEqual({
+    expect(node._properties.get('prop4')).toEqual({
       value: {},
       type: Object,
       binding: undefined,
@@ -189,7 +229,7 @@ describe('ReactiveNode', () => {
       init: null,
       observer: {type: 'object', observing: true},
     })
-    expect(node._reactiveProperties.get('prop5')).toEqual({
+    expect(node._properties.get('prop5')).toEqual({
       value: [0, 1, 2],
       type: undefined,
       binding: undefined,
@@ -197,7 +237,7 @@ describe('ReactiveNode', () => {
       init: undefined,
       observer: {type: 'object', observing: true},
     })
-    expect(node._reactiveProperties.get('prop6')).toEqual({
+    expect(node._properties.get('prop6')).toEqual({
       value: 'hello',
       type: String,
       binding: undefined,
@@ -205,7 +245,7 @@ describe('ReactiveNode', () => {
       init: undefined,
       observer: {type: 'none', observing: false},
     })
-    expect(node._reactiveProperties.get('prop7')).toEqual({
+    expect(node._properties.get('prop7')).toEqual({
       value: true,
       type: Boolean,
       binding: undefined,
@@ -213,7 +253,7 @@ describe('ReactiveNode', () => {
       init: undefined,
       observer: {type: 'none', observing: false},
     })
-    expect(node._reactiveProperties.get('prop8')).toEqual({
+    expect(node._properties.get('prop8')).toEqual({
       value: 1,
       type: Number,
       binding: undefined,
@@ -221,7 +261,7 @@ describe('ReactiveNode', () => {
       init: undefined,
       observer: {type: 'none', observing: false},
     })
-    expect(node._reactiveProperties.get('prop9')).toEqual({
+    expect(node._properties.get('prop9')).toEqual({
       value: [1, 2, 3],
       type: Array,
       binding: undefined,
@@ -229,7 +269,7 @@ describe('ReactiveNode', () => {
       init: [1, 2, 3],
       observer: {type: 'object', observing: true},
     })
-    expect(node._reactiveProperties.get('prop10')).toEqual({
+    expect(node._properties.get('prop10')).toEqual({
       value: [],
       type: Array,
       binding: undefined,
@@ -241,8 +281,8 @@ describe('ReactiveNode', () => {
   })
   it('Should aggregate reactive property definitions from prototype chain', () => {
     @Register
-    class Object1 extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class Object1 extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           prop1: {
             value: 0
@@ -259,7 +299,7 @@ describe('ReactiveNode', () => {
 
     @Register
     class Object2 extends Object1 {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+      static get Properties(): PropertyDefinitions {
         return {
           prop1: {
             value: 'asd',
@@ -276,14 +316,14 @@ describe('ReactiveNode', () => {
     const node1 = new Object1()
     const node2 = new Object2()
 
-    const protoProps1 = node1._protochain.reactiveProperties
-    const protoProps2 = node2._protochain.reactiveProperties
+    const protoProps1 = node1._protochain.properties
+    const protoProps2 = node2._protochain.properties
 
-    expect(Array.from(node1._reactiveProperties.keys())).toEqual(['reactivity', 'prop1', 'prop2', 'prop3'])
-    expect(Array.from(node2._reactiveProperties.keys())).toEqual(['reactivity', 'prop1', 'prop2', 'prop3'])
+    expect(Array.from(node1._properties.keys())).toEqual(['dispatchTiming', 'prop1', 'prop2', 'prop3'])
+    expect(Array.from(node2._properties.keys())).toEqual(['dispatchTiming', 'prop1', 'prop2', 'prop3'])
 
     expect(protoProps1.prop1.value).toBe(0)
-    expect(node1._reactiveProperties.get('prop1')).toEqual({
+    expect(node1._properties.get('prop1')).toEqual({
       value: 0,
       type: undefined,
       binding: undefined,
@@ -293,7 +333,7 @@ describe('ReactiveNode', () => {
     })
 
     expect(protoProps2.prop1.value).toEqual('asd')
-    expect(node2._reactiveProperties.get('prop1')).toEqual({
+    expect(node2._properties.get('prop1')).toEqual({
       value: 'asd',
       type: undefined,
       binding: undefined,
@@ -301,7 +341,7 @@ describe('ReactiveNode', () => {
       init: false,
       observer: {type: 'none', observing: false},
     })
-    expect(node2._reactiveProperties.get('prop2')).toEqual({
+    expect(node2._properties.get('prop2')).toEqual({
       value: null,
       type: undefined,
       binding: undefined,
@@ -309,7 +349,7 @@ describe('ReactiveNode', () => {
       init: true,
       observer: {type: 'none', observing: false},
     })
-    expect(node2._reactiveProperties.get('prop3')).toEqual({
+    expect(node2._properties.get('prop3')).toEqual({
       value: '',
       type: String,
       binding: undefined,
@@ -320,8 +360,8 @@ describe('ReactiveNode', () => {
   })
   it('Should correctly register properties with bindings', () => {
     @Register
-    class TestNode extends ReactiveNode {
-      static get ReactiveProperties(): any {
+    class TestNode extends ReactiveObject {
+      static get Properties(): any {
         return {
           label: ''
         }
@@ -334,8 +374,8 @@ describe('ReactiveNode', () => {
     const binding3 = new Binding(new TestNode({label: 'label3'}), 'label')
 
     @Register
-    class Object1 extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class Object1 extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           prop1: binding1,
         }
@@ -344,7 +384,7 @@ describe('ReactiveNode', () => {
 
     @Register
     class Object2 extends Object1 {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+      static get Properties(): PropertyDefinitions {
         return {
           prop1: {
             binding: binding2
@@ -357,22 +397,22 @@ describe('ReactiveNode', () => {
     const node1 = new Object1()
     const node2 = new Object2()
 
-    expect(node1._reactiveProperties.get('prop1')!.binding).toBe(binding1)
-    expect(node2._reactiveProperties.get('prop1')!.binding).toBe(binding2)
-    expect(node2._reactiveProperties.get('prop3')!.binding).toBe(binding3)
+    expect(node1._properties.get('prop1')!.binding).toBe(binding1)
+    expect(node2._properties.get('prop1')!.binding).toBe(binding2)
+    expect(node2._properties.get('prop3')!.binding).toBe(binding3)
 
     expect((binding1).targets.has(node1)).toBe(true)
     expect((binding2).targets.has(node2)).toBe(true)
     expect((binding3).targets.has(node2)).toBe(true)
 
-    expect(node1._reactiveProperties.get('prop1')!.value).toBe('label1')
-    expect(node2._reactiveProperties.get('prop1')!.value).toBe('label2')
-    expect(node2._reactiveProperties.get('prop3')!.value).toBe('label3')
+    expect(node1._properties.get('prop1')!.value).toBe('label1')
+    expect(node2._properties.get('prop1')!.value).toBe('label2')
+    expect(node2._properties.get('prop3')!.value).toBe('label3')
   })
   it('Should correctly get/set properties', () => {
     @Register
-    class TestNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           prop1: {
             value: 1
@@ -383,17 +423,17 @@ describe('ReactiveNode', () => {
 
     const node = new TestNode() as any
 
-    expect(node._reactiveProperties.get('prop1')!.value).toBe(1)
+    expect(node._properties.get('prop1')!.value).toBe(1)
     expect(node.prop1).toBe(1)
     node.setProperty('prop1', 0)
-    expect(node._reactiveProperties.get('prop1')!.value).toBe(0)
+    expect(node._properties.get('prop1')!.value).toBe(0)
     expect(node.prop1).toBe(0)
   })
   it('Should correctly get/set bound properties', () => {
 
     @Register
-    class TestNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           label: '',
         }
@@ -405,8 +445,8 @@ describe('ReactiveNode', () => {
     const binding2 = new Binding(new TestNode({label: 'label2'}), 'label')
 
     @Register
-    class TestNode2 extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestNode2 extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           prop1: binding1
         }
@@ -415,23 +455,23 @@ describe('ReactiveNode', () => {
 
     const node = new TestNode2() as any
 
-    expect(node._reactiveProperties.get('prop1')!.value).toBe('label1')
+    expect(node._properties.get('prop1')!.value).toBe('label1')
     expect(node.prop1).toBe('label1')
 
-    expect(node._reactiveProperties.get('prop1')!.binding).toBe(binding1)
+    expect(node._properties.get('prop1')!.binding).toBe(binding1)
     expect((binding1).targets.has(node)).toBe(true)
 
     node.setProperty('prop1', binding2)
-    expect(node._reactiveProperties.get('prop1')!.value).toBe('label2')
+    expect(node._properties.get('prop1')!.value).toBe('label2')
     expect(node.prop1).toBe('label2')
 
     expect((binding1).targets.has(node)).toBe(false)
     expect((binding2).targets.has(node)).toBe(true)
   })
-  it('Should execute attribute reflection on IoElement', () => {
+  it('Should execute attribute reflection on ReactiveElement', () => {
     @Register
-    class TestElementReflection extends IoElement {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestElementReflection extends ReactiveElement {
+      static get Properties(): PropertyDefinitions {
         return {
           label: {
             value: 'label1',
@@ -452,8 +492,8 @@ describe('ReactiveNode', () => {
   })
   it('Should dispatch "[propName]-changed" events correctly', async () => {
     @Register
-    class TestNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           propChangedEvents: {type: Array, init: null},
           prop: Number,
@@ -505,7 +545,7 @@ describe('ReactiveNode', () => {
       value: 1,
     }])
 
-    await nextQueue()
+    await nextFrame()
 
     expect(node.propChangedEvents).toEqual([{
       oldValue: 0,
@@ -522,7 +562,7 @@ describe('ReactiveNode', () => {
     node.setProperty('prop', 3, true)
     node.prop = 4
 
-    await nextQueue()
+    await nextFrame()
 
     expect(node.propChangedEvents).toEqual([{
       oldValue: 0,
@@ -559,12 +599,12 @@ describe('ReactiveNode', () => {
     }])
 
     node3.propChangedEvents.length = 0
-    node3.reactivity = 'debounced'
+    node3.dispatchTiming = 'debounced'
     node3.prop = 10
 
     expect(node3.propChangedEvents).toEqual([])
 
-    await nextQueue()
+    await nextFrame()
 
     expect(node3.propChangedEvents).toEqual([{
       oldValue: -1,
@@ -573,18 +613,18 @@ describe('ReactiveNode', () => {
     }])
 
     node3.propChangedEvents.length = 0
-    node3.reactivity = 'none'
+    node3.dispatchTiming = 'none'
     node3.prop = 20
 
     expect(node3.propChangedEvents).toEqual([])
 
-    await nextQueue()
+    await nextFrame()
 
     expect(node3.propChangedEvents).toEqual([])
   })
   it('Should execute throttle immediately and debounce deferred', async () => {
     const order: number[] = []
-    const node = new ReactiveNode()
+    const node = new ReactiveObject()
     node.debounce(() => {
       order.push(1)
     })
@@ -600,14 +640,14 @@ describe('ReactiveNode', () => {
     // Throttle leading already executed, trailing + debounces pending
     expect(order).toEqual([0])
 
-    await nextQueue()
+    await nextFrame()
     // Debounces execute (in insertion order), then trailing throttle
     expect(order).toEqual([0, 1, 2, 0])
   })
-  it('Should add/remove "io-object-mutation" event listeners to properties of Node type', async () => {
+  it('Should add/remove "io-mutation" event listeners to properties of Node type', async () => {
     @Register
-    class TestNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           prop: Number,
         }
@@ -620,20 +660,20 @@ describe('ReactiveNode', () => {
       prop: subnode,
     }) as any
 
-    expect(subnode._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node.onPropertyMutated)
+    expect(subnode._eventDispatcher.addedListeners['io-mutation'][0][0]).toBe(node.onPropertyMutated)
 
     node.prop = null
 
-    expect(subnode._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
+    expect(subnode._eventDispatcher.addedListeners['io-mutation']).toBe(undefined)
 
     const subnode2 = new TestNode()
     node.prop = subnode2
 
-    expect(subnode2._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node.onPropertyMutated)
+    expect(subnode2._eventDispatcher.addedListeners['io-mutation'][0][0]).toBe(node.onPropertyMutated)
 
     @Register
-    class TestNode2 extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestNode2 extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           prop: {type: TestNode, init: null},
         }
@@ -643,18 +683,18 @@ describe('ReactiveNode', () => {
     const node2 = new TestNode2() as any
     const subnode3 = node2.prop
 
-    expect(subnode3._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node2.onPropertyMutated)
+    expect(subnode3._eventDispatcher.addedListeners['io-mutation'][0][0]).toBe(node2.onPropertyMutated)
 
     node2.dispose()
 
-    expect(subnode3._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
+    expect(subnode3._eventDispatcher.addedListeners['io-mutation']).toBe(undefined)
 
     const node3 = new TestNode2() as any
     const subnode4 = node3.prop
 
     node3.prop = null
 
-    expect(subnode4._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
+    expect(subnode4._eventDispatcher.addedListeners['io-mutation']).toBe(undefined)
 
     const node4 = new TestNode2() as any
     const node5 = new TestNode2() as any
@@ -663,24 +703,24 @@ describe('ReactiveNode', () => {
 
     node4.prop = new Binding(node5, 'prop')
 
-    expect(subnode5._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
-    expect(subnode6._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node5.onPropertyMutated)
-    expect(subnode6._eventDispatcher.addedListeners['io-object-mutation'][1][0]).toBe(node4.onPropertyMutated)
+    expect(subnode5._eventDispatcher.addedListeners['io-mutation']).toBe(undefined)
+    expect(subnode6._eventDispatcher.addedListeners['io-mutation'][0][0]).toBe(node5.onPropertyMutated)
+    expect(subnode6._eventDispatcher.addedListeners['io-mutation'][1][0]).toBe(node4.onPropertyMutated)
 
   })
   it('Should correctly invoke handler functions on property changes', async () => {
     @Register
-    class TestNode extends ReactiveNode {
+    class TestNode extends ReactiveObject {
       changedCounter = 0
       prop1Changes: Change[] = []
       prop2Changes: Change[] = []
-      static get ReactiveProperties(): any {
+      static get Properties(): any {
         return {
           prop1: String,
           prop2: String,
         }
       }
-      changed() {
+      mutated() {
         this.changedCounter++
       }
       prop1Changed(change: Change) {
@@ -742,7 +782,7 @@ describe('ReactiveNode', () => {
     node.prop1Changes.length = 0
     node.prop2Changes.length = 0
 
-    node.reactivity = 'debounced'
+    node.dispatchTiming = 'debounced'
 
     node.setProperties({
       'prop1': 'four',
@@ -752,7 +792,7 @@ describe('ReactiveNode', () => {
     expect(node.prop1Changes).toEqual([])
     expect(node.prop2Changes).toEqual([])
 
-    await nextQueue()
+    await nextFrame()
 
     expect(node.prop1Changes).toEqual([{
       property: 'prop1',
@@ -769,8 +809,8 @@ describe('ReactiveNode', () => {
   })
   it('Should invoke property mutation handler functions on mutation events', async () => {
     @Register
-    class TestSubNode extends ReactiveNode {
-      static get ReactiveProperties(): any {
+    class TestSubNode extends ReactiveObject {
+      static get Properties(): any {
         return {
           a: {
             value: 0,
@@ -780,11 +820,11 @@ describe('ReactiveNode', () => {
     }
 
     @Register
-    class TestNode extends ReactiveNode {
+    class TestNode extends ReactiveObject {
       changedCounter = 0
       obj1MutatedCounter = 0
       obj2MutatedCounter = 0
-      static get ReactiveProperties(): any {
+      static get Properties(): any {
         return {
           obj1: {
             type: TestSubNode, init: null,
@@ -809,7 +849,7 @@ describe('ReactiveNode', () => {
 
     node.obj1.a = 1
 
-    await nextQueue()
+    await nextFrame()
 
     expect(node.obj1MutatedCounter).toBe(1)
     expect(node.obj2MutatedCounter).toBe(0)
@@ -818,17 +858,17 @@ describe('ReactiveNode', () => {
 
     expect(node.obj2MutatedCounter).toBe(1)
 
-    await nextQueue()
+    await nextFrame()
 
     node.obj1 = new TestNode()
 
-    await nextQueue()
+    await nextFrame()
 
     expect(node.obj1MutatedCounter).toBe(1)
 
     node.obj1.obj1 = {a: 1}
 
-    await nextQueue()
+    await nextFrame()
 
     expect(node.obj1MutatedCounter).toBe(2)
 
@@ -836,8 +876,8 @@ describe('ReactiveNode', () => {
   })
   it('Should correctly bind properties using binding system', () => {
     @Register
-    class TestNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           prop1: String,
           prop2: String,
@@ -886,8 +926,8 @@ describe('ReactiveNode', () => {
   })
   it('Should correctly handle multiple binding re-assignments in setProperties()', async () => {
     @Register
-    class TestNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           prop1: 'subnode1',
           prop2: 'subnode2',
@@ -898,8 +938,8 @@ describe('ReactiveNode', () => {
     }
 
     @Register
-    class TestNodeTarget extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestNodeTarget extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           subnode: {type: TestNode, init: null},
           prop1: 'target1',
@@ -909,9 +949,9 @@ describe('ReactiveNode', () => {
       }
       declare subnode: TestNode
       ready() {
-        this.changed()
+        this.mutated()
       }
-      changed() {
+      mutated() {
         this.subnode.setProperties({
           prop1: this.bind('prop1'),
           prop2: this.bind('prop2'),
@@ -983,8 +1023,8 @@ describe('ReactiveNode', () => {
   })
   it('Should correctly manage binding targets and target properties', () => {
     @Register
-    class TestNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           prop1: String,
           prop2: String,
@@ -1031,8 +1071,8 @@ describe('ReactiveNode', () => {
   })
   it('Should return existing binding or create new one on bind()', () => {
     @Register
-    class TestNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           prop1: String,
           prop2: String,
@@ -1046,8 +1086,8 @@ describe('ReactiveNode', () => {
   })
   it('Should dispose bindings correctly', () => {
     @Register
-    class TestNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           prop1: String,
           prop2: String,
@@ -1069,18 +1109,18 @@ describe('ReactiveNode', () => {
     expect(binding1.targets).toBe(undefined)
     expect(binding1.targetProperties).toBe(undefined)
   })
-  it('Should remove "io-object-mutation" listeners from Io objects assigned to properties with type: Object', async () => {
+  it('Should remove "io-mutation" listeners from Io objects assigned to properties with type: Object', async () => {
     @Register
-    class IoObjectNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class IoObjectNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           label: String,
         }
       }
     }
     @Register
-    class TestNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           prop: {type: Object, init: null},
         }
@@ -1094,28 +1134,28 @@ describe('ReactiveNode', () => {
     node.prop = ioObject
 
     // Listener should be added to the Io object
-    expect(ioObject._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node.onPropertyMutated)
+    expect(ioObject._eventDispatcher.addedListeners['io-mutation'][0][0]).toBe(node.onPropertyMutated)
 
     // Dispose the node - listener should be removed
     node.dispose()
 
     // Listener should have been removed
-    expect(ioObject._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
+    expect(ioObject._eventDispatcher.addedListeners['io-mutation']).toBe(undefined)
 
     ioObject.dispose()
   })
-  it('Should remove "io-object-mutation" listeners when shared Io object value is released by all properties', async () => {
+  it('Should remove "io-mutation" listeners when shared Io object value is released by all properties', async () => {
     @Register
-    class IoObjectNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class IoObjectNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           label: String,
         }
       }
     }
     @Register
-    class TestNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           propA: {type: IoObjectNode, init: null},
           propB: {type: IoObjectNode, init: null},
@@ -1131,36 +1171,36 @@ describe('ReactiveNode', () => {
     node.propB = ioObject
 
     // Listener should be on the Io object (only one, due to hasValueAtOtherProperty optimization)
-    expect(ioObject._eventDispatcher.addedListeners['io-object-mutation'].length).toBe(1)
-    expect(ioObject._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node.onPropertyMutated)
+    expect(ioObject._eventDispatcher.addedListeners['io-mutation'].length).toBe(1)
+    expect(ioObject._eventDispatcher.addedListeners['io-mutation'][0][0]).toBe(node.onPropertyMutated)
 
     // Release from propA - listener should remain (propB still has it)
     node.propA = null
 
     // Listener should still be present
-    expect(ioObject._eventDispatcher.addedListeners['io-object-mutation'].length).toBe(1)
+    expect(ioObject._eventDispatcher.addedListeners['io-mutation'].length).toBe(1)
 
     // Release from propB - listener should be removed (no other property has it)
     node.propB = null
 
     // Listener should have been removed
-    expect(ioObject._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
+    expect(ioObject._eventDispatcher.addedListeners['io-mutation']).toBe(undefined)
 
     node.dispose()
     ioObject.dispose()
   })
   it('Should correctly add listeners to new Io object after shared value is released', async () => {
     @Register
-    class IoObjectNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class IoObjectNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           label: String,
         }
       }
     }
     @Register
-    class TestNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           propA: {type: IoObjectNode, init: null},
           propB: {type: IoObjectNode, init: null},
@@ -1180,25 +1220,25 @@ describe('ReactiveNode', () => {
     node.propA = ioObject2
 
     // ioObject1 should still have a listener (from propB)
-    expect(ioObject1._eventDispatcher.addedListeners['io-object-mutation'].length).toBe(1)
+    expect(ioObject1._eventDispatcher.addedListeners['io-mutation'].length).toBe(1)
 
     // ioObject2 should have a listener (from propA)
-    expect(ioObject2._eventDispatcher.addedListeners['io-object-mutation'].length).toBe(1)
-    expect(ioObject2._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node.onPropertyMutated)
+    expect(ioObject2._eventDispatcher.addedListeners['io-mutation'].length).toBe(1)
+    expect(ioObject2._eventDispatcher.addedListeners['io-mutation'][0][0]).toBe(node.onPropertyMutated)
 
     node.dispose()
 
     // Both should have listeners removed after dispose
-    expect(ioObject1._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
-    expect(ioObject2._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
+    expect(ioObject1._eventDispatcher.addedListeners['io-mutation']).toBe(undefined)
+    expect(ioObject2._eventDispatcher.addedListeners['io-mutation']).toBe(undefined)
 
     ioObject1.dispose()
     ioObject2.dispose()
   })
   it('Should use one window mutation listener per node for multiple object properties', () => {
     @Register
-    class TestNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return {
           propA: {type: Object, init: null},
           propB: {type: Object, init: null},
@@ -1209,30 +1249,30 @@ describe('ReactiveNode', () => {
     const addSpy = vi.spyOn(window, 'addEventListener')
     const node = new TestNode() as any
 
-    expect(addSpy.mock.calls.filter(([type]) => type === 'io-object-mutation').length).toBe(1)
+    expect(addSpy.mock.calls.filter(([type]) => type === 'io-mutation').length).toBe(1)
 
     node.propA = {label: 'a'}
     node.propB = {label: 'b'}
 
-    expect(addSpy.mock.calls.filter(([type]) => type === 'io-object-mutation').length).toBe(1)
+    expect(addSpy.mock.calls.filter(([type]) => type === 'io-mutation').length).toBe(1)
 
     addSpy.mockRestore()
     node.dispose()
   })
 
   describe('toJSON and applyJSON', () => {
-    it('serializes numbers and nested toJSON values, skips reactivity and strings', () => {
+    it('serializes primitives and nested toJSON values, skips dispatchTiming', () => {
       const node = new JsonNode()
       node.count = 9
       node.color.applyJSON(Color.toHex(1, 0.2, 0))
-      node.label = 'ignored'
+      node.label = 'saved'
       node.children.push(new JsonChildNode())
 
-      const json = node.toJSON()
+      const json = node.toJSON() as any
       expect(json.count).toBe(9)
       expect(json.color).toBe(0xffff3300)
-      expect(json.label).toBeUndefined()
-      expect(json.reactivity).toBeUndefined()
+      expect(json.label).toBe('saved')
+      expect(json.dispatchTiming).toBeUndefined()
       expect(json.children).toEqual([{ count: 3 }])
     })
 
@@ -1242,7 +1282,7 @@ describe('ReactiveNode', () => {
       node.count = 11
       node.color.applyJSON(Color.toHex(0, 0, 0, 0.5))
 
-      const json = node.toJSON()
+      const json = node.toJSON() as any
       node.applyJSON(json)
 
       expect(node.count).toBe(11)
@@ -1277,7 +1317,7 @@ describe('ReactiveNode', () => {
   })
 
   it('Should track active nodes in NODES registry', () => {
-    const node = new ReactiveNode()
+    const node = new ReactiveObject()
     expect(NODES.active.has(node)).toBe(true)
     expect(NODES.disposed.has(node)).toBe(false)
     node.dispose()
@@ -1286,7 +1326,7 @@ describe('ReactiveNode', () => {
   })
 
   it('Should ignore dispose on already disposed node', () => {
-    const node = new ReactiveNode()
+    const node = new ReactiveObject()
     node.dispose()
     expect(() => node.dispose()).not.toThrow()
     expect(NODES.disposed.has(node)).toBe(true)
@@ -1294,8 +1334,8 @@ describe('ReactiveNode', () => {
 
   it('Should apply only reactive properties from applyProperties', () => {
     @Register
-    class PropsNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class PropsNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return { count: 0, label: '' }
       }
       declare count: number
@@ -1311,8 +1351,8 @@ describe('ReactiveNode', () => {
 
   it('Should skip setProperty when disposed', () => {
     @Register
-    class CountNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class CountNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return { count: 0 }
       }
       declare count: number
@@ -1325,15 +1365,15 @@ describe('ReactiveNode', () => {
 
   it('Should bubble synthetic events through parent graph', async () => {
     @Register
-    class ChildNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class ChildNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return { value: 0 }
       }
       declare value: number
     }
     @Register
-    class ParentNode extends ReactiveNode {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class ParentNode extends ReactiveObject {
+      static get Properties(): PropertyDefinitions {
         return { child: { type: ChildNode, init: null } }
       }
       declare child: ChildNode
@@ -1345,7 +1385,7 @@ describe('ReactiveNode', () => {
     parent.addEventListener('value-changed', () => events.push('parent'))
     child.addEventListener('value-changed', () => events.push('child'))
     child.dispatch('value-changed', { property: 'value', value: 1, oldValue: 0 }, true)
-    await nextQueue()
+    await nextFrame()
     expect(events).toContain('child')
     parent.dispose()
     child.dispose()

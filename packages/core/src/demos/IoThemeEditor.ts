@@ -1,12 +1,12 @@
 //@ts-nocheck
-import { Register, IoElement, ThemeSingleton, $ThemeID, THEMES } from '@io-gui/core'
-import { MenuOption, ioOptionSelect } from '@io-gui/menus'
-import { ioButton, ioField } from '@io-gui/inputs'
+import { Register, ReactiveElement, ThemeSingleton, $ThemeID, THEMES, span } from '@io-gui/core'
+import { Menu, ioOptionSelect } from '@io-gui/menus'
+import { ioButton } from '@io-gui/inputs'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioColorRgba } from '@io-gui/colors'
 
 /** @internal Demo: live theme variable editor. */
-export class IoThemeEditor extends IoElement {
+export class IoThemeEditor extends ReactiveElement {
   static get Style() {
     return /* css */`
     :host {
@@ -20,97 +20,97 @@ export class IoThemeEditor extends IoElement {
   constructor(props) {
     super(props)
     this.render([
-      ioOptionSelect({value: $ThemeID, option: new MenuOption({options: [
+      ioOptionSelect({value: $ThemeID, model: new Menu({options: [
         {id: 'Light Theme', value: 'light'},
         {id: 'Dark Theme', value: 'dark'},
       ]})}),
       ioButton({label: 'Reset', action: () => ThemeSingleton.applyJSON(THEMES[$ThemeID.value as keyof typeof THEMES]) }),
 
-      ioField('spacing'),
+      span('spacing'),
       ioNumberSlider({value: ThemeSingleton.bind('spacing'), min: 0, max: 20, step: 1}),
 
-      ioField('lineHeight'),
+      span('lineHeight'),
       ioNumberSlider({value: ThemeSingleton.bind('lineHeight'), min: ThemeSingleton.bind('fontSize'), max: 50, step: 1}),
 
-      ioField('fontSize'),
+      span('fontSize'),
       ioNumberSlider({value: ThemeSingleton.bind('fontSize'), min: 5, max: 20, step: 1}),
 
-      ioField('borderRadius'),
+      span('borderRadius'),
       ioNumberSlider({value: ThemeSingleton.bind('borderRadius'), min: 0, max: 20, step: 1}),
 
-      ioField('borderWidth'),
+      span('borderWidth'),
       ioNumberSlider({value: ThemeSingleton.bind('borderWidth'), min: 0, max: 5, step: 1}),
 
-      ioField('borderColor'),
+      span('borderColor'),
       ioColorRgba({value: ThemeSingleton.bind('borderColor')}),
 
-      ioField('borderColorLight'),
+      span('borderColorLight'),
       ioColorRgba({value: ThemeSingleton.bind('borderColorLight')}),
 
-      ioField('borderColorStrong'),
+      span('borderColorStrong'),
       ioColorRgba({value: ThemeSingleton.bind('borderColorStrong')}),
 
-      ioField('borderColorRed'),
+      span('borderColorRed'),
       ioColorRgba({value: ThemeSingleton.bind('borderColorRed')}),
 
-      ioField('borderColorBlue'),
+      span('borderColorBlue'),
       ioColorRgba({value: ThemeSingleton.bind('borderColorBlue')}),
 
-      ioField('borderColorGreen'),
+      span('borderColorGreen'),
       ioColorRgba({value: ThemeSingleton.bind('borderColorGreen')}),
 
-      ioField('bgColor'),
+      span('bgColor'),
       ioColorRgba({value: ThemeSingleton.bind('bgColor')}),
 
-      ioField('bgColorStrong'),
+      span('bgColorStrong'),
       ioColorRgba({value: ThemeSingleton.bind('bgColorStrong')}),
 
-      ioField('bgColorLight'),
+      span('bgColorLight'),
       ioColorRgba({value: ThemeSingleton.bind('bgColorLight')}),
 
-      ioField('bgColorRed'),
+      span('bgColorRed'),
       ioColorRgba({value: ThemeSingleton.bind('bgColorRed')}),
 
-      ioField('bgColorGreen'),
+      span('bgColorGreen'),
       ioColorRgba({value: ThemeSingleton.bind('bgColorGreen')}),
 
-      ioField('bgColorBlue'),
+      span('bgColorBlue'),
       ioColorRgba({value: ThemeSingleton.bind('bgColorBlue')}),
 
-      ioField('bgColorInput'),
+      span('bgColorInput'),
       ioColorRgba({value: ThemeSingleton.bind('bgColorInput')}),
 
-      ioField('color'),
+      span('color'),
       ioColorRgba({value: ThemeSingleton.bind('color')}),
 
-      ioField('colorStrong'),
+      span('colorStrong'),
       ioColorRgba({value: ThemeSingleton.bind('colorStrong')}),
 
-      ioField('colorLight'),
+      span('colorLight'),
       ioColorRgba({value: ThemeSingleton.bind('colorLight')}),
 
-      ioField('colorRed'),
+      span('colorRed'),
       ioColorRgba({value: ThemeSingleton.bind('colorRed')}),
 
-      ioField('colorGreen'),
+      span('colorGreen'),
       ioColorRgba({value: ThemeSingleton.bind('colorGreen')}),
 
-      ioField('colorBlue'),
+      span('colorBlue'),
       ioColorRgba({value: ThemeSingleton.bind('colorBlue')}),
 
-      ioField('colorWhite'),
+      span('colorWhite'),
       ioColorRgba({value: ThemeSingleton.bind('colorWhite')}),
 
-      ioField('colorInput'),
+      span('colorInput'),
       ioColorRgba({value: ThemeSingleton.bind('colorInput')}),
 
-      ioField('gradientColorStart'),
+      span('gradientColorStart'),
       ioColorRgba({value: ThemeSingleton.bind('gradientColorStart')}),
 
-      ioField('gradientColorEnd'),
+      span('gradientColorEnd'),
       ioColorRgba({value: ThemeSingleton.bind('gradientColorEnd')}),
     ])
   }
 }
 Register(IoThemeEditor)
-export const ioThemeEditor = IoThemeEditor.vConstructor
+export const ioThemeEditor = (arg0: any) => IoThemeEditor.vConstructor(arg0)

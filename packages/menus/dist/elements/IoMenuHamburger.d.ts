@@ -1,9 +1,8 @@
 import { NudgeDirection } from '@io-gui/core';
-import { IoMenuItem } from './IoMenuItem.js';
-export declare class IoMenuHamburger extends IoMenuItem {
+import { IoOption, IoOptionProps } from './IoOption.js';
+export declare class IoMenuHamburger extends IoOption {
     static get Style(): string;
     direction: NudgeDirection;
-    changed(): void;
+    mutated(): void;
 }
-export declare const ioMenuHamburger: (arg0?: import("@io-gui/core").IoElementProps | Array<import("@io-gui/core").VDOMElement | null> | string, arg1?: Array<import("@io-gui/core").VDOMElement | null> | string) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoMenuHamburger.d.ts.map
+export declare const ioMenuHamburger: (arg0: IoOptionProps) => import("@io-gui/core").VDOMElement;

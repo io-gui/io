@@ -1,14 +1,14 @@
 //@ts-nocheck
-import { IoElement, Register, section, input, label, ul, ReactiveProperty, IoElementProps } from '@io-gui/core'
+import { ReactiveElement, Register, section, input, label, ul, Property, ReactiveElementProps } from '@io-gui/core'
 import { TodoListModel } from './TodoListModel.js'
 import { todoItem } from './TodoItem.js'
 
-type TodoListProps = IoElementProps & {
-  model?: TodoListModel
-  route?: string
+type TodoListProps = ReactiveElementProps & {
+  model: TodoListModel
+  route: WithBinding<string>
 }
 
-export class TodoList extends IoElement {
+export class TodoList extends ReactiveElement {
   static get Style() {
     return /* CSS */`
       :host {
@@ -17,19 +17,21 @@ export class TodoList extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: TodoListModel})
+  @Property({type: TodoListModel})
   declare model: TodoListModel
 
-  @ReactiveProperty({value: 'all'})
+  @Property({value: 'all'})
   declare route: string
 
-  constructor(args: TodoListProps = {}) { super(args) }
-
-  modelMutated() {
-    this.changed()
+  constructor(args: TodoListProps) {
+    super(args)
   }
 
-  changed() {
+  modelMutated() {
+    this.mutated()
+  }
+
+  mutated() {
     const itemsInRoute = this.model.items.filter(this.model.filters[this.route as keyof typeof this.model.filters])
     this.render([
       section({class: 'main'}, [

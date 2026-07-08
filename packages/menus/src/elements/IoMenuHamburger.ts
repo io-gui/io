@@ -1,9 +1,9 @@
-import { NudgeDirection, ReactiveProperty, Register } from '@io-gui/core'
+import { NudgeDirection, Property, Register } from '@io-gui/core'
 import { ioIcon } from '@io-gui/icons'
-import { IoMenuItem } from './IoMenuItem.js'
+import { IoOption, IoOptionProps } from './IoOption.js'
 
 @Register
-export class IoMenuHamburger extends IoMenuItem {
+export class IoMenuHamburger extends IoOption {
   static override get Style() {
     return /* css */`
       :host {
@@ -17,11 +17,11 @@ export class IoMenuHamburger extends IoMenuItem {
     `
   }
 
-  @ReactiveProperty({value: 'down', reflect: true})
+  @Property({value: 'down', reflect: true})
   declare direction: NudgeDirection
 
-  override changed() {
+  override mutated() {
     this.render([ioIcon({value: 'io:hamburger'})])
   }
 }
-export const ioMenuHamburger = IoMenuHamburger.vConstructor
+export const ioMenuHamburger = (arg0: IoOptionProps) => IoMenuHamburger.vConstructor(arg0)

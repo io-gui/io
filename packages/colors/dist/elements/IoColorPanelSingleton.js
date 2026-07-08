@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, IoOverlaySingleton } from '@io-gui/core';
+import { Register, Property, IoOverlaySingleton } from '@io-gui/core';
 import { IoColorBase } from './IoColorBase.js';
 import { ioColorSlider } from './IoColorSliders.js';
 /**
@@ -65,7 +65,7 @@ let IoColorPanel = class IoColorPanel extends IoColorBase {
     onValueInput() {
         this.src?.onPanelValueInput();
     }
-    changed() {
+    mutated() {
         this.render([
             ioColorSlider({ value: this.value, channel: 'sv', '@value-input': this.onValueInput }),
             ioColorSlider({ value: this.value, channel: 'h', vertical: true, '@value-input': this.onValueInput }),
@@ -74,10 +74,10 @@ let IoColorPanel = class IoColorPanel extends IoColorBase {
     }
 };
 __decorate([
-    ReactiveProperty({ value: false, reflect: true })
+    Property({ value: false, reflect: true })
 ], IoColorPanel.prototype, "expanded", void 0);
 __decorate([
-    ReactiveProperty({ value: null })
+    Property({ value: null })
 ], IoColorPanel.prototype, "src", void 0);
 IoColorPanel = __decorate([
     Register
@@ -86,4 +86,3 @@ export const IoColorPanelSingleton = new IoColorPanel();
 setTimeout(() => {
     IoOverlaySingleton.appendChild(IoColorPanelSingleton);
 }, 100);
-//# sourceMappingURL=IoColorPanelSingleton.js.map

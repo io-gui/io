@@ -13,4 +13,3 @@ registerEditorConfig(PolyhedronGeometry, [
 registerEditorGroups(PolyhedronGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=PolyhedronGeometry.js.map

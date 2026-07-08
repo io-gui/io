@@ -12,4 +12,3 @@ registerEditorConfig(OctahedronGeometry, [
 registerEditorGroups(OctahedronGeometry, {
     Hidden: ['parameters'],
 });
-//# sourceMappingURL=OctahedronGeometry.js.map

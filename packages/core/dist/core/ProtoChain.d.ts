@@ -1,11 +1,11 @@
-import { ReactiveProtoProperty } from './ReactiveProperty.js';
+import { ProtoProperty } from './Property.js';
+import type { ReactiveNode } from './ReactiveCore.js';
 import { ListenerDefinition } from './EventDispatcher.js';
-import { ReactiveNode, ReactiveNodeConstructor, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/ReactiveNode.js';
-import { IoElement } from '../elements/IoElement.js';
+import { ReactiveNodeConstructor, PropertyDefinitions, ListenerDefinitions } from '../nodes/ReactiveObject.js';
 type ProtoConstructors = Array<ReactiveNodeConstructor>;
 type ProtoHandlers = string[];
 type ReactiveProtoProperties = {
-    [property: string]: ReactiveProtoProperty;
+    [property: string]: ProtoProperty;
 };
 type ProtoListeners = {
     [property: string]: ListenerDefinition[];
@@ -15,42 +15,42 @@ type ProtoListeners = {
  */
 export declare class ProtoChain {
     constructors: ProtoConstructors;
-    properties: Record<string, unknown>;
-    reactiveProperties: ReactiveProtoProperties;
+    fields: Record<string, unknown>;
+    properties: ReactiveProtoProperties;
     listeners: ProtoListeners;
     style: string;
     handlers: ProtoHandlers;
     /**
      * Creates an instance of `ProtoChain` for specified class constructor.
-     * @param {ReactiveNodeConstructor} ioNodeConstructor - Owner `ReactiveNode` constructor.
+     * @param {ReactiveNodeConstructor} ioNodeConstructor - Owner `ReactiveObject` constructor.
      */
     constructor(ioNodeConstructor: ReactiveNodeConstructor);
     /**
      * Auto-binds event handler methods (starting with 'on[A-Z]' or '_on[A-Z]') to preserve their 'this' context.
      * NOTE: Defining handlers as arrow functions will not work because they are not defined before constructor has finished.
-     * @param {ReactiveNode | IoElement} node - Target node instance
+     * @param {ReactiveNode} node - Target node instance
      */
-    init(node: ReactiveNode | IoElement): void;
+    init(node: ReactiveNode): void;
     /**
      * Adds properties defined in decorators to the properties array.
-     * @param {ReactiveNodeConstructor} ioNodeConstructor - Owner `ReactiveNode` constructor.
+     * @param {ReactiveNodeConstructor} ioNodeConstructor - Owner `ReactiveObject` constructor.
      */
-    addPropertiesFromDecorators(ioNodeConstructor: ReactiveNodeConstructor): void;
-    addProperties(properties?: Record<string, unknown>, prevHash?: string): string;
+    addFieldsFromDecorators(ioNodeConstructor: ReactiveNodeConstructor): void;
+    addFields(fields?: Record<string, unknown>, prevHash?: string): string;
     /**
      * Adds reactive properties defined in decorators to the properties array.
-     * @param {ReactiveNodeConstructor} ioNodeConstructor - Owner `ReactiveNode` constructor.
+     * @param {ReactiveNodeConstructor} ioNodeConstructor - Owner `ReactiveObject` constructor.
      */
-    addReactivePropertiesFromDecorators(ioNodeConstructor: ReactiveNodeConstructor): void;
+    addPropertiesFromDecorators(ioNodeConstructor: ReactiveNodeConstructor): void;
     /**
-     * Adds reactive properties from `static get ReactiveProperties()` to the properties array.
+     * Adds reactive properties from `static get Properties()` to the properties array.
      * Only process properties if they differ from superclass.
-     * This prevents 'static get ReactiveProperties()' from overriding subclass properties defined in decorators.
-     * @param {ReactivePropertyDefinitions} properties - Properties to add
+     * This prevents 'static get Properties()' from overriding subclass properties defined in decorators.
+     * @param {PropertyDefinitions} properties - Fields to add
      * @param {string} prevHash - Previous properties hash
      * @returns {string} - Updated properties hash
      */
-    addReactiveProperties(properties?: ReactivePropertyDefinitions, prevHash?: string): string;
+    addProperties(properties?: PropertyDefinitions, prevHash?: string): string;
     /**
      * Merges listener definitions from each class in the prototype chain into {@link listeners}.
      * Duplicate handler names update options; distinct handler names append to the array.
@@ -65,14 +65,14 @@ export declare class ProtoChain {
     addStyle(style?: string): void;
     /**
      * Adds style defined in decorators to the style string.
-     * @param {ReactiveNodeConstructor} ioNodeConstructor - Owner `ReactiveNode` constructor.
+     * @param {ReactiveNodeConstructor} ioNodeConstructor - Owner `ReactiveObject` constructor.
      */
     addStyleFromDecorators(ioNodeConstructor: ReactiveNodeConstructor): void;
     /**
      * Adds function names that start with "on[A-Z]" or "_on[A-Z]" to the handlers array.
-     * @param {ReactiveNode} proto - Prototype object to search for handlers
+     * @param {ReactiveObject} proto - Prototype object to search for handlers
      */
-    addHandlers(proto: ReactiveNode | IoElement): void;
+    addHandlers(proto: ReactiveNode): void;
     /**
      * Validates reactive property definitions in debug mode.
      * Logs warnings for incorrect property definitions.
@@ -81,4 +81,3 @@ export declare class ProtoChain {
     validateReactiveProperties(): void;
 }
 export {};
-//# sourceMappingURL=ProtoChain.d.ts.map

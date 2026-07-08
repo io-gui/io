@@ -1,11 +1,103 @@
 import { describe, it, expect } from 'vitest'
-import { Register, IoElement, applyNativeElementProps, constructElement, VDOMElement, div, span, ReactivePropertyDefinitions, clearNativeElementChildren } from '@io-gui/core'
+import { Register, ReactiveElement, applyNativeElementProps, constructElement, VDOMElement, div, span, text, TEXT_TAG, filterVDOMElements, PropertyDefinitions, clearNativeElementChildren } from '@io-gui/core'
 
 describe('VDOM', () => {
   it('Should construct an native DIV element', () => {
     const element = constructElement(div())
     expect(element).toBeDefined()
-    expect(element.localName).toBe('div')
+    expect((element as HTMLElement).localName).toBe('div')
+  })
+  it('Should construct a text node from text() VDOM', () => {
+    const node = constructElement(text('hello'))
+    expect(node.nodeType).toBe(Node.TEXT_NODE)
+    expect(node.nodeName).toBe(TEXT_TAG)
+    expect(node.nodeValue).toBe('hello')
+  })
+  it('Should store text content as a single-item children array', () => {
+    expect(text('hello').children).toEqual(['hello'])
+  })
+  it('Should normalize string children to array in native factories', () => {
+    expect(span('hello').children).toEqual(['hello'])
+    expect(span({class: 'label'}, 'hello').children).toEqual(['hello'])
+  })
+  it('Should treat string children same as text() in filterVDOMElements', () => {
+    const filtered = filterVDOMElements(['hello', null, span(), 'world'])
+    expect(filtered.length).toBe(3)
+    expect(filtered[0]).toEqual(text('hello'))
+    expect(filtered[1].tag).toBe('span')
+    expect(filtered[2]).toEqual(text('world'))
+  })
+  it('Should render text() nodes as DOM text siblings', () => {
+    @Register
+    class TestTextNodes extends ReactiveElement {
+      label = 'world'
+      mutated() {
+        this.render([
+          div([text('Hello '), span({class: 'label'}, this.label)]),
+        ])
+      }
+    }
+
+    const element = new TestTextNodes()
+    document.body.appendChild(element as unknown as HTMLElement)
+    element.mutated()
+
+    const container = element.children[0]
+    expect(container.childNodes.length).toBe(2)
+    expect(container.childNodes[0].nodeName).toBe(TEXT_TAG)
+    expect(container.childNodes[0].nodeValue).toBe('Hello ')
+    expect(container.childNodes[1].localName).toBe('span')
+    expect(container.textContent).toBe('Hello world')
+
+    element.label = 'Io-Gui'
+    element.mutated()
+    expect(container.childNodes[0].nodeValue).toBe('Hello ')
+    expect(container.childNodes[1].textContent).toBe('Io-Gui')
+    expect(container.textContent).toBe('Hello Io-Gui')
+
+    element.remove()
+  })
+  it('Should render plain strings in child arrays same as text()', () => {
+    @Register
+    class TestStringChildren extends ReactiveElement {
+      ready() {
+        this.render([div(['Hello ', span('world')])])
+      }
+    }
+
+    const element = new TestStringChildren()
+    document.body.appendChild(element as unknown as HTMLElement)
+
+    const container = element.children[0]
+    expect(container.childNodes.length).toBe(2)
+    expect(container.childNodes[0].nodeName).toBe(TEXT_TAG)
+    expect(container.childNodes[0].nodeValue).toBe('Hello ')
+    expect(container.textContent).toBe('Hello world')
+
+    element.remove()
+  })
+  it('Should update text() node value on re-render', () => {
+    @Register
+    class TestTextUpdate extends ReactiveElement {
+      message = 'first'
+      mutated() {
+        this.render([div([text(this.message)])])
+      }
+    }
+
+    const element = new TestTextUpdate()
+    document.body.appendChild(element as unknown as HTMLElement)
+    element.mutated()
+
+    const container = element.children[0]
+    expect(container.childNodes[0].nodeValue).toBe('first')
+
+    element.message = 'second'
+    element.mutated()
+    expect(container.childNodes.length).toBe(1)
+    expect(container.childNodes[0].nodeValue).toBe('second')
+
+    element.remove()
   })
   it('Should apply native element properties to the native DIV element', () => {
     const element = document.createElement('div')
@@ -76,17 +168,17 @@ describe('VDOM', () => {
     // The text content "Text" should be cleared but wasn't due to the bug.
 
     @Register
-    class TestVDOMClearChildren extends IoElement {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestVDOMClearChildren extends ReactiveElement {
+      static get Properties(): PropertyDefinitions {
         return {
           showMarker: false,
         }
       }
       declare showMarker: boolean
       ready() {
-        this.changed()
+        this.mutated()
       }
-      changed() {
+      mutated() {
         // Mimics IoTab render pattern where selected tab has a drop-marker span
         // and all tabs have a label span. When showMarker changes, the first
         // span switches between drop-marker (no children) and label (with text).
@@ -138,7 +230,7 @@ describe('VDOM Element Reuse', () => {
 
   it('Should reuse DOM elements when rendering the same VDom array consecutively', () => {
     @Register
-    class TestReuseConsecutive1 extends IoElement {
+    class TestReuseConsecutive1 extends ReactiveElement {
       renderWithVdom(vdom: any[]) {
         this.render(vdom)
       }
@@ -167,7 +259,7 @@ describe('VDOM Element Reuse', () => {
 
   it('Should reuse DOM elements when rendering the same VDom object instance in multiple positions', () => {
     @Register
-    class TestReuseSameInstance1 extends IoElement {
+    class TestReuseSameInstance1 extends ReactiveElement {
       renderWithVdom(vdom: any[]) {
         this.render(vdom)
       }
@@ -214,7 +306,7 @@ describe('VDOM Element Reuse', () => {
    */
   it('Should reuse elements when creating new VDom wrapper with shared children (widget pattern)', () => {
     @Register
-    class TestWidgetPattern1 extends IoElement {
+    class TestWidgetPattern1 extends ReactiveElement {
       renderWithVdom(vdom: any[]) {
         this.render(vdom)
       }
@@ -289,7 +381,7 @@ describe('VDOM Element Reuse', () => {
 
   it('Should reuse nested DOM elements when parent VDom is rendered consecutively', () => {
     @Register
-    class TestReuseNested1 extends IoElement {
+    class TestReuseNested1 extends ReactiveElement {
       renderWithVdom(vdom: any[]) {
         this.render(vdom)
       }
@@ -331,7 +423,7 @@ describe('VDOM Element Reuse', () => {
 
   it('Should reuse elements when VDom array changes length and then returns to original', () => {
     @Register
-    class TestReuseLengthChange1 extends IoElement {
+    class TestReuseLengthChange1 extends ReactiveElement {
       renderWithVdom(vdom: any[]) {
         this.render(vdom)
       }
@@ -365,7 +457,7 @@ describe('VDOM Element Reuse', () => {
 
   it('Should properly reuse elements when same VDom array is rendered in rapid succession', () => {
     @Register
-    class TestReuseRapid1 extends IoElement {
+    class TestReuseRapid1 extends ReactiveElement {
       renderCount = 0
       renderWithVdom(vdom: any[]) {
         this.renderCount++
@@ -398,7 +490,7 @@ describe('VDOM Element Reuse', () => {
 
   it('Should reuse elements when VDom props change but structure remains same', () => {
     @Register
-    class TestReusePropsChange1 extends IoElement {
+    class TestReusePropsChange1 extends ReactiveElement {
       renderWithVdom(vdom: any[]) {
         this.render(vdom)
       }
@@ -433,7 +525,7 @@ describe('VDOM Element Reuse', () => {
    */
   it('Should NOT create duplicate elements when new VDom wrappers share same children array', () => {
     @Register
-    class TestDuplicateBug1 extends IoElement {
+    class TestDuplicateBug1 extends ReactiveElement {
       renderWithVdom(vdom: any[]) {
         this.render(vdom)
       }
@@ -491,15 +583,15 @@ describe('VDOM Element Reuse', () => {
   })
 
   /**
-   * This test uses IoElement children (custom elements), which is what
+   * This test uses ReactiveElement children (custom elements), which is what
    * IoPropertyEditor widgets typically are. The handling differs between
-   * IoElement and native elements in the traverse function.
+   * ReactiveElement and native elements in the traverse function.
    */
-  it('Should reuse IoElement children when rendering widget pattern with custom elements', () => {
-    // Define a custom IoElement to use as widget
+  it('Should reuse ReactiveElement children when rendering widget pattern with custom elements', () => {
+    // Define a custom ReactiveElement to use as widget
     @Register
-    class TestWidgetElement1 extends IoElement {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestWidgetElement1 extends ReactiveElement {
+      static get Properties(): PropertyDefinitions {
         return {
           value: null,
         }
@@ -509,7 +601,7 @@ describe('VDOM Element Reuse', () => {
     }
 
     @Register
-    class TestParentWithWidget1 extends IoElement {
+    class TestParentWithWidget1 extends ReactiveElement {
       renderWithVdom(vdom: any[]) {
         this.render(vdom)
       }
@@ -522,7 +614,7 @@ describe('VDOM Element Reuse', () => {
     const cachedWidgetVdom: VDOMElement = {
       tag: 'test-widget-element1',
       props: { class: 'widget' },
-      children: undefined  // IoElements manage their own children
+      children: undefined  // ReactiveElements manage their own children
     }
 
     // First render - create a NEW wrapper object (like widgetWithValue)
@@ -576,10 +668,10 @@ describe('VDOM Element Reuse', () => {
    * Test the exact pattern from IoPropertyEditor where widget has children
    * that are shared across renders.
    */
-  it('Should reuse IoElement widget with nested native children', () => {
+  it('Should reuse ReactiveElement widget with nested native children', () => {
     @Register
-    class TestWidgetWithChildren1 extends IoElement {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestWidgetWithChildren1 extends ReactiveElement {
+      static get Properties(): PropertyDefinitions {
         return {
           value: null,
         }
@@ -589,7 +681,7 @@ describe('VDOM Element Reuse', () => {
     }
 
     @Register
-    class TestParentWithNestedWidget1 extends IoElement {
+    class TestParentWithNestedWidget1 extends ReactiveElement {
       renderWithVdom(vdom: any[]) {
         this.render(vdom)
       }
@@ -645,8 +737,8 @@ describe('VDOM Element Reuse', () => {
    */
   it('Should handle multiple debounced renders without creating duplicates', async () => {
     @Register
-    class TestWidgetElement2 extends IoElement {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestWidgetElement2 extends ReactiveElement {
+      static get Properties(): PropertyDefinitions {
         return {
           value: null,
         }
@@ -656,8 +748,8 @@ describe('VDOM Element Reuse', () => {
     }
 
     @Register
-    class TestDebouncedParent1 extends IoElement {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestDebouncedParent1 extends ReactiveElement {
+      static get Properties(): PropertyDefinitions {
         return {
           data: null,
         }
@@ -711,10 +803,10 @@ describe('VDOM Element Reuse', () => {
   /**
    * Diagnostic test: Verify widget renders its own children during construction
    */
-  it('DIAGNOSTIC: Widget should render children via ready() -> changed()', () => {
+  it('DIAGNOSTIC: Widget should render children via ready() -> mutated()', () => {
     @Register
-    class TestDiagnosticWidget1 extends IoElement {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestDiagnosticWidget1 extends ReactiveElement {
+      static get Properties(): PropertyDefinitions {
         return {
           value: null,
         }
@@ -722,10 +814,10 @@ describe('VDOM Element Reuse', () => {
       declare value: any
 
       ready() {
-        this.changed()
+        this.mutated()
       }
 
-      changed() {
+      mutated() {
         this.render([
           span({class: 'diag-child-1'}),
           span({class: 'diag-child-2'}),
@@ -737,7 +829,7 @@ describe('VDOM Element Reuse', () => {
     const widget = new TestDiagnosticWidget1()
     document.body.appendChild(widget as unknown as HTMLElement)
 
-    // Widget should have 2 children from its changed() method
+    // Widget should have 2 children from its mutated() method
     expect(widget.children.length).toBe(2)
     expect(widget.children[0].className).toBe('diag-child-1')
     expect(widget.children[1].className).toBe('diag-child-2')
@@ -746,18 +838,18 @@ describe('VDOM Element Reuse', () => {
   })
 
   /**
-   * Test: Parent should NOT traverse IoElement children even when vChild.children is an array.
+   * Test: Parent should NOT traverse ReactiveElement children even when vChild.children is an array.
    *
    * Scenario:
-   * 1. IoElement widget renders its own children via ready() -> changed() -> render()
+   * 1. ReactiveElement widget renders its own children via ready() -> mutated() -> render()
    * 2. Parent renders widget with vChild.children = [] (empty array)
    * 3. Parent's traverse should NOT override widget's internally-rendered children
    */
-  it('Parent should NOT traverse IoElement children even when vChild.children is an array', () => {
-    // Widget that renders its own children via ready() -> changed()
+  it('Parent should NOT traverse ReactiveElement children even when vChild.children is an array', () => {
+    // Widget that renders its own children via ready() -> mutated()
     @Register
-    class TestSelfRenderingWidget1 extends IoElement {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestSelfRenderingWidget1 extends ReactiveElement {
+      static get Properties(): PropertyDefinitions {
         return {
           value: null,
         }
@@ -765,11 +857,11 @@ describe('VDOM Element Reuse', () => {
       declare value: any
 
       ready() {
-        this.changed()
+        this.mutated()
       }
 
-      changed() {
-        // Widget renders its own children - this is standard IoElement pattern
+      mutated() {
+        // Widget renders its own children - this is standard ReactiveElement pattern
         this.render([
           span({class: 'internal-child-1'}),
           span({class: 'internal-child-2'}),
@@ -778,7 +870,7 @@ describe('VDOM Element Reuse', () => {
     }
 
     @Register
-    class TestParentWithExplicitChildren1 extends IoElement {
+    class TestParentWithExplicitChildren1 extends ReactiveElement {
       renderWithVdom(vdom: any[]) {
         this.render(vdom)
       }
@@ -800,7 +892,7 @@ describe('VDOM Element Reuse', () => {
     expect(parent.children.length).toBe(1)
     const widget = parent.children[0] as TestSelfRenderingWidget1
 
-    // Widget should have 2 children (rendered by its changed() method)
+    // Widget should have 2 children (rendered by its mutated() method)
     expect(widget.children.length).toBe(2)
     expect(widget.children[0].className).toBe('internal-child-1')
     expect(widget.children[1].className).toBe('internal-child-2')
@@ -809,12 +901,12 @@ describe('VDOM Element Reuse', () => {
   })
 
   /**
-   * Test: Parent should NOT override IoElement internal children with vChild.children array.
+   * Test: Parent should NOT override ReactiveElement internal children with vChild.children array.
    */
-  it('Parent should NOT override IoElement internal children with vChild.children array', () => {
+  it('Parent should NOT override ReactiveElement internal children with vChild.children array', () => {
     @Register
-    class TestSelfRenderingWidget2 extends IoElement {
-      static get ReactiveProperties(): ReactivePropertyDefinitions {
+    class TestSelfRenderingWidget2 extends ReactiveElement {
+      static get Properties(): PropertyDefinitions {
         return {
           value: null,
         }
@@ -822,10 +914,10 @@ describe('VDOM Element Reuse', () => {
       declare value: any
 
       ready() {
-        this.changed()
+        this.mutated()
       }
 
-      changed() {
+      mutated() {
         // Widget renders 3 children internally
         this.render([
           span({class: 'widget-child-a'}),
@@ -836,7 +928,7 @@ describe('VDOM Element Reuse', () => {
     }
 
     @Register
-    class TestParentWithMismatchedChildren1 extends IoElement {
+    class TestParentWithMismatchedChildren1 extends ReactiveElement {
       renderWithVdom(vdom: any[]) {
         this.render(vdom)
       }
@@ -862,7 +954,7 @@ describe('VDOM Element Reuse', () => {
     const widget = parent.children[0] as TestSelfRenderingWidget2
 
     // The widget's internal children should take precedence
-    // because IoElements manage their own children
+    // because ReactiveElements manage their own children
     // BUG: If this fails, parent's traverse is overriding widget's children
     expect(widget.children.length).toBe(3)  // Widget renders 3 children
     expect(widget.children[0].className).toBe('widget-child-a')
@@ -882,5 +974,90 @@ describe('VDOM Element Reuse', () => {
 
     expect(parent.childNodes.length).toBe(0)
     expect((child as any)._eventDispatcher).toBeUndefined()
+  })
+
+  it('Should reuse DOM elements when skipDispose re-renders same tag', () => {
+    @Register
+    class TestSkipDisposeReuse extends ReactiveElement {
+      renderWithVdom(vdom: VDOMElement[], skipDispose?: boolean) {
+        this.render(vdom, undefined, skipDispose)
+      }
+    }
+
+    const element = new TestSkipDisposeReuse()
+    document.body.appendChild(element as unknown as HTMLElement)
+
+    element.renderWithVdom([span({class: 'first'})], true)
+    const child = element.children[0]
+
+    element.renderWithVdom([span({class: 'second'})], true)
+    expect(element.children[0]).toBe(child)
+    expect(child.className).toBe('second')
+
+    element.remove()
+  })
+
+  it('Should reset class when omitted from re-render props via render()', () => {
+    @Register
+    class TestClassRemoval extends ReactiveElement {
+      renderWithVdom(vdom: VDOMElement[]) {
+        this.render(vdom)
+      }
+    }
+
+    const element = new TestClassRemoval()
+    document.body.appendChild(element as unknown as HTMLElement)
+
+    element.renderWithVdom([span({class: 'active'})])
+    const child = element.children[0] as HTMLSpanElement
+    expect(child.className).toBe('active')
+    expect(child.getAttribute('class')).toBe('active')
+    expect(child.getAttribute('className')).toBe(null)
+
+    element.renderWithVdom([span({title: 'no-class'})])
+    expect(element.children[0]).toBe(child)
+    expect(child.className).toBe('')
+    expect(child.getAttribute('class')).toBe(null)
+    expect(child.getAttribute('className')).toBe(null)
+
+    element.remove()
+  })
+
+  it('Should replace inline style keys when style object shrinks on re-render', () => {
+    @Register
+    class TestStyleRemoval extends ReactiveElement {
+      renderWithVdom(vdom: VDOMElement[]) {
+        this.render(vdom)
+      }
+    }
+
+    const element = new TestStyleRemoval()
+    document.body.appendChild(element as unknown as HTMLElement)
+
+    element.renderWithVdom([span({style: {'font-size': '12px', color: 'red'}})])
+    const child = element.children[0] as HTMLSpanElement
+    expect(child.style.color).toBe('red')
+    expect(child.style.fontSize).toBe('12px')
+
+    element.renderWithVdom([span({style: {color: 'blue'}})])
+    expect(element.children[0]).toBe(child)
+    expect(child.style.color).toBe('blue')
+    expect(child.style.fontSize).toBe('')
+
+    element.remove()
+  })
+
+  it('Should reset class and style via applyNativeElementProps when props are omitted', () => {
+    const element = document.createElement('div')
+    applyNativeElementProps(element, {class: 'foo', style: {color: 'red', margin: '1px'}})
+    expect(element.className).toBe('foo')
+    expect(element.style.color).toBe('red')
+    expect(element.style.margin).toBe('1px')
+
+    applyNativeElementProps(element, {title: 'bar'})
+    expect(element.className).toBe('')
+    expect(element.getAttribute('class')).toBe(null)
+    expect(element.style.color).toBe('')
+    expect(element.style.margin).toBe('')
   })
 })

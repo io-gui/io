@@ -16,4 +16,3 @@ registerEditorGroups(Fog, {
 registerEditorConfig(Object, [
     [Fog, ioObject({ labelWidth: '52px' })],
 ]);
-//# sourceMappingURL=Fog.js.map

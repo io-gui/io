@@ -1,12 +1,12 @@
 //@ts-nocheck
-import { Register, IoElement, ThemeSingleton, Theme } from '@io-gui/core'
+import { Register, ReactiveElement, ThemeSingleton, Theme } from '@io-gui/core'
 
 function lerp(a, b, t) {
   return a + (b - a) * t
 }
 
 /** @internal Demo: scoped style container for nested elements. */
-export class IoStyleContainer extends IoElement {
+export class IoStyleContainer extends ReactiveElement {
   static get Style() {
     return /* css */`
       :host {
@@ -38,7 +38,7 @@ export class IoStyleContainer extends IoElement {
     `
   }
 
-  static get ReactiveProperties() {
+  static get Properties() {
     return {
       theme: {type: Theme, value: ThemeSingleton},
     }
@@ -84,4 +84,4 @@ export class IoStyleContainer extends IoElement {
 }
 Register(IoStyleContainer)
 
-export const ioStyleContainer = IoStyleContainer.vConstructor
+export const ioStyleContainer = (arg0: any) => IoStyleContainer.vConstructor(arg0)

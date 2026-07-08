@@ -30,4 +30,3 @@ export * from './elements/IoContextEditorSingleton.js';
 export * from './elements/IoInspector.js';
 export * from './elements/IoObject.js';
 export * from './elements/IoPropertyEditor.js';
-//# sourceMappingURL=index.d.ts.map

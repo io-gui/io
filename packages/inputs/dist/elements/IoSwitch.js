@@ -73,7 +73,7 @@ let IoSwitch = class IoSwitch extends IoBoolean {
       }
     `;
     }
-    changed() {
+    mutated() {
         this.render([
             this.icon ? ioIcon({ value: this.icon }) : null,
             span()
@@ -87,4 +87,3 @@ export { IoSwitch };
 export const ioSwitch = function (arg0) {
     return IoSwitch.vConstructor(arg0);
 };
-//# sourceMappingURL=IoSwitch.js.map

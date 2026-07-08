@@ -6,7 +6,7 @@ todos:
     content: Create principles-decisions.md template with shared criteria + 'principles to affirm' section
     status: pending
   - id: p1-diff-audit
-    content: "P1: Diff ReactiveNode vs IoElement instance APIs; list duplication vs intentional DOM-only surface"
+    content: "P1: Diff ReactiveNode vs ReactiveElement instance APIs; list duplication vs intentional DOM-only surface"
     status: pending
   - id: p1-subclass-survey
     content: "P1: Survey packages for RN vs IE subclass/extension patterns"
@@ -92,7 +92,7 @@ Evaluate six architectural principles from the design review. **Goal:** decision
 
 **Already addressed elsewhere (baseline, not in scope):**
 - ReactiveCore + unified parent graph ([packages/core/src/core/ReactiveCore.ts](packages/core/src/core/ReactiveCore.ts)) — original concern #1 largely mitigated
-- One window mutation listener per node ([packages/core/src/core/ReactiveProperty.ts](packages/core/src/core/ReactiveProperty.ts) `ensureWindowMutationListener`)
+- One window mutation listener per node ([packages/core/src/core/Property.ts](packages/core/src/core/Property.ts) `ensureWindowMutationListener`)
 - VDOM keys — done in original roadmap
 - Packaging: `exports` → dist, narrowed `sideEffects`, incremental `tsc -b` ([packages/core/package.json](packages/core/package.json))
 - Package-layer refactors → [package_layer.plan.md](.cursor/plans/package_layer.plan.md)
@@ -126,13 +126,13 @@ For each principle, produce a short **Decision Record** (ADR-style) with:
 
 ## Principle 1: Universal reactivity via parallel base classes
 
-**Current state:** [ReactiveCore.ts](packages/core/src/core/ReactiveCore.ts) shares internals; [ReactiveNode.ts](packages/core/src/nodes/ReactiveNode.ts) and [IoElement.ts](packages/core/src/elements/IoElement.ts) still duplicate instance API (~150+ lines each: `setProperty`, `dispatch`, bindings, queue).
+**Current state:** [ReactiveCore.ts](packages/core/src/core/ReactiveCore.ts) shares internals; [ReactiveNode.ts](packages/core/src/nodes/ReactiveNode.ts) and [ReactiveElement.ts](packages/core/src/elements/ReactiveElement.ts) still duplicate instance API (~150+ lines each: `setProperty`, `dispatch`, bindings, queue).
 
 ```mermaid
 flowchart LR
   subgraph today [Current]
     RN[ReactiveNode]
-    IE[IoElement]
+    IE[ReactiveElement]
     RC[ReactiveCore free functions]
     RN --> RC
     IE --> RC
@@ -181,7 +181,7 @@ flowchart TD
 
 ## Principle 3: Synthetic bubbling through `_parents`
 
-**Current state:** [EventDispatcher.dispatchEvent](packages/core/src/core/EventDispatcher.ts) walks `_parents` for non-DOM nodes (~L367–372). DOM elements rely on native bubbling + `hasVisitedDomAncestor` dedup (~L77–85). Production `dispatch(..., true)` usage is mostly **IoElement → DOM tree** (layout, inputs, menus, three).
+**Current state:** [EventDispatcher.dispatchEvent](packages/core/src/core/EventDispatcher.ts) walks `_parents` for non-DOM nodes (~L367–372). DOM elements rely on native bubbling + `hasVisitedDomAncestor` dedup (~L77–85). Production `dispatch(..., true)` usage is mostly **ReactiveElement → DOM tree** (layout, inputs, menus, three).
 
 **Evaluation tasks:**
 - Classify all `dispatch(..., true)` call sites: node-graph bubble vs DOM-only vs both
@@ -198,7 +198,7 @@ flowchart TD
 
 ## Principle 4: Automatic observation of plain objects
 
-**Current state:** `type: Object` props use window `io-object-mutation` bus (one listener per node, improved). Io values listen directly; `NodeArray` uses proxy + self-listener. `Color` in-place mutation still invisible ([packages/core/src/core/Color.ts](packages/core/src/core/Color.ts)).
+**Current state:** `type: Object` props use window `io-mutation` bus (one listener per node, improved). Io values listen directly; `NodeArray` uses proxy + self-listener. `Color` in-place mutation still invisible ([packages/core/src/core/Color.ts](packages/core/src/core/Color.ts)).
 
 **Production `type: Object` usage:** layout (`IoSplit`, `IoPanel`, `IoDrawer`), editors (`IoInspector`, `IoObject`, `IoPropertyEditor`), three (`IoVectorBase`, `IoBuildGeometry`).
 

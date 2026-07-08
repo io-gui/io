@@ -1,5 +1,5 @@
-import { IoElement, IoElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
-export type IoColorPickerProps = IoElementProps & {
+import { ReactiveElement, ReactiveElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
+export type IoColorPickerProps = ReactiveElementProps & {
     value: WithBinding<{
         r: number;
         g: number;
@@ -7,7 +7,7 @@ export type IoColorPickerProps = IoElementProps & {
         a?: number;
     }>;
 };
-export declare class IoColorPicker extends IoElement {
+export declare class IoColorPicker extends ReactiveElement {
     static get Style(): string;
     value: {
         r: number;
@@ -28,4 +28,3 @@ export declare class IoColorPicker extends IoElement {
     valueChanged(): void;
 }
 export declare const ioColorPicker: (arg0: IoColorPickerProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoColorPicker.d.ts.map

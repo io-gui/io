@@ -9,4 +9,3 @@ registerEditorGroups(Frustum, {});
 registerEditorConfig(Object, [
     [Frustum, ioObject({ labeled: false })],
 ]);
-//# sourceMappingURL=Frustum.js.map

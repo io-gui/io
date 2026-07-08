@@ -4,13 +4,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, Property, Storage as $, clearFocusBacktrack } from '@io-gui/core';
+import { Register, ReactiveElement, Property, Field, Storage as $, clearFocusBacktrack } from '@io-gui/core';
 import { ioBoolean } from '@io-gui/inputs';
 import { ioPropertyEditor } from './IoPropertyEditor.js';
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside io-collapsible element. It can be configured to use custom property editors and display only specified properties.
  **/
-let IoObject = class IoObject extends IoElement {
+let IoObject = class IoObject extends ReactiveElement {
     static get Style() {
         return /* css */ `
     :host {
@@ -63,7 +63,7 @@ let IoObject = class IoObject extends IoElement {
         const targetIsThis = bindingTargets.has(this);
         if (bindingTargets.size < 1) {
             if (!targetIsThis) {
-                const targetP = this._reactiveProperties.get('expanded');
+                const targetP = this._properties.get('expanded');
                 if (targetP.binding && targetP.binding !== expandedBinding) {
                     targetP.binding.removeTarget(this, 'expanded');
                 }
@@ -74,7 +74,7 @@ let IoObject = class IoObject extends IoElement {
     expandedChanged() {
         clearFocusBacktrack();
     }
-    changed() {
+    mutated() {
         const label = this.label || this.value.constructor.name;
         const propCount = Object.keys(this.value).length;
         const vChildren = [];
@@ -101,37 +101,37 @@ let IoObject = class IoObject extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty()
+    Property()
 ], IoObject.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty({ type: Array, init: null })
+    Property({ type: Array, init: null })
 ], IoObject.prototype, "properties", void 0);
 __decorate([
-    ReactiveProperty({ type: String, value: '' })
+    Property({ type: String, value: '' })
 ], IoObject.prototype, "label", void 0);
 __decorate([
-    ReactiveProperty(true)
+    Property(true)
 ], IoObject.prototype, "labeled", void 0);
 __decorate([
-    ReactiveProperty('80px')
+    Property('80px')
 ], IoObject.prototype, "labelWidth", void 0);
 __decorate([
-    ReactiveProperty({ value: false, reflect: true })
+    Property({ value: false, reflect: true })
 ], IoObject.prototype, "expanded", void 0);
 __decorate([
-    ReactiveProperty({ value: false })
+    Property({ value: false })
 ], IoObject.prototype, "persistentExpand", void 0);
 __decorate([
-    ReactiveProperty({ type: Array, init: null })
+    Property({ type: Array, init: null })
 ], IoObject.prototype, "config", void 0);
 __decorate([
-    ReactiveProperty({ type: Object, init: null })
+    Property({ type: Object, init: null })
 ], IoObject.prototype, "groups", void 0);
 __decorate([
-    ReactiveProperty({ type: Object })
+    Property({ type: Object })
 ], IoObject.prototype, "widget", void 0);
 __decorate([
-    Property('region')
+    Field('region')
 ], IoObject.prototype, "role", void 0);
 IoObject = __decorate([
     Register
@@ -154,4 +154,3 @@ function getTempIdentifier(object) {
     }
     return tempIdentifiers.get(object);
 }
-//# sourceMappingURL=IoObject.js.map

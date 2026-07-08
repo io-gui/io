@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, span, Property } from '@io-gui/core'
+import { Register, Property, span, Field } from '@io-gui/core'
 import { ioIcon } from '@io-gui/icons'
 import { IoField, IoFieldProps } from './IoField.js'
 
@@ -26,16 +26,16 @@ export class IoButton extends IoField {
       }
     `
   }
-  @ReactiveProperty({value: undefined})
+  @Property({value: undefined})
   declare value: unknown
 
-  @ReactiveProperty()
+  @Property()
   declare action?: (value: unknown) => void
 
-  @ReactiveProperty({value: 'outset', type: String, reflect: true})
+  @Property({value: 'outset', type: String, reflect: true})
   declare appearance: 'inset' | 'outset' | 'neutral'
 
-  @Property('button')
+  @Field('button')
   declare role: string
 
   constructor(args: IoButtonProps = {}) { super(args) }
@@ -59,9 +59,9 @@ export class IoButton extends IoField {
     this.dispatch('io-button-clicked', {value: this.value}, true)
   }
   override ready() {
-    this.changed()
+    this.mutated()
   }
-  override changed() {
+  override mutated() {
     this.setAttribute('aria-pressed', String(this.pressed))
     this.render([
       this.icon ? ioIcon({value: this.icon}) : null,

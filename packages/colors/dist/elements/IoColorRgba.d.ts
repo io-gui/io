@@ -5,7 +5,6 @@ import { IoColorBase, IoColorBaseProps } from './IoColorBase.js';
 export declare class IoColorRgba extends IoColorBase {
     static get Style(): string;
     _onNumberValueInput(event: CustomEvent): void;
-    changed(): void;
+    mutated(): void;
 }
 export declare const ioColorRgba: (arg0?: IoColorBaseProps) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoColorRgba.d.ts.map

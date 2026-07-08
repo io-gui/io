@@ -16,5 +16,4 @@ export declare class IoCameraLogarithmicDepthBufferExample extends IoThreeExampl
     ready(): void;
     dispose(): void;
 }
-export declare const ioCameraLogarithmicDepthBufferExample: (arg0?: import("@io-gui/core").IoElementProps | Array<import("@io-gui/core").VDOMElement | null> | string, arg1?: Array<import("@io-gui/core").VDOMElement | null> | string) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoCameraLogarithmicDepthBufferExample.d.ts.map
+export declare const ioCameraLogarithmicDepthBufferExample: (arg0: any) => import("@io-gui/core").VDOMElement;

@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, Property } from '@io-gui/core'
+import { Register, Property, Field } from '@io-gui/core'
 import { Vector4 } from 'three/webgpu'
 import { IoVectorBaseProps, IoVectorBase } from './IoVectorBase.js'
 
@@ -9,10 +9,10 @@ export type IoVector4Props = IoVectorBaseProps & {
 @Register
 export class IoVector4 extends IoVectorBase {
 
-  @ReactiveProperty({type: Vector4, init: null})
+  @Property({type: Vector4, init: null})
   declare value: Vector4
 
-  @Property(['x', 'y', 'z', 'w'])
+  @Field(['x', 'y', 'z', 'w'])
   declare keys: Array<string>
 
   constructor(args: IoVector4Props) {

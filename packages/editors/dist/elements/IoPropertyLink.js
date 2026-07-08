@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { ReactiveProperty, Register, span } from '@io-gui/core';
+import { Property, Register, span } from '@io-gui/core';
 import { IoButton } from '@io-gui/inputs';
 let IoPropertyLink = class IoPropertyLink extends IoButton {
     static get Style() {
@@ -24,9 +24,9 @@ let IoPropertyLink = class IoPropertyLink extends IoButton {
     `;
     }
     valueMutated() {
-        this.changed();
+        this.mutated();
     }
-    changed() {
+    mutated() {
         let label;
         if (this.value instanceof Array) {
             label = `${this.value.constructor.name} (${this.value.length})`;
@@ -45,13 +45,13 @@ let IoPropertyLink = class IoPropertyLink extends IoButton {
     }
 };
 __decorate([
-    ReactiveProperty()
+    Property()
 ], IoPropertyLink.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty({ value: false, type: Boolean })
+    Property({ value: false, type: Boolean })
 ], IoPropertyLink.prototype, "showName", void 0);
 __decorate([
-    ReactiveProperty({ value: 'neutral', type: String, reflect: true })
+    Property({ value: 'neutral', type: String, reflect: true })
 ], IoPropertyLink.prototype, "appearance", void 0);
 IoPropertyLink = __decorate([
     Register
@@ -60,4 +60,3 @@ export { IoPropertyLink };
 export const ioPropertyLink = function (arg0) {
     return IoPropertyLink.vConstructor(arg0);
 };
-//# sourceMappingURL=IoPropertyLink.js.map

@@ -1,10 +1,10 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Property, Storage as $, clearFocusBacktrack } from '@io-gui/core'
+import { Register, ReactiveElement, Property, ReactiveElementProps, WithBinding, VDOMElement, Field, Storage as $, clearFocusBacktrack } from '@io-gui/core'
 import { ioBoolean } from '@io-gui/inputs'
 import { ioPropertyEditor } from './IoPropertyEditor.js'
 import { PropertyConfig } from '../utils/EditorConfig.js'
 import { PropertyGroups } from '../utils/EditorGroups.js'
 
-export type IoObjectProps = IoElementProps & {
+export type IoObjectProps = ReactiveElementProps & {
   value?: Record<string, any> | any[]
   properties?: string[]
   labeled?: boolean
@@ -21,7 +21,7 @@ export type IoObjectProps = IoElementProps & {
  * Object property editor. It displays a set of labeled property editors for the `value` object inside io-collapsible element. It can be configured to use custom property editors and display only specified properties.
  **/
 @Register
-export class IoObject extends IoElement {
+export class IoObject extends ReactiveElement {
   static override get Style() {
     return /* css */`
     :host {
@@ -55,37 +55,37 @@ export class IoObject extends IoElement {
     `
   }
 
-  @ReactiveProperty()
+  @Property()
   declare value: Record<string, unknown> | Array<unknown>
 
-  @ReactiveProperty({type: Array, init: null})
+  @Property({type: Array, init: null})
   declare properties: string[] | null
 
-  @ReactiveProperty({type: String, value: ''})
+  @Property({type: String, value: ''})
   declare label: string
 
-  @ReactiveProperty(true)
+  @Property(true)
   declare labeled: boolean
 
-  @ReactiveProperty('80px')
+  @Property('80px')
   declare labelWidth: string
 
-  @ReactiveProperty({value: false, reflect: true})
+  @Property({value: false, reflect: true})
   declare expanded: boolean
 
-  @ReactiveProperty({value: false})
+  @Property({value: false})
   declare persistentExpand: boolean
 
-  @ReactiveProperty({type: Array, init: null})
+  @Property({type: Array, init: null})
   declare config: PropertyConfig[]
 
-  @ReactiveProperty({type: Object, init: null})
+  @Property({type: Object, init: null})
   declare groups: PropertyGroups
 
-  @ReactiveProperty({type: Object})
+  @Property({type: Object})
   declare widget: VDOMElement | undefined | null
 
-  @Property('region')
+  @Field('region')
   declare role: string
 
   valueChanged() {
@@ -111,7 +111,7 @@ export class IoObject extends IoElement {
 
     if (bindingTargets.size < 1) {
       if (!targetIsThis) {
-        const targetP = this._reactiveProperties.get('expanded')!
+        const targetP = this._properties.get('expanded')!
         if (targetP.binding && targetP.binding !== expandedBinding) {
           targetP.binding.removeTarget(this, 'expanded')
         }
@@ -124,7 +124,7 @@ export class IoObject extends IoElement {
     clearFocusBacktrack()
   }
 
-  override changed() {
+  override mutated() {
     const label = this.label || this.value.constructor.name
 
     const propCount = Object.keys(this.value).length

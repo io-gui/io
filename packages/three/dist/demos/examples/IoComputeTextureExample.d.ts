@@ -10,5 +10,4 @@ export declare class IoComputeTextureExample extends IoThreeExample {
     applet: ComputeTextureExample;
     ready(): void;
 }
-export declare const ioComputeTextureExample: (arg0?: import("@io-gui/core").IoElementProps | Array<import("@io-gui/core").VDOMElement | null> | string, arg1?: Array<import("@io-gui/core").VDOMElement | null> | string) => import("@io-gui/core").VDOMElement;
-//# sourceMappingURL=IoComputeTextureExample.d.ts.map
+export declare const ioComputeTextureExample: (arg0: any) => import("@io-gui/core").VDOMElement;

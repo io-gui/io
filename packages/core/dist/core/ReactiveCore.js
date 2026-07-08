@@ -1,15 +1,14 @@
 import { ChangeQueue } from './ChangeQueue.js';
 import { EventDispatcher } from './EventDispatcher.js';
-export function isReactiveOwner(value) {
+export function isReactiveNode(value) {
     if (typeof value !== 'object' || value === null)
         return false;
     const owner = value;
-    return owner._isNode === true || owner._isIoElement === true;
+    return owner._isReactiveObject === true || owner._isReactiveElement === true;
 }
-export const isIoValue = isReactiveOwner;
-export function initReactiveOwnerInternals(owner) {
+export function initReactiveNodeInternals(owner) {
     Object.defineProperty(owner, '_changeQueue', { enumerable: false, configurable: true, value: new ChangeQueue(owner) });
-    Object.defineProperty(owner, '_reactiveProperties', { enumerable: false, configurable: true, value: new Map() });
+    Object.defineProperty(owner, '_properties', { enumerable: false, configurable: true, value: new Map() });
     Object.defineProperty(owner, '_bindings', { enumerable: false, configurable: true, value: new Map() });
     Object.defineProperty(owner, '_eventDispatcher', { enumerable: false, configurable: true, value: new EventDispatcher(owner) });
     Object.defineProperty(owner, '_parents', { enumerable: false, configurable: true, value: [] });
@@ -18,7 +17,7 @@ export function initReactiveOwnerInternals(owner) {
     Object.defineProperty(owner, '_hasSelfMutationListener', { enumerable: false, configurable: true, writable: true, value: false });
 }
 export function addParent(child, parent) {
-    if (!isReactiveOwner(parent))
+    if (!isReactiveNode(parent))
         return;
     if (!child._parents.includes(parent)) {
         child._parents.push(parent);
@@ -29,7 +28,7 @@ export function addParent(child, parent) {
 export function removeParent(child, parent) {
     if (child._disposed)
         return;
-    if (!isReactiveOwner(parent))
+    if (!isReactiveNode(parent))
         return;
     const index = child._parents.indexOf(parent);
     if (index !== -1) {
@@ -39,15 +38,14 @@ export function removeParent(child, parent) {
             parent._children.splice(childIndex, 1);
     }
     else {
-        debug: console.warn('ReactiveOwner.removeParent(): Parent not found!', child, parent);
+        debug: console.warn('ReactiveNode.removeParent(): Parent not found!', child, parent);
     }
 }
-export function detachChildParents(owner) {
+export function detachNodeParents(owner) {
     for (let i = owner._children.length; i--;) {
         const child = owner._children[i];
-        if (isReactiveOwner(child) && !child._disposed) {
+        if (isReactiveNode(child) && !child._disposed) {
             removeParent(child, owner);
         }
     }
 }
-//# sourceMappingURL=ReactiveCore.js.map

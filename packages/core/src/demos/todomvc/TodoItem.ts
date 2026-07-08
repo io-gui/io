@@ -1,40 +1,43 @@
-import { IoElement, Register, input, label, li, div, button, ReactiveProperty, IoElementProps } from '@io-gui/core'
+import { ReactiveElement, Register, input, label, li, div, button, Property, ReactiveElementProps } from '@io-gui/core'
 import { TodoItemModel } from './TodoItemModel.js'
 import { TodoListModel } from './TodoListModel.js'
 
-type TodoItemProps = IoElementProps & {
+type TodoItemProps = ReactiveElementProps & {
   item?: TodoItemModel
   model?: TodoListModel
 }
 
-export class TodoItem extends IoElement {
+export class TodoItem extends ReactiveElement {
+
   static override get Style() {
     return /* css */`
-    :host {
-      display: contents;
-    }
+      :host {
+        display: contents;
+      }
     `
   }
 
-  @ReactiveProperty({type: TodoItemModel})
+  @Property({type: TodoItemModel})
   declare item: TodoItemModel
 
-  @ReactiveProperty({type: TodoListModel})
+  @Property({type: TodoListModel})
   declare model: TodoListModel
 
-  @ReactiveProperty({value: false})
+  @Property({value: false})
   declare editing: boolean
 
-  private $input!: HTMLInputElement
-  private _originalTitle!: string
+  declare private $input: HTMLInputElement
+  declare private _originalTitle: string
 
-  constructor(args: TodoItemProps = {}) { super(args) }
-
-  itemMutated() {
-    this.changed()
+  constructor(args: TodoItemProps = {}) {
+    super(args)
   }
 
-  override changed() {
+  itemMutated() {
+    this.mutated()
+  }
+
+  override mutated() {
     this.render([
       li({class: 'todo ' + (this.item.completed ? 'completed ' : '') + (this.editing ? 'editing' : '')}, [
         div({class: 'view'}, [
@@ -42,10 +45,10 @@ export class TodoItem extends IoElement {
           label({'@dblclick': this.onStartEdit}, this.item.title),
           button({class: 'destroy', '@click': this.item.delete}),
         ]),
-        input({id: 'input-' + this.item.title, class: 'edit', value: this.item.title, '@blur': this.onBlur, '@keyup': this.onInputKey})
+        input({id: 'input', class: 'edit', value: this.item.title, '@blur': this.onBlur, '@keyup': this.onInputKey})
       ])
     ])
-    this.$input = this.querySelector('input.edit') as HTMLInputElement
+    this.$input = this.$['input'] as HTMLInputElement
   }
 
   onStartEdit() {
@@ -64,9 +67,8 @@ export class TodoItem extends IoElement {
     this.editing = false
   }
 
-  onInputKey(event: CustomEvent) {
-    const keyboardEvent = event.detail as KeyboardEvent
-    if (['Enter', 'Escape'].includes(keyboardEvent.key)) {
+  onInputKey(event: KeyboardEvent) {
+    if (['Enter', 'Escape'].includes(event.key)) {
       this.$input.blur()
     }
   }

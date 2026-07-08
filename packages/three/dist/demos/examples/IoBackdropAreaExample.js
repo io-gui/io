@@ -4,15 +4,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { ReactiveProperty, Register } from '@io-gui/core';
+import { Property, Register } from '@io-gui/core';
 import { AmbientLight, AnimationMixer, BoxGeometry, DoubleSide, Mesh, MeshBasicNodeMaterial, Vector3, } from 'three/webgpu';
 import { color, positionWorld, linearDepth, viewportLinearDepth, viewportSharedTexture, screenUV, hue, time, checker, uv, modelScale, } from 'three/tsl';
 import { hashBlur } from 'three/addons/tsl/display/hashBlur.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { ThreeApplet, IoThreeExample, ioThreeViewport, ioVector3 } from '@io-gui/three';
-import { ioSplit, Split } from '@io-gui/layout';
+import { ioLayout, Layout } from '@io-gui/layout';
 import { ioPropertyEditor } from '@io-gui/editors';
-import { ioOptionSelect, MenuOption } from '@io-gui/menus';
+import { ioOptionSelect, Menu } from '@io-gui/menus';
 let BackdropAreaExample = class BackdropAreaExample extends ThreeApplet {
     mixer;
     box;
@@ -106,7 +106,7 @@ let BackdropAreaExample = class BackdropAreaExample extends ThreeApplet {
     }
 };
 __decorate([
-    ReactiveProperty({ type: String, value: 'blurred' })
+    Property({ type: String, value: 'blurred' })
 ], BackdropAreaExample.prototype, "material", void 0);
 BackdropAreaExample = __decorate([
     Register
@@ -115,7 +115,7 @@ export { BackdropAreaExample };
 let IoBackdropAreaExample = class IoBackdropAreaExample extends IoThreeExample {
     ready() {
         this.render([
-            ioSplit({
+            ioLayout({
                 elements: [
                     ioThreeViewport({ id: 'Top', applet: this.applet, cameraSelect: 'top' }),
                     ioThreeViewport({ id: 'Left', applet: this.applet, cameraSelect: 'left' }),
@@ -125,61 +125,60 @@ let IoBackdropAreaExample = class IoBackdropAreaExample extends IoThreeExample {
                         properties: ['material', 'boxScale'],
                         config: [
                             ['material', ioOptionSelect({
-                                    option: new MenuOption({
+                                    model: new Menu({
                                         options: ['blurred', 'depth', 'checker', 'pixel']
                                     }),
-                                    selectBy: 'id'
                                 })],
                             [Vector3, ioVector3({ linkable: true })]
                         ]
                     })
                 ],
-                split: new Split({
-                    type: 'split',
-                    orientation: 'horizontal',
-                    children: [
-                        {
-                            type: 'split',
-                            flex: '2 1 auto',
-                            orientation: 'vertical',
-                            children: [
-                                {
-                                    type: 'split',
-                                    flex: '1 1 50%',
-                                    orientation: 'horizontal',
-                                    children: [
-                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Top' }] },
-                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Left' }] }
-                                    ]
-                                },
-                                {
-                                    type: 'split',
-                                    flex: '1 1 50%',
-                                    orientation: 'horizontal',
-                                    children: [
-                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Back' }] },
-                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'SceneCamera' }] },
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            type: 'panel',
-                            flex: '0 0 280px',
-                            tabs: [{ id: 'PropertyEditor' }]
-                        }
-                    ]
+                model: new Layout({
+                    child: {
+                        type: 'split',
+                        orientation: 'horizontal',
+                        children: [
+                            {
+                                type: 'split',
+                                orientation: 'vertical',
+                                children: [
+                                    {
+                                        type: 'split',
+                                        size: '50%',
+                                        orientation: 'horizontal',
+                                        children: [
+                                            { type: 'panel', size: '50%', tabs: [{ id: 'Top' }] },
+                                            { type: 'panel', size: '50%', tabs: [{ id: 'Left' }] }
+                                        ]
+                                    },
+                                    {
+                                        type: 'split',
+                                        size: '50%',
+                                        orientation: 'horizontal',
+                                        children: [
+                                            { type: 'panel', size: '50%', tabs: [{ id: 'Back' }] },
+                                            { type: 'panel', size: '50%', tabs: [{ id: 'SceneCamera' }] },
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                type: 'panel',
+                                size: '280px',
+                                tabs: [{ id: 'PropertyEditor' }]
+                            }
+                        ]
+                    }
                 })
             })
         ]);
     }
 };
 __decorate([
-    ReactiveProperty({ type: BackdropAreaExample, init: { isPlaying: true } })
+    Property({ type: BackdropAreaExample, init: { isPlaying: true } })
 ], IoBackdropAreaExample.prototype, "applet", void 0);
 IoBackdropAreaExample = __decorate([
     Register
 ], IoBackdropAreaExample);
 export { IoBackdropAreaExample };
-export const ioBackdropAreaExample = IoBackdropAreaExample.vConstructor;
-//# sourceMappingURL=IoBackdropAreaExample.js.map
+export const ioBackdropAreaExample = (arg0) => IoBackdropAreaExample.vConstructor(arg0);

@@ -1,7 +1,7 @@
 //@ts-nocheck
-import { Register, IoElement, div } from '@io-gui/core';
+import { Register, ReactiveElement, div } from '@io-gui/core';
 import { ioField, ioString, ioNumber, ioBoolean, ioSwitch, ioButton } from '@io-gui/inputs';
-export class IoInputsDemo extends IoElement {
+export class IoInputsDemo extends ReactiveElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -21,7 +21,7 @@ export class IoInputsDemo extends IoElement {
       }
     `;
     }
-    static get ReactiveProperties() {
+    static get Properties() {
         return {
             string: 'Hello!',
             number: 1,
@@ -71,5 +71,4 @@ export class IoInputsDemo extends IoElement {
     }
 }
 Register(IoInputsDemo);
-export const ioInputsDemo = IoInputsDemo.vConstructor;
-//# sourceMappingURL=IoInputsDemo.js.map
+export const ioInputsDemo = (arg0) => IoInputsDemo.vConstructor(arg0);

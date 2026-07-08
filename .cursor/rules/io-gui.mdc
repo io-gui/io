@@ -8,6 +8,8 @@ Io-Gui is a reactive web UI framework that provides a consistent reactive founda
 
 Io-Gui relies on interoperable reactive **nodes** and **elements** that respond to state changes and mutations. They provide a base for a reactive architecture that combines the best aspects of declarative component-based design, with reactive and composable development patterns.
 
+`ReactiveNode` is the union of `ReactiveObject` and `ReactiveElement`.
+
 ### Universal Reactive Architecture
 
 Io-Gui implements the same features on top of its base classes - nodes and elements. The features include:
@@ -17,15 +19,15 @@ Io-Gui implements the same features on top of its base classes - nodes and eleme
 - Event-driven architecture
 By doing this, it achieves reactive interoperability with predictable data flow patterns between nodes and elements.
 
-#### Node
-Node is a base class extending `Object` with all of the core features provided by Io-Gui. It can be used to create reactive data models and state containers with business logic. Some examples of nodes are:
+#### ReactiveObject
+ReactiveObject is a base class extending `Object` with all of the core features provided by Io-Gui. It can be used to create reactive data models and state containers with business logic. Some examples of nodes are:
 - `ThemeSingleton`: Io-Gui's theme system that responsively renders CSS variables to document 
 - `StorageNode` and `Storage`: Data persistence node/factory for data storage in location.hash/localStorage
 - `MenuOption`: A rich domain model for menu options and their state in io-menus
 - `Tab`, `Panel` and `Split`: Rich domain models for tabbed-split-panel layout in io-layout
 
-#### IoElement
-IoElement is a custom element base class extending `HTMLElement` with Node functionality as well as some DOM functionality such as:
+#### ReactiveElement
+ReactiveElement is a custom element base class extending `HTMLElement` with ReactiveObject functionality as well as some DOM functionality such as:
 - Virtual DOM rendering
 - Style declaration with inheritance
 It can be used to create reactive custom elements that can be bound to node properties and are responsive to node mutations. The entire Io-Gui design system is built on top of this class.
@@ -36,10 +38,10 @@ It can be used to create reactive custom elements that can be bound to node prop
   - Example: `"label"` property change event `"label-changed"` includes `event.detail.value` and `event.detail.oldValue`
   - Change handlers get invoked automatically if they are defined
   - Example: change event `"label-changed"` invokes `.labelChanged()` handler if it exists
-  - Generic property handler `.changed()` gets invoked after any property change
+- Generic property handler `.mutated()` gets invoked after any property change
 - Leaf-to-trunk data flow can be achieved using mutation events and handlers
   - Mutation events are automatically dispatched for all nodes and objects
-  - Example: `"data"` property mutation event `"io-object-mutation"` includes `event.detail.object` that equals mutated object
+  - Example: `"data"` property mutation event `"io-mutation"` includes `event.detail.object` that equals mutated object
   - Mutations of generic objects can be dispatched using `this.dispatchMutation(mutatedObject);`
   - Mutation handlers get invoked automatically if they are defined
   - Example: `"data"` property mutation event invokes `dataMutated()` handler if it exists
@@ -50,15 +52,15 @@ It can be used to create reactive custom elements that can be bound to node prop
 
 ### Core Systems
 - **ProtoChain** - Inheritance aggregator that also performs one-time class initialization
-- **ReactiveProperty** - Creates and initializes responsive properties
+- **Property** - Creates and initializes responsive properties
 - **EventDispatcher** - Manages DOM events on elements and bridges them to synthetic events on nodes
 - **ChangeQueue** - Detects property changes and dispatches change/mutation events and handlers
-- **Queue** - Generic queue manager with throttle and debounce capability
+- **FrameScheduler** - Generic frame scheduler with throttle and debounce capability
 - **Binding** - Manages two-way data flow using change events
 - **VDOM** - Virtual DOM implementation for efficient rendering
 
 ### TypeScript Patterns
-- Use decorators (`@Register`, `@ReactiveProperty`, `@Property`)
+- Use decorators (`@Register`, `@Property`, `@Field`)
 - Strong typing with interfaces and type definitions
 - Avoid using `any` whenever possible
 - ES modules with `.js` extensions in imports
@@ -67,13 +69,13 @@ It can be used to create reactive custom elements that can be bound to node prop
 - When importing from another package or a test file, use package name instead of full path. Example: `import { ioButton } from '@io-gui/inputs'`
 
 ### Defining New Components
-- Elements extend `IoElement` and use reactive properties
-- Nodes extend `Node` for non-DOM reactive objects
+- Elements extend `ReactiveElement` and use reactive properties
+- Nodes extend `ReactiveObject` for non-DOM reactive objects
 - Nodes and elements require registration using `Register(IoClassConstructor)` or `@Register` decorator
 - CSS styles defined in static `static get Style()` string
 - CSS selectors have to start with `:host` selector which represents the host element
-- Reactive properties defined in static `static get ReactiveProperties()` object or `@ReactiveProperty` decorators
-- Non-reactive properties defined in static `static get Properties()` object or `@Property` decorators
+- Reactive properties defined in static `static get Properties()` object or `@Property` decorators
+- Non-reactive fields defined in static `static get Fields()` object or `@Field` decorators
 
 ### Singleton Pattern
 When using singletons that hold shared state:
@@ -81,7 +83,7 @@ When using singletons that hold shared state:
 - View elements should capture events and forward them to singleton methods
 - Avoid direct property manipulation from views - use methods instead
 - This keeps views focused on event handling and rendering
-- Example: `IoTab` captures pointer events and forwards to `tabDragIconSingleton.updateDrag()`, `endDrag()`, `cancelDrag()`
+- Example: `IoTab` captures pointer events and forwards to `IoTabDragIconSingleton.updateDrag()`, `endDrag()`, `cancelDrag()`
 
 ### Runtime Type Checking
 - Use `debug: {}` labeled scoped blocks to write runtime debug code such as type checking etc
@@ -111,7 +113,7 @@ The framework has no runtime dependencies - only development dependencies. It us
 ### Monorepo Structure
 The project is organized as a monorepo with packages in `/packages/`:
 
-- **io-core** - Core framework (Node, IoElement, bindings, event system, Storage, Theme)
+- **io-core** - Core framework (ReactiveObject, ReactiveElement, bindings, event system, Storage, Theme)
 - **io-colors** - Color components and utilities
 - **io-icons** - Icon component and default iconset
 - **io-inputs** - Input components (buttons, fields, switches)
@@ -145,9 +147,9 @@ Each package can be built/linted individually:
 - Run tests with `pnpm test` or `pnpm test:[package]` for individual packages
 - If playwright browsers are not installed in sandbox try `source .env && pnpm test:[package] 2>&1`
 - If that fails, install playwright browsers with `pnpm exec playwright install chromium 2>&1`
-- Use `nextQueue()` from `@io-gui/core` to wait for next queue tick in tests. Dont use `await new Promise`
-- DO NOT use `@ReactiveProperty` decorator in test files. Use `static override get ReactiveProperties()` method instead.
+- Use `nextFrame()` from `@io-gui/core` to wait for next queue tick in tests. Dont use `await new Promise`
 - DO NOT use `@Property` decorator in test files. Use `static override get Properties()` method instead.
+- DO NOT use `@Field` decorator in test files. Use `static override get Fields()` method instead.
 
 ### Development Guidelines
 

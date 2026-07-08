@@ -8,7 +8,7 @@ import {
   Color,
   StorageNode,
   Storage,
-  nextQueue,
+  nextFrame,
 } from '@io-gui/core'
 
 const LIGHT = THEMES.light
@@ -33,11 +33,11 @@ function getDocumentCssVar(name: string): string {
 describe('Theme', () => {
   describe('property definitions', () => {
     it('registers color properties as Color type', () => {
-      expect(ThemeSingleton._reactiveProperties.get('borderColor')!.type).toBe(Color)
+      expect(ThemeSingleton._properties.get('borderColor')!.type).toBe(Color)
     })
 
     it('registers numeric properties as Number type', () => {
-      expect(ThemeSingleton._reactiveProperties.get('spacing')!.type).toBe(Number)
+      expect(ThemeSingleton._properties.get('spacing')!.type).toBe(Number)
     })
   })
 
@@ -92,14 +92,13 @@ describe('Theme', () => {
     })
   })
 
-  describe('changed()', () => {
+  describe('mutated()', () => {
     it('derives spacing multiples and fieldHeight', () => {
       const theme = themeWith({ ...LIGHT, spacing: 4, lineHeight: 20, borderWidth: 1 })
-      theme.changed()
+      theme.mutated()
       expect(theme.spacing2).toBe(8)
       expect(theme.spacing3).toBe(12)
-      expect(theme.spacing5).toBe(20)
-      expect(theme.spacing8).toBe(32)
+      expect(theme.spacing4).toBe(16)
       expect(theme.fieldHeight).toBe(20 + 2 * (4 + 1))
       theme.dispose()
     })
@@ -117,7 +116,7 @@ describe('Theme', () => {
 
     it('writes CSS custom properties to the document stylesheet', () => {
       const theme = themeWith(LIGHT)
-      theme.changed()
+      theme.mutated()
       expect(getDocumentCssVar('--io_borderColor')).toBe(theme.borderColor.toCss())
       expect(getDocumentCssVar('--io_spacing')).toBe(`${theme.spacing}px`)
       expect(getDocumentCssVar('--io_shadowColor')).toBe(theme.shadowColor.toCss())
@@ -154,7 +153,7 @@ describe('Theme', () => {
       const node = new StorageNode({ key, value: theme, storage: 'local' })
       theme.spacing = 9
       theme.dispatchMutation()
-      await nextQueue()
+      await nextFrame()
       const stored = JSON.parse(localStorage.getItem('Storage:' + key)!)
       expect(stored.spacing).toBe(9)
       expect(stored.shadowColor).toBe(LIGHT.shadowColor)

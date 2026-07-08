@@ -1,7 +1,7 @@
-import { IoElement, IoElementProps, VDOMElement } from '@io-gui/core';
+import { ReactiveElement, ReactiveElementProps, VDOMElement } from '@io-gui/core';
 import { PropertyConfig } from '../utils/EditorConfig.js';
 import { PropertyGroups } from '../utils/EditorGroups.js';
-export type IoPropertyEditorProps = IoElementProps & {
+export type IoPropertyEditorProps = ReactiveElementProps & {
     value?: Record<string, any> | any[];
     properties?: string[] | null;
     label?: string;
@@ -14,7 +14,7 @@ export type IoPropertyEditorProps = IoElementProps & {
 /**
  * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
  **/
-export declare class IoPropertyEditor extends IoElement {
+export declare class IoPropertyEditor extends ReactiveElement {
     static get Style(): string;
     value: object | Array<unknown>;
     properties: string[] | undefined;
@@ -35,9 +35,8 @@ export declare class IoPropertyEditor extends IoElement {
     valueChanged(): void;
     configureDebounced(): void;
     valueMutated(): void;
-    changed(): void;
+    mutated(): void;
     changedThrottled(): void;
     dispose(): void;
 }
 export declare const ioPropertyEditor: (arg0?: IoPropertyEditorProps) => VDOMElement;
-//# sourceMappingURL=IoPropertyEditor.d.ts.map

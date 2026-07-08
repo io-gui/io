@@ -4,4 +4,3 @@ import { Quaternion } from 'three/webgpu';
 registerEditorConfig(Object, [
     [Quaternion, ioQuaternion({ min: -Infinity, max: Infinity, step: 0.1 })],
 ]);
-//# sourceMappingURL=Quaternion.js.map

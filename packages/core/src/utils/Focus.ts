@@ -1,4 +1,4 @@
-import { IoElement } from '../elements/IoElement.js'
+import { ReactiveElement } from '../elements/ReactiveElement.js'
 import { ThemeSingleton } from '../nodes/Theme.js'
 import { IoOverlaySingleton as Overlay } from '../elements/IoOverlay.js'
 
@@ -16,7 +16,7 @@ const backtrackDir: Record<Direction, Direction> = {
   ArrowUp: 'ArrowDown'
 }
 
-function setFocusBacktrack(element: HTMLElement | IoElement, dir: Direction, source: HTMLElement | IoElement) {
+function setFocusBacktrack(element: HTMLElement | ReactiveElement, dir: Direction, source: HTMLElement | ReactiveElement) {
   focusBacktrack.set(element, {
     dir: backtrackDir[dir],
     source: source

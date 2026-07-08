@@ -1,13 +1,13 @@
-import { ReactiveNode, ReactiveNodeProps, Binding } from '@io-gui/core';
+import { ReactiveObject, ReactiveObjectProps, Binding } from '@io-gui/core';
 import { IoThreeViewport } from '../elements/IoThreeViewport.js';
 import { ThreeApplet } from './ThreeApplet.js';
 import { Camera, Object3D, OrthographicCamera, PerspectiveCamera } from 'three/webgpu';
-export type ViewCamerasProps = ReactiveNodeProps & {
+export type ViewCamerasProps = ReactiveObjectProps & {
     viewport: IoThreeViewport;
     applet: ThreeApplet | Binding;
     cameraSelect: string | Binding;
 };
-export declare class ViewCameras extends ReactiveNode {
+export declare class ViewCameras extends ReactiveObject {
     private viewport;
     applet: ThreeApplet;
     cameraSelect: string;
@@ -32,4 +32,3 @@ export declare class ViewCameras extends ReactiveNode {
     resetOverscan(): void;
     dispose(): void;
 }
-//# sourceMappingURL=ViewCameras.d.ts.map

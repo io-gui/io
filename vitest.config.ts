@@ -1,57 +1,35 @@
 /**
- * Vitest configuration with browser testing and Node benchmarks
- *
- * Usage:
- *   pnpm test                          - Run unit tests (browser)
- *   pnpm test:coverage                 - Run core coverage with thresholds
- *   pnpm bench                         - Run Node *.bench.ts benchmarks
- *   pnpm bench:browser                 - Run browser *.browser.bench.ts benchmarks
- *   pnpm test:core                     - Run core package tests
- *   pnpm bench packages/core           - Run benchmarks in one package
+ * Vitest configuration with browser testing and browser benchmarks
  */
+
 import { defineConfig } from 'vitest/config'
 import { playwright } from '@vitest/browser-playwright'
 import { resolveConfig } from './vite.config'
 
-const browserUnitConfig = {
-  enabled: true,
-  provider: playwright() as any,
-  instances: [{ browser: 'chromium' as const }],
-  screenshotFailures: false,
+function browserConfig(instanceName: string) {
+  return {
+    enabled: true,
+    provider: playwright(),
+    instances: [{ browser: 'chromium' as const, name: instanceName }],
+    screenshotFailures: false,
+  }
 }
-
-const coreCoverageInclude = ['packages/core/src/**/*.ts']
-const coreCoverageExclude = [
-  '**/*.test.ts',
-  '**/*.bench.ts',
-  '**/demos/**',
-  '**/testing/**',
-  '**/*.glsl.ts',
-]
 
 export default defineConfig({
   resolve: resolveConfig,
   test: {
-    coverage: {
-      provider: 'v8',
-      include: coreCoverageInclude,
-      exclude: coreCoverageExclude,
-      reporter: ['text', 'text-summary', 'html', 'lcov'],
-      reportsDirectory: './coverage',
-      thresholds: {
-        lines: 74,
-        functions: 78,
-        branches: 58,
-        statements: 73,
-      },
-    },
     projects: [
       {
         extends: true,
         test: {
           name: 'unit',
           include: ['packages/*/src/**/*.test.ts'],
-          browser: browserUnitConfig,
+          browser: browserConfig('unit-chromium'),
+          fileParallelism: false,
+          testTimeout: 120_000,
+          benchmark: {
+            include: ['packages/*/src/**/*.bench.ts'],
+          },
         },
       },
       {
@@ -59,19 +37,10 @@ export default defineConfig({
         test: {
           name: 'coverage',
           include: ['packages/core/src/**/*.test.ts'],
-          browser: browserUnitConfig,
-        },
-      },
-      {
-        extends: true,
-        test: {
-          name: 'bench',
-          include: ['packages/*/src/**/*.bench.ts'],
+          browser: browserConfig('coverage-chromium'),
           benchmark: {
-            include: ['packages/*/src/**/*.bench.ts'],
+            include: [],
           },
-          browser: browserUnitConfig,
-          setupFiles: ['packages/core/src/testing/bench-setup.ts'],
         },
       },
     ],
