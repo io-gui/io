@@ -1,6 +1,6 @@
 import { ReactiveElement, IoGl, Theme, AnyConstructor, VDOMElement, ReactiveObject, Color, JsonObject } from '@io-gui/core'
 import { ioString, ioNumber, ioSwitch, ioField, ioButton } from '@io-gui/inputs'
-import { MenuOption, MenuOptionProps, ioOptionSelect } from '@io-gui/menus'
+import { Menu, MenuProps, OptionProps, ioOptionSelect } from '@io-gui/menus'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioColorRgba } from '@io-gui/colors'
 import { ioObject } from '../elements/IoObject.js'
@@ -13,14 +13,11 @@ export type PropertyConfigMap = Map<PropertyIdentifier, VDOMElement>
 export type PropertyConfigRecord = Record<string, VDOMElement>
 export type EditorConfig = Map<AnyConstructor, PropertyConfig[]>
 
-function makeSelect(options: Array<string | number | boolean | null | undefined | MenuOptionProps>) {
+function makeSelect(options: Array<string | number | boolean | null | undefined | OptionProps>) {
   for (let i = 0; i < options.length; i++) {
-    if (options[i] === null) {
-      options[i] = {value: null, id: 'Null'}
-    }
+    if (options[i] === null) options[i] = {value: null, id: 'Null'}
   }
-  const option = new MenuOption({options: options})
-  return ioOptionSelect({option})
+  return ioOptionSelect({model: new Menu({options: options})})
 }
 
 class ConfigCache<K1 extends object, K2 extends object, V> {
@@ -68,17 +65,17 @@ const CONFIGS: EditorConfig = new Map<AnyConstructor, PropertyConfig[]>([
     [Number, ioNumber({step: 0.01})],
   ]],
   [window.Node, [
-    ['tabIndex', ioOptionSelect({option: new MenuOption({options: [{value: '', id: 'None'}, '-1', '0', '1', '2', '3']})})],
+    ['tabIndex', ioOptionSelect({model: new Menu({options: [{value: '', id: 'None'}, '-1', '0', '1', '2', '3']})})],
     ['innerHTML', ioString({disabled: true, style: {maxWidth: '10em'}})],//TODO
     ['outerHTML', ioString({disabled: true, style: {maxWidth: '10em'}})],//TODO
-    ['autocapitalize', ioOptionSelect({option: new MenuOption({options: ['off', 'sentences', 'words', 'characters', {value: '', id: 'None'}]})})],
-    ['writingSuggestions', ioOptionSelect({option: new MenuOption({options: ['true', 'false']})})],
-    ['dir', ioOptionSelect({option: new MenuOption({options: ['ltr','rtl','auto',{value:'', id: 'None'}]})})],
-    ['virtualKeyboardPolicy', ioOptionSelect({option: new MenuOption({options: ['manual','auto',{value:'', id: 'None'}]})})],
-    ['enterKeyHint', ioOptionSelect({option: new MenuOption({options: ['enter','done','go','next','previous','search','send',{value:'', id: 'None'}]})})],
-    ['contentEditable', ioOptionSelect({option: new MenuOption({options: ['true','false','plaintext-only','inherit']})})],
-    ['inputMode', ioOptionSelect({option: new MenuOption({options: ['decimal','email','numeric','tel','search','url','text',{value:'', id: 'None'}]})})],
-    ['lang', ioOptionSelect({option: new MenuOption({options: [
+    ['autocapitalize', ioOptionSelect({model: new Menu({options: ['off', 'sentences', 'words', 'characters', {value: '', id: 'None'}]})})],
+    ['writingSuggestions', ioOptionSelect({model: new Menu({options: ['true', 'false']})})],
+    ['dir', ioOptionSelect({model: new Menu({options: ['ltr','rtl','auto',{value:'', id: 'None'}]})})],
+    ['virtualKeyboardPolicy', ioOptionSelect({model: new Menu({options: ['manual','auto',{value:'', id: 'None'}]})})],
+    ['enterKeyHint', ioOptionSelect({model: new Menu({options: ['enter','done','go','next','previous','search','send',{value:'', id: 'None'}]})})],
+    ['contentEditable', ioOptionSelect({model: new Menu({options: ['true','false','plaintext-only','inherit']})})],
+    ['inputMode', ioOptionSelect({model: new Menu({options: ['decimal','email','numeric','tel','search','url','text',{value:'', id: 'None'}]})})],
+    ['lang', ioOptionSelect({model: new Menu({options: [
       {value: '', id: 'None'},
       'ab','aa','af','ak','sq','am','ar','an','hy','as','av','ae','ay','az','bm','ba','eu','be','bn','bh','bi','bs','br','bg','my','ca','ch','ce',
       'ny','zh','zh-ans','zh-ant','cv','kw','co','cr','hr','cs','da','dv','nl','dz','en','eo','et','ee','fo','fj','fi','fr','ff','gl','gd',
@@ -88,7 +85,7 @@ const CONFIGS: EditorConfig = new Map<AnyConstructor, PropertyConfig[]>([
       'ro','ru','se','sm','sg','sa','sr','sh','st','tn','sn','ii','sd','si','ss','sk','sl','so','nr','es','su','sw','sv','tl','ty','tg','ta',
       'tt','te','th','bo','ti','to','ts','tr','tk','tw','ug','uk','ur','uz','ve','vi','vo','wa','cy','wo','fy','xh','yi','ji','yo','za','zu'
     ]})})],
-    ['role', ioOptionSelect({option: new MenuOption({options: [
+    ['role', ioOptionSelect({model: new Menu({options: [
       'alert','alertdialog','application','article','banner','button','cell','checkbox','columnheader','combobox','complementary',
       'contentinfo','definition','dialog','directory','document','feed','figure','form','grid','gridcell','group','heading','img',
       'link','list','listbox','listitem','log','main','marquee','math','menu','menubar','menuitem','menuitemcheckbox','menuitemradio',
@@ -97,7 +94,7 @@ const CONFIGS: EditorConfig = new Map<AnyConstructor, PropertyConfig[]>([
       'textbox','timer','toolbar','tooltip','tree','treegrid','treeitem',
     ]})})],
     ['ariaAtomic', makeSelect(['true','false',null])],
-    ['ariaAutoComplete', ioOptionSelect({option: new MenuOption({options: ['inline','list','both','none']})})],
+    ['ariaAutoComplete', ioOptionSelect({model: new Menu({options: ['inline','list','both','none']})})],
     ['ariaBusy', makeSelect(['true','false',null])],
     ['ariaBrailleLabel', ioString()],
     ['ariaBrailleRoleDescription', ioString()],
@@ -115,24 +112,24 @@ const CONFIGS: EditorConfig = new Map<AnyConstructor, PropertyConfig[]>([
     ['ariaKeyShortcuts', ioString()],
     ['ariaLabel', ioString()],
     ['ariaLevel', makeSelect([...[...Array(32)].map((_, i) => i + 1),null])],
-    ['ariaLive', ioOptionSelect({option: new MenuOption({options: ['assertive','polite','off']})})],
+    ['ariaLive', ioOptionSelect({model: new Menu({options: ['assertive','polite','off']})})],
     ['ariaModal', makeSelect(['true','false',null])],
     ['ariaMultiLine', makeSelect(['true','false',null])],
     ['ariaMultiSelectable', makeSelect(['true','false',null])],
-    ['ariaOrientation', ioOptionSelect({option: new MenuOption({options: ['horizontal','vertical','undefined']})})],
+    ['ariaOrientation', ioOptionSelect({model: new Menu({options: ['horizontal','vertical','undefined']})})],
     ['ariaPlaceholder', ioString()],
     ['ariaPosInSet', makeSelect([...[...Array(32)].map((_, i) => i + 1),null])],
     ['ariaPressed', makeSelect(['true','false','mixed',null])],
     ['ariaReadOnly', makeSelect(['true','false',null])],
     ['ariaRequired', makeSelect(['true','false',null])],
-    ['ariaRelevant', ioOptionSelect({option: new MenuOption({options: ['additions','all','removals','text']})})],
+    ['ariaRelevant', ioOptionSelect({model: new Menu({options: ['additions','all','removals','text']})})],
     ['ariaRoleDescription', ioString()],
     ['ariaRowCount', makeSelect([...[...Array(32)].map((_, i) => i + 1),null])],
     ['ariaRowIndex', makeSelect([...[...Array(32)].map((_, i) => i + 1),null])],
     ['ariaRowSpan', makeSelect([...[...Array(32)].map((_, i) => i + 1),null])],
     ['ariaSelected', makeSelect(['true','false',null])],
     ['ariaSetSize', makeSelect([...[...Array(32)].map((_, i) => i + 1),null])],
-    ['ariaSort', ioOptionSelect({option: new MenuOption({options: ['none','ascending','descending','other']})})],
+    ['ariaSort', ioOptionSelect({model: new Menu({options: ['none','ascending','descending','other']})})],
     ['ariaValueMax', makeSelect([...[...Array(32)].map((_, i) => i + 1),null])],
     ['ariaValueMin', makeSelect([...[...Array(32)].map((_, i) => i + 1),null])],
     ['ariaValueNow', makeSelect([...[...Array(32)].map((_, i) => i + 1),null])],
@@ -145,10 +142,10 @@ const CONFIGS: EditorConfig = new Map<AnyConstructor, PropertyConfig[]>([
   [HTMLElement, [
   ]],
   [ReactiveObject, [
-    ['dispatchTiming', ioOptionSelect({option: new MenuOption({options: ['immediate', 'throttled', 'debounced']})})],
+    ['dispatchTiming', ioOptionSelect({model: new Menu({options: ['immediate', 'throttled', 'debounced']})})],
   ]],
   [ReactiveElement, [
-    ['dispatchTiming', ioOptionSelect({option: new MenuOption({options: ['immediate', 'throttled', 'debounced']})})],
+    ['dispatchTiming', ioOptionSelect({model: new Menu({options: ['immediate', 'throttled', 'debounced']})})],
   ]],
   [IoGl, [
     ['size', ioObject()],
@@ -156,7 +153,7 @@ const CONFIGS: EditorConfig = new Map<AnyConstructor, PropertyConfig[]>([
   ]],
   [Theme, [
     [Number, ioNumberSlider({step: 1, min: 0, max: 20})],
-    ['themeID', ioOptionSelect({option: new MenuOption({options: ['light','dark']})})],
+    ['themeID', ioOptionSelect({model: new Menu({options: ['light','dark']})})],
     ['spacing2', ioField({disabled: true})],
     ['spacing3', ioField({disabled: true})],
     ['spacing4', ioField({disabled: true})],
@@ -256,8 +253,8 @@ export function getEditorConfig(object: object, propertyConfigs: PropertyConfig[
     if (props) {
       for (const [key, value] of Object.entries(props)) {
         // TODO: Generalize for other objects that should be cloned / unique.
-        if (value instanceof MenuOption) {
-          props[key] = new MenuOption({}).fromJSON(value.toJSON() as JsonObject) as MenuOptionProps
+        if (value instanceof Menu) {
+          props[key] = new Menu({}).fromJSON(value.toJSON() as JsonObject) as MenuProps
         }
       }
     }

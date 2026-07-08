@@ -1,26 +1,32 @@
-import { ReactiveObject, Register, Property, WithBinding, NodeArray, Json } from '@io-gui/core'
+import { ReactiveObject, Register, Property, WithBinding, NodeArray, Json, Binding } from '@io-gui/core'
 
-export type MenuOptionMode = 'select' | 'toggle' | 'none'
+export type OptionMode = 'select' | 'toggle' | 'none'
 
-export type MenuOptionProps = {
+export type OptionProps = {
   id?: string
   value?: any
   label?: WithBinding<string>
   icon?: string
   hint?: WithBinding<string>
   action?: (value?: any) => void
-  mode?: MenuOptionMode
+  mode?: OptionMode
   disabled?: boolean
   hidden?: boolean
   selected?: WithBinding<boolean>
-  selectedID?: WithBinding<string>
-  selectedIDImmediate?: WithBinding<string>
-  path?: WithBinding<string>
-  options?: Array<string | number | boolean | null | undefined | MenuOptionProps>
+  selectedIDImmediate?: Binding<string>
+  options?: Array<string | number | boolean | null | undefined | OptionProps | Option>
 }
 
+/**
+ * One node of a Menu's tree. Carries local state only (id, value, label, icon,
+ * hint, mode, action, selected, child options) — tree-scoped state (selection
+ * tracking, disclosure, serialization entry point) belongs on `Menu`.
+ *
+ * The `select`-mode children of any one Option form a selection scope: at most
+ * one of them is selected, enforced here by the parent.
+ */
 @Register
-export class MenuOption extends ReactiveObject {
+export class Option extends ReactiveObject {
 
   @Property({value: '', type: String})
   declare id: string
@@ -47,30 +53,26 @@ export class MenuOption extends ReactiveObject {
   declare action?: (value?: any) => void
 
   @Property({value: 'select', type: String})
-  declare mode: MenuOptionMode
+  declare mode: OptionMode
 
   @Property({value: false, type: Boolean})
   declare selected: boolean
 
+  // TODO: Consider implementing readonly in core
   @Property({value: '', type: String})
-  declare selectedIDImmediate: string
-
-  @Property({value: '', type: String})
-  declare selectedID: string
-
-  @Property({value: '', type: String})
-  declare path: string
+  declare readonly selectedIDImmediate: string
 
   @Property({type: NodeArray, init: 'this'})
-  declare options: NodeArray<MenuOption>
+  declare options: NodeArray<Option>
 
   static override get Listeners() {
     return {
+      // Internal scope-enforcement traffic — not public API.
       'option-selected-changed': 'onOptionSelectedChanged',
     }
   }
 
-  constructor(args: string | number | boolean | null | undefined | MenuOptionProps) {
+  constructor(args: string | number | boolean | null | undefined | OptionProps) {
 
     if (typeof args === 'string' || typeof args === 'number' || typeof args === 'boolean' || args === null || args === undefined) {
       args = {
@@ -80,52 +82,53 @@ export class MenuOption extends ReactiveObject {
     }
 
     args = { ...args }
-    args.id = args.id ?? '' // TODO: Reconsider.
+    args.id = args.id ?? ''
     args.label = args.label ?? args.id
     args.value = args.value ?? args.id
+    // An Option with an action is a transient command unless told otherwise.
+    if (args.mode === undefined && typeof args.action === 'function') {
+      args.mode = 'none'
+    }
     args.options = args.options ?? []
     args.options = args.options.map(option => {
-      return (option instanceof MenuOption) ? option : new MenuOption(option)
+      return (option instanceof Option) ? option : new Option(option)
     })
 
-    const selectedOptions = (args.options as MenuOption[]).filter(option => option.mode === 'select' && option.selected)
+    const selectedOptions = (args.options as Option[]).filter(option => option.mode === 'select' && option.selected)
     for (let i = 1; i < selectedOptions.length; i++) {
       debug: console.warn('Duplicate selected options with mode "select" found!', selectedOptions)
       selectedOptions[i].selected = false
     }
 
-    super(args as MenuOptionProps)
+    debug: if ((args.id as string).indexOf(',') !== -1) {
+      console.warn(`Option id "${args.id}" may not contain a comma — it is the Path separator!`)
+    }
+
+    super(args as OptionProps)
   }
   getAllOptions() {
-    const options: MenuOption[] = [this]
+    const options: Option[] = [this]
     for (let i = 0; i < this.options.length; i++) {
       options.push(...this.options[i].getAllOptions())
     }
-    debug: {
-      const ids = new Set()
-      for (let i = 0; i < options.length; i++) {
-        if (ids.has(options[i].id)) console.warn(`Duplicate id "${options[i].id}"`, this)
-        ids.add(options[i].id)
-      }
-    }
     return options
   }
-  findItemByValue(value: any): MenuOption | undefined {
+  findOptionByValue(value: any): Option | undefined {
     for (let i = 0; i < this.options.length; i++) {
-      const found = this.options[i].findItemByValue(value)
+      const found = this.options[i].findOptionByValue(value)
       if (found) return found
     }
     if (this.value === value) return this
   }
-  findItemById(id: string): MenuOption | undefined {
+  findOptionById(id: string): Option | undefined {
     for (let i = 0; i < this.options.length; i++) {
-      const found = this.options[i].findItemById(id)
+      const found = this.options[i].findOptionById(id)
       if (found) return found
     }
     if (this.id === id) return this
   }
   selectDefault() {
-    let walker: MenuOption | undefined = this.mode === 'select' ? this : undefined
+    let walker: Option | undefined = this.mode === 'select' ? this : undefined
     while (walker) {
       const next = walker.options.find(option => option.mode === 'select')
       if (walker.mode === 'select' && next) {
@@ -142,24 +145,11 @@ export class MenuOption extends ReactiveObject {
     }
     this.dispatch('option-selected-changed', {option: this}, true)
   }
-  selectedIDChanged() {
-    const option = this.findItemById(this.selectedID)
-    if (option) {
-      option.selected = true
-      this.dispatch('option-selected', {option: option}, false)
-    } else {
-      this.unselectSuboptions()
-    }
-  }
+  // TODO: Consider implementing readonly in core
   selectedIDImmediateChanged() {
-    if (this.selectedIDImmediate) {
-      this.selected = true
-      const option = this.options.find(option => option.id === this.selectedIDImmediate)
-      if (option) {
-        option.selected = true
-      }
+    debug: if (this.selectedIDImmediate !== this.getSelectedIDImmediate()) {
+      console.warn('"selectedIDImmediate" is read-only derived — write "selected" on the option instead!', this)
     }
-    this.updatePaths()
   }
   getSelectedIDImmediate() {
     let selected = ''
@@ -176,19 +166,15 @@ export class MenuOption extends ReactiveObject {
     const selectedIDImmediate = this.getSelectedIDImmediate()
     return this.options.find(option => option.mode === 'select' && option.selected && option.id === selectedIDImmediate)
   }
-  setSelectedIDImmediate(id: string) {
-    // TODO Test and reconsider withInternalOperation
-    this.options.withInternalOperation(() => {
-      for (let i = 0; i < this.options.length; i++) {
-        const item = this.options[i]
-        if (item.id === id) {
-          item.selected = true
-        } else {
-          item.selected = false
-        }
-      }
-    })
-    this.options.dispatchMutation()
+  // Derived: the chain of selected options from this scope downwards.
+  getSelectedChain(): Option[] {
+    const chain: Option[] = []
+    let walker = this.findSelectedImmediateOption()
+    while (walker) {
+      chain.push(walker)
+      walker = walker.findSelectedImmediateOption()
+    }
+    return chain
   }
   onOptionSelectedChanged(event: CustomEvent) {
     // TODO: Instead of this check, use event.stopPropagation() once implemented in EventDispatcher.
@@ -197,21 +183,15 @@ export class MenuOption extends ReactiveObject {
     const selectedOption = event.detail.option
     if (selectedOption.selected) {
       for (let i = 0; i < this.options.length; i++) {
-        const option = this.options[i] as MenuOption
+        const option = this.options[i] as Option
         if (option !== selectedOption && option.mode === 'select' && selectedOption.mode === 'select') {
           option.selected = false
         }
       }
     }
     const hasSelected = this.options.some(option => option.selected && option.mode === 'select')
-    if (hasSelected) {
-      // this.updatePaths();
-    } else {
-      this.setProperties({
-        selectedID: '',
-        selectedIDImmediate: '',
-        path: '',
-      })
+    if (!hasSelected) {
+      this.setProperty('selectedIDImmediate', '')
     }
   }
   unselectSuboptions() {
@@ -223,48 +203,34 @@ export class MenuOption extends ReactiveObject {
       }
     }
   }
-  updatePaths() {
-    const path: string[] = []
-    if (this.mode !== 'select' || !this.selected) {
-      this.path = ''
-      return
-    }
-
-    let walker = this.findSelectedImmediateOption()
-    if (!walker) return
-
-    while (walker) {
-      path.push(walker.id)
-      walker = walker.findSelectedImmediateOption()
-    }
-    const selectedID = path[path.length - 1]
-    if (this.path !== path.join(',')) {
-      this.path = path.join(',')
-    }
-    if (this.selectedID !== selectedID) {
-      this.selectedID = selectedID
-    }
-  }
-  pathChanged() {
-    const path = this.path ? [...this.path.split(',')] : []
-    for (let i = path.length - 1; i >= 0; i--) {
-      if (this.findItemById(path[i])) {
-        this.selectedID = path[i]
-        return
-      }
-    }
-  }
-  optionsMutated(event: CustomEvent) {
+  optionsMutated() {
     const hasSelected = this.options.some(option => option.selected && option.mode === 'select')
     if (this.mode === 'select' && hasSelected && this.options.length) {
       this.setProperties({
         selected: true,
         selectedIDImmediate: this.getSelectedIDImmediate(),
       })
+    } else if (!hasSelected) {
+      this.setProperty('selectedIDImmediate', '')
     }
-    this.updatePaths()
     this.dispatchMutation()
   }
+
+  override mutated() {
+    debug: {
+      if (['select', 'toggle', 'none'].indexOf(this.mode) === -1) {
+        console.warn(`Unknown "mode" property "${this.mode}"!`, this)
+      }
+      if (this.selected && ['select', 'toggle'].indexOf(this.mode) === -1) {
+        console.warn('"selected" property is only valid when mode is "select" or "toggle"!', this)
+      }
+      if (this.action && typeof this.action !== 'function') {
+        console.warn(`Invalid type "${typeof this.action}" of "action" property!`, this)
+      }
+    }
+  }
+
+  // Structure only — selection is not part of an Option's serialized form.
   override toJSON(): Json {
     return {
       id: this.id,
@@ -279,8 +245,7 @@ export class MenuOption extends ReactiveObject {
       options: this.options.map(option => option.toJSON()),
     }
   }
-  // TODO: use applyJSON recursively
-  fromJSON(json: MenuOptionProps) {
+  fromJSON(json: OptionProps) {
     this.setProperties({
       id: json.id,
       value: json.value ?? undefined,
@@ -291,25 +256,9 @@ export class MenuOption extends ReactiveObject {
       hidden: json.hidden ?? false,
       // action: N/A for serialization
       mode: json.mode ?? 'select',
-      selected: json.selected ?? false,
-      options: json.options?.map(option => new MenuOption(option)) ?? [],
+      // selected: deliberately not read — selection is not part of the JSON form.
+      options: json.options?.map(option => (option instanceof Option) ? option : new Option(option)) ?? [],
     })
     return this
-  }
-  override mutated() {
-    debug: {
-      if (['select', 'toggle', 'none'].indexOf(this.mode) === -1) {
-        console.warn(`Unknown "mode" property "${this.mode}"!`, this)
-      }
-      if (this.selected && ['select', 'toggle'].indexOf(this.mode) === -1) {
-        console.warn('"selected" property is only valid when mode is "select" or "toggle"!', this)
-      }
-      // if (!this.id) {
-      //   console.warn('"id" property is required!', this)
-      // }
-      if (this.action && typeof this.action !== 'function') {
-        console.warn(`Invalid type "${typeof this.action}" of "action" property!`, this)
-      }
-    }
   }
 }

@@ -2,7 +2,6 @@ import { ReactiveObject, NodeArray, Property, Register } from '@io-gui/core'
 import { Tab, TabData } from './Tab.js'
 import {
   DEFAULT_SIZE,
-  LayoutSizeData,
   applyLayoutSizeProps,
   isValidSize,
   layoutSizeToJSON,
@@ -11,7 +10,8 @@ import {
 export type PanelData = {
   type: 'panel'
   tabs: Array<TabData>
-} & LayoutSizeData
+  size?: string
+}
 
 @Register
 export class Panel extends ReactiveObject {

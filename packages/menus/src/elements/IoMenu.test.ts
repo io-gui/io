@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { IoMenuOptions, MenuOption } from '@io-gui/menus'
+import { IoMenu, Option } from '@io-gui/menus'
 
-describe('IoMenuOptions', () => {
-  let option: MenuOption
-  let element: IoMenuOptions
+describe('IoMenu', () => {
+  let model: Option
+  let element: IoMenu
   let container: HTMLElement
 
   beforeEach(() => {
@@ -11,32 +11,32 @@ describe('IoMenuOptions', () => {
     container.style.display = 'none'
     document.body.appendChild(container)
 
-    option = new MenuOption({
+    model = new Option({
       id: 'root',
       options: [
         { id: 'one', label: 'One' },
         { id: 'two', label: 'Two' },
       ],
     })
-    element = new IoMenuOptions({ option })
+    element = new IoMenu({ model })
     container.appendChild(element as HTMLElement)
   })
 
   afterEach(() => {
     element.remove()
     container.remove()
-    option.dispose()
+    model.dispose()
   })
 
   it('has listbox role', () => {
     expect(element.getAttribute('role')).toBe('listbox')
   })
 
-  it('renders menu items from option.options', () => {
-    const items = element.querySelectorAll('io-menu-item')
-    expect(items.length).toBe(2)
-    expect(items[0].textContent).toContain('One')
-    expect(items[1].textContent).toContain('Two')
+  it('renders option elements from model.options', () => {
+    const options = element.querySelectorAll('io-option')
+    expect(options.length).toBe(2)
+    expect(options[0].textContent).toContain('One')
+    expect(options[1].textContent).toContain('Two')
   })
 
   it('reflects horizontal layout', () => {
@@ -44,9 +44,9 @@ describe('IoMenuOptions', () => {
     expect(element.hasAttribute('horizontal')).toBe(true)
   })
 
-  it('updates when option changes', () => {
-    option.options.push(new MenuOption({ id: 'three', label: 'Three' }))
+  it('updates when model changes', () => {
+    model.options.push(new Option({ id: 'three', label: 'Three' }))
     element.mutated()
-    expect(element.querySelectorAll('io-menu-item').length).toBe(3)
+    expect(element.querySelectorAll('io-option').length).toBe(3)
   })
 })

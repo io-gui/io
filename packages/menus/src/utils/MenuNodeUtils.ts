@@ -1,6 +1,6 @@
-import { MenuOption } from '../nodes/MenuOption.js'
+import { Option } from '../nodes/Option.js'
 
-function matchMenuOption(option: MenuOption, search: string) {
+function matchOption(option: Option, search: string) {
   if (option.options.length) return false
   if (option.value !== undefined && String(option.value).toLowerCase().indexOf(search) !== -1) return true
   if (option.label && option.label.toLowerCase().indexOf(search) !== -1) return true
@@ -8,16 +8,16 @@ function matchMenuOption(option: MenuOption, search: string) {
   return false
 }
 
-export function searchMenuOption(option: MenuOption, search: string, depth = 5, d = 0) {
+export function searchOptions(option: Option, search: string, depth = 5, d = 0) {
   search = search.toLowerCase()
-  const subitems: MenuOption[] = []
+  const suboptions: Option[] = []
   if (d <= depth) for (let i = 0; i < option.options.length; i++) {
-    if (matchMenuOption(option.options[i], search)) {
-      subitems.push(option.options[i])
+    if (matchOption(option.options[i], search)) {
+      suboptions.push(option.options[i])
     }
     if (option.options[i].options.length) {
-      subitems.push(...searchMenuOption(option.options[i], search, depth, d + 1))
+      suboptions.push(...searchOptions(option.options[i], search, depth, d + 1))
     }
   }
-  return subitems
+  return suboptions
 }

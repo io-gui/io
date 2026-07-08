@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { IoMenuTree, MenuOption } from '@io-gui/menus'
+import { IoMenuTree, Menu } from '@io-gui/menus'
 
 describe('IoMenuTree', () => {
-  let option: MenuOption
+  let model: Menu
   let element: IoMenuTree
   let container: HTMLElement
 
@@ -11,7 +11,7 @@ describe('IoMenuTree', () => {
     container.style.display = 'none'
     document.body.appendChild(container)
 
-    option = new MenuOption({
+    model = new Menu({
       id: 'root',
       options: [
         { id: 'leaf', label: 'Leaf' },
@@ -22,32 +22,32 @@ describe('IoMenuTree', () => {
         },
       ],
     })
-    element = new IoMenuTree({ option, depth: 1 })
+    element = new IoMenuTree({ model, depth: 1 })
     container.appendChild(element as HTMLElement)
   })
 
   afterEach(() => {
     element.remove()
     container.remove()
-    option.dispose()
+    model.dispose()
   })
 
   it('has listbox role', () => {
     expect(element.getAttribute('role')).toBe('listbox')
   })
 
-  it('renders leaf items and tree branches', () => {
-    expect(element.querySelector('io-menu-item')).toBeTruthy()
+  it('renders leaf options and tree branches', () => {
+    expect(element.querySelector('io-option')).toBeTruthy()
     expect(element.querySelector('io-menu-tree-branch')).toBeTruthy()
   })
 
-  it('filters items when search is set', () => {
+  it('filters options when search is set', () => {
     element.searchable = true
     element.search = 'Nested'
     element.mutated()
-    const items = element.querySelectorAll('io-menu-item')
-    expect(items.length).toBe(1)
-    expect(items[0].textContent).toContain('Nested')
+    const options = element.querySelectorAll('io-option')
+    expect(options.length).toBe(1)
+    expect(options[0].textContent).toContain('Nested')
   })
 
   it('shows no matches field for empty search results', () => {
@@ -57,5 +57,15 @@ describe('IoMenuTree', () => {
     const field = element.querySelector('io-field')
     expect(field).toBeTruthy()
     expect(field!.getAttribute('aria-label')).toBe('No matches')
+  })
+
+  it('persists branch disclosure to the Menu expandedIDs', () => {
+    const branch = element.querySelector('io-menu-tree-branch') as any
+    expect(branch).toBeTruthy()
+    branch.expanded = true
+    expect(model.isDisclosed('branch')).toBe(true)
+    expect(model.expandedIDs).toContain('branch')
+    branch.expanded = false
+    expect(model.isDisclosed('branch')).toBe(false)
   })
 })

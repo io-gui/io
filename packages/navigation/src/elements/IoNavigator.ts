@@ -1,5 +1,5 @@
 import { ReactiveElement, VDOMElement, Property, ReactiveElementProps, WithBinding, Register, div } from '@io-gui/core'
-import { MenuOption, ioMenuOptions, ioMenuTree } from '@io-gui/menus'
+import { Menu, Option, ioMenu, ioMenuTree } from '@io-gui/menus'
 import { CachingType, ioSelector } from './IoSelector.js'
 import { ioNavigatorDrawer, IoNavigatorDrawer } from './IoNavigatorDrawer.js'
 
@@ -8,7 +8,7 @@ export type SelectType = 'shallow' | 'deep' | 'all' | 'none'
 export type MenuPosition = 'top' | 'left'
 
 export type IoNavigatorProps = ReactiveElementProps & {
-  option?: MenuOption
+  model?: Menu | Option
   elements?: VDOMElement[]
   widget?: VDOMElement
   menu?: MenuPosition
@@ -46,7 +46,7 @@ export class IoNavigator extends ReactiveElement {
       :host > io-menu-tree {
         border-width: 0 var(--io_borderWidth) 0 0;
       }
-      :host > io-menu-options {
+      :host > io-menu {
         border: none;
         border-bottom: var(--io_border);
         border-radius: 0;
@@ -71,8 +71,8 @@ export class IoNavigator extends ReactiveElement {
   @Property({type: Array, init: null})
   declare elements: VDOMElement[]
 
-  @Property({type: MenuOption})
-  declare option: MenuOption
+  @Property({type: Option})
+  declare model: Menu | Option
 
   @Property(null)
   declare widget: VDOMElement | null
@@ -151,20 +151,24 @@ export class IoNavigator extends ReactiveElement {
     this.calculateCollapsed()
   }
 
-  optionMutated() {
+  modelMutated() {
     this.mutated()
   }
 
   override mutated() {
     const sharedMenuConfig = {
-      option: this.option,
+      model: this.model,
       widget: this.widget,
       depth: this.depth
     }
 
     let selected = ''
-    if (this.select === 'shallow') selected = this.option.selectedIDImmediate
-    if (this.select === 'deep') selected = this.option.selectedID
+    if (this.select === 'shallow') selected = this.model.selectedIDImmediate
+    if (this.select === 'deep') {
+      // Derived deep selection — works for Menu roots and branch Options alike.
+      const chain = this.model.getSelectedChain()
+      selected = chain.length ? chain[chain.length - 1].id : ''
+    }
     if (this.select === 'all') selected = '*'
     if (this.select === 'none') selected = ''
 
@@ -174,7 +178,7 @@ export class IoNavigator extends ReactiveElement {
     if (this.menu === 'top') {
       this.render([
         selectorElement,
-        ioMenuOptions({horizontal: true, ...sharedMenuConfig}),
+        ioMenu({horizontal: true, ...sharedMenuConfig}),
       ])
     } else if (this.menu === 'left') {
       if (this.collapsed) {

@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { IoMenuItem, MenuOption } from '@io-gui/menus'
+import { IoOption, Option } from '@io-gui/menus'
 
-describe('IoMenuItem', () => {
-  let option: MenuOption
-  let element: IoMenuItem
+describe('IoOption', () => {
+  let model: Option
+  let element: IoOption
   let container: HTMLElement
 
   beforeEach(() => {
@@ -11,7 +11,7 @@ describe('IoMenuItem', () => {
     container.style.display = 'none'
     document.body.appendChild(container)
 
-    option = new MenuOption({
+    model = new Option({
       id: 'item',
       label: 'Item Label',
       hint: 'hint text',
@@ -19,17 +19,17 @@ describe('IoMenuItem', () => {
         { id: 'sub', label: 'Sub Item' },
       ],
     })
-    element = new IoMenuItem({ option, depth: 1 })
+    element = new IoOption({ model, depth: 1 })
     container.appendChild(element as HTMLElement)
   })
 
   afterEach(() => {
     element.remove()
     container.remove()
-    option.dispose()
+    model.dispose()
   })
 
-  it('renders label and hint from option', () => {
+  it('renders label and hint from model', () => {
     expect(element.querySelector('.label')?.textContent).toBe('Item Label')
     expect(element.querySelector('.hint')?.textContent).toBe('hint text')
   })
@@ -40,25 +40,25 @@ describe('IoMenuItem', () => {
     expect(element.hasAttribute('expanded')).toBe(true)
   })
 
-  it('reports hasmore when option has sub-options and depth > 0', () => {
+  it('reports hasmore when model has sub-options and depth > 0', () => {
     expect(element.hasmore).toBe(true)
     element.depth = 0
     expect(element.hasmore).toBe(false)
   })
 
-  it('dispatches io-menu-option-clicked on click for leaf option', () => {
-    const leaf = new MenuOption({ id: 'leaf', label: 'Leaf', mode: 'select' })
-    const leafItem = new IoMenuItem({ option: leaf, depth: 1 })
-    container.appendChild(leafItem as HTMLElement)
+  it('dispatches io-option-clicked on click for leaf option', () => {
+    const leaf = new Option({ id: 'leaf', label: 'Leaf', mode: 'select' })
+    const leafElement = new IoOption({ model: leaf, depth: 1 })
+    container.appendChild(leafElement as HTMLElement)
 
     const handler = vi.fn()
-    leafItem.addEventListener('io-menu-option-clicked', handler)
-    leafItem.onClick()
+    leafElement.addEventListener('io-option-clicked', handler)
+    leafElement.onClick()
 
     expect(handler).toHaveBeenCalledTimes(1)
     expect(handler.mock.calls[0][0].detail.option).toBe(leaf)
 
-    leafItem.remove()
+    leafElement.remove()
     leaf.dispose()
   })
 })

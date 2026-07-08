@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { Register, ReactiveElement, div, Property } from '@io-gui/core'
-import { MenuOption, ioOptionSelect } from '@io-gui/menus'
+import { Menu, ioOptionSelect } from '@io-gui/menus'
 import { ioSlider } from '@io-gui/sliders'
 import { ioString, ioNumber, ioBoolean, ioButton } from '@io-gui/inputs'
 import { ioPropertyEditor, ioInspector, ioObject, IoContextEditorSingleton } from '@io-gui/editors'
@@ -105,7 +105,7 @@ export class IoEditorsDemo extends ReactiveElement {
           config: [
             [String, ioString({live: true, appearance: 'neutral'})],
             // TODO: fix this. 'number' works but breaks other configs.
-            [Number, ioOptionSelect({option: new MenuOption({
+            [Number, ioOptionSelect({model: new Menu({
               id: 'number',
               options: [
                 {id: 'zero', value: 0},

@@ -1,17 +1,16 @@
 import { Register, ReactiveElement, Property, VDOMElement, IoOverlaySingleton as Overlay, NudgeDirection, ReactiveElementProps, WithBinding, Field, nudge, ListenerDefinition, span, IoExpandable } from '@io-gui/core'
 import { ioField, ioString } from '@io-gui/inputs'
-import { MenuOption } from '../nodes/MenuOption.js'
-import { ioMenuItem, IoMenuItem } from './IoMenuItem.js'
+import { Option } from '../nodes/Option.js'
+import { Menu } from '../nodes/Menu.js'
+import { ioOption, IoOption } from './IoOption.js'
 import { IoContextMenu } from './IoContextMenu.js'
 import { getMenuDescendants, getMenuSiblings } from '../utils/MenuDOMUtils.js'
-import { searchMenuOption } from '../utils/MenuNodeUtils.js'
-
-// const rects = new WeakMap();
+import { searchOptions } from '../utils/MenuNodeUtils.js'
 
 // TODO: improve focusto nav and in-layer navigation.
 
-export type IoMenuOptionsProps = ReactiveElementProps & {
-  option?: MenuOption
+export type IoMenuProps = ReactiveElementProps & {
+  model?: Menu | Option
   expanded?: WithBinding<boolean>
   horizontal?: boolean
   searchable?: boolean
@@ -19,14 +18,16 @@ export type IoMenuOptionsProps = ReactiveElementProps & {
   direction?: NudgeDirection
   depth?: number
   widget?: VDOMElement | null
-  $parent?: IoMenuItem | IoContextMenu
+  $parent?: IoOption | IoContextMenu
 }
 
 /**
- * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu options are displayed in horizontal direction.
+ * The view paired with an expanded selection scope: it renders a list of `IoOption` elements from
+ * its model's `options`. The model is the `Menu` root or the branch `Option` whose children it shows.
+ * If the `horizontal` property is set, options are displayed in a horizontal direction (menu bar).
  **/
 @Register
-export class IoMenuOptions extends ReactiveElement {
+export class IoMenu extends ReactiveElement {
   static override get Style() {
     return /* css */`
     :host {
@@ -49,14 +50,14 @@ export class IoMenuOptions extends ReactiveElement {
     :host[inoverlay] {
       overflow-y: auto;
       box-shadow: 1px 1px 16px var(--io_shadowColor),
-                  1px 1px 8px var(--io_shadowColor), 
+                  1px 1px 8px var(--io_shadowColor),
                   1px 1px 4px var(--io_shadowColor);
     }
     :host[inoverlay]:not([expanded]) {
       visibility: hidden;
       opacity: 0;
     }
-    :host > io-menu-item[hidden] ~ span.divider {
+    :host > io-option[hidden] ~ span.divider {
       display: none;
     }
     :host > span.divider {
@@ -69,7 +70,7 @@ export class IoMenuOptions extends ReactiveElement {
     :host[horizontal] > span.divider {
       margin: 0 var(--io_spacing);
     }
-    :host[horizontal] > io-menu-item > .hint {
+    :host[horizontal] > io-option > .hint {
       display: none;
     }
     :host:not([horizontal]) > #search {
@@ -83,8 +84,8 @@ export class IoMenuOptions extends ReactiveElement {
     `
   }
 
-  @Property({type: MenuOption})
-  declare option: MenuOption
+  @Property({type: Option})
+  declare model: Menu | Option
 
   @Property({value: false, reflect: true})
   declare expanded: boolean
@@ -111,7 +112,7 @@ export class IoMenuOptions extends ReactiveElement {
   declare widget: VDOMElement | null
 
   @Field()
-  declare $parent?: IoMenuItem
+  declare $parent?: IoOption
 
   @Field('listbox')
   declare role: string
@@ -125,7 +126,7 @@ export class IoMenuOptions extends ReactiveElement {
   get inoverlay() {
     return Overlay.contains(this.parentElement)
   }
-  constructor(args: IoMenuOptionsProps = {}) { super(args) }
+  constructor(args: IoMenuProps = {}) { super(args) }
 
   stopPropagation(event: TouchEvent) {
     if (this.inoverlay) {
@@ -231,9 +232,9 @@ export class IoMenuOptions extends ReactiveElement {
     }
   }
   focusFirstOption() {
-    const firstOption = this.querySelector('io-menu-item')
+    const firstOption = this.querySelector('io-option')
     if (firstOption) {
-      (firstOption as IoMenuItem).focus()
+      (firstOption as IoOption).focus()
     }
   }
   override mutated() {
@@ -248,13 +249,13 @@ export class IoMenuOptions extends ReactiveElement {
       }))
     }
     if (this.search) {
-      const filteredItems = searchMenuOption(this.option, this.search, this.depth)
-      if (filteredItems.length === 0) {
+      const filteredOptions = searchOptions(this.model, this.search, this.depth)
+      if (filteredOptions.length === 0) {
         vChildren.push(ioField({label: 'No matches'}))
       } else {
-        for (let i = 0; i < filteredItems.length; i++) {
-          vChildren.push(ioMenuItem({option: filteredItems[i], depth: 0}))
-          if (i < filteredItems.length - 1) {
+        for (let i = 0; i < filteredOptions.length; i++) {
+          vChildren.push(ioOption({model: filteredOptions[i], depth: 0}))
+          if (i < filteredOptions.length - 1) {
             vChildren.push({tag: 'span', props: {class: 'divider'}})
           }
         }
@@ -264,14 +265,14 @@ export class IoMenuOptions extends ReactiveElement {
       if (this.horizontal && this.direction === 'up') {
         direction = 'up'
       }
-      for (let i = 0; i < this.option.options.length; i++) {
-        vChildren.push(ioMenuItem({
-          option: this.option.options[i],
+      for (let i = 0; i < this.model.options.length; i++) {
+        vChildren.push(ioOption({
+          model: this.model.options[i],
           direction: direction,
           $parent: this,
           depth: this.depth
         }))
-        if (i < this.option.options.length - 1) {
+        if (i < this.model.options.length - 1) {
           vChildren.push(span({class: 'divider'}))
         }
       }
@@ -279,6 +280,6 @@ export class IoMenuOptions extends ReactiveElement {
     this.render(vChildren)
   }
 }
-export const ioMenuOptions = function(arg0?: IoMenuOptionsProps) {
-  return IoMenuOptions.vConstructor(arg0)
+export const ioMenu = function(arg0?: IoMenuProps) {
+  return IoMenu.vConstructor(arg0)
 }

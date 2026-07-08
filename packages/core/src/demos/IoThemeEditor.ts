@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { Register, ReactiveElement, ThemeSingleton, $ThemeID, THEMES, span } from '@io-gui/core'
-import { MenuOption, ioOptionSelect } from '@io-gui/menus'
+import { Menu, ioOptionSelect } from '@io-gui/menus'
 import { ioButton } from '@io-gui/inputs'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioColorRgba } from '@io-gui/colors'
@@ -20,7 +20,7 @@ export class IoThemeEditor extends ReactiveElement {
   constructor(props) {
     super(props)
     this.render([
-      ioOptionSelect({value: $ThemeID, option: new MenuOption({options: [
+      ioOptionSelect({value: $ThemeID, model: new Menu({options: [
         {id: 'Light Theme', value: 'light'},
         {id: 'Dark Theme', value: 'dark'},
       ]})}),

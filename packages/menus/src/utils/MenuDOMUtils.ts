@@ -1,28 +1,28 @@
 import { IoOverlaySingleton } from '@io-gui/core'
 import { IoString } from '@io-gui/inputs'
-import { IoMenuItem } from '../elements/IoMenuItem.js'
-import { IoMenuOptions } from '../elements/IoMenuOptions.js'
+import { IoOption } from '../elements/IoOption.js'
+import { IoMenu } from '../elements/IoMenu.js'
 import { IoMenuTree } from '../elements/IoMenuTree.js'
 
-export type IoMenuElementType = IoMenuItem | IoMenuOptions | IoMenuTree | IoString
+export type IoMenuElementType = IoOption | IoMenu | IoMenuTree | IoString
 
 interface MenuDOMNode {
   depth?: number
   disabled?: boolean
   expanded?: boolean
-  $options?: IoMenuOptions
+  $menu?: IoMenu
   $parent?: IoMenuElementType
 }
 
-const MenuElementTags = ['io-menu-item', 'io-menu-options', 'io-menu-hamburger', 'io-option-select', 'io-string', 'io-menu-tree']
+const MenuElementTags = ['io-option', 'io-menu', 'io-menu-hamburger', 'io-option-select', 'io-string', 'io-menu-tree']
 const MenuElementTagsSelector = MenuElementTags.join(', ')
 
-export function getHoveredMenuItem(event: PointerEvent) {
-  const options = Array.from(IoOverlaySingleton.querySelectorAll('io-menu-item, io-menu-options')) as IoMenuItem[]
+export function getHoveredOption(event: PointerEvent) {
+  const options = Array.from(IoOverlaySingleton.querySelectorAll('io-option, io-menu')) as IoOption[]
   const hovered: IoMenuElementType[] = []
   if (IoOverlaySingleton.expanded) {
     for (let i = options.length; i--;) {
-      if (isPointerAboveIoMenuItem(event, options[i])) hovered.push(options[i])
+      if (isPointerAboveIoOption(event, options[i])) hovered.push(options[i])
     }
   }
   if (hovered.length) {
@@ -33,17 +33,17 @@ export function getHoveredMenuItem(event: PointerEvent) {
         if (aDepth > bDepth) return 1
         if (aDepth < bDepth) return -1
       }
-      if (a.localName === 'io-menu-item') return 1
-      if (b.localName === 'io-menu-item') return -1
+      if (a.localName === 'io-option') return 1
+      if (b.localName === 'io-option') return -1
       return 0
     })
     const first = hovered[0]
     const second = hovered[1]
-    if (first.localName === 'io-menu-item') {
+    if (first.localName === 'io-option') {
       return first
-    // NOTE: This effectively blocks picking io-menu-item behind io-menu-options.
-    } else if (first.localName === 'io-menu-options' && second) {
-      if (second.localName === 'io-menu-item' && (second as MenuDOMNode).depth === (first as MenuDOMNode).depth) {
+    // NOTE: This effectively blocks picking io-option behind io-menu.
+    } else if (first.localName === 'io-menu' && second) {
+      if (second.localName === 'io-option' && (second as MenuDOMNode).depth === (first as MenuDOMNode).depth) {
         return second
       }
     }
@@ -54,9 +54,9 @@ export function getHoveredMenuItem(event: PointerEvent) {
 export function getMenuDescendants(element: IoMenuElementType) {
   const descendants: IoMenuElementType[] = []
   const menuElement = element as MenuDOMNode
-  if (menuElement.$options) {
-    descendants.push(menuElement.$options)
-    const options = menuElement.$options.querySelectorAll(MenuElementTagsSelector)
+  if (menuElement.$menu) {
+    descendants.push(menuElement.$menu)
+    const options = menuElement.$menu.querySelectorAll(MenuElementTagsSelector)
     for (let i = options.length; i--;) {
       descendants.push(options[i] as IoMenuElementType)
       descendants.push(...getMenuDescendants(options[i] as IoMenuElementType))
@@ -88,9 +88,9 @@ export function getMenuChildren(element: IoMenuElementType) {
     children.push(options[i])
   }
   const menuElement = element as MenuDOMNode
-  if (menuElement.$options) {
-    children.push(menuElement.$options)
-    const options = menuElement.$options.querySelectorAll(MenuElementTagsSelector)
+  if (menuElement.$menu) {
+    children.push(menuElement.$menu)
+    const options = menuElement.$menu.querySelectorAll(MenuElementTagsSelector)
     for (let i = options.length; i--;) {
       children.push(options[i] as IoMenuElementType)
     }
@@ -98,11 +98,11 @@ export function getMenuChildren(element: IoMenuElementType) {
   return children
 }
 
-export function getMenuSiblings(element: IoMenuItem) {
-  const siblings: IoMenuItem[] = []
+export function getMenuSiblings(element: IoOption) {
+  const siblings: IoOption[] = []
   const parent = element.parentElement
   if (parent) {
-    siblings.push(...Array.from(parent.querySelectorAll(MenuElementTagsSelector)) as IoMenuItem[])
+    siblings.push(...Array.from(parent.querySelectorAll(MenuElementTagsSelector)) as IoOption[])
   }
   return siblings
 }
@@ -115,7 +115,7 @@ export function getMenuRoot(element: IoMenuElementType) {
   return root
 }
 
-export function isPointerAboveIoMenuItem(event: PointerEvent, element: IoMenuElementType) {
+export function isPointerAboveIoOption(event: PointerEvent, element: IoMenuElementType) {
   if (MenuElementTags.indexOf(element.localName) !== -1) {
     if (!(element as MenuDOMNode).disabled) {
       if (element.parentElement !== IoOverlaySingleton && (element.parentElement as MenuDOMNode).expanded) {

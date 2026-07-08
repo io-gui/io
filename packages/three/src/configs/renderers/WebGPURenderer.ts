@@ -1,7 +1,7 @@
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 // import { ioNumber } from '@io-gui/inputs'
 import { ioNumberSlider } from '@io-gui/sliders'
-import { ioOptionSelect, MenuOption } from '@io-gui/menus'
+import { ioOptionSelect, Menu } from '@io-gui/menus'
 import {
   WebGPURenderer,
   SRGBColorSpace,
@@ -22,11 +22,11 @@ import {
 
 registerEditorConfig(WebGPURenderer, [
   ['toneMappingExposure', ioNumberSlider({min: 0, max: 10, step: 0.01, exponent: 2})],
-  ['outputColorSpace', ioOptionSelect({selectBy: 'value', option: new MenuOption({options: [
+  ['outputColorSpace', ioOptionSelect({model: new Menu({options: [
     {value: SRGBColorSpace, id: 'sRGB'},
     {value: LinearSRGBColorSpace, id: 'Linear sRGB'},
   ]})})],
-  ['toneMapping', ioOptionSelect({selectBy: 'value', option: new MenuOption({options: [
+  ['toneMapping', ioOptionSelect({model: new Menu({options: [
     {value: NoToneMapping, id: 'None'},
     {value: LinearToneMapping, id: 'Linear'},
     {value: ReinhardToneMapping, id: 'Reinhard'},

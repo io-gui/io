@@ -1,20 +1,60 @@
-import { describe, it, expect } from 'vitest'
-import { IoOptionSelect, MenuOption } from '@io-gui/menus'
-
-const element = new IoOptionSelect({value: '', option: new MenuOption({id: 'test', options: []})})
-document.body.appendChild(element as HTMLElement)
-element.style.display = 'none'
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
+import { IoOptionSelect, Menu } from '@io-gui/menus'
 
 describe('IoOptionSelect', () => {
-  it('has default values', () => {
+  let model: Menu
+  let element: IoOptionSelect
+
+  beforeEach(() => {
+    model = new Menu({
+      id: 'root',
+      options: [
+        { id: 'one', value: 1, label: 'One' },
+        { id: 'two', value: 2, label: 'Two' },
+      ],
+    })
+    element = new IoOptionSelect({ model })
+    document.body.appendChild(element as HTMLElement)
+    element.style.display = 'none'
   })
-  it('matches values', () => {
-    expect(element.textContent).toBe('test')
+
+  afterEach(() => {
+    element.remove()
+    model.dispose()
+  })
+
+  it('selects the matching option when value is written', () => {
     element.value = 2
-    expect(element.textContent).toBe('2')
+    expect(model.findOptionById('two')!.selected).toBe(true)
+    expect(model.selectedID).toBe('two')
+    expect(element.textContent).toContain('Two')
   })
-  it('has tabIndex attribute', () => {
+
+  it('mirrors the selected option value when selection changes on the model', () => {
+    model.findOptionById('one')!.selected = true
+    expect(element.value).toBe(1)
+    expect(element.textContent).toContain('One')
   })
-  it('has a11y attributes', () => {
+
+  it('takes the initially selected option value when value is undefined', () => {
+    const preselected = new Menu({
+      id: 'root',
+      selectedID: 'two',
+      options: [
+        { id: 'one', value: 1, label: 'One' },
+        { id: 'two', value: 2, label: 'Two' },
+      ],
+    })
+    const select = new IoOptionSelect({ model: preselected })
+    document.body.appendChild(select as HTMLElement)
+    select.style.display = 'none'
+    expect(select.value).toBe(2)
+    select.remove()
+    preselected.dispose()
+  })
+
+  it('falls back to String(value) label when value matches no option', () => {
+    element.value = 42
+    expect(element.textContent).toContain('42')
   })
 })
