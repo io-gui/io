@@ -1,4 +1,4 @@
-import { ReactiveObject, Register, Property, WithBinding, NodeArray, Json, Binding } from '@io-gui/core'
+import { ReactiveObject, Register, Property, WithBinding, NodeArray, Json } from '@io-gui/core'
 
 export type OptionMode = 'select' | 'toggle' | 'none'
 
@@ -13,7 +13,6 @@ export type OptionProps = {
   disabled?: boolean
   hidden?: boolean
   selected?: WithBinding<boolean>
-  selectedIDImmediate?: Binding<string>
   options?: Array<string | number | boolean | null | undefined | OptionProps | Option>
 }
 
