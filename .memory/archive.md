@@ -212,3 +212,11 @@
 - Fix: debounce all spoke `setProperty(..., true)` then `dispatchQueue()` per dirty target
 - Same batching idea as setProperties — values settle before any *-changed / mutation
 - Binding.test.ts 11/11 pass
+
+## 2026-07-09 Binding network race investigation
+
+- Single-hub batch fix does not cover multi-hub cascades
+- Binding.network.test.ts: 5 fail / 2 pass
+- Fail modes: sibling cascade leaves, diamond half-join (`X+` then `X+X`), nested-hub side spoke empty during Mid.vChanged, ladder/bridge when side leaf attached before child hub
+- Pass modes: ladder/bridge when child hub attached before side leaf (Set insertion order luck)
+- Pattern: hub values settle in batch; leaf push is deferred to each hub's dispatchQueue — sequential hub dispatch leaves sibling/deeper leaves stale mid-wave
