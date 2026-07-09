@@ -220,3 +220,16 @@
 - Fail modes: sibling cascade leaves, diamond half-join (`X+` then `X+X`), nested-hub side spoke empty during Mid.vChanged, ladder/bridge when side leaf attached before child hub
 - Pass modes: ladder/bridge when child hub attached before side leaf (Set insertion order luck)
 - Pattern: hub values settle in batch; leaf push is deferred to each hub's dispatchQueue — sequential hub dispatch leaves sibling/deeper leaves stale mid-wave
+
+## 2026-07-09 Binding graph-write sync
+
+- Arch: forward sync is transitive graph write, not event cascade
+- `pushBindingValue(binding, value, dirty, visited)` walks hub→spoke via target._bindings.get(prop), debounce-writes, then flush dirty dispatchQueue
+- Visited Set breaks cycles (circular binds)
+- Nested hub onSourceChanged re-entry no-ops (values already equal)
+- Binding.test + Binding.network + ReactiveNode/Element binding paths: 64 pass
+
+## 2026-07-09 Binding docs
+
+- CONTEXT.md Binding: forward sync = transitive graph write then flush
+- deep-dive: data-flow bullet, Core Systems Binding line, Data Binding section rewritten (hub→leaf graph write vs leaf→hub setProperty)

@@ -38,8 +38,7 @@
 
 ### io-core
 
-- **Binding hub-spoke mid-push:** `onSourceChanged` debounce-writes all spokes then `dispatchQueue()` per dirty target so sync handlers never see half-updated spokes. Covered by Binding.test.ts.
-- **Binding multi-hub cascade (open):** batching one hub is not enough. Nested hubs only push their leaves on their own dispatch; sequential `dispatchQueue` across sibling hubs exposes stale leaves / half-joins mid-wave. Attachment order (Set iteration) can mask or reveal it. Failing suite: `Binding.network.test.ts`.
+- **Binding sync = graph write:** `onSourceChanged` walks outbound bindings transitively (`pushBindingValue`), debounce-writes the full closure, then flushes dirty queues. Fixes single-hub mid-push and multi-hub cascade/diamond/nested races. Suites: Binding.test.ts, Binding.network.test.ts.
 - `tsconfig.json` include path: use `"./src"` (relative with dot)
 - `IoSelector.Listeners` return type: `ListenerDefinitions`
 - VDOM supports opt-in keyed reconciliation: set `key` in a vChild's props to match-and-move elements on reorder instead of destroy/recreate. Keys live on DOM elements as non-enumerable `_vdomKey` (read via `getElementKey`); `key` is never applied as a property/attribute. Unkeyed siblings in a keyed list still reuse positionally by tag. Duplicate keys warn in debug blocks.

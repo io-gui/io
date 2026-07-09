@@ -21,6 +21,33 @@ const isTypeCompatible = (type1: unknown, type2: unknown) => {
   }
   return false
 }
+
+/**
+ * Forward-sync is a graph write, not an event cascade.
+ * Walks hub→spoke bindings transitively, debounce-writing every reachable
+ * property, then flushes dirty queues so handlers never observe a half-updated
+ * closure (sibling branches, diamonds, nested hubs).
+ */
+function pushBindingValue(binding: Binding, value: unknown, dirty: Set<ReactiveNode>, visited: Set<Binding>) {
+  if (visited.has(binding)) return
+  visited.add(binding)
+
+  for (const target of binding.targets) {
+    const targetProperties = binding.getTargetProperties(target)
+    for (let j = targetProperties.length; j--;) {
+      const propName = targetProperties[j]
+      const oldValue = target._properties.get(propName)!.value
+      if (oldValue === value || bothAreNaNs(value, oldValue)) continue
+
+      target.setProperty(propName, value, true)
+      dirty.add(target)
+
+      const outbound = target._bindings.get(propName)
+      if (outbound) pushBindingValue(outbound, value, dirty, visited)
+    }
+  }
+}
+
 /**
  * Hub-and-spoke two-way sync between reactive properties via `[propName]-changed` events.
  * @example binding.addTarget(nodeB, 'value')
@@ -152,28 +179,15 @@ export class Binding<T = unknown> {
   }
   /**
    * Event handler that updates bound properties on target nodes when source node emits `[propName]-changed` event.
+   * Settles the full outbound binding closure before any target dispatches.
    * @param {ChangeEvent} event - Field change event.
    */
   onSourceChanged(event: ChangeEvent) {
     debug: if (event.target !== this.node) {
       console.error('onSourceChanged() should always originate form source node!')
     }
-    const value = event.detail.value
-    // Write all spokes before any *-changed dispatch so sync handlers on one
-    // spoke cannot observe another spoke still holding the old value.
     const dirty = new Set<ReactiveNode>()
-    for (const target of this.targets) {
-      const targetProperties = this.getTargetProperties(target)
-      for (let j = targetProperties.length; j--;) {
-        const propName = targetProperties[j]
-        const oldValue = target._properties.get(propName)!.value
-        if (oldValue !== value) {
-          if (bothAreNaNs(value, oldValue)) continue
-          target.setProperty(propName, value, true)
-          dirty.add(target)
-        }
-      }
-    }
+    pushBindingValue(this, event.detail.value, dirty, new Set())
     for (const target of dirty) target.dispatchQueue()
   }
   /**
