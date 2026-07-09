@@ -192,6 +192,67 @@ describe('Layout', () => {
       expect(verticalSplit.children[1]).toBe(panelB)
     })
 
+    it('inserts panel immediately above target when dropping top on non-first panel in vertical split', () => {
+      const layout = new Layout({
+        child: {
+          type: 'split',
+          children: [
+            {
+              type: 'split',
+              orientation: 'vertical',
+              children: [
+                { type: 'panel', tabs: [{ id: 'Inputs' }] },
+                { type: 'panel', tabs: [{ id: 'Getting Started' }] },
+              ],
+            },
+            { type: 'panel', tabs: [{ id: 'Editors' }] },
+          ],
+        },
+      })
+
+      const rootSplit = layout.child as Split
+      const leftSplit = rootSplit.children[0] as Split
+      const inputsPanel = leftSplit.children[0] as Panel
+      const gettingStartedPanel = leftSplit.children[1] as Panel
+      const editorsPanel = rootSplit.children[1] as Panel
+      const editorsTab = editorsPanel.tabs[0]
+
+      layout.moveTab(editorsTab, gettingStartedPanel, 'top', 0)
+
+      expect(leftSplit.children.length).toBe(3)
+      expect(leftSplit.children[0]).toBe(inputsPanel)
+      expect((leftSplit.children[1] as Panel).tabs[0].id).toBe('Editors')
+      expect(leftSplit.children[2]).toBe(gettingStartedPanel)
+    })
+
+    it('inserts panel immediately left of target when dropping left on non-first panel in horizontal split', () => {
+      const layout = new Layout({
+        child: {
+          type: 'split',
+          orientation: 'horizontal',
+          children: [
+            { type: 'panel', tabs: [{ id: 'a' }] },
+            { type: 'panel', tabs: [{ id: 'b' }] },
+            { type: 'panel', tabs: [{ id: 'keep' }, { id: 'drag' }] },
+          ],
+        },
+      })
+
+      const rootSplit = layout.child as Split
+      const panelA = rootSplit.children[0] as Panel
+      const panelB = rootSplit.children[1] as Panel
+      const sourcePanel = rootSplit.children[2] as Panel
+      const dragTab = sourcePanel.tabs.find(t => t.id === 'drag') as Tab
+
+      layout.moveTab(dragTab, panelB, 'left', 0)
+
+      expect(rootSplit.children.length).toBe(4)
+      expect(rootSplit.children[0]).toBe(panelA)
+      expect((rootSplit.children[1] as Panel).tabs[0].id).toBe('drag')
+      expect(rootSplit.children[2]).toBe(panelB)
+      expect(rootSplit.children[3]).toBe(sourcePanel)
+    })
+
   })
 
   describe('findParentSplit after normalize', () => {

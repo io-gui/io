@@ -6,7 +6,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 var ReactiveElement_1;
 import { Field } from '../decorators/Field.js';
-import { Property } from '../decorators/Property.js';
 import { Register } from '../decorators/Register.js';
 import { ProtoChain } from '../core/ProtoChain.js';
 import { applyNativeElementProps, constructElement, createVDOMElement, filterVDOMElements, TEXT_TAG, getNodeVDOMTag, getTextVDOMContent } from '../vdom/VDOM.js';
@@ -374,9 +373,6 @@ let ReactiveElement = ReactiveElement_1 = class ReactiveElement extends HTMLElem
             } });
     }
 };
-__decorate([
-    Property({ type: String, value: 'immediate' })
-], ReactiveElement.prototype, "dispatchTiming", void 0);
 __decorate([
     Field(Object)
 ], ReactiveElement.prototype, "$", void 0);

@@ -388,28 +388,6 @@ this.prop2Changed(change)
 this.mutated()
 ```
 
-### Asynchronous Dispatch
-
-By default, all nodes and elements handle changes synchronously, meaning that change handler functions and events happen immediately after the change. While this means that nodes react as fast as possible, it can also lead to inefficiencies in complex systems where multiple properties are changing frequently.
-
-Just like in the batching example above we can get into a scenario where change handler functions are called excessively. Again, this is fine but we can avoid redundant work by setting node's `dispatchTiming` property to `debounced` or `throttled`. This will defer change dispatch to an asynchronous regime.
-
-In asynchronous regime, nodes don't invoke change events until the next `requestAnimationFrame` cycle. Multiple property changes can happen during this time and the resulting sequence of change events and handler function invocations will be automatically batched.
-
-```javascript
-this.prop1 = 1
-this.prop1 = 2
-this.prop1 = 3
-this.prop2 = 'a'
-this.prop2 = 'b'
-this.prop2 = 'c'
-
-// Sequence of change functions:
-this.prop1Changed(change) // change.oldValue === 1
-this.prop2Changed(change) // change.oldValue === 'a'
-this.mutated()
-```
-
 ### Template Syntax
 
 Io-Gui elements use hypertext-like array structures to express virtual DOM templates. Internally, the arrays are converted to virtual DOM and rendered as actual DOM elements. During a re-render, the templates will be compared against the existing elements and states so only necessary DOM changes will be performed. Template rendering also takes care of disposing unused elements and connections.

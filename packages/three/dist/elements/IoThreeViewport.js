@@ -201,9 +201,6 @@ __decorate([
     Property({ type: Number, value: 1 })
 ], IoThreeViewport.prototype, "clearAlpha", void 0);
 __decorate([
-    Property({ type: String, value: 'throttled' })
-], IoThreeViewport.prototype, "dispatchTiming", void 0);
-__decorate([
     Property({ type: String, value: 'perspective' })
 ], IoThreeViewport.prototype, "cameraSelect", void 0);
 __decorate([

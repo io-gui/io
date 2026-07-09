@@ -319,8 +319,8 @@ describe('ReactiveObject', () => {
     const protoProps1 = node1._protochain.properties
     const protoProps2 = node2._protochain.properties
 
-    expect(Array.from(node1._properties.keys())).toEqual(['dispatchTiming', 'prop1', 'prop2', 'prop3'])
-    expect(Array.from(node2._properties.keys())).toEqual(['dispatchTiming', 'prop1', 'prop2', 'prop3'])
+    expect(Array.from(node1._properties.keys())).toEqual(['prop1', 'prop2', 'prop3'])
+    expect(Array.from(node2._properties.keys())).toEqual(['prop1', 'prop2', 'prop3'])
 
     expect(protoProps1.prop1.value).toBe(0)
     expect(node1._properties.get('prop1')).toEqual({
@@ -599,28 +599,6 @@ describe('ReactiveObject', () => {
     }])
 
     node3.propChangedEvents.length = 0
-    node3.dispatchTiming = 'debounced'
-    node3.prop = 10
-
-    expect(node3.propChangedEvents).toEqual([])
-
-    await nextFrame()
-
-    expect(node3.propChangedEvents).toEqual([{
-      oldValue: -1,
-      property: 'prop',
-      value: 10,
-    }])
-
-    node3.propChangedEvents.length = 0
-    node3.dispatchTiming = 'none'
-    node3.prop = 20
-
-    expect(node3.propChangedEvents).toEqual([])
-
-    await nextFrame()
-
-    expect(node3.propChangedEvents).toEqual([])
   })
   it('Should execute throttle immediately and debounce deferred', async () => {
     const order: number[] = []
@@ -781,29 +759,6 @@ describe('ReactiveObject', () => {
 
     node.prop1Changes.length = 0
     node.prop2Changes.length = 0
-
-    node.dispatchTiming = 'debounced'
-
-    node.setProperties({
-      'prop1': 'four',
-      'prop2': 'test2',
-    })
-
-    expect(node.prop1Changes).toEqual([])
-    expect(node.prop2Changes).toEqual([])
-
-    await nextFrame()
-
-    expect(node.prop1Changes).toEqual([{
-      property: 'prop1',
-      oldValue: 'three',
-      value: 'four',
-    }])
-    expect(node.prop2Changes).toEqual([{
-      property: 'prop2',
-      oldValue: '',
-      value: 'test2',
-    }])
 
     node.dispose()
   })
@@ -1261,7 +1216,7 @@ describe('ReactiveObject', () => {
   })
 
   describe('toJSON and applyJSON', () => {
-    it('serializes primitives and nested toJSON values, skips dispatchTiming', () => {
+    it('serializes primitives and nested toJSON values', () => {
       const node = new JsonNode()
       node.count = 9
       node.color.applyJSON(Color.toHex(1, 0.2, 0))
@@ -1272,7 +1227,6 @@ describe('ReactiveObject', () => {
       expect(json.count).toBe(9)
       expect(json.color).toBe(0xffff3300)
       expect(json.label).toBe('saved')
-      expect(json.dispatchTiming).toBeUndefined()
       expect(json.children).toEqual([{ count: 3 }])
     })
 

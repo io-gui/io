@@ -1,6 +1,6 @@
 import { ProtoChain } from '../core/ProtoChain.js';
 import { VDOMElement, VDOMChild, VDOMFactoryChildren, NativeElementProps } from '../vdom/VDOM.js';
-import { ReactiveObject, DispatchTiming, PropertyDefinitions, ListenerDefinitions, PropertyValues } from '../nodes/ReactiveObject.js';
+import { ReactiveObject, PropertyDefinitions, ListenerDefinitions, PropertyValues } from '../nodes/ReactiveObject.js';
 import { type ReactiveNode } from '../core/ReactiveCore.js';
 import { Binding } from '../core/Binding.js';
 import type { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js';
@@ -10,7 +10,6 @@ import { CallbackFunction } from '../core/FrameScheduler.js';
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 type AnyEventHandler = ((event: CustomEvent) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void);
 export type ReactiveElementProps = NativeElementProps & {
-    dispatchTiming?: DispatchTiming;
     [key: prefix<string, '@'>]: string | AnyEventHandler;
 };
 /**
@@ -30,7 +29,6 @@ export type ReactiveElementProps = NativeElementProps & {
 export declare class ReactiveElement extends HTMLElement {
     static vConstructor: (arg0?: ReactiveElementProps | VDOMFactoryChildren, arg1?: VDOMFactoryChildren) => VDOMElement;
     static get Style(): string;
-    dispatchTiming: DispatchTiming;
     $: Record<string, HTMLElement | ReactiveElement>;
     static get Properties(): PropertyDefinitions;
     static get Fields(): Record<string, unknown>;

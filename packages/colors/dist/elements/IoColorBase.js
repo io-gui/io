@@ -87,9 +87,6 @@ let IoColorBase = class IoColorBase extends ReactiveElement {
     }
 };
 __decorate([
-    Property('throttled')
-], IoColorBase.prototype, "dispatchTiming", void 0);
-__decorate([
     Property({ type: Object, init: { r: 1, g: 1, b: 1, a: 1 } })
 ], IoColorBase.prototype, "value", void 0);
 __decorate([

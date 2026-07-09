@@ -72,8 +72,6 @@ let IoGl = IoGl_1 = class IoGl extends ReactiveElement {
       }
     `;
     }
-    // @Property('throttled')
-    // declare dispatchTiming: DispatchTiming
     #needsResize = false;
     #canvas;
     // #counter: HTMLSpanElement;

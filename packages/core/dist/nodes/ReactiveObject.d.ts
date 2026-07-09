@@ -33,12 +33,10 @@ export declare const NODES: {
     active: Set<ReactiveObject>;
     disposed: WeakSet<ReactiveObject>;
 };
-export type DispatchTiming = 'immediate' | 'throttled' | 'debounced';
 export type WithBinding<T> = T | Binding<T>;
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 type AnyEventHandler = ((event: CustomEvent) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void);
 export type ReactiveObjectProps = {
-    dispatchTiming?: DispatchTiming;
     [key: prefix<string, '@'>]: string | AnyEventHandler;
 };
 /**
@@ -56,7 +54,6 @@ export type ReactiveObjectProps = {
  * @see ReactiveElement for the DOM-integrated counterpart
  */
 export declare class ReactiveObject extends Object {
-    dispatchTiming: DispatchTiming;
     static get Properties(): PropertyDefinitions;
     static get Fields(): Record<string, unknown>;
     /** Class-level listeners wired at construction; subclass overrides same event name (last wins). */

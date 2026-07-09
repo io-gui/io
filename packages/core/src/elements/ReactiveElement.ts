@@ -1,9 +1,8 @@
 import { Field } from '../decorators/Field.js'
-import { Property } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
 import { ProtoChain } from '../core/ProtoChain.js'
 import { applyNativeElementProps, constructElement, createVDOMElement, filterVDOMElements, VDOMElement, VDOMChild, VDOMFactoryArg, VDOMFactoryChildren, NativeElementProps, TEXT_TAG, getNodeVDOMTag, getTextVDOMContent } from '../vdom/VDOM.js'
-import { ReactiveObject, DispatchTiming, dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initProperties, initFields, PropertyDefinitions, ListenerDefinitions, PropertyValues } from '../nodes/ReactiveObject.js'
+import { ReactiveObject, dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initProperties, initFields, PropertyDefinitions, ListenerDefinitions, PropertyValues } from '../nodes/ReactiveObject.js'
 import { addParent, initReactiveNodeInternals, removeParent, type ReactiveNode } from '../core/ReactiveCore.js'
 import { Binding } from '../core/Binding.js'
 import { applyElementStyleToDocument } from '../core/Style.js'
@@ -40,7 +39,6 @@ type AnyEventHandler = (
   ((event: Event) => void)
 
 export type ReactiveElementProps = NativeElementProps & {
-  dispatchTiming?: DispatchTiming
   [key: prefix<string, '@'>]: string | AnyEventHandler
 }
 
@@ -84,9 +82,6 @@ export class ReactiveElement extends HTMLElement {
       }
     `
   }
-
-  @Property({type: String, value: 'immediate'})
-  declare dispatchTiming: DispatchTiming
 
   @Field(Object)
   declare $: Record<string, HTMLElement | ReactiveElement>

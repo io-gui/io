@@ -98,18 +98,6 @@ mutated() {
 }
 ```
 
-### Dispatch Timing
-
-Control dispatch timing via `dispatchTiming` property:
-
-| Mode | Behavior |
-|------|----------|
-| `'immediate'` | Synchronous dispatch (default) |
-| `'throttled'` | Once per animation frame, first value wins |
-| `'debounced'` | Once per animation frame, last value wins |
-
----
-
 ## Two-Way Binding
 
 Create bindings with `this.bind('propertyName')`:

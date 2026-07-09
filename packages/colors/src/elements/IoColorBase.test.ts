@@ -13,7 +13,6 @@ describe('IoColorBase.test', () => {
     expect(typeof element.valueFromRgb).toBe('function')
   })
   it('Should initialize properties correctly', () => {
-    expect(element.dispatchTiming).toBe('throttled')
     expect(element.value).toEqual({r: 1, g: 1, b: 1, a: 1})
     expect(element.rgba).toEqual([1, 1, 1, 1])
     expect(element.hsv).toEqual([1, 0, 1])

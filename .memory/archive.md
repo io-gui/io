@@ -257,3 +257,22 @@
 - Bug: onPointerup always called onOverlayPointeup then this.onClick — overlay path ok via hovered; non-overlay options never got click when hovered unset
 - Fix: `if (!this.inoverlay) this.onClick()`
 - Test: IoOption.test.ts pointerdown→pointerup on leaf not in overlay → io-option-clicked once
+
+## 2026-07-09 Removed dispatchTiming leftover imports
+
+- User removed dispatchTiming; build failed on unused imports (lint errors)
+- Fixed: ReactiveElement.ts dropped Property import; EditorConfig.ts dropped ReactiveElement + ReactiveObject
+- Build: 0 errors
+
+## 2026-07-09 Layout top-edge drop bug
+
+- Demo: drop Editors on top edge of 2nd panel in vertical left split → inserts above Inputs, not above Getting Started
+- Cause: `Layout.moveTab` same-orient top/left uses `index - 1` → splice at 0 for target index 1
+- Added failing tests in Layout.test.ts (vertical top + horizontal left); both fail as expected
+- Fix not implemented yet
+
+## 2026-07-09 Layout top-edge drop fix
+
+- `moveTab` same-orient: `left`/`top` splice at `index` (before target), not `index - 1`
+- Was causing drop on 2nd panel to land at start of split
+- Layout.test.ts 15/15 pass
