@@ -64,6 +64,7 @@ let IoOverlay = class IoOverlay extends ReactiveElement {
     }
     stopPropagation(event) {
         event.stopPropagation();
+        event.preventDefault();
     }
     onPointerup(event) {
         if (event.composedPath()[0] === this) {

@@ -45,6 +45,7 @@ export function onOverlayPointeup(event) {
         hovered.onClick();
 }
 Overlay.addEventListener('pointermove', onOverlayPointermove);
+Overlay.addEventListener('pointerup', onOverlayPointeup);
 /**
  * The view paired with one `Option` model. It displays `model.icon`, `model.label` and `model.hint`
  * and creates an expandable `IoMenu` from the `model.options` array. Options expand in the direction
@@ -130,27 +131,19 @@ let IoOption = class IoOption extends IoField {
     }
     onPointerdown(event) {
         super.onPointerdown(event);
-        if (event.pointerType !== 'touch') {
-            this.setPointerCapture(event.pointerId);
-            event.stopPropagation();
-            if (this.hasmore)
-                this.expanded = true;
-            onOverlayPointerdown.call(this, event);
-        }
+        this.setPointerCapture(event.pointerId);
+        if (this.hasmore)
+            this.expanded = true;
+        onOverlayPointerdown(event);
+        onOverlayPointermove(event);
     }
     onPointermove(event) {
-        event.stopPropagation();
-        if (event.pointerType !== 'touch') {
-            onOverlayPointermove.call(this, event);
-        }
+        super.onPointermove(event);
+        onOverlayPointermove(event);
     }
     onPointerup(event) {
         super.onPointerup(event);
-        event.stopPropagation();
-        this.onPointerupAction(event);
-    }
-    onPointerupAction(event) {
-        this.onClick();
+        onOverlayPointeup(event);
     }
     onFocus(event) {
         super.onFocus(event);
@@ -163,6 +156,10 @@ let IoOption = class IoOption extends IoField {
                 $allitems[i].collapse();
             }
         }
+    }
+    onTouchend(event) {
+        event.preventDefault();
+        super.onTouchend(event);
     }
     onBlur(event) {
         super.onBlur(event);

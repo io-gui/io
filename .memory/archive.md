@@ -192,3 +192,62 @@
 - User asked restore packages/layout/docs/adr from git
 - Deleted in b094b89a "Finished 3 adrs"; restored from parent ebca04dc via git checkout
 - 3 files staged: 0001–0003 layout ADRs
+
+## 2026-07-09 IoOption ghost click
+
+- Touch tap leaf option collapses menu via onClick→collapseRoot before browser synthesizes click
+- stopPropagation on touch does NOT suppress click synthesis; need preventDefault on touchend
+- Hit-test for synthetic click uses coords after overlay gone → element underneath
+- Same class of bug as react-spectrum #7026 / Chrome 1150073
+
+## 2026-07-09 Binding hub-spoke mid-push race
+
+- Symptom (polygone): AssetInfoView `this.guid` empty in download URL while `assetInfo.guid` set. PageModel binds same hub guid to model + view.
+- Root: `Binding.onSourceChanged` loops targets and `setProperty`s one-by-one. First spoke's sync `guidChanged` → load/mutate → view `modelMutated` re-renders before second spoke updated.
+- Final `view.guid` catches up after loop; mutation-time derived state stays wrong (`/archives//_….zip`).
+- Breaking tests added in `packages/core/src/core/Binding.test.ts` (PageModel-shaped + mid-push observation). Fix deferred; polygone stash drops duplicate guid bind as workaround.
+
+## 2026-07-09 Binding onSourceChanged batch fix
+
+- Fix: debounce all spoke `setProperty(..., true)` then `dispatchQueue()` per dirty target
+- Same batching idea as setProperties — values settle before any *-changed / mutation
+- Binding.test.ts 11/11 pass
+
+## 2026-07-09 Binding network race investigation
+
+- Single-hub batch fix does not cover multi-hub cascades
+- Binding.network.test.ts: 5 fail / 2 pass
+- Fail modes: sibling cascade leaves, diamond half-join (`X+` then `X+X`), nested-hub side spoke empty during Mid.vChanged, ladder/bridge when side leaf attached before child hub
+- Pass modes: ladder/bridge when child hub attached before side leaf (Set insertion order luck)
+- Pattern: hub values settle in batch; leaf push is deferred to each hub's dispatchQueue — sequential hub dispatch leaves sibling/deeper leaves stale mid-wave
+
+## 2026-07-09 Binding graph-write sync
+
+- Arch: forward sync is transitive graph write, not event cascade
+- `pushBindingValue(binding, value, dirty, visited)` walks hub→spoke via target._bindings.get(prop), debounce-writes, then flush dirty dispatchQueue
+- Visited Set breaks cycles (circular binds)
+- Nested hub onSourceChanged re-entry no-ops (values already equal)
+- Binding.test + Binding.network + ReactiveNode/Element binding paths: 64 pass
+
+## 2026-07-09 Binding docs
+
+- CONTEXT.md Binding: forward sync = transitive graph write then flush
+- deep-dive: data-flow bullet, Core Systems Binding line, Data Binding section rewritten (hub→leaf graph write vs leaf→hub setProperty)
+
+## 2026-07-09 Parallel binding networks race (failing test)
+
+- Two independent networks: source.a→midA→sink.a and source.b→midB→sink.b
+- source.setProperties({a,b}) writes both hubs then dispatches; each hub's onSourceChanged settles+flushes its own network alone
+- Mid-wave io-mutation / mutated sees `A1|` then `A1|B1`
+- Final sink state coherent; race is mid-wave only
+- Test: Binding.network.test.ts parallel-network case — fix deferred
+
+## 2026-07-09 BindingWave epoch
+
+- New BindingWave.ts: enter/leave/noteBindingDirty — shared dirty set, flush on outermost leave
+- ChangeQueue.dispatch opens wave around #dispatchQueuedChanges only (closes before source mutated)
+- Binding.onSourceChanged enters nested wave, pushBindingValue notes dirty, leave flushes only at outermost
+- Parallel networks in one setProperties batch settle together → no mid-wave A1|
+- ReactiveElement event-order expectation updated (one TestNode:changed for batched prop0+prop1)
+- Docs: CONTEXT + deep-dive BindingWave
+- 111 related tests pass

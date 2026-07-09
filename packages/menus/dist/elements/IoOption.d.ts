@@ -41,8 +41,8 @@ export declare class IoOption extends IoField {
     onPointerdown(event: PointerEvent): void;
     onPointermove(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;
-    onPointerupAction(event: PointerEvent): void;
     onFocus(event: FocusEvent): void;
+    onTouchend(event: TouchEvent): void;
     onBlur(event: FocusEvent): void;
     onBlurDebounced(): void;
     onKeydown(event: KeyboardEvent): void;
