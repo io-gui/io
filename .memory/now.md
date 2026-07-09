@@ -1,5 +1,5 @@
 # Current Focus
 
-Binding forward-sync is now a transitive graph write (`pushBindingValue`) then flush dirty queues. Network + single-hub suites green (64).
+Parallel binding networks race: two independent prop networks (a vs b) batch-updated via setProperties; first network settles+flushes while second still stale → Sink.mutated()/io-mutation sees `A1|` then `A1|B1`.
 
-Architectural shift: hub→spoke sync is graph settlement, not per-hub event cascade.
+Failing test in Binding.network.test.ts — no fix yet.

@@ -39,6 +39,7 @@
 ### io-core
 
 - **Binding sync = graph write:** `onSourceChanged` walks outbound bindings transitively (`pushBindingValue`), debounce-writes the full closure, then flushes dirty queues. Fixes single-hub mid-push and multi-hub cascade/diamond/nested races. Suites: Binding.test.ts, Binding.network.test.ts.
+- **Parallel binding networks (open):** independent networks on different props still flush separately when a shared source batches both. Sink.mutated can see `A1|` before `A1|B1`. Failing test in Binding.network.test.ts.
 - `tsconfig.json` include path: use `"./src"` (relative with dot)
 - `IoSelector.Listeners` return type: `ListenerDefinitions`
 - VDOM supports opt-in keyed reconciliation: set `key` in a vChild's props to match-and-move elements on reorder instead of destroy/recreate. Keys live on DOM elements as non-enumerable `_vdomKey` (read via `getElementKey`); `key` is never applied as a property/attribute. Unkeyed siblings in a keyed list still reuse positionally by tag. Duplicate keys warn in debug blocks.

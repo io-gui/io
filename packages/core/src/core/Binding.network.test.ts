@@ -336,4 +336,67 @@ describe('Binding network', () => {
     leafL.dispose()
     leafR.dispose()
   })
+
+  /**
+   * Two independent binding networks on different properties, joined only by a
+   * consumer that needs both. Source batches a+b via setProperties; each
+   * network settles its own closure and flushes before the other finishes —
+   * so Sink.mutated() can run while a is new and b is still old (or vice versa).
+   *
+   * Anti-pattern as app design; the system should still keep parallel networks
+   * coherent across one source batch.
+   */
+  it('Should not invoke mutated() with unsynchronized parallel-network properties', () => {
+    @Register
+    class DualSource extends ReactiveObject {
+      static override get Properties(): PropertyDefinitions {
+        return {a: '', b: ''}
+      }
+      declare a: string
+      declare b: string
+    }
+
+    @Register
+    class DualSink extends ReactiveObject {
+      static override get Properties(): PropertyDefinitions {
+        return {a: '', b: '', snapshot: ''}
+      }
+      declare a: string
+      declare b: string
+      declare snapshot: string
+      mutated() {
+        this.snapshot = `${this.a}|${this.b}`
+      }
+    }
+
+    const source = new DualSource()
+    const midA = new StrNode()
+    const midB = new StrNode()
+    const sink = new DualSink()
+
+    // Network A: source.a → midA.v → sink.a
+    midA.v = source.bind('a') as unknown as string
+    sink.a = midA.bind('v') as unknown as string
+    // Network B: source.b → midB.v → sink.b
+    midB.v = source.bind('b') as unknown as string
+    sink.b = midB.bind('v') as unknown as string
+
+    const midMutations: string[] = []
+    sink.addEventListener('io-mutation', () => {
+      midMutations.push(`${sink.a}|${sink.b}`)
+    })
+
+    source.setProperties({a: 'A1', b: 'B1'})
+
+    expect(sink.a).toBe('A1')
+    expect(sink.b).toBe('B1')
+    // Final state is coherent; the race is mid-wave (first network flushes alone).
+    expect(sink.snapshot).toBe('A1|B1')
+    expect(midMutations).toEqual(['A1|B1'])
+
+    source.dispose()
+    midA.dispose()
+    midB.dispose()
+    sink.dispose()
+  })
 })

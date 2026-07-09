@@ -233,3 +233,11 @@
 
 - CONTEXT.md Binding: forward sync = transitive graph write then flush
 - deep-dive: data-flow bullet, Core Systems Binding line, Data Binding section rewritten (hub→leaf graph write vs leaf→hub setProperty)
+
+## 2026-07-09 Parallel binding networks race (failing test)
+
+- Two independent networks: source.a→midA→sink.a and source.b→midB→sink.b
+- source.setProperties({a,b}) writes both hubs then dispatches; each hub's onSourceChanged settles+flushes its own network alone
+- Mid-wave io-mutation / mutated sees `A1|` then `A1|B1`
+- Final sink state coherent; race is mid-wave only
+- Test: Binding.network.test.ts parallel-network case — fix deferred
