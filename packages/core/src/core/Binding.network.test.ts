@@ -37,7 +37,7 @@ describe('Binding network', () => {
     leafA.v = hubA.bind('v') as unknown as string
     leafB.v = hubB.bind('v') as unknown as string
 
-    const midWave: {hubA: string, hubB: string, leafA: string, leafB: string}[] = []
+    const midWave: {hubA: string; hubB: string; leafA: string; leafB: string}[] = []
     leafA.addEventListener('v-changed', () => {
       midWave.push({
         hubA: hubA.v,
@@ -203,7 +203,7 @@ describe('Binding network', () => {
     leafB.v = b.bind('v') as unknown as string
     leafC.v = c.bind('v') as unknown as string
 
-    const midWave: {leafB: string, leafC: string, c: string}[] = []
+    const midWave: {leafB: string; leafC: string; c: string}[] = []
     leafB.addEventListener('v-changed', () => {
       midWave.push({leafB: leafB.v, leafC: leafC.v, c: c.v})
     })
@@ -245,7 +245,7 @@ describe('Binding network', () => {
     b.v = a.bind('v') as unknown as string
     c.v = b.bind('v') as unknown as string
 
-    const midWave: {leafB: string, leafC: string, c: string}[] = []
+    const midWave: {leafB: string; leafC: string; c: string}[] = []
     leafB.addEventListener('v-changed', () => {
       midWave.push({leafB: leafB.v, leafC: leafC.v, c: c.v})
     })
@@ -281,7 +281,7 @@ describe('Binding network', () => {
     leafL.v = hubL.bind('v') as unknown as string
     leafR.v = hubR.bind('v') as unknown as string
 
-    const midWave: {leafL: string, leafR: string, hubR: string}[] = []
+    const midWave: {leafL: string; leafR: string; hubR: string}[] = []
     leafL.addEventListener('v-changed', () => {
       midWave.push({leafL: leafL.v, leafR: leafR.v, hubR: hubR.v})
     })
@@ -317,7 +317,7 @@ describe('Binding network', () => {
     hubR.v = bridge.bind('v') as unknown as string
     leafR.v = hubR.bind('v') as unknown as string
 
-    const midWave: {leafL: string, leafR: string, hubR: string}[] = []
+    const midWave: {leafL: string; leafR: string; hubR: string}[] = []
     leafL.addEventListener('v-changed', () => {
       midWave.push({leafL: leafL.v, leafR: leafR.v, hubR: hubR.v})
     })

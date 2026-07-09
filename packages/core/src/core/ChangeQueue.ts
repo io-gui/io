@@ -73,7 +73,7 @@ export class ChangeQueue {
     // Hold one binding wave across all *-changed in this pass so parallel
     // networks settle before any spoke flush; close before this node's mutated().
     enterBindingWave()
-    let properties: string[] = []
+    let properties: string[]
     try {
       properties = this.#dispatchQueuedChanges()
       this.#changes.clear()

@@ -350,7 +350,7 @@ describe('Binding', () => {
     const hub = new TestNodeString()
     const model = new Spoke()
     const view = new Spoke()
-    const seen: {model: string, view: string}[] = []
+    const seen: {model: string; view: string}[] = []
 
     model.addEventListener('guid-changed', () => {
       seen.push({model: model.guid, view: view.guid})
