@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { Binding, ReactiveObject, Register, PropertyDefinitions } from '@io-gui/core'
+import { Binding, ReactiveObject, ReactiveElement, Register, PropertyDefinitions } from '@io-gui/core'
 
 @Register
 class TestNode extends ReactiveObject {
@@ -249,5 +249,126 @@ describe('Binding', () => {
 
     node1.dispose()
     node2.dispose()
+  })
+  /**
+   * PageModel-like hub-and-spoke: source `guid` bound to model + view.
+   * Model `guidChanged` sync-mutates (cache-hit load). View re-renders from that
+   * mutation via `modelMutated` and must read the same `guid` as the model.
+   *
+   * Breaks when `Binding.onSourceChanged` updates targets sequentially: model
+   * gets the value first, its sync handler mutates, view re-renders while its
+   * own spoke is still `''`. Final `view.guid` may catch up later, but the
+   * mutation-time snapshot (download URL) stays wrong — AssetInfoView symptom.
+   */
+  it('Should keep hub-and-spoke targets in sync when first target mutates during source push', () => {
+    @Register
+    class GuidModel extends ReactiveObject {
+      static override get Properties(): PropertyDefinitions {
+        return {
+          guid: '',
+          formats: {type: Array, init: null},
+        }
+      }
+      declare guid: string
+      declare formats: string[]
+      guidChanged() {
+        this.formats = []
+        if (this.guid) {
+          // Sync cache-hit path (AssetInfo.load when ASSET_INFO_CACHE hits).
+          this.formats = ['GLTF2']
+        }
+      }
+    }
+
+    @Register
+    class GuidView extends ReactiveElement {
+      static override get Properties(): PropertyDefinitions {
+        return {
+          model: {type: GuidModel, init: null},
+          guid: '',
+          downloadPath: '',
+        }
+      }
+      declare model: GuidModel
+      declare guid: string
+      declare downloadPath: string
+      ready() {
+        this.modelMutated()
+      }
+      modelMutated() {
+        // AssetInfoView reads this.guid while model.guid is already set.
+        this.downloadPath = this.model.formats.length
+          ? `/archives/${this.guid}/${this.guid}_${this.model.formats[0]}.zip`
+          : ''
+      }
+    }
+
+    @Register
+    class GuidPage extends ReactiveElement {
+      static override get Properties(): PropertyDefinitions {
+        return {
+          guid: '',
+          model: {type: GuidModel, init: null},
+        }
+      }
+      declare guid: string
+      declare model: GuidModel
+      declare view: GuidView
+      ready() {
+        this.model.guid = this.bind('guid') as unknown as string
+        this.view = new GuidView({
+          model: this.model,
+          guid: this.bind('guid'),
+        })
+      }
+    }
+
+    const page = new GuidPage({guid: ''})
+    expect(page.model.guid).toBe('')
+    expect(page.view.guid).toBe('')
+
+    page.guid = 'asset-abc'
+
+    expect(page.model.guid).toBe('asset-abc')
+    expect(page.view.guid).toBe('asset-abc')
+    expect(page.model.formats).toEqual(['GLTF2'])
+    // Mutation-time render must not bake empty guid into derived UI state.
+    expect(page.view.downloadPath).toBe('/archives/asset-abc/asset-abc_GLTF2.zip')
+
+    page.view.dispose()
+    page.dispose()
+  })
+  it('Should not leave a spoke empty while another spoke already has the source value mid-push', () => {
+    @Register
+    class Spoke extends ReactiveObject {
+      static override get Properties(): PropertyDefinitions {
+        return {guid: ''}
+      }
+      declare guid: string
+    }
+
+    const hub = new TestNodeString()
+    const model = new Spoke()
+    const view = new Spoke()
+    const seen: {model: string; view: string}[] = []
+
+    model.addEventListener('guid-changed', () => {
+      seen.push({model: model.guid, view: view.guid})
+    })
+
+    model.guid = hub.bind('strProp') as unknown as string
+    view.guid = hub.bind('strProp') as unknown as string
+
+    hub.strProp = 'asset-abc'
+
+    expect(model.guid).toBe('asset-abc')
+    expect(view.guid).toBe('asset-abc')
+    // Every observation during the push must see both spokes already matching the source.
+    // Fails if onSourceChanged updates targets one-by-one and sync handlers run mid-loop.
+    expect(seen).toEqual([{model: 'asset-abc', view: 'asset-abc'}])
+
+    hub.dispose()
+    model.dispose()
+    view.dispose()
   })
 })

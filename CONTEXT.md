@@ -48,7 +48,7 @@ A `Property` option that mirrors the property's value to a matching attribute on
 ### Bindings & persistence
 
 **Binding**:
-A graph-tethered handle to one property of one owner `ReactiveNode`, kept in two-way sync with target properties on other nodes. It cannot exist without an owner node and is always used through one so it stays part of the graph. Created via `bind(node, 'prop')`; assigning a `Binding` onto another node's property registers that property as a sync target. Not a property option — a property's `binding` field merely references one.
+A graph-tethered handle to one property of one owner `ReactiveNode`, kept in two-way sync with target properties on other nodes. It cannot exist without an owner node and is always used through one so it stays part of the graph. Created via `bind(node, 'prop')`; assigning a `Binding` onto another node's property registers that property as a sync target. Not a property option — a property's `binding` field merely references one. Forward sync is a **graph write** inside a shared **binding wave**: on source change, the binding walks the outbound hub→spoke closure transitively and writes every reachable property; `ChangeQueue.dispatch` holds one wave open across an entire property-dispatch pass so parallel networks updated in the same batch all settle before any spoke `mutated()` / `io-mutation`.
 
 **Storage**:
 A factory that creates (or reuses) a singleton persistent `StorageNode` for a `key` + backend (`local` | `hash` | `none`) and returns a `Binding` to its value — a graph-ready handle you assign onto node properties to bind state to `localStorage` or the location hash. The `$`-prefixed exports (`$Theme`, `$ThemeID`) are such bindings.

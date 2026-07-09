@@ -42,7 +42,7 @@ It can be used to create reactive custom elements that can be bound to node prop
 - Bi-directional data flow can be achieved using binding objects
   - Example: Binding function `this.bind('label')` returns a data-binding object to the `"label"` property
   - Binding object can synchronize reactive properties by simple assignment to a property
-  - Binding objects rely on change events for bound properties
+  - Source change triggers a transitive graph write inside a shared binding wave held open by `ChangeQueue.dispatch` for the whole property pass — parallel networks in one batch settle before any spoke flush
 
 ### Cross-Domain Reactivity
 
@@ -73,7 +73,8 @@ Synthetic events (including `io-mutation`) bubble by walking `_parents` recursiv
 - **EventDispatcher** - Manages DOM events on elements and synthetic events on nodes
 - **ChangeQueue** - Detects property changes and dispatches change/mutation events and handlers
 - **FrameScheduler** - Generic frame scheduler with throttle and debounce capability
-- **Binding** - Manages two-way data flow using change events
+- **Binding** - Manages two-way data flow; forward sync settles the outbound binding graph inside a shared binding wave
+- **BindingWave** - Epoch that defers spoke `dispatchQueue` until parallel networks in one ChangeQueue pass have all settled
 - **VDOM** - Virtual DOM implementation for efficient rendering
 
 ### Registration
@@ -486,7 +487,7 @@ Or we can assign it to an element using template syntax:
 this.render([ioSlider({value: this.bind('value')})])
 ```
 
-The binding is event-based, meaning that the binding object will assign change event listeners to its source node and its targets.
+Bindings listen for `[prop]-changed` on the source and on each target. Leaf→hub (target changed) writes the source property normally. Hub→leaf (source changed) is a **graph write** inside a shared **binding wave**, not an event cascade: the binding walks every outbound spoke transitively (including nested hubs that bind the same property onward) and debounce-writes the full closure. `ChangeQueue.dispatch` holds one wave open across the entire property-dispatch pass, so independent networks updated in the same batch (e.g. `setProperties({a, b})`) all settle before any spoke flushes — handlers never observe a half-updated network. The wave closes before the source node's own `mutated()`. Cycles are cut with a visited set; nested hubs that re-enter during flush are no-ops once values already match.
 
 ## Reactive WebGL Elements
 
