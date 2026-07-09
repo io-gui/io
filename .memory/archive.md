@@ -192,3 +192,17 @@
 - User asked restore packages/layout/docs/adr from git
 - Deleted in b094b89a "Finished 3 adrs"; restored from parent ebca04dc via git checkout
 - 3 files staged: 0001–0003 layout ADRs
+
+## 2026-07-09 IoOption ghost click
+
+- Touch tap leaf option collapses menu via onClick→collapseRoot before browser synthesizes click
+- stopPropagation on touch does NOT suppress click synthesis; need preventDefault on touchend
+- Hit-test for synthetic click uses coords after overlay gone → element underneath
+- Same class of bug as react-spectrum #7026 / Chrome 1150073
+
+## 2026-07-09 Binding hub-spoke mid-push race
+
+- Symptom (polygone): AssetInfoView `this.guid` empty in download URL while `assetInfo.guid` set. PageModel binds same hub guid to model + view.
+- Root: `Binding.onSourceChanged` loops targets and `setProperty`s one-by-one. First spoke's sync `guidChanged` → load/mutate → view `modelMutated` re-renders before second spoke updated.
+- Final `view.guid` catches up after loop; mutation-time derived state stays wrong (`/archives//_….zip`).
+- Breaking tests added in `packages/core/src/core/Binding.test.ts` (PageModel-shaped + mid-push observation). Fix deferred; polygone stash drops duplicate guid bind as workaround.

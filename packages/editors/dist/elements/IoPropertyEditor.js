@@ -161,7 +161,7 @@ let IoPropertyEditor = class IoPropertyEditor extends ReactiveElement {
                     }
                     const isIoObject = tag === 'io-object';
                     if (isIoObject) {
-                        finalProps.label = finalProps.label || id + ': ' + value?.constructor?.name || String(value);
+                        finalProps.label = finalProps.label || id + ': ' + (value?.constructor?.name || String(value));
                     }
                     // TODO: Document and reconsider this
                     const label = finalProps.label || id;

@@ -71,6 +71,7 @@ class IoOverlay extends ReactiveElement {
   }
   stopPropagation(event: Event) {
     event.stopPropagation()
+    event.preventDefault()
   }
   onPointerup(event: PointerEvent) {
     if (event.composedPath()[0] === this as unknown as EventTarget) {
