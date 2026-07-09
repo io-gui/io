@@ -1,5 +1,3 @@
 # Current Focus
 
-Parallel binding networks race: two independent prop networks (a vs b) batch-updated via setProperties; first network settles+flushes while second still stale → Sink.mutated()/io-mutation sees `A1|` then `A1|B1`.
-
-Failing test in Binding.network.test.ts — no fix yet.
+BindingWave epoch: ChangeQueue holds wave open across property-dispatch pass; bindings settle into shared dirty set; flush on outermost leave. Parallel networks + cascades green (111).

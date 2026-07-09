@@ -1,5 +1,6 @@
 import { isReactiveNode } from './ReactiveCore.js'
 import type { ReactiveNode } from './ReactiveCore.js'
+import { enterBindingWave, leaveBindingWave } from './Binding.js'
 
 export interface Change<T = unknown> {
   property: string
@@ -22,6 +23,8 @@ type ChangeHandler = (change: Change) => void
 /**
  * FIFO property-change queue for {@link ReactiveNode}.
  * Coalesces repeated writes to the same property, then dispatches handlers and events.
+ * Holds a {@link Binding} wave open for the whole pass so parallel binding networks
+ * settle before any target `mutated()` / `io-mutation`.
  */
 export class ChangeQueue {
   declare readonly node: ReactiveNode
@@ -67,8 +70,16 @@ export class ChangeQueue {
       return
     }
     this.dispatching = true
-    const properties = this.#dispatchQueuedChanges()
-    this.#changes.clear()
+    // Hold one binding wave across all *-changed in this pass so parallel
+    // networks settle before any spoke flush; close before this node's mutated().
+    enterBindingWave()
+    let properties: string[] = []
+    try {
+      properties = this.#dispatchQueuedChanges()
+      this.#changes.clear()
+    } finally {
+      leaveBindingWave()
+    }
     if (this.dispatchedChange) {
       this.#invokeChanged()
       this.#invokeMutation(properties)

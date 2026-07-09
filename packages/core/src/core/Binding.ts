@@ -25,10 +25,9 @@ const isTypeCompatible = (type1: unknown, type2: unknown) => {
 /**
  * Forward-sync is a graph write, not an event cascade.
  * Walks hub→spoke bindings transitively, debounce-writing every reachable
- * property, then flushes dirty queues so handlers never observe a half-updated
- * closure (sibling branches, diamonds, nested hubs).
+ * property into the open {@link BindingWave}. Flush happens when the wave closes.
  */
-function pushBindingValue(binding: Binding, value: unknown, dirty: Set<ReactiveNode>, visited: Set<Binding>) {
+function pushBindingValue(binding: Binding, value: unknown, visited: Set<Binding>) {
   if (visited.has(binding)) return
   visited.add(binding)
 
@@ -40,12 +39,43 @@ function pushBindingValue(binding: Binding, value: unknown, dirty: Set<ReactiveN
       if (oldValue === value || bothAreNaNs(value, oldValue)) continue
 
       target.setProperty(propName, value, true)
-      dirty.add(target)
+      noteBindingDirty(target)
 
       const outbound = target._bindings.get(propName)
-      if (outbound) pushBindingValue(outbound, value, dirty, visited)
+      if (outbound) pushBindingValue(outbound, value, visited)
     }
   }
+}
+
+/**
+ * Binding sync epoch.
+ *
+ * Forward binding writes settle values into a shared dirty set while a wave is
+ * open; change queues flush only when the outermost wave closes. ChangeQueue
+ * holds one wave across an entire property-dispatch pass so parallel networks
+ * updated in the same batch all settle before any `mutated()` / `io-mutation`.
+ */
+let depth = 0
+let dirty: Set<ReactiveNode> | null = null
+
+export function enterBindingWave() {
+  if (depth === 0) dirty = new Set()
+  depth++
+}
+
+export function leaveBindingWave() {
+  depth--
+  if (depth !== 0) return
+  const nodes = dirty!
+  dirty = null
+  for (const node of nodes) node.dispatchQueue()
+}
+
+export function noteBindingDirty(node: ReactiveNode) {
+  debug: if (!dirty) {
+    console.error('noteBindingDirty() outside a binding wave!')
+  }
+  dirty!.add(node)
 }
 
 /**
@@ -178,17 +208,20 @@ export class Binding<T = unknown> {
     }
   }
   /**
-   * Event handler that updates bound properties on target nodes when source node emits `[propName]-changed` event.
-   * Settles the full outbound binding closure before any target dispatches.
+   * Settles the outbound binding closure into the open binding wave.
+   * Nested under ChangeQueue.dispatch so parallel networks in one batch share a wave.
    * @param {ChangeEvent} event - Field change event.
    */
   onSourceChanged(event: ChangeEvent) {
     debug: if (event.target !== this.node) {
       console.error('onSourceChanged() should always originate form source node!')
     }
-    const dirty = new Set<ReactiveNode>()
-    pushBindingValue(this, event.detail.value, dirty, new Set())
-    for (const target of dirty) target.dispatchQueue()
+    enterBindingWave()
+    try {
+      pushBindingValue(this, event.detail.value, new Set())
+    } finally {
+      leaveBindingWave()
+    }
   }
   /**
    * Returns a list of target properties for specified target node.

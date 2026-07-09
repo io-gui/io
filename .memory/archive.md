@@ -241,3 +241,13 @@
 - Mid-wave io-mutation / mutated sees `A1|` then `A1|B1`
 - Final sink state coherent; race is mid-wave only
 - Test: Binding.network.test.ts parallel-network case — fix deferred
+
+## 2026-07-09 BindingWave epoch
+
+- New BindingWave.ts: enter/leave/noteBindingDirty — shared dirty set, flush on outermost leave
+- ChangeQueue.dispatch opens wave around #dispatchQueuedChanges only (closes before source mutated)
+- Binding.onSourceChanged enters nested wave, pushBindingValue notes dirty, leave flushes only at outermost
+- Parallel networks in one setProperties batch settle together → no mid-wave A1|
+- ReactiveElement event-order expectation updated (one TestNode:changed for batched prop0+prop1)
+- Docs: CONTEXT + deep-dive BindingWave
+- 111 related tests pass
