@@ -1,6 +1,6 @@
 {
   "name": "@io-gui/icons",
-  "version": "2.0.0-alpha.3",
+  "version": "2.0.0-alpha.4",
   "description": "A set of icons for Io-Gui.",
   "sideEffects": [
     "**/elements/**",
@@ -49,6 +49,6 @@
     "@io-gui/core": "workspace:*"
   },
   "peerDependencies": {
-    "@io-gui/core": "^2.0.0-alpha.3"
+    "@io-gui/core": "^2.0.0-alpha.4"
   }
 }
