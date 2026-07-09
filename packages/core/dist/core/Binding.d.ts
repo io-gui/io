@@ -2,6 +2,9 @@ import { ChangeEvent } from './ChangeQueue.js';
 import { ReactiveNode } from './ReactiveCore.js';
 type Fields = string[];
 type TargetProperties = WeakMap<ReactiveNode, Fields>;
+export declare function enterBindingWave(): void;
+export declare function leaveBindingWave(): void;
+export declare function noteBindingDirty(node: ReactiveNode): void;
 /**
  * Hub-and-spoke two-way sync between reactive properties via `[propName]-changed` events.
  * @example binding.addTarget(nodeB, 'value')
@@ -37,7 +40,8 @@ export declare class Binding<T = unknown> {
      */
     onTargetChanged(event: ChangeEvent): void;
     /**
-     * Event handler that updates bound properties on target nodes when source node emits `[propName]-changed` event.
+     * Settles the outbound binding closure into the open binding wave.
+     * Nested under ChangeQueue.dispatch so parallel networks in one batch share a wave.
      * @param {ChangeEvent} event - Field change event.
      */
     onSourceChanged(event: ChangeEvent): void;

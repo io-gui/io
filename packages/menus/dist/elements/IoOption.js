@@ -144,6 +144,8 @@ let IoOption = class IoOption extends IoField {
     onPointerup(event) {
         super.onPointerup(event);
         onOverlayPointeup(event);
+        if (!this.inoverlay)
+            this.onClick();
     }
     onFocus(event) {
         super.onFocus(event);

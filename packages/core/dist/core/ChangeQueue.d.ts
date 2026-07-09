@@ -15,6 +15,8 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
 /**
  * FIFO property-change queue for {@link ReactiveNode}.
  * Coalesces repeated writes to the same property, then dispatches handlers and events.
+ * Holds a {@link Binding} wave open for the whole pass so parallel binding networks
+ * settle before any target `mutated()` / `io-mutation`.
  */
 export declare class ChangeQueue {
     #private;
