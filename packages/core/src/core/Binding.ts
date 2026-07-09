@@ -159,6 +159,9 @@ export class Binding<T = unknown> {
       console.error('onSourceChanged() should always originate form source node!')
     }
     const value = event.detail.value
+    // Write all spokes before any *-changed dispatch so sync handlers on one
+    // spoke cannot observe another spoke still holding the old value.
+    const dirty = new Set<ReactiveNode>()
     for (const target of this.targets) {
       const targetProperties = this.getTargetProperties(target)
       for (let j = targetProperties.length; j--;) {
@@ -166,10 +169,12 @@ export class Binding<T = unknown> {
         const oldValue = target._properties.get(propName)!.value
         if (oldValue !== value) {
           if (bothAreNaNs(value, oldValue)) continue
-          target.setProperty(propName, value)
+          target.setProperty(propName, value, true)
+          dirty.add(target)
         }
       }
     }
+    for (const target of dirty) target.dispatchQueue()
   }
   /**
    * Returns a list of target properties for specified target node.

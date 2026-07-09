@@ -206,3 +206,9 @@
 - Root: `Binding.onSourceChanged` loops targets and `setProperty`s one-by-one. First spoke's sync `guidChanged` → load/mutate → view `modelMutated` re-renders before second spoke updated.
 - Final `view.guid` catches up after loop; mutation-time derived state stays wrong (`/archives//_….zip`).
 - Breaking tests added in `packages/core/src/core/Binding.test.ts` (PageModel-shaped + mid-push observation). Fix deferred; polygone stash drops duplicate guid bind as workaround.
+
+## 2026-07-09 Binding onSourceChanged batch fix
+
+- Fix: debounce all spoke `setProperty(..., true)` then `dispatchQueue()` per dirty target
+- Same batching idea as setProperties — values settle before any *-changed / mutation
+- Binding.test.ts 11/11 pass

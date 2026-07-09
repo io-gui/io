@@ -38,7 +38,7 @@
 
 ### io-core
 
-- **Binding hub-spoke mid-push race (open):** `onSourceChanged` updates targets sequentially. Sync `*Changed`/mutation on spoke A can re-enter and read spoke B before B is updated. Final values catch up; mutation-time derived UI can bake empty/stale spoke values. Covered by failing tests in `Binding.test.ts`. Likely fix: set all target values before dispatching, or snapshot/batch spoke writes.
+- **Binding hub-spoke mid-push:** `onSourceChanged` debounce-writes all spokes then `dispatchQueue()` per dirty target so sync handlers never see half-updated spokes. Covered by Binding.test.ts.
 - `tsconfig.json` include path: use `"./src"` (relative with dot)
 - `IoSelector.Listeners` return type: `ListenerDefinitions`
 - VDOM supports opt-in keyed reconciliation: set `key` in a vChild's props to match-and-move elements on reorder instead of destroy/recreate. Keys live on DOM elements as non-enumerable `_vdomKey` (read via `getElementKey`); `key` is never applied as a property/attribute. Unkeyed siblings in a keyed list still reuse positionally by tag. Duplicate keys warn in debug blocks.
