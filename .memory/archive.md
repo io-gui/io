@@ -251,3 +251,9 @@
 - ReactiveElement event-order expectation updated (one TestNode:changed for batched prop0+prop1)
 - Docs: CONTEXT + deep-dive BindingWave
 - 111 related tests pass
+
+## 2026-07-09 IoOption non-overlay pointerup click
+
+- Bug: onPointerup always called onOverlayPointeup then this.onClick — overlay path ok via hovered; non-overlay options never got click when hovered unset
+- Fix: `if (!this.inoverlay) this.onClick()`
+- Test: IoOption.test.ts pointerdown→pointerup on leaf not in overlay → io-option-clicked once

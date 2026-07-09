@@ -1,6 +1,6 @@
 {
   "name": "@io-gui/inputs",
-  "version": "2.0.0-alpha.3",
+  "version": "2.0.0-alpha.4",
   "description": "A set of basic input elements for Io-Gui",
   "sideEffects": [
     "**/elements/**",
@@ -53,7 +53,7 @@
     "@io-gui/icons": "workspace:*"
   },
   "peerDependencies": {
-    "@io-gui/core": "^2.0.0-alpha.3",
-    "@io-gui/icons": "^2.0.0-alpha.3"
+    "@io-gui/core": "^2.0.0-alpha.4",
+    "@io-gui/icons": "^2.0.0-alpha.4"
   }
 }

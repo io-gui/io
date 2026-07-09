@@ -61,4 +61,31 @@ describe('IoOption', () => {
     leafElement.remove()
     leaf.dispose()
   })
+
+  it('invokes onClick on pointerup when not in overlay', () => {
+    const leaf = new Option({ id: 'leaf', label: 'Leaf', mode: 'select' })
+    const leafElement = new IoOption({ model: leaf, depth: 1 })
+    container.appendChild(leafElement as HTMLElement)
+
+    expect(leafElement.inoverlay).toBe(false)
+
+    const handler = vi.fn()
+    leafElement.addEventListener('io-option-clicked', handler)
+    vi.spyOn(leafElement, 'setPointerCapture').mockImplementation(() => {})
+    vi.spyOn(leafElement, 'releasePointerCapture').mockImplementation(() => {})
+
+    const pointerInit = {
+      pointerId: 1,
+      bubbles: true,
+      cancelable: true,
+    }
+    leafElement.onPointerdown(new PointerEvent('pointerdown', {...pointerInit, buttons: 1}))
+    leafElement.onPointerup(new PointerEvent('pointerup', {...pointerInit, buttons: 0}))
+
+    expect(handler).toHaveBeenCalledTimes(1)
+    expect(handler.mock.calls[0][0].detail.option).toBe(leaf)
+
+    leafElement.remove()
+    leaf.dispose()
+  })
 })

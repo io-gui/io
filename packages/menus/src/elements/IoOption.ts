@@ -172,6 +172,7 @@ export class IoOption extends IoField {
   override onPointerup(event: PointerEvent) {
     super.onPointerup(event)
     onOverlayPointeup(event)
+    if (!this.inoverlay) this.onClick();
   }
   override onFocus(event: FocusEvent) {
     super.onFocus(event)

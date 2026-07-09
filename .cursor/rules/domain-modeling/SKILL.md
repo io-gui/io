@@ -21,20 +21,23 @@ Most repos have a single context:
 └── src/
 ```
 
-If a `CONTEXT-MAP.md` exists at the root, the repo has multiple contexts. The map points to where each one lives:
+If a `CONTEXT.md` exists at the root, the repo has multiple contexts. The map points to where each one lives:
 
 ```
 /
-├── CONTEXT-MAP.md
+├── CONTEXT.md
 ├── docs/
 │   └── adr/                          ← system-wide decisions
-├── src/
-│   ├── ordering/
+├── packages/
+│   ├── core/
 │   │   ├── CONTEXT.md
 │   │   └── docs/adr/                 ← context-specific decisions
-│   └── billing/
+│   ├── layout/
+│   │   ├── CONTEXT.md
+│   │   └── docs/adr/                 ← context-specific decisions
+│   └── menus/
 │       ├── CONTEXT.md
-│       └── docs/adr/
+│       └── docs/adr/                 ← context-specific decisions
 ```
 
 Create files lazily — only when you have something to write. If no `CONTEXT.md` exists, create one when the first term is resolved. If no `docs/adr/` exists, create it when the first ADR is needed.

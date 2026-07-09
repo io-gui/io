@@ -1,6 +1,6 @@
 {
   "name": "@io-gui/three",
-  "version": "2.0.0-alpha.3",
+  "version": "2.0.0-alpha.4",
   "description": "Three.js UI elements built with io-gui",
   "sideEffects": [
     "**/elements/**",
@@ -58,13 +58,13 @@
     "three": "^0.182.0"
   },
   "peerDependencies": {
-    "@io-gui/core": "^2.0.0-alpha.3",
-    "@io-gui/layout": "^2.0.0-alpha.3",
-    "@io-gui/menus": "^2.0.0-alpha.3",
-    "@io-gui/editors": "^2.0.0-alpha.3",
-    "@io-gui/inputs": "^2.0.0-alpha.3",
-    "@io-gui/sliders": "^2.0.0-alpha.3",
-    "@io-gui/colors": "^2.0.0-alpha.3",
+    "@io-gui/core": "^2.0.0-alpha.4",
+    "@io-gui/layout": "^2.0.0-alpha.4",
+    "@io-gui/menus": "^2.0.0-alpha.4",
+    "@io-gui/editors": "^2.0.0-alpha.4",
+    "@io-gui/inputs": "^2.0.0-alpha.4",
+    "@io-gui/sliders": "^2.0.0-alpha.4",
+    "@io-gui/colors": "^2.0.0-alpha.4",
     "three": ">=0.182.0"
   }
 }
