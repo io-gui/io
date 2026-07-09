@@ -42,6 +42,7 @@ export function onOverlayPointeup(event: PointerEvent) {
 }
 
 Overlay.addEventListener('pointermove', onOverlayPointermove)
+Overlay.addEventListener('pointerup', onOverlayPointeup)
 
 export type IoOptionProps = IoFieldProps & {
   model?: Option
@@ -159,26 +160,18 @@ export class IoOption extends IoField {
   }
   override onPointerdown(event: PointerEvent) {
     super.onPointerdown(event)
-    if (event.pointerType !== 'touch') {
-      this.setPointerCapture(event.pointerId)
-      event.stopPropagation()
-      if (this.hasmore) this.expanded = true
-      onOverlayPointerdown.call(this, event)
-    }
+    this.setPointerCapture(event.pointerId)
+    if (this.hasmore) this.expanded = true
+    onOverlayPointerdown(event)
+    onOverlayPointermove(event)
   }
   override onPointermove(event: PointerEvent) {
-    event.stopPropagation()
-    if (event.pointerType !== 'touch') {
-      onOverlayPointermove.call(this, event)
-    }
+    super.onPointermove(event)
+    onOverlayPointermove(event)
   }
   override onPointerup(event: PointerEvent) {
     super.onPointerup(event)
-    event.stopPropagation()
-    this.onPointerupAction(event)
-  }
-  onPointerupAction(event: PointerEvent) {
-    this.onClick()
+    onOverlayPointeup(event)
   }
   override onFocus(event: FocusEvent) {
     super.onFocus(event)
@@ -190,6 +183,10 @@ export class IoOption extends IoField {
         ($allitems[i] as any).collapse()
       }
     }
+  }
+  override onTouchend(event: TouchEvent) {
+    event.preventDefault()
+    super.onTouchend(event)
   }
   override onBlur(event: FocusEvent) {
     super.onBlur(event)

@@ -145,7 +145,7 @@ let IoField = class IoField extends ReactiveElement {
     onTouchstart(event) {
         event.stopPropagation();
         this.addEventListener('touchmove', this.onTouchmove, { passive: false });
-        this.addEventListener('touchend', this.onTouchend);
+        this.addEventListener('touchend', this.onTouchend, { passive: false });
         this.focus();
     }
     onTouchmove(event) {
@@ -165,6 +165,7 @@ let IoField = class IoField extends ReactiveElement {
         }
     }
     onClick(event) {
+        event?.stopPropagation();
     }
     onKeydown(event) {
         switch (event.key) {
