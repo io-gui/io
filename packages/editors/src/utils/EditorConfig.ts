@@ -1,6 +1,6 @@
 import { IoGl, Theme, AnyConstructor, VDOMElement, Color, JsonObject } from '@io-gui/core'
 import { ioString, ioNumber, ioSwitch, ioField, ioButton } from '@io-gui/inputs'
-import { Menu, MenuProps, OptionProps, ioOptionSelect } from '@io-gui/menus'
+import { Menu, MenuProps, OptionSimpleData, OptionProps, ioOptionSelect } from '@io-gui/menus'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioColorRgba } from '@io-gui/colors'
 import { ioObject } from '../elements/IoObject.js'
@@ -17,7 +17,7 @@ function makeSelect(options: Array<string | number | boolean | null | OptionProp
   for (let i = 0; i < options.length; i++) {
     if (options[i] === null) options[i] = {value: null, id: 'Null'}
   }
-  return ioOptionSelect({model: new Menu({options: options})})
+  return ioOptionSelect({model: new Menu({options: options as OptionSimpleData[]})})
 }
 
 class ConfigCache<K1 extends object, K2 extends object, V> {

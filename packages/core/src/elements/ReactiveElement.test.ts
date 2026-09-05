@@ -177,7 +177,7 @@ describe('ReactiveElement', () => {
     expect(element._prop1counter).toBe(2)
     expect(element._prop1Change).toEqual({property: 'prop1', value: 'buzz', oldValue: 'foo'})
 
-    // Hub→leaf batch (element.setProperties): both networks settle in one BindingWave,
+    // Hub→leaf batch (element.setProperties): both networks settle in one BindingEpoch,
     // so spokes see prop0+prop1 together and emit a single TestNode: changed.
     expect(eventStack).toEqual(
       [

@@ -1,5 +1,9 @@
 # Archive
 
+## 2026-09-05 eslint disable ToolBase
+
+- Added file-level `/* eslint-disable @typescript-eslint/no-unused-vars */` to `packages/three/src/nodes/ToolBase.ts`
+
 ## 2026-07-08 CONSTANT_CONDITION fixes
 
 - IoPropertyEditor: label expr `id + ': ' + name || String(value)` → parens so fallback applies to constructor name not whole concat
@@ -276,3 +280,65 @@
 - `moveTab` same-orient: `left`/`top` splice at `index` (before target), not `index - 1`
 - Was causing drop on 2nd panel to land at start of split
 - Layout.test.ts 15/15 pass
+## 2026-07-09 ViewCameras framing / morph AABB
+
+- Bug: `Box3.setFromObject` default `precise=false` unions morph-target extremes into AABB → origin inflation on absolute morph GLTFs
+- Fix: `setFromObject(object, true)`; perspective `lookAt(center)`; near/far via corner depths along forward; `orbitControls.update()`; empty-box center → origin
+- Tests: unused morph extremes ignored; off-center mesh optical axis + clip planes
+- ModelViewer: no production change (debug already gone)
+- Deleted TEMP-framing-aabb-fix.md handoff
+
+## 2026-07-09 extract camera utils
+
+- clipPlanesFromBox → packages/three/src/utils/clipPlanesFromBox.ts (takes box arg)
+- copyProjection → packages/three/src/utils/copyProjection.ts
+- ViewCameras imports both; tests still 6/6
+
+## 2026-07-26 — Theme applyJSON silent for color-only switches
+
+### [bug]
+- Theme ID change → applyJSON → Color.applyJSON in-place, no io-mutation
+- Light↔dark shares numeric props so ChangeQueue never fires
+
+### [fix]
+- Theme.applyJSON: after super, mutated() + dispatchMutation()
+- Circuits materials: io-object-mutation → io-mutation
+
+## 2026-07-27 — ToolBase activePointers Record→Array
+
+### [refactor]
+- WeakMap values: Record<number, Pointer3D> → Pointer3D[]
+- Keying via pointer.event.pointerId; Object.values() no longer needed for handlers
+
+## 2026-07-31 — Ortho setOverscan preserves frustum center
+
+### [fix]
+- Ortho `setOverscan` rebuilt L/R/T/B symmetric around 0, discarding off-center projections.
+- Now keeps `(left+right)/2`, `(top+bottom)/2` while aspect-contain + overscan scale.
+
+### [why]
+- Circuits board camera pans/zooms via frustum bounds (not camera.zoom/position).
+
+## 2026-08-27 — daily-routines io-gui port
+
+### [app]
+- Filters: ioPropertyEditor + sliders/switches bound to RoutinesApplet
+- Locations: city buttons → cubicInOut 250ms fly (no tween.js)
+- GlobeTool extends ToolBase: drag orbit, wheel zoom, double-tap
+- ThreeApplet + IoThreeViewport cameraSelect scene
+- Track shader GLSL → TSL LineBasicNodeMaterial (WebGPU)
+- Removed dat.gui, @tweenjs/tween.js
+
+## 2026-08-27 — IoThreeViewport null renderer crash
+
+### [fix]
+- Custom-renderer lazy-init created a local `WebGPURenderer` and never stored it. `@Property({value: _renderer})` was `null` snapshot at class def.
+- `getDefaultRenderer()` singleton; pass `args.renderer ?? getDefaultRenderer()` into `super()`. Custom renderer still wins.
+- Crash: `this.renderer.backend` / `.initialized` on null. Camera demo + viewport tests green.
+
+## 2026-08-27 — daily-routines single-line imports
+
+### [style]
+- Ban multiline named imports: `@stylistic/object-curly-newline` `{ ImportDeclaration: "never" }`
+- Collapsed scene.ts + tracks.ts import lists
+- README Style Guide: one-line imports, max-len 320

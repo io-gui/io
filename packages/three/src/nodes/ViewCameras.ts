@@ -3,6 +3,8 @@ import { IoThreeViewport } from '../elements/IoThreeViewport.js'
 import { ThreeApplet } from './ThreeApplet.js'
 import { Box3, Camera, Object3D, OrthographicCamera, PerspectiveCamera, Sphere, Vector3 } from 'three/webgpu'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { clipPlanesFromBox } from '../utils/clipPlanesFromBox.js'
+import { copyProjection } from '../utils/copyProjection.js'
 
 const box = new Box3()
 const sphere = new Sphere()
@@ -15,28 +17,9 @@ const cameraForward = new Vector3()
 const corner = new Vector3()
 let radius = 0
 
-const resetCameras = new WeakMap<PerspectiveCamera | OrthographicCamera, PerspectiveCamera | OrthographicCamera>()
+const FRAME_OVERFIT = 4
 
-function copyProjection(source: PerspectiveCamera | OrthographicCamera, target: PerspectiveCamera | OrthographicCamera) {
-  if (target instanceof PerspectiveCamera && source instanceof PerspectiveCamera) {
-    target.fov = source.fov
-    target.aspect = source.aspect
-    target.focus = source.focus
-    target.filmGauge = source.filmGauge
-    target.filmOffset = source.filmOffset
-  } else if (target instanceof OrthographicCamera && source instanceof OrthographicCamera) {
-    target.left = source.left
-    target.right = source.right
-    target.top = source.top
-    target.bottom = source.bottom
-  }
-  target.zoom = source.zoom
-  target.near = source.near
-  target.far = source.far
-  if (source.view) target.view = {...source.view}
-  else target.clearViewOffset()
-  target.updateProjectionMatrix()
-}
+const resetCameras = new WeakMap<PerspectiveCamera | OrthographicCamera, PerspectiveCamera | OrthographicCamera>()
 
 class DefaultCameras {
   public perspective: PerspectiveCamera
@@ -223,15 +206,15 @@ export class ViewCameras extends ReactiveObject {
 
   frameObject(object: Object3D, camera: Camera, overscan: number = 1) {
 
-    box.setFromObject( object )
+    // precise=true: use current morph influences, not unused morph extremes
+    box.setFromObject(object, true)
 
-    if ( box.isEmpty() === false ) {
-      box.getCenter( center )
-      radius = box.getBoundingSphere( sphere ).radius
+    if (box.isEmpty() === false) {
+      box.getCenter(center)
+      radius = box.getBoundingSphere(sphere).radius
     } else {
       // Focusing on an Group, AmbientLight, etc
-      // TODO: Investigate and make more robust
-      center.setFromMatrixPosition( camera.matrixWorld )
+      center.set(0, 0, 0)
       radius = 0.1
     }
 
@@ -244,7 +227,6 @@ export class ViewCameras extends ReactiveObject {
 
     const halfWidth = Math.abs(size.x * cameraRight.x) + Math.abs(size.y * cameraRight.y) + Math.abs(size.z * cameraRight.z)
     const halfHeight = Math.abs(size.x * cameraUp.x) + Math.abs(size.y * cameraUp.y) + Math.abs(size.z * cameraUp.z)
-    const halfDepth = Math.abs(size.x * cameraForward.x) + Math.abs(size.y * cameraForward.y) + Math.abs(size.z * cameraForward.z)
 
     if (camera instanceof PerspectiveCamera) {
 
@@ -273,9 +255,11 @@ export class ViewCameras extends ReactiveObject {
         .applyQuaternion(camera.quaternion)
         .multiplyScalar(distance)
       camera.position.copy(center).add(delta)
+      camera.lookAt(center)
 
-      camera.near = halfDepth * 0.01
-      camera.far = distance + halfDepth * 20
+      const {near, far} = clipPlanesFromBox(box, camera.position, camera, FRAME_OVERFIT)
+      camera.near = near
+      camera.far = far
       camera.zoom = 1 / overscan
       camera.updateProjectionMatrix()
 
@@ -290,14 +274,16 @@ export class ViewCameras extends ReactiveObject {
       camera.bottom = -halfHeight
       camera.top = halfHeight
 
+      const {near, far} = clipPlanesFromBox(box, camera.position, camera, FRAME_OVERFIT)
       camera.zoom = 1 / overscan
-      camera.near = 0
-      camera.far = radius + halfDepth * 20
+      camera.near = near
+      camera.far = far
 
       camera.updateProjectionMatrix()
     }
 
-    this.orbitControls.target.copy( center )
+    this.orbitControls.target.copy(center)
+    this.orbitControls.update()
   }
 
   setOverscan(width: number, height: number, overscan: number) {
@@ -315,24 +301,32 @@ export class ViewCameras extends ReactiveObject {
       const aspectContain = Math.max(1, originalAspect / viewportAspect)
 
       camera.fov = 2 * Math.atan(Math.tan(halfFovRad) * aspectContain) * 180 / Math.PI
-      camera.zoom = 1 / overscan
+      // camera.zoom = 1 / overscan
+      // TODO: verify if this is correct
+      camera.zoom = resetCamera.zoom / overscan
     } else if (camera instanceof OrthographicCamera) {
       const frustumHeight = camera.top - camera.bottom
       const frustumWidth = camera.right - camera.left
+      const centerX = (camera.left + camera.right) / 2
+      const centerY = (camera.top + camera.bottom) / 2
       const frustumAspect = frustumWidth / frustumHeight
 
+      let halfWidth: number
+      let halfHeight: number
       if (frustumAspect > viewportAspect) {
-        camera.top = frustumWidth / 2 / viewportAspect
-        camera.bottom = -frustumWidth / 2 / viewportAspect
+        halfWidth = frustumWidth / 2
+        halfHeight = frustumWidth / 2 / viewportAspect
       } else {
-        camera.left = -frustumHeight / 2 * viewportAspect
-        camera.right = frustumHeight / 2 * viewportAspect
+        halfHeight = frustumHeight / 2
+        halfWidth = frustumHeight / 2 * viewportAspect
       }
 
-      camera.top *= overscan
-      camera.bottom *= overscan
-      camera.left *= overscan
-      camera.right *= overscan
+      halfWidth *= overscan
+      halfHeight *= overscan
+      camera.left = centerX - halfWidth
+      camera.right = centerX + halfWidth
+      camera.top = centerY + halfHeight
+      camera.bottom = centerY - halfHeight
     }
     camera.updateProjectionMatrix()
   }

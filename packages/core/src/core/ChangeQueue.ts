@@ -1,6 +1,6 @@
 import { isReactiveNode } from './ReactiveCore.js'
 import type { ReactiveNode } from './ReactiveCore.js'
-import { enterBindingWave, leaveBindingWave } from './Binding.js'
+import { enterBindingEpoch, leaveBindingEpoch } from './Binding.js'
 
 export interface Change<T = unknown> {
   property: string
@@ -72,13 +72,13 @@ export class ChangeQueue {
     this.dispatching = true
     // Hold one binding wave across all *-changed in this pass so parallel
     // networks settle before any spoke flush; close before this node's mutated().
-    enterBindingWave()
+    enterBindingEpoch()
     let properties: string[]
     try {
       properties = this.#dispatchQueuedChanges()
       this.#changes.clear()
     } finally {
-      leaveBindingWave()
+      leaveBindingEpoch()
     }
     if (this.dispatchedChange) {
       this.#invokeChanged()

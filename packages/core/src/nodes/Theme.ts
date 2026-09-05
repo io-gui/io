@@ -1,5 +1,5 @@
 import { Register } from '../decorators/Register.js'
-import { PropertyDefinitions, ReactiveObject } from '../nodes/ReactiveObject.js'
+import { Json, PropertyDefinitions, ReactiveObject } from '../nodes/ReactiveObject.js'
 import { Storage as $ } from '../nodes/Storage.js'
 import { Color } from '../core/Color.js'
 import { adoptDocumentStylesheet } from '../core/Style.js'
@@ -153,6 +153,14 @@ export class Theme extends ReactiveObject {
       return true
     }
     return false
+  }
+
+  // Color.applyJSON mutates in place with no notify — force CSS + io-mutation.
+  override applyJSON(json: Json) {
+    super.applyJSON(json)
+    this.mutated()
+    this.dispatchMutation()
+    return this
   }
 
   fontSizeChanged() {

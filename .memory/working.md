@@ -109,8 +109,10 @@ Renamed instance `fromJSON` → `applyJSON` to distinguish apply-to-existing fro
 
 ### io-three
 
+- `IoThreeViewport` lazy-inits a shared default `WebGPURenderer`. Must assign onto `args` before `super()` — `@Property({value: _renderer})` snapshots at class def, so a later `let` assign never reaches instances. Custom `renderer` prop still wins.
 - `ToolBase` stores hover and active pointers per `IoThreeViewport` in viewport-keyed `WeakMap`s. Pointer events should resolve the source viewport from `event.currentTarget` so hover/move/down/up payloads stay isolated to the viewport that emitted the event.
 - Dev import map needs bare `"three"` entry (OrbitControls imports `from 'three'`).
+- **Framing AABB:** always `Box3.setFromObject(obj, true)`. Default path unions morph-target extremes via `geometry.computeBoundingBox()` — absolute morphs often inflate to origin. Also: both cams `lookAt(center)`, near/far from AABB corner depths, `orbitControls.update()`.
 
 ### io-layout
 

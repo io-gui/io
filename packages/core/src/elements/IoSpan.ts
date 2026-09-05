@@ -10,6 +10,7 @@ type IoSpanProps = ReactiveElementProps & {
 /** Inline text element; `value` updates `innerText`. */
 @Register
 export class IoSpan extends ReactiveElement {
+
   constructor(props: IoSpanProps) {
     super(props)
   }
@@ -23,10 +24,10 @@ export class IoSpan extends ReactiveElement {
   }
 
   @Property({type: String, value: ''})
-  declare value: string
+  declare value: WithBinding<string>
 
   valueChanged() {
-    this.innerText = this.value
+    this.innerText = this.value as string
   }
 }
 
