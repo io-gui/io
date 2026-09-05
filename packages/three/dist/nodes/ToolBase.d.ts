@@ -9,9 +9,11 @@ export interface Pointer3D {
     event: PointerEvent;
     screen: Vector2;
     screenStart: Vector2;
+    screenPrevious: Vector2;
     screenMovement: Vector2;
     ray: Ray;
     rayStart: Ray;
+    rayPrevious: Ray;
     rayMovement: Ray;
 }
 export declare class ToolBase extends ReactiveObject {
@@ -30,13 +32,18 @@ export declare class ToolBase extends ReactiveObject {
     _onPointerLeave(event: PointerEvent): void;
     _onPointerOut(event: PointerEvent): void;
     _onLostPointerCapture(event: PointerEvent): void;
+    _onWheel(event: WheelEvent): void;
     on3DPointerHover(pointer: Pointer3D, pointers: Pointer3D[], viewport: IoThreeViewport): void;
     on3DPointerDown(pointer: Pointer3D, pointers: Pointer3D[], viewport: IoThreeViewport): void;
     on3DPointerMove(pointer: Pointer3D, pointers: Pointer3D[], viewport: IoThreeViewport): void;
     on3DPointerUp(pointer: Pointer3D, pointers: Pointer3D[], viewport: IoThreeViewport): void;
     on3DPointerCancel(pointer: Pointer3D, pointers: Pointer3D[], viewport: IoThreeViewport): void;
+    on3DWheel(pointer: Pointer3D, event: WheelEvent, viewport: IoThreeViewport): void;
     private _getActivePointers;
     private _getHoverPointers;
+    private _findPointer;
+    private _setPointer;
+    private _removePointer;
     private _removeHoverPointer;
     pointerTo3D(event: PointerEvent): Pointer3D;
 }

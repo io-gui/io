@@ -15,7 +15,7 @@ const isTypeCompatible = (type1, type2) => {
 /**
  * Forward-sync is a graph write, not an event cascade.
  * Walks hub→spoke bindings transitively, debounce-writing every reachable
- * property into the open {@link BindingWave}. Flush happens when the wave closes.
+ * property into the open {@link BindingEpoch}. Flush happens when the wave closes.
  */
 function pushBindingValue(binding, value, visited) {
     if (visited.has(binding))
@@ -46,12 +46,12 @@ function pushBindingValue(binding, value, visited) {
  */
 let depth = 0;
 let dirty = null;
-export function enterBindingWave() {
+export function enterBindingEpoch() {
     if (depth === 0)
         dirty = new Set();
     depth++;
 }
-export function leaveBindingWave() {
+export function leaveBindingEpoch() {
     depth--;
     if (depth !== 0)
         return;
@@ -201,12 +201,12 @@ export class Binding {
         debug: if (event.target !== this.node) {
             console.error('onSourceChanged() should always originate form source node!');
         }
-        enterBindingWave();
+        enterBindingEpoch();
         try {
             pushBindingValue(this, event.detail.value, new Set());
         }
         finally {
-            leaveBindingWave();
+            leaveBindingEpoch();
         }
     }
     /**

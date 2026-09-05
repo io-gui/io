@@ -101,9 +101,8 @@ let IoLayout = class IoLayout extends ReactiveElement {
                 }
                 else if (tabRects.length > 0) {
                     const duplicateTabIndex = tabs.findIndex(tab => tab.model.id === this.$tabDragGhost.model.id);
-                    if (duplicateTabIndex !== -1) {
+                    if (duplicateTabIndex !== -1 && splitDirection === 'center') {
                         dropIndex = duplicateTabIndex;
-                        splitDirection = 'center';
                     }
                     const pickedTabIndex = resolveDropIndex(x, y, tabRects);
                     if (pickedTabIndex !== -1) {

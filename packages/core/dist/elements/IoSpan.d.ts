@@ -7,7 +7,7 @@ type IoSpanProps = ReactiveElementProps & {
 export declare class IoSpan extends ReactiveElement {
     constructor(props: IoSpanProps);
     static get Style(): string;
-    value: string;
+    value: WithBinding<string>;
     valueChanged(): void;
 }
 export declare const ioSpan: (props?: IoSpanProps) => import("../index.js").VDOMElement;

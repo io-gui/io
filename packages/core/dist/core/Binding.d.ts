@@ -2,8 +2,8 @@ import { ChangeEvent } from './ChangeQueue.js';
 import { ReactiveNode } from './ReactiveCore.js';
 type Fields = string[];
 type TargetProperties = WeakMap<ReactiveNode, Fields>;
-export declare function enterBindingWave(): void;
-export declare function leaveBindingWave(): void;
+export declare function enterBindingEpoch(): void;
+export declare function leaveBindingEpoch(): void;
 export declare function noteBindingDirty(node: ReactiveNode): void;
 /**
  * Hub-and-spoke two-way sync between reactive properties via `[propName]-changed` events.

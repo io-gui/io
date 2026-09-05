@@ -1,5 +1,5 @@
 import { isReactiveNode } from './ReactiveCore.js';
-import { enterBindingWave, leaveBindingWave } from './Binding.js';
+import { enterBindingEpoch, leaveBindingEpoch } from './Binding.js';
 /**
  * FIFO property-change queue for {@link ReactiveNode}.
  * Coalesces repeated writes to the same property, then dispatches handlers and events.
@@ -53,14 +53,14 @@ export class ChangeQueue {
         this.dispatching = true;
         // Hold one binding wave across all *-changed in this pass so parallel
         // networks settle before any spoke flush; close before this node's mutated().
-        enterBindingWave();
+        enterBindingEpoch();
         let properties;
         try {
             properties = this.#dispatchQueuedChanges();
             this.#changes.clear();
         }
         finally {
-            leaveBindingWave();
+            leaveBindingEpoch();
         }
         if (this.dispatchedChange) {
             this.#invokeChanged();

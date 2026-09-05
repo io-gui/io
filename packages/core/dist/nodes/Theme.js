@@ -117,6 +117,13 @@ let Theme = class Theme extends ReactiveObject {
         }
         return false;
     }
+    // Color.applyJSON mutates in place with no notify — force CSS + io-mutation.
+    applyJSON(json) {
+        super.applyJSON(json);
+        this.mutated();
+        this.dispatchMutation();
+        return this;
+    }
     fontSizeChanged() {
         this.lineHeight = Math.max(this.fontSize, this.lineHeight);
     }

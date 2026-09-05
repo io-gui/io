@@ -94,9 +94,8 @@ let Layout = class Layout extends ReactiveObject {
             return;
         }
         const index = parentSplit.children.indexOf(targetPanel);
-        let newIndex = ['left', 'top'].includes(direction) ? index - 1 : index + 1;
+        const newIndex = ['left', 'top'].includes(direction) ? index : index + 1;
         if (parentSplit.orientation === orientation) {
-            newIndex = Math.max(0, newIndex);
             source.removeTab(tab);
             parentSplit.children.splice(newIndex, 0, new Panel({ type: 'panel', tabs: [tab] }));
         }

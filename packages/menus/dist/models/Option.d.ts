@@ -1,6 +1,6 @@
 import { ReactiveObject, NodeArray, Json, WithBinding } from '@io-gui/core';
 export type OptionMode = 'select' | 'toggle' | 'none';
-export type OptionPrimitiveData = string | number | boolean | null;
+export type OptionSimpleData = string | number | boolean | null;
 export type OptionData = {
     id?: string;
     value?: Json;
@@ -10,10 +10,18 @@ export type OptionData = {
     disabled?: boolean;
     hidden?: boolean;
     mode?: OptionMode;
-    options?: Array<OptionPrimitiveData | OptionData>;
+    options?: Array<OptionSimpleData | OptionData>;
 };
-export type OptionProps = OptionData & {
-    options?: Array<OptionPrimitiveData | OptionData | OptionProps | Option>;
+export type OptionProps = {
+    id?: string;
+    value?: Json;
+    label?: WithBinding<string>;
+    icon?: string;
+    hint?: WithBinding<string>;
+    disabled?: boolean;
+    hidden?: boolean;
+    mode?: OptionMode;
+    options?: Array<OptionSimpleData | OptionProps>;
     selected?: WithBinding<boolean>;
     action?: (value?: any) => void;
 };
@@ -40,7 +48,7 @@ export declare class Option extends ReactiveObject {
     static get Listeners(): {
         'option-selected-changed': string;
     };
-    constructor(args: OptionPrimitiveData | OptionProps);
+    constructor(args: OptionSimpleData | OptionProps);
     getAllOptions(): Option[];
     findOptionByValue(value: any): Option | undefined;
     findOptionById(id: string): Option | undefined;
@@ -54,5 +62,5 @@ export declare class Option extends ReactiveObject {
     optionsMutated(): void;
     mutated(): void;
     toJSON(): OptionData;
-    applyJSON(json: OptionPrimitiveData | OptionData): this;
+    applyJSON(json: OptionSimpleData | OptionData): this;
 }

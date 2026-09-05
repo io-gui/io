@@ -26,6 +26,8 @@ let Menu = class Menu extends Option {
         if (typeof args === 'object') {
             if (args.id === undefined)
                 args.id = 'root';
+            if (args.label === undefined)
+                args.label = '';
         }
         super(args);
         // Tree-scoped props — not part of an Option's wire format.

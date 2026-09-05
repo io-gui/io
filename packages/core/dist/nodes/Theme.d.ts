@@ -1,4 +1,4 @@
-import { PropertyDefinitions, ReactiveObject } from '../nodes/ReactiveObject.js';
+import { Json, PropertyDefinitions, ReactiveObject } from '../nodes/ReactiveObject.js';
 import { Color } from '../core/Color.js';
 export declare const $ThemeID: import("../index.js").Binding<string>;
 export type ThemeJSON = Record<string, number>;
@@ -43,6 +43,7 @@ export declare class Theme extends ReactiveObject {
     gradientColorEnd: Color;
     shadowColor: Color;
     onPropertyMutated(event: CustomEvent): boolean;
+    applyJSON(json: Json): this;
     fontSizeChanged(): void;
     lineHeightChanged(): void;
     mutated(): void;
