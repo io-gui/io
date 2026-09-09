@@ -14,4 +14,4 @@ Chosen because in a reactive framework "Property" should imply reactivity, and o
 
 ## Consequences
 
-`static Properties` flips meaning during migration (was non-reactive, becomes reactive) — a sharp footgun for in-flight code and for the `io-gui` rule file, which currently documents `ReactiveProperties` and `Properties` with the old meanings. Breaking and ecosystem-wide.
+`static Properties` flips meaning during migration (was non-reactive, becomes reactive) — a sharp footgun for in-flight code. Breaking and ecosystem-wide.

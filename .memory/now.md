@@ -1,3 +1,3 @@
 # Current Focus
 
-Docs aligned to ADR-0001: objects + elements; node = graph vertex.
+Docs APIs aligned: `model: Menu | Option`, scoped `@io-gui/*` imports.

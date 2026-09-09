@@ -102,7 +102,7 @@ Renamed instance `fromJSON` → `applyJSON` to distinguish apply-to-existing fro
 **When to override** (domain logic beyond flat reactive props):
 - **`Split` / `Panel` / `Tab`** — polymorphic tree, `createChild`, consolidation, compact wire format (omit defaults).
 - **`TodoListModel`** — `applyJSON` maps wire items → `TodoItemModel` instances via `setProperty('items', ...)`.
-- **`MenuOption`** — custom `toJSON` for menu-specific shape.
+- **`Option`** — custom `toJSON` for menu-specific shape.
 - **`Theme`** — uses generic path; color keys hydrate via `Color.applyJSON` on reactive properties.
 
 **Gotchas discovered post-refactor:**
@@ -126,9 +126,9 @@ Renamed instance `fromJSON` → `applyJSON` to distinguish apply-to-existing fro
 
 ### io-menus
 
-- **MenuOption empty-id selection:** `getSelectedIDImmediate`, `optionsMutated`, `updatePaths` must not treat `''` as falsy. `updatePaths` sets `selectedID` directly (path `''` can't round-trip via `pathChanged`).
-- **Open: root MenuOption identity.** Root defaults `id: ''` (`args.id ?? ''`). Child option with `id: ''` (e.g. filter "all" with `value: ''` for string-input sync) duplicates root id → debug warning in `getAllOptions`. Valid use case; root identity model needs improvement (distinct internal id vs leaf ids, or exclude root from duplicate-id check).
-- **findItemById/findItemByValue:** search descendants before self so empty-id child wins over empty-id root (fixes selectedID `''` binding → menu highlight).
+- **Option empty-id selection:** `getSelectedIDImmediate`, `optionsMutated` must not treat `''` as falsy. Menu `updatePaths` sets `selectedID` directly (path `''` can't round-trip via `pathChanged`).
+- **Open: root Menu identity.** Menu defaults `id: 'root'` when omitted. Child option with `id: ''` (e.g. filter "all" with `value: ''` for string-input sync) can still collide with an empty-id Option. Valid use case; root identity model needs improvement (distinct internal id vs leaf ids, or exclude root from duplicate-id check).
+- **findOptionById/findOptionByValue:** search descendants before self so empty-id child wins over empty-id root (fixes selectedID `''` binding → menu highlight).
 
 ### Other Packages
 

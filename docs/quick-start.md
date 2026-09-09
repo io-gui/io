@@ -11,7 +11,7 @@ To quickly import Io-Gui and get started, continue reading this article.
 Here is a basic example of a reactive element `<my-element>` with style declaration and a `message` property. Use "@" decorator syntax to register the element (`@Register`), define reactive properties (`@Property`) and non-reactive fields (`@Field`).
 
 ```javascript
-import { ReactiveElement, Register, Property, Field, span } from 'io-core'
+import { ReactiveElement, Register, Property, Field, span } from '@io-gui/core'
 
 @Register
 class MyElement extends ReactiveElement {
@@ -50,15 +50,15 @@ document.body.appendChild(
 Here is a quick way to make a simple static website with navigation and 5 pages that load contents from .md files. 
 
 ```javascript
-import { IoNavigator } from 'io-navigation'
-import { MenuOption } from 'io-menus'
-import { Storage } from 'io-core'
-import { ioMarkdown } from 'io-markdown'
+import { IoNavigator } from '@io-gui/navigation'
+import { Menu } from '@io-gui/menus'
+import { Storage } from '@io-gui/core'
+import { ioMarkdown } from '@io-gui/markdown'
 
 document.body.appendChild(
   new IoNavigator({
     menu: 'top',
-    option: new MenuOption({
+    model: new Menu({
       options: ['About', 'Products', 'Services', 'Testimonials', 'Contact'],
       path: Storage({storage: 'hash', key: 'page', value: 'About'})
     }),
@@ -81,13 +81,13 @@ See [index.html] of iogui.dev for more advanced `ioNavigator` usage examples.
 You can import and use built-in Io-Gui elements such as `IoSlider` or `IoOptionSelect`:
 
 ```javascript
-import { IoSlider } from 'io-sliders';
-import { IoOptionSelect, MenuOption } from 'io-menus';
+import { IoSlider } from '@io-gui/sliders';
+import { IoOptionSelect, Menu } from '@io-gui/menus';
 
 const slider = new IoSlider({value: 0, min: -3, max: 3, step: 1});
 const optionSelect = new IoOptionSelect({
   value: 0,
-  option: new MenuOption({options: [
+  model: new Menu({options: [
     {id: 'Zero', value: 0},
     {id: 'One', value: 1},
     {id: 'Two', value: 2},
@@ -108,9 +108,9 @@ Just like most modern frameworks, Io-Gui uses a virtual DOM to efficiently updat
 Here, we can replicate the previous example using the `render()` function and virtual DOM constructors inside a custom element.
 
 ```typescript
-import { ReactiveElement, Register, Property, span } from 'io-core'
-import { ioSlider } from 'io-sliders'
-import { ioOptionSelect, MenuOption } from 'io-menus'
+import { ReactiveElement, Register, Property, span } from '@io-gui/core'
+import { ioSlider } from '@io-gui/sliders'
+import { ioOptionSelect, Menu } from '@io-gui/menus'
 
 class MyElement extends ReactiveElement {
 
@@ -126,13 +126,13 @@ class MyElement extends ReactiveElement {
   @Property({type: Number, value: 0})
   declare numberValue: number
 
-  @Property({type: MenuOption, value: new MenuOption({options: [
+  @Property({type: Menu, value: new Menu({options: [
     {id: 'Zero', value: 0},
     {id: 'One', value: 1},
     {id: 'Two', value: 2},
     {id: 'Three', value: 3},
   ]})})
-  declare menuOption: MenuOption
+  declare menu: Menu
 
   ready() {
     this.mutated()
@@ -148,7 +148,7 @@ class MyElement extends ReactiveElement {
       ioSlider({value: this.numberValue, min: -3, max: 3, step: 1, '@value-input': this.onValueInput}),
       ioOptionSelect({
         value: this.numberValue,
-        option: this.menuOption,
+        model: this.menu,
         '@value-input': this.onValueInput,
       })
     ])
@@ -166,7 +166,7 @@ In the example above, we also introduced event listeners to update value on user
 ```typescript
 ioOptionSelect({
   value: this.bind('numberValue'),
-  option: this.menuOption,
+  model: this.menu,
 })
 ```
 

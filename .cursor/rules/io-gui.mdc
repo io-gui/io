@@ -23,7 +23,7 @@ By doing this, it achieves reactive interoperability with predictable data flow 
 ReactiveObject is a base class extending `Object` with all of the core features provided by Io-Gui. It can be used to create reactive data models and state containers with business logic. Some examples of objects are:
 - `ThemeSingleton`: Io-Gui's theme system that responsively renders CSS variables to document 
 - `StorageNode` and `Storage`: Data persistence object/factory for data storage in location.hash/localStorage
-- `MenuOption`: A rich domain model for menu options and their state in io-menus
+- `Menu` and `Option`: Rich domain models for menu trees and their state in io-menus
 - `Tab`, `Panel` and `Split`: Rich domain models for tabbed-split-panel layout in io-layout
 
 #### ReactiveElement
@@ -71,7 +71,7 @@ It can be used to create reactive custom elements that can be bound to object pr
 ### Defining New Components
 - Elements extend `ReactiveElement` and use reactive properties
 - Objects extend `ReactiveObject` for non-DOM reactive models
-- Objects and elements require registration using `Register(IoClassConstructor)` or `@Register` decorator
+- Objects and elements require registration using `Register(MyClass)` or `@Register` decorator
 - CSS styles defined in static `static get Style()` string
 - CSS selectors have to start with `:host` selector which represents the host element
 - Reactive properties defined in static `static get Properties()` object or `@Property` decorators
@@ -83,7 +83,7 @@ When using singletons that hold shared state:
 - View elements should capture events and forward them to singleton methods
 - Avoid direct property manipulation from views - use methods instead
 - This keeps views focused on event handling and rendering
-- Example: `IoTab` captures pointer events and forwards to `IoTabDragIconSingleton.updateDrag()`, `endDrag()`, `cancelDrag()`
+- Example: `IoNumber` captures pointer events and forwards them to `IoNumberLadderSingleton` (`src`, `expanded`)
 
 ### Runtime Type Checking
 - Use `debug: {}` labeled scoped blocks to write runtime debug code such as type checking etc

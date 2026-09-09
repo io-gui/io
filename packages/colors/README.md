@@ -110,7 +110,7 @@ Global singleton overlay containing the expanded color picker UI. Automatically 
 The package exports conversion utilities:
 
 ```typescript
-import { rgb2hsl, hsl2rgb, rgb2hsv, hsv2rgb } from 'io-colors'
+import { rgb2hsl, hsl2rgb, rgb2hsv, hsv2rgb } from '@io-gui/colors'
 
 // RGB arrays use 0-255 range
 // HSL/HSV arrays use: [0-360, 0-100, 0-100]

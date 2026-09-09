@@ -108,7 +108,7 @@ Io-Gui is organized as a monorepo with the following packages:
 ### Defining New Components
 - Elements extend `ReactiveElement`
 - Objects (non-DOM) extend `ReactiveObject`
-- Objects and elements require registration using `Register(IoClassConstructor)` or `@Register` decorator
+- Objects and elements require registration using `Register(MyClass)` or `@Register` decorator
 - CSS styles defined in static `static get Style()` string
 - CSS selectors have to start with `:host` selector which represents the host element
 - Reactive properties defined in static `static get Properties()` object or `@Property` decorators

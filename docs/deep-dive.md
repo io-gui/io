@@ -15,7 +15,7 @@ ReactiveObject is a base class extending `Object` with all of the core features 
 It can be used to create reactive data models and state containers with business logic. Some examples of objects are:
 - `ThemeSingleton`: Io-Gui's theme system that responsively renders CSS variables to document 
 - `StorageNode` and `Storage`: Data persistence object/factory for data storage in location.hash or localStorage
-- `MenuOption`: A rich domain model for menu options and their state in io-menus
+- `Menu` and `Option`: Rich domain models for menu trees and their state in io-menus
 - `Tab`, `Panel` and `Split`: Rich domain models for tabbed-split-panel layout in io-layout
 
 #### ReactiveElement

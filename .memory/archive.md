@@ -1,5 +1,11 @@
 # Archive
 
+## 2026-09-09 docs: stale menus/nav API
+
+- User: `option: new MenuOption(...)` is stale. Views take `model`. `IoNavigator.model` is `Menu | Option`; `IoOptionSelect.model` is `Menu`.
+- Fixed: quick-start, markdown README, deep-dive, io-gui.mdc, menus CONTEXT (drop "still MenuOption" parenthetical; `_Avoid_: MenuOption`).
+- Also: unscoped `io-*` imports → `@io-gui/*` in package READMEs; `Register(IoClassConstructor)` → `Register(MyClass)`; ADR-0003 no longer claims rule file has old Property names; `dev.html` `ReactiveProperties`/`changed()` → `Properties`/`mutated()` (dropped duplicate handler); dead `IoTabDragIconSingleton` example → `IoNumberLadderSingleton`.
+
 ## 2026-09-09 docs: nodes → objects nomenclature
 
 - Source: ADR-0001 (`packages/core/adr/0001-reactivenode-is-the-graph-union.md`). Object base was informal "Node"/`ReactiveNode`; now `ReactiveObject`. Union/graph vertex keeps `ReactiveNode`. Pairing is objects + elements.

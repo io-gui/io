@@ -47,7 +47,7 @@ type IoNavigatorProps = {
 | Mode | Behavior |
 |------|----------|
 | `shallow` | Shows the scope's immediate selection (direct child) |
-| `deep` | Shows final `selectedID` in tree |
+| `deep` | Shows the deepest selected option in the tree |
 | `all` | Shows all elements (`*`) |
 | `none` | Shows nothing |
 

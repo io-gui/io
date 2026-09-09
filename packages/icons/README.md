@@ -19,7 +19,7 @@ IoIcon (element)
 ### Displaying Icons
 
 ```typescript
-import { IoIcon } from 'io-icons'
+import { IoIcon } from '@io-gui/icons'
 
 // Using constructor
 const icon = new IoIcon({ value: 'io:gear' })
@@ -74,7 +74,7 @@ Global singleton for registering and retrieving SVG icons.
 ### Registering Custom Icons
 
 ```typescript
-import { IconsetSingleton } from 'io-icons'
+import { IconsetSingleton } from '@io-gui/icons'
 
 const customIcons = `
 <svg>

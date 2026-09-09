@@ -53,7 +53,7 @@ type PropertyConfig = {
 
 **Custom registration:**
 ```typescript
-import { registerEditorConfig } from 'io-editors'
+import { registerEditorConfig } from '@io-gui/editors'
 
 registerEditorConfig(MyClass, [
   { name: 'position', tag: 'io-vector3', props: { labels: ['x', 'y', 'z'] } },
@@ -78,7 +78,7 @@ type PropertyGroups = Record<string, Array<string | RegExp>>
 
 **Registration:**
 ```typescript
-import { registerEditorGroups } from 'io-editors'
+import { registerEditorGroups } from '@io-gui/editors'
 
 registerEditorGroups(MyClass, {
   Transform: ['position', 'rotation', 'scale'],
