@@ -189,7 +189,7 @@ IoPropertyEditor._onValueInput()
     ↓
 Updates object property
     ↓
-Dispatches mutation if not a Node
+Dispatches mutation if not a ReactiveNode
 ```
 
 ## Events

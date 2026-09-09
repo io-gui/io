@@ -6,23 +6,23 @@ alwaysApply: true
 
 Io-Gui is a reactive web UI framework that provides a consistent reactive foundation that supports multiple architectural patterns. It takes a multi-paradigm approach because different UI problems require different architectural solutions. Io-Gui adapts its architecture to the problem domain while maintaining consistent reactive principles throughout.
 
-Io-Gui relies on interoperable reactive **nodes** and **elements** that respond to state changes and mutations. They provide a base for a reactive architecture that combines the best aspects of declarative component-based design, with reactive and composable development patterns.
+Io-Gui relies on interoperable reactive **objects** and **elements** that respond to state changes and mutations. They provide a base for a reactive architecture that combines the best aspects of declarative component-based design, with reactive and composable development patterns.
 
 `ReactiveNode` is the union of `ReactiveObject` and `ReactiveElement`.
 
 ### Universal Reactive Architecture
 
-Io-Gui implements the same features on top of its base classes - nodes and elements. The features include:
+Io-Gui implements the same features on top of its base classes - objects and elements. The features include:
 - Reactive property system
 - Two-way data binding
 - Component lifecycle management
 - Event-driven architecture
-By doing this, it achieves reactive interoperability with predictable data flow patterns between nodes and elements.
+By doing this, it achieves reactive interoperability with predictable data flow patterns between objects and elements.
 
 #### ReactiveObject
-ReactiveObject is a base class extending `Object` with all of the core features provided by Io-Gui. It can be used to create reactive data models and state containers with business logic. Some examples of nodes are:
+ReactiveObject is a base class extending `Object` with all of the core features provided by Io-Gui. It can be used to create reactive data models and state containers with business logic. Some examples of objects are:
 - `ThemeSingleton`: Io-Gui's theme system that responsively renders CSS variables to document 
-- `StorageNode` and `Storage`: Data persistence node/factory for data storage in location.hash/localStorage
+- `StorageNode` and `Storage`: Data persistence object/factory for data storage in location.hash/localStorage
 - `MenuOption`: A rich domain model for menu options and their state in io-menus
 - `Tab`, `Panel` and `Split`: Rich domain models for tabbed-split-panel layout in io-layout
 
@@ -30,7 +30,7 @@ ReactiveObject is a base class extending `Object` with all of the core features 
 ReactiveElement is a custom element base class extending `HTMLElement` with ReactiveObject functionality as well as some DOM functionality such as:
 - Virtual DOM rendering
 - Style declaration with inheritance
-It can be used to create reactive custom elements that can be bound to node properties and are responsive to node mutations. The entire Io-Gui design system is built on top of this class.
+It can be used to create reactive custom elements that can be bound to object properties and are responsive to object mutations. The entire Io-Gui design system is built on top of this class.
 
 ### Reactive Data Flow
 - Trunk-to-leaf data flow can be achieved using change handlers and value assignment
@@ -40,7 +40,7 @@ It can be used to create reactive custom elements that can be bound to node prop
   - Example: change event `"label-changed"` invokes `.labelChanged()` handler if it exists
 - Generic property handler `.mutated()` gets invoked after any property change
 - Leaf-to-trunk data flow can be achieved using mutation events and handlers
-  - Mutation events are automatically dispatched for all nodes and objects
+  - Mutation events are automatically dispatched for all objects and elements
   - Example: `"data"` property mutation event `"io-mutation"` includes `event.detail.object` that equals mutated object
   - Mutations of generic objects can be dispatched using `this.dispatchMutation(mutatedObject);`
   - Mutation handlers get invoked automatically if they are defined
@@ -53,7 +53,7 @@ It can be used to create reactive custom elements that can be bound to node prop
 ### Core Systems
 - **ProtoChain** - Inheritance aggregator that also performs one-time class initialization
 - **Property** - Creates and initializes responsive properties
-- **EventDispatcher** - Manages DOM events on elements and bridges them to synthetic events on nodes
+- **EventDispatcher** - Manages DOM events on elements and bridges them to synthetic events on objects
 - **ChangeQueue** - Detects property changes and dispatches change/mutation events and handlers
 - **FrameScheduler** - Generic frame scheduler with throttle and debounce capability
 - **Binding** - Manages two-way data flow using change events
@@ -70,8 +70,8 @@ It can be used to create reactive custom elements that can be bound to node prop
 
 ### Defining New Components
 - Elements extend `ReactiveElement` and use reactive properties
-- Nodes extend `ReactiveObject` for non-DOM reactive objects
-- Nodes and elements require registration using `Register(IoClassConstructor)` or `@Register` decorator
+- Objects extend `ReactiveObject` for non-DOM reactive models
+- Objects and elements require registration using `Register(IoClassConstructor)` or `@Register` decorator
 - CSS styles defined in static `static get Style()` string
 - CSS selectors have to start with `:host` selector which represents the host element
 - Reactive properties defined in static `static get Properties()` object or `@Property` decorators
@@ -159,4 +159,4 @@ We should follow an invariant-driven, readability-first style: validate uncertai
 
 Wire format is dumb; domain types are smart; infrastructure only connects them. Serialize at the boundary, hydrate at the boundary — keep the interior model typed and rich.
 
-Persistence and transport should only deal with plain, JSON-safe data. Each domain type owns how it encodes and decodes itself (toJSON, fromJSON, hydrate, or equivalent). Generic infrastructure (Storage, loaders, APIs) should route serialized data to the right object and never embed type-specific knowledge. Inside the app, work with real types (Color, nodes, domain models), not wire-format leftovers. When a new field needs rehydration, extend the type or its hydrate path once — don’t add parallel clone/stringify logic, lookup tables, or special-case fixups in unrelated layers.
+Persistence and transport should only deal with plain, JSON-safe data. Each domain type owns how it encodes and decodes itself (toJSON, fromJSON, hydrate, or equivalent). Generic infrastructure (Storage, loaders, APIs) should route serialized data to the right object and never embed type-specific knowledge. Inside the app, work with real types (Color, objects, domain models), not wire-format leftovers. When a new field needs rehydration, extend the type or its hydrate path once — don’t add parallel clone/stringify logic, lookup tables, or special-case fixups in unrelated layers.

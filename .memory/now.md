@@ -1,3 +1,3 @@
 # Current Focus
 
-Disable `@typescript-eslint/no-unused-vars` for `packages/three/src/nodes/ToolBase.ts` (file-level eslint-disable).
+Docs aligned to ADR-0001: objects + elements; node = graph vertex.

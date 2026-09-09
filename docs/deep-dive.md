@@ -1,20 +1,20 @@
 ### Universal Reactive Architecture
 
-Io-Gui implements the same features on top of its base classes - nodes and elements. The features include:
+Io-Gui implements the same features on top of its base classes - objects and elements. The features include:
 - Reactive property system
 - Two-way data binding
 - Component lifecycle management
 - Event-driven architecture
 
-By doing this, it achieves reactive interoperability with predictable data flow patterns between nodes and elements.
+By doing this, it achieves reactive interoperability with predictable data flow patterns between objects and elements.
 
 `ReactiveNode` is the union of the two concrete bases below — it names a vertex in the shared reactive graph and is matched by the `isReactiveNode` predicate.
 
 #### ReactiveObject
 ReactiveObject is a base class extending `Object` with all of the core features provided by Io-Gui.
-It can be used to create reactive data models and state containers with business logic. Some examples of nodes are:
+It can be used to create reactive data models and state containers with business logic. Some examples of objects are:
 - `ThemeSingleton`: Io-Gui's theme system that responsively renders CSS variables to document 
-- `StorageNode` and `Storage`: Data persistence node/factory for data storage in location.hash or localStorage
+- `StorageNode` and `Storage`: Data persistence object/factory for data storage in location.hash or localStorage
 - `MenuOption`: A rich domain model for menu options and their state in io-menus
 - `Tab`, `Panel` and `Split`: Rich domain models for tabbed-split-panel layout in io-layout
 
@@ -23,7 +23,7 @@ ReactiveElement is a custom element base class extending `HTMLElement` with Reac
 - Virtual DOM rendering
 - Style declaration with inheritance
 
-It can be used to create reactive custom elements that can be bound to node properties and are responsive to node mutations. The entire Io-Gui design system is built on top of this class.
+It can be used to create reactive custom elements that can be bound to object properties and are responsive to object mutations. The entire Io-Gui design system is built on top of this class.
 
 ### Reactive Data Flow
 - Trunk-to-leaf data flow can be achieved using change handlers and value assignment
@@ -33,7 +33,7 @@ It can be used to create reactive custom elements that can be bound to node prop
   - Example: change event `"label-changed"` invokes `.labelChanged()` handler if it exists
   - Generic catch-all handler `.mutated()` gets invoked after any property change
 - Leaf-to-trunk data flow can be achieved using mutation events and handlers
-  - Mutation events are automatically dispatched for all nodes and elements
+  - Mutation events are automatically dispatched for all objects and elements
   - Example: `"data"` object property mutation event `"io-mutation"` includes `event.detail.object` that equals mutated object
   - Mutation events for generic objects can be dispatched using `this.dispatchMutation(mutatedObject);`
   - Mutation events for generic objects are emitted on a global event bus (window)
@@ -70,7 +70,7 @@ Synthetic events (including `io-mutation`) bubble by walking `_parents` recursiv
 ### Core Systems
 - **ProtoChain** - Inheritance aggregator that also performs one-time class initialization
 - **Property** - Creates and initializes reactive properties
-- **EventDispatcher** - Manages DOM events on elements and synthetic events on nodes
+- **EventDispatcher** - Manages DOM events on elements and synthetic events on objects
 - **ChangeQueue** - Detects property changes and dispatches change/mutation events and handlers
 - **FrameScheduler** - Generic frame scheduler with throttle and debounce capability
 - **Binding** - Manages two-way data flow; forward sync settles the outbound binding graph inside a shared binding wave
@@ -83,8 +83,8 @@ All new classes must be registered before use.
 
 ```javascript
 // Javascript flavor
-class MyNode extends ReactiveObject {}
-Register(MyNode)
+class MyObject extends ReactiveObject {}
+Register(MyObject)
 
 class MyElement extends ReactiveElement {}
 Register(MyElement)
@@ -93,7 +93,7 @@ Register(MyElement)
 ```typescript
 // Typescript flavor with experimentalDecorators: true
 @Register
-class MyNode extends ReactiveObject {}
+class MyObject extends ReactiveObject {}
 
 @Register
 class MyElement extends ReactiveElement {}
@@ -107,7 +107,7 @@ In the following example, we define a boolean property called `selected` by spec
 
 ```javascript
 // Javascript version with `static get Properties()` object
-class MyNode extends ReactiveObject {
+class MyObject extends ReactiveObject {
   static get Properties() {
     return {
       selected: false
@@ -120,7 +120,7 @@ Here we do the same using decorator syntax in typescript. Note that we use `decl
 
 ```typescript
 // Typescript version with `@Property()` decorator
-class MyNode extends ReactiveObject {
+class MyObject extends ReactiveObject {
   @Property(false)
   declare selected: boolean
 }
@@ -131,7 +131,7 @@ class MyNode extends ReactiveObject {
 Alternatively, a property can be declared by specifying only the type. The result of the following declaration is exactly the same since initial value for `Boolean` is inferred to `false`, just like `Number` is `0` and `String` is `""`. In other words, when no initial value is specified, it will be inferred from the specified type. Properties with type `Object` and `Array` will be initialized with `new Object()` and `new Array()` only if the `init: null` flag is specified. Otherwise, they will be initialized with `undefined`. You can also specify custom initialization arguments in the `init` field. e.g. `{type: Array, init: [1, 2, 3]}` will initialize the property with `new Array(1, 2, 3)`.
 
 ```typescript
-class MyNode extends ReactiveObject {
+class MyObject extends ReactiveObject {
   @Property(Boolean)
   declare selected: boolean
 }
@@ -142,24 +142,24 @@ Just like initial property value can be inferred from type, a property type can 
 Note that ANY initial value specified in property declaration can be overridden by a value specified in the constructor.
 
 ```typescript
-class MyNode extends ReactiveObject {
+class MyObject extends ReactiveObject {
   @Property(Color)
   declare color: Color
 }
 
-new MyNode({color: new Color()})
+new MyObject({color: new Color()})
 ```
 
 While it is possible to specify object instances as values in property declaration it is important to note that such initial values will be shared across all instances of the class.
 
 ```typescript
-class MyNode extends ReactiveObject {
+class MyObject extends ReactiveObject {
   // This is not recommended!
   @Property({value: new Color()})
   declare color: Color
 }
 
-new MyNode().color === new MyNode().color
+new MyObject().color === new MyObject().color
 // returns true
 ```
 
@@ -172,10 +172,10 @@ As mentioned above, we can use `init` field to specify how we want to initialize
 
 ### Property Declaration Inheritance
 
-Property definitions respect inheritance. This means that if a subclass extends a superclass and defines a property with the same name, the subclass's definition will overwrite the superclass's definition but only for explicitly specified parts of the property declaration. In the following example `MyNode` will inherit explicit property declaration from `MySuperNode` but it will override the initial value to `true`. 
+Property definitions respect inheritance. This means that if a subclass extends a superclass and defines a property with the same name, the subclass's definition will overwrite the superclass's definition but only for explicitly specified parts of the property declaration. In the following example `MyObject` will inherit explicit property declaration from `MySuperObject` but it will override the initial value to `true`. 
 
 ```typescript
-class MySuperNode extends ReactiveObject {
+class MySuperObject extends ReactiveObject {
   @Property({
     value: false,
     reflect: true,
@@ -183,7 +183,7 @@ class MySuperNode extends ReactiveObject {
   declare selected: boolean
 }
 
-class MyNode extends MySuperNode {
+class MyObject extends MySuperObject {
   @Property(true)
   declare selected: boolean
 }
@@ -202,9 +202,9 @@ Now let's get into each specific field of the PropertyDeclaration object. Note t
 
 We already covered `value` and `type` in examples above. Now let's dig into the other fields.
 
-**`init`** field is `undefined` by default and it can be used in conjunction with an object constructor in the `type` field. `init: null` will initialize the constructor without any arguments, `"this"` will pass node itself as the argument. You can also specify arguments as arrays.
+**`init`** field is `undefined` by default and it can be used in conjunction with an object constructor in the `type` field. `init: null` will initialize the constructor without any arguments, `"this"` will pass the object itself as the argument. You can also specify arguments as arrays.
 
-**`reflect`** field is `false` by default and it can enable reflection of properties to attributes in DOM elements. Enabling this on properties of nodes makes no effect. Reflected attributes can be used for CSS selectors for example.
+**`reflect`** field is `false` by default and it can enable reflection of properties to attributes in DOM elements. Enabling this on properties of objects makes no effect. Reflected attributes can be used for CSS selectors for example.
 
 ```typescript
 class MyElement extends ReactiveElement {
@@ -325,11 +325,11 @@ static get Listeners() {
 
 All properties are reactive by default, meaning that changing a property value will emit a change event and invoke change handler functions if they exist. Lastly, `mutated()` function will be called when any one or more reactive properties change.
 
-Here is an example of a node fully rigged to handle changes of its `selected` property.
+Here is an example of an object fully rigged to handle changes of its `selected` property.
 
 ```typescript
 @Register
-class MyNode extends ReactiveObject {
+class MyObject extends ReactiveObject {
   @Property(false)
   declare selected: boolean
   selectedChanged(change: Change) {
@@ -344,8 +344,8 @@ class MyNode extends ReactiveObject {
   }
 }
 
-const node = new MyNode()
-node.addEventListener('selected-changed',
+const object = new MyObject()
+object.addEventListener('selected-changed',
   (event: CustomEvent) => {
     // This will happen second
     console.log(event.detail.property)
@@ -354,7 +354,7 @@ node.addEventListener('selected-changed',
   }
 )
 
-node.selected = true
+object.selected = true
 ```
 
 Note that change handler functions are provided with a `change` payload that includes property name as well as `oldValue` and new `value`. Similarly, the change event provides the same change payload as `event.detail`.
@@ -438,7 +438,7 @@ DOM output:
 
 ### Data Binding
 
-This is a simple yet powerful feature designed to be used with Io-Gui nodes and elements by simply invoking the `bind(propName)` method:
+This is a simple yet powerful feature designed to be used with Io-Gui objects and elements by simply invoking the `bind(propName)` method:
 
 ```javascript
 // Returns a binding object to source property "value".
@@ -448,15 +448,15 @@ this.bind('value')
 To create a two-way data binding between two or more properties, simply assign a binding object to a property:
 
 ```javascript
-const myNode = new MyNode()
+const myObject = new MyObject()
 const slider = new IoSlider()
-slider.value = myNode.bind('value')
+slider.value = myObject.bind('value')
 ```
 
 We can also assign bindings in the constructor:
 
 ```javascript
-new IoSlider({value: myNode.bind('value')})
+new IoSlider({value: myObject.bind('value')})
 ```
 
 Or we can assign it to an element using template syntax:

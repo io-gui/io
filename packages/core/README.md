@@ -23,7 +23,7 @@ Both concrete bases share identical reactive APIs: properties, bindings, event d
 
 ```typescript
 @Register
-class MyNode extends ReactiveObject {
+class MyObject extends ReactiveObject {
   @Property({type: String, value: ''})
   declare label: string
 }
@@ -103,8 +103,8 @@ mutated() {
 Create bindings with `this.bind('propertyName')`:
 
 ```typescript
-const binding = sourceNode.bind('value')
-targetNode.prop = binding  // Target syncs to source
+const binding = source.bind('value')
+target.prop = binding  // Target syncs to source
 // Changes propagate bidirectionally
 ```
 

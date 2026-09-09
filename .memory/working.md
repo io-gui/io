@@ -4,7 +4,12 @@
 
 ## Recent Decisions
 
-(none yet)
+- daily-routines P4 locked: storage buffers + TSL vertex pull + IndirectStorageBufferAttribute. No texture2DArray. Density/heatmap overlay removed 2026-09-05 — lines only at all zooms. GPU pool 16M verts (was 4M; SF L14 ~5M). Dummy pos stay 2 — draw count is indirect.
+- daily-routines line gaps: shader hides chords longer than `tileSpan * SEGMENT_MAX_TILE_FRACTION` only (no frontend DISTANCE/TIME/SPEED). Ingest owns rejection in pipeline config. Pair both verts via `evenVid = vid - (vid & 1)` — do not `bitAnd(0xfffffffe)` (f32 loses low bits). Collapse both ends to even endpoint. Day/hour filters hard (no fade). No weekday filter.
+- daily-routines: no synthesized flights. Ingest splits gaps only. File cache VERSION 2. Exclusive client LOD stay.
+- daily-routines coarse LOD = Ramer–Douglas–Peucker (perp. deviation), not radial stride. Every run survives. Weight = dropped verts folded onto preceding kept. No weekday/hour hash drop (deleted in mesh-style rewrite). `SIMPLIFY_MIN_DEG` ≈ 10 m. Do **not** raise eps to hit COARSE_TILE_BUDGET — that flattened L0–L11 to 2-pt sticks. Leaf L14 full-res. Archive 2026-09-06: 189.7 MiB; L0 561,918 → L13 2.29M → L14 20.6M. 16-bit tile quantize still coarse at world tiles (huge bbox). Hour filter at world zoom can miss tracks (kept verts are shape, not time).
+- daily-routines pipeline: `pnpm pipeline` full chain. Incremental ingest. After config.js limits or filecache VERSION change: `pnpm pipeline -- --force`. Stage scripts resume from later step. 12 GB heap on ingest/canonical/tile/verify.
+- three r185: do not share one StorageBufferAttribute as atomic in compute and readonly in fragment — writes don't appear. MeshBasicNodeMaterial MultiplyBlending can ignore blend and draw opaque; use opacityNode + NormalBlending for DataTexture overlays.
 
 ### Architectural Insights
 
@@ -39,16 +44,17 @@
 ### io-core
 
 - **Binding sync = graph write + BindingWave:** `pushBindingValue` settles outbound closure; `ChangeQueue.dispatch` holds one wave across the property pass so parallel networks batch-settle before spoke flush. Wave closes before source `mutated()`. Suites: Binding.test.ts, Binding.network.test.ts.
+- **Nomenclature (ADR-0001):** Object base = `ReactiveObject` ("object"); HTMLElement base = `ReactiveElement` ("element"); union/graph vertex = `ReactiveNode` ("node"). Informal pairing is objects + elements, not nodes + elements.
 - `tsconfig.json` include path: use `"./src"` (relative with dot)
 - `IoSelector.Listeners` return type: `ListenerDefinitions`
 - VDOM supports opt-in keyed reconciliation: set `key` in a vChild's props to match-and-move elements on reorder instead of destroy/recreate. Keys live on DOM elements as non-enumerable `_vdomKey` (read via `getElementKey`); `key` is never applied as a property/attribute. Unkeyed siblings in a keyed list still reuse positionally by tag. Duplicate keys warn in debug blocks.
 - VDOM `children` is always `Array<VDOMChild> | undefined`; string literals normalized at factory boundary only. `text()` helper creates `#text` nodes; reconciliation uses `childNodes`.
 - Generic `vConstructor` doesn't type subclass props; in tests, wrap it: `type XProps = ReactiveElementProps & {...}; const x = (props: XProps) => X.vConstructor(props)`
-- ProtoChain init: avoid runtime imports from ReactiveNode into Property (TDZ/circular init).
+- ProtoChain init: avoid runtime imports from ReactiveObject into Property (TDZ/circular init).
 - Vitest does not typecheck — run `pnpm build` after typed test changes.
 - `IoSyntheticEvent.path` is mutated during bubble; copy if retained beyond handler.
 
-#### ReactiveNode (de)serialization — generic `toJSON` / `applyJSON`
+#### ReactiveObject (de)serialization — generic `toJSON` / `applyJSON`
 
 **Principle:** Wire format is dumb; domain types are smart; infrastructure only connects them. Serialize at the boundary, hydrate at the boundary — keep the interior model typed and rich. Persistence/transport deals in plain JSON-safe data; each type owns encode/decode; `Storage` routes bytes, never embeds type-specific knowledge.
 
@@ -64,13 +70,13 @@
 
 Renamed instance `fromJSON` → `applyJSON` to distinguish apply-to-existing from static factory semantics.
 
-**Generic `ReactiveNode.toJSON()`** (`packages/core/src/nodes/ReactiveNode.ts`):
+**Generic `ReactiveObject.toJSON()`** (`packages/core/src/nodes/ReactiveObject.ts`):
 - Walks `_reactiveProperties`;
 - Objects with `toJSON()` → delegate (nested nodes, `NodeArray`, `Color`, etc.).
 - Primitives (`number`, `string`, `boolean`) → copied as-is.
 - Does **not** auto-serialize arbitrary plain objects or unregistered props.
 
-**Generic `ReactiveNode.applyJSON(json)`**:
+**Generic `ReactiveObject.applyJSON(json)`**:
 - For each key in JSON, looks up reactive property.
 - Object values with `applyJSON()` → delegate in place (nested rehydration).
 - Otherwise → collect as primitive, batch via `setProperties`.
@@ -88,7 +94,7 @@ Renamed instance `fromJSON` → `applyJSON` to distinguish apply-to-existing fro
 - `applyJSON` mutates existing instance; no static factory needed for Storage path.
 
 **`Storage` load/save** (`packages/core/src/nodes/Storage.ts`):
-- Load: `JSON.parse(stored)` → if value is IoValue (node), `value.applyJSON(parsed)` — **same instance**, bindings preserved.
+- Load: `JSON.parse(stored)` → if value is ReactiveObject, `value.applyJSON(parsed)` — **same instance**, bindings preserved.
 - Save: `JSON.stringify` uses each node's `toJSON()` via normal JSON semantics + mutation dispatch.
 - Non-node values: construct via registered constructor or assign parsed plain object.
 - Catch block must not leave raw JSON **string** on model — corrupts typed state.
@@ -105,7 +111,7 @@ Renamed instance `fromJSON` → `applyJSON` to distinguish apply-to-existing fro
 - Storage must call `applyJSON` on existing node, not `new Constructor(parsed)` — Theme/layout singletons rely on in-place hydration.
 - Layout tests renamed `.fromJSON(` → `.applyJSON(` across Tab/Panel/Split tests.
 
-**Tests:** `ReactiveNode.test.ts`, `NodeArray.test.ts`, `Color.test.ts`, `Theme.test.ts`, `Storage.test.ts` cover round-trip, nested delegation, in-place updates, and localStorage hydration.
+**Tests:** `ReactiveObject.test.ts`, `NodeArray.test.ts`, `Color.test.ts`, `Theme.test.ts`, `Storage.test.ts` cover round-trip, nested delegation, in-place updates, and localStorage hydration.
 
 ### io-three
 

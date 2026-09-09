@@ -1,10 +1,6 @@
 # Usage
 
-Io-Gui is a reactive web UI framework that provides a consistent reactive foundation that supports multiple architectural patterns. It takes a multi-paradigm approach because different UI problems require different architectural solutions. Io-Gui adapts its architecture to the problem domain while maintaining consistent reactive principles throughout.
-
-Io-Gui relies on interoperable reactive **nodes** and **elements** that respond to state changes and mutations. They provide a base for a reactive architecture that combines the best aspects of declarative component-based design, with reactive and composable development patterns.
-
-Io-Gui is incrementally adoptable. You can use its core classes `ReactiveObject` and `ReactiveElement` to create your own nodes and elements, build anything from a simple website to an app, or you can import and use one of its nodes and elements in your own architecture.
+Io-Gui is incrementally adoptable. You can use its core classes `ReactiveObject` and `ReactiveElement` to create your own objects and elements, build anything from a simple website to an app, or you can import and use one of its objects and elements in your own architecture.
 
 Both base classes share one reactive graph, so plain data models and custom elements propagate changes, mutations, and events through the same system — across the object/element boundary, not just down the DOM tree. The [deep dive] covers this cross-domain reactivity in detail.
 
@@ -103,7 +99,7 @@ document.body.appendChild(slider);
 document.body.appendChild(optionSelect);
 ```
 
-These are just a few examples. There is an extensive library of nodes and elements to choose from.
+These are just a few examples. There is an extensive library of objects and elements to choose from.
 
 ## Virtual DOM
 
