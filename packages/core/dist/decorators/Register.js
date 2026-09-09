@@ -5,7 +5,7 @@
  * @example
  * // Creating a new ReactiveObject subclass.
  * \@Register
- * class MyNode extends ReactiveObject {
+ * class MyObject extends ReactiveObject {
  * }
  *
  * @example
@@ -16,9 +16,9 @@
  *
  * @example
  * //Javascript without decorator syntax.
- * class MyNode extends ReactiveObject {
+ * class MyObject extends ReactiveObject {
  * }
- * Register(MyNode);
+ * Register(MyObject);
 */
 export function Register(ioNodeConstructor) {
     ioNodeConstructor.prototype.Register(ioNodeConstructor);
