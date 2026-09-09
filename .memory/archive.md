@@ -1,5 +1,13 @@
 # Archive
 
+## 2026-09-09 package CONTEXT.md + Agent Skills
+
+- Distro: each `@io-gui/*` `files[]` = dist, LICENSE, README, CONTEXT.md, skills/. No root skills catalog.
+- Skill name = kebab flatten (`@io-gui/menus` → `io-gui-menus`); folder matches name; points at CONTEXT/README, no copy.
+- New CONTEXT: navigation, editors, colors, three, inputs, sliders, icons, markdown. Kept core/layout/menus.
+- Root CONTEXT map lists all 11 + relationships (Color vs ColorValue, Drawer vs IoNavigatorDrawer, three→editors side-effect).
+- Editors skill warns: PropertyConfig is `[matcher, VDOMElement]` tuples — README `{tag,props}` stale.
+
 ## 2026-09-09 docs: stale menus/nav API
 
 - User: `option: new MenuOption(...)` is stale. Views take `model`. `IoNavigator.model` is `Menu | Option`; `IoOptionSelect.model` is `Menu`.

@@ -1,3 +1,3 @@
 # Current Focus
 
-Docs APIs aligned: `model: Menu | Option`, scoped `@io-gui/*` imports.
+Shipped package CONTEXT.md + Agent Skills (`skills/io-gui-<pkg>/`) for all 11 packages; npm `files[]` includes CONTEXT.md + skills/.

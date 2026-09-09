@@ -36,7 +36,9 @@
   "files": [
     "/dist/",
     "/LICENSE",
-    "/README.md"
+    "/README.md",
+    "/CONTEXT.md",
+    "/skills/"
   ],
   "exports": {
     ".": {
