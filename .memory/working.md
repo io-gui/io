@@ -13,7 +13,7 @@
 
 ### Architectural Insights
 
-- **Agent skills ship inside packages:** `packages/<pkg>/skills/io-gui-<pkg>/SKILL.md` + CONTEXT.md in npm `files[]`. agentskills.io format; consumer linker discovers from node_modules.
+- **Agent skills ship inside packages:** `packages/<pkg>/skills/io-gui-<pkg>/SKILL.md` + CONTEXT.md in npm `files[]`. Root `skills/` = git symlinks for `npx skills add io-gui/io`. agentskills.io format; consumer linker can also discover from node_modules.
 - Apps use `<custom-element>` tags directly in HTML (e.g. `<circuits-app>`)
 - Apps are embedded in the root `index.html` via `iframe()` helper + nav entry
 - Workspace deps use `"workspace:*"` in `package.json`

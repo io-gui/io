@@ -1,8 +1,14 @@
 # Archive
 
+## 2026-09-09 root skills catalog (symlinks)
+
+- `skills/io-gui-*` → `../packages/<pkg>/skills/io-gui-*` (git mode 120000). Source of truth stays in packages.
+- `skills/README.md` + root README blurb: `npx skills add io-gui/io`.
+- Windows: needs symlink support (`core.symlinks` / Developer Mode); macOS/Linux fine.
+
 ## 2026-09-09 package CONTEXT.md + Agent Skills
 
-- Distro: each `@io-gui/*` `files[]` = dist, LICENSE, README, CONTEXT.md, skills/. No root skills catalog.
+- Distro: each `@io-gui/*` `files[]` = dist, LICENSE, README, CONTEXT.md, skills/. Root catalog added same day (symlinks).
 - Skill name = kebab flatten (`@io-gui/menus` → `io-gui-menus`); folder matches name; points at CONTEXT/README, no copy.
 - New CONTEXT: navigation, editors, colors, three, inputs, sliders, icons, markdown. Kept core/layout/menus.
 - Root CONTEXT map lists all 11 + relationships (Color vs ColorValue, Drawer vs IoNavigatorDrawer, three→editors side-effect).

@@ -6,6 +6,8 @@ Both base classes share one reactive graph, so plain data models and custom elem
 
 To quickly import Io-Gui and get started, continue reading this article.
 
+To let your agents use io-gui run `npx skills-npm` after installing the packages or simply run `npx skills add io-gui/io`.
+
 ## Making an Element
 
 Here is a basic example of a reactive element `<my-element>` with style declaration and a `message` property. Use "@" decorator syntax to register the element (`@Register`), define reactive properties (`@Property`) and non-reactive fields (`@Field`).

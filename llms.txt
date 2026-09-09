@@ -1,5 +1,7 @@
 # Io-Gui
 
+to install io-gui skills run `npx skills add io-gui/io`
+
 > Io-Gui is a multi-paradigm reactive web UI framework with zero runtime dependencies. Plain data models (`ReactiveObject`) and custom DOM elements (`ReactiveElement`) are vertices in a single reactive graph, so changes, mutations, and events propagate across the object/element boundary — reactivity is not tied to DOM placement. Written in TypeScript, distributed as `@io-gui/*` packages, usable without any build step.
 
 Why use it: you need reactive state that spans data models and DOM elements without a framework boundary between them — e.g. an editor, inspector, or IDE-like tool where one model drives many views. A model can parent a DOM element (and vice versa), nodes can have multiple parents, and a visited-set circuit breaker makes diamonds and cycles in the graph safe.

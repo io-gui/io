@@ -12,6 +12,14 @@ Because objects and elements are vertices in a single reactive graph, reactivity
 
 To learn about Io-Gui, read the [quick start] and the [deep dive] guide.
 
+### Agent Skills
+
+Package how-to skills for coding agents (Cursor, Claude Code, Codex, …) live under [`skills/`](./skills/) and ship inside each `@io-gui/*` npm package. Install into a project with:
+
+```bash
+npx skills add io-gui/io
+```
+
 Stay in touch on [github], [twitter] and [bluesky].
 
 ## Development
