@@ -23,7 +23,7 @@ Both concrete bases share identical reactive APIs: properties, bindings, event d
 
 ```typescript
 @Register
-class MyNode extends ReactiveObject {
+class MyObject extends ReactiveObject {
   @Property({type: String, value: ''})
   declare label: string
 }
@@ -98,25 +98,13 @@ mutated() {
 }
 ```
 
-### Dispatch Timing
-
-Control dispatch timing via `dispatchTiming` property:
-
-| Mode | Behavior |
-|------|----------|
-| `'immediate'` | Synchronous dispatch (default) |
-| `'throttled'` | Once per animation frame, first value wins |
-| `'debounced'` | Once per animation frame, last value wins |
-
----
-
 ## Two-Way Binding
 
 Create bindings with `this.bind('propertyName')`:
 
 ```typescript
-const binding = sourceNode.bind('value')
-targetNode.prop = binding  // Target syncs to source
+const binding = source.bind('value')
+target.prop = binding  // Target syncs to source
 // Changes propagate bidirectionally
 ```
 

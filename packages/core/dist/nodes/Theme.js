@@ -5,7 +5,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register } from '../decorators/Register.js';
-import { Property } from '../decorators/Property.js';
 import { ReactiveObject } from '../nodes/ReactiveObject.js';
 import { Storage as $ } from '../nodes/Storage.js';
 import { Color } from '../core/Color.js';
@@ -118,6 +117,13 @@ let Theme = class Theme extends ReactiveObject {
         }
         return false;
     }
+    // Color.applyJSON mutates in place with no notify — force CSS + io-mutation.
+    applyJSON(json) {
+        super.applyJSON(json);
+        this.mutated();
+        this.dispatchMutation();
+        return this;
+    }
     fontSizeChanged() {
         this.lineHeight = Math.max(this.fontSize, this.lineHeight);
     }
@@ -136,9 +142,6 @@ let Theme = class Theme extends ReactiveObject {
         }
     }
 };
-__decorate([
-    Property('debounced')
-], Theme.prototype, "dispatchTiming", void 0);
 Theme = __decorate([
     Register
 ], Theme);

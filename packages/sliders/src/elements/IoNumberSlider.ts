@@ -4,11 +4,11 @@ import {ioSlider} from './IoSlider.js'
 
 export type IoNumberSliderProps = ReactiveElementProps & {
   value?: WithBinding<number>
-  step?: number
-  min?: number
-  max?: number
-  exponent?: number
-  conversion?: number
+  step?: WithBinding<number>
+  min?: WithBinding<number>
+  max?: WithBinding<number>
+  exponent?: WithBinding<number>
+  conversion?: WithBinding<number>
   disabled?: WithBinding<boolean>
 }
 

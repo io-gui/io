@@ -1,6 +1,6 @@
 # Menus
 
-The `@io-gui/menus` context: hierarchical trees of selectable options and the elements that present them as dropdowns, menu bars, context menus, and trees. A `Menu` owns the root of a tree of `Option`s; paired views render them and translate gestures back into model operations. (The Menu/Option split and view renames are being introduced — today the root is just another `MenuOption`.)
+The `@io-gui/menus` context: hierarchical trees of selectable options and the elements that present them as dropdowns, menu bars, context menus, and trees. A `Menu` owns the root of a tree of `Option`s; paired views render them and translate gestures back into model operations.
 
 ## Language
 
@@ -8,11 +8,11 @@ The `@io-gui/menus` context: hierarchical trees of selectable options and the el
 
 **Menu**:
 The root model of a whole menu tree. Owns everything tree-scoped: selection tracking (`selectedID`, `path`), tree Disclosure (`expandedIDs`), default selection, serialization, and invariants no single Option can see. Every menu tree has exactly one Menu. Its JSON form is structure only (ids, labels, icons, hints, modes, nesting) — selection persists separately through Path/`selectedID` bindings (ADR 0003).
-_Avoid_: root option, menu tree, manager
+_Avoid_: root option, menu tree, manager, MenuOption
 
 **Option**:
 One node of a Menu's tree — an id/label/value with an interaction Mode, an optional `action`, and optionally nested child options. Both branches and leaves are Options; tree-scoped state belongs on the Menu.
-_Avoid_: item, entry, choice
+_Avoid_: item, entry, choice, MenuOption
 
 **Id**:
 An Option's identifier, unique across its whole Menu (a Menu invariant, debug-enforced). May not contain a comma — the Path separator. The only way Options are addressed. `label` and `value` default to it.

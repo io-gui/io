@@ -6,11 +6,19 @@
 
 Io-Gui is a reactive web UI framework that provides a consistent reactive foundation that supports multiple architectural patterns. It takes a multi-paradigm approach because different UI problems require different architectural solutions. Io-Gui adapts its architecture to the problem domain while maintaining consistent reactive principles throughout.
 
-Io-Gui relies on interoperable reactive **nodes** and **elements** that respond to state changes and mutations. They provide a base for a reactive architecture that combines the best aspects of declarative component-based design, with reactive and composable development patterns.
+Io-Gui relies on interoperable reactive **objects** and **elements** that respond to state changes and mutations. They provide a base for a reactive architecture that combines the best aspects of declarative component-based design, with reactive and composable development patterns.
 
-Because nodes and elements are vertices in a single reactive graph, reactivity is not tied to DOM placement. Data models and custom elements bubble changes, mutations, and events through the same graph, crossing the object/element boundary that most frameworks keep apart. A plain data model can parent — and propagate to — a DOM element, and a node can have multiple parents of either kind. See the [deep dive] for how this works and how the dispatcher stays loop-safe.
+Because objects and elements are vertices in a single reactive graph, reactivity is not tied to DOM placement. Data models and custom elements bubble changes, mutations, and events through the same graph, crossing the object/element boundary that most frameworks keep apart. A plain data model can parent — and propagate to — a DOM element, and a `ReactiveNode` can have multiple parents of either kind. See the [deep dive] for how this works and how the dispatcher stays loop-safe.
 
 To learn about Io-Gui, read the [quick start] and the [deep dive] guide.
+
+### Agent Skills
+
+Package how-to skills for coding agents (Cursor, Claude Code, Codex, …) live under [`skills/`](./skills/) and ship inside each `@io-gui/*` npm package. Install into a project with:
+
+```bash
+npx skills add io-gui/io
+```
 
 Stay in touch on [github], [twitter] and [bluesky].
 

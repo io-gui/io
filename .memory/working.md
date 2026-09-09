@@ -4,10 +4,16 @@
 
 ## Recent Decisions
 
-(none yet)
+- daily-routines P4 locked: storage buffers + TSL vertex pull + IndirectStorageBufferAttribute. No texture2DArray. Density/heatmap overlay removed 2026-09-05 — lines only at all zooms. GPU pool 16M verts (was 4M; SF L14 ~5M). Dummy pos stay 2 — draw count is indirect.
+- daily-routines line gaps: shader hides chords longer than `tileSpan * SEGMENT_MAX_TILE_FRACTION` only (no frontend DISTANCE/TIME/SPEED). Ingest owns rejection in pipeline config. Pair both verts via `evenVid = vid - (vid & 1)` — do not `bitAnd(0xfffffffe)` (f32 loses low bits). Collapse both ends to even endpoint. Day/hour filters hard (no fade). No weekday filter.
+- daily-routines: no synthesized flights. Ingest splits gaps only. File cache VERSION 2. Exclusive client LOD stay.
+- daily-routines coarse LOD = Ramer–Douglas–Peucker (perp. deviation), not radial stride. Every run survives. Weight = dropped verts folded onto preceding kept. No weekday/hour hash drop (deleted in mesh-style rewrite). `SIMPLIFY_MIN_DEG` ≈ 10 m. Do **not** raise eps to hit COARSE_TILE_BUDGET — that flattened L0–L11 to 2-pt sticks. Leaf L14 full-res. Archive 2026-09-06: 189.7 MiB; L0 561,918 → L13 2.29M → L14 20.6M. 16-bit tile quantize still coarse at world tiles (huge bbox). Hour filter at world zoom can miss tracks (kept verts are shape, not time).
+- daily-routines pipeline: `pnpm pipeline` full chain. Incremental ingest. After config.js limits or filecache VERSION change: `pnpm pipeline -- --force`. Stage scripts resume from later step. 12 GB heap on ingest/canonical/tile/verify.
+- three r185: do not share one StorageBufferAttribute as atomic in compute and readonly in fragment — writes don't appear. MeshBasicNodeMaterial MultiplyBlending can ignore blend and draw opaque; use opacityNode + NormalBlending for DataTexture overlays.
 
 ### Architectural Insights
 
+- **Agent skills ship inside packages:** `packages/<pkg>/skills/io-gui-<pkg>/SKILL.md` + CONTEXT.md in npm `files[]`. Root `skills/` = git symlinks for `npx skills add io-gui/io`. agentskills.io format; consumer linker can also discover from node_modules.
 - Apps use `<custom-element>` tags directly in HTML (e.g. `<circuits-app>`)
 - Apps are embedded in the root `index.html` via `iframe()` helper + nav entry
 - Workspace deps use `"workspace:*"` in `package.json`
@@ -39,16 +45,17 @@
 ### io-core
 
 - **Binding sync = graph write + BindingWave:** `pushBindingValue` settles outbound closure; `ChangeQueue.dispatch` holds one wave across the property pass so parallel networks batch-settle before spoke flush. Wave closes before source `mutated()`. Suites: Binding.test.ts, Binding.network.test.ts.
+- **Nomenclature (ADR-0001):** Object base = `ReactiveObject` ("object"); HTMLElement base = `ReactiveElement` ("element"); union/graph vertex = `ReactiveNode` ("node"). Informal pairing is objects + elements, not nodes + elements.
 - `tsconfig.json` include path: use `"./src"` (relative with dot)
 - `IoSelector.Listeners` return type: `ListenerDefinitions`
 - VDOM supports opt-in keyed reconciliation: set `key` in a vChild's props to match-and-move elements on reorder instead of destroy/recreate. Keys live on DOM elements as non-enumerable `_vdomKey` (read via `getElementKey`); `key` is never applied as a property/attribute. Unkeyed siblings in a keyed list still reuse positionally by tag. Duplicate keys warn in debug blocks.
 - VDOM `children` is always `Array<VDOMChild> | undefined`; string literals normalized at factory boundary only. `text()` helper creates `#text` nodes; reconciliation uses `childNodes`.
 - Generic `vConstructor` doesn't type subclass props; in tests, wrap it: `type XProps = ReactiveElementProps & {...}; const x = (props: XProps) => X.vConstructor(props)`
-- ProtoChain init: avoid runtime imports from ReactiveNode into Property (TDZ/circular init).
+- ProtoChain init: avoid runtime imports from ReactiveObject into Property (TDZ/circular init).
 - Vitest does not typecheck — run `pnpm build` after typed test changes.
 - `IoSyntheticEvent.path` is mutated during bubble; copy if retained beyond handler.
 
-#### ReactiveNode (de)serialization — generic `toJSON` / `applyJSON`
+#### ReactiveObject (de)serialization — generic `toJSON` / `applyJSON`
 
 **Principle:** Wire format is dumb; domain types are smart; infrastructure only connects them. Serialize at the boundary, hydrate at the boundary — keep the interior model typed and rich. Persistence/transport deals in plain JSON-safe data; each type owns encode/decode; `Storage` routes bytes, never embeds type-specific knowledge.
 
@@ -64,13 +71,13 @@
 
 Renamed instance `fromJSON` → `applyJSON` to distinguish apply-to-existing from static factory semantics.
 
-**Generic `ReactiveNode.toJSON()`** (`packages/core/src/nodes/ReactiveNode.ts`):
-- Walks `_reactiveProperties`; skips `dispatchTiming`.
+**Generic `ReactiveObject.toJSON()`** (`packages/core/src/nodes/ReactiveObject.ts`):
+- Walks `_reactiveProperties`;
 - Objects with `toJSON()` → delegate (nested nodes, `NodeArray`, `Color`, etc.).
 - Primitives (`number`, `string`, `boolean`) → copied as-is.
 - Does **not** auto-serialize arbitrary plain objects or unregistered props.
 
-**Generic `ReactiveNode.applyJSON(json)`**:
+**Generic `ReactiveObject.applyJSON(json)`**:
 - For each key in JSON, looks up reactive property.
 - Object values with `applyJSON()` → delegate in place (nested rehydration).
 - Otherwise → collect as primitive, batch via `setProperties`.
@@ -88,7 +95,7 @@ Renamed instance `fromJSON` → `applyJSON` to distinguish apply-to-existing fro
 - `applyJSON` mutates existing instance; no static factory needed for Storage path.
 
 **`Storage` load/save** (`packages/core/src/nodes/Storage.ts`):
-- Load: `JSON.parse(stored)` → if value is IoValue (node), `value.applyJSON(parsed)` — **same instance**, bindings preserved.
+- Load: `JSON.parse(stored)` → if value is ReactiveObject, `value.applyJSON(parsed)` — **same instance**, bindings preserved.
 - Save: `JSON.stringify` uses each node's `toJSON()` via normal JSON semantics + mutation dispatch.
 - Non-node values: construct via registered constructor or assign parsed plain object.
 - Catch block must not leave raw JSON **string** on model — corrupts typed state.
@@ -96,7 +103,7 @@ Renamed instance `fromJSON` → `applyJSON` to distinguish apply-to-existing fro
 **When to override** (domain logic beyond flat reactive props):
 - **`Split` / `Panel` / `Tab`** — polymorphic tree, `createChild`, consolidation, compact wire format (omit defaults).
 - **`TodoListModel`** — `applyJSON` maps wire items → `TodoItemModel` instances via `setProperty('items', ...)`.
-- **`MenuOption`** — custom `toJSON` for menu-specific shape.
+- **`Option`** — custom `toJSON` for menu-specific shape.
 - **`Theme`** — uses generic path; color keys hydrate via `Color.applyJSON` on reactive properties.
 
 **Gotchas discovered post-refactor:**
@@ -105,12 +112,14 @@ Renamed instance `fromJSON` → `applyJSON` to distinguish apply-to-existing fro
 - Storage must call `applyJSON` on existing node, not `new Constructor(parsed)` — Theme/layout singletons rely on in-place hydration.
 - Layout tests renamed `.fromJSON(` → `.applyJSON(` across Tab/Panel/Split tests.
 
-**Tests:** `ReactiveNode.test.ts`, `NodeArray.test.ts`, `Color.test.ts`, `Theme.test.ts`, `Storage.test.ts` cover round-trip, nested delegation, in-place updates, and localStorage hydration.
+**Tests:** `ReactiveObject.test.ts`, `NodeArray.test.ts`, `Color.test.ts`, `Theme.test.ts`, `Storage.test.ts` cover round-trip, nested delegation, in-place updates, and localStorage hydration.
 
 ### io-three
 
+- `IoThreeViewport` lazy-inits a shared default `WebGPURenderer`. Must assign onto `args` before `super()` — `@Property({value: _renderer})` snapshots at class def, so a later `let` assign never reaches instances. Custom `renderer` prop still wins.
 - `ToolBase` stores hover and active pointers per `IoThreeViewport` in viewport-keyed `WeakMap`s. Pointer events should resolve the source viewport from `event.currentTarget` so hover/move/down/up payloads stay isolated to the viewport that emitted the event.
 - Dev import map needs bare `"three"` entry (OrbitControls imports `from 'three'`).
+- **Framing AABB:** always `Box3.setFromObject(obj, true)`. Default path unions morph-target extremes via `geometry.computeBoundingBox()` — absolute morphs often inflate to origin. Also: both cams `lookAt(center)`, near/far from AABB corner depths, `orbitControls.update()`.
 
 ### io-layout
 
@@ -118,9 +127,9 @@ Renamed instance `fromJSON` → `applyJSON` to distinguish apply-to-existing fro
 
 ### io-menus
 
-- **MenuOption empty-id selection:** `getSelectedIDImmediate`, `optionsMutated`, `updatePaths` must not treat `''` as falsy. `updatePaths` sets `selectedID` directly (path `''` can't round-trip via `pathChanged`).
-- **Open: root MenuOption identity.** Root defaults `id: ''` (`args.id ?? ''`). Child option with `id: ''` (e.g. filter "all" with `value: ''` for string-input sync) duplicates root id → debug warning in `getAllOptions`. Valid use case; root identity model needs improvement (distinct internal id vs leaf ids, or exclude root from duplicate-id check).
-- **findItemById/findItemByValue:** search descendants before self so empty-id child wins over empty-id root (fixes selectedID `''` binding → menu highlight).
+- **Option empty-id selection:** `getSelectedIDImmediate`, `optionsMutated` must not treat `''` as falsy. Menu `updatePaths` sets `selectedID` directly (path `''` can't round-trip via `pathChanged`).
+- **Open: root Menu identity.** Menu defaults `id: 'root'` when omitted. Child option with `id: ''` (e.g. filter "all" with `value: ''` for string-input sync) can still collide with an empty-id Option. Valid use case; root identity model needs improvement (distinct internal id vs leaf ids, or exclude root from duplicate-id check).
+- **findOptionById/findOptionByValue:** search descendants before self so empty-id child wins over empty-id root (fixes selectedID `''` binding → menu highlight).
 
 ### Other Packages
 

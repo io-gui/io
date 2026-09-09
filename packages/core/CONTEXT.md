@@ -8,12 +8,15 @@ Io-Gui is a multi-paradigm reactive web UI framework. Its domain is the small se
 
 **ReactiveNode**:
 A vertex in Io-Gui's reactive graph — any participant linked through `_parents`/`_children`. The union of `ReactiveObject` and `ReactiveElement`; the predicate is `isReactiveNode`. The graph (not property ownership) is the defining trait.
+_Avoid_: Node (for the Object base class), ReactiveOwner, IoValue
 
 **ReactiveObject**:
 The non-DOM base class for reactive models and state containers; extends `Object`. One of the two concrete kinds of `ReactiveNode`.
+_Avoid_: Node, ReactiveNode (for this class)
 
 **ReactiveElement**:
 The DOM-backed base class for reactive custom elements; extends `HTMLElement`. The other concrete kind of `ReactiveNode`. Adds virtual DOM rendering, inherited CSS, and DOM event bridging on top of the shared reactive system.
+_Avoid_: IoElement, Element (as the framework base class)
 
 ### Data flow
 
@@ -56,4 +59,4 @@ A factory that creates (or reuses) a singleton persistent `StorageNode` for a `k
 ### Class setup
 
 **Register**:
-The one-time class setup every `ReactiveNode`/`ReactiveElement` subclass needs. Applied via the `@Register` decorator (sugar) which calls the overridable `prototype.Register()` that does the work: builds the `ProtoChain` (merges inherited properties, fields, listeners, styles; auto-binds handlers) and sets reactive flags. For `ReactiveElement` it additionally defines the custom element in the browser `customElements` registry with its tag name. Subclasses extend it with `super.Register()`.
+The one-time class setup every `ReactiveObject`/`ReactiveElement` subclass needs. Applied via the `@Register` decorator (sugar) which calls the overridable `prototype.Register()` that does the work: builds the `ProtoChain` (merges inherited properties, fields, listeners, styles; auto-binds handlers) and sets reactive flags. For `ReactiveElement` it additionally defines the custom element in the browser `customElements` registry with its tag name. Subclasses extend it with `super.Register()`.

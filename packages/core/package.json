@@ -1,7 +1,7 @@
 {
   "name": "@io-gui/core",
-  "version": "2.0.0-alpha.4",
-  "description": "A lightweight library that provides core features for Io-Gui components (nodes and elements).",
+  "version": "2.0.0-alpha.5",
+  "description": "A lightweight library that provides core features for Io-Gui components (objects and elements).",
   "sideEffects": [
     "**/elements/**",
     "**/nodes/**"
@@ -34,7 +34,9 @@
   "files": [
     "/dist/",
     "/LICENSE",
-    "/README.md"
+    "/README.md",
+    "/CONTEXT.md",
+    "/skills/"
   ],
   "exports": {
     ".": {

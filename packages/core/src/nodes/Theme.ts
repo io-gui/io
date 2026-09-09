@@ -1,6 +1,5 @@
 import { Register } from '../decorators/Register.js'
-import { Property } from '../decorators/Property.js'
-import { PropertyDefinitions, ReactiveObject, DispatchTiming } from '../nodes/ReactiveObject.js'
+import { Json, PropertyDefinitions, ReactiveObject } from '../nodes/ReactiveObject.js'
 import { Storage as $ } from '../nodes/Storage.js'
 import { Color } from '../core/Color.js'
 import { adoptDocumentStylesheet } from '../core/Style.js'
@@ -146,9 +145,6 @@ export class Theme extends ReactiveObject {
   declare gradientColorEnd: Color
   declare shadowColor: Color
 
-  @Property('debounced')
-  declare dispatchTiming: DispatchTiming
-
   override onPropertyMutated(event: CustomEvent) {
     const mutated = super.onPropertyMutated(event)
     if (mutated) {
@@ -157,6 +153,14 @@ export class Theme extends ReactiveObject {
       return true
     }
     return false
+  }
+
+  // Color.applyJSON mutates in place with no notify — force CSS + io-mutation.
+  override applyJSON(json: Json) {
+    super.applyJSON(json)
+    this.mutated()
+    this.dispatchMutation()
+    return this
   }
 
   fontSizeChanged() {

@@ -12,7 +12,6 @@ import { PropertyInstance, removeSelfMutationListener, removeWindowMutationListe
 import { NodeArray } from '../core/NodeArray.js';
 import { throttle, debounce, clearNodeCallbacks } from '../core/FrameScheduler.js';
 import { addParent, detachNodeParents, initReactiveNodeInternals, isReactiveNode, removeParent } from '../core/ReactiveCore.js';
-import { Property } from '../decorators/Property.js';
 import { ReactiveElement } from '../elements/ReactiveElement.js';
 /** Instantiates a property type constructor with runtime constructor arguments. */
 export function constructType(ctor, ...args) {
@@ -110,8 +109,6 @@ let ReactiveObject = ReactiveObject_1 = class ReactiveObject extends Object {
     toJSON() {
         const out = {};
         for (const key of this._properties.keys()) {
-            if (key === 'dispatchTiming')
-                continue;
             const value = this._properties.get(key).value;
             if (typeof value === 'object' && value !== null && typeof value.toJSON === 'function') {
                 out[key] = value.toJSON();
@@ -206,9 +203,6 @@ let ReactiveObject = ReactiveObject_1 = class ReactiveObject extends Object {
         Object.defineProperty(ioNodeConstructor.prototype, '_protochain', { value: new ProtoChain(ioNodeConstructor) });
     }
 };
-__decorate([
-    Property({ type: String, value: 'immediate' })
-], ReactiveObject.prototype, "dispatchTiming", void 0);
 ReactiveObject = ReactiveObject_1 = __decorate([
     Register
 ], ReactiveObject);
@@ -376,18 +370,11 @@ export function setProperty(node, name, value, debounce = false) {
     node.dispatchQueue(debounce);
 }
 export function dispatchQueue(node, debounce = false) {
-    if (node.dispatchTiming === 'debounced' || debounce || node._changeQueue.dispatching) {
+    if (debounce || node._changeQueue.dispatching) {
         node.debounce(node._changeQueue.dispatch);
     }
-    else if (node.dispatchTiming === 'throttled') {
-        node.throttle(node._changeQueue.dispatch);
-    }
-    else if (node.dispatchTiming === 'immediate') {
+    else {
         node._changeQueue.dispatch();
-    }
-    debug: if (['immediate', 'throttled', 'debounced'].indexOf(node.dispatchTiming) === -1) {
-        console.warn(`ReactiveObject.dispatchQueue(): Invalid dispatchTiming property value: "${node.dispatchTiming}".
-      Expected one of: "immediate", "throttled", "debounced".`);
     }
 }
 /** Dispatches `io-mutation` for in-place object or nested Io value changes. */

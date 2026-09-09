@@ -107,13 +107,13 @@ Io-Gui is organized as a monorepo with the following packages:
 
 ### Defining New Components
 - Elements extend `ReactiveElement`
-- Nodes (non-DOM Objects) extend `ReactiveObject`
-- Nodes and elements require registration using `Register(IoClassConstructor)` or `@Register` decorator
+- Objects (non-DOM) extend `ReactiveObject`
+- Objects and elements require registration using `Register(MyClass)` or `@Register` decorator
 - CSS styles defined in static `static get Style()` string
 - CSS selectors have to start with `:host` selector which represents the host element
 - Reactive properties defined in static `static get Properties()` object or `@Property` decorators
 - Non-reactive fields defined in static `static get Fields()` object or `@Field` decorators
-- Nodes and elements share one reactive graph (`_parents`/`_children`), wired by node-valued properties, `NodeArray` items, or explicit `addParent`/`removeParent`. This graph is independent of DOM placement, so a non-DOM model can parent and propagate to an element across the object/element boundary. Events and `io-mutation` bubble through this graph (and, for elements, the DOM tree) with a `visited` set that keeps multi-parent graphs and cycles loop-safe. See the deep dive's "Cross-Domain Reactivity" section before changing parenting or event propagation.
+- Objects and elements share one reactive graph (`_parents`/`_children`), wired by node-valued properties, `NodeArray` items, or explicit `addParent`/`removeParent`. This graph is independent of DOM placement, so a non-DOM model can parent and propagate to an element across the object/element boundary. Events and `io-mutation` bubble through this graph (and, for elements, the DOM tree) with a `visited` set that keeps multi-parent graphs and cycles loop-safe. See the deep dive's "Cross-Domain Reactivity" section before changing parenting or event propagation.
 
 ### Runtime Type Checking
 - Use `debug: {}` labeled scoped blocks to write runtime debug code such as type checking etc

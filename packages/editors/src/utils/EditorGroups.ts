@@ -97,14 +97,12 @@ const GROUPS: EditorGroups = new Map<AnyConstructor, PropertyGroups>([
   }],
   [ReactiveObject, {
     Hidden: [
-      'dispatchTiming',
       '_changeQueue', '_properties', '_bindings', '_eventDispatcher', '_parents',
       '_protochain', '_disposed', '_isReactiveObject', '_isReactiveElement',
     ],
   }],
   [ReactiveElement, {
     Hidden: [
-      'dispatchTiming',
       '_changeQueue', '_properties', '_bindings', '_eventDispatcher', '_parents',
       '_protochain', '_disposed', '_isReactiveObject', '_isReactiveElement',
     ],

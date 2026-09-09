@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { nextFrame } from '@io-gui/core'
 import { IoThreeViewport, ThreeApplet, ToolBase } from '@io-gui/three'
-import { Scene } from 'three/webgpu'
+import { Scene, WebGPURenderer } from 'three/webgpu'
 
 describe('IoThreeViewport', () => {
   let applet: ThreeApplet
@@ -55,5 +55,36 @@ describe('IoThreeViewport', () => {
     viewport.remove()
     viewport.viewCameras.dispose()
     tool.dispose()
+  })
+
+  it('uses a shared default renderer when none is provided', async () => {
+    const viewportA = new IoThreeViewport({ applet })
+    const viewportB = new IoThreeViewport({ applet })
+    container.appendChild(viewportA as Node)
+    container.appendChild(viewportB as Node)
+    await nextFrame()
+
+    expect(viewportA.renderer).toBeInstanceOf(WebGPURenderer)
+    expect(viewportB.renderer).toBe(viewportA.renderer)
+    expect(viewportA.renderer.backend).toBeTruthy()
+
+    viewportA.remove()
+    viewportB.remove()
+    viewportA.viewCameras.dispose()
+    viewportB.viewCameras.dispose()
+  })
+
+  it('uses a custom renderer when provided', async () => {
+    const renderer = new WebGPURenderer({antialias: false, alpha: true})
+    void renderer.init()
+    const viewport = new IoThreeViewport({ applet, renderer })
+    container.appendChild(viewport as Node)
+    await nextFrame()
+
+    expect(viewport.renderer).toBe(renderer)
+
+    viewport.remove()
+    viewport.viewCameras.dispose()
+    renderer.dispose()
   })
 })

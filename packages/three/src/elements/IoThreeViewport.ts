@@ -1,13 +1,9 @@
-import { Register, ReactiveElement, ReactiveElementProps, Property, DispatchTiming, Change, Field, WithBinding } from '@io-gui/core'
+import { Register, ReactiveElement, ReactiveElementProps, Property, Change, Field, WithBinding } from '@io-gui/core'
 import { WebGPURenderer, CanvasTarget, NeutralToneMapping, Object3D } from 'three/webgpu'
 import WebGPU from 'three/addons/capabilities/WebGPU.js'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
 import { ViewCameras } from '../nodes/ViewCameras.js'
 import { ToolBase } from '../nodes/ToolBase.js'
-
-if ( WebGPU.isAvailable() === false ) {
-  console.error( 'No WebGPU support!' )
-}
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
@@ -17,11 +13,21 @@ const observer = new IntersectionObserver((entries) => {
 
 // TODO: Add support for logarithmic depth buffer
 // TODO: Add support for unique renderer instances per viewport
-const _renderer = new WebGPURenderer({antialias: false, alpha: true})
-_renderer.toneMapping = NeutralToneMapping
-_renderer.setPixelRatio(window.devicePixelRatio)
-_renderer.shadowMap.enabled = true
-void _renderer.init()
+let _renderer: WebGPURenderer | null = null
+
+function getDefaultRenderer() {
+  if (!_renderer) {
+    if (WebGPU.isAvailable() === false) {
+      console.error('No WebGPU support!')
+    }
+    _renderer = new WebGPURenderer({antialias: false, alpha: true})
+    _renderer.toneMapping = NeutralToneMapping
+    _renderer.setPixelRatio(window.devicePixelRatio)
+    _renderer.shadowMap.enabled = true
+    void _renderer.init()
+  }
+  return _renderer
+}
 
 export type IoThreeViewportProps = ReactiveElementProps & {
   applet: WithBinding<ThreeApplet>
@@ -52,13 +58,10 @@ export class IoThreeViewport extends ReactiveElement {
   @Property({type: Number, value: 1})
   declare public clearAlpha: number
 
-  @Property({type: String, value: 'throttled'})
-  declare dispatchTiming: DispatchTiming
-
   @Property({type: String, value: 'perspective'})
   declare cameraSelect: string
 
-  @Property({type: WebGPURenderer, value: _renderer})
+  @Property({type: WebGPURenderer})
   declare renderer: WebGPURenderer
 
   @Property({type: ViewCameras})
@@ -125,7 +128,10 @@ export class IoThreeViewport extends ReactiveElement {
   }
 
   constructor(args: IoThreeViewportProps) {
-    super(args)
+    super({
+      ...args,
+      renderer: args.renderer ?? getDefaultRenderer(),
+    } as ReactiveElementProps)
     this.viewCameras = new ViewCameras({viewport: this, applet: this.bind('applet'), cameraSelect: this.bind('cameraSelect')})
     this.debounce(this.renderViewportDebounced)
   }

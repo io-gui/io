@@ -7,7 +7,7 @@ import { ReactiveElement } from '../elements/ReactiveElement.js';
  * @example
  * // Creating a new ReactiveObject subclass.
  * \@Register
- * class MyNode extends ReactiveObject {
+ * class MyObject extends ReactiveObject {
  * }
  *
  * @example
@@ -18,8 +18,8 @@ import { ReactiveElement } from '../elements/ReactiveElement.js';
  *
  * @example
  * //Javascript without decorator syntax.
- * class MyNode extends ReactiveObject {
+ * class MyObject extends ReactiveObject {
  * }
- * Register(MyNode);
+ * Register(MyObject);
 */
 export declare function Register(ioNodeConstructor: typeof ReactiveObject | typeof ReactiveElement): void;

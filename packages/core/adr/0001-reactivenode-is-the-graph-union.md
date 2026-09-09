@@ -8,4 +8,4 @@ Chosen over keeping `ReactiveOwner` (which avoided base-class churn) because "no
 
 ## Consequences
 
-Cross-package rename: `ReactiveNode`(class) → `ReactiveObject`, `IoElement` → `ReactiveElement`, `ReactiveOwner` → `ReactiveNode`, `isReactiveOwner` → `isReactiveNode`, delete `isIoValue`; internal flags `_isNode` → `_isReactiveObject` and `_isIoElement` → `_isReactiveElement`. Touches all packages and the `io-gui` rule file, which still uses the deprecated "Node" nomenclature.
+Cross-package rename: `ReactiveNode`(class) → `ReactiveObject`, `IoElement` → `ReactiveElement`, `ReactiveOwner` → `ReactiveNode`, `isReactiveOwner` → `isReactiveNode`, delete `isIoValue`; internal flags `_isNode` → `_isReactiveObject` and `_isIoElement` → `_isReactiveElement`. Informal pairing in docs is **objects and elements**; **node** is reserved for a graph vertex (`ReactiveNode`).

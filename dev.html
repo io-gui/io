@@ -123,7 +123,7 @@
           `;
         }
 
-        static get ReactiveProperties() {
+        static get Properties() {
           return {
             numberValue: 0,
             menu: {value: new Menu({options: [
@@ -136,24 +136,14 @@
         }
 
         ready() {
-          this.changed();
-        }
-
-        changed() {
-          this.render([
-            ioSlider({value: this.bind('numberValue'), min: -3, max: 3, step: 1}),
-            ioOptionSelect({
-              value: this.bind('numberValue'),
-              model: this.menu
-            })
-          ]);
+          this.mutated();
         }
 
         onValueInput(event) {
           this.numberValue = event.detail.value;
         }
 
-        changed() {
+        mutated() {
           this.render([
             // Notice that, unlike constructors, vDOM factories start with lowercase "i"
             ioSlider({

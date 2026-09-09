@@ -18,7 +18,7 @@ IoMarkdown
 ## Usage
 
 ```typescript
-import { IoMarkdown } from 'io-markdown'
+import { IoMarkdown } from '@io-gui/markdown'
 
 // Basic usage
 const md = new IoMarkdown({
@@ -160,7 +160,7 @@ Combine with `IoSelector` for document navigation:
 
 ```typescript
 ioNavigator({
-  option: menuOption,
+  model: menu,
   elements: [
     ioMarkdown({ id: 'guide', src: './docs/guide.md' }),
     ioMarkdown({ id: 'api', src: './docs/api.md' }),

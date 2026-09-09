@@ -1,6 +1,6 @@
 {
   "name": "@io-gui/navigation",
-  "version": "2.0.0-alpha.4",
+  "version": "2.0.0-alpha.5",
   "description": "A set of navigators for Io-Gui.",
   "sideEffects": [
     "**/elements/**",
@@ -34,7 +34,9 @@
   "files": [
     "/dist/",
     "/LICENSE",
-    "/README.md"
+    "/README.md",
+    "/CONTEXT.md",
+    "/skills/"
   ],
   "exports": {
     ".": {
@@ -50,9 +52,9 @@
     "@io-gui/icons": "workspace:*"
   },
   "peerDependencies": {
-    "@io-gui/core": "^2.0.0-alpha.4",
-    "@io-gui/menus": "^2.0.0-alpha.4",
-    "@io-gui/inputs": "^2.0.0-alpha.4",
-    "@io-gui/icons": "^2.0.0-alpha.4"
+    "@io-gui/core": "^2.0.0-alpha.5",
+    "@io-gui/menus": "^2.0.0-alpha.5",
+    "@io-gui/inputs": "^2.0.0-alpha.5",
+    "@io-gui/icons": "^2.0.0-alpha.5"
   }
 }

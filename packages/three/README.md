@@ -12,7 +12,7 @@ IoThreeViewport (element)
 ├── CanvasTarget (per viewport)
 └── ViewCameras (perspective/orthographic)
 
-ThreeApplet (node)
+ThreeApplet (object)
 ├── scene: Scene
 ├── toneMapping, toneMappingExposure
 └── onAnimate(delta), onResized(width, height)
@@ -29,7 +29,7 @@ WebGPU-powered viewport element for rendering Three.js scenes.
 
 ```typescript
 type IoThreeViewportProps = {
-  applet: ThreeApplet; // Application node
+  applet: ThreeApplet; // Application object
   playing?: boolean; // Enable animation loop
   clearColor?: number; // Background color (hex)
   clearAlpha?: number; // Background alpha (0-1)
@@ -71,7 +71,7 @@ const viewport = new IoThreeViewport({
 });
 ```
 
-## Nodes
+## Objects
 
 ### ThreeApplet
 

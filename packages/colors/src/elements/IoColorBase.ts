@@ -1,4 +1,4 @@
-import { ReactiveElement, ReactiveElementProps, Property, Register, WithBinding, DispatchTiming } from '@io-gui/core'
+import { ReactiveElement, ReactiveElementProps, Property, Register, WithBinding } from '@io-gui/core'
 import { hsl2rgb, rgb2hsl, rgb2hsv, hsv2rgb } from '../lib/color.convert.js'
 
 export type IoColorBaseProps = ReactiveElementProps & {
@@ -7,9 +7,6 @@ export type IoColorBaseProps = ReactiveElementProps & {
 
 @Register
 export class IoColorBase extends ReactiveElement {
-
-  @Property('throttled')
-  declare dispatchTiming: DispatchTiming
 
   @Property({type: Object, init: {r: 1, g: 1, b: 1, a: 1}})
   declare value: {r: number; g: number; b: number; a?: number}

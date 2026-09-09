@@ -2,7 +2,7 @@ import { ReactiveObject, Register, Property, NodeArray, Json, WithBinding } from
 
 export type OptionMode = 'select' | 'toggle' | 'none'
 
-export type OptionPrimitiveData = string | number | boolean | null
+export type OptionSimpleData = string | number | boolean | null
 
 // Wire format — structure only; `action` and selection state are not serialized.
 export type OptionData = {
@@ -14,11 +14,19 @@ export type OptionData = {
   disabled?: boolean
   hidden?: boolean
   mode?: OptionMode
-  options?: Array<OptionPrimitiveData | OptionData>
+  options?: Array<OptionSimpleData | OptionData>
 }
 
-export type OptionProps = OptionData & {
-  options?: Array<OptionPrimitiveData | OptionData | OptionProps | Option>
+export type OptionProps = {
+  id?: string
+  value?: Json
+  label?: WithBinding<string>
+  icon?: string
+  hint?: WithBinding<string>
+  disabled?: boolean
+  hidden?: boolean
+  mode?: OptionMode
+  options?: Array<OptionSimpleData | OptionProps>
   selected?: WithBinding<boolean>
   action?: (value?: any) => void
 }
@@ -74,9 +82,9 @@ export class Option extends ReactiveObject {
     }
   }
 
-  constructor(args: OptionPrimitiveData | OptionProps) {
+  constructor(args: OptionSimpleData | OptionProps) {
     super()
-    this.applyJSON(args as OptionPrimitiveData | OptionData)
+    this.applyJSON(args as OptionSimpleData | OptionData)
 
     // `action` and `selected` are props-only — never part of the wire format.
     if (!!args && typeof args === 'object') {
@@ -237,7 +245,7 @@ export class Option extends ReactiveObject {
     if (json.mode === 'select') delete json.mode
     return json
   }
-  override applyJSON(json: OptionPrimitiveData | OptionData) {
+  override applyJSON(json: OptionSimpleData | OptionData) {
     if (typeof json === 'string' || typeof json === 'number' || typeof json === 'boolean' || json === null) {
       json = { id: String(json), value: json } as OptionData
     }

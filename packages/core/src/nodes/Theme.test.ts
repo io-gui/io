@@ -90,6 +90,16 @@ describe('Theme', () => {
       expect(theme.shadowColor.toHex()).toBe(shadowHex)
       theme.dispose()
     })
+
+    it('dispatches io-mutation when only colors change', () => {
+      const theme = themeWith(LIGHT)
+      let count = 0
+      theme.addEventListener('io-mutation', () => { count++ })
+      theme.applyJSON(DARK)
+      expect(count).toBeGreaterThan(0)
+      expect(getDocumentCssVar('--io_bgColor')).toBe(theme.bgColor.toCss())
+      theme.dispose()
+    })
   })
 
   describe('mutated()', () => {

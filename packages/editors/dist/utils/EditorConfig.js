@@ -1,4 +1,4 @@
-import { ReactiveElement, IoGl, Theme, ReactiveObject, Color } from '@io-gui/core';
+import { IoGl, Theme, Color } from '@io-gui/core';
 import { ioString, ioNumber, ioSwitch, ioField, ioButton } from '@io-gui/inputs';
 import { Menu, ioOptionSelect } from '@io-gui/menus';
 import { ioNumberSlider } from '@io-gui/sliders';
@@ -124,12 +124,6 @@ const CONFIGS = new Map([
         ]],
     [Element, []],
     [HTMLElement, []],
-    [ReactiveObject, [
-            ['dispatchTiming', ioOptionSelect({ model: new Menu({ options: ['immediate', 'throttled', 'debounced'] }) })],
-        ]],
-    [ReactiveElement, [
-            ['dispatchTiming', ioOptionSelect({ model: new Menu({ options: ['immediate', 'throttled', 'debounced'] }) })],
-        ]],
     [IoGl, [
             ['size', ioObject()],
             ['color', ioObject()],

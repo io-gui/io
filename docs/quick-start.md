@@ -1,21 +1,19 @@
 # Usage
 
-Io-Gui is a reactive web UI framework that provides a consistent reactive foundation that supports multiple architectural patterns. It takes a multi-paradigm approach because different UI problems require different architectural solutions. Io-Gui adapts its architecture to the problem domain while maintaining consistent reactive principles throughout.
-
-Io-Gui relies on interoperable reactive **nodes** and **elements** that respond to state changes and mutations. They provide a base for a reactive architecture that combines the best aspects of declarative component-based design, with reactive and composable development patterns.
-
-Io-Gui is incrementally adoptable. You can use its core classes `ReactiveObject` and `ReactiveElement` to create your own nodes and elements, build anything from a simple website to an app, or you can import and use one of its nodes and elements in your own architecture.
+Io-Gui is incrementally adoptable. You can use its core classes `ReactiveObject` and `ReactiveElement` to create your own objects and elements, build anything from a simple website to an app, or you can import and use one of its objects and elements in your own architecture.
 
 Both base classes share one reactive graph, so plain data models and custom elements propagate changes, mutations, and events through the same system — across the object/element boundary, not just down the DOM tree. The [deep dive] covers this cross-domain reactivity in detail.
 
 To quickly import Io-Gui and get started, continue reading this article.
+
+To let your agents use io-gui run `npx skills-npm` after installing the packages or simply run `npx skills add io-gui/io`.
 
 ## Making an Element
 
 Here is a basic example of a reactive element `<my-element>` with style declaration and a `message` property. Use "@" decorator syntax to register the element (`@Register`), define reactive properties (`@Property`) and non-reactive fields (`@Field`).
 
 ```javascript
-import { ReactiveElement, Register, Property, Field, span } from 'io-core'
+import { ReactiveElement, Register, Property, Field, span } from '@io-gui/core'
 
 @Register
 class MyElement extends ReactiveElement {
@@ -54,15 +52,15 @@ document.body.appendChild(
 Here is a quick way to make a simple static website with navigation and 5 pages that load contents from .md files. 
 
 ```javascript
-import { IoNavigator } from 'io-navigation'
-import { MenuOption } from 'io-menus'
-import { Storage } from 'io-core'
-import { ioMarkdown } from 'io-markdown'
+import { IoNavigator } from '@io-gui/navigation'
+import { Menu } from '@io-gui/menus'
+import { Storage } from '@io-gui/core'
+import { ioMarkdown } from '@io-gui/markdown'
 
 document.body.appendChild(
   new IoNavigator({
     menu: 'top',
-    option: new MenuOption({
+    model: new Menu({
       options: ['About', 'Products', 'Services', 'Testimonials', 'Contact'],
       path: Storage({storage: 'hash', key: 'page', value: 'About'})
     }),
@@ -85,13 +83,13 @@ See [index.html] of iogui.dev for more advanced `ioNavigator` usage examples.
 You can import and use built-in Io-Gui elements such as `IoSlider` or `IoOptionSelect`:
 
 ```javascript
-import { IoSlider } from 'io-sliders';
-import { IoOptionSelect, MenuOption } from 'io-menus';
+import { IoSlider } from '@io-gui/sliders';
+import { IoOptionSelect, Menu } from '@io-gui/menus';
 
 const slider = new IoSlider({value: 0, min: -3, max: 3, step: 1});
 const optionSelect = new IoOptionSelect({
   value: 0,
-  option: new MenuOption({options: [
+  model: new Menu({options: [
     {id: 'Zero', value: 0},
     {id: 'One', value: 1},
     {id: 'Two', value: 2},
@@ -103,7 +101,7 @@ document.body.appendChild(slider);
 document.body.appendChild(optionSelect);
 ```
 
-These are just a few examples. There is an extensive library of nodes and elements to choose from.
+These are just a few examples. There is an extensive library of objects and elements to choose from.
 
 ## Virtual DOM
 
@@ -112,9 +110,9 @@ Just like most modern frameworks, Io-Gui uses a virtual DOM to efficiently updat
 Here, we can replicate the previous example using the `render()` function and virtual DOM constructors inside a custom element.
 
 ```typescript
-import { ReactiveElement, Register, Property, span } from 'io-core'
-import { ioSlider } from 'io-sliders'
-import { ioOptionSelect, MenuOption } from 'io-menus'
+import { ReactiveElement, Register, Property, span } from '@io-gui/core'
+import { ioSlider } from '@io-gui/sliders'
+import { ioOptionSelect, Menu } from '@io-gui/menus'
 
 class MyElement extends ReactiveElement {
 
@@ -130,13 +128,13 @@ class MyElement extends ReactiveElement {
   @Property({type: Number, value: 0})
   declare numberValue: number
 
-  @Property({type: MenuOption, value: new MenuOption({options: [
+  @Property({type: Menu, value: new Menu({options: [
     {id: 'Zero', value: 0},
     {id: 'One', value: 1},
     {id: 'Two', value: 2},
     {id: 'Three', value: 3},
   ]})})
-  declare menuOption: MenuOption
+  declare menu: Menu
 
   ready() {
     this.mutated()
@@ -152,7 +150,7 @@ class MyElement extends ReactiveElement {
       ioSlider({value: this.numberValue, min: -3, max: 3, step: 1, '@value-input': this.onValueInput}),
       ioOptionSelect({
         value: this.numberValue,
-        option: this.menuOption,
+        model: this.menu,
         '@value-input': this.onValueInput,
       })
     ])
@@ -170,7 +168,7 @@ In the example above, we also introduced event listeners to update value on user
 ```typescript
 ioOptionSelect({
   value: this.bind('numberValue'),
-  option: this.menuOption,
+  model: this.menu,
 })
 ```
 

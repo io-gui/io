@@ -1,6 +1,6 @@
 {
   "name": "@io-gui/layout",
-  "version": "2.0.0-alpha.4",
+  "version": "2.0.0-alpha.5",
   "description": "Io-layout, a set of layout elements for Io-Gui.",
   "sideEffects": [
     "**/elements/**",
@@ -34,7 +34,9 @@
   "files": [
     "/dist/",
     "/LICENSE",
-    "/README.md"
+    "/README.md",
+    "/CONTEXT.md",
+    "/skills/"
   ],
   "exports": {
     ".": {
@@ -52,11 +54,11 @@
     "@io-gui/navigation": "workspace:*"
   },
   "peerDependencies": {
-    "@io-gui/core": "^2.0.0-alpha.4",
-    "@io-gui/editors": "^2.0.0-alpha.4",
-    "@io-gui/inputs": "^2.0.0-alpha.4",
-    "@io-gui/icons": "^2.0.0-alpha.4",
-    "@io-gui/menus": "^2.0.0-alpha.4",
-    "@io-gui/navigation": "^2.0.0-alpha.4"
+    "@io-gui/core": "^2.0.0-alpha.5",
+    "@io-gui/editors": "^2.0.0-alpha.5",
+    "@io-gui/inputs": "^2.0.0-alpha.5",
+    "@io-gui/icons": "^2.0.0-alpha.5",
+    "@io-gui/menus": "^2.0.0-alpha.5",
+    "@io-gui/navigation": "^2.0.0-alpha.5"
   }
 }
