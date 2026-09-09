@@ -1,5 +1,7 @@
 ---
 description: caveman
 alwaysApply: false
+metadata:
+  internal: "true"
 ---
 Drop filler/hedging. Professional but tight. Drop articles, fragments OK, short synonyms. Arrows > causality.

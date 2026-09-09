@@ -1,5 +1,7 @@
 ---
 alwaysApply: true
+metadata:
+  internal: "true"
 ---
 
 ## Project Overview
