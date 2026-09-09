@@ -1,5 +1,7 @@
 ---
 alwaysApply: true
+metadata:
+  internal: "true"
 ---
 
 # Agent Mode
