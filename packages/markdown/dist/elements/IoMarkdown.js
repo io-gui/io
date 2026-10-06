@@ -49,6 +49,18 @@ purify.addHook('uponSanitizeElement', (node, event) => {
         return;
     element.parentNode?.removeChild(element);
 });
+const MARKDOWN_EXTENSIONS = ['.md', '.markdown', '.mdown', '.mkd', '.mkdn', '.txt'];
+function isMarkdownSrc(src) {
+    if (!src)
+        return false;
+    try {
+        const pathname = new URL(src, document.baseURI).pathname.toLowerCase();
+        return MARKDOWN_EXTENSIONS.some(extension => pathname.endsWith(extension));
+    }
+    catch {
+        return false;
+    }
+}
 function strip(innerHTML, strip) {
     for (let i = 0; i < strip.length; i++) {
         innerHTML = innerHTML.replace(new RegExp(strip[i], 'g'), '');
@@ -206,10 +218,21 @@ let IoMarkdown = class IoMarkdown extends ReactiveElement {
         const src = this.src;
         const sanitize = this.sanitize;
         const stripList = this.strip;
-        this.loading = true;
         this.innerHTML = '';
+        if (!isMarkdownSrc(src)) {
+            debug: if (src) {
+                console.warn(`IoMarkdown: "${src}" is not a markdown file (${MARKDOWN_EXTENSIONS.join(', ')}).`);
+            }
+            this.loading = false;
+            return;
+        }
+        this.loading = true;
         void fetch(src)
-            .then(response => response.text())
+            .then(response => {
+            if (!response.ok)
+                throw new Error(`IoMarkdown: Failed to fetch "${src}" (${response.status})`);
+            return response.text();
+        })
             .then(markdown => {
             if (this._disposed || this.src !== src)
                 return;

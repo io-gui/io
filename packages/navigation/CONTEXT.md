@@ -15,7 +15,7 @@ A VDOM descriptor in the navigator/selector elements list whose `id` matches a M
 _Avoid_: page, view, route target
 
 **Dynamic import**:
-An optional `import` path on a content element descriptor that lazy-loads the module before first render.
+An optional `import` path on a content element descriptor (next to `tag` and `props`, not inside `props`) that lazy-loads the module before first render. Typed as `SelectorElement`.
 _Avoid_: lazy route, code split entry
 
 ### Caching & anchors

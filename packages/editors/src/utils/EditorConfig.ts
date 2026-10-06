@@ -147,7 +147,6 @@ const CONFIGS: EditorConfig = new Map<AnyConstructor, PropertyConfig[]>([
   ]],
   [Theme, [
     [Number, ioNumberSlider({step: 1, min: 0, max: 20})],
-    ['themeID', ioOptionSelect({model: new Menu({options: ['light','dark']})})],
     ['spacing2', ioField({disabled: true})],
     ['spacing3', ioField({disabled: true})],
     ['spacing4', ioField({disabled: true})],

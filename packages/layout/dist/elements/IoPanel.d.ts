@@ -1,13 +1,14 @@
-import { ReactiveElement, VDOMElement, ReactiveElementProps } from '@io-gui/core';
+import { ReactiveElement, ReactiveElementProps } from '@io-gui/core';
+import { SelectorElement } from '@io-gui/navigation';
 import { Panel } from '../models/Panel.js';
 export type IoPanelData = ReactiveElementProps & {
     model: Panel;
-    elements: VDOMElement[];
+    elements: SelectorElement[];
 };
 export declare class IoPanel extends ReactiveElement {
     static get Style(): string;
     model: Panel;
-    elements: VDOMElement[];
+    elements: SelectorElement[];
     static get Listeners(): {
         'io-tab-action': string;
         'io-add-tab-clicked': string;
@@ -20,4 +21,4 @@ export declare class IoPanel extends ReactiveElement {
     modelMutated(): void;
     mutated(): void;
 }
-export declare const ioPanel: (arg0: IoPanelData) => VDOMElement;
+export declare const ioPanel: (arg0: IoPanelData) => import("@io-gui/core").VDOMElement;

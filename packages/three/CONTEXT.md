@@ -5,7 +5,7 @@ The `@io-gui/three` context: WebGPU Three.js viewports wired into Io-Gui's react
 ## Language
 
 **ThreeApplet**:
-ReactiveObject base for a Three.js application: owns the `Scene`, tone-mapping knobs, optional editor `uiConfig`/`uiGroups`, and lifecycle hooks (`onRendererInitialized`, `onResized`, `onAnimate`).
+ReactiveObject base for a Three.js application: owns the `Scene`, tone-mapping knobs, the `isPlaying` flag, and lifecycle hooks (`onRendererInitialized`, `onResized`, `onAnimate`).
 _Avoid_: scene controller, app, demo host
 
 **CanvasTarget**:
@@ -13,11 +13,11 @@ Per-viewport render surface the shared renderer draws into. Each `IoThreeViewpor
 _Avoid_: canvas, framebuffer (as the Io-Gui term)
 
 **Shared renderer**:
-The single default `WebGPURenderer` reused across viewports. Renderer state is reset per viewport draw; a custom renderer may be passed in.
+The single default `WebGPURenderer` reused across viewports. Renderer state is reset per viewport draw; a custom renderer may be passed in. Viewports never dispose the renderer.
 _Avoid_: global GL context, IoGl (core 2D shader quad)
 
 **Playing**:
-Whether the viewport runs the animation loop and calls `ThreeApplet.onAnimate`. Off when false; non-visible viewports also skip draws via IntersectionObserver.
+`ThreeApplet.isPlaying`: whether the applet joins the global animation loop and gets `onAnimate(delta, time)` each frame. Independently, non-visible viewports skip draws via IntersectionObserver.
 _Avoid_: animating, running, live
 
 **ViewCameras**:

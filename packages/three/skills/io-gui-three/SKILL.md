@@ -11,7 +11,7 @@ description: >-
 ## Defaults
 
 - Import from `@io-gui/three` (pulls peer `three` / webgpu).
-- Subclass **`ThreeApplet`** for scene + lifecycle; mount with **`IoThreeViewport({ applet, playing })`**.
+- Subclass **`ThreeApplet`** for scene + lifecycle; mount with **`IoThreeViewport({ applet })`**; set `applet.isPlaying` to animate.
 - Prefer package math editors (`IoVector3`, …) for Three math types in inspectors.
 
 ## Gotchas
@@ -19,7 +19,7 @@ description: >-
 - **Importing the package registers editor configs** for Three.js classes (side-effect). Expected.
 - Default **shared `WebGPURenderer`** across viewports; each viewport has its own **CanvasTarget**. Renderer state reset per draw.
 - Renderer init is **async** — use `onRendererInitialized` / wait for `renderer.initialized` before GPU work.
-- `playing: false` or non-visible viewport ⇒ no animate/draw.
+- `isPlaying: false` on the applet ⇒ no `onAnimate`; non-visible viewport ⇒ no draw.
 - **Not core `IoGl`.** IoGl is 2D shader quads for sliders/colors; this package is full Three WebGPU.
 - `ToolBase` registers on viewports and supplies Pointer3D rays — subclass for tools; don't re-wire pointer→ray ad hoc.
 

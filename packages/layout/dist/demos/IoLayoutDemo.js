@@ -94,14 +94,14 @@ let IoLayoutDemo = class IoLayoutDemo extends ReactiveElement {
         this.render([
             ioLayout({
                 elements: [
-                    { tag: 'io-inputs-demo', props: { id: 'Inputs', icon: 'io:inputs', import: './packages/inputs/dist/demos/IoInputsDemo.js' } },
-                    { tag: 'io-icons-demo', props: { id: 'Icons', icon: 'io:icons', import: './packages/icons/dist/demos/IoIconsDemo.js' } },
-                    { tag: 'io-sliders-demo', props: { id: 'Sliders', icon: 'io:sliders', import: './packages/sliders/dist/demos/IoSlidersDemo.js' } },
-                    { tag: 'io-colors-demo', props: { id: 'Colors', icon: 'io:colors', import: './packages/colors/dist/demos/IoColorsDemo.js' } },
-                    { tag: 'io-editors-demo', props: { id: 'Editors', icon: 'io:editors', import: './packages/editors/dist/demos/IoEditorsDemo.js' } },
-                    { tag: 'io-menus-demo', props: { id: 'Menus', icon: 'io:menus', import: './packages/menus/dist/demos/IoMenusDemo.js' } },
-                    { tag: 'io-navigation-demo', props: { id: 'Navigation', icon: 'io:navigation', import: './packages/navigation/dist/demos/IoNavigationDemo.js' } },
-                    { tag: 'io-theme-editor', props: { id: 'Theme Editor', icon: 'io:theme', import: './packages/core/dist/demos/IoThemeEditor.js' } },
+                    { tag: 'io-inputs-demo', props: { id: 'Inputs', icon: 'io:inputs' }, import: './packages/inputs/dist/demos/IoInputsDemo.js' },
+                    { tag: 'io-icons-demo', props: { id: 'Icons', icon: 'io:icons' }, import: './packages/icons/dist/demos/IoIconsDemo.js' },
+                    { tag: 'io-sliders-demo', props: { id: 'Sliders', icon: 'io:sliders' }, import: './packages/sliders/dist/demos/IoSlidersDemo.js' },
+                    { tag: 'io-colors-demo', props: { id: 'Colors', icon: 'io:colors' }, import: './packages/colors/dist/demos/IoColorsDemo.js' },
+                    { tag: 'io-editors-demo', props: { id: 'Editors', icon: 'io:editors' }, import: './packages/editors/dist/demos/IoEditorsDemo.js' },
+                    { tag: 'io-menus-demo', props: { id: 'Menus', icon: 'io:menus' }, import: './packages/menus/dist/demos/IoMenusDemo.js' },
+                    { tag: 'io-navigation-demo', props: { id: 'Navigation', icon: 'io:navigation' }, import: './packages/navigation/dist/demos/IoNavigationDemo.js' },
+                    { tag: 'io-theme-editor', props: { id: 'Theme Editor', icon: 'io:theme' }, import: './packages/core/dist/demos/IoThemeEditor.js' },
                     ioMarkdown({ id: 'Getting Started', icon: 'io:book', strip: ['https://iogui.dev/io/'], sanitize: false, src: './docs/quick-start.md' }),
                     ioMarkdown({ id: 'Deep Dive', icon: 'io:book', strip: ['https://iogui.dev/io/'], sanitize: false, src: './docs/deep-dive.md' }),
                     div({ id: 'Doc 1', icon: 'io:book' }, [

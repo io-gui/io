@@ -80,10 +80,11 @@ export declare class ReactiveElement extends HTMLElement {
     disconnectedCallback(): void;
     /** Renders VDOM children into this element or optional host. */
     render(vDOMElements: Array<VDOMChild>, host?: HTMLElement | ReactiveElement, skipDispose?: boolean): void;
-    /** Reconciles VDOM tree into host; keyed when children specify `key`. */
+    /** Reconciles VDOM tree into host by position and tag name. */
     traverse(vChildren: VDOMElement[], host: HTMLElement | ReactiveElement, skipDispose?: boolean): void;
     /**
      * Reconciles host children with vDOM children by position and tag name.
+     * TODO: Keyed reconciliation using `key` props (`_vdomKey`) is future work.
      * @param {Array} vChildren - Array of VDOMElements elements.
      * @param {HTMLElement} host - Template target.
      * @param {boolean} [skipDispose] - Detach removed/replaced nodes without calling dispose (for DOM caching).

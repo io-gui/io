@@ -7,7 +7,7 @@
 
 # Architecture Decision Records
 
-./packages/<package_name>/adr/*.md # architecture decision records (currently only `packages/core/adr/`)
+./packages/<package_name>/docs/adr/*.md # architecture decision records (currently core, layout, menus)
 
 ## Cursor rules (`.cursor/rules/*.mdc`)
 

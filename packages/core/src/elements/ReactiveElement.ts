@@ -253,7 +253,7 @@ export class ReactiveElement extends HTMLElement {
     for (const id in this.$) delete this.$[id]
     this.traverse(vDOMElementsOnly, renderHost, skipDispose)
   }
-  /** Reconciles VDOM tree into host; keyed when children specify `key`. */
+  /** Reconciles VDOM tree into host by position and tag name. */
   traverse(vChildren: VDOMElement[], host: HTMLElement | ReactiveElement, skipDispose?: boolean) {
     this._reconcileChildren(vChildren, host, skipDispose)
     const childNodes = host.childNodes
@@ -284,6 +284,7 @@ export class ReactiveElement extends HTMLElement {
   }
   /**
    * Reconciles host children with vDOM children by position and tag name.
+   * TODO: Keyed reconciliation using `key` props (`_vdomKey`) is future work.
    * @param {Array} vChildren - Array of VDOMElements elements.
    * @param {HTMLElement} host - Template target.
    * @param {boolean} [skipDispose] - Detach removed/replaced nodes without calling dispose (for DOM caching).

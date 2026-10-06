@@ -5,7 +5,7 @@ A lightweight (~25KB gzipped) core reactive library for Io-Gui framework.
 ## Core Classes
 
 ### ReactiveNode
-Union type of all graph participants: `ReactiveNode`.
+Union type of all graph participants: `ReactiveObject | ReactiveElement` (predicate: `isReactiveNode`).
 
 ### ReactiveObject
 Reactive `Object` base class for data models, state containers, and business logic.
@@ -75,7 +75,7 @@ Use `@Field` decorator or `static get Fields()` for values that should not parti
 
 ```typescript
 @Field(Object)
-declare $: Record<string, HTMLElement> // Common pattern for element refs
+declare $: Record<string, HTMLElement> // How ReactiveElement declares its id → element map
 ```
 
 ---
@@ -153,8 +153,8 @@ itemsMutated() {
 ```
 
 **Edge cases:**
-- `fill()` and `copyWithin()` are unsupported (log warning)
-- Setting `length` to extend array logs warning
+- All mutating methods, including `fill()` and `copyWithin()`, connect/disconnect items and dispatch one mutation
+- Setting `length` to extend the array (empty slots) logs a warning and is ignored
 - Item listeners are automatically managed on add/remove
 - **Shared references**: assigning the same `NodeArray` to another node's property is fine for rendering; only the constructor owner disposes it when that owner is disposed
 
@@ -238,7 +238,7 @@ static get Style() {
 **Rules:**
 - All selectors must start with `:host`
 - Styles are aggregated up prototype chain
-- Injected to document `<head>` at registration
+- Added as an adopted stylesheet (`document.adoptedStyleSheets`) at registration
 - Custom mixins via `--mixin-name: { ... }` and `@apply --mixin-name`
 
 ---
@@ -248,12 +248,12 @@ static get Style() {
 Global CSS variables manager. Properties map to `--io_propertyName` variables:
 
 ```typescript
-ThemeSingleton.themeID = 'dark'
+$ThemeID.value = 'dark' // switch theme ('light' | 'dark' built in)
 ThemeSingleton.spacing = 4
 ThemeSingleton.bgColor = new Color(0.2, 0.2, 0.2, 1)
 ```
 
-Themes persist to localStorage. Register custom themes with `registerTheme(id, vars)`.
+`$ThemeID` is a `Storage` binding (`storage: 'local'`), so the selected theme ID persists when storage is permitted; it defaults to the OS color scheme. Built-in themes live in `THEMES`; add a custom theme by adding a `ThemeJSON` entry there and selecting its ID. Runtime edits to `ThemeSingleton` are not persisted.
 
 ---
 

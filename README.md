@@ -33,7 +33,7 @@ git clone https://github.com/io-gui/io.git && cd io
 pnpm i && pnpm dev
 ```
 
-This will install dev dependencies and start the Vite dev server with TypeScript watch mode.
+This will install dev dependencies and start the Vite dev server. Run `pnpm build:watch` alongside it if you want TypeScript watch mode.
 
 To learn more Io-Gui development, please read [contributing guide](https://github.com/io-gui/io/blob/main/.github/CONTRIBUTING.md) and [code of conduct](https://github.com/io-gui/io/blob/main/.github/CODE_OF_CONDUCT.md), browse and submit [issues](https://github.com/io-gui/io/issues).
 

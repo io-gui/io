@@ -30,6 +30,7 @@ type IoFieldProps = {
   selected?: boolean
   disabled?: boolean
   appearance?: 'neutral' | 'inset' | 'outset'
+  pattern?: string
 }
 ```
 
