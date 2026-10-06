@@ -173,10 +173,13 @@ let IoSelector = class IoSelector extends ReactiveElement {
         else {
             this.loading = true;
             this._preaching = false;
-            void importModule(importPath).then(() => {
+            importModule(importPath).then(() => {
                 this.loading = false;
                 this.debounce(this.renderDebounced, vElement);
                 this.debounce(this.startPreache);
+            }).catch(() => {
+                this.loading = false;
+                this.render([span(`Failed to import "${importPath}"!`)], this, cache);
             });
         }
     }
@@ -221,14 +224,16 @@ let IoSelector = class IoSelector extends ReactiveElement {
                     return;
                 }
                 else {
-                    void importModule(vElement.import).then(() => {
+                    importModule(vElement.import).then(() => {
                         if (!this._preaching)
                             return;
                         this.render([vElement], dummyElement, true);
                         this._caches[id] = dummyElement.childNodes[0];
                         dummyElement.removeChild(dummyElement.childNodes[0]);
                         this.debounce(this.preacheNext);
-                        delete vElement.import;
+                    }).catch(() => {
+                        // Stop preaching; otherwise the failed entry would be retried forever.
+                        this._preaching = false;
                     });
                     return;
                 }
