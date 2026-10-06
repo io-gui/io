@@ -12,10 +12,9 @@ Where to find context, in reading order:
 
 [Repository](https://github.com/io-gui/io/)
 
-2. `CONTEXT.md` — how the modeled contexts (Core, Layout, Menus) relate to each other.
 1. `packages/core/CONTEXT.md` — the pinned vocabulary of the reactive core (change vs. mutation, graph, Property vs. Field, Binding, Register). Read this first; the terms are used precisely everywhere else.
+2. `CONTEXT.md` — how the modeled contexts relate to each other.
 3. `docs/quick-start.md` then `docs/deep-dive.md` — usage and architecture.
-4. `packages/**/docs/adr/` — records of the reasoning behind architectural design decisions.
 
 ## Docs
 
@@ -25,13 +24,6 @@ Where to find context, in reading order:
 - [Context Map](CONTEXT.md): index of modeled contexts and the dependencies between them
 - [Layout Context](packages/layout/CONTEXT.md): vocabulary of the layout system (Split/Panel/Tab models and their views)
 - [Menus Context](packages/menus/CONTEXT.md): vocabulary of the menu system (Menu/Option models, dropdowns, menu bars, trees)
-
-## Architecture Decisions
-
-- [ReactiveNode is the graph union](docs/adr/0001-reactivenode-is-the-graph-union.md)
-- [mutated() catch-all; nested mutations do not bubble](docs/adr/0002-mutated-catch-all-and-non-bubbling-nested-mutations.md)
-- [Property is reactive, Field is plain](docs/adr/0003-property-is-reactive-field-is-plain.md)
-- [Graph-attaching factories return Bindings](docs/adr/0004-graph-attaching-factories-return-bindings.md)
 
 ## Packages
 
