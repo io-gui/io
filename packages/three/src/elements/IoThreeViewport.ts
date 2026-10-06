@@ -73,13 +73,13 @@ export class IoThreeViewport extends ReactiveElement {
   @Field(0)
   declare tabIndex: number
 
-  private renderTarget: CanvasTarget | undefined
+  public renderTarget: CanvasTarget | undefined
 
-  private isWebGPUBackend() {
+  public isWebGPUBackend() {
     return (this.renderer.backend as { isWebGPUBackend?: boolean }).isWebGPUBackend === true
   }
 
-  private attachSurface() {
+  public attachSurface() {
     if (this.isWebGPUBackend()) {
       if (!this.renderTarget) {
         this.renderTarget = new CanvasTarget(document.createElement('canvas'))
