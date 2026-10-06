@@ -20,6 +20,7 @@ description: >-
 - Reuse menus vocabulary for Menu/Option/selectedID — do not invent a parallel routing model.
 - `shallow` uses immediate scope selection (`getSelectedIDImmediate()`); `deep` uses deepest `selectedID`.
 - Cache keys are element ids — **colliding ids** across templates reuse the wrong cached instance.
+- Lazy loading: put `import` on the entry next to `tag`/`props` (`{ tag, props, import }`), **not inside `props`** — it is read by the selector only (`SelectorElement`).
 - Proactive caching runs on idle frames; many dynamic `import`s warm slowly.
 - Anchor sync targets `[data-heading]` (markdown package stamps these). 120ms debounce breaks scroll↔anchor loops.
 - **`IoNavigatorDrawer` ≠ layout Drawer.**

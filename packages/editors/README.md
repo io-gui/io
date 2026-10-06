@@ -26,38 +26,42 @@ EditorGroups (property grouping)
 
 ### EditorConfig
 
-Determines which widget to use for each property. Configuration is matched by priority:
-
-1. **Exact property name** - `{ name: 'color', tag: 'io-color-picker' }`
-2. **Value type** - `{ type: Number, tag: 'io-number' }`
-3. **RegExp pattern** - `{ name: /^on[A-Z]/, tag: 'io-button' }`
+Determines which widget to use for each property. A `PropertyConfig` is a tuple of a property identifier and a prebuilt vDOM widget:
 
 ```typescript
-type PropertyConfig = {
-  name?: string | RegExp      // Property name or pattern
-  type?: AnyConstructor       // Value constructor
-  tag?: string                // Widget element tag
-  props?: Record<string, any> // Props to pass to widget
-}
+type PropertyIdentifier = AnyConstructor | string | RegExp | null | undefined
+type PropertyConfig = [PropertyIdentifier, VDOMElement]
 ```
 
-**Built-in defaults:**
-| Type | Widget |
+An identifier matches a property when it is:
+- a **constructor** and the value is an instance of it (or has it as its `constructor`)
+- a **string** equal to the property name
+- a **RegExp** that tests true against the property name
+- `null` / `undefined` and the value is `null` / `undefined`
+
+Configs are collected from every registered constructor the object is an instance of (in registration order), followed by the element's `config` prop. Every matching entry is applied in that order and **the last match wins**. Re-registering an existing identifier replaces its widget but keeps its position in the order.
+
+**Built-in defaults (for `Object`):**
+| Identifier | Widget |
 |------|--------|
-| `Number` | `io-number` |
-| `String` | `io-string` |
-| `Boolean` | `io-boolean` |
-| `Object` | `io-object` |
-| `Array` | `io-object` |
-| `Function` | `io-button` |
+| `String` | `ioString()` |
+| `Number` | `ioNumber({step: 0.01})` |
+| `Boolean` | `ioSwitch()` |
+| `Object` (incl. arrays) | `ioObject()` |
+| `null` / `undefined` | `ioField({disabled: true})` |
+| `Function` | `ioButton()` |
+
+Read-only (getter-only or non-writable) prototype properties of configured constructors are mapped to a disabled `ioField`.
 
 **Custom registration:**
 ```typescript
 import { registerEditorConfig } from '@io-gui/editors'
+import { ioColorRgba } from '@io-gui/colors'
+import { ioVector3 } from '@io-gui/three'
 
 registerEditorConfig(MyClass, [
-  { name: 'position', tag: 'io-vector3', props: { labels: ['x', 'y', 'z'] } },
-  { name: /Color$/, tag: 'io-color-picker' },
+  ['position', ioVector3()],
+  [/Color$/, ioColorRgba()],
 ])
 ```
 
@@ -95,18 +99,19 @@ Full object inspector with breadcrumb navigation.
 
 ```typescript
 type IoInspectorProps = {
-  value: object               // Object to inspect
+  value?: object | any[]      // Root object to inspect
+  selected?: object | any[]   // Currently inspected (drilled-into) object; bindable
+  search?: string             // Property filter; bindable
   config?: PropertyConfig[]   // Widget overrides
   groups?: PropertyGroups     // Grouping overrides
-  labeled?: boolean           // Show property labels
-  labelWidth?: string         // Label column width
+  widget?: VDOMElement        // Override auto-detected widget
 }
 ```
 
 **Key behaviors:**
 - Breadcrumb trail for nested object navigation
 - Click object property to drill into it
-- Back button returns to parent
+- Breadcrumb back button returns to the parent object
 
 ### IoPropertyEditor
 
@@ -115,7 +120,8 @@ Renders editable properties for an object.
 ```typescript
 type IoPropertyEditorProps = {
   value: object | any[]
-  properties?: string[]       // Specific properties (omit for auto)
+  properties?: string[] | null // Specific properties (omit for auto)
+  label?: string
   config?: PropertyConfig[]
   groups?: PropertyGroups
   labeled?: boolean           // Show labels (default: true)
@@ -136,13 +142,16 @@ Collapsible property editor with persistent expand state.
 
 ```typescript
 type IoObjectProps = {
-  value: object
+  value: object | any[]
   label?: string              // Header label
+  labeled?: boolean           // Show property labels
+  labelWidth?: string         // Label column width
   properties?: string[]       // Specific properties
-  expanded?: boolean          // Expand state
+  expanded?: boolean          // Expand state; bindable
   persistentExpand?: boolean  // Remember expand state
   config?: PropertyConfig[]
   groups?: PropertyGroups
+  widget?: VDOMElement | null // Override auto-detected widget
 }
 ```
 
@@ -157,7 +166,9 @@ Navigation trail for nested object inspection.
 
 ```typescript
 type IoBreadcrumbsProps = {
-  path?: string               // Dot-separated path
+  value?: object              // Root object
+  selected?: object           // Currently selected object; bindable
+  search?: string             // Search string; bindable
 }
 ```
 

@@ -163,8 +163,10 @@ type IoMenuProps = {
   horizontal?: boolean     // Horizontal layout (menu bar)
   expanded?: boolean
   searchable?: boolean
+  search?: string          // Search query; bindable
   depth?: number
   direction?: NudgeDirection
+  widget?: VDOMElement | null // Extra element rendered in the menu
 }
 ```
 
@@ -174,9 +176,11 @@ Vertical tree menu with inline collapsible branches.
 
 ```typescript
 type IoMenuTreeProps = {
-  model?: Menu
+  model?: Menu | Option
   searchable?: boolean
+  search?: string          // Search query; bindable
   depth?: number
+  widget?: VDOMElement | null // Extra element rendered in the tree
 }
 ```
 

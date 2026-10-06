@@ -23,7 +23,7 @@ IoLayout (root view)
 |--------------|---------|---------|
 | `Layout` | `IoLayout` | Root; tree-wide ops (`moveTab`), root normalization |
 | `Split` | `IoSplit` | Arranges children horizontally or vertically; `normalize()` |
-| `Panel` | `IoPanel` | Tab container; `addTab`, `removeTab`, `moveTab`, selection |
+| `Panel` | `IoPanel` | Tab container; `addTab`, `removeTab`, `moveTab`, `selectByIndex` |
 | `Tab` | `IoTab` | Tab handle with id, label, icon |
 
 `IoLayout.elements` is the application-provided **elements pool** (VDOM descriptors). It is not persisted — the host supplies it when mounting. The add-tab menu is derived from pool entries.
@@ -50,14 +50,14 @@ type TabData = {
 type PanelData = {
   type: 'panel'
   tabs: Array<TabData>
-  size?: string     // 'auto' | 'Npx' | 'N%', defaults to 'auto'
-  minSize?: string  // 'Npx' | 'N%', defaults to '240px'
+  size?: string     // 'auto' | 'Npx' | 'N%' | 'Npx auto' | 'N% auto', defaults to 'auto'
 }
 ```
 
 - `applyJSON` auto-selects the first tab if none are selected
-- `getSelected()` / `setSelected(id)` manage tab selection
+- `selectedID` (getter) / `selectByIndex(index)` manage tab selection; selecting dispatches `io-panel-tab-selected`
 - `addTab(tab, index?)`, `removeTab(tab)`, `moveTab(tab, index)` — structural tab ops (dedupe id within panel, reselect on remove)
+- There is no `minSize`; the collapse budget is derived from `size` (see CONTEXT.md, "Size budget")
 
 ### Split
 
@@ -67,7 +67,6 @@ type SplitData = {
   children: Array<SplitData | PanelData>
   orientation?: 'horizontal' | 'vertical'  // defaults to 'horizontal'
   size?: string
-  minSize?: string
 }
 ```
 
@@ -83,8 +82,8 @@ type LayoutData = {
 ```
 
 - Single reactive `child: Split | Panel`
-- `moveTab(tab, targetPanel, direction, sourcePanel?)` — tree-wide tab moves (center merge or edge split)
-- `findPanelWithTab(tab)` — locate the panel holding a tab (internal walk from `child`)
+- `moveTab(tab, targetPanel, direction, tabIndex)` — tree-wide tab moves; `direction` is a `SplitDirection` (`'center'` merges at `tabIndex`, `'left' | 'right' | 'top' | 'bottom'` split the target panel)
+- `findPanelWithTab(node, tab)` — locate the panel holding a tab (walk from `node`, usually `child`)
 - `normalize()` — root invariants: promote lone child after split consolidation; keep terminal empty panel
 
 ## Elements
@@ -102,6 +101,8 @@ ioLayout({
 
 Handles `io-add-tab-request` from panels and shows an overlay menu built from `elements`.
 
+Also handles `io-tab-drag` from tabs: shows its own `IoTabDragGhost` in the overlay, resolves the drop target (tab index or panel edge) under the pointer, and calls `layout.moveTab()` on drop.
+
 ### IoSplit
 
 Renders a Split model as a flex container with children and dividers.
@@ -115,11 +116,11 @@ Renders `IoTabs` header and `IoSelector` content area.
 
 Tab keyboard actions arrive as `io-tab-action` events; `IoPanel.onTabAction` delegates to `Panel` methods:
 
-- `Select` → `panel.setSelected`
-- `Backspace` → `panel.removeTab`
-- `ArrowLeft` / `ArrowRight` → `panel.moveTab`
+- `select` → `panel.selectByIndex`
+- `delete` → `panel.removeTab`
+- `move-left` / `move-right` / `move-start` / `move-end` → `panel.moveTab`
 
-`focusTab(id)` focuses the matching tab element after selection or reorder.
+After selection or reorder (`io-panel-tab-selected`), the panel focuses the selected tab element (debounced).
 
 ### IoTabs
 
@@ -129,9 +130,9 @@ Renders `IoTab[]` plus an add button that dispatches `io-add-tab-clicked`.
 
 Individual tab element extending `IoField`.
 
-- Click dispatches `io-tab-action` with action `Select`
-- Shift+`Backspace` / Shift+arrow keys dispatch `io-tab-action` for remove and within-panel reorder
-- Cross-panel drag-and-drop is not wired in the current source
+- Click dispatches `io-tab-action` with action `select`; the close icon dispatches `delete`
+- Shift+`Backspace` / Shift+`ArrowLeft` / Shift+`ArrowRight` / Shift+`Home` / Shift+`End` dispatch `delete`, `move-left`, `move-right`, `move-start`, `move-end`
+- Dragging past a small threshold dispatches `io-tab-drag` (`start` / `move` / `end`) for cross-panel drag-and-drop
 
 ### IoDivider
 
@@ -144,13 +145,16 @@ Draggable handle between split children. Dispatches:
 
 ### IoDrawer / IoDrawerHandle
 
-Collapsed split children shown as slide-out drawers when the split is too small for all children at minimum size.
+Collapsed split children shown as slide-out drawers when the split is too small for all children's size budgets. `IoDrawerHandle` dispatches `io-drawer-toggle`.
 
 ## Event Reference
 
 | Event | Dispatched By | Payload | Purpose |
 |-------|---------------|---------|---------|
-| `io-tab-action` | IoTab | `{ tab, action }` | Select, remove, reorder tab |
+| `io-tab-action` | IoTab | `{ model, action }` | Select, remove, reorder tab |
+| `io-tab-drag` | IoTab | `{ model, phase, x, y }` | Cross-panel tab drag (`start` / `move` / `end`) |
+| `io-panel-tab-selected` | Panel (model) | `{ index }` | Focus selected tab |
+| `io-drawer-toggle` | IoDrawerHandle | — | Expand/collapse a drawer |
 | `io-add-tab-clicked` | IoTabs | — | Open add-tab flow |
 | `io-add-tab-request` | IoPanel | `{ model }` | Show add-tab menu for panel |
 | `io-divider-move` | IoDivider | `{ clientX, clientY, element }` | Resize in progress |
@@ -184,7 +188,7 @@ ioLayout({
 })
 ```
 
-**Persisted:** layout structure, orientations, size/minSize values, tab id/label/icon/selected.
+**Persisted:** layout structure, orientations, size values, tab id/label/icon/selected.
 
 **Not persisted:** `IoLayout.elements`, transient UI state, focus, scroll positions.
 
@@ -216,6 +220,6 @@ Divider drag enforces `ThemeSingleton.fieldHeight * 4` minimum on adjacent sibli
 
 ### Known limitations
 
-- Cross-panel tab drag-and-drop is not implemented in source yet (`IoTab.test.pending.ts` holds the target tests)
+- Tabs cannot be dragged between different `IoLayout` instances
 - Shift+ArrowUp/Down reserved for future cross-panel keyboard moves
 - Auto-size redistribution when removing the middle auto-size panel from three panels needs work

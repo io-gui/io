@@ -1,4 +1,5 @@
 import { Register, Property, VDOMElement, ReactiveElement, ReactiveElementProps, WithBinding, ListenerDefinitions, IoOverlaySingleton as Overlay, ThemeSingleton } from '@io-gui/core'
+import { SelectorElement } from '@io-gui/navigation'
 import { Layout } from '../models/Layout.js'
 import { SplitDirection } from '../types/SplitDirection.js'
 import { Split } from '../models/Split.js'
@@ -14,7 +15,7 @@ import { resolveDropIndex, resolveSplitEdge } from '../utils/dropZone.js'
 
 export type IoLayoutData = ReactiveElementProps & {
   model: WithBinding<Layout>
-  elements: VDOMElement[]
+  elements: SelectorElement[]
 }
 
 @Register
@@ -37,7 +38,7 @@ export class IoLayout extends ReactiveElement {
   declare model: Layout
 
   @Property(Array)
-  declare elements: VDOMElement[]
+  declare elements: SelectorElement[]
 
   // TODO: Improve once Menu models have better (de)serialization
   @Property({type: IoMenu, init: null})

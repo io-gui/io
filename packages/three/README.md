@@ -14,8 +14,8 @@ IoThreeViewport (element)
 
 ThreeApplet (object)
 ├── scene: Scene
-├── toneMapping, toneMappingExposure
-└── onAnimate(delta), onResized(width, height)
+├── toneMapping, toneMappingExposure, isPlaying
+└── onAnimate(delta, time), onResized(width, height)
 
 EditorConfigs (configs/*)
 └── Property editors for Three.js classes
@@ -30,11 +30,12 @@ WebGPU-powered viewport element for rendering Three.js scenes.
 ```typescript
 type IoThreeViewportProps = {
   applet: ThreeApplet; // Application object
-  playing?: boolean; // Enable animation loop
+  overscan?: number; // Camera overscan factor (default 1.1)
   clearColor?: number; // Background color (hex)
   clearAlpha?: number; // Background alpha (0-1)
-  cameraSelect?: string; // Camera type: 'perspective' | 'orthographic'
+  cameraSelect?: string; // 'perspective' | 'top' | 'bottom' | 'left' | 'right' | 'front' | 'back' | 'scene' | 'scene:<cameraName>'
   renderer?: WebGPURenderer; // Custom renderer (optional)
+  tool?: ToolBase; // Active 3D pointer tool (optional)
 };
 ```
 
@@ -49,25 +50,26 @@ type IoThreeViewportProps = {
 **Usage:**
 
 ```typescript
-import { IoThreeViewport, ThreeApplet } from "@io-gui/three";
+import { Register } from "@io-gui/core";
+import { IoThreeViewport, ThreeApplet, ThreeAppletProps } from "@io-gui/three";
 import { Scene, Mesh, BoxGeometry, MeshBasicMaterial } from "three/webgpu";
 
+@Register
 class MyApplet extends ThreeApplet {
-  constructor() {
-    super();
+  constructor(args?: ThreeAppletProps) {
+    super(args);
     this.scene = new Scene();
     this.scene.add(
       new Mesh(new BoxGeometry(), new MeshBasicMaterial({ color: 0xff0000 })),
     );
   }
-  onAnimate(delta: number) {
+  onAnimate(delta: number, time: number) {
     // Animation logic
   }
 }
 
 const viewport = new IoThreeViewport({
-  applet: new MyApplet(),
-  playing: true,
+  applet: new MyApplet({ isPlaying: true }),
 });
 ```
 
@@ -82,8 +84,7 @@ type ThreeAppletProps = {
   scene?: Scene;
   toneMappingExposure?: number;
   toneMapping?: ToneMapping;
-  uiConfig?: PropertyConfig[];
-  uiGroups?: PropertyGroups;
+  isPlaying?: boolean; // Run the animation loop
 };
 ```
 
@@ -93,7 +94,7 @@ type ThreeAppletProps = {
 | --------------------------------- | ------------------------------------ |
 | `onRendererInitialized(renderer)` | Called when WebGPU renderer is ready |
 | `onResized(width, height)`        | Called on viewport resize            |
-| `onAnimate(delta)`                | Called each animation frame          |
+| `onAnimate(delta, time)`          | Called each frame while `isPlaying`  |
 
 ### ViewCameras
 
@@ -103,7 +104,7 @@ Manages viewport cameras with perspective and orthographic options.
 type ViewCamerasProps = {
   viewport: IoThreeViewport;
   applet: ThreeApplet;
-  cameraSelect: "perspective" | "orthographic";
+  cameraSelect: string; // see IoThreeViewport
 };
 ```
 
@@ -138,20 +139,19 @@ registerEditorGroups(MyCustomObject, {
 
 ## Animation Loop
 
-The shared renderer runs a global animation loop:
+A single global `requestAnimationFrame` loop drives all playing applets:
 
 ```typescript
-// Viewports opt-in to animation
-viewport.playing = true; // Adds to animation loop
-viewport.playing = false; // Removes from animation loop
+// Applets opt-in to animation
+applet.isPlaying = true; // Adds to animation loop
+applet.isPlaying = false; // Removes from animation loop
 ```
 
 **Loop behavior:**
 
-- Uses `renderer.setAnimationLoop()` for WebGPU sync
-- Calls `onAnimate()` only for playing viewports
+- Calls `onAnimate(delta, time)` only for playing applets (time from a three.js `Timer`)
+- After each frame the applet dispatches a bubbling `three-applet-needs-render` event; viewports showing it re-render (debounced)
 - Skips rendering for non-visible viewports (IntersectionObserver)
-- Provides `time` and `delta` to applets
 
 ## Edge Cases
 
@@ -169,7 +169,7 @@ The renderer initializes asynchronously. Viewports wait for `renderer.initialize
 
 ### Dispose Cleanup
 
-Disposing a viewport disposes its CanvasTarget and ViewCameras. The shared renderer is only disposed if a custom renderer was provided.
+Disposing a viewport disposes its CanvasTarget and ViewCameras and unregisters its tool. The renderer (shared or custom) is never disposed by the viewport.
 
 ## Packaging
 

@@ -166,7 +166,7 @@ let IoSelector = class IoSelector extends ReactiveElement {
             this.render([span(`Could not find elements with id: "${id}"!`)], this, cache);
             return;
         }
-        const importPath = vElement.props?.import;
+        const importPath = vElement.import;
         if (!importPath) {
             this.debounce(this.renderDebounced, vElement);
         }
@@ -213,7 +213,7 @@ let IoSelector = class IoSelector extends ReactiveElement {
             const props = vElement.props;
             const id = props.id;
             if (id && this._caches[id] === undefined) {
-                if (!props.import) {
+                if (!vElement.import) {
                     this.render([vElement], dummyElement, true);
                     this._caches[id] = dummyElement.childNodes[0];
                     dummyElement.removeChild(dummyElement.childNodes[0]);
@@ -221,14 +221,14 @@ let IoSelector = class IoSelector extends ReactiveElement {
                     return;
                 }
                 else {
-                    void importModule(props.import).then(() => {
+                    void importModule(vElement.import).then(() => {
                         if (!this._preaching)
                             return;
                         this.render([vElement], dummyElement, true);
                         this._caches[id] = dummyElement.childNodes[0];
                         dummyElement.removeChild(dummyElement.childNodes[0]);
                         this.debounce(this.preacheNext);
-                        delete props.import;
+                        delete vElement.import;
                     });
                     return;
                 }

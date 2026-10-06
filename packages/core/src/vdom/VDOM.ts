@@ -474,6 +474,7 @@ export const constructElement = function(vDOMElement: VDOMElement): ChildNode {
     element = document.createElement(vDOMElement.tag)
     applyNativeElementProps(element, props)
   }
+  // TODO: Keyed reconciliation (matching children by `_vdomKey`) is future work; children are currently reconciled by position.
   if (props.key !== undefined) {
     Object.defineProperty(element, '_vdomKey', {enumerable: false, configurable: true, value: props.key})
   }

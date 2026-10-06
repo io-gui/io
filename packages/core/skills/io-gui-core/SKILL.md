@@ -25,7 +25,7 @@ description: >-
 - `Binding` from `bind(node, 'prop')` or `this.bind('prop')` — assign onto another property to sync. Forward sync is a graph write inside a binding wave, not a plain assignment.
 - Elements have three relations: reactive graph (`_parents`/`_children`), DOM tree, VDOM children from `render()`. Cross-domain reactivity lives where graph ≠ DOM.
 - `ThemeSingleton` properties become `--io_*` CSS variables; theme colors use core **`Color`**, not colors-package ColorValue.
-- `Storage(key, backend)` returns a **Binding** to a singleton `StorageNode` — assign it onto properties for hash/local persistence.
+- `Storage({key, value, storage: 'local' | 'hash' | 'none'})` returns a **Binding** to a singleton `StorageNode` — assign it onto properties for hash/local persistence.
 - Arrow-function methods are not auto-bound as listeners.
 
 ## Read next

@@ -14,8 +14,8 @@ IoColorPicker
     └── IoColorSlider (a - alpha, optional)
 
 IoColorRgba
-├── IoColorSwatch
-└── IoColorSlider[] (r, g, b, a)
+├── IoNumber[] (r, g, b, a) with ladder
+└── IoColorPicker (swatch)
 ```
 
 ## Color Value Format
@@ -53,9 +53,7 @@ type IoColorPickerProps = {
 Displays a colored square with transparency checkerboard background.
 
 ```typescript
-type IoColorSwatchProps = {
-  value: ColorValue
-}
+type IoColorSwatchProps = IoColorBaseProps // { value?: ColorValue }
 ```
 
 ### IoColorSlider
@@ -63,9 +61,9 @@ type IoColorSwatchProps = {
 Generic color slider wrapper that renders channel-specific sliders.
 
 ```typescript
-type IoColorSliderProps = {
-  value: ColorValue
-  channel: 'r' | 'g' | 'b' | 'a' | 'h' | 's' | 'v' | 'l' | 'hs' | 'sv' | 'sl'
+type IoColorSliderProps = IoColorBaseProps & {
+  color?: [number, number, number, number] // Internal RGBA mirror passed to channel shaders
+  channel?: 'r' | 'g' | 'b' | 'a' | 'h' | 's' | 'v' | 'l' | 'hs' | 'sv' | 'sl'
   step?: number       // defaults to 0.01
   vertical?: boolean  // vertical orientation
 }
@@ -88,12 +86,10 @@ type IoColorSliderProps = {
 
 ### IoColorRgba
 
-Expanded color editor with swatch and individual RGBA sliders.
+Inline color editor: one `IoNumber` (with ladder) per RGBA channel, plus an `IoColorPicker` swatch that opens the panel.
 
 ```typescript
-type IoColorRgbaProps = {
-  value: ColorValue
-}
+type IoColorRgbaProps = IoColorBaseProps // { value?: ColorValue }
 ```
 
 ### IoColorPanelSingleton
@@ -137,7 +133,7 @@ IoColorBase.valueMutated() triggers re-render
 
 | Event | Dispatched By | Payload | Purpose |
 |-------|---------------|---------|---------|
-| `value-input` | IoColorSlider, IoColorPanel | `{ property: 'value', value }` | Color value changed |
+| `value-input` | IoColorSlider, IoColorRgba, IoColorPicker | `{ property: 'value', value }` | Color value changed |
 
 ## Edge Cases
 
