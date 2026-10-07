@@ -23,7 +23,7 @@ import {
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
-import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
+import { ThreeEditor, IoThreeExample, ThreeEditorProps } from '@io-gui/three'
 
 type FbxModel = Group & {
   animations: AnimationClip[]
@@ -52,7 +52,7 @@ const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
 })
 
 @Register
-export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
+export class AnimationRetargetingReadyplayerExample extends ThreeEditor {
 
   @Property({type: AnimationMixer, init: new Group()})
   declare public sourceMixer: AnimationMixer
@@ -60,27 +60,27 @@ export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
   @Property({type: AnimationMixer, init: new Group()})
   declare public targetMixer: AnimationMixer
 
-  constructor(args: ThreeAppletProps) {
+  constructor(args: ThreeEditorProps) {
     super(args)
 
     const horizontalEffect = screenUV.x.mix(color(0x13172b), color(0x311649))
     const lightEffect = screenUV.distance(vec2(0.5, 1.0)).oneMinus().mul(color(0x0c5d68))
-    this.scene.backgroundNode = horizontalEffect.add(lightEffect)
+    this.document.scene.backgroundNode = horizontalEffect.add(lightEffect)
 
     const light = new HemisphereLight(0x311649, 0x0c5d68, 10)
-    this.scene.add(light)
+    this.document.scene.add(light)
 
     const backLight = new DirectionalLight(0xffffff, 10)
     backLight.position.set(0, 5, -5)
-    this.scene.add(backLight)
+    this.document.scene.add(backLight)
 
     const keyLight = new DirectionalLight(0xfff9ea, 4)
     keyLight.position.set(3, 5, 3)
-    this.scene.add(keyLight)
+    this.document.scene.add(keyLight)
 
     const reflection = reflector()
     reflection.target.rotateX(-Math.PI / 2)
-    this.scene.add(reflection.target)
+    this.document.scene.add(reflection.target)
 
     const reflectionMask = positionWorld.xz.distance(0).mul(.1).clamp().oneMinus()
 
@@ -92,7 +92,7 @@ export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
     const floor = new Mesh(new BoxGeometry(50, .001, 50), floorMaterial)
     floor.receiveShadow = true
     floor.position.set(0, 0, 0)
-    this.scene.add(floor)
+    this.document.scene.add(floor)
 
     void this.loadModels()
   }
@@ -106,7 +106,7 @@ export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
     const models = new Group()
     models.add(sourceModel)
     models.add(targetModel.scene)
-    this.scene.add(models)
+    this.document.scene.add(models)
 
     sourceModel.position.x -= .9
     targetModel.scene.position.x += .9
@@ -175,7 +175,7 @@ export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
 export class IoAnimationRetargetingReadyplayerExample extends IoThreeExample {
 
   @Property({type: AnimationRetargetingReadyplayerExample, init: {isPlaying: true}})
-  declare applet: AnimationRetargetingReadyplayerExample
+  declare editor: AnimationRetargetingReadyplayerExample
 
 }
 

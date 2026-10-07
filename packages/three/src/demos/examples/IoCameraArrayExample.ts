@@ -10,17 +10,17 @@ import {
   Vector4
 } from 'three/webgpu'
 import { Register, Property } from '@io-gui/core'
-import { ThreeApplet, IoThreeViewport, ThreeAppletProps } from '@io-gui/three'
+import { ThreeEditor, IoThreeViewport, ThreeEditorProps } from '@io-gui/three'
 
 const AMOUNT = 6
 
 @Register
-export class CameraArrayExample extends ThreeApplet {
+export class CameraArrayExample extends ThreeEditor {
 
   public arrayCamera: ArrayCamera
   public mesh: Mesh
 
-  constructor(args: ThreeAppletProps) {
+  constructor(args: ThreeEditorProps) {
     super(args)
 
     const subCameras: PerspectiveCamera[] = []
@@ -34,18 +34,18 @@ export class CameraArrayExample extends ThreeApplet {
     this.arrayCamera = new ArrayCamera( subCameras )
     this.arrayCamera.name = 'arrayCamera'
     this.arrayCamera.position.z = 3
-    this.scene.add( this.arrayCamera )
+    this.document.scene.add( this.arrayCamera )
 
     // Lighting
 
-    this.scene.add( new AmbientLight( 0x999999 ) )
+    this.document.scene.add( new AmbientLight( 0x999999 ) )
 
     const light = new DirectionalLight( 0xffffff, 3 )
     light.position.set( 0.5, 0.5, 1 )
     light.castShadow = true
     light.shadow.bias = - 0.001
     light.shadow.camera.zoom = 4
-    this.scene.add( light )
+    this.document.scene.add( light )
 
     // Background plane
 
@@ -55,7 +55,7 @@ export class CameraArrayExample extends ThreeApplet {
     const background = new Mesh( geometryBackground, materialBackground )
     background.receiveShadow = true
     background.position.set( 0, 0, - 1 )
-    this.scene.add( background )
+    this.document.scene.add( background )
 
     // Cylinder
 
@@ -65,12 +65,7 @@ export class CameraArrayExample extends ThreeApplet {
     this.mesh = new Mesh( geometryCylinder, materialCylinder )
     this.mesh.castShadow = true
     this.mesh.receiveShadow = true
-    this.scene.add( this.mesh )
-  }
-
-  override onResized(width: number, height: number) {
-    super.onResized(width, height)
-    this.updateCameras(width, height)
+    this.document.scene.add( this.mesh )
   }
 
   updateCameras(width: number, height: number) {
@@ -115,7 +110,12 @@ export class CameraArrayExample extends ThreeApplet {
 export class IoCameraArrayExample extends IoThreeViewport {
 
   @Property({type: CameraArrayExample, init: {isPlaying: true}})
-  declare applet: CameraArrayExample
+  declare editor: CameraArrayExample
+
+  override onResized() {
+    super.onResized()
+    if (this.width && this.height) this.editor.updateCameras(this.width, this.height)
+  }
 
 }
 

@@ -1,12 +1,12 @@
 export type ChangeKind = 'transform' | 'geometry' | 'material' | 'structure' | 'selection' | 'settings' | 'time' | 'other'
 
 /**
- * A typed record of something that changed in a document or applet.
+ * A typed record of something that changed in a document.
  * Views decide whether a change concerns them (`listens(change)`) and get tagged for redraw.
  */
 export interface DocumentChange {
   kind: ChangeKind
-  /** The document (applet until the editor layer lands) the change belongs to. */
+  /** The document the change belongs to. */
   source: object
   /** Stable ids (`Object3D.uuid`) of the objects that changed, when known. */
   ids?: readonly string[]

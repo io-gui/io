@@ -1,14 +1,14 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { nextFrame } from '@io-gui/core'
-import { IoThreeViewport, ThreeApplet, ThreeDocument, ThreeEditor, ThreeView, ToolBase, renderScheduler, NavigationBehavior, navigationKeymaps } from '@io-gui/three'
-import { BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGPURenderer } from 'three/webgpu'
+import { IoThreeViewport, ThreeDocument, ThreeEditor, ThreeView, renderScheduler, NavigationBehavior, navigationKeymaps } from '@io-gui/three'
+import { BoxGeometry, Mesh, PerspectiveCamera, WebGPURenderer } from 'three/webgpu'
 
 describe('IoThreeViewport', () => {
-  let applet: ThreeApplet
+  let editor: ThreeEditor
   let container: HTMLElement
 
   beforeEach(() => {
-    applet = new ThreeApplet({ scene: new Scene() })
+    editor = new ThreeEditor()
     container = document.createElement('div')
     container.style.display = 'none'
     document.body.appendChild(container)
@@ -16,51 +16,27 @@ describe('IoThreeViewport', () => {
 
   afterEach(() => {
     container.remove()
-    applet.dispose()
+    editor.dispose()
   })
 
-  it('routes input through its router: tool first, then navigation', () => {
-    const tool = new ToolBase({ applet })
-    const viewport = new IoThreeViewport({ applet, tool })
+  it('routes input through its router: gizmos, navigation, then selection', () => {
+    const viewport = new IoThreeViewport({ editor })
     expect(viewport.navigationBehavior).toBeInstanceOf(NavigationBehavior)
-    expect(viewport.inputRouter.behaviors).toEqual([viewport.gizmoLayer, tool.behavior, viewport.navigationBehavior, viewport.selectBehavior])
+    expect(viewport.inputRouter.behaviors).toEqual([viewport.gizmoLayer, viewport.navigationBehavior, viewport.selectBehavior])
     viewport.keymap = navigationKeymaps.blender
     expect(viewport.navigationBehavior.keymap).toBe(navigationKeymaps.blender)
     viewport.dispose()
-    tool.dispose()
-  })
-
-  it('registers tool on assignment and unregisters previous tool', async () => {
-    const tool1 = new ToolBase({ applet })
-    const tool2 = new ToolBase({ applet })
-    const viewport = new IoThreeViewport({ applet, tool: tool1 })
-    container.appendChild(viewport as Node)
-    await nextFrame()
-
-    const unregisterSpy = vi.spyOn(tool1, 'unregisterViewport')
-    const registerSpy = vi.spyOn(tool2, 'registerViewport')
-
-    viewport.tool = tool2
-    await nextFrame()
-
-    expect(unregisterSpy).toHaveBeenCalledWith(viewport)
-    expect(registerSpy).toHaveBeenCalledWith(viewport)
-
-    tool2.unregisterViewport(viewport)
-    viewport.remove()
-    tool1.dispose()
-    tool2.dispose()
   })
 
   it('owns a default view, or shows a given one without owning it', () => {
-    const own = new IoThreeViewport({ applet })
+    const own = new IoThreeViewport({ editor })
     expect(own.view).toBeInstanceOf(ThreeView)
     const ownView = own.view
     own.dispose()
     expect(ownView._disposed).toBe(true)
 
     const view = new ThreeView()
-    const shared = new IoThreeViewport({ applet, view })
+    const shared = new IoThreeViewport({ editor, view })
     expect(shared.view).toBe(view)
     shared.dispose()
     expect(view._disposed).toBeFalsy()
@@ -70,8 +46,8 @@ describe('IoThreeViewport', () => {
   it('maps cameraSelect onto the view', () => {
     const sceneCamera = new PerspectiveCamera()
     sceneCamera.name = 'shot'
-    applet.scene.add(sceneCamera)
-    const viewport = new IoThreeViewport({ applet, cameraSelect: 'top' })
+    editor.document.scene.add(sceneCamera)
+    const viewport = new IoThreeViewport({ editor, cameraSelect: 'top' })
     expect(viewport.view.navigation.axisView).toBe('top')
     viewport.cameraSelect = 'scene:shot'
     expect(viewport.view.navigation.cameraSource).toBe(sceneCamera.uuid)
@@ -83,24 +59,24 @@ describe('IoThreeViewport', () => {
   })
 
   it('switches to a requested scene camera once it is added to the scene', () => {
-    const viewport = new IoThreeViewport({ applet, cameraSelect: 'scene' })
+    const viewport = new IoThreeViewport({ editor, cameraSelect: 'scene' })
     expect(viewport.view.navigation.cameraSource).toBe(null)
     const late = new PerspectiveCamera()
-    applet.scene.add(late)
-    applet.dispatch('frame-object', {object: applet.scene}, true)
+    editor.document.scene.add(late)
+    editor.dispatch('frame-object', {object: editor.document.scene}, true)
     expect(viewport.view.navigation.cameraSource).toBe(late.uuid)
     viewport.dispose()
   })
 
   it('frames the scene once for a new view, but keeps a restored view as is', () => {
-    applet.scene.add(new Mesh(new BoxGeometry(2, 2, 2)))
-    applet.scene.children[0].position.set(10, 0, 0)
-    applet.scene.updateMatrixWorld(true)
-    const fresh = new IoThreeViewport({ applet })
+    editor.document.scene.add(new Mesh(new BoxGeometry(2, 2, 2)))
+    editor.document.scene.children[0].position.set(10, 0, 0)
+    editor.document.scene.updateMatrixWorld(true)
+    const fresh = new IoThreeViewport({ editor })
     expect(fresh.view.navigation.target.x).toBeCloseTo(10, 5)
 
     const view = new ThreeView().applyJSON({navigation: {target: [1, 2, 3], distance: 5}})
-    const restored = new IoThreeViewport({ applet, view, cameraSelect: '' })
+    const restored = new IoThreeViewport({ editor, view, cameraSelect: '' })
     expect(view.navigation.target.toArray()).toEqual([1, 2, 3])
     expect(view.navigation.distance).toBe(5)
     fresh.dispose()
@@ -110,7 +86,7 @@ describe('IoThreeViewport', () => {
 
   it('keeps navigation when a view moves to a new viewport element', async () => {
     const view = new ThreeView()
-    const first = new IoThreeViewport({ applet, view })
+    const first = new IoThreeViewport({ editor, view })
     container.appendChild(first as Node)
     view.setAxisView('front')
     view.navigation.target.set(4, 5, 6)
@@ -118,7 +94,7 @@ describe('IoThreeViewport', () => {
     first.remove()
     first.dispose()
 
-    const second = new IoThreeViewport({ applet, view })
+    const second = new IoThreeViewport({ editor, view })
     container.appendChild(second as Node)
     await nextFrame()
     expect(JSON.stringify(second.view.toJSON())).toBe(before)
@@ -128,7 +104,7 @@ describe('IoThreeViewport', () => {
   })
 
   it('tags itself for redraw when its view navigation changes', () => {
-    const viewport = new IoThreeViewport({ applet })
+    const viewport = new IoThreeViewport({ editor })
     container.appendChild(viewport as Node)
     renderScheduler.step()
     expect(renderScheduler.getTags(viewport).has('view')).toBe(false)
@@ -138,19 +114,19 @@ describe('IoThreeViewport', () => {
     viewport.dispose()
   })
 
-  it('frames objects on the applet frame-object event', () => {
-    const viewport = new IoThreeViewport({ applet })
+  it('frames objects on the editor frame-object event', () => {
+    const viewport = new IoThreeViewport({ editor })
     const mesh = new Mesh(new BoxGeometry(1, 1, 1))
     mesh.position.set(-20, 0, 0)
     mesh.updateMatrixWorld(true)
-    applet.dispatch('frame-object', {object: mesh}, true)
+    editor.dispatch('frame-object', {object: mesh}, true)
     expect(viewport.view.navigation.target.x).toBeCloseTo(-20, 5)
     viewport.dispose()
   })
 
   it('uses a shared default renderer when none is provided', async () => {
-    const viewportA = new IoThreeViewport({ applet })
-    const viewportB = new IoThreeViewport({ applet })
+    const viewportA = new IoThreeViewport({ editor })
+    const viewportB = new IoThreeViewport({ editor })
     container.appendChild(viewportA as Node)
     container.appendChild(viewportB as Node)
     await nextFrame()
@@ -168,7 +144,7 @@ describe('IoThreeViewport', () => {
   it('uses a custom renderer when provided', async () => {
     const renderer = new WebGPURenderer({antialias: false, alpha: true})
     void renderer.init()
-    const viewport = new IoThreeViewport({ applet, renderer })
+    const viewport = new IoThreeViewport({ editor, renderer })
     container.appendChild(viewport as Node)
     await nextFrame()
 
@@ -180,7 +156,7 @@ describe('IoThreeViewport', () => {
   })
 
   it('registers with the render scheduler while connected', async () => {
-    const viewport = new IoThreeViewport({ applet })
+    const viewport = new IoThreeViewport({ editor })
     expect(renderScheduler.isRegistered(viewport)).toBe(false)
     container.appendChild(viewport as Node)
     expect(renderScheduler.isRegistered(viewport)).toBe(true)
@@ -192,13 +168,13 @@ describe('IoThreeViewport', () => {
   })
 
   it('listens only to changes from its editor\'s active document', () => {
-    const other = new ThreeApplet({ scene: new Scene() })
-    const viewport = new IoThreeViewport({ applet })
-    expect(viewport.editor).toBe(applet)
-    expect(viewport.changeBus).toBe(applet.document.changeBus)
-    expect(viewport.scene).toBe(applet.scene)
-    expect(viewport.listens({kind: 'transform', source: applet.document})).toBe('content')
-    expect(viewport.listens({kind: 'selection', source: applet.document})).toBe('overlay')
+    const other = new ThreeEditor()
+    const viewport = new IoThreeViewport({ editor })
+    expect(viewport.editor).toBe(editor)
+    expect(viewport.changeBus).toBe(editor.document.changeBus)
+    expect(viewport.scene).toBe(editor.document.scene)
+    expect(viewport.listens({kind: 'transform', source: editor.document})).toBe('content')
+    expect(viewport.listens({kind: 'selection', source: editor.document})).toBe('overlay')
     expect(viewport.listens({kind: 'transform', source: other.document})).toBe(false)
     other.dispose()
     viewport.dispose()
@@ -257,7 +233,7 @@ describe('IoThreeViewport', () => {
   })
 
   it('is not renderable while hidden or zero-sized', async () => {
-    const viewport = new IoThreeViewport({ applet })
+    const viewport = new IoThreeViewport({ editor })
     container.appendChild(viewport as Node)
     await nextFrame()
     // container is display:none, so the viewport has no size and is not intersecting

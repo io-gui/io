@@ -13,7 +13,7 @@ import {
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'
 import { Register, Property } from '@io-gui/core'
-import { ThreeApplet, IoThreeExample, ioThreeViewport, ThreeAppletProps } from '@io-gui/three'
+import { ThreeEditor, IoThreeExample, ioThreeViewport, ThreeEditorProps } from '@io-gui/three'
 import { Layout, ioLayout } from '@io-gui/layout'
 
 // 1 micrometer to 100 billion light years in one scene, with 1 unit = 1 meter
@@ -39,7 +39,7 @@ const labeldata = [
 ]
 
 @Register
-export class CameraLogarithmicDepthBufferExample extends ThreeApplet {
+export class CameraLogarithmicDepthBufferExample extends ThreeEditor {
 
   public camera: PerspectiveCamera
   public zoompos = -100
@@ -47,19 +47,19 @@ export class CameraLogarithmicDepthBufferExample extends ThreeApplet {
   public minzoomspeed = 0.015
   public mouse = [0.5, 0.5]
 
-  constructor(args: ThreeAppletProps) {
+  constructor(args: ThreeEditorProps) {
     super(args)
 
     // Create camera with extreme near/far planes
     this.camera = new PerspectiveCamera(50, 1, NEAR, FAR)
-    this.scene.add(this.camera)
+    this.document.scene.add(this.camera)
 
     // Lighting
-    this.scene.add(new AmbientLight(0x777777))
+    this.document.scene.add(new AmbientLight(0x777777))
 
     const light = new DirectionalLight(0xffffff, 3)
     light.position.set(100, 100, 100)
-    this.scene.add(light)
+    this.document.scene.add(light)
   }
 
   override async onRendererInitialized(renderer: WebGPURenderer) {
@@ -97,7 +97,7 @@ export class CameraLogarithmicDepthBufferExample extends ThreeApplet {
 
         const group = new Group()
         group.position.z = -labeldata[i].size * scale
-        this.scene.add(group)
+        this.document.scene.add(group)
 
         const textmesh = new Mesh(labelgeo, material)
         textmesh.scale.set(scale, scale, scale)
@@ -135,7 +135,7 @@ export class CameraLogarithmicDepthBufferExample extends ThreeApplet {
     this.camera.position.x = Math.sin(0.5 * Math.PI * (this.mouse[0] - 0.5)) * zoom
     this.camera.position.y = Math.sin(0.25 * Math.PI * (this.mouse[1] - 0.5)) * zoom
     this.camera.position.z = Math.cos(0.5 * Math.PI * (this.mouse[0] - 0.5)) * zoom
-    this.camera.lookAt(this.scene.position)
+    this.camera.lookAt(this.document.scene.position)
 
     if (this.zoompos > 48) {this.zoompos = -100}
   }
@@ -145,7 +145,7 @@ export class CameraLogarithmicDepthBufferExample extends ThreeApplet {
 export class IoCameraLogarithmicDepthBufferExample extends IoThreeExample {
 
   @Property({type: CameraLogarithmicDepthBufferExample, init: {isPlaying: true}})
-  declare applet: CameraLogarithmicDepthBufferExample
+  declare editor: CameraLogarithmicDepthBufferExample
 
   @Property({type: WebGPURenderer, init: {antialias: true, logarithmicDepthBuffer: true}})
   declare renderer: WebGPURenderer
@@ -158,8 +158,8 @@ export class IoCameraLogarithmicDepthBufferExample extends IoThreeExample {
     this.render([
       ioLayout({
         elements: [
-          ioThreeViewport({id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene'}),
-          ioThreeViewport({id: 'SceneCameraLog', applet: this.applet, cameraSelect: 'scene', renderer: this.renderer}),
+          ioThreeViewport({id: 'SceneCamera', editor: this.editor, cameraSelect: 'scene'}),
+          ioThreeViewport({id: 'SceneCameraLog', editor: this.editor, cameraSelect: 'scene', renderer: this.renderer}),
         ],
         model: new Layout({
           child: {

@@ -6,7 +6,7 @@ The `@io-gui/three` context: WebGPU Three.js viewports wired into Io-Gui's react
 
 **ThreeEditor**:
 The app object: one active ThreeDocument (switchable at runtime), editor mode, playback, operators and tools. Viewports read `editor.document`.
-_Avoid_: app, scene controller, ThreeApplet (for new code)
+_Avoid_: app, scene controller, applet (removed `ThreeApplet`)
 
 **ThreeDocument**:
 The content of an editor: the scene of authored objects plus scene render settings. Edited through transactions.
@@ -30,7 +30,7 @@ _Avoid_: operator (the runnable thing)
 
 **Tool (ToolDefinition)**:
 A persistent mode of interaction registered on the editor, active per view kind + mode; creates behaviors per viewport.
-_Avoid_: ToolBase (legacy adapter), manipulator
+_Avoid_: ToolBase (removed), manipulator
 
 **SelectionModel**:
 Session selection of one document: object uuids, the active object, the select domain, component sets per object per domain, a `version` bumped once per committed edit. Owned by the editor per document; never document data.
@@ -76,10 +76,6 @@ _Avoid_: tap, tweak
 `ThreeView.profile`: what a viewport's router installs — `full`, `select`, `navigate`, `none`.
 _Avoid_: view mode, read-only
 
-**ThreeApplet**:
-Compatibility shim: a ThreeEditor with one document whose scene and tone-mapping props are bound to the document.
-_Avoid_: scene controller, demo host
-
 **CanvasTarget**:
 Per-viewport render surface the shared renderer draws into. Each `IoThreeViewport` has its own; viewports do not share canvases.
 _Avoid_: canvas, framebuffer (as the Io-Gui term)
@@ -97,11 +93,11 @@ A typed reason (`content`, `view`, `overlay`, `resize`, `continuous`) that marks
 _Avoid_: needs-render, invalidate
 
 **ChangeBus**:
-Per-applet queue of typed `DocumentChange`s, drained by the scheduler each frame to tag the viewports that listen to them.
+Per-document queue of typed `DocumentChange`s, drained by the scheduler each frame to tag the viewports that listen to them.
 _Avoid_: notifier, event bus
 
 **Playing**:
-`ThreeApplet.isPlaying`: whether the scheduler ticks the applet (`onAnimate(delta, time)`) each frame. Independently, non-visible viewports skip draws via IntersectionObserver.
+`ThreeEditor.isPlaying`: whether the scheduler ticks the editor (`onAnimate(delta, time)`) each frame. Independently, non-visible viewports skip draws via IntersectionObserver.
 _Avoid_: animating, running, live
 
 **ThreeView**:
@@ -155,10 +151,6 @@ _Avoid_: shortcuts, hotkeys (as the type name)
 **NavigationBehavior**:
 The router behavior that turns keymap-bound gestures into ViewNavigation edits (orbit, pan, dolly, zoom, frame, axis views).
 _Avoid_: OrbitControls (removed), camera controls
-
-**ToolBase**:
-ReactiveObject base for 3D pointer tools. Registers one behavior at tool priority on each viewport's InputRouter and receives Pointer3D rays; `capturesInput` decides what it leaves to navigation.
-_Avoid_: manipulator, gizmo controller
 
 **Editor configs (side-effect)**:
 Importing `@io-gui/three` runs config registration so Three.js classes get PropertyConfigs/EditorGroups for inspectors. Opting into the package opts into those registrations.
