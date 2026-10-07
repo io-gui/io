@@ -11,6 +11,7 @@ export interface KeymapEntry {
     props?: Record<string, unknown>;
     when?: {
         viewKind?: ViewKind;
+        mode?: string;
     };
 }
 type ParsedTrigger = {

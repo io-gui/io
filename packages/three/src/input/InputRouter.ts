@@ -53,6 +53,7 @@ export class InputRouter {
   private _hovered: Behavior | null = null
   private readonly _lastPositions = new Map<number, {x: number; y: number}>()
   private _suppressContextMenu = false
+  private _modal = false
 
   constructor(host: InputHost) {
     this.host = host
@@ -96,6 +97,28 @@ export class InputRouter {
       behavior.hoverEnd?.()
     }
     this._behaviors.splice(index, 1)
+  }
+
+  /**
+   * Gives every event in this viewport to `behavior` until `endModal(behavior)` (running modal operators).
+   * Whatever had captured is cancelled; pointers it held stay captured for the modal behavior.
+   */
+  startModal(behavior: Behavior) {
+    const previous = this._captured
+    if (previous && previous !== behavior) previous.cancel()
+    this._endHover()
+    this._captured = behavior
+    this._modal = true
+  }
+
+  endModal(behavior: Behavior) {
+    if (this._captured !== behavior || !this._modal) return
+    this._modal = false
+    this._releaseAll()
+  }
+
+  get isModal() {
+    return this._modal
   }
 
   handleKey(type: 'keydown' | 'keyup', native: KeyboardEvent): boolean {
@@ -175,6 +198,7 @@ export class InputRouter {
     }
     this._capturedPointers.clear()
     this._captured = null
+    this._modal = false
   }
 
   private _endHover(event?: ViewInputEvent) {
@@ -189,6 +213,13 @@ export class InputRouter {
     this._suppressContextMenu = false
     const event = this._event('pointerdown', native)
     const captured = this._captured
+    if (captured && this._modal) {
+      this._capturePointer(event.pointerId)
+      if (event.button === 2) this._suppressContextMenu = true
+      this._consume(native)
+      captured.update(event)
+      return
+    }
     if (captured) {
       if (captured.allowsStealing) {
         const thief = this._behaviors.find(behavior => behavior !== captured && behavior.wantsCapture(event))
@@ -219,7 +250,7 @@ export class InputRouter {
   private _onPointerMove = (native: PointerEvent) => {
     const event = this._event('pointermove', native)
     if (this._captured) {
-      if (this._capturedPointers.has(native.pointerId)) {
+      if (this._modal || this._capturedPointers.has(native.pointerId)) {
         this._consume(native)
         this._captured.update(event)
       }
@@ -242,6 +273,12 @@ export class InputRouter {
     const event = this._event('pointerup', native)
     this._lastPositions.delete(native.pointerId)
     const captured = this._captured
+    if (captured && this._modal) {
+      this._consume(native)
+      this._releasePointer(native.pointerId)
+      captured.update(event)
+      return
+    }
     if (!captured || !this._capturedPointers.has(native.pointerId)) return
     this._consume(native)
     this._capturedPointers.delete(native.pointerId)
@@ -258,8 +295,21 @@ export class InputRouter {
     }
   }
 
+  private _releasePointer(pointerId: number) {
+    this._capturedPointers.delete(pointerId)
+    try {
+      if (this.host.hasPointerCapture(pointerId)) this.host.releasePointerCapture(pointerId)
+    } catch {
+      // Pointer already gone.
+    }
+  }
+
   private _onPointerCancel = (native: PointerEvent) => {
     this._lastPositions.delete(native.pointerId)
+    if (this._modal) {
+      this._capturedPointers.delete(native.pointerId)
+      return
+    }
     const captured = this._captured
     if (!captured || !this._capturedPointers.has(native.pointerId)) return
     const event = this._event('pointercancel', native)

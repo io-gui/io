@@ -21,6 +21,11 @@ export interface Behavior {
    * which cancels this one (for example a second touch turning a tool drag into a pan).
    */
   readonly allowsStealing?: boolean
+  /**
+   * Set on behaviors started with `InputRouter.startModal()` (running modal operators): they receive every
+   * pointer, wheel and key event in the viewport until `endModal()`, not just captured pointers.
+   */
+  readonly modal?: boolean
   /** Called for `pointerdown` and `wheel` when nothing has captured (and for stealing). */
   wantsCapture(event: ViewInputEvent): boolean
   /** Capture starts. For `wheel` the router calls `end` right after. */

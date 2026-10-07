@@ -1,21 +1,24 @@
-import { Register, ReactiveObject, Property, ReactiveObjectProps } from '@io-gui/core'
+import { Register, Property } from '@io-gui/core'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
-import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu'
+import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene, ToneMapping } from 'three/webgpu'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
-import { ChangeBus, DocumentChange } from '../editor/ChangeBus.js'
-import { renderScheduler, FrameInfo, ScheduledTicker } from '../render/RenderScheduler.js'
-import type { IoThreeViewport } from '../elements/IoThreeViewport.js'
+import { ThreeEditor, ThreeEditorProps } from '../editor/ThreeEditor.js'
+import { ThreeDocument } from '../editor/ThreeDocument.js'
 
-export type ThreeAppletProps = ReactiveObjectProps & {
+export type ThreeAppletProps = ThreeEditorProps & {
   scene?: Scene
   toneMappingExposure?: number
   toneMapping?: ToneMapping
-  isPlaying?: boolean
 }
 
+/**
+ * Compatibility shim (ADR-0002): a ThreeEditor with one document whose `scene`, `toneMapping` and
+ * `toneMappingExposure` are two-way bound to the applet's own properties. New apps use ThreeEditor
+ * and ThreeDocument directly. After replacing `applet.document`, the applet properties no longer follow it.
+ */
 @Register
-export class ThreeApplet extends ReactiveObject implements ScheduledTicker {
+export class ThreeApplet extends ThreeEditor {
 
   @Property({type: Scene, init: null})
   declare scene: Scene
@@ -26,64 +29,11 @@ export class ThreeApplet extends ReactiveObject implements ScheduledTicker {
   @Property({type: Number, value: NoToneMapping})
   declare toneMapping: ToneMapping
 
-  @Property({type: Boolean, value: false})
-  declare isPlaying: boolean
-
-  public _renderer: WebGPURenderer | null = null
-
-  /** Changes drained by the RenderScheduler each frame; views showing this applet redraw. */
-  readonly changeBus = new ChangeBus()
-
   constructor(args?: ThreeAppletProps) {
-    super(args)
-    this.isPlayingChanged()
-  }
-
-  isPlayingChanged() {
-    if (this.isPlaying) {
-      renderScheduler.addTicker(this)
-    } else {
-      renderScheduler.removeTicker(this)
-    }
-  }
-
-  tick(frame: FrameInfo) {
-    if (!this.isPlaying) return
-    this.onAnimate(frame.delta, frame.time)
-    this.notify({kind: 'time', source: this})
-  }
-
-  notify(change: DocumentChange) {
-    this.changeBus.notify(change)
-  }
-
-  /** Redraws every view showing this applet on the next frame. */
-  requestRender() {
-    this.notify({kind: 'other', source: this})
-  }
-
-  isRendererInitialized() {
-    return !!this._renderer && this._renderer.initialized === true
-  }
-
-  onRendererInitialized(renderer: WebGPURenderer) {
-    this._renderer = renderer
-  }
-
-  /**
-   * @deprecated Size belongs to each view (ADR-0002). Called when a viewport showing this applet resizes;
-   * with several viewports, the last one resized wins.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onResized(width: number, height: number, viewport?: IoThreeViewport) {}
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onAnimate(delta: number, time: number) {}
-
-  override dispose() {
-    this.isPlaying = false
-    renderScheduler.removeTicker(this)
-    super.dispose()
+    super({...args, document: args?.document ?? new ThreeDocument()})
+    this.document.scene = this.bind('scene') as unknown as Scene
+    this.document.toneMapping = this.bind('toneMapping') as unknown as ToneMapping
+    this.document.toneMappingExposure = this.bind('toneMappingExposure') as unknown as number
   }
 }
 
@@ -111,5 +61,10 @@ registerEditorGroups(ThreeApplet, {
     'toneMappingExposure',
     '_renderer',
     'changeBus',
+    'document',
+    'mode',
+    'activeTools',
+    'operators',
+    'tools',
   ],
 })

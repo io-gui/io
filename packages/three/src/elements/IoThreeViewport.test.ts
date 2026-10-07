@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { nextFrame } from '@io-gui/core'
-import { IoThreeViewport, ThreeApplet, ThreeView, ToolBase, renderScheduler, NavigationBehavior, navigationKeymaps } from '@io-gui/three'
+import { IoThreeViewport, ThreeApplet, ThreeDocument, ThreeEditor, ThreeView, ToolBase, renderScheduler, NavigationBehavior, navigationKeymaps } from '@io-gui/three'
 import { BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGPURenderer } from 'three/webgpu'
 
 describe('IoThreeViewport', () => {
@@ -191,15 +191,66 @@ describe('IoThreeViewport', () => {
     viewport.dispose()
   })
 
-  it('listens only to changes from its own applet', () => {
+  it('listens only to changes from its editor\'s active document', () => {
     const other = new ThreeApplet({ scene: new Scene() })
     const viewport = new IoThreeViewport({ applet })
-    expect(viewport.changeBus).toBe(applet.changeBus)
+    expect(viewport.editor).toBe(applet)
+    expect(viewport.changeBus).toBe(applet.document.changeBus)
     expect(viewport.scene).toBe(applet.scene)
-    expect(viewport.listens({kind: 'transform', source: applet})).toBe(true)
-    expect(viewport.listens({kind: 'transform', source: other})).toBe(false)
+    expect(viewport.listens({kind: 'transform', source: applet.document})).toBe(true)
+    expect(viewport.listens({kind: 'transform', source: other.document})).toBe(false)
     other.dispose()
     viewport.dispose()
+  })
+
+  it('installs the editor\'s active tool according to the view profile', () => {
+    const editor = new ThreeEditor()
+    const behavior = {priority: 500, wantsCapture: () => false, begin() {}, update() {}, end() {}, cancel() {}}
+    let created = 0
+    editor.tools.register({id: 'probe', label: 'Probe', viewKinds: ['3d'], modes: ['object'], createBehaviors: () => { created++; return [behavior] }})
+    const viewport = new IoThreeViewport({ editor })
+    expect(viewport.inputRouter.behaviors).not.toContain(behavior)
+
+    editor.setActiveTool('3d', 'object', 'probe')
+    expect(viewport.inputRouter.behaviors).toContain(behavior)
+    expect(created).toBe(1)
+
+    editor.mode = 'edit'
+    expect(viewport.inputRouter.behaviors).not.toContain(behavior)
+    editor.mode = 'object'
+    expect(viewport.inputRouter.behaviors).toContain(behavior)
+
+    viewport.view.profile = 'navigate'
+    expect(viewport.inputRouter.behaviors).toEqual([viewport.navigationBehavior])
+    viewport.view.profile = 'none'
+    expect(viewport.inputRouter.behaviors).toEqual([])
+    viewport.view.profile = 'full'
+    expect(viewport.inputRouter.behaviors).toEqual([behavior, viewport.navigationBehavior])
+    viewport.dispose()
+    editor.dispose()
+  })
+
+  it('shows the new document after a switch and restores each document\'s navigation', () => {
+    const editor = new ThreeEditor()
+    const first = editor.document
+    first.scene.add(new Mesh(new BoxGeometry(1, 1, 1)))
+    const second = new ThreeDocument()
+    const far = new Mesh(new BoxGeometry(1, 1, 1))
+    far.position.set(50, 0, 0)
+    second.scene.add(far)
+    second.scene.updateMatrixWorld(true)
+
+    const viewport = new IoThreeViewport({ editor })
+    viewport.view.navigation.target.set(1, 2, 3)
+    editor.document = second
+    expect(viewport.scene).toBe(second.scene)
+    expect(viewport.view.navigation.target.x).toBeCloseTo(50, 5)
+
+    editor.document = first
+    expect(viewport.view.navigation.target.toArray()).toEqual([1, 2, 3])
+    viewport.dispose()
+    editor.dispose()
+    second.dispose()
   })
 
   it('is not renderable while hidden or zero-sized', async () => {

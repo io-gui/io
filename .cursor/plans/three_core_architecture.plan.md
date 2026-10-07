@@ -49,19 +49,19 @@ todos:
     status: completed
   - id: editor-document
     content: "P4: ThreeEditor + ThreeDocument; ThreeApplet becomes shim over them; clock on editor"
-    status: pending
+    status: completed
   - id: document-transactions
     content: "P4: ThreeDocument mutation API: patches, transactions, coalescing, rollback; commits feed change bus"
-    status: pending
+    status: completed
   - id: document-switching
     content: "P4: editor.document switchable at runtime; per-document session maps (selection, nav, undo)"
-    status: pending
+    status: completed
   - id: operators
     content: "P4: Operator contract, registry, modal operators as top-priority behavior running inside a transaction"
-    status: pending
+    status: completed
   - id: tool-registry
     content: "P4: Active tool per (viewKind, mode); interaction profile filters router behaviors"
-    status: pending
+    status: completed
   - id: selection-model
     content: "P5: SelectionModel (object domain), transactions, undo, change notifications"
     status: pending
@@ -122,6 +122,7 @@ todos:
   - id: docs-sync
     content: "Docs: CONTEXT.md glossary, README, io-gui-three skill updated at the end of each phase"
     status: pending
+isProject: false
 ---
 
 <!-- Plan: @io-gui/three core architecture -->
@@ -310,6 +311,17 @@ Orbit, pan, dolly, zoom to cursor, wheel, two-finger pan and pinch, frame select
 ---
 
 ## Phase 4: App layer (ADR-0002, ADR-0004)
+
+**Done 2026-10-07.** Notes from implementation:
+- Files: `editor/ThreeEditor.ts`, `editor/ThreeDocument.ts`, `editor/Transaction.ts`, `editor/Patch.ts`, `tools/Operator.ts` (+ `OperatorRegistry`, modal behavior, `Command`), `tools/Tool.ts` (`ToolDefinition`, `ToolRegistry`, `InteractionProfile`).
+- The change bus lives on the document; change `source` is always the document. `editor.notify()` overrides any source. Document render-setting changes notify `'settings'`.
+- `setAttribute` patches are deferred to geometry editing (P7) with blob storage (P8); `set` / `insert` / `remove` exist. `set` copies math objects in place and clones values for the record.
+- `document.history` keeps the last 100 committed transactions; `revert()` / `reapply()` / commit listeners are the hooks for the P8 undo stack. Empty transactions are not recorded.
+- Modal operators use `InputRouter.startModal()` / `endModal()` (new `Behavior.modal`): all pointer, wheel and key events go to the operator; Escape cancels. One running operator at a time; starting another or switching documents cancels it.
+- `operators.lastCommand` records `{name: id, args: props}` of finished runs (command layer seed).
+- Viewport has `editor` (and `applet` alias). Per-document navigation is session state on `ThreeView` (`switchDocument`), not serialized. A view first attached keeps its navigation; only real switches park/restore.
+- `ThreeView.profile` added; active tool per `'<viewKind>:<mode>'` in `editor.activeTools`; keymap `when.mode` via `InputHost.mode`.
+- `ToolBase` stays as the legacy adapter alongside tool definitions (no deprecation yet).
 
 ### `editor-document`
 

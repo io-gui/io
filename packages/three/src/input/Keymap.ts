@@ -10,7 +10,7 @@ export interface KeymapEntry {
   input: string
   action: string
   props?: Record<string, unknown>
-  when?: {viewKind?: ViewKind}
+  when?: {viewKind?: ViewKind; mode?: string}
 }
 
 type ParsedTrigger =
@@ -84,6 +84,7 @@ export class Keymap {
       const parsed = this._parsed[i]
       if (actions && !actions(entry.action)) continue
       if (entry.when?.viewKind && entry.when.viewKind !== viewKind) continue
+      if (entry.when?.mode && entry.when.mode !== event.host.mode) continue
       if (!sameTrigger(parsed.trigger, trigger)) continue
       if (!sameModifiers(parsed.modifiers, event.modifiers)) continue
       return entry
@@ -99,7 +100,8 @@ export class Keymap {
         const a = this.entries[i]
         const b = this.entries[j]
         const kindsOverlap = !a.when?.viewKind || !b.when?.viewKind || a.when.viewKind === b.when.viewKind
-        if (!kindsOverlap) continue
+        const modesOverlap = !a.when?.mode || !b.when?.mode || a.when.mode === b.when.mode
+        if (!kindsOverlap || !modesOverlap) continue
         if (sameTrigger(this._parsed[i].trigger, this._parsed[j].trigger) && sameModifiers(this._parsed[i].modifiers, this._parsed[j].modifiers)) {
           conflicts.push([a, b])
         }

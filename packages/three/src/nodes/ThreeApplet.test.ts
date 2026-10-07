@@ -21,12 +21,12 @@ describe('ThreeApplet', () => {
     applet.isPlaying = true
     applet.tick({frame: 2, delta: 0.016, time: 0.032})
     expect(calls).toEqual([0.016])
-    expect(applet.changeBus.drain()).toEqual([{kind: 'time', source: applet}])
+    expect(applet.changeBus.drain()).toEqual([{kind: 'time', source: applet.document}])
   })
 
   it('requestRender queues a change for its views', () => {
     applet = new ThreeApplet({ scene: new Scene() })
     applet.requestRender()
-    expect(applet.changeBus.drain()).toEqual([{kind: 'other', source: applet}])
+    expect(applet.changeBus.drain()).toEqual([{kind: 'other', source: applet.document}])
   })
 })
