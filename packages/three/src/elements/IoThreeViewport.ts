@@ -1,6 +1,10 @@
 import { Register, ReactiveElement, ReactiveElementProps, Property, Change, Field, WithBinding } from '@io-gui/core'
 import { WebGPURenderer, CanvasTarget, Scene, Object3D, OrthographicCamera, PerspectiveCamera } from 'three/webgpu'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
+import { ThreeEditor } from '../editor/ThreeEditor.js'
+import type { ThreeDocument } from '../editor/ThreeDocument.js'
+import type { Behavior } from '../input/Behavior.js'
+import { toolAllowsProfile } from '../tools/Tool.js'
 import { ToolBase } from '../nodes/ToolBase.js'
 import { ThreeView } from '../view/ThreeView.js'
 import { AXIS_VIEW_DIRECTIONS, AxisView } from '../view/ViewNavigation.js'
@@ -19,7 +23,10 @@ const observer = new IntersectionObserver((entries) => {
 })
 
 export type IoThreeViewportProps = ReactiveElementProps & {
-  applet: WithBinding<ThreeApplet>
+  /** The editor whose active document this viewport shows. */
+  editor?: WithBinding<ThreeEditor>
+  /** Compatibility alias: a ThreeApplet is a ThreeEditor; setting it sets `editor`. */
+  applet?: WithBinding<ThreeApplet>
   /** View state to show. Pass one to keep navigation across remounts; otherwise the viewport makes its own. */
   view?: WithBinding<ThreeView>
   /** Shorthand that sets the view: `'perspective'`, an axis (`'top'`, `'front'`, ...), `'scene'` or `'scene:<camera name>'`. */
@@ -37,7 +44,10 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   public height: number = 0
   public visible: boolean = false
 
-  @Property({type: ThreeApplet, init: null})
+  @Property({type: ThreeEditor})
+  declare editor: ThreeEditor
+
+  @Property({type: ThreeApplet})
   declare applet: ThreeApplet
 
   @Property({type: ThreeView})
@@ -110,6 +120,8 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   // Lazy, like renderTarget: a `tool` passed to the constructor registers before the constructor body runs.
   declare private _inputRouter: InputRouter | undefined
   declare private _navigation: NavigationBehavior | undefined
+  declare private _toolBehaviors: {toolId: string; behaviors: Behavior[]} | undefined
+  declare private _shownDocument: ThreeDocument | undefined
 
   /** Routes this viewport's input to behaviors: navigation, tools, later gizmos and operators (ADR-0004). */
   get inputRouter(): InputRouter {
@@ -134,6 +146,7 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
     } as ReactiveElementProps)
     this._ownsView = !args.view
     void this.inputRouter
+    this._syncBehaviors()
   }
 
   override ready() {
@@ -155,11 +168,15 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   }
 
   get scene(): Scene | null {
-    return this.applet?.scene ?? null
+    return this.editor?.document?.scene ?? null
   }
 
   get changeBus(): ChangeBus | null {
-    return this.applet?.changeBus ?? null
+    return this.editor?.document?.changeBus ?? null
+  }
+
+  get mode(): string | undefined {
+    return this.editor?.mode
   }
 
   /** Marks this viewport for redraw on the next frame. */
@@ -168,7 +185,7 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   }
 
   isRenderable() {
-    return this.visible && this.width > 0 && this.height > 0 && !!this.applet?.scene
+    return this.visible && this.width > 0 && this.height > 0 && !!this.scene
   }
 
   getPriority() {
@@ -178,7 +195,7 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   }
 
   listens(change: DocumentChange) {
-    return change.source === this.applet
+    return !!this.editor && change.source === this.editor.document
   }
 
   onRendererError(error: Error) {
@@ -205,6 +222,34 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
     if (!view.navigation.framed && scene) view.frame(scene)
   }
 
+  /** On a document switch, park this view's navigation for the old document and restore it for the new one. */
+  private _syncDocument() {
+    const document = this.editor?.document
+    if (document === this._shownDocument) return
+    if (this._shownDocument && document && this.view) this.view.switchDocument(this._shownDocument.uuid, document.uuid)
+    this._shownDocument = document
+  }
+
+  /** Installs navigation and the editor's active tool according to the view's interaction profile. */
+  private _syncBehaviors() {
+    const view = this.view
+    if (!view || !this._inputRouter) return
+    const router = this._inputRouter
+    if (view.profile === 'none') router.remove(this._navigation!)
+    else router.add(this._navigation!)
+
+    const tool = this.editor?.getActiveTool(view.kind) ?? null
+    const toolId = tool && toolAllowsProfile(tool, view.profile) ? tool.id : null
+    if ((this._toolBehaviors?.toolId ?? null) === toolId) return
+    for (const behavior of this._toolBehaviors?.behaviors ?? []) router.remove(behavior)
+    this._toolBehaviors = undefined
+    if (tool && toolId) {
+      const behaviors = tool.createBehaviors({editor: this.editor, host: this, view})
+      for (const behavior of behaviors) router.add(behavior)
+      this._toolBehaviors = {toolId, behaviors}
+    }
+  }
+
   toolChanged(change: Change<ToolBase>) {
     const newTool = change.value
     const oldTool = change.oldValue
@@ -221,16 +266,23 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
     this.height = height
     this.renderTarget.setSize(width, height)
     this.renderTarget.setPixelRatio(window.devicePixelRatio)
-    if (width && height) this.applet?.onResized(width, height, this)
+    if (width && height) this.editor?.onResized(width, height, this)
     this.tag('resize')
   }
 
   appletChanged() {
+    if (this.applet) this.editor = this.applet
+  }
+  editorChanged() {
+    this._syncDocument()
     this._syncView()
+    this._syncBehaviors()
     this.tag('content')
   }
-  appletMutated() {
-    if (this._sceneCameraPending) this._syncView()
+  editorMutated() {
+    this._syncDocument()
+    if (this._sceneCameraPending || !this.view?.navigation.framed) this._syncView()
+    this._syncBehaviors()
     this.tag('content')
   }
   cameraSelectChanged() {
@@ -242,12 +294,14 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
       this._ownsView = false
     }
     this._syncView()
+    this._syncBehaviors()
     this.tag('view')
   }
   keymapChanged() {
     if (this._navigation) this._navigation.keymap = this.keymap
   }
   viewMutated() {
+    this._syncBehaviors()
     this.tag('view')
   }
   override mutated() {
@@ -257,8 +311,10 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   /** Called by the RenderScheduler only (ADR-0003). */
   renderView() {
     if (this._sceneCameraPending) this._syncView()
-    if (this.applet.isRendererInitialized() === false) {
-      void this.applet.onRendererInitialized(this.renderer)
+    const editor = this.editor
+    const document = editor.document
+    if (editor.isRendererInitialized() === false) {
+      void editor.onRendererInitialized(this.renderer)
     }
 
     this.renderer.setCanvasTarget(this.renderTarget)
@@ -269,10 +325,10 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
     const toneMapping = this.renderer.toneMapping
     const toneMappingExposure = this.renderer.toneMappingExposure
 
-    this.renderer.toneMapping = this.applet.toneMapping
-    this.renderer.toneMappingExposure = this.applet.toneMappingExposure
+    this.renderer.toneMapping = document.toneMapping
+    this.renderer.toneMappingExposure = document.toneMappingExposure
 
-    this.renderer.render(this.applet.scene, this.getViewCamera())
+    this.renderer.render(document.scene, this.getViewCamera())
 
     this.renderer.toneMapping = toneMapping
     this.renderer.toneMappingExposure = toneMappingExposure
@@ -281,6 +337,7 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   override dispose() {
     renderScheduler.unregister(this)
     delete (this as Record<string, unknown>).applet
+    delete (this as Record<string, unknown>).editor
     this.renderTarget.dispose()
     this._inputRouter?.dispose()
     if (this._ownsView) this.view.dispose()

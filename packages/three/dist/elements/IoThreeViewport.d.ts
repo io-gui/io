@@ -1,6 +1,7 @@
 import { ReactiveElement, ReactiveElementProps, Change, WithBinding } from '@io-gui/core';
 import { WebGPURenderer, CanvasTarget, Scene, Object3D, OrthographicCamera, PerspectiveCamera } from 'three/webgpu';
 import { ThreeApplet } from '../nodes/ThreeApplet.js';
+import { ThreeEditor } from '../editor/ThreeEditor.js';
 import { ToolBase } from '../nodes/ToolBase.js';
 import { ThreeView } from '../view/ThreeView.js';
 import { InputRouter } from '../input/InputRouter.js';
@@ -9,7 +10,10 @@ import { NavigationBehavior } from '../input/behaviors/NavigationBehavior.js';
 import { DocumentChange, ChangeBus } from '../editor/ChangeBus.js';
 import { ScheduledView, DirtyReason } from '../render/RenderScheduler.js';
 export type IoThreeViewportProps = ReactiveElementProps & {
-    applet: WithBinding<ThreeApplet>;
+    /** The editor whose active document this viewport shows. */
+    editor?: WithBinding<ThreeEditor>;
+    /** Compatibility alias: a ThreeApplet is a ThreeEditor; setting it sets `editor`. */
+    applet?: WithBinding<ThreeApplet>;
     /** View state to show. Pass one to keep navigation across remounts; otherwise the viewport makes its own. */
     view?: WithBinding<ThreeView>;
     /** Shorthand that sets the view: `'perspective'`, an axis (`'top'`, `'front'`, ...), `'scene'` or `'scene:<camera name>'`. */
@@ -23,6 +27,7 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
     width: number;
     height: number;
     visible: boolean;
+    editor: ThreeEditor;
     applet: ThreeApplet;
     view: ThreeView;
     /** Empty leaves the view as it is. */
@@ -43,6 +48,8 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
     private _sceneCameraPending;
     private _inputRouter;
     private _navigation;
+    private _toolBehaviors;
+    private _shownDocument;
     /** Routes this viewport's input to behaviors: navigation, tools, later gizmos and operators (ADR-0004). */
     get inputRouter(): InputRouter;
     get navigationBehavior(): NavigationBehavior;
@@ -52,10 +59,11 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
     disconnectedCallback(): void;
     get scene(): Scene | null;
     get changeBus(): ChangeBus | null;
+    get mode(): string | undefined;
     /** Marks this viewport for redraw on the next frame. */
     tag(reason: DirtyReason): void;
     isRenderable(): boolean;
-    getPriority(): 0 | 2 | 1;
+    getPriority(): 0 | 1 | 2;
     listens(change: DocumentChange): boolean;
     onRendererError(error: Error): void;
     /** The camera this viewport draws and picks with, built from its view at the current size. */
@@ -66,10 +74,15 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
         overscan?: number;
     }>): void;
     private _syncView;
+    /** On a document switch, park this view's navigation for the old document and restore it for the new one. */
+    private _syncDocument;
+    /** Installs navigation and the editor's active tool according to the view's interaction profile. */
+    private _syncBehaviors;
     toolChanged(change: Change<ToolBase>): void;
     onResized(): void;
     appletChanged(): void;
-    appletMutated(): void;
+    editorChanged(): void;
+    editorMutated(): void;
     cameraSelectChanged(): void;
     viewChanged(change: Change<ThreeView>): void;
     keymapChanged(): void;

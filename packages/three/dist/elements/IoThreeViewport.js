@@ -7,6 +7,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Register, ReactiveElement, Property, Field } from '@io-gui/core';
 import { WebGPURenderer, CanvasTarget } from 'three/webgpu';
 import { ThreeApplet } from '../nodes/ThreeApplet.js';
+import { ThreeEditor } from '../editor/ThreeEditor.js';
+import { toolAllowsProfile } from '../tools/Tool.js';
 import { ToolBase } from '../nodes/ToolBase.js';
 import { ThreeView } from '../view/ThreeView.js';
 import { AXIS_VIEW_DIRECTIONS } from '../view/ViewNavigation.js';
@@ -87,6 +89,7 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         });
         this._ownsView = !args.view;
         void this.inputRouter;
+        this._syncBehaviors();
     }
     ready() {
         this.attachSurface();
@@ -105,17 +108,20 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         this.visible = false;
     }
     get scene() {
-        return this.applet?.scene ?? null;
+        return this.editor?.document?.scene ?? null;
     }
     get changeBus() {
-        return this.applet?.changeBus ?? null;
+        return this.editor?.document?.changeBus ?? null;
+    }
+    get mode() {
+        return this.editor?.mode;
     }
     /** Marks this viewport for redraw on the next frame. */
     tag(reason) {
         renderScheduler.tag(this, reason);
     }
     isRenderable() {
-        return this.visible && this.width > 0 && this.height > 0 && !!this.applet?.scene;
+        return this.visible && this.width > 0 && this.height > 0 && !!this.scene;
     }
     getPriority() {
         if (this.matches(':focus-within'))
@@ -125,7 +131,7 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         return 0;
     }
     listens(change) {
-        return change.source === this.applet;
+        return !!this.editor && change.source === this.editor.document;
     }
     onRendererError(error) {
         this.textContent = error.message;
@@ -150,6 +156,39 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         if (!view.navigation.framed && scene)
             view.frame(scene);
     }
+    /** On a document switch, park this view's navigation for the old document and restore it for the new one. */
+    _syncDocument() {
+        const document = this.editor?.document;
+        if (document === this._shownDocument)
+            return;
+        if (this._shownDocument && document && this.view)
+            this.view.switchDocument(this._shownDocument.uuid, document.uuid);
+        this._shownDocument = document;
+    }
+    /** Installs navigation and the editor's active tool according to the view's interaction profile. */
+    _syncBehaviors() {
+        const view = this.view;
+        if (!view || !this._inputRouter)
+            return;
+        const router = this._inputRouter;
+        if (view.profile === 'none')
+            router.remove(this._navigation);
+        else
+            router.add(this._navigation);
+        const tool = this.editor?.getActiveTool(view.kind) ?? null;
+        const toolId = tool && toolAllowsProfile(tool, view.profile) ? tool.id : null;
+        if ((this._toolBehaviors?.toolId ?? null) === toolId)
+            return;
+        for (const behavior of this._toolBehaviors?.behaviors ?? [])
+            router.remove(behavior);
+        this._toolBehaviors = undefined;
+        if (tool && toolId) {
+            const behaviors = tool.createBehaviors({ editor: this.editor, host: this, view });
+            for (const behavior of behaviors)
+                router.add(behavior);
+            this._toolBehaviors = { toolId, behaviors };
+        }
+    }
     toolChanged(change) {
         const newTool = change.value;
         const oldTool = change.oldValue;
@@ -169,16 +208,24 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         this.renderTarget.setSize(width, height);
         this.renderTarget.setPixelRatio(window.devicePixelRatio);
         if (width && height)
-            this.applet?.onResized(width, height, this);
+            this.editor?.onResized(width, height, this);
         this.tag('resize');
     }
     appletChanged() {
+        if (this.applet)
+            this.editor = this.applet;
+    }
+    editorChanged() {
+        this._syncDocument();
         this._syncView();
+        this._syncBehaviors();
         this.tag('content');
     }
-    appletMutated() {
-        if (this._sceneCameraPending)
+    editorMutated() {
+        this._syncDocument();
+        if (this._sceneCameraPending || !this.view?.navigation.framed)
             this._syncView();
+        this._syncBehaviors();
         this.tag('content');
     }
     cameraSelectChanged() {
@@ -190,6 +237,7 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
             this._ownsView = false;
         }
         this._syncView();
+        this._syncBehaviors();
         this.tag('view');
     }
     keymapChanged() {
@@ -197,6 +245,7 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
             this._navigation.keymap = this.keymap;
     }
     viewMutated() {
+        this._syncBehaviors();
         this.tag('view');
     }
     mutated() {
@@ -206,8 +255,10 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
     renderView() {
         if (this._sceneCameraPending)
             this._syncView();
-        if (this.applet.isRendererInitialized() === false) {
-            void this.applet.onRendererInitialized(this.renderer);
+        const editor = this.editor;
+        const document = editor.document;
+        if (editor.isRendererInitialized() === false) {
+            void editor.onRendererInitialized(this.renderer);
         }
         this.renderer.setCanvasTarget(this.renderTarget);
         this.renderer.setClearColor(this.view.clearColor, this.view.clearAlpha);
@@ -215,15 +266,16 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         this.renderer.clear();
         const toneMapping = this.renderer.toneMapping;
         const toneMappingExposure = this.renderer.toneMappingExposure;
-        this.renderer.toneMapping = this.applet.toneMapping;
-        this.renderer.toneMappingExposure = this.applet.toneMappingExposure;
-        this.renderer.render(this.applet.scene, this.getViewCamera());
+        this.renderer.toneMapping = document.toneMapping;
+        this.renderer.toneMappingExposure = document.toneMappingExposure;
+        this.renderer.render(document.scene, this.getViewCamera());
         this.renderer.toneMapping = toneMapping;
         this.renderer.toneMappingExposure = toneMappingExposure;
     }
     dispose() {
         renderScheduler.unregister(this);
         delete this.applet;
+        delete this.editor;
         this.renderTarget.dispose();
         this._inputRouter?.dispose();
         if (this._ownsView)
@@ -235,7 +287,10 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
     }
 };
 __decorate([
-    Property({ type: ThreeApplet, init: null })
+    Property({ type: ThreeEditor })
+], IoThreeViewport.prototype, "editor", void 0);
+__decorate([
+    Property({ type: ThreeApplet })
 ], IoThreeViewport.prototype, "applet", void 0);
 __decorate([
     Property({ type: ThreeView })

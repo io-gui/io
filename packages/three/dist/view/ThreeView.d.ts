@@ -1,15 +1,18 @@
 import { ReactiveObject, ReactiveObjectProps } from '@io-gui/core';
 import { Object3D, OrthographicCamera, PerspectiveCamera, Scene } from 'three/webgpu';
 import { AxisView, ViewNavigation, ViewNavigationData } from './ViewNavigation.js';
+import type { InteractionProfile } from '../tools/Tool.js';
 export type ViewKind = '3d';
 export type ThreeViewProps = ReactiveObjectProps & {
     kind?: ViewKind;
+    profile?: InteractionProfile;
     overscan?: number;
     clearColor?: number;
     clearAlpha?: number;
 };
 export type ThreeViewData = {
     kind?: ViewKind;
+    profile?: InteractionProfile;
     overscan?: number;
     clearColor?: number;
     clearAlpha?: number;
@@ -22,6 +25,8 @@ type ViewCamera = PerspectiveCamera | OrthographicCamera;
  */
 export declare class ThreeView extends ReactiveObject {
     kind: ViewKind;
+    /** What the viewport's router installs: `full` (tool + navigation), `select`, `navigate`, `none`. */
+    profile: InteractionProfile;
     /** Extra margin drawn around the framed area (1 = none). */
     overscan: number;
     clearColor: number;
@@ -31,6 +36,8 @@ export declare class ThreeView extends ReactiveObject {
     private readonly _orthographic;
     private readonly _scenePerspective;
     private readonly _sceneOrthographic;
+    /** Session state: navigation per document uuid, so switching documents back restores the camera. */
+    private readonly _navigationByDocument;
     constructor(args?: ThreeViewProps);
     /**
      * Call after changing `navigation` directly, so viewports showing this view redraw.
@@ -41,6 +48,11 @@ export declare class ThreeView extends ReactiveObject {
     /** Looks through a scene camera by `uuid`, or stops with `null`. */
     setCameraSource(uuid: string | null): void;
     frame(object: Object3D, padding?: number): void;
+    /**
+     * Stores the current navigation for `fromDocument` and restores the one saved for `toDocument`,
+     * or starts unframed (the viewport then frames the new scene).
+     */
+    switchDocument(fromDocument: string | null, toDocument: string): void;
     /** The scene camera this view looks through, if it is set and present in `scene`. */
     getSourceCamera(scene: Scene | null): ViewCamera | null;
     /**

@@ -1,35 +1,18 @@
-import { ReactiveObject, ReactiveObjectProps } from '@io-gui/core';
-import { Scene, ToneMapping, WebGPURenderer } from 'three/webgpu';
-import { ChangeBus, DocumentChange } from '../editor/ChangeBus.js';
-import { FrameInfo, ScheduledTicker } from '../render/RenderScheduler.js';
-import type { IoThreeViewport } from '../elements/IoThreeViewport.js';
-export type ThreeAppletProps = ReactiveObjectProps & {
+import { Scene, ToneMapping } from 'three/webgpu';
+import { ThreeEditor, ThreeEditorProps } from '../editor/ThreeEditor.js';
+export type ThreeAppletProps = ThreeEditorProps & {
     scene?: Scene;
     toneMappingExposure?: number;
     toneMapping?: ToneMapping;
-    isPlaying?: boolean;
 };
-export declare class ThreeApplet extends ReactiveObject implements ScheduledTicker {
+/**
+ * Compatibility shim (ADR-0002): a ThreeEditor with one document whose `scene`, `toneMapping` and
+ * `toneMappingExposure` are two-way bound to the applet's own properties. New apps use ThreeEditor
+ * and ThreeDocument directly. After replacing `applet.document`, the applet properties no longer follow it.
+ */
+export declare class ThreeApplet extends ThreeEditor {
     scene: Scene;
     toneMappingExposure: number;
     toneMapping: ToneMapping;
-    isPlaying: boolean;
-    _renderer: WebGPURenderer | null;
-    /** Changes drained by the RenderScheduler each frame; views showing this applet redraw. */
-    readonly changeBus: ChangeBus;
     constructor(args?: ThreeAppletProps);
-    isPlayingChanged(): void;
-    tick(frame: FrameInfo): void;
-    notify(change: DocumentChange): void;
-    /** Redraws every view showing this applet on the next frame. */
-    requestRender(): void;
-    isRendererInitialized(): boolean;
-    onRendererInitialized(renderer: WebGPURenderer): void;
-    /**
-     * @deprecated Size belongs to each view (ADR-0002). Called when a viewport showing this applet resizes;
-     * with several viewports, the last one resized wins.
-     */
-    onResized(width: number, height: number, viewport?: IoThreeViewport): void;
-    onAnimate(delta: number, time: number): void;
-    dispose(): void;
 }

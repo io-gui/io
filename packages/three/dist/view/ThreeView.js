@@ -18,6 +18,8 @@ let ThreeView = class ThreeView extends ReactiveObject {
     _orthographic = new OrthographicCamera();
     _scenePerspective = new PerspectiveCamera();
     _sceneOrthographic = new OrthographicCamera();
+    /** Session state: navigation per document uuid, so switching documents back restores the camera. */
+    _navigationByDocument = new Map();
     constructor(args) {
         super(args);
     }
@@ -39,6 +41,22 @@ let ThreeView = class ThreeView extends ReactiveObject {
     }
     frame(object, padding = 1) {
         this.navigation.frame(object, padding);
+        this.markNavigationChanged();
+    }
+    /**
+     * Stores the current navigation for `fromDocument` and restores the one saved for `toDocument`,
+     * or starts unframed (the viewport then frames the new scene).
+     */
+    switchDocument(fromDocument, toDocument) {
+        if (fromDocument === toDocument)
+            return;
+        if (fromDocument)
+            this._navigationByDocument.set(fromDocument, this.navigation.toJSON());
+        const saved = this._navigationByDocument.get(toDocument);
+        if (saved)
+            this.navigation.applyJSON(saved);
+        else
+            this.navigation.copy(new ViewNavigation()).framed = false;
         this.markNavigationChanged();
     }
     /** The scene camera this view looks through, if it is set and present in `scene`. */
@@ -145,6 +163,7 @@ let ThreeView = class ThreeView extends ReactiveObject {
     toJSON() {
         return {
             kind: this.kind,
+            profile: this.profile,
             overscan: this.overscan,
             clearColor: this.clearColor,
             clearAlpha: this.clearAlpha,
@@ -157,6 +176,8 @@ let ThreeView = class ThreeView extends ReactiveObject {
         const props = {};
         if (data.kind !== undefined)
             props.kind = data.kind;
+        if (data.profile !== undefined)
+            props.profile = data.profile;
         if (data.overscan !== undefined)
             props.overscan = data.overscan;
         if (data.clearColor !== undefined)
@@ -171,6 +192,9 @@ let ThreeView = class ThreeView extends ReactiveObject {
 __decorate([
     Property({ type: String, value: '3d' })
 ], ThreeView.prototype, "kind", void 0);
+__decorate([
+    Property({ type: String, value: 'full' })
+], ThreeView.prototype, "profile", void 0);
 __decorate([
     Property({ type: Number, value: 1.1 })
 ], ThreeView.prototype, "overscan", void 0);

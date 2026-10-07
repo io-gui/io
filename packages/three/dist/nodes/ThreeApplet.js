@@ -4,60 +4,24 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveObject, Property } from '@io-gui/core';
+import { Register, Property } from '@io-gui/core';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
 import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene } from 'three/webgpu';
 import { ioOptionSelect, Menu } from '@io-gui/menus';
-import { ChangeBus } from '../editor/ChangeBus.js';
-import { renderScheduler } from '../render/RenderScheduler.js';
-let ThreeApplet = class ThreeApplet extends ReactiveObject {
-    _renderer = null;
-    /** Changes drained by the RenderScheduler each frame; views showing this applet redraw. */
-    changeBus = new ChangeBus();
+import { ThreeEditor } from '../editor/ThreeEditor.js';
+import { ThreeDocument } from '../editor/ThreeDocument.js';
+/**
+ * Compatibility shim (ADR-0002): a ThreeEditor with one document whose `scene`, `toneMapping` and
+ * `toneMappingExposure` are two-way bound to the applet's own properties. New apps use ThreeEditor
+ * and ThreeDocument directly. After replacing `applet.document`, the applet properties no longer follow it.
+ */
+let ThreeApplet = class ThreeApplet extends ThreeEditor {
     constructor(args) {
-        super(args);
-        this.isPlayingChanged();
-    }
-    isPlayingChanged() {
-        if (this.isPlaying) {
-            renderScheduler.addTicker(this);
-        }
-        else {
-            renderScheduler.removeTicker(this);
-        }
-    }
-    tick(frame) {
-        if (!this.isPlaying)
-            return;
-        this.onAnimate(frame.delta, frame.time);
-        this.notify({ kind: 'time', source: this });
-    }
-    notify(change) {
-        this.changeBus.notify(change);
-    }
-    /** Redraws every view showing this applet on the next frame. */
-    requestRender() {
-        this.notify({ kind: 'other', source: this });
-    }
-    isRendererInitialized() {
-        return !!this._renderer && this._renderer.initialized === true;
-    }
-    onRendererInitialized(renderer) {
-        this._renderer = renderer;
-    }
-    /**
-     * @deprecated Size belongs to each view (ADR-0002). Called when a viewport showing this applet resizes;
-     * with several viewports, the last one resized wins.
-     */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onResized(width, height, viewport) { }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onAnimate(delta, time) { }
-    dispose() {
-        this.isPlaying = false;
-        renderScheduler.removeTicker(this);
-        super.dispose();
+        super({ ...args, document: args?.document ?? new ThreeDocument() });
+        this.document.scene = this.bind('scene');
+        this.document.toneMapping = this.bind('toneMapping');
+        this.document.toneMappingExposure = this.bind('toneMappingExposure');
     }
 };
 __decorate([
@@ -69,9 +33,6 @@ __decorate([
 __decorate([
     Property({ type: Number, value: NoToneMapping })
 ], ThreeApplet.prototype, "toneMapping", void 0);
-__decorate([
-    Property({ type: Boolean, value: false })
-], ThreeApplet.prototype, "isPlaying", void 0);
 ThreeApplet = __decorate([
     Register
 ], ThreeApplet);
@@ -99,5 +60,10 @@ registerEditorGroups(ThreeApplet, {
         'toneMappingExposure',
         '_renderer',
         'changeBus',
+        'document',
+        'mode',
+        'activeTools',
+        'operators',
+        'tools',
     ],
 });

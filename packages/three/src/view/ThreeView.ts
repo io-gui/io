@@ -2,11 +2,13 @@ import { Register, ReactiveObject, ReactiveObjectProps, Property } from '@io-gui
 import { Camera, Object3D, OrthographicCamera, PerspectiveCamera, Scene } from 'three/webgpu'
 import { AxisView, ViewNavigation, ViewNavigationData } from './ViewNavigation.js'
 import { copyProjection } from '../utils/copyProjection.js'
+import type { InteractionProfile } from '../tools/Tool.js'
 
 export type ViewKind = '3d'
 
 export type ThreeViewProps = ReactiveObjectProps & {
   kind?: ViewKind
+  profile?: InteractionProfile
   overscan?: number
   clearColor?: number
   clearAlpha?: number
@@ -14,6 +16,7 @@ export type ThreeViewProps = ReactiveObjectProps & {
 
 export type ThreeViewData = {
   kind?: ViewKind
+  profile?: InteractionProfile
   overscan?: number
   clearColor?: number
   clearAlpha?: number
@@ -32,6 +35,10 @@ export class ThreeView extends ReactiveObject {
   @Property({type: String, value: '3d'})
   declare kind: ViewKind
 
+  /** What the viewport's router installs: `full` (tool + navigation), `select`, `navigate`, `none`. */
+  @Property({type: String, value: 'full'})
+  declare profile: InteractionProfile
+
   /** Extra margin drawn around the framed area (1 = none). */
   @Property({type: Number, value: 1.1})
   declare overscan: number
@@ -48,6 +55,8 @@ export class ThreeView extends ReactiveObject {
   private readonly _orthographic = new OrthographicCamera()
   private readonly _scenePerspective = new PerspectiveCamera()
   private readonly _sceneOrthographic = new OrthographicCamera()
+  /** Session state: navigation per document uuid, so switching documents back restores the camera. */
+  private readonly _navigationByDocument = new Map<string, ViewNavigationData>()
 
   constructor(args?: ThreeViewProps) {
     super(args)
@@ -74,6 +83,19 @@ export class ThreeView extends ReactiveObject {
 
   frame(object: Object3D, padding = 1) {
     this.navigation.frame(object, padding)
+    this.markNavigationChanged()
+  }
+
+  /**
+   * Stores the current navigation for `fromDocument` and restores the one saved for `toDocument`,
+   * or starts unframed (the viewport then frames the new scene).
+   */
+  switchDocument(fromDocument: string | null, toDocument: string) {
+    if (fromDocument === toDocument) return
+    if (fromDocument) this._navigationByDocument.set(fromDocument, this.navigation.toJSON())
+    const saved = this._navigationByDocument.get(toDocument)
+    if (saved) this.navigation.applyJSON(saved)
+    else this.navigation.copy(new ViewNavigation()).framed = false
     this.markNavigationChanged()
   }
 
@@ -180,6 +202,7 @@ export class ThreeView extends ReactiveObject {
   override toJSON(): ThreeViewData {
     return {
       kind: this.kind,
+      profile: this.profile,
       overscan: this.overscan,
       clearColor: this.clearColor,
       clearAlpha: this.clearAlpha,
@@ -191,6 +214,7 @@ export class ThreeView extends ReactiveObject {
     if (data.navigation) this.navigation.applyJSON(data.navigation)
     const props: ThreeViewProps = {}
     if (data.kind !== undefined) props.kind = data.kind
+    if (data.profile !== undefined) props.profile = data.profile
     if (data.overscan !== undefined) props.overscan = data.overscan
     if (data.clearColor !== undefined) props.clearColor = data.clearColor
     if (data.clearAlpha !== undefined) props.clearAlpha = data.clearAlpha

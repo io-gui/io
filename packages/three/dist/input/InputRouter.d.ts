@@ -14,11 +14,19 @@ export declare class InputRouter {
     private _hovered;
     private readonly _lastPositions;
     private _suppressContextMenu;
+    private _modal;
     constructor(host: InputHost);
     get behaviors(): readonly Behavior[];
     get captured(): Behavior | null;
     add(behavior: Behavior): void;
     remove(behavior: Behavior): void;
+    /**
+     * Gives every event in this viewport to `behavior` until `endModal(behavior)` (running modal operators).
+     * Whatever had captured is cancelled; pointers it held stay captured for the modal behavior.
+     */
+    startModal(behavior: Behavior): void;
+    endModal(behavior: Behavior): void;
+    get isModal(): boolean;
     handleKey(type: 'keydown' | 'keyup', native: KeyboardEvent): boolean;
     dispose(): void;
     private _event;
@@ -30,6 +38,7 @@ export declare class InputRouter {
     private _onPointerDown;
     private _onPointerMove;
     private _onPointerUp;
+    private _releasePointer;
     private _onPointerCancel;
     private _onWheel;
     private _onContextMenu;

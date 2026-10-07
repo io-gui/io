@@ -4,9 +4,41 @@ The `@io-gui/three` context: WebGPU Three.js viewports wired into Io-Gui's react
 
 ## Language
 
+**ThreeEditor**:
+The app object: one active ThreeDocument (switchable at runtime), editor mode, playback, operators and tools. Viewports read `editor.document`.
+_Avoid_: app, scene controller, ThreeApplet (for new code)
+
+**ThreeDocument**:
+The content of an editor: the scene of authored objects plus scene render settings. Edited through transactions.
+_Avoid_: model, project, file
+
+**Transaction**:
+One atomic group of patches: the unit of undo, change notification and sync. Applies edits immediately and records old values.
+_Avoid_: change set, batch, command (a command is the intent that runs one)
+
+**Patch**:
+The smallest invertible edit, addressed by object uuid: `set` (property path), `insert`, `remove`.
+_Avoid_: diff, delta, mutation (core term)
+
+**Operator**:
+One action with one transaction (`exec`, or `invoke` + `modal` for interactive ones). Tools and gizmos start operators; they never edit the document themselves.
+_Avoid_: action handler, command (the operator's serializable equivalent)
+
+**Command**:
+A finished operator run as name + serializable arguments, for repeat, journal and macros (`operators.lastCommand`).
+_Avoid_: operator (the runnable thing)
+
+**Tool (ToolDefinition)**:
+A persistent mode of interaction registered on the editor, active per view kind + mode; creates behaviors per viewport.
+_Avoid_: ToolBase (legacy adapter), manipulator
+
+**Interaction profile**:
+`ThreeView.profile`: what a viewport's router installs — `full`, `select`, `navigate`, `none`.
+_Avoid_: view mode, read-only
+
 **ThreeApplet**:
-ReactiveObject base for a Three.js application: owns the `Scene`, tone-mapping knobs, the `isPlaying` flag, and lifecycle hooks (`onRendererInitialized`, `onResized`, `onAnimate`).
-_Avoid_: scene controller, app, demo host
+Compatibility shim: a ThreeEditor with one document whose scene and tone-mapping props are bound to the document.
+_Avoid_: scene controller, demo host
 
 **CanvasTarget**:
 Per-viewport render surface the shared renderer draws into. Each `IoThreeViewport` has its own; viewports do not share canvases.

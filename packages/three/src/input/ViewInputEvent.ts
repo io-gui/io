@@ -5,6 +5,8 @@ import type { ThreeView } from '../view/ThreeView.js'
 export interface InputHost extends HTMLElement {
   readonly view: ThreeView
   readonly scene: Scene | null
+  /** Current editor mode (`'object'`, `'edit'`, ...), for keymap `when.mode`. */
+  readonly mode?: string
   getViewCamera(): PerspectiveCamera | OrthographicCamera
 }
 

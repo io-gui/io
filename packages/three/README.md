@@ -18,11 +18,17 @@ IoThreeViewport (element)
     ├── navigation: ViewNavigation (target, rotation, distance, projection, axis view, scene camera)
     └── overscan, clearColor, clearAlpha
 
-ThreeApplet (object)
-├── scene: Scene
-├── changeBus: ChangeBus
-├── toneMapping, toneMappingExposure, isPlaying
-└── onAnimate(delta, time), requestRender(), notify(change)
+ThreeEditor (object, one per app)
+├── document: ThreeDocument (switchable at runtime)
+│   ├── scene, toneMapping, toneMappingExposure
+│   ├── changeBus: ChangeBus
+│   └── transact() / begin(): Transaction of invertible patches
+├── mode, isPlaying, onAnimate(delta, time), requestRender()
+├── operators: OperatorRegistry (run, modal operators, lastCommand)
+└── tools: ToolRegistry + activeTools per '<viewKind>:<mode>'
+
+ThreeApplet (object, compatibility shim)
+└── a ThreeEditor whose scene / toneMapping props are bound to its document
 
 EditorConfigs (configs/*)
 └── Property editors for Three.js classes
@@ -36,7 +42,7 @@ WebGPU-powered viewport element for rendering Three.js scenes.
 
 ```typescript
 type IoThreeViewportProps = {
-  applet: ThreeApplet; // Application object
+  editor?: ThreeEditor; // App object (or `applet`, an alias for ThreeApplet)
   view?: ThreeView; // View state; pass one to keep navigation across remounts (default: the viewport makes its own)
   cameraSelect?: string; // Shorthand setting the view: 'perspective' | 'top' | 'bottom' | 'left' | 'right' | 'front' | 'back' | 'scene' | 'scene:<cameraName>'
   renderer?: WebGPURenderer; // Custom renderer (optional)
@@ -85,16 +91,65 @@ const viewport = new IoThreeViewport({
 
 ## Objects
 
-### ThreeApplet
+### ThreeEditor and ThreeDocument
 
-Base class for Three.js applications with lifecycle hooks.
+The app object and its content ([ADR-0002](./docs/adr/0002-app-view-frame-layers.md)). Viewports show `editor.document`; assigning a new document switches every viewport, and each view remembers its camera per document.
 
 ```typescript
-type ThreeAppletProps = {
+const editor = new ThreeEditor({ isPlaying: false });
+editor.document.scene.add(mesh);
+ioThreeViewport({ editor });
+
+editor.document = new ThreeDocument(); // switch; switching back restores each view's camera
+```
+
+**Edits go through transactions** of invertible patches ([ADR-0008](./docs/adr/0008-commands-transactions-and-patches.md)). Edits apply immediately and redraw the views; the old values are recorded, so a transaction can be rolled back, reverted or re-applied. Writes to the same path coalesce.
+
+```typescript
+editor.document.transact((tx) => {
+  tx.set(mesh, "position", new Vector3(1, 2, 3)); // math objects are copied in place
+  tx.set(mesh.uuid, "material.color", new Color(0xff0000));
+  tx.insert(group, mesh, 0);
+}, "Move mesh");
+
+const drag = editor.document.begin("Drag"); // long-running: commit() or rollback()
+```
+
+The undo stack and multi-user sync are planned on top of `document.history`, `revert()` / `reapply()` and `addCommitListener()`.
+
+### Operators
+
+One action, one transaction. `exec` for instant actions; `invoke` returning `'running'` plus `modal` for interactive ones, which then receive every event in the viewport (Escape cancels and rolls back).
+
+```typescript
+editor.operators.register({ id: "object.rename", label: "Rename", create: (props) => ({
+  exec: (ctx) => { ctx.transaction.set(props.id as string, "name", props.name); return "finished"; },
+}) });
+editor.operators.run("object.rename", { id: mesh.uuid, name: "Box" });
+editor.operators.run("object.slide", {}, { host: viewport, event }); // modal in that viewport
+editor.operators.lastCommand; // { name: "object.rename", args: {...} }
+```
+
+### Tools
+
+A tool is a definition registered on the editor and active per view kind + mode. Each viewport whose view `profile` allows it gets its own behaviors from `createBehaviors`.
+
+```typescript
+editor.tools.register({ id: "slide", label: "Slide", viewKinds: ["3d"], modes: ["object"],
+  createBehaviors: ({ editor, host }) => [mySlideBehavior(editor, host)] });
+editor.setActiveTool("3d", "object", "slide");
+viewport.view.profile = "navigate"; // 'full' | 'select' | 'navigate' | 'none'
+```
+
+### ThreeApplet
+
+Compatibility shim: a `ThreeEditor` with one document, whose `scene`, `toneMapping` and `toneMappingExposure` are two-way bound to the document. Existing applets keep working.
+
+```typescript
+type ThreeAppletProps = ThreeEditorProps & {
   scene?: Scene;
   toneMappingExposure?: number;
   toneMapping?: ToneMapping;
-  isPlaying?: boolean; // Run the animation loop
 };
 ```
 

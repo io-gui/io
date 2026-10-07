@@ -556,3 +556,11 @@
 - Lint: `_hoveredRouter = this` trips no-this-alias -> setHoveredRouter(this).
 - Headed check: LMB orbit, RMB pan, wheel (no page scroll), top-view LMB pans, Home frames, probe ToolBase gets LMB while RMB still pans. 952 tests pass.
 - Gotcha for ad-hoc classes in page: must core.Register() a ToolBase subclass before `new`.
+
+## 2026-10-07 — io-three Phase 4 (app layer) implemented
+
+### [three][editor]
+- ThreeEditor (document, mode, isPlaying, activeTools, lazy operators/tools registries, ticker, notify->document), ThreeDocument (scene, toneMapping*, uuid, changeBus, index by uuid w/ rebuild on miss, begin/transact (joins open tx), revert/reapply, history 100, commit listeners), Transaction (set coalesce, insert, remove, commit, rollback), Patch helpers. ThreeApplet = editor shim with props bound to document.
+- OperatorRegistry: run (poll, begin tx, invoke/exec, modal via router.startModal), Escape cancel, lastCommand. ToolRegistry + ToolDefinition + profiles. Viewport: editor prop, _syncDocument (park/restore nav per doc), _syncBehaviors (profile + active tool).
+- Gotchas: ThreeDocument.mutated() runs inside base ctor before changeBus field -> guard. In page.evaluate, import('three/webgpu') resolves via index.html import map = second three copy -> renders nothing; use Vite's /node_modules/.vite/deps/three_webgpu.js URL.
+- 971 tests pass. Headed: tool -> modal operator -> 1 transaction -> both views redraw; navigate profile blocks tool; doc switch restores nav.
