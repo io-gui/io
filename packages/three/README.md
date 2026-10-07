@@ -14,7 +14,9 @@ RenderScheduler (singleton, the only thing that renders)
 
 IoThreeViewport (element)
 ├── CanvasTarget (per viewport)
-└── ViewCameras (perspective/orthographic)
+└── view: ThreeView (object, outlives the element)
+    ├── navigation: ViewNavigation (target, rotation, distance, projection, axis view, scene camera)
+    └── overscan, clearColor, clearAlpha
 
 ThreeApplet (object)
 ├── scene: Scene
@@ -35,10 +37,8 @@ WebGPU-powered viewport element for rendering Three.js scenes.
 ```typescript
 type IoThreeViewportProps = {
   applet: ThreeApplet; // Application object
-  overscan?: number; // Camera overscan factor (default 1.1)
-  clearColor?: number; // Background color (hex)
-  clearAlpha?: number; // Background alpha (0-1)
-  cameraSelect?: string; // 'perspective' | 'top' | 'bottom' | 'left' | 'right' | 'front' | 'back' | 'scene' | 'scene:<cameraName>'
+  view?: ThreeView; // View state; pass one to keep navigation across remounts (default: the viewport makes its own)
+  cameraSelect?: string; // Shorthand setting the view: 'perspective' | 'top' | 'bottom' | 'left' | 'right' | 'front' | 'back' | 'scene' | 'scene:<cameraName>'
   renderer?: WebGPURenderer; // Custom renderer (optional)
   tool?: ToolBase; // Active 3D pointer tool (optional)
 };
@@ -50,7 +50,10 @@ type IoThreeViewportProps = {
 - Per-viewport CanvasTarget for independent rendering
 - IntersectionObserver for visibility-based rendering
 - Automatic resize handling with pixel ratio support
-- Debounced rendering for performance
+- Drawn by the RenderScheduler only when tagged dirty
+- `getViewCamera()` returns the camera it draws and picks with
+- Frames an object when its applet dispatches `frame-object` with `{object, overscan?}`
+- A `'scene'` / `'scene:<name>'` camera added later (async asset load) is picked up when it appears
 
 **Usage:**
 
@@ -101,23 +104,28 @@ type ThreeAppletProps = {
 | `onResized(width, height, viewport)` | Deprecated. Called when a viewport showing the applet resizes; last one wins |
 | `onAnimate(delta, time)`          | Called each frame while `isPlaying`  |
 
-### ViewCameras
+### ThreeView
 
-Manages viewport cameras with perspective and orthographic options.
+Serializable state of one view ([ADR-0002](./docs/adr/0002-app-view-frame-layers.md), [ADR-0005](./docs/adr/0005-navigation-is-view-state-camera-built-per-draw.md)). Navigation is stored as numbers in `view.navigation`; the camera is built from it for each draw and pick.
 
 ```typescript
-type ViewCamerasProps = {
-  viewport: IoThreeViewport;
-  applet: ThreeApplet;
-  cameraSelect: string; // see IoThreeViewport
-};
+const view = new ThreeView({ overscan: 1.1, clearColor: 0x000000 });
+view.setAxisView("top"); // orthographic axis view, or null for perspective
+view.setCameraSource(sceneCamera.uuid); // look through a scene camera (never mutated)
+view.frame(object); // fit an object
+view.getCamera(width, height, scene); // camera for this size
+view.toJSON(); // persist with a layout; restore with applyJSON()
+
+ioThreeViewport({ applet, view }); // the view survives the element being remounted
 ```
 
 **Key behaviors:**
 
-- Automatic aspect ratio adjustment
-- Overscan support for edge rendering
-- Camera switching without scene modification
+- Viewport aspect and overscan are applied at draw time, never stored
+- Scene cameras are copied, never mutated
+- A new view frames its scene once; restored views keep their navigation
+- After changing `view.navigation` directly, call `view.markNavigationChanged()`
+- Orbit/pan/zoom use `OrbitControls` on the view's private camera until the input router lands
 
 ## Editor Configurations
 
@@ -182,7 +190,7 @@ The renderer initializes asynchronously. The scheduler initializes each renderer
 
 ### Dispose Cleanup
 
-Disposing a viewport unregisters it from the scheduler, disposes its CanvasTarget and ViewCameras, and unregisters its tool. The renderer (shared or custom) is never disposed by the viewport.
+Disposing a viewport unregisters it from the scheduler, disposes its CanvasTarget and the view it created (a view passed in is not disposed), and unregisters its tool. The renderer (shared or custom) is never disposed by the viewport.
 
 ## Packaging
 

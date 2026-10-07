@@ -32,9 +32,17 @@ _Avoid_: notifier, event bus
 `ThreeApplet.isPlaying`: whether the scheduler ticks the applet (`onAnimate(delta, time)`) each frame. Independently, non-visible viewports skip draws via IntersectionObserver.
 _Avoid_: animating, running, live
 
-**ViewCameras**:
-ReactiveObject that owns perspective/orthographic cameras for one viewport and switches between them without mutating the scene graph.
-_Avoid_: camera rig, camera controller
+**ThreeView**:
+Serializable ReactiveObject holding one view's state: navigation, overscan and clear color. Shown by an IoThreeViewport and outlives it.
+_Avoid_: viewport state, ViewCameras (removed)
+
+**ViewNavigation**:
+A view's navigation as numbers: target, rotation, distance, projection, fov, clip range, axis view and an optional scene camera (`cameraSource`, by uuid). The draw camera is built from it per frame.
+_Avoid_: camera rig, camera controller, orbit state
+
+**Axis view**:
+An orthographic view looking along a world axis: `top`, `bottom`, `left`, `right`, `front`, `back`.
+_Avoid_: ortho camera, named camera
 
 **ToolBase**:
 ReactiveObject base for 3D pointer tools: registers on viewports, builds Pointer3D rays from pointer events, and subclasses implement tool behavior.

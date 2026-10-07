@@ -1,8 +1,10 @@
 import { Register, ReactiveElement, ReactiveElementProps, Property, Change, Field, WithBinding } from '@io-gui/core'
-import { WebGPURenderer, CanvasTarget, Scene } from 'three/webgpu'
+import { WebGPURenderer, CanvasTarget, Scene, Object3D, OrthographicCamera, PerspectiveCamera } from 'three/webgpu'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
-import { ViewCameras } from '../nodes/ViewCameras.js'
 import { ToolBase } from '../nodes/ToolBase.js'
+import { ThreeView } from '../view/ThreeView.js'
+import { AXIS_VIEW_DIRECTIONS, AxisView } from '../view/ViewNavigation.js'
+import { ViewOrbitControls } from '../view/ViewOrbitControls.js'
 import { DocumentChange, ChangeBus } from '../editor/ChangeBus.js'
 import { renderScheduler, getDefaultRenderer, ScheduledView, DirtyReason } from '../render/RenderScheduler.js'
 
@@ -14,13 +16,11 @@ const observer = new IntersectionObserver((entries) => {
   })
 })
 
-// TODO: Add support for logarithmic depth buffer
-
 export type IoThreeViewportProps = ReactiveElementProps & {
   applet: WithBinding<ThreeApplet>
-  overscan?: WithBinding<number>
-  clearColor?: WithBinding<number>
-  clearAlpha?: WithBinding<number>
+  /** View state to show. Pass one to keep navigation across remounts; otherwise the viewport makes its own. */
+  view?: WithBinding<ThreeView>
+  /** Shorthand that sets the view: `'perspective'`, an axis (`'top'`, `'front'`, ...), `'scene'` or `'scene:<camera name>'`. */
   cameraSelect?: WithBinding<string>
   renderer?: WebGPURenderer
   tool?: WithBinding<ToolBase>
@@ -36,23 +36,15 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   @Property({type: ThreeApplet, init: null})
   declare applet: ThreeApplet
 
-  @Property({type: Number, value: 1.1})
-  declare public overscan: number
+  @Property({type: ThreeView})
+  declare view: ThreeView
 
-  @Property({type: Number, value: 0x000000})
-  declare public clearColor: number
-
-  @Property({type: Number, value: 1})
-  declare public clearAlpha: number
-
-  @Property({type: String, value: 'perspective'})
+  /** Empty leaves the view as it is. */
+  @Property({type: String, value: ''})
   declare cameraSelect: string
 
   @Property({type: WebGPURenderer})
   declare renderer: WebGPURenderer
-
-  @Property({type: ViewCameras})
-  declare viewCameras: ViewCameras
 
   @Property({type: ToolBase})
   declare tool: ToolBase
@@ -100,15 +92,23 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
 
   static override get Listeners() {
     return {
+      'frame-object': 'onFrameObject',
     }
   }
+
+  declare private _ownsView: boolean
+  /** `cameraSelect` asks for a scene camera that is not in the scene yet (assets still loading). */
+  declare private _sceneCameraPending: boolean
+  declare private _orbitControls: ViewOrbitControls
 
   constructor(args: IoThreeViewportProps) {
     super({
       ...args,
+      view: args.view ?? new ThreeView(),
       renderer: args.renderer ?? getDefaultRenderer(),
     } as ReactiveElementProps)
-    this.viewCameras = new ViewCameras({viewport: this, applet: this.bind('applet'), cameraSelect: this.bind('cameraSelect')})
+    this._ownsView = !args.view
+    this._orbitControls = new ViewOrbitControls(this)
   }
 
   override ready() {
@@ -160,6 +160,27 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
     this.textContent = error.message
   }
 
+  /** The camera this viewport draws and picks with, built from its view at the current size. */
+  getViewCamera(): PerspectiveCamera | OrthographicCamera {
+    return this.view.getCamera(this.width, this.height, this.scene)
+  }
+
+  /** Applet event `frame-object` with `{object, overscan?}`: frames the object in this viewport's view. */
+  onFrameObject(event: CustomEvent<{object: Object3D; overscan?: number}>) {
+    event.stopPropagation()
+    if (this._sceneCameraPending) this._syncView()
+    this.view.frame(event.detail.object, event.detail.overscan ?? 1)
+  }
+
+  private _syncView() {
+    const view = this.view
+    const scene = this.scene
+    if (!view) return
+    this._sceneCameraPending = !applyCameraSelect(view, this.cameraSelect, scene)
+    if (!view.navigation.framed && scene) view.frame(scene)
+    this._orbitControls?.updateEnabled()
+  }
+
   toolChanged(change: Change<ToolBase>) {
     const newTool = change.value
     const oldTool = change.oldValue
@@ -181,12 +202,26 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   }
 
   appletChanged() {
+    this._syncView()
     this.tag('content')
   }
   appletMutated() {
+    if (this._sceneCameraPending) this._syncView()
     this.tag('content')
   }
-  viewCamerasMutated() {
+  cameraSelectChanged() {
+    this._syncView()
+  }
+  viewChanged(change: Change<ThreeView>) {
+    if (this._ownsView && change.oldValue && change.oldValue !== change.value) {
+      change.oldValue.dispose()
+      this._ownsView = false
+    }
+    this._syncView()
+    this.tag('view')
+  }
+  viewMutated() {
+    this._orbitControls?.updateEnabled()
     this.tag('view')
   }
   override mutated() {
@@ -195,12 +230,13 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
 
   /** Called by the RenderScheduler only (ADR-0003). */
   renderView() {
+    if (this._sceneCameraPending) this._syncView()
     if (this.applet.isRendererInitialized() === false) {
       void this.applet.onRendererInitialized(this.renderer)
     }
 
     this.renderer.setCanvasTarget(this.renderTarget)
-    this.renderer.setClearColor(this.clearColor, this.clearAlpha)
+    this.renderer.setClearColor(this.view.clearColor, this.view.clearAlpha)
     this.renderer.setSize(this.width, this.height)
     this.renderer.clear()
 
@@ -210,9 +246,7 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
     this.renderer.toneMapping = this.applet.toneMapping
     this.renderer.toneMappingExposure = this.applet.toneMappingExposure
 
-    this.viewCameras.setOverscan(this.width, this.height, this.overscan)
-    this.renderer.render(this.applet.scene, this.viewCameras.camera)
-    this.viewCameras.resetOverscan()
+    this.renderer.render(this.applet.scene, this.getViewCamera())
 
     this.renderer.toneMapping = toneMapping
     this.renderer.toneMappingExposure = toneMappingExposure
@@ -222,12 +256,49 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
     renderScheduler.unregister(this)
     delete (this as Record<string, unknown>).applet
     this.renderTarget.dispose()
-    this.viewCameras.dispose()
+    this._orbitControls.dispose()
+    if (this._ownsView) this.view.dispose()
     if (this.tool) {
       this.tool.unregisterViewport(this)
     }
     super.dispose()
   }
+}
+
+/**
+ * Maps the `cameraSelect` shorthand onto a view: `'perspective'`, an axis view, `'scene'` (first scene camera)
+ * or `'scene:<name>'` (scene camera by name, resolved to its uuid).
+ * Returns false when a requested scene camera is not in the scene yet; the view then shows the default
+ * perspective view until it appears.
+ */
+function applyCameraSelect(view: ThreeView, cameraSelect: string, scene: Scene | null): boolean {
+  if (!cameraSelect) return true
+  const nav = view.navigation
+  let resolved = true
+  if (cameraSelect.startsWith('scene')) {
+    const name = cameraSelect.split(':')[1] || ''
+    const cameras = scene ? [
+      ...scene.getObjectsByProperty('isPerspectiveCamera', true),
+      ...scene.getObjectsByProperty('isOrthographicCamera', true),
+    ] : []
+    const camera = name ? cameras.find(camera => camera.name === name) : cameras[0]
+    if (camera) {
+      if (nav.cameraSource !== camera.uuid) view.setCameraSource(camera.uuid)
+      return true
+    }
+    resolved = false
+    cameraSelect = 'perspective'
+  }
+  if (nav.cameraSource !== null) view.setCameraSource(null)
+  if (cameraSelect === 'perspective') {
+    if (nav.axisView !== null) view.setAxisView(null)
+  } else if (cameraSelect in AXIS_VIEW_DIRECTIONS) {
+    if (nav.axisView !== cameraSelect) view.setAxisView(cameraSelect as AxisView)
+  } else {
+    console.warn(`Unknown cameraSelect "${cameraSelect}", using default perspective view`)
+    if (nav.axisView !== null) view.setAxisView(null)
+  }
+  return resolved
 }
 
 export const ioThreeViewport = function(arg0: IoThreeViewportProps) {

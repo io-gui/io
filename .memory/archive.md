@@ -540,3 +540,11 @@
 - ThreeApplet: no own rAF/Timer/_width/_height; ticker via scheduler; changeBus, notify(), requestRender(); onResized(w,h,viewport) on resize only.
 - Tests 918/918 pass; new RenderScheduler.test.ts (14), ThreeApplet.test.ts, viewport tests.
 - Gotchas: headless Chromium screenshots of WebGPU canvases blank -> use headed playwright. Vite aliases @io-gui/* to src; page.evaluate import('@io-gui/three') hits import map dist -> double registration; import '/packages/three/src/index.ts'. Demos render children in ctor -> construct with new, not document.createElement.
+
+## 2026-10-07 — io-three Phase 2 (view layer) implemented
+
+### [three][view]
+- ThreeView (ReactiveObject: kind, overscan, clearColor, clearAlpha; navigation plain; getCamera builds private persp/ortho per call; scene camera copied via decompose+copyProjection, never mutated; toJSON/applyJSON). ViewNavigation (target, rotation, distance, projection, fov, near/far, axisView, cameraSource uuid, framed). ViewOrbitControls bridge (OrbitControls drives view private camera; change -> write back nav; ortho zoom folded into distance).
+- Viewport: view prop (owns default, created in ctor not via init since init builds default even when arg passed), cameraSelect '' default, applyCameraSelect pending retry for late scene cameras, frame-object listener, getViewCamera(). ViewCameras deleted.
+- Bug found: OrbitControls(camera, element) ctor -> connect() disconnects first -> io-gui 'Listener not found' errors. Construct without element, then connect().
+- Tests 927->44 three tests; manual headed check: axis views, ortho wheel zoom, persp orbit, scene cameras, train camera after GLTF load.

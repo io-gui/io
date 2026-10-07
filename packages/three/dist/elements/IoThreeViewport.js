@@ -7,8 +7,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Register, ReactiveElement, Property, Field } from '@io-gui/core';
 import { WebGPURenderer, CanvasTarget } from 'three/webgpu';
 import { ThreeApplet } from '../nodes/ThreeApplet.js';
-import { ViewCameras } from '../nodes/ViewCameras.js';
 import { ToolBase } from '../nodes/ToolBase.js';
+import { ThreeView } from '../view/ThreeView.js';
+import { AXIS_VIEW_DIRECTIONS } from '../view/ViewNavigation.js';
+import { ViewOrbitControls } from '../view/ViewOrbitControls.js';
 import { renderScheduler, getDefaultRenderer } from '../render/RenderScheduler.js';
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -57,14 +59,18 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
     `;
     }
     static get Listeners() {
-        return {};
+        return {
+            'frame-object': 'onFrameObject',
+        };
     }
     constructor(args) {
         super({
             ...args,
+            view: args.view ?? new ThreeView(),
             renderer: args.renderer ?? getDefaultRenderer(),
         });
-        this.viewCameras = new ViewCameras({ viewport: this, applet: this.bind('applet'), cameraSelect: this.bind('cameraSelect') });
+        this._ownsView = !args.view;
+        this._orbitControls = new ViewOrbitControls(this);
     }
     ready() {
         this.attachSurface();
@@ -108,6 +114,27 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
     onRendererError(error) {
         this.textContent = error.message;
     }
+    /** The camera this viewport draws and picks with, built from its view at the current size. */
+    getViewCamera() {
+        return this.view.getCamera(this.width, this.height, this.scene);
+    }
+    /** Applet event `frame-object` with `{object, overscan?}`: frames the object in this viewport's view. */
+    onFrameObject(event) {
+        event.stopPropagation();
+        if (this._sceneCameraPending)
+            this._syncView();
+        this.view.frame(event.detail.object, event.detail.overscan ?? 1);
+    }
+    _syncView() {
+        const view = this.view;
+        const scene = this.scene;
+        if (!view)
+            return;
+        this._sceneCameraPending = !applyCameraSelect(view, this.cameraSelect, scene);
+        if (!view.navigation.framed && scene)
+            view.frame(scene);
+        this._orbitControls?.updateEnabled();
+    }
     toolChanged(change) {
         const newTool = change.value;
         const oldTool = change.oldValue;
@@ -131,12 +158,27 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         this.tag('resize');
     }
     appletChanged() {
+        this._syncView();
         this.tag('content');
     }
     appletMutated() {
+        if (this._sceneCameraPending)
+            this._syncView();
         this.tag('content');
     }
-    viewCamerasMutated() {
+    cameraSelectChanged() {
+        this._syncView();
+    }
+    viewChanged(change) {
+        if (this._ownsView && change.oldValue && change.oldValue !== change.value) {
+            change.oldValue.dispose();
+            this._ownsView = false;
+        }
+        this._syncView();
+        this.tag('view');
+    }
+    viewMutated() {
+        this._orbitControls?.updateEnabled();
         this.tag('view');
     }
     mutated() {
@@ -144,20 +186,20 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
     }
     /** Called by the RenderScheduler only (ADR-0003). */
     renderView() {
+        if (this._sceneCameraPending)
+            this._syncView();
         if (this.applet.isRendererInitialized() === false) {
             void this.applet.onRendererInitialized(this.renderer);
         }
         this.renderer.setCanvasTarget(this.renderTarget);
-        this.renderer.setClearColor(this.clearColor, this.clearAlpha);
+        this.renderer.setClearColor(this.view.clearColor, this.view.clearAlpha);
         this.renderer.setSize(this.width, this.height);
         this.renderer.clear();
         const toneMapping = this.renderer.toneMapping;
         const toneMappingExposure = this.renderer.toneMappingExposure;
         this.renderer.toneMapping = this.applet.toneMapping;
         this.renderer.toneMappingExposure = this.applet.toneMappingExposure;
-        this.viewCameras.setOverscan(this.width, this.height, this.overscan);
-        this.renderer.render(this.applet.scene, this.viewCameras.camera);
-        this.viewCameras.resetOverscan();
+        this.renderer.render(this.applet.scene, this.getViewCamera());
         this.renderer.toneMapping = toneMapping;
         this.renderer.toneMappingExposure = toneMappingExposure;
     }
@@ -165,7 +207,9 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         renderScheduler.unregister(this);
         delete this.applet;
         this.renderTarget.dispose();
-        this.viewCameras.dispose();
+        this._orbitControls.dispose();
+        if (this._ownsView)
+            this.view.dispose();
         if (this.tool) {
             this.tool.unregisterViewport(this);
         }
@@ -176,23 +220,14 @@ __decorate([
     Property({ type: ThreeApplet, init: null })
 ], IoThreeViewport.prototype, "applet", void 0);
 __decorate([
-    Property({ type: Number, value: 1.1 })
-], IoThreeViewport.prototype, "overscan", void 0);
+    Property({ type: ThreeView })
+], IoThreeViewport.prototype, "view", void 0);
 __decorate([
-    Property({ type: Number, value: 0x000000 })
-], IoThreeViewport.prototype, "clearColor", void 0);
-__decorate([
-    Property({ type: Number, value: 1 })
-], IoThreeViewport.prototype, "clearAlpha", void 0);
-__decorate([
-    Property({ type: String, value: 'perspective' })
+    Property({ type: String, value: '' })
 ], IoThreeViewport.prototype, "cameraSelect", void 0);
 __decorate([
     Property({ type: WebGPURenderer })
 ], IoThreeViewport.prototype, "renderer", void 0);
-__decorate([
-    Property({ type: ViewCameras })
-], IoThreeViewport.prototype, "viewCameras", void 0);
 __decorate([
     Property({ type: ToolBase })
 ], IoThreeViewport.prototype, "tool", void 0);
@@ -203,6 +238,49 @@ IoThreeViewport = __decorate([
     Register
 ], IoThreeViewport);
 export { IoThreeViewport };
+/**
+ * Maps the `cameraSelect` shorthand onto a view: `'perspective'`, an axis view, `'scene'` (first scene camera)
+ * or `'scene:<name>'` (scene camera by name, resolved to its uuid).
+ * Returns false when a requested scene camera is not in the scene yet; the view then shows the default
+ * perspective view until it appears.
+ */
+function applyCameraSelect(view, cameraSelect, scene) {
+    if (!cameraSelect)
+        return true;
+    const nav = view.navigation;
+    let resolved = true;
+    if (cameraSelect.startsWith('scene')) {
+        const name = cameraSelect.split(':')[1] || '';
+        const cameras = scene ? [
+            ...scene.getObjectsByProperty('isPerspectiveCamera', true),
+            ...scene.getObjectsByProperty('isOrthographicCamera', true),
+        ] : [];
+        const camera = name ? cameras.find(camera => camera.name === name) : cameras[0];
+        if (camera) {
+            if (nav.cameraSource !== camera.uuid)
+                view.setCameraSource(camera.uuid);
+            return true;
+        }
+        resolved = false;
+        cameraSelect = 'perspective';
+    }
+    if (nav.cameraSource !== null)
+        view.setCameraSource(null);
+    if (cameraSelect === 'perspective') {
+        if (nav.axisView !== null)
+            view.setAxisView(null);
+    }
+    else if (cameraSelect in AXIS_VIEW_DIRECTIONS) {
+        if (nav.axisView !== cameraSelect)
+            view.setAxisView(cameraSelect);
+    }
+    else {
+        console.warn(`Unknown cameraSelect "${cameraSelect}", using default perspective view`);
+        if (nav.axisView !== null)
+            view.setAxisView(null);
+    }
+    return resolved;
+}
 export const ioThreeViewport = function (arg0) {
     return IoThreeViewport.vConstructor(arg0);
 };

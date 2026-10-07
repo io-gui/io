@@ -194,10 +194,7 @@ let ToolBase = class ToolBase extends ReactiveObject {
         const hoverPointers = this._getHoverPointers(viewport);
         const _rect = viewport.getBoundingClientRect();
         const screen = new Vector2(((event.clientX - _rect.left) / _rect.width) * 2 - 1, -((event.clientY - _rect.top) / _rect.height) * 2 + 1);
-        viewport.viewCameras.setOverscan(viewport.width, viewport.height, viewport.overscan);
-        const camera = viewport.viewCameras.camera;
-        _raycaster.setFromCamera(screen, camera);
-        viewport.viewCameras.resetOverscan();
+        _raycaster.setFromCamera(screen, viewport.getViewCamera());
         const { origin, direction } = _raycaster.ray;
         const previousPointer3D = this._findPointer(activePointers, event.pointerId) || this._findPointer(hoverPointers, event.pointerId);
         if (previousPointer3D) {
