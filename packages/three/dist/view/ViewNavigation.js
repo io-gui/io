@@ -104,12 +104,14 @@ export class ViewNavigation {
         return this.distance * Math.tan(this.fov * Math.PI / 360);
     }
     /**
-     * Fits `object` into a square viewport without changing the view direction.
+     * Fits `object` (or several) into a square viewport without changing the view direction.
      * `padding` > 1 leaves room around the object.
      */
     frame(object, padding = 1) {
         // precise=true: use current morph influences, not unused morph extremes
-        _box.setFromObject(object, true);
+        _box.makeEmpty();
+        for (const item of Array.isArray(object) ? object : [object])
+            _box.expandByObject(item, true);
         if (_box.isEmpty()) {
             // Focusing on a Group, AmbientLight, etc
             _box.setFromCenterAndSize(_center.set(0, 0, 0), _size.set(0.2, 0.2, 0.2));

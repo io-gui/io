@@ -53,10 +53,10 @@ export declare class ViewNavigation {
     /** Half height of the visible area at the target, for a square viewport. */
     getHalfHeight(): number;
     /**
-     * Fits `object` into a square viewport without changing the view direction.
+     * Fits `object` (or several) into a square viewport without changing the view direction.
      * `padding` > 1 leaves room around the object.
      */
-    frame(object: Object3D, padding?: number): void;
+    frame(object: Object3D | readonly Object3D[], padding?: number): void;
     copy(source: ViewNavigation): this;
     toJSON(): ViewNavigationData;
     applyJSON(data: Partial<ViewNavigationData>): this;

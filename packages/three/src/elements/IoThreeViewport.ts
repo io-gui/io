@@ -9,8 +9,10 @@ import { ToolBase } from '../nodes/ToolBase.js'
 import { ThreeView } from '../view/ThreeView.js'
 import { AXIS_VIEW_DIRECTIONS, AxisView } from '../view/ViewNavigation.js'
 import { InputRouter } from '../input/InputRouter.js'
-import { Keymap, navigationKeymaps } from '../input/Keymap.js'
+import { Keymap, keymaps } from '../input/Keymap.js'
 import { NavigationBehavior } from '../input/behaviors/NavigationBehavior.js'
+import { SelectBehavior } from '../input/behaviors/SelectBehavior.js'
+import type { SelectionModel } from '../selection/SelectionModel.js'
 import { DocumentChange, ChangeBus } from '../editor/ChangeBus.js'
 import { renderScheduler, getDefaultRenderer, ScheduledView, DirtyReason } from '../render/RenderScheduler.js'
 
@@ -31,7 +33,7 @@ export type IoThreeViewportProps = ReactiveElementProps & {
   view?: WithBinding<ThreeView>
   /** Shorthand that sets the view: `'perspective'`, an axis (`'top'`, `'front'`, ...), `'scene'` or `'scene:<camera name>'`. */
   cameraSelect?: WithBinding<string>
-  /** Navigation bindings (default: `navigationKeymaps.default`, OrbitControls-like). */
+  /** Navigation and selection bindings (default: `keymaps.default`, OrbitControls-like navigation). */
   keymap?: Keymap
   renderer?: WebGPURenderer
   tool?: WithBinding<ToolBase>
@@ -60,7 +62,7 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   @Property({type: WebGPURenderer})
   declare renderer: WebGPURenderer
 
-  @Property({type: Keymap, value: navigationKeymaps.default})
+  @Property({type: Keymap, value: keymaps.default})
   declare keymap: Keymap
 
   @Property({type: ToolBase})
@@ -120,6 +122,7 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   // Lazy, like renderTarget: a `tool` passed to the constructor registers before the constructor body runs.
   declare private _inputRouter: InputRouter | undefined
   declare private _navigation: NavigationBehavior | undefined
+  declare private _select: SelectBehavior | undefined
   declare private _toolBehaviors: {toolId: string; behaviors: Behavior[]} | undefined
   declare private _shownDocument: ThreeDocument | undefined
 
@@ -128,7 +131,9 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
     if (!this._inputRouter) {
       this._inputRouter = new InputRouter(this)
       this._navigation = new NavigationBehavior(this, this.keymap)
+      this._select = new SelectBehavior(this, this.keymap)
       this._inputRouter.add(this._navigation)
+      this._inputRouter.add(this._select)
     }
     return this._inputRouter
   }
@@ -136,6 +141,11 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   get navigationBehavior(): NavigationBehavior {
     void this.inputRouter
     return this._navigation!
+  }
+
+  get selectBehavior(): SelectBehavior {
+    void this.inputRouter
+    return this._select!
   }
 
   constructor(args: IoThreeViewportProps) {
@@ -177,6 +187,10 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
 
   get mode(): string | undefined {
     return this.editor?.mode
+  }
+
+  get selection(): SelectionModel | null {
+    return this.editor?.selection ?? null
   }
 
   /** Marks this viewport for redraw on the next frame. */
@@ -237,6 +251,8 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
     const router = this._inputRouter
     if (view.profile === 'none') router.remove(this._navigation!)
     else router.add(this._navigation!)
+    if (view.profile === 'full' || view.profile === 'select') router.add(this._select!)
+    else router.remove(this._select!)
 
     const tool = this.editor?.getActiveTool(view.kind) ?? null
     const toolId = tool && toolAllowsProfile(tool, view.profile) ? tool.id : null
@@ -299,6 +315,7 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   }
   keymapChanged() {
     if (this._navigation) this._navigation.keymap = this.keymap
+    if (this._select) this._select.keymap = this.keymap
   }
   viewMutated() {
     this._syncBehaviors()

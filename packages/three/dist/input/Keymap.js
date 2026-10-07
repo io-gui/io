@@ -14,9 +14,9 @@ export function parseInput(input) {
             modifiers[modifier] = true;
     }
     let trigger;
-    const press = /^(LMB|MMB|RMB) drag$/.exec(last);
+    const press = /^(LMB|MMB|RMB) (drag|click)$/.exec(last);
     if (press)
-        trigger = { type: 'press', button: BUTTONS[press[1]] };
+        trigger = { type: press[2] === 'drag' ? 'press' : 'click', button: BUTTONS[press[1]] };
     else if (last === 'wheel')
         trigger = { type: 'wheel' };
     else
@@ -29,7 +29,7 @@ function sameModifiers(a, b) {
 function sameTrigger(a, b) {
     if (a.type !== b.type)
         return false;
-    if (a.type === 'press')
+    if (a.type === 'press' || a.type === 'click')
         return a.button === b.button;
     if (a.type === 'key')
         return a.code === b.code;
@@ -54,6 +54,8 @@ export class Keymap {
         let trigger;
         if (event.type === 'pointerdown')
             trigger = { type: 'press', button: event.button };
+        else if (event.type === 'click')
+            trigger = { type: 'click', button: event.button };
         else if (event.type === 'wheel')
             trigger = { type: 'wheel' };
         else if (event.type === 'keydown')
@@ -117,6 +119,7 @@ export const navigationKeymaps = {
         { input: 'wheel', action: 'view.zoom' },
         { input: 'Ctrl+wheel', action: 'view.zoom' },
         { input: 'Home', action: 'view.frameAll' },
+        { input: 'KeyF', action: 'view.frameSelected' },
     ]),
     blender: new Keymap([
         { input: 'MMB drag', action: 'view.orbit' },
@@ -125,6 +128,7 @@ export const navigationKeymaps = {
         { input: 'wheel', action: 'view.zoom' },
         { input: 'Ctrl+wheel', action: 'view.zoom' },
         { input: 'Home', action: 'view.frameAll' },
+        { input: 'NumpadDecimal', action: 'view.frameSelected' },
         ...axisKeys('Numpad1', 'Numpad3', 'Numpad7'),
     ]),
     maya: new Keymap([
@@ -134,6 +138,47 @@ export const navigationKeymaps = {
         { input: 'wheel', action: 'view.zoom' },
         { input: 'Ctrl+wheel', action: 'view.zoom' },
         { input: 'KeyA', action: 'view.frameAll' },
-        { input: 'KeyF', action: 'view.frameAll' },
+        { input: 'KeyF', action: 'view.frameSelected' },
     ]),
+};
+/**
+ * Selection bindings. Clicks share LMB with drag navigation in the default preset; box select there is
+ * `Alt+LMB drag`. Blender and Maya keep LMB drag free for box select.
+ */
+export const selectionKeymaps = {
+    default: new Keymap([
+        { input: 'LMB click', action: 'select.click', props: { mode: 'set' } },
+        { input: 'Shift+LMB click', action: 'select.click', props: { mode: 'toggle' } },
+        { input: 'Ctrl+LMB click', action: 'select.click', props: { mode: 'subtract' } },
+        { input: 'Alt+LMB drag', action: 'select.box', props: { mode: 'set' } },
+        { input: 'Shift+Alt+LMB drag', action: 'select.box', props: { mode: 'extend' } },
+        { input: 'Ctrl+KeyA', action: 'select.all' },
+        { input: 'Escape', action: 'select.none' },
+    ]),
+    blender: new Keymap([
+        { input: 'LMB click', action: 'select.click', props: { mode: 'set' } },
+        { input: 'Shift+LMB click', action: 'select.click', props: { mode: 'toggle' } },
+        { input: 'Ctrl+LMB click', action: 'select.click', props: { mode: 'subtract' } },
+        { input: 'LMB drag', action: 'select.box', props: { mode: 'set' } },
+        { input: 'Shift+LMB drag', action: 'select.box', props: { mode: 'extend' } },
+        { input: 'Ctrl+LMB drag', action: 'select.box', props: { mode: 'subtract' } },
+        { input: 'KeyA', action: 'select.all' },
+        { input: 'Alt+KeyA', action: 'select.none' },
+        { input: 'Ctrl+KeyI', action: 'select.invert' },
+    ]),
+    maya: new Keymap([
+        { input: 'LMB click', action: 'select.click', props: { mode: 'set' } },
+        { input: 'Shift+LMB click', action: 'select.click', props: { mode: 'toggle' } },
+        { input: 'Ctrl+LMB click', action: 'select.click', props: { mode: 'subtract' } },
+        { input: 'LMB drag', action: 'select.box', props: { mode: 'set' } },
+        { input: 'Shift+LMB drag', action: 'select.box', props: { mode: 'toggle' } },
+        { input: 'Ctrl+LMB drag', action: 'select.box', props: { mode: 'subtract' } },
+        { input: 'Ctrl+Shift+KeyI', action: 'select.invert' },
+    ]),
+};
+/** Navigation and selection together, per preset. Behaviors pick their own actions (`view.*`, `select.*`). */
+export const keymaps = {
+    default: Keymap.layer(navigationKeymaps.default, selectionKeymaps.default),
+    blender: Keymap.layer(navigationKeymaps.blender, selectionKeymaps.blender),
+    maya: Keymap.layer(navigationKeymaps.maya, selectionKeymaps.maya),
 };

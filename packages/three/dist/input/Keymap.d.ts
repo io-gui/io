@@ -2,8 +2,9 @@ import type { ViewKind } from '../view/ThreeView.js';
 import type { ViewInputEvent, Modifiers } from './ViewInputEvent.js';
 /**
  * One binding, as data. `input` grammar: optional modifiers joined with `+`, then one of
- * `LMB drag` / `MMB drag` / `RMB drag`, `wheel`, or a `KeyboardEvent.code` (`KeyF`, `Numpad7`, `Home`).
- * Examples: `'Alt+LMB drag'`, `'Ctrl+wheel'`, `'Ctrl+Numpad7'`.
+ * `LMB drag` / `MMB drag` / `RMB drag` (press), `LMB click` / ... (press and release without dragging),
+ * `wheel`, or a `KeyboardEvent.code` (`KeyF`, `Numpad7`, `Home`).
+ * Examples: `'Alt+LMB drag'`, `'Shift+LMB click'`, `'Ctrl+wheel'`, `'Ctrl+Numpad7'`.
  */
 export interface KeymapEntry {
     input: string;
@@ -16,6 +17,9 @@ export interface KeymapEntry {
 }
 type ParsedTrigger = {
     type: 'press';
+    button: number;
+} | {
+    type: 'click';
     button: number;
 } | {
     type: 'wheel';
@@ -44,6 +48,21 @@ export declare class Keymap {
 }
 /** Navigation bindings. `default` matches three.js OrbitControls, so viewports feel as before. */
 export declare const navigationKeymaps: {
+    default: Keymap;
+    blender: Keymap;
+    maya: Keymap;
+};
+/**
+ * Selection bindings. Clicks share LMB with drag navigation in the default preset; box select there is
+ * `Alt+LMB drag`. Blender and Maya keep LMB drag free for box select.
+ */
+export declare const selectionKeymaps: {
+    default: Keymap;
+    blender: Keymap;
+    maya: Keymap;
+};
+/** Navigation and selection together, per preset. Behaviors pick their own actions (`view.*`, `select.*`). */
+export declare const keymaps: {
     default: Keymap;
     blender: Keymap;
     maya: Keymap;

@@ -23,7 +23,7 @@ describe('IoThreeViewport', () => {
     const tool = new ToolBase({ applet })
     const viewport = new IoThreeViewport({ applet, tool })
     expect(viewport.navigationBehavior).toBeInstanceOf(NavigationBehavior)
-    expect(viewport.inputRouter.behaviors).toEqual([tool.behavior, viewport.navigationBehavior])
+    expect(viewport.inputRouter.behaviors).toEqual([tool.behavior, viewport.navigationBehavior, viewport.selectBehavior])
     viewport.keymap = navigationKeymaps.blender
     expect(viewport.navigationBehavior.keymap).toBe(navigationKeymaps.blender)
     viewport.dispose()
@@ -220,12 +220,14 @@ describe('IoThreeViewport', () => {
     editor.mode = 'object'
     expect(viewport.inputRouter.behaviors).toContain(behavior)
 
+    viewport.view.profile = 'select'
+    expect(viewport.inputRouter.behaviors).toEqual([viewport.navigationBehavior, viewport.selectBehavior])
     viewport.view.profile = 'navigate'
     expect(viewport.inputRouter.behaviors).toEqual([viewport.navigationBehavior])
     viewport.view.profile = 'none'
     expect(viewport.inputRouter.behaviors).toEqual([])
     viewport.view.profile = 'full'
-    expect(viewport.inputRouter.behaviors).toEqual([behavior, viewport.navigationBehavior])
+    expect(viewport.inputRouter.behaviors).toEqual([behavior, viewport.navigationBehavior, viewport.selectBehavior])
     viewport.dispose()
     editor.dispose()
   })

@@ -47,7 +47,7 @@ export declare class ThreeView extends ReactiveObject {
     setAxisView(axis: AxisView | null): void;
     /** Looks through a scene camera by `uuid`, or stops with `null`. */
     setCameraSource(uuid: string | null): void;
-    frame(object: Object3D, padding?: number): void;
+    frame(object: Object3D | readonly Object3D[], padding?: number): void;
     /**
      * Stores the current navigation for `fromDocument` and restores the one saved for `toDocument`,
      * or starts unframed (the viewport then frames the new scene).

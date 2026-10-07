@@ -564,3 +564,10 @@
 - OperatorRegistry: run (poll, begin tx, invoke/exec, modal via router.startModal), Escape cancel, lastCommand. ToolRegistry + ToolDefinition + profiles. Viewport: editor prop, _syncDocument (park/restore nav per doc), _syncBehaviors (profile + active tool).
 - Gotchas: ThreeDocument.mutated() runs inside base ctor before changeBus field -> guard. In page.evaluate, import('three/webgpu') resolves via index.html import map = second three copy -> renders nothing; use Vite's /node_modules/.vite/deps/three_webgpu.js URL.
 - 971 tests pass. Headed: tool -> modal operator -> 1 transaction -> both views redraw; navigate profile blocks tool; doc switch restores nav.
+
+## 2026-10-07 — io-three Phase 5 (object selection) implemented
+
+### [three][selection]
+- SelectionModel (domain, version, active, uvSync props; plain Set of uuids; edit()/commit one bump + one 'selection' notify; prune on remove patches). Editor selection per doc. RaycastPicker async (visible + layers + userData.selectable filter; line/points threshold 4px via worldPerPixel); pickRect by projected AABB. SelectBehavior (click/box/all/none/invert, DOM marquee). Router click synthesis + Behavior.click + keymap 'LMB click'. keymaps.* combined presets. frameSelected.
+- Bugs found in headed run: GridHelper won clicks (Raycaster Line threshold default 1 world unit) -> pixel threshold + selectable opt-out. Demo class fields in ready() again -> use @Property init.
+- 984 tests pass.

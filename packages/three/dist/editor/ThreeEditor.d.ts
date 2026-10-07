@@ -5,6 +5,7 @@ import { ThreeDocument } from './ThreeDocument.js';
 import { FrameInfo, ScheduledTicker } from '../render/RenderScheduler.js';
 import { OperatorRegistry } from '../tools/Operator.js';
 import { ToolDefinition, ToolRegistry } from '../tools/Tool.js';
+import { SelectionModel } from '../selection/SelectionModel.js';
 import type { ViewKind } from '../view/ThreeView.js';
 import type { IoThreeViewport } from '../elements/IoThreeViewport.js';
 export type ThreeEditorProps = ReactiveObjectProps & {
@@ -23,9 +24,12 @@ export declare class ThreeEditor extends ReactiveObject implements ScheduledTick
     isPlaying: boolean;
     /** Active tool id per `'<viewKind>:<mode>'`. Replace the object to change it (or use `setActiveTool`). */
     activeTools: Record<string, string>;
+    /** Selection of the active document. Session state; each document keeps its own (ADR-0007). */
+    selection: SelectionModel;
     _renderer: WebGPURenderer | null;
     private _operators;
     private _tools;
+    private _selections;
     constructor(args?: ThreeEditorProps);
     get operators(): OperatorRegistry;
     get tools(): ToolRegistry;
@@ -34,6 +38,7 @@ export declare class ThreeEditor extends ReactiveObject implements ScheduledTick
     setActiveTool(viewKind: ViewKind, mode: string, toolId: string | null): void;
     getActiveTool(viewKind: ViewKind, mode?: string): ToolDefinition | null;
     documentChanged(change: Change<ThreeDocument>): void;
+    private _selectionFor;
     isPlayingChanged(): void;
     tick(frame: FrameInfo): void;
     /** Reports a change in the active document (the source is always the document). */

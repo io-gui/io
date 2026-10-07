@@ -9,6 +9,7 @@ import { ThreeDocument } from './ThreeDocument.js';
 import { renderScheduler } from '../render/RenderScheduler.js';
 import { OperatorRegistry } from '../tools/Operator.js';
 import { ToolRegistry } from '../tools/Tool.js';
+import { SelectionModel } from '../selection/SelectionModel.js';
 /**
  * The app object (ADR-0002): one active ThreeDocument (switchable at runtime), the editor mode,
  * playback, operators and tools. Viewports read `editor.document`; they never hold a document themselves.
@@ -48,6 +49,18 @@ let ThreeEditor = class ThreeEditor extends ReactiveObject {
     documentChanged(change) {
         if (change.oldValue && change.oldValue !== change.value)
             this._operators?.cancelRunning();
+        if (change.value)
+            this.selection = this._selectionFor(change.value);
+    }
+    _selectionFor(document) {
+        if (!this._selections)
+            this._selections = new Map();
+        let selection = this._selections.get(document.uuid);
+        if (!selection) {
+            selection = new SelectionModel({ document });
+            this._selections.set(document.uuid, selection);
+        }
+        return selection;
     }
     isPlayingChanged() {
         if (this.isPlaying) {
@@ -87,6 +100,8 @@ let ThreeEditor = class ThreeEditor extends ReactiveObject {
     onAnimate(delta, time) { }
     dispose() {
         this._operators?.cancelRunning();
+        for (const selection of this._selections?.values() ?? [])
+            selection.dispose();
         this.isPlaying = false;
         renderScheduler.removeTicker(this);
         super.dispose();
@@ -104,6 +119,9 @@ __decorate([
 __decorate([
     Property({ type: Object, init: null })
 ], ThreeEditor.prototype, "activeTools", void 0);
+__decorate([
+    Property({ type: SelectionModel })
+], ThreeEditor.prototype, "selection", void 0);
 ThreeEditor = __decorate([
     Register
 ], ThreeEditor);

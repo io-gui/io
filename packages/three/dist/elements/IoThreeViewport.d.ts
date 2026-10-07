@@ -7,6 +7,8 @@ import { ThreeView } from '../view/ThreeView.js';
 import { InputRouter } from '../input/InputRouter.js';
 import { Keymap } from '../input/Keymap.js';
 import { NavigationBehavior } from '../input/behaviors/NavigationBehavior.js';
+import { SelectBehavior } from '../input/behaviors/SelectBehavior.js';
+import type { SelectionModel } from '../selection/SelectionModel.js';
 import { DocumentChange, ChangeBus } from '../editor/ChangeBus.js';
 import { ScheduledView, DirtyReason } from '../render/RenderScheduler.js';
 export type IoThreeViewportProps = ReactiveElementProps & {
@@ -18,7 +20,7 @@ export type IoThreeViewportProps = ReactiveElementProps & {
     view?: WithBinding<ThreeView>;
     /** Shorthand that sets the view: `'perspective'`, an axis (`'top'`, `'front'`, ...), `'scene'` or `'scene:<camera name>'`. */
     cameraSelect?: WithBinding<string>;
-    /** Navigation bindings (default: `navigationKeymaps.default`, OrbitControls-like). */
+    /** Navigation and selection bindings (default: `keymaps.default`, OrbitControls-like navigation). */
     keymap?: Keymap;
     renderer?: WebGPURenderer;
     tool?: WithBinding<ToolBase>;
@@ -48,11 +50,13 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
     private _sceneCameraPending;
     private _inputRouter;
     private _navigation;
+    private _select;
     private _toolBehaviors;
     private _shownDocument;
     /** Routes this viewport's input to behaviors: navigation, tools, later gizmos and operators (ADR-0004). */
     get inputRouter(): InputRouter;
     get navigationBehavior(): NavigationBehavior;
+    get selectBehavior(): SelectBehavior;
     constructor(args: IoThreeViewportProps);
     ready(): void;
     connectedCallback(): void;
@@ -60,10 +64,11 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
     get scene(): Scene | null;
     get changeBus(): ChangeBus | null;
     get mode(): string | undefined;
+    get selection(): SelectionModel | null;
     /** Marks this viewport for redraw on the next frame. */
     tag(reason: DirtyReason): void;
     isRenderable(): boolean;
-    getPriority(): 0 | 1 | 2;
+    getPriority(): 2 | 1 | 0;
     listens(change: DocumentChange): boolean;
     onRendererError(error: Error): void;
     /** The camera this viewport draws and picks with, built from its view at the current size. */
