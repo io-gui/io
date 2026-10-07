@@ -30,6 +30,8 @@ export * from './elements/math/IoQuaternion.js';
 export * from './elements/math/IoVector2.js';
 export * from './elements/math/IoVector3.js';
 export * from './elements/math/IoVector4.js';
+export * from './editor/ChangeBus.js';
+export * from './render/RenderScheduler.js';
 export * from './elements/IoBuildGeometry.js';
 export * from './elements/IoThreeExample.js';
 export * from './elements/IoThreeViewport.js';

@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # Document edits are commands that run transactions of invertible patches

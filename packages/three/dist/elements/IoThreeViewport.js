@@ -5,52 +5,30 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register, ReactiveElement, Property, Field } from '@io-gui/core';
-import { WebGPURenderer, CanvasTarget, NeutralToneMapping } from 'three/webgpu';
-import WebGPU from 'three/addons/capabilities/WebGPU.js';
+import { WebGPURenderer, CanvasTarget } from 'three/webgpu';
 import { ThreeApplet } from '../nodes/ThreeApplet.js';
 import { ViewCameras } from '../nodes/ViewCameras.js';
 import { ToolBase } from '../nodes/ToolBase.js';
+import { renderScheduler, getDefaultRenderer } from '../render/RenderScheduler.js';
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-        entry.target.visible = entry.isIntersecting;
+        const viewport = entry.target;
+        viewport.visible = entry.isIntersecting;
+        if (entry.isIntersecting)
+            viewport.tag('view');
     });
 });
-// TODO: Add support for logarithmic depth buffer
-// TODO: Add support for unique renderer instances per viewport
-let _renderer = null;
-function getDefaultRenderer() {
-    if (!_renderer) {
-        if (WebGPU.isAvailable() === false) {
-            console.error('No WebGPU support!');
-        }
-        _renderer = new WebGPURenderer({ antialias: false, alpha: true });
-        _renderer.toneMapping = NeutralToneMapping;
-        _renderer.setPixelRatio(window.devicePixelRatio);
-        _renderer.shadowMap.enabled = true;
-        void _renderer.init();
-    }
-    return _renderer;
-}
 let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
     width = 0;
     height = 0;
     visible = false;
-    renderTarget;
-    isWebGPUBackend() {
-        return this.renderer.backend.isWebGPUBackend === true;
+    get renderTarget() {
+        if (!this._renderTarget)
+            this._renderTarget = new CanvasTarget(document.createElement('canvas'));
+        return this._renderTarget;
     }
     attachSurface() {
-        if (this.isWebGPUBackend()) {
-            if (!this.renderTarget) {
-                this.renderTarget = new CanvasTarget(document.createElement('canvas'));
-            }
-            const canvas = this.renderTarget.domElement;
-            if (canvas.parentElement !== this) {
-                this.appendChild(canvas);
-            }
-            return;
-        }
-        const canvas = this.renderer.domElement;
+        const canvas = this.renderTarget.domElement;
         if (canvas.parentElement !== this) {
             this.appendChild(canvas);
         }
@@ -79,10 +57,7 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
     `;
     }
     static get Listeners() {
-        return {
-            'three-applet-needs-render': 'onAppletNeedsRender',
-            'three-applet-frame-object-all': 'onAppletFrameObjectAll',
-        };
+        return {};
     }
     constructor(args) {
         super({
@@ -90,25 +65,48 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
             renderer: args.renderer ?? getDefaultRenderer(),
         });
         this.viewCameras = new ViewCameras({ viewport: this, applet: this.bind('applet'), cameraSelect: this.bind('cameraSelect') });
-        this.debounce(this.renderViewportDebounced);
     }
     ready() {
         this.attachSurface();
-        if (!this.isWebGPUBackend()) {
-            console.log('WebGL fallback enabled');
-        }
     }
     connectedCallback() {
         super.connectedCallback();
         observer.observe(this);
         this.attachSurface();
+        renderScheduler.register(this);
         this.onResized();
     }
     disconnectedCallback() {
         super.disconnectedCallback();
         observer.unobserve(this);
-        // TODO: Visibility observe
+        renderScheduler.unregister(this);
         this.visible = false;
+    }
+    get scene() {
+        return this.applet?.scene ?? null;
+    }
+    get changeBus() {
+        return this.applet?.changeBus ?? null;
+    }
+    /** Marks this viewport for redraw on the next frame. */
+    tag(reason) {
+        renderScheduler.tag(this, reason);
+    }
+    isRenderable() {
+        return this.visible && this.width > 0 && this.height > 0 && !!this.applet?.scene;
+    }
+    getPriority() {
+        if (this.matches(':focus-within'))
+            return 2;
+        if (this.matches(':hover'))
+            return 1;
+        return 0;
+    }
+    listens(change) {
+        return change.source === this.applet;
+    }
+    onRendererError(error) {
+        this.textContent = error.message;
     }
     toolChanged(change) {
         const newTool = change.value;
@@ -118,63 +116,41 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         if (newTool)
             newTool.registerViewport(this);
     }
-    onAppletNeedsRender(event) {
-        event.stopPropagation(); // TODO: Test with multiple viewports
-        if (!this.visible)
-            return;
-        this.debounce(this.renderViewportDebounced);
-    }
-    onAppletFrameObjectAll(event) {
-        event.stopPropagation(); // TODO: Test with multiple viewports
-        if (!this.visible)
-            return;
-        this.viewCameras.frameObjectAll(event.detail);
-    }
     onResized() {
         const rect = this.getBoundingClientRect();
-        this.width = Math.floor(rect.width);
-        this.height = Math.floor(rect.height);
-        if (this.isWebGPUBackend() && this.renderTarget) {
-            this.renderTarget.setSize(this.width, this.height);
-            this.renderTarget.setPixelRatio(window.devicePixelRatio);
-        }
-        this.renderViewportDebounced();
+        const width = Math.floor(rect.width);
+        const height = Math.floor(rect.height);
+        if (width === this.width && height === this.height)
+            return;
+        this.width = width;
+        this.height = height;
+        this.renderTarget.setSize(width, height);
+        this.renderTarget.setPixelRatio(window.devicePixelRatio);
+        if (width && height)
+            this.applet?.onResized(width, height, this);
+        this.tag('resize');
     }
     appletChanged() {
-        this.debounce(this.renderViewportDebounced);
+        this.tag('content');
     }
     appletMutated() {
-        this.debounce(this.renderViewportDebounced);
+        this.tag('content');
     }
     viewCamerasMutated() {
-        this.debounce(this.renderViewportDebounced);
+        this.tag('view');
     }
     mutated() {
-        this.debounce(this.renderViewportDebounced);
+        this.tag('view');
     }
-    renderViewportDebounced() {
-        if (this.renderer.initialized === false) {
-            this.debounce(this.renderViewportDebounced, undefined, 2);
-            return;
-        }
-        this.applet.updateViewportSize(this.width, this.height);
-        this.renderViewport();
-    }
-    renderViewport() {
-        if (this.renderer.initialized === false)
-            return;
+    /** Called by the RenderScheduler only (ADR-0003). */
+    renderView() {
         if (this.applet.isRendererInitialized() === false) {
             void this.applet.onRendererInitialized(this.renderer);
         }
-        if (!this.width || !this.height)
-            return;
-        if (this.isWebGPUBackend() && this.renderTarget) {
-            this.renderer.setCanvasTarget(this.renderTarget);
-        }
+        this.renderer.setCanvasTarget(this.renderTarget);
         this.renderer.setClearColor(this.clearColor, this.clearAlpha);
         this.renderer.setSize(this.width, this.height);
         this.renderer.clear();
-        this.applet.updateViewportSize(this.width, this.height);
         const toneMapping = this.renderer.toneMapping;
         const toneMappingExposure = this.renderer.toneMappingExposure;
         this.renderer.toneMapping = this.applet.toneMapping;
@@ -186,10 +162,9 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         this.renderer.toneMappingExposure = toneMappingExposure;
     }
     dispose() {
+        renderScheduler.unregister(this);
         delete this.applet;
-        if (this.renderTarget) {
-            this.renderTarget.dispose();
-        }
+        this.renderTarget.dispose();
         this.viewCameras.dispose();
         if (this.tool) {
             this.tool.unregisterViewport(this);

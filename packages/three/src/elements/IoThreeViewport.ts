@@ -1,33 +1,20 @@
 import { Register, ReactiveElement, ReactiveElementProps, Property, Change, Field, WithBinding } from '@io-gui/core'
-import { WebGPURenderer, CanvasTarget, NeutralToneMapping, Object3D } from 'three/webgpu'
-import WebGPU from 'three/addons/capabilities/WebGPU.js'
+import { WebGPURenderer, CanvasTarget, Scene } from 'three/webgpu'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
 import { ViewCameras } from '../nodes/ViewCameras.js'
 import { ToolBase } from '../nodes/ToolBase.js'
+import { DocumentChange, ChangeBus } from '../editor/ChangeBus.js'
+import { renderScheduler, getDefaultRenderer, ScheduledView, DirtyReason } from '../render/RenderScheduler.js'
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    (entry.target as IoThreeViewport).visible = entry.isIntersecting
+    const viewport = entry.target as IoThreeViewport
+    viewport.visible = entry.isIntersecting
+    if (entry.isIntersecting) viewport.tag('view')
   })
 })
 
 // TODO: Add support for logarithmic depth buffer
-// TODO: Add support for unique renderer instances per viewport
-let _renderer: WebGPURenderer | null = null
-
-function getDefaultRenderer() {
-  if (!_renderer) {
-    if (WebGPU.isAvailable() === false) {
-      console.error('No WebGPU support!')
-    }
-    _renderer = new WebGPURenderer({antialias: false, alpha: true})
-    _renderer.toneMapping = NeutralToneMapping
-    _renderer.setPixelRatio(window.devicePixelRatio)
-    _renderer.shadowMap.enabled = true
-    void _renderer.init()
-  }
-  return _renderer
-}
 
 export type IoThreeViewportProps = ReactiveElementProps & {
   applet: WithBinding<ThreeApplet>
@@ -40,7 +27,7 @@ export type IoThreeViewportProps = ReactiveElementProps & {
 }
 
 @Register
-export class IoThreeViewport extends ReactiveElement {
+export class IoThreeViewport extends ReactiveElement implements ScheduledView {
 
   public width: number = 0
   public height: number = 0
@@ -73,24 +60,15 @@ export class IoThreeViewport extends ReactiveElement {
   @Field(0)
   declare tabIndex: number
 
-  public renderTarget: CanvasTarget | undefined
-
-  public isWebGPUBackend() {
-    return (this.renderer.backend as { isWebGPUBackend?: boolean }).isWebGPUBackend === true
+  // Lazy: `ready()` runs inside the base constructor, before class fields are initialized.
+  declare private _renderTarget: CanvasTarget | undefined
+  get renderTarget(): CanvasTarget {
+    if (!this._renderTarget) this._renderTarget = new CanvasTarget(document.createElement('canvas'))
+    return this._renderTarget
   }
 
   public attachSurface() {
-    if (this.isWebGPUBackend()) {
-      if (!this.renderTarget) {
-        this.renderTarget = new CanvasTarget(document.createElement('canvas'))
-      }
-      const canvas = this.renderTarget.domElement
-      if (canvas.parentElement !== this) {
-        this.appendChild(canvas)
-      }
-      return
-    }
-    const canvas = this.renderer.domElement
+    const canvas = this.renderTarget.domElement
     if (canvas.parentElement !== this) {
       this.appendChild(canvas)
     }
@@ -122,8 +100,6 @@ export class IoThreeViewport extends ReactiveElement {
 
   static override get Listeners() {
     return {
-      'three-applet-needs-render': 'onAppletNeedsRender',
-      'three-applet-frame-object-all': 'onAppletFrameObjectAll',
     }
   }
 
@@ -133,27 +109,55 @@ export class IoThreeViewport extends ReactiveElement {
       renderer: args.renderer ?? getDefaultRenderer(),
     } as ReactiveElementProps)
     this.viewCameras = new ViewCameras({viewport: this, applet: this.bind('applet'), cameraSelect: this.bind('cameraSelect')})
-    this.debounce(this.renderViewportDebounced)
   }
 
   override ready() {
     this.attachSurface()
-    if (!this.isWebGPUBackend()) {
-      console.log('WebGL fallback enabled')
-    }
   }
 
   override connectedCallback() {
     super.connectedCallback()
     observer.observe(this)
     this.attachSurface()
+    renderScheduler.register(this)
     this.onResized()
   }
   override disconnectedCallback() {
     super.disconnectedCallback()
     observer.unobserve(this)
-    // TODO: Visibility observe
+    renderScheduler.unregister(this)
     this.visible = false
+  }
+
+  get scene(): Scene | null {
+    return this.applet?.scene ?? null
+  }
+
+  get changeBus(): ChangeBus | null {
+    return this.applet?.changeBus ?? null
+  }
+
+  /** Marks this viewport for redraw on the next frame. */
+  tag(reason: DirtyReason) {
+    renderScheduler.tag(this, reason)
+  }
+
+  isRenderable() {
+    return this.visible && this.width > 0 && this.height > 0 && !!this.applet?.scene
+  }
+
+  getPriority() {
+    if (this.matches(':focus-within')) return 2
+    if (this.matches(':hover')) return 1
+    return 0
+  }
+
+  listens(change: DocumentChange) {
+    return change.source === this.applet
+  }
+
+  onRendererError(error: Error) {
+    this.textContent = error.message
   }
 
   toolChanged(change: Change<ToolBase>) {
@@ -163,66 +167,42 @@ export class IoThreeViewport extends ReactiveElement {
     if (newTool) newTool.registerViewport(this)
   }
 
-  onAppletNeedsRender(event: CustomEvent) {
-    event.stopPropagation() // TODO: Test with multiple viewports
-    if (!this.visible) return
-    this.debounce(this.renderViewportDebounced)
-  }
-
-  onAppletFrameObjectAll(event: CustomEvent) {
-    event.stopPropagation() // TODO: Test with multiple viewports
-    if (!this.visible) return
-    this.viewCameras.frameObjectAll(event.detail as Object3D)
-  }
-
   onResized() {
     const rect = this.getBoundingClientRect()
-    this.width = Math.floor(rect.width)
-    this.height = Math.floor(rect.height)
-    if (this.isWebGPUBackend() && this.renderTarget) {
-      this.renderTarget.setSize(this.width, this.height)
-      this.renderTarget.setPixelRatio(window.devicePixelRatio)
-    }
-    this.renderViewportDebounced()
+    const width = Math.floor(rect.width)
+    const height = Math.floor(rect.height)
+    if (width === this.width && height === this.height) return
+    this.width = width
+    this.height = height
+    this.renderTarget.setSize(width, height)
+    this.renderTarget.setPixelRatio(window.devicePixelRatio)
+    if (width && height) this.applet?.onResized(width, height, this)
+    this.tag('resize')
   }
 
   appletChanged() {
-    this.debounce(this.renderViewportDebounced)
+    this.tag('content')
   }
   appletMutated() {
-    this.debounce(this.renderViewportDebounced)
+    this.tag('content')
   }
   viewCamerasMutated() {
-    this.debounce(this.renderViewportDebounced)
+    this.tag('view')
   }
   override mutated() {
-    this.debounce(this.renderViewportDebounced)
+    this.tag('view')
   }
 
-  renderViewportDebounced() {
-    if (this.renderer.initialized === false) {
-      this.debounce(this.renderViewportDebounced, undefined, 2)
-      return
-    }
-    this.applet.updateViewportSize(this.width, this.height)
-    this.renderViewport()
-  }
-  renderViewport() {
-    if (this.renderer.initialized === false) return
+  /** Called by the RenderScheduler only (ADR-0003). */
+  renderView() {
     if (this.applet.isRendererInitialized() === false) {
       void this.applet.onRendererInitialized(this.renderer)
     }
-    if (!this.width || !this.height) return
 
-    if (this.isWebGPUBackend() && this.renderTarget) {
-      this.renderer.setCanvasTarget(this.renderTarget)
-    }
-
+    this.renderer.setCanvasTarget(this.renderTarget)
     this.renderer.setClearColor(this.clearColor, this.clearAlpha)
     this.renderer.setSize(this.width, this.height)
     this.renderer.clear()
-
-    this.applet.updateViewportSize(this.width, this.height)
 
     const toneMapping = this.renderer.toneMapping
     const toneMappingExposure = this.renderer.toneMappingExposure
@@ -239,10 +219,9 @@ export class IoThreeViewport extends ReactiveElement {
   }
 
   override dispose() {
+    renderScheduler.unregister(this)
     delete (this as Record<string, unknown>).applet
-    if (this.renderTarget) {
-      this.renderTarget.dispose()
-    }
+    this.renderTarget.dispose()
     this.viewCameras.dispose()
     if (this.tool) {
       this.tool.unregisterViewport(this)

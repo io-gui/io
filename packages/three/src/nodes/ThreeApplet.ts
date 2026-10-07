@@ -1,8 +1,11 @@
 import { Register, ReactiveObject, Property, ReactiveObjectProps } from '@io-gui/core'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
-import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, Timer, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu'
+import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
+import { ChangeBus, DocumentChange } from '../editor/ChangeBus.js'
+import { renderScheduler, FrameInfo, ScheduledTicker } from '../render/RenderScheduler.js'
+import type { IoThreeViewport } from '../elements/IoThreeViewport.js'
 
 export type ThreeAppletProps = ReactiveObjectProps & {
   scene?: Scene
@@ -11,17 +14,8 @@ export type ThreeAppletProps = ReactiveObjectProps & {
   isPlaying?: boolean
 }
 
-const _playingApplets: ThreeApplet[] = []
-function rAFLoop() {
-  for (const applet of _playingApplets) {
-    applet.onRAF()
-  }
-  requestAnimationFrame(rAFLoop)
-}
-rAFLoop()
-
 @Register
-export class ThreeApplet extends ReactiveObject {
+export class ThreeApplet extends ReactiveObject implements ScheduledTicker {
 
   @Property({type: Scene, init: null})
   declare scene: Scene
@@ -36,42 +30,36 @@ export class ThreeApplet extends ReactiveObject {
   declare isPlaying: boolean
 
   public _renderer: WebGPURenderer | null = null
-  public _width: number = 0
-  public _height: number = 0
 
-  readonly _timer: Timer = new Timer()
+  /** Changes drained by the RenderScheduler each frame; views showing this applet redraw. */
+  readonly changeBus = new ChangeBus()
 
   constructor(args?: ThreeAppletProps) {
     super(args)
-    this._timer.connect(document)
     this.isPlayingChanged()
   }
 
   isPlayingChanged() {
-    if (this.isPlaying === true && _playingApplets.includes(this) === false) {
-      _playingApplets.push(this)
-    } else if (this.isPlaying === false && _playingApplets.includes(this)) {
-      _playingApplets.splice(_playingApplets.indexOf(this), 1)
+    if (this.isPlaying) {
+      renderScheduler.addTicker(this)
+    } else {
+      renderScheduler.removeTicker(this)
     }
   }
 
-  onRAF() {
+  tick(frame: FrameInfo) {
     if (!this.isPlaying) return
-    this._timer.update()
-    const delta = this._timer.getDelta()
-    const time = this._timer.getElapsed()
-    this.onAnimate(delta, time)
-    this.dispatch('three-applet-needs-render', undefined, true)
+    this.onAnimate(frame.delta, frame.time)
+    this.notify({kind: 'time', source: this})
   }
 
-  updateViewportSize(width: number, height: number) {
-    if (this._width !== width || this._height !== height) {
-      if (!!width && !!height) {
-        this._width = width
-        this._height = height
-        this.onResized(width, height)
-      }
-    }
+  notify(change: DocumentChange) {
+    this.changeBus.notify(change)
+  }
+
+  /** Redraws every view showing this applet on the next frame. */
+  requestRender() {
+    this.notify({kind: 'other', source: this})
   }
 
   isRendererInitialized() {
@@ -82,16 +70,20 @@ export class ThreeApplet extends ReactiveObject {
     this._renderer = renderer
   }
 
+  /**
+   * @deprecated Size belongs to each view (ADR-0002). Called when a viewport showing this applet resizes;
+   * with several viewports, the last one resized wins.
+   */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onResized(width: number, height: number) {}
+  onResized(width: number, height: number, viewport?: IoThreeViewport) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onAnimate(delta: number, time: number) {}
 
   override dispose() {
     this.isPlaying = false
+    renderScheduler.removeTicker(this)
     super.dispose()
-    // this._timer.disconnect();
   }
 }
 
@@ -118,8 +110,6 @@ registerEditorGroups(ThreeApplet, {
     'toneMapping',
     'toneMappingExposure',
     '_renderer',
-    '_width',
-    '_height',
-    '_timer',
+    'changeBus',
   ],
 })

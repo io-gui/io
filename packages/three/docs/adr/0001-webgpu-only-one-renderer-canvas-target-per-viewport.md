@@ -16,5 +16,6 @@ We dropped the WebGL fallback. It has a single canvas, so multiple viewports wou
 ## Consequences
 
 - Browsers without WebGPU get an explicit error, not a degraded viewport.
+- Renderer-level options (`logarithmicDepthBuffer`, `reversedDepthBuffer`, MSAA samples) are fixed at construction, so a viewport may still be given its own `renderer`. The scheduler initializes and drives every renderer it sees. Such viewports do not share GPU resources with the default renderer, and an applet's `onRendererInitialized` setup (PMREM, compute) runs against whichever renderer draws it first.
 - `attachSurface()`'s WebGL branch and `isWebGPUBackend()` checks go away.
 - Many small previews (material balls, thumbnails) should not each get a `CanvasTarget`. They render into a shared offscreen target and are cached as images.

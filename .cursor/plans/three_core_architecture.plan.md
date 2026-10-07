@@ -13,19 +13,19 @@ todos:
     status: pending
   - id: webgpu-only
     content: "P1: Remove WebGL fallback; explicit error when WebGPU is unavailable"
-    status: pending
+    status: completed
   - id: change-bus
     content: "P1: ChangeBus with typed changes; ThreeView.listens(change) predicate"
-    status: pending
+    status: completed
   - id: render-scheduler
     content: "P1: RenderScheduler singleton: renderer init, rAF after core, typed dirty tags, phases, budget"
-    status: pending
+    status: completed
   - id: viewport-on-scheduler
     content: "P1: IoThreeViewport registers with scheduler; remove debounce draws and three-applet-needs-render"
-    status: pending
+    status: completed
   - id: applet-shim-p1
     content: "P1: ThreeApplet loses rAF loop, Timer, _width/_height; onAnimate via scheduler tick; fix demos"
-    status: pending
+    status: completed
   - id: three-view-model
     content: "P2: ThreeView model (kind, navigation, shading, overlays, profile) with JSON round-trip"
     status: pending
@@ -183,6 +183,13 @@ Read ADR-0008 and either accept it or change it before `document-transactions` s
 ---
 
 ## Phase 1: Frame layer (ADR-0001, ADR-0003)
+
+**Done 2026-10-07.** Notes from implementation:
+- `ChangeBus` lives at `editor/ChangeBus.ts`; its record type is `DocumentChange` (core already exports `Change`). Kinds add `'other'` for `requestRender()`.
+- The scheduler is generic over `ScheduledView` / `ScheduledTicker` interfaces and testable with `autoStart: false` + `step()`. The loop starts from a microtask so it runs after core's `FrameScheduler` in each frame (tested).
+- Custom per-viewport renderers stay supported (log-depth demo needs one); see ADR-0001 consequences.
+- `ThreeApplet` keeps `_renderer` / `onRendererInitialized` (demos do PMREM and compute setup there). `onResized(w, h, viewport)` now fires on viewport resize only, not every draw.
+- WebGPU canvases are blank in headless Chromium screenshots; manual checks need a headed browser.
 
 ### `webgpu-only`
 
