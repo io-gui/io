@@ -10,24 +10,24 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
 import { Register, Property } from '@io-gui/core'
-import { ThreeApplet, IoThreeExample, ThreeAppletProps, ioThreeViewport   } from '@io-gui/three'
+import { ThreeEditor, IoThreeExample, ThreeEditorProps, ioThreeViewport   } from '@io-gui/three'
 import { ioLayout, Layout } from '@io-gui/layout'
 
 @Register
-export class AnimationKeyframesExample extends ThreeApplet {
+export class AnimationKeyframesExample extends ThreeEditor {
 
   public mixer: AnimationMixer = new AnimationMixer(new Object3D())
 
-  constructor(args: ThreeAppletProps) {
+  constructor(args: ThreeEditorProps) {
     super(args)
-    this.scene.background = new Color( 0xbfe3dd )
+    this.document.scene.background = new Color( 0xbfe3dd )
   }
 
   override async onRendererInitialized(renderer: WebGPURenderer) {
     super.onRendererInitialized(renderer)
 
     const pmremGenerator = new PMREMGenerator( renderer )
-    this.scene.environment = pmremGenerator.fromScene( new RoomEnvironment(), 0.04 ).texture
+    this.document.scene.environment = pmremGenerator.fromScene( new RoomEnvironment(), 0.04 ).texture
 
     const dracoLoader = new DRACOLoader()
     dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/versioned/decoders/1.5.7/' )
@@ -40,7 +40,7 @@ export class AnimationKeyframesExample extends ThreeApplet {
       const model = gltf.scene
       model.position.set( 1, 1, 0 )
       model.scale.set( 0.01, 0.01, 0.01 )
-      this.scene.add( model )
+      this.document.scene.add( model )
 
       this.mixer = new AnimationMixer( model )
       this.mixer.clipAction( gltf.animations[ 0 ] ).play()
@@ -52,7 +52,7 @@ export class AnimationKeyframesExample extends ThreeApplet {
       train.add(perspectiveCamera)
 
       this.dispatchMutation()
-      this.dispatch('frame-object', {object: this.scene}, true)
+      this.dispatch('frame-object', {object: this.document.scene}, true)
     } catch ( e ) {
       console.error( e )
     }
@@ -72,16 +72,16 @@ export class AnimationKeyframesExample extends ThreeApplet {
 export class IoAnimationKeyframesExample extends IoThreeExample {
 
   @Property({type: AnimationKeyframesExample, init: {isPlaying: true}})
-  declare applet: AnimationKeyframesExample
+  declare editor: AnimationKeyframesExample
 
   override ready() {
     this.render([
       ioLayout({
         elements: [
-          ioThreeViewport({id: 'Top', applet: this.applet, cameraSelect: 'top'}),
-          ioThreeViewport({id: 'Left', applet: this.applet, cameraSelect: 'left'}),
-          ioThreeViewport({id: 'Perspective', applet: this.applet, cameraSelect: 'perspective'}),
-          ioThreeViewport({id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene'}),
+          ioThreeViewport({id: 'Top', editor: this.editor, cameraSelect: 'top'}),
+          ioThreeViewport({id: 'Left', editor: this.editor, cameraSelect: 'left'}),
+          ioThreeViewport({id: 'Perspective', editor: this.editor, cameraSelect: 'perspective'}),
+          ioThreeViewport({id: 'SceneCamera', editor: this.editor, cameraSelect: 'scene'}),
         ],
         model: new Layout({
           child: {

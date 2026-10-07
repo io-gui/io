@@ -24,6 +24,6 @@ Previews that need their own scene (material balls, asset thumbnails) use privat
 
 ## Consequences
 
-- `ThreeApplet` stays as a compatibility shim: an editor with one document and an `onAnimate` hook, so existing demos and apps keep working during migration.
+- `ThreeApplet` stays as a compatibility shim: an editor with one document and an `onAnimate` hook, so existing demos and apps keep working during migration. Removed 2026-10-07 once the demos moved to `ThreeEditor`.
 - Viewport size is never app or document state. Anything that depends on aspect is computed per view at draw time.
 - `ViewCameras`, `cameraSelect`, `overscan` and `clearColor` move from the viewport element onto `ThreeView`.

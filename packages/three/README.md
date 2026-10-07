@@ -35,9 +35,6 @@ ThreeEditor (object, one per app)
 │   object.editmode_toggle, mesh.select_mode)
 └── tools: ToolRegistry + activeTools per '<viewKind>:<mode>' (built-in Move tool, not active)
 
-ThreeApplet (object, compatibility shim)
-└── a ThreeEditor whose scene / toneMapping props are bound to its document
-
 EditorConfigs (configs/*)
 └── Property editors for Three.js classes
 ```
@@ -50,12 +47,11 @@ WebGPU-powered viewport element for rendering Three.js scenes.
 
 ```typescript
 type IoThreeViewportProps = {
-  editor?: ThreeEditor; // App object (or `applet`, an alias for ThreeApplet)
+  editor?: ThreeEditor; // App object whose active document the viewport shows
   view?: ThreeView; // View state; pass one to keep navigation across remounts (default: the viewport makes its own)
   cameraSelect?: string; // Shorthand setting the view: 'perspective' | 'top' | 'bottom' | 'left' | 'right' | 'front' | 'back' | 'scene' | 'scene:<cameraName>'
   renderer?: WebGPURenderer; // Custom renderer (optional)
   keymap?: Keymap; // Navigation and selection bindings (default: keymaps.default, OrbitControls-like)
-  tool?: ToolBase; // Active 3D pointer tool (optional)
 };
 ```
 
@@ -67,7 +63,7 @@ type IoThreeViewportProps = {
 - Automatic resize handling with pixel ratio support
 - Drawn by the RenderScheduler only when tagged dirty
 - `getViewCamera()` returns the camera it draws and picks with
-- Frames an object when its applet dispatches `frame-object` with `{object, overscan?}`
+- Frames an object when its editor dispatches `frame-object` with `{object, overscan?}`
 - A `'scene'` / `'scene:<name>'` camera added later (async asset load) is picked up when it appears
 - All input goes through `viewport.inputRouter` (see Input below)
 - Draws through `viewport.compositor`: the view's pipeline, then overlays and `viewport.gizmoLayer` (see Pipelines and Overlays)
@@ -76,15 +72,14 @@ type IoThreeViewportProps = {
 
 ```typescript
 import { Register } from "@io-gui/core";
-import { IoThreeViewport, ThreeApplet, ThreeAppletProps } from "@io-gui/three";
-import { Scene, Mesh, BoxGeometry, MeshBasicMaterial } from "three/webgpu";
+import { IoThreeViewport, ThreeEditor, ThreeEditorProps } from "@io-gui/three";
+import { Mesh, BoxGeometry, MeshBasicMaterial } from "three/webgpu";
 
 @Register
-class MyApplet extends ThreeApplet {
-  constructor(args?: ThreeAppletProps) {
+class MyEditor extends ThreeEditor {
+  constructor(args?: ThreeEditorProps) {
     super(args);
-    this.scene = new Scene();
-    this.scene.add(
+    this.document.scene.add(
       new Mesh(new BoxGeometry(), new MeshBasicMaterial({ color: 0xff0000 })),
     );
   }
@@ -94,7 +89,7 @@ class MyApplet extends ThreeApplet {
 }
 
 const viewport = new IoThreeViewport({
-  applet: new MyApplet({ isPlaying: true }),
+  editor: new MyEditor({ isPlaying: true }),
 });
 ```
 
@@ -111,6 +106,13 @@ ioThreeViewport({ editor });
 
 editor.document = new ThreeDocument(); // switch; switching back restores each view's camera
 ```
+
+**Lifecycle methods** (override in a subclass):
+
+| Method                            | Description                          |
+| --------------------------------- | ------------------------------------ |
+| `onRendererInitialized(renderer)` | Called when WebGPU renderer is ready |
+| `onAnimate(delta, time)`          | Called each frame while `isPlaying`  |
 
 **Edits go through transactions** of invertible patches ([ADR-0008](./docs/adr/0008-commands-transactions-and-patches.md)). Edits apply immediately and redraw the views; the old values are recorded, so a transaction can be rolled back, reverted or re-applied. Writes to the same path coalesce.
 
@@ -203,26 +205,6 @@ Domains come from a cached topology per `BufferGeometry` (`getTopology(geometry,
 
 Picking in 3D views (`IdComponentPicker`) draws an ID buffer: the edit set's triangles carrying their index, every other visible mesh as an occluder, with view depth, at CSS-pixel size, read back once and cached until the camera, size, edit set or content changes. Faces come from the buffer (front-most under the pointer); points and edges are projected on the CPU within 10 px and kept only where the buffer's depth shows them. With `view.xray = true` nothing is occluded. Deformation (skinning, morph targets) is not applied: components are picked on the rest shape. The `components` overlay draws the wire, points (point mode) and selected faces of the edit set; the selection outline is hidden in edit mode.
 
-### ThreeApplet
-
-Compatibility shim: a `ThreeEditor` with one document, whose `scene`, `toneMapping` and `toneMappingExposure` are two-way bound to the document. Existing applets keep working.
-
-```typescript
-type ThreeAppletProps = ThreeEditorProps & {
-  scene?: Scene;
-  toneMappingExposure?: number;
-  toneMapping?: ToneMapping;
-};
-```
-
-**Lifecycle methods:**
-
-| Method                            | Description                          |
-| --------------------------------- | ------------------------------------ |
-| `onRendererInitialized(renderer)` | Called when WebGPU renderer is ready |
-| `onResized(width, height, viewport)` | Deprecated. Called when a viewport showing the applet resizes; last one wins |
-| `onAnimate(delta, time)`          | Called each frame while `isPlaying`  |
-
 ### ThreeView
 
 Serializable state of one view ([ADR-0002](./docs/adr/0002-app-view-frame-layers.md), [ADR-0005](./docs/adr/0005-navigation-is-view-state-camera-built-per-draw.md)). Navigation is stored as numbers in `view.navigation`; the camera is built from it for each draw and pick.
@@ -235,7 +217,7 @@ view.frame(object); // fit an object
 view.getCamera(width, height, scene); // camera for this size
 view.toJSON(); // persist with a layout; restore with applyJSON()
 
-ioThreeViewport({ applet, view }); // the view survives the element being remounted
+ioThreeViewport({ editor, view }); // the view survives the element being remounted
 ```
 
 **Key behaviors:**
@@ -293,7 +275,7 @@ Each viewport has one `InputRouter` ([ADR-0004](./docs/adr/0004-input-arbitrated
 | --- | --- | --- |
 | Modal operator | 1000 | Running modal operators (`transform.translate`) |
 | Gizmos | 800 | `GizmoLayer` (active tool's gizmo groups) |
-| Tool | 500 | Tool behaviors, `ToolBase` subclasses |
+| Tool | 500 | Behaviors of the editor's active tool |
 | Navigation | 300 | `NavigationBehavior` |
 | Fallback selection | 100 | `SelectBehavior` (objects; components in edit mode; Tab, 1 / 2 / 3) |
 
@@ -304,16 +286,7 @@ ioThreeViewport({ editor, keymap: keymaps.blender });
 const keymap = Keymap.layer(myBindings, navigationKeymaps.default); // first match wins
 ```
 
-**Tools**: `ToolBase` registers one behavior on each viewport router at tool priority. By default it captures every press and wheel event; override `capturesInput(event)` to leave some to navigation:
-
-```typescript
-class PaintTool extends ToolBase {
-  capturesInput(event: PointerEvent | WheelEvent) {
-    return event.type === "pointerdown" && (event as PointerEvent).button === 0;
-  }
-  on3DPointerDown(pointer: Pointer3D) { /* ... */ }
-}
-```
+**Tools**: a tool definition (`editor.tools.register({id, viewKinds, modes, createBehaviors, createGizmoGroups?})`) gives each viewport its behaviors at tool priority while it is active (`editor.setActiveTool(viewKind, mode, id)`).
 
 ## Editor Configurations
 
@@ -343,20 +316,20 @@ registerEditorGroups(MyCustomObject, {
 `renderScheduler` runs one `requestAnimationFrame` loop and is the only code that renders ([ADR-0003](./docs/adr/0003-redraw-is-a-dirty-tag-consumed-by-one-scheduler.md)). Viewports never draw on their own; they are tagged dirty and drawn on the next frame.
 
 ```typescript
-applet.isPlaying = true; // ticks onAnimate every frame, redraws its viewports
-applet.isPlaying = false;
+editor.isPlaying = true; // ticks onAnimate every frame, redraws its viewports
+editor.isPlaying = false;
 
-applet.requestRender(); // redraw viewports showing this applet once
-applet.notify({kind: 'transform', source: applet, ids: [mesh.uuid]}); // same, with a typed change
+editor.requestRender(); // redraw viewports showing the active document once
+editor.notify({kind: 'transform', ids: [mesh.uuid]}); // same, with a typed change
 ```
 
 **Each frame:**
 
-1. Tick playing applets: `onAnimate(delta, time)` (one shared three.js `Timer`).
+1. Tick playing editors: `onAnimate(delta, time)` (one shared three.js `Timer`).
 2. Drain change buses; tag viewports whose `listens(change)` is true.
 3. Update each scene's world matrices once, then draw tagged, visible viewports in priority order (focused, hovered, other) within a frame budget (`renderScheduler.frameBudget`, 12 ms). Views not reached draw next frame. A view tagged only `overlay` presents its cached pipeline output with fresh overlays.
 
-Plain Three.js edits made outside `onAnimate` must call `applet.requestRender()` (or `viewport.tag('content')`), or nothing redraws.
+Plain Three.js edits made outside `onAnimate` must call `editor.requestRender()` (or `viewport.tag('content')`), or nothing redraws.
 
 ## Edge Cases
 
@@ -374,7 +347,7 @@ Viewports not intersecting the viewport (scrolled out of view) skip rendering en
 
 ### Renderer Initialization
 
-The renderer initializes asynchronously. The scheduler initializes each renderer once and draws its viewports when it is ready. Applets get `onRendererInitialized(renderer)` before their first draw and do renderer-dependent setup there.
+The renderer initializes asynchronously. The scheduler initializes each renderer once and draws its viewports when it is ready. Editors get `onRendererInitialized(renderer)` before their first draw and do renderer-dependent setup there.
 
 ### Dispose Cleanup
 

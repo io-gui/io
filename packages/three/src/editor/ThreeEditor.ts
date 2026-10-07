@@ -10,7 +10,6 @@ import { translateOperatorType } from '../tools/operators/TranslateOperator.js'
 import { translateTool } from '../tools/TranslateTool.js'
 import { editModeToggleOperatorType, selectModeOperatorType } from '../tools/operators/EditModeOperators.js'
 import type { ViewKind } from '../view/ThreeView.js'
-import type { IoThreeViewport } from '../elements/IoThreeViewport.js'
 
 export type ThreeEditorProps = ReactiveObjectProps & {
   document?: ThreeDocument
@@ -122,8 +121,8 @@ export class ThreeEditor extends ReactiveObject implements ScheduledTicker {
   }
 
   /** Reports a change in the active document (the source is always the document). */
-  notify(change: Omit<DocumentChange, 'source'> & {source?: object}) {
-    this.document.notify({kind: change.kind, ids: change.ids})
+  notify(change: Omit<DocumentChange, 'source'>) {
+    this.document.notify(change)
   }
 
   /** Redraws every view showing the active document on the next frame. */
@@ -138,13 +137,6 @@ export class ThreeEditor extends ReactiveObject implements ScheduledTicker {
   onRendererInitialized(renderer: WebGPURenderer) {
     this._renderer = renderer
   }
-
-  /**
-   * @deprecated Size belongs to each view (ADR-0002). Called when a viewport showing this editor resizes;
-   * with several viewports, the last one resized wins.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onResized(width: number, height: number, viewport?: IoThreeViewport) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onAnimate(delta: number, time: number) {}

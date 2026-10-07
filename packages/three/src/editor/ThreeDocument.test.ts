@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { ThreeDocument, ThreeApplet, ThreeEditor, Transaction } from '@io-gui/three'
+import { ThreeDocument, ThreeEditor, Transaction } from '@io-gui/three'
 import { Color, Group, Mesh, MeshBasicMaterial, Object3D, Vector3 } from 'three/webgpu'
 
 function snapshot(document: ThreeDocument) {
@@ -144,16 +144,25 @@ describe('ThreeEditor', () => {
     expect(editor.getActiveTool('3d')).toBe(null)
     editor.dispose()
   })
-})
 
-describe('ThreeApplet shim', () => {
-  it('binds its scene and tone mapping to its document both ways', () => {
-    const applet = new ThreeApplet()
-    expect(applet.document.scene).toBe(applet.scene)
-    applet.toneMappingExposure = 3
-    expect(applet.document.toneMappingExposure).toBe(3)
-    applet.document.toneMapping = 4
-    expect(applet.toneMapping).toBe(4)
-    applet.dispose()
+  it('ticks onAnimate and reports time only while playing', () => {
+    const editor = new ThreeEditor()
+    const calls: number[] = []
+    editor.onAnimate = (delta: number) => { calls.push(delta) }
+    editor.tick({frame: 1, delta: 0.016, time: 0.016})
+    expect(calls).toEqual([])
+    expect(editor.changeBus.pending).toBe(false)
+    editor.isPlaying = true
+    editor.tick({frame: 2, delta: 0.016, time: 0.032})
+    expect(calls).toEqual([0.016])
+    expect(editor.changeBus.drain()).toEqual([{kind: 'time', source: editor.document}])
+    editor.dispose()
+  })
+
+  it('requestRender reports an other change', () => {
+    const editor = new ThreeEditor()
+    editor.requestRender()
+    expect(editor.changeBus.drain()).toEqual([{kind: 'other', source: editor.document}])
+    editor.dispose()
   })
 })

@@ -38,7 +38,7 @@ import {
 } from 'three/tsl'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
-import { ThreeApplet, IoThreeExample, ThreeAppletProps, ioThreeViewport } from '@io-gui/three'
+import { ThreeEditor, IoThreeExample, ThreeEditorProps, ioThreeViewport } from '@io-gui/three'
 import { ioLayout, Layout } from '@io-gui/layout'
 
 type GltfModel = {
@@ -75,36 +75,36 @@ const lightSpeed = /*#__PURE__*/ Fn<[Node]>(([suv_immutable]) => {
 })
 
 @Register
-export class AnimationRetargetingExample extends ThreeApplet {
+export class AnimationRetargetingExample extends ThreeEditor {
   public sourceMixer?: AnimationMixer
   public targetMixer?: AnimationMixer
   public camera: PerspectiveCamera
   public group: Group = new Group()
 
-  constructor(args: ThreeAppletProps) {
+  constructor(args: ThreeEditorProps) {
     super(args)
 
-    // this.toneMapping = NeutralToneMapping;
+    // this.document.toneMapping = NeutralToneMapping;
 
     // Background
     const coloredVignette = screenUV.distance(.5).mix(hue(color(0x0175ad), time.mul(.1)), hue(color(0x02274f), time.mul(.5)))
     const lightSpeedEffect = lightSpeed(normalWorldGeometry).clamp()
     const lightSpeedSky = normalWorldGeometry.y.remapClamp(-.1, 1).mix(0, lightSpeedEffect)
     const composedBackground = blendDodge(coloredVignette, lightSpeedSky)
-    this.scene.backgroundNode = composedBackground
+    this.document.scene.backgroundNode = composedBackground
 
     // Lights
     const light = new HemisphereLight(0xe9c0a5, 0x0175ad, 5)
-    this.scene.add(light)
+    this.document.scene.add(light)
 
     const dirLight = new DirectionalLight(0xfff9ea, 4)
     dirLight.position.set(2, 5, 2)
-    this.scene.add(dirLight)
+    this.document.scene.add(dirLight)
 
     // Floor with reflection
     const reflection = reflector()
     reflection.target.rotateX(-Math.PI / 2)
-    this.scene.add(reflection.target)
+    this.document.scene.add(reflection.target)
 
     const floorMaterial = new NodeMaterial()
     floorMaterial.colorNode = reflection
@@ -114,24 +114,17 @@ export class AnimationRetargetingExample extends ThreeApplet {
     const floor = new Mesh(new BoxGeometry(50, .001, 50), floorMaterial)
     floor.receiveShadow = true
     floor.position.set(0, 0, 0)
-    this.scene.add(floor)
+    this.document.scene.add(floor)
 
     this.camera = new PerspectiveCamera(40, 1, .25, 50)
     this.camera.position.set(0, 1, 4)
     this.camera.name = 'camera'
-    this.scene.add(this.camera)
+    this.document.scene.add(this.camera)
 
-    this.scene.add(this.group)
+    this.document.scene.add(this.group)
 
     // Load and setup models
     void this.loadModels()
-  }
-
-  override onResized(width: number, height: number) {
-    super.onResized(width, height)
-    const aspect = width / height
-    this.camera.aspect = aspect
-    this.camera.updateProjectionMatrix()
   }
 
   private async loadModels() {
@@ -253,17 +246,17 @@ export class AnimationRetargetingExample extends ThreeApplet {
 export class IoAnimationRetargetingExample extends IoThreeExample {
 
   @Property({type: AnimationRetargetingExample, init: {isPlaying: true}})
-  declare applet: AnimationRetargetingExample
+  declare editor: AnimationRetargetingExample
 
   override ready() {
 
     this.render([
       ioLayout({
         elements: [
-          ioThreeViewport({id: 'Top', applet: this.applet, cameraSelect: 'top'}),
-          ioThreeViewport({id: 'Left', applet: this.applet, cameraSelect: 'left'}),
-          ioThreeViewport({id: 'Back', applet: this.applet, cameraSelect: 'back'}),
-          ioThreeViewport({id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene'}),
+          ioThreeViewport({id: 'Top', editor: this.editor, cameraSelect: 'top'}),
+          ioThreeViewport({id: 'Left', editor: this.editor, cameraSelect: 'left'}),
+          ioThreeViewport({id: 'Back', editor: this.editor, cameraSelect: 'back'}),
+          ioThreeViewport({id: 'SceneCamera', editor: this.editor, cameraSelect: 'scene'}),
         ],
         model: new Layout({
           child: {

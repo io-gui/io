@@ -1,13 +1,13 @@
 import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture, WebGPURenderer, ComputeNode } from 'three/webgpu'
 import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl'
 import { Register, Property } from '@io-gui/core'
-import { ThreeApplet, IoThreeExample, ioThreeViewport, ThreeAppletProps } from '@io-gui/three'
+import { ThreeEditor, IoThreeExample, ioThreeViewport, ThreeEditorProps } from '@io-gui/three'
 
 @Register
-export class ComputeTextureExample extends ThreeApplet {
+export class ComputeTextureExample extends ThreeEditor {
   public storageTexture: StorageTexture
   public computeNode: ComputeNode
-  constructor(args: ThreeAppletProps) {
+  constructor(args: ThreeEditorProps) {
     super(args)
     const width = 512, height = 512
     this.storageTexture = new StorageTexture(width, height)
@@ -39,7 +39,7 @@ export class ComputeTextureExample extends ThreeApplet {
     material.colorNode = texture(this.storageTexture)
 
     const plane = new Mesh(new PlaneGeometry(1, 1), material)
-    this.scene.add(plane)
+    this.document.scene.add(plane)
   }
   override async onRendererInitialized(renderer: WebGPURenderer) {
     super.onRendererInitialized(renderer)
@@ -51,12 +51,12 @@ export class ComputeTextureExample extends ThreeApplet {
 export class IoComputeTextureExample extends IoThreeExample {
 
   @Property({type: ComputeTextureExample, init: null})
-  declare applet: ComputeTextureExample
+  declare editor: ComputeTextureExample
 
   override ready() {
 
     this.render([
-      ioThreeViewport({id: 'Front', applet: this.applet, cameraSelect: 'front'}),
+      ioThreeViewport({id: 'Front', editor: this.editor, cameraSelect: 'front'}),
     ])
 
   }

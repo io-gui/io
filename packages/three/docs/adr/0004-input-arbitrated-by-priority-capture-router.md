@@ -24,6 +24,6 @@ Before this, `OrbitControls` and `ToolBase` each added their own listeners to th
 ## Consequences
 
 - `OrbitControls` is removed. Navigation is a set of behaviors acting on `ThreeView` navigation state (ADR-0005).
-- `ToolBase` stays as an adapter that wraps its `on3DPointer*` methods into one `Behavior`, so existing tools keep working. `Pointer3D` stays as the event shape, with the ray built lazily.
+- `ToolBase` stays as an adapter that wraps its `on3DPointer*` methods into one `Behavior`, so existing tools keep working. `Pointer3D` stays as the event shape, with the ray built lazily. Removed 2026-10-07: tools are `ToolDefinition`s only.
 - Keyboard events go to the viewport under the pointer, else the focused viewport.
 - A drag that starts in one viewport stays captured there, even across other viewports.

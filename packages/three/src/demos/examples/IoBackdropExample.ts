@@ -1,5 +1,5 @@
 import { Property, Register } from '@io-gui/core'
-import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
+import { ThreeEditor, IoThreeExample, ThreeEditorProps } from '@io-gui/three'
 import {
   AnimationMixer,
   Group,
@@ -32,32 +32,32 @@ import {
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 
 @Register
-export class BackdropExample extends ThreeApplet {
+export class BackdropExample extends ThreeEditor {
 
   @Property({type: AnimationMixer, init: new Group()})
   declare public mixer: AnimationMixer
 
   public portals: Group
 
-  constructor(args: ThreeAppletProps) {
+  constructor(args: ThreeEditorProps) {
     super(args)
 
-    this.toneMapping = NeutralToneMapping
-    this.toneMappingExposure = 0.3
+    this.document.toneMapping = NeutralToneMapping
+    this.document.toneMappingExposure = 0.3
 
     // Background
-    this.scene.backgroundNode = screenUV.y.mix(color(0x66bbff), color(0x4466ff))
+    this.document.scene.backgroundNode = screenUV.y.mix(color(0x66bbff), color(0x4466ff))
 
     // Light
     const light = new SpotLight(0xffffff, 1)
     light.position.set(1, 2, 3)
     light.lookAt(0, 1, 0)
     light.power = 2000
-    this.scene.add(light)
+    this.document.scene.add(light)
 
     // Portals
     this.portals = new Group()
-    this.scene.add(this.portals)
+    this.document.scene.add(this.portals)
 
     const geometry = new SphereGeometry(.3, 32, 16)
 
@@ -111,7 +111,7 @@ export class BackdropExample extends ThreeApplet {
       const action = this.mixer.clipAction(gltf.animations[0])
       action.play()
 
-      this.scene.add(object)
+      this.document.scene.add(object)
     })
   }
 
@@ -128,7 +128,7 @@ export class BackdropExample extends ThreeApplet {
 export class IoBackdropExample extends IoThreeExample {
 
   @Property({type: BackdropExample, init: {isPlaying: true}})
-  declare applet: BackdropExample
+  declare editor: BackdropExample
 
 }
 

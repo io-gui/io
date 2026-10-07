@@ -23,13 +23,13 @@ import {
 } from 'three/tsl'
 import { hashBlur } from 'three/addons/tsl/display/hashBlur.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { ThreeApplet, IoThreeExample, ThreeAppletProps, ioThreeViewport, ioVector3 } from '@io-gui/three'
+import { ThreeEditor, IoThreeExample, ThreeEditorProps, ioThreeViewport, ioVector3 } from '@io-gui/three'
 import { ioLayout, Layout } from '@io-gui/layout'
 import { ioPropertyEditor } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 
 @Register
-export class BackdropAreaExample extends ThreeApplet {
+export class BackdropAreaExample extends ThreeEditor {
   public mixer?: AnimationMixer
   public box: Mesh
 
@@ -46,17 +46,17 @@ export class BackdropAreaExample extends ThreeApplet {
   @Property({type: String, value: 'blurred'})
   declare public material: string
 
-  constructor(args: ThreeAppletProps) {
+  constructor(args: ThreeEditorProps) {
     super(args)
 
-    this.toneMappingExposure = 0.9
+    this.document.toneMappingExposure = 0.9
 
     // Background
-    this.scene.backgroundNode = hue(screenUV.y.mix(color(0x66bbff), color(0x4466ff)), time.mul(0.1))
+    this.document.scene.backgroundNode = hue(screenUV.y.mix(color(0x66bbff), color(0x4466ff)), time.mul(0.1))
 
     // Lighting
     const ambient = new AmbientLight(0xffffff, 2.5)
-    this.scene.add(ambient)
+    this.document.scene.add(ambient)
 
     // Create materials
     // Compare depth from viewportLinearDepth with linearDepth() to create a distance field
@@ -103,7 +103,7 @@ export class BackdropAreaExample extends ThreeApplet {
     this.box.position.set(0, 1, 0)
     this.boxScale = this.box.scale
     this.box.renderOrder = 1
-    this.scene.add(this.box)
+    this.document.scene.add(this.box)
 
     // Floor
     const floor = new Mesh(new BoxGeometry(3, .01, 3), new MeshBasicNodeMaterial({
@@ -112,7 +112,7 @@ export class BackdropAreaExample extends ThreeApplet {
       transparent: true,
       depthWrite: false
     }))
-    this.scene.add(floor)
+    this.document.scene.add(floor)
 
     // Load model
     void this.loadModel()
@@ -134,10 +134,10 @@ export class BackdropAreaExample extends ThreeApplet {
       const action = this.mixer.clipAction(gltf.animations[0])
       action.play()
 
-      this.scene.add(object)
+      this.document.scene.add(object)
 
       this.dispatchMutation()
-      this.dispatch('frame-object', {object: this.scene.children[1]}, true)
+      this.dispatch('frame-object', {object: this.document.scene.children[1]}, true)
     })
   }
 
@@ -152,17 +152,17 @@ export class BackdropAreaExample extends ThreeApplet {
 export class IoBackdropAreaExample extends IoThreeExample {
 
   @Property({type: BackdropAreaExample, init: {isPlaying: true}})
-  declare applet: BackdropAreaExample
+  declare editor: BackdropAreaExample
 
   override ready() {
     this.render([
       ioLayout({
         elements: [
-          ioThreeViewport({id: 'Top', applet: this.applet, cameraSelect: 'top'}),
-          ioThreeViewport({id: 'Left', applet: this.applet, cameraSelect: 'left'}),
-          ioThreeViewport({id: 'Back', applet: this.applet, cameraSelect: 'back'}),
-          ioThreeViewport({id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene'}),
-          ioPropertyEditor({id: 'PropertyEditor', value: this.applet,
+          ioThreeViewport({id: 'Top', editor: this.editor, cameraSelect: 'top'}),
+          ioThreeViewport({id: 'Left', editor: this.editor, cameraSelect: 'left'}),
+          ioThreeViewport({id: 'Back', editor: this.editor, cameraSelect: 'back'}),
+          ioThreeViewport({id: 'SceneCamera', editor: this.editor, cameraSelect: 'scene'}),
+          ioPropertyEditor({id: 'PropertyEditor', value: this.editor,
             properties: ['material', 'boxScale'],
             config: [
               ['material', ioOptionSelect({

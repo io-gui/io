@@ -32,7 +32,7 @@ export interface ScheduledView {
 }
 
 /**
- * Anything advanced by the scheduler clock while playing, such as a playing ThreeApplet.
+ * Anything advanced by the scheduler clock while playing, such as a playing ThreeEditor.
  */
 export interface ScheduledTicker {
   readonly changeBus: ChangeBus
@@ -49,7 +49,7 @@ export type RenderSchedulerOptions = {
 
 /**
  * The only thing that renders (ADR-0003). Each frame it collects changes into typed dirty tags,
- * ticks playing applets, evaluates each scene once and draws tagged views within a frame budget.
+ * ticks playing editors, evaluates each scene once and draws tagged views within a frame budget.
  */
 export class RenderScheduler {
 
