@@ -4,24 +4,69 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, Property } from '@io-gui/core';
+import { Register, ReactiveObject, Property } from '@io-gui/core';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
-import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene } from 'three/webgpu';
+import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, Timer, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene } from 'three/webgpu';
 import { ioOptionSelect, Menu } from '@io-gui/menus';
-import { ThreeEditor } from '../editor/ThreeEditor.js';
-import { ThreeDocument } from '../editor/ThreeDocument.js';
-/**
- * Compatibility shim (ADR-0002): a ThreeEditor with one document whose `scene`, `toneMapping` and
- * `toneMappingExposure` are two-way bound to the applet's own properties. New apps use ThreeEditor
- * and ThreeDocument directly. After replacing `applet.document`, the applet properties no longer follow it.
- */
-let ThreeApplet = class ThreeApplet extends ThreeEditor {
+const _playingApplets = [];
+function rAFLoop() {
+    for (const applet of _playingApplets) {
+        applet.onRAF();
+    }
+    requestAnimationFrame(rAFLoop);
+}
+rAFLoop();
+let ThreeApplet = class ThreeApplet extends ReactiveObject {
+    _renderer = null;
+    _width = 0;
+    _height = 0;
+    _timer = new Timer();
     constructor(args) {
-        super({ ...args, document: args?.document ?? new ThreeDocument() });
-        this.document.scene = this.bind('scene');
-        this.document.toneMapping = this.bind('toneMapping');
-        this.document.toneMappingExposure = this.bind('toneMappingExposure');
+        super(args);
+        this._timer.connect(document);
+        this.isPlayingChanged();
+    }
+    isPlayingChanged() {
+        if (this.isPlaying === true && _playingApplets.includes(this) === false) {
+            _playingApplets.push(this);
+        }
+        else if (this.isPlaying === false && _playingApplets.includes(this)) {
+            _playingApplets.splice(_playingApplets.indexOf(this), 1);
+        }
+    }
+    onRAF() {
+        if (!this.isPlaying)
+            return;
+        this._timer.update();
+        const delta = this._timer.getDelta();
+        const time = this._timer.getElapsed();
+        this.onAnimate(delta, time);
+        this.dispatch('three-applet-needs-render', undefined, true);
+    }
+    updateViewportSize(width, height) {
+        if (this._width !== width || this._height !== height) {
+            if (!!width && !!height) {
+                this._width = width;
+                this._height = height;
+                this.onResized(width, height);
+            }
+        }
+    }
+    isRendererInitialized() {
+        return !!this._renderer && this._renderer.initialized === true;
+    }
+    onRendererInitialized(renderer) {
+        this._renderer = renderer;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onResized(width, height) { }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onAnimate(delta, time) { }
+    dispose() {
+        this.isPlaying = false;
+        super.dispose();
+        // this._timer.disconnect();
     }
 };
 __decorate([
@@ -33,6 +78,9 @@ __decorate([
 __decorate([
     Property({ type: Number, value: NoToneMapping })
 ], ThreeApplet.prototype, "toneMapping", void 0);
+__decorate([
+    Property({ type: Boolean, value: false })
+], ThreeApplet.prototype, "isPlaying", void 0);
 ThreeApplet = __decorate([
     Register
 ], ThreeApplet);
@@ -59,11 +107,8 @@ registerEditorGroups(ThreeApplet, {
         'toneMapping',
         'toneMappingExposure',
         '_renderer',
-        'changeBus',
-        'document',
-        'mode',
-        'activeTools',
-        'operators',
-        'tools',
+        '_width',
+        '_height',
+        '_timer',
     ],
 });
