@@ -40,6 +40,15 @@ export declare class ViewNavigation {
     setDirection(direction: Vector3): void;
     /** Switches to an orthographic axis view, or back to the default perspective view with `null`. */
     setAxisView(axis: AxisView | null): void;
+    /**
+     * Turntable orbit around the target: `deltaTheta` turns around world Y, `deltaPhi` tilts toward or away
+     * from the poles (radians). Leaves any axis view.
+     */
+    orbit(deltaTheta: number, deltaPhi: number): void;
+    /** Moves the target in the view plane by screen pixels, so the scene follows the pointer. */
+    pan(dx: number, dy: number, worldPerPixel: number): void;
+    /** Scales the distance to the target (> 1 moves away). Perspective clip planes scale along. */
+    dolly(factor: number): void;
     getPosition(out: Vector3): Vector3;
     /** Half height of the visible area at the target, for a square viewport. */
     getHalfHeight(): number;

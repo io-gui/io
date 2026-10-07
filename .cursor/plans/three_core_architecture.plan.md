@@ -37,16 +37,16 @@ todos:
     status: completed
   - id: input-router
     content: "P3: InputRouter + Behavior: capture by priority, hover pass, stealing, keyboard routing"
-    status: pending
+    status: completed
   - id: keymaps
     content: "P3: Keymap tables, matcher and Blender/Maya navigation presets"
-    status: pending
+    status: completed
   - id: navigation-behaviors
     content: "P3: Orbit/pan/dolly/wheel/touch navigation behaviors; remove OrbitControls"
-    status: pending
+    status: completed
   - id: toolbase-adapter
     content: "P3: Tool.createBehaviors(view); ToolBase becomes adapter; registerViewport deprecated"
-    status: pending
+    status: completed
   - id: editor-document
     content: "P4: ThreeEditor + ThreeDocument; ThreeApplet becomes shim over them; clock on editor"
     status: pending
@@ -270,6 +270,14 @@ State: `target`, `rotation`, `distance`, `projection`, `fov`, `axisView`, `camer
 ---
 
 ## Phase 3: Input (ADR-0004)
+
+**Done 2026-10-07.** Notes from implementation:
+- Files: `input/InputRouter.ts`, `input/Behavior.ts` (+ `BehaviorPriority`), `input/ViewInputEvent.ts` (+ `InputHost` interface so routers work on stubs), `input/Keymap.ts` (+ `navigationKeymaps.default | blender | maya`), `input/behaviors/NavigationBehavior.ts`. `view/ViewOrbitControls.ts` and OrbitControls removed.
+- Wheel events are one-shot (`begin` then `end`). Extra pointers go to the capturing behavior's `update` unless it `allowsStealing`; a thief takes over all captured pointers (ADR-0004 wording updated).
+- The router focuses the viewport on a captured press (preventDefault would block focus) so key routing works; hovered viewport wins over focused.
+- `default` keymap mirrors OrbitControls so demos feel unchanged; Blender/Maya presets add axis keys / frame keys. Axis views pan instead of orbit (`lockAxisViews`). Turntable orbit with pole clamp; perspective clip planes scale with dolly.
+- Not done: zoom to cursor, frame selected (needs selection, P5), fly mode, `when.mode` in keymaps (needs editor mode, P4).
+- `ToolBase` keeps its `on3DPointer*` API and per-viewport WeakMaps; `registerViewport()` now adds `tool.behavior` to the router (no DOM listeners). New `capturesInput(event)` hook, default true (captures all, as before minus the OrbitControls fight).
 
 ### `input-router`
 

@@ -44,8 +44,24 @@ _Avoid_: camera rig, camera controller, orbit state
 An orthographic view looking along a world axis: `top`, `bottom`, `left`, `right`, `front`, `back`.
 _Avoid_: ortho camera, named camera
 
+**InputRouter**:
+Per-viewport owner of all DOM input listeners and pointer capture. Offers events to behaviors in priority order; the first to want a press captures its pointer stream.
+_Avoid_: input manager, event handler, controls
+
+**Behavior**:
+Anything that wants viewport input (navigation, a tool, later gizmos and modal operators), with a priority band. Implements `wantsCapture`, `begin`, `update`, `end`, `cancel`, and optionally `hover`, `key`.
+_Avoid_: controller, handler, interaction
+
+**Keymap**:
+An ordered table of bindings as data (`'Alt+LMB drag'` -> `'view.orbit'`); first match wins, layering is concatenation.
+_Avoid_: shortcuts, hotkeys (as the type name)
+
+**NavigationBehavior**:
+The router behavior that turns keymap-bound gestures into ViewNavigation edits (orbit, pan, dolly, zoom, frame, axis views).
+_Avoid_: OrbitControls (removed), camera controls
+
 **ToolBase**:
-ReactiveObject base for 3D pointer tools: registers on viewports, builds Pointer3D rays from pointer events, and subclasses implement tool behavior.
+ReactiveObject base for 3D pointer tools. Registers one behavior at tool priority on each viewport's InputRouter and receives Pointer3D rays; `capturesInput` decides what it leaves to navigation.
 _Avoid_: manipulator, gizmo controller
 
 **Editor configs (side-effect)**:

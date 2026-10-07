@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { ToolBase, ThreeView, ThreeApplet } from '@io-gui/three'
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
+import { ToolBase, ThreeView, ThreeApplet, InputRouter, NavigationBehavior, Pointer3D } from '@io-gui/three'
 import type { IoThreeViewport } from '@io-gui/three'
 import { Scene } from 'three/webgpu'
 
@@ -26,7 +26,8 @@ function createViewportStub(width = 200, height = 100): IoThreeViewport {
   viewport.setPointerCapture = () => {}
   viewport.releasePointerCapture = () => {}
   const view = new ThreeView()
-  viewport.getViewCamera = () => view.getCamera(width, height, null)
+  Object.assign(viewport, {view, scene: null, getViewCamera: () => view.getCamera(width, height, null)})
+  Object.defineProperty(viewport, 'inputRouter', {value: new InputRouter(viewport)})
 
   return viewport
 }
@@ -49,23 +50,38 @@ describe('ToolBase', () => {
     ;(viewport as unknown as HTMLElement).remove()
   })
 
-  it('registers viewport pointer listeners', () => {
-    const addListener = vi.spyOn(viewport, 'addEventListener')
+  it('adds its behavior to the viewport router and removes it again', () => {
     tool.registerViewport(viewport)
-
-    expect(addListener).toHaveBeenCalledWith('pointerdown', expect.any(Function))
-    expect(addListener).toHaveBeenCalledWith('pointermove', expect.any(Function))
-    expect(addListener).toHaveBeenCalledWith('pointerup', expect.any(Function))
+    expect(viewport.inputRouter.behaviors).toContain(tool.behavior)
+    tool.unregisterViewport(viewport)
+    expect(viewport.inputRouter.behaviors).not.toContain(tool.behavior)
   })
 
-  it('unregisters viewport pointer listeners', () => {
-    const removeListener = vi.spyOn(viewport, 'removeEventListener')
+  it('receives pointer events through the router, ahead of navigation', () => {
+    const calls: string[] = []
+    tool.on3DPointerDown = (pointer: Pointer3D) => { calls.push(`down ${pointer.screen.x.toFixed(1)}`) }
+    tool.on3DPointerMove = () => { calls.push('move') }
+    tool.on3DPointerUp = () => { calls.push('up') }
+    tool.on3DPointerHover = () => { calls.push('hover') }
+    viewport.inputRouter.add(new NavigationBehavior(viewport))
     tool.registerViewport(viewport)
-    tool.unregisterViewport(viewport)
+    const init = {bubbles: true, cancelable: true, pointerId: 1, button: 0, clientX: 100, clientY: 50}
+    viewport.dispatchEvent(new PointerEvent('pointermove', init))
+    viewport.dispatchEvent(new PointerEvent('pointerdown', init))
+    viewport.dispatchEvent(new PointerEvent('pointermove', {...init, clientX: 120}))
+    viewport.dispatchEvent(new PointerEvent('pointerup', {...init, clientX: 120}))
+    expect(calls).toEqual(['hover', 'down 0.0', 'move', 'up'])
+    expect(viewport.inputRouter.captured).toBe(null)
+  })
 
-    expect(removeListener).toHaveBeenCalledWith('pointerdown', expect.any(Function))
-    expect(removeListener).toHaveBeenCalledWith('pointermove', expect.any(Function))
-    expect(removeListener).toHaveBeenCalledWith('pointerup', expect.any(Function))
+  it('lets navigation have input the tool does not capture', () => {
+    const navigation = new NavigationBehavior(viewport)
+    viewport.inputRouter.add(navigation)
+    tool.capturesInput = (event: PointerEvent | WheelEvent) => event.type === 'pointerdown' && (event as PointerEvent).button === 0
+    tool.registerViewport(viewport)
+    const distance = viewport.view.navigation.distance
+    viewport.dispatchEvent(new WheelEvent('wheel', {bubbles: true, cancelable: true, deltaY: 100}))
+    expect(viewport.view.navigation.distance).toBeGreaterThan(distance)
   })
 
   it('maps pointer coordinates to normalized device space', () => {

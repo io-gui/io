@@ -24,7 +24,8 @@ description: >-
 - `onResized` on the applet is deprecated: size belongs to each viewport.
 - **View state lives on `ThreeView`**, not the viewport: `viewport.view.navigation` (target, rotation, distance, axis view, scene camera by uuid), `overscan`, `clearColor`. Pass a `view` to keep navigation across remounts. Use `viewport.getViewCamera()` for picking; never mutate scene cameras to fit a viewport. After editing `view.navigation` directly, call `view.markNavigationChanged()`.
 - **Not core `IoGl`.** IoGl is 2D shader quads for sliders/colors; this package is full Three WebGPU.
-- `ToolBase` registers on viewports and supplies Pointer3D rays — subclass for tools; don't re-wire pointer→ray ad hoc.
+- **All viewport input goes through `viewport.inputRouter`** (priority capture). Never add pointer/wheel listeners to a viewport directly, and never use `OrbitControls` on it: navigation is `NavigationBehavior` + a `Keymap` (`navigationKeymaps.default | blender | maya`, or pass `keymap`).
+- `ToolBase` registers one behavior per viewport router and supplies Pointer3D rays — subclass for tools; don't re-wire pointer→ray ad hoc. It captures every press and wheel by default; override `capturesInput(event)` to leave buttons or the wheel to navigation.
 
 ## Read next
 

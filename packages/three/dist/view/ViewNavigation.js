@@ -1,4 +1,4 @@
-import { Box3, PerspectiveCamera, Quaternion, Vector3 } from 'three/webgpu';
+import { Box3, MathUtils, PerspectiveCamera, Quaternion, Spherical, Vector3 } from 'three/webgpu';
 import { clipPlanesFromBox } from '../utils/clipPlanesFromBox.js';
 export const AXIS_VIEW_DIRECTIONS = {
     top: [0, 1, 0],
@@ -10,6 +10,8 @@ export const AXIS_VIEW_DIRECTIONS = {
 };
 const DEFAULT_DIRECTION = new Vector3(0.5, 0.25, 1).normalize();
 const FRAME_OVERFIT = 4;
+const POLE_EPSILON = 1e-4;
+const MIN_DISTANCE = 1e-6;
 const _lookAtCamera = new PerspectiveCamera();
 const _box = new Box3();
 const _center = new Vector3();
@@ -18,6 +20,8 @@ const _right = new Vector3();
 const _up = new Vector3();
 const _forward = new Vector3();
 const _corner = new Vector3();
+const _offset = new Vector3();
+const _spherical = new Spherical();
 /**
  * Navigation state of one view, stored as numbers (ADR-0005), modelled on Blender's RegionView3D.
  * The camera used for drawing and picking is built from this state per frame by `ThreeView.getCamera()`.
@@ -62,6 +66,35 @@ export class ViewNavigation {
             this.setDirection(DEFAULT_DIRECTION);
         }
         this.axisView = axis;
+    }
+    /**
+     * Turntable orbit around the target: `deltaTheta` turns around world Y, `deltaPhi` tilts toward or away
+     * from the poles (radians). Leaves any axis view.
+     */
+    orbit(deltaTheta, deltaPhi) {
+        _offset.set(0, 0, 1).applyQuaternion(this.rotation);
+        _spherical.setFromVector3(_offset);
+        _spherical.theta += deltaTheta;
+        _spherical.phi = MathUtils.clamp(_spherical.phi + deltaPhi, POLE_EPSILON, Math.PI - POLE_EPSILON);
+        _offset.setFromSpherical(_spherical);
+        this.setDirection(_offset);
+        this.axisView = null;
+    }
+    /** Moves the target in the view plane by screen pixels, so the scene follows the pointer. */
+    pan(dx, dy, worldPerPixel) {
+        _right.set(1, 0, 0).applyQuaternion(this.rotation);
+        _up.set(0, 1, 0).applyQuaternion(this.rotation);
+        this.target.addScaledVector(_right, -dx * worldPerPixel).addScaledVector(_up, dy * worldPerPixel);
+    }
+    /** Scales the distance to the target (> 1 moves away). Perspective clip planes scale along. */
+    dolly(factor) {
+        const distance = Math.max(this.distance * factor, MIN_DISTANCE);
+        const applied = distance / this.distance;
+        this.distance = distance;
+        if (this.projection === 'perspective') {
+            this.near *= applied;
+            this.far *= applied;
+        }
     }
     getPosition(out) {
         return out.set(0, 0, 1).applyQuaternion(this.rotation).multiplyScalar(this.distance).add(this.target);

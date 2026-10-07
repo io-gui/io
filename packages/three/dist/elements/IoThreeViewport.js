@@ -10,7 +10,9 @@ import { ThreeApplet } from '../nodes/ThreeApplet.js';
 import { ToolBase } from '../nodes/ToolBase.js';
 import { ThreeView } from '../view/ThreeView.js';
 import { AXIS_VIEW_DIRECTIONS } from '../view/ViewNavigation.js';
-import { ViewOrbitControls } from '../view/ViewOrbitControls.js';
+import { InputRouter } from '../input/InputRouter.js';
+import { Keymap, navigationKeymaps } from '../input/Keymap.js';
+import { NavigationBehavior } from '../input/behaviors/NavigationBehavior.js';
 import { renderScheduler, getDefaultRenderer } from '../render/RenderScheduler.js';
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -39,6 +41,7 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         return /* css */ `
       :host {
         position: relative;
+        touch-action: none;
         display: flex;
         flex: 1 1 auto;
         flex-direction: column;
@@ -63,6 +66,19 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
             'frame-object': 'onFrameObject',
         };
     }
+    /** Routes this viewport's input to behaviors: navigation, tools, later gizmos and operators (ADR-0004). */
+    get inputRouter() {
+        if (!this._inputRouter) {
+            this._inputRouter = new InputRouter(this);
+            this._navigation = new NavigationBehavior(this, this.keymap);
+            this._inputRouter.add(this._navigation);
+        }
+        return this._inputRouter;
+    }
+    get navigationBehavior() {
+        void this.inputRouter;
+        return this._navigation;
+    }
     constructor(args) {
         super({
             ...args,
@@ -70,7 +86,7 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
             renderer: args.renderer ?? getDefaultRenderer(),
         });
         this._ownsView = !args.view;
-        this._orbitControls = new ViewOrbitControls(this);
+        void this.inputRouter;
     }
     ready() {
         this.attachSurface();
@@ -133,7 +149,6 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         this._sceneCameraPending = !applyCameraSelect(view, this.cameraSelect, scene);
         if (!view.navigation.framed && scene)
             view.frame(scene);
-        this._orbitControls?.updateEnabled();
     }
     toolChanged(change) {
         const newTool = change.value;
@@ -177,8 +192,11 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         this._syncView();
         this.tag('view');
     }
+    keymapChanged() {
+        if (this._navigation)
+            this._navigation.keymap = this.keymap;
+    }
     viewMutated() {
-        this._orbitControls?.updateEnabled();
         this.tag('view');
     }
     mutated() {
@@ -207,7 +225,7 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         renderScheduler.unregister(this);
         delete this.applet;
         this.renderTarget.dispose();
-        this._orbitControls.dispose();
+        this._inputRouter?.dispose();
         if (this._ownsView)
             this.view.dispose();
         if (this.tool) {
@@ -228,6 +246,9 @@ __decorate([
 __decorate([
     Property({ type: WebGPURenderer })
 ], IoThreeViewport.prototype, "renderer", void 0);
+__decorate([
+    Property({ type: Keymap, value: navigationKeymaps.default })
+], IoThreeViewport.prototype, "keymap", void 0);
 __decorate([
     Property({ type: ToolBase })
 ], IoThreeViewport.prototype, "tool", void 0);
