@@ -1,18 +1,27 @@
-import { Scene, ToneMapping } from 'three/webgpu';
-import { ThreeEditor, ThreeEditorProps } from '../editor/ThreeEditor.js';
-export type ThreeAppletProps = ThreeEditorProps & {
+import { ReactiveObject, ReactiveObjectProps } from '@io-gui/core';
+import { Timer, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu';
+export type ThreeAppletProps = ReactiveObjectProps & {
     scene?: Scene;
     toneMappingExposure?: number;
     toneMapping?: ToneMapping;
+    isPlaying?: boolean;
 };
-/**
- * Compatibility shim (ADR-0002): a ThreeEditor with one document whose `scene`, `toneMapping` and
- * `toneMappingExposure` are two-way bound to the applet's own properties. New apps use ThreeEditor
- * and ThreeDocument directly. After replacing `applet.document`, the applet properties no longer follow it.
- */
-export declare class ThreeApplet extends ThreeEditor {
+export declare class ThreeApplet extends ReactiveObject {
     scene: Scene;
     toneMappingExposure: number;
     toneMapping: ToneMapping;
+    isPlaying: boolean;
+    _renderer: WebGPURenderer | null;
+    _width: number;
+    _height: number;
+    readonly _timer: Timer;
     constructor(args?: ThreeAppletProps);
+    isPlayingChanged(): void;
+    onRAF(): void;
+    updateViewportSize(width: number, height: number): void;
+    isRendererInitialized(): boolean;
+    onRendererInitialized(renderer: WebGPURenderer): void;
+    onResized(width: number, height: number): void;
+    onAnimate(delta: number, time: number): void;
+    dispose(): void;
 }

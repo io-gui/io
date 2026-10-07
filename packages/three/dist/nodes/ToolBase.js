@@ -8,98 +8,41 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { ReactiveObject, Register, Property } from '@io-gui/core';
 import { Vector2, Ray, Raycaster, Vector3 } from 'three/webgpu';
 import { ThreeApplet } from './ThreeApplet';
-import { BehaviorPriority } from '../input/Behavior.js';
 const _raycaster = new Raycaster();
-/**
- * Adapts a ToolBase to the InputRouter (ADR-0004): one shared behavior at tool priority that forwards
- * router events to the tool's existing pointer handlers. The router dispatches synchronously from the
- * viewport's own listeners, so `event.currentTarget` is still the viewport.
- */
-class ToolBaseBehavior {
-    tool;
-    priority = BehaviorPriority.tool;
-    constructor(tool) {
-        this.tool = tool;
-    }
-    wantsCapture(event) {
-        return (event.type === 'pointerdown' || event.type === 'wheel') && this.tool.capturesInput(event.native);
-    }
-    begin(event) {
-        if (event.type === 'wheel')
-            this.tool._onWheel(event.native);
-        else
-            this.tool._onPointerDown(event.native);
-    }
-    update(event) {
-        switch (event.type) {
-            case 'pointerdown':
-                this.tool._onPointerDown(event.native);
-                break;
-            case 'pointermove':
-                this.tool._onPointerMove(event.native);
-                break;
-            case 'pointerup':
-                this.tool._onPointerUp(event.native);
-                break;
-            case 'wheel':
-                this.tool._onWheel(event.native);
-                break;
-        }
-    }
-    end(event) {
-        if (event.type === 'pointerup')
-            this.tool._onPointerUp(event.native);
-    }
-    cancel(event) {
-        if (event?.type === 'pointercancel')
-            this.tool._onPointerCancel(event.native);
-        else if (event)
-            this.tool._resetPointers(event.host);
-    }
-    hover(event) {
-        // Tools track hover passively and never block lower behaviors.
-        this.tool._onPointerMove(event.native);
-        return false;
-    }
-    hoverEnd(event) {
-        if (event)
-            this.tool._onPointerLeave(event.native);
-    }
-}
 let ToolBase = class ToolBase extends ReactiveObject {
     _viewports = [];
     _activePointers = new WeakMap();
     _hoverPointers = new WeakMap();
-    _behavior = new ToolBaseBehavior(this);
     constructor(args) {
         super(args);
-    }
-    /** The behavior this tool adds to each registered viewport's InputRouter. */
-    get behavior() {
-        return this._behavior;
     }
     registerViewport(viewport) {
         if (this._viewports.includes(viewport))
             return;
         this._viewports.push(viewport);
-        viewport.inputRouter.add(this._behavior);
+        viewport.addEventListener('contextmenu', this._onContextMenu);
+        viewport.addEventListener('pointerdown', this._onPointerDown);
+        viewport.addEventListener('pointermove', this._onPointerMove);
+        viewport.addEventListener('pointerleave', this._onPointerLeave);
+        viewport.addEventListener('pointerout', this._onPointerOut);
+        viewport.addEventListener('pointerup', this._onPointerUp);
+        viewport.addEventListener('pointercancel', this._onPointerCancel);
+        viewport.addEventListener('lostpointercapture', this._onLostPointerCapture);
+        viewport.addEventListener('wheel', this._onWheel);
     }
     unregisterViewport(viewport) {
         if (!this._viewports.includes(viewport))
             return;
         this._viewports.splice(this._viewports.indexOf(viewport), 1);
-        viewport.inputRouter.remove(this._behavior);
-        this._resetPointers(viewport);
-    }
-    /**
-     * Whether this tool captures a press or wheel event. Defaults to everything, so lower-priority behaviors
-     * (camera navigation) only get input the tool lets through. Override to share, for example
-     * `return event.button === 0` to leave other buttons and the wheel to navigation.
-     */
-    capturesInput(event) {
-        return true;
-    }
-    _resetPointers(viewport) {
+        viewport.removeEventListener('contextmenu', this._onContextMenu);
+        viewport.removeEventListener('pointerdown', this._onPointerDown);
+        viewport.removeEventListener('pointermove', this._onPointerMove);
+        viewport.removeEventListener('pointerleave', this._onPointerLeave);
+        viewport.removeEventListener('pointerout', this._onPointerOut);
+        viewport.removeEventListener('pointerup', this._onPointerUp);
+        viewport.removeEventListener('pointercancel', this._onPointerCancel);
+        viewport.removeEventListener('lostpointercapture', this._onLostPointerCapture);
+        viewport.removeEventListener('wheel', this._onWheel);
         this._activePointers.delete(viewport);
         this._hoverPointers.delete(viewport);
     }
@@ -251,7 +194,10 @@ let ToolBase = class ToolBase extends ReactiveObject {
         const hoverPointers = this._getHoverPointers(viewport);
         const _rect = viewport.getBoundingClientRect();
         const screen = new Vector2(((event.clientX - _rect.left) / _rect.width) * 2 - 1, -((event.clientY - _rect.top) / _rect.height) * 2 + 1);
-        _raycaster.setFromCamera(screen, viewport.getViewCamera());
+        viewport.viewCameras.setOverscan(viewport.width, viewport.height, viewport.overscan);
+        const camera = viewport.viewCameras.camera;
+        _raycaster.setFromCamera(screen, camera);
+        viewport.viewCameras.resetOverscan();
         const { origin, direction } = _raycaster.ray;
         const previousPointer3D = this._findPointer(activePointers, event.pointerId) || this._findPointer(hoverPointers, event.pointerId);
         if (previousPointer3D) {
