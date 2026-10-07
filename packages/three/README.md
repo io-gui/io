@@ -7,15 +7,20 @@ See [live examples here](https://iogui.dev/io/#path=Demos,Three)
 ## Overview
 
 ```
+RenderScheduler (singleton, the only thing that renders)
+├── WebGPURenderer (shared default; custom renderers allowed)
+├── one requestAnimationFrame loop
+└── typed dirty tags per viewport
+
 IoThreeViewport (element)
-├── WebGPURenderer (shared)
 ├── CanvasTarget (per viewport)
 └── ViewCameras (perspective/orthographic)
 
 ThreeApplet (object)
 ├── scene: Scene
+├── changeBus: ChangeBus
 ├── toneMapping, toneMappingExposure, isPlaying
-└── onAnimate(delta, time), onResized(width, height)
+└── onAnimate(delta, time), requestRender(), notify(change)
 
 EditorConfigs (configs/*)
 └── Property editors for Three.js classes
@@ -93,7 +98,7 @@ type ThreeAppletProps = {
 | Method                            | Description                          |
 | --------------------------------- | ------------------------------------ |
 | `onRendererInitialized(renderer)` | Called when WebGPU renderer is ready |
-| `onResized(width, height)`        | Called on viewport resize            |
+| `onResized(width, height, viewport)` | Deprecated. Called when a viewport showing the applet resizes; last one wins |
 | `onAnimate(delta, time)`          | Called each frame while `isPlaying`  |
 
 ### ViewCameras
@@ -137,27 +142,35 @@ registerEditorGroups(MyCustomObject, {
 });
 ```
 
-## Animation Loop
+## Render Loop
 
-A single global `requestAnimationFrame` loop drives all playing applets:
+`renderScheduler` runs one `requestAnimationFrame` loop and is the only code that renders ([ADR-0003](./docs/adr/0003-redraw-is-a-dirty-tag-consumed-by-one-scheduler.md)). Viewports never draw on their own; they are tagged dirty and drawn on the next frame.
 
 ```typescript
-// Applets opt-in to animation
-applet.isPlaying = true; // Adds to animation loop
-applet.isPlaying = false; // Removes from animation loop
+applet.isPlaying = true; // ticks onAnimate every frame, redraws its viewports
+applet.isPlaying = false;
+
+applet.requestRender(); // redraw viewports showing this applet once
+applet.notify({kind: 'transform', source: applet, ids: [mesh.uuid]}); // same, with a typed change
 ```
 
-**Loop behavior:**
+**Each frame:**
 
-- Calls `onAnimate(delta, time)` only for playing applets (time from a three.js `Timer`)
-- After each frame the applet dispatches a bubbling `three-applet-needs-render` event; viewports showing it re-render (debounced)
-- Skips rendering for non-visible viewports (IntersectionObserver)
+1. Tick playing applets: `onAnimate(delta, time)` (one shared three.js `Timer`).
+2. Drain change buses; tag viewports whose `listens(change)` is true.
+3. Update each scene's world matrices once, then draw tagged, visible viewports in priority order (focused, hovered, other) within a frame budget (`renderScheduler.frameBudget`, 12 ms). Views not reached draw next frame.
+
+Plain Three.js edits made outside `onAnimate` must call `applet.requestRender()` (or `viewport.tag('content')`), or nothing redraws.
 
 ## Edge Cases
 
+### WebGPU Only
+
+The package requires WebGPU ([ADR-0001](./docs/adr/0001-webgpu-only-one-renderer-canvas-target-per-viewport.md)). If a renderer ends up on a non-WebGPU backend, its viewports show an error message instead of rendering.
+
 ### Shared Renderer
 
-All `IoThreeViewport` instances share a single `WebGPURenderer` by default. This improves performance but means renderer state (tone mapping, clear color) is reset per viewport render.
+All `IoThreeViewport` instances share a single `WebGPURenderer` by default (`getDefaultRenderer()`). Renderer state (tone mapping, clear color) is reset per viewport render. A viewport may be given its own `renderer` for renderer-level options such as `logarithmicDepthBuffer`; GPU resources are then not shared with other renderers.
 
 ### Visibility Optimization
 
@@ -165,11 +178,11 @@ Viewports not intersecting the viewport (scrolled out of view) skip rendering en
 
 ### Renderer Initialization
 
-The renderer initializes asynchronously. Viewports wait for `renderer.initialized === true` before rendering. Similarly, applets wait for `onRendererInitialized()` before performing renderer-dependent setup.
+The renderer initializes asynchronously. The scheduler initializes each renderer once and draws its viewports when it is ready. Applets get `onRendererInitialized(renderer)` before their first draw and do renderer-dependent setup there.
 
 ### Dispose Cleanup
 
-Disposing a viewport disposes its CanvasTarget and ViewCameras and unregisters its tool. The renderer (shared or custom) is never disposed by the viewport.
+Disposing a viewport unregisters it from the scheduler, disposes its CanvasTarget and ViewCameras, and unregisters its tool. The renderer (shared or custom) is never disposed by the viewport.
 
 ## Packaging
 

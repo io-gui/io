@@ -17,9 +17,11 @@ description: >-
 ## Gotchas
 
 - **Importing the package registers editor configs** for Three.js classes (side-effect). Expected.
-- Default **shared `WebGPURenderer`** across viewports; each viewport has its own **CanvasTarget**. Renderer state reset per draw.
-- Renderer init is **async** — use `onRendererInitialized` / wait for `renderer.initialized` before GPU work.
+- **WebGPU only.** Default **shared `WebGPURenderer`** across viewports; each viewport has its own **CanvasTarget**. Renderer state reset per draw.
+- **Only `renderScheduler` renders.** Viewports are tagged dirty and drawn next frame. After editing the scene outside `onAnimate`, call `applet.requestRender()` (or `applet.notify({kind, source: applet})`) or nothing redraws. Never call render methods on viewports.
+- Renderer init is **async** — do GPU setup in `onRendererInitialized(renderer)`.
 - `isPlaying: false` on the applet ⇒ no `onAnimate`; non-visible viewport ⇒ no draw.
+- `onResized` on the applet is deprecated: size belongs to each viewport.
 - **Not core `IoGl`.** IoGl is 2D shader quads for sliders/colors; this package is full Three WebGPU.
 - `ToolBase` registers on viewports and supplies Pointer3D rays — subclass for tools; don't re-wire pointer→ray ad hoc.
 

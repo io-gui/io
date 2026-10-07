@@ -531,3 +531,12 @@
 - ThreeEditor name. One active ThreeDocument, switchable at runtime; per-doc session maps on editor (selection, view nav, undo).
 - Undo advised: commands + transactions of auto-inverted patches (not Maya undoIt, not Blender memfile). ADR-0008 status proposed. Mutation API in P4; undo stack/commands/collab in future P8.
 - Selection moved to session state (per user) in ADR-0007. Picker async interface; plain Raycaster now; BVH + ID buffer later.
+
+## 2026-10-07 — io-three Phase 1 (frame layer) implemented
+
+### [three][render]
+- New: src/editor/ChangeBus.ts (DocumentChange, kinds + 'other'), src/render/RenderScheduler.ts (ScheduledView/Ticker, typed dirty tags, tick->collect->evaluate once->draw by priority within budget, continuous, renderer init + WebGPU backend check, getDefaultRenderer, renderScheduler singleton).
+- IoThreeViewport: registers on connect, tag() instead of debounce draws, renderView() called by scheduler only, WebGL path removed, renderTarget lazy getter (ready() runs inside base ctor before class fields).
+- ThreeApplet: no own rAF/Timer/_width/_height; ticker via scheduler; changeBus, notify(), requestRender(); onResized(w,h,viewport) on resize only.
+- Tests 918/918 pass; new RenderScheduler.test.ts (14), ThreeApplet.test.ts, viewport tests.
+- Gotchas: headless Chromium screenshots of WebGPU canvases blank -> use headed playwright. Vite aliases @io-gui/* to src; page.evaluate import('@io-gui/three') hits import map dist -> double registration; import '/packages/three/src/index.ts'. Demos render children in ctor -> construct with new, not document.createElement.

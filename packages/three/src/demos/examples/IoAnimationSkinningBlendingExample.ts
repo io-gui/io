@@ -149,7 +149,7 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
     if (this.mixer) {
       this.mixer.update(this.stepSize)
     }
-    this.dispatch('three-applet-needs-render', undefined, true)
+    this.requestRender()
   }
 
   private getCurrentAction(): AnimationAction | null {

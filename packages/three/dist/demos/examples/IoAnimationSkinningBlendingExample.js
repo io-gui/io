@@ -96,7 +96,7 @@ let AnimationSkinningBlendingExample = class AnimationSkinningBlendingExample ex
         if (this.mixer) {
             this.mixer.update(this.stepSize);
         }
-        this.dispatch('three-applet-needs-render', undefined, true);
+        this.requestRender();
     };
     getCurrentAction() {
         for (const action of Object.values(this.actions)) {

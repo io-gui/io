@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { nextFrame } from '@io-gui/core'
-import { IoThreeViewport, ThreeApplet, ToolBase } from '@io-gui/three'
+import { IoThreeViewport, ThreeApplet, ToolBase, renderScheduler } from '@io-gui/three'
 import { Scene, WebGPURenderer } from 'three/webgpu'
 
 describe('IoThreeViewport', () => {
@@ -86,5 +86,38 @@ describe('IoThreeViewport', () => {
     viewport.remove()
     viewport.viewCameras.dispose()
     renderer.dispose()
+  })
+
+  it('registers with the render scheduler while connected', async () => {
+    const viewport = new IoThreeViewport({ applet })
+    expect(renderScheduler.isRegistered(viewport)).toBe(false)
+    container.appendChild(viewport as Node)
+    expect(renderScheduler.isRegistered(viewport)).toBe(true)
+    expect(renderScheduler.getTags(viewport).has('content')).toBe(true)
+
+    viewport.remove()
+    expect(renderScheduler.isRegistered(viewport)).toBe(false)
+    viewport.viewCameras.dispose()
+  })
+
+  it('listens only to changes from its own applet', () => {
+    const other = new ThreeApplet({ scene: new Scene() })
+    const viewport = new IoThreeViewport({ applet })
+    expect(viewport.changeBus).toBe(applet.changeBus)
+    expect(viewport.scene).toBe(applet.scene)
+    expect(viewport.listens({kind: 'transform', source: applet})).toBe(true)
+    expect(viewport.listens({kind: 'transform', source: other})).toBe(false)
+    other.dispose()
+    viewport.viewCameras.dispose()
+  })
+
+  it('is not renderable while hidden or zero-sized', async () => {
+    const viewport = new IoThreeViewport({ applet })
+    container.appendChild(viewport as Node)
+    await nextFrame()
+    // container is display:none, so the viewport has no size and is not intersecting
+    expect(viewport.isRenderable()).toBe(false)
+    viewport.remove()
+    viewport.viewCameras.dispose()
   })
 })

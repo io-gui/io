@@ -7,51 +7,38 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Register, ReactiveObject, Property } from '@io-gui/core';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
-import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, Timer, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene } from 'three/webgpu';
+import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene } from 'three/webgpu';
 import { ioOptionSelect, Menu } from '@io-gui/menus';
-const _playingApplets = [];
-function rAFLoop() {
-    for (const applet of _playingApplets) {
-        applet.onRAF();
-    }
-    requestAnimationFrame(rAFLoop);
-}
-rAFLoop();
+import { ChangeBus } from '../editor/ChangeBus.js';
+import { renderScheduler } from '../render/RenderScheduler.js';
 let ThreeApplet = class ThreeApplet extends ReactiveObject {
     _renderer = null;
-    _width = 0;
-    _height = 0;
-    _timer = new Timer();
+    /** Changes drained by the RenderScheduler each frame; views showing this applet redraw. */
+    changeBus = new ChangeBus();
     constructor(args) {
         super(args);
-        this._timer.connect(document);
         this.isPlayingChanged();
     }
     isPlayingChanged() {
-        if (this.isPlaying === true && _playingApplets.includes(this) === false) {
-            _playingApplets.push(this);
+        if (this.isPlaying) {
+            renderScheduler.addTicker(this);
         }
-        else if (this.isPlaying === false && _playingApplets.includes(this)) {
-            _playingApplets.splice(_playingApplets.indexOf(this), 1);
+        else {
+            renderScheduler.removeTicker(this);
         }
     }
-    onRAF() {
+    tick(frame) {
         if (!this.isPlaying)
             return;
-        this._timer.update();
-        const delta = this._timer.getDelta();
-        const time = this._timer.getElapsed();
-        this.onAnimate(delta, time);
-        this.dispatch('three-applet-needs-render', undefined, true);
+        this.onAnimate(frame.delta, frame.time);
+        this.notify({ kind: 'time', source: this });
     }
-    updateViewportSize(width, height) {
-        if (this._width !== width || this._height !== height) {
-            if (!!width && !!height) {
-                this._width = width;
-                this._height = height;
-                this.onResized(width, height);
-            }
-        }
+    notify(change) {
+        this.changeBus.notify(change);
+    }
+    /** Redraws every view showing this applet on the next frame. */
+    requestRender() {
+        this.notify({ kind: 'other', source: this });
     }
     isRendererInitialized() {
         return !!this._renderer && this._renderer.initialized === true;
@@ -59,14 +46,18 @@ let ThreeApplet = class ThreeApplet extends ReactiveObject {
     onRendererInitialized(renderer) {
         this._renderer = renderer;
     }
+    /**
+     * @deprecated Size belongs to each view (ADR-0002). Called when a viewport showing this applet resizes;
+     * with several viewports, the last one resized wins.
+     */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onResized(width, height) { }
+    onResized(width, height, viewport) { }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onAnimate(delta, time) { }
     dispose() {
         this.isPlaying = false;
+        renderScheduler.removeTicker(this);
         super.dispose();
-        // this._timer.disconnect();
     }
 };
 __decorate([
@@ -107,8 +98,6 @@ registerEditorGroups(ThreeApplet, {
         'toneMapping',
         'toneMappingExposure',
         '_renderer',
-        '_width',
-        '_height',
-        '_timer',
+        'changeBus',
     ],
 });

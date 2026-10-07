@@ -1,6 +1,6 @@
 # Three
 
-The `@io-gui/three` context: WebGPU Three.js viewports wired into Io-Gui's reactive graph. A ThreeApplet owns the scene and lifecycle; IoThreeViewport renders it through a shared renderer and a per-viewport canvas target. Math editor elements and side-effect EditorConfigs integrate Three types with `@io-gui/editors`.
+The `@io-gui/three` context: WebGPU Three.js viewports wired into Io-Gui's reactive graph. A ThreeApplet owns the scene and lifecycle; IoThreeViewport shows it through a per-viewport canvas target; the RenderScheduler is the only thing that renders. WebGPU only. Architecture decisions: `docs/adr/`. Math editor elements and side-effect EditorConfigs integrate Three types with `@io-gui/editors`.
 
 ## Language
 
@@ -13,11 +13,23 @@ Per-viewport render surface the shared renderer draws into. Each `IoThreeViewpor
 _Avoid_: canvas, framebuffer (as the Io-Gui term)
 
 **Shared renderer**:
-The single default `WebGPURenderer` reused across viewports. Renderer state is reset per viewport draw; a custom renderer may be passed in. Viewports never dispose the renderer.
+The single default `WebGPURenderer` (`getDefaultRenderer()`) reused across viewports and initialized once by the scheduler. Renderer state is reset per viewport draw; a custom renderer may be passed in for renderer-level options. Viewports never dispose the renderer.
 _Avoid_: global GL context, IoGl (core 2D shader quad)
 
+**RenderScheduler**:
+The singleton that owns the render loop and is the only code that renders. Draws tagged, visible viewports once per frame within a frame budget.
+_Avoid_: render loop (as a class name), animation loop
+
+**Dirty tag**:
+A typed reason (`content`, `view`, `overlay`, `resize`, `continuous`) that marks a viewport for redraw on the next frame. Tagging never draws.
+_Avoid_: needs-render, invalidate
+
+**ChangeBus**:
+Per-applet queue of typed `DocumentChange`s, drained by the scheduler each frame to tag the viewports that listen to them.
+_Avoid_: notifier, event bus
+
 **Playing**:
-`ThreeApplet.isPlaying`: whether the applet joins the global animation loop and gets `onAnimate(delta, time)` each frame. Independently, non-visible viewports skip draws via IntersectionObserver.
+`ThreeApplet.isPlaying`: whether the scheduler ticks the applet (`onAnimate(delta, time)`) each frame. Independently, non-visible viewports skip draws via IntersectionObserver.
 _Avoid_: animating, running, live
 
 **ViewCameras**:
