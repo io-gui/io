@@ -13,8 +13,9 @@ import { ToolBase } from '../nodes/ToolBase.js';
 import { ThreeView } from '../view/ThreeView.js';
 import { AXIS_VIEW_DIRECTIONS } from '../view/ViewNavigation.js';
 import { InputRouter } from '../input/InputRouter.js';
-import { Keymap, navigationKeymaps } from '../input/Keymap.js';
+import { Keymap, keymaps } from '../input/Keymap.js';
 import { NavigationBehavior } from '../input/behaviors/NavigationBehavior.js';
+import { SelectBehavior } from '../input/behaviors/SelectBehavior.js';
 import { renderScheduler, getDefaultRenderer } from '../render/RenderScheduler.js';
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -73,13 +74,19 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         if (!this._inputRouter) {
             this._inputRouter = new InputRouter(this);
             this._navigation = new NavigationBehavior(this, this.keymap);
+            this._select = new SelectBehavior(this, this.keymap);
             this._inputRouter.add(this._navigation);
+            this._inputRouter.add(this._select);
         }
         return this._inputRouter;
     }
     get navigationBehavior() {
         void this.inputRouter;
         return this._navigation;
+    }
+    get selectBehavior() {
+        void this.inputRouter;
+        return this._select;
     }
     constructor(args) {
         super({
@@ -115,6 +122,9 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
     }
     get mode() {
         return this.editor?.mode;
+    }
+    get selection() {
+        return this.editor?.selection ?? null;
     }
     /** Marks this viewport for redraw on the next frame. */
     tag(reason) {
@@ -175,6 +185,10 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
             router.remove(this._navigation);
         else
             router.add(this._navigation);
+        if (view.profile === 'full' || view.profile === 'select')
+            router.add(this._select);
+        else
+            router.remove(this._select);
         const tool = this.editor?.getActiveTool(view.kind) ?? null;
         const toolId = tool && toolAllowsProfile(tool, view.profile) ? tool.id : null;
         if ((this._toolBehaviors?.toolId ?? null) === toolId)
@@ -243,6 +257,8 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
     keymapChanged() {
         if (this._navigation)
             this._navigation.keymap = this.keymap;
+        if (this._select)
+            this._select.keymap = this.keymap;
     }
     viewMutated() {
         this._syncBehaviors();
@@ -302,7 +318,7 @@ __decorate([
     Property({ type: WebGPURenderer })
 ], IoThreeViewport.prototype, "renderer", void 0);
 __decorate([
-    Property({ type: Keymap, value: navigationKeymaps.default })
+    Property({ type: Keymap, value: keymaps.default })
 ], IoThreeViewport.prototype, "keymap", void 0);
 __decorate([
     Property({ type: ToolBase })

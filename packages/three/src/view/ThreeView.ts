@@ -81,7 +81,7 @@ export class ThreeView extends ReactiveObject {
     this.markNavigationChanged()
   }
 
-  frame(object: Object3D, padding = 1) {
+  frame(object: Object3D | readonly Object3D[], padding = 1) {
     this.navigation.frame(object, padding)
     this.markNavigationChanged()
   }

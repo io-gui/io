@@ -5,6 +5,7 @@ import { ThreeDocument } from './ThreeDocument.js'
 import { renderScheduler, FrameInfo, ScheduledTicker } from '../render/RenderScheduler.js'
 import { OperatorRegistry } from '../tools/Operator.js'
 import { ToolDefinition, ToolRegistry } from '../tools/Tool.js'
+import { SelectionModel } from '../selection/SelectionModel.js'
 import type { ViewKind } from '../view/ThreeView.js'
 import type { IoThreeViewport } from '../elements/IoThreeViewport.js'
 
@@ -35,11 +36,16 @@ export class ThreeEditor extends ReactiveObject implements ScheduledTicker {
   @Property({type: Object, init: null})
   declare activeTools: Record<string, string>
 
+  /** Selection of the active document. Session state; each document keeps its own (ADR-0007). */
+  @Property({type: SelectionModel})
+  declare selection: SelectionModel
+
   public _renderer: WebGPURenderer | null = null
 
   // Created lazily: change handlers can run inside the base constructor, before class fields exist.
   declare private _operators: OperatorRegistry | undefined
   declare private _tools: ToolRegistry | undefined
+  declare private _selections: Map<string, SelectionModel> | undefined
 
   constructor(args?: ThreeEditorProps) {
     super({...args, document: args?.document ?? new ThreeDocument()})
@@ -75,6 +81,17 @@ export class ThreeEditor extends ReactiveObject implements ScheduledTicker {
 
   documentChanged(change: Change<ThreeDocument>) {
     if (change.oldValue && change.oldValue !== change.value) this._operators?.cancelRunning()
+    if (change.value) this.selection = this._selectionFor(change.value)
+  }
+
+  private _selectionFor(document: ThreeDocument) {
+    if (!this._selections) this._selections = new Map()
+    let selection = this._selections.get(document.uuid)
+    if (!selection) {
+      selection = new SelectionModel({document})
+      this._selections.set(document.uuid, selection)
+    }
+    return selection
   }
 
   isPlayingChanged() {
@@ -121,6 +138,7 @@ export class ThreeEditor extends ReactiveObject implements ScheduledTicker {
 
   override dispose() {
     this._operators?.cancelRunning()
+    for (const selection of this._selections?.values() ?? []) selection.dispose()
     this.isPlaying = false
     renderScheduler.removeTicker(this)
     super.dispose()

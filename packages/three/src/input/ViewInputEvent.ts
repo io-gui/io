@@ -1,5 +1,6 @@
 import { OrthographicCamera, PerspectiveCamera, Ray, Raycaster, Scene, Vector2 } from 'three/webgpu'
 import type { ThreeView } from '../view/ThreeView.js'
+import type { SelectionModel } from '../selection/SelectionModel.js'
 
 /** What an InputRouter needs from the element it routes for. Implemented by IoThreeViewport. */
 export interface InputHost extends HTMLElement {
@@ -7,10 +8,13 @@ export interface InputHost extends HTMLElement {
   readonly scene: Scene | null
   /** Current editor mode (`'object'`, `'edit'`, ...), for keymap `when.mode`. */
   readonly mode?: string
+  /** Selection of the shown document, when the host has one. */
+  readonly selection?: SelectionModel | null
   getViewCamera(): PerspectiveCamera | OrthographicCamera
 }
 
-export type ViewInputType = 'pointerdown' | 'pointermove' | 'pointerup' | 'pointercancel' | 'wheel' | 'keydown' | 'keyup'
+/** `click` is synthesized by the router: a press and release on one pointer that moved less than a few pixels. */
+export type ViewInputType = 'pointerdown' | 'pointermove' | 'pointerup' | 'pointercancel' | 'wheel' | 'keydown' | 'keyup' | 'click'
 
 export type Modifiers = {
   shift: boolean

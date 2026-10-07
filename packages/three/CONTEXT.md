@@ -32,6 +32,18 @@ _Avoid_: operator (the runnable thing)
 A persistent mode of interaction registered on the editor, active per view kind + mode; creates behaviors per viewport.
 _Avoid_: ToolBase (legacy adapter), manipulator
 
+**SelectionModel**:
+Session selection of one document: object uuids, the active object, the select domain, a `version` bumped once per committed edit. Owned by the editor per document; never document data.
+_Avoid_: selected list, selection set (as the type name)
+
+**Picker**:
+Async "what is under the pointer" for a view: `pick` and `pickRect`. `RaycastPicker` now; BVH and ID-buffer pickers later.
+_Avoid_: raycaster (as the concept), hit tester
+
+**Click**:
+A press and release that moved less than `CLICK_TOLERANCE`; synthesized by the InputRouter after any capture of that press, so click bindings share a button with drag bindings.
+_Avoid_: tap, tweak
+
 **Interaction profile**:
 `ThreeView.profile`: what a viewport's router installs — `full`, `select`, `navigate`, `none`.
 _Avoid_: view mode, read-only

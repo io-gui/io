@@ -50,4 +50,7 @@ export * from './input/ViewInputEvent.js';
 export * from './input/InputRouter.js';
 export * from './input/Keymap.js';
 export * from './input/behaviors/NavigationBehavior.js';
+export * from './input/behaviors/SelectBehavior.js';
+export * from './selection/SelectionModel.js';
+export * from './selection/Picker.js';
 import './configs/index.js';

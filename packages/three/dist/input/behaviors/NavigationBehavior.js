@@ -77,11 +77,18 @@ export class NavigationBehavior {
     key(event) {
         if (event.type !== 'keydown' || !this._isEnabled())
             return false;
-        const entry = this.keymap.match(event, action => action === 'view.frameAll' || action === 'view.axis');
+        const entry = this.keymap.match(event, action => action === 'view.frameAll' || action === 'view.frameSelected' || action === 'view.axis');
         if (!entry)
             return false;
         const view = event.view;
-        if (entry.action === 'view.frameAll') {
+        if (entry.action === 'view.frameSelected') {
+            const selected = this._host.selection?.getObjects() ?? [];
+            if (selected.length)
+                view.frame(selected);
+            else if (this._host.scene)
+                view.frame(this._host.scene);
+        }
+        else if (entry.action === 'view.frameAll') {
             const scene = this._host.scene;
             if (scene)
                 view.frame(scene);

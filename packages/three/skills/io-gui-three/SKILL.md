@@ -13,6 +13,7 @@ description: >-
 - Import from `@io-gui/three` (pulls peer `three` / webgpu).
 - New apps: **`ThreeEditor`** (app) + **`ThreeDocument`** (`editor.document.scene`); mount with **`ioThreeViewport({ editor })`**. `ThreeApplet` (subclass, `ioThreeViewport({ applet })`) still works as a shim. Set `isPlaying` to animate.
 - **Edit the document through transactions** (`document.transact(tx => tx.set(obj, 'position', v))`), or operators (`editor.operators.run(id, props)`), not by writing Three.js objects directly: that is what keeps undo, redraw and future sync working. Interactive edits are modal operators (`invoke` returns `'running'`, `modal` gets events, Escape rolls back).
+- **Selection** is `editor.selection` (per document): change it with `selection.set(uuids)` / `selection.edit()...commit()`, read `getObjects()` / `getActiveObject()`, bind UI to `selection.version` / `selection.active`. Picking goes through a `Picker` (`defaultPicker`, async). Set `userData.selectable = false` on helpers (grids, gizmo meshes) so they cannot be picked.
 - Tools are `ToolDefinition`s on `editor.tools`, activated per view kind + mode (`editor.setActiveTool('3d', 'object', id)`); `view.profile` (`full | select | navigate | none`) filters what a viewport installs.
 - Prefer package math editors (`IoVector3`, …) for Three math types in inspectors.
 

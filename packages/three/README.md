@@ -24,6 +24,7 @@ ThreeEditor (object, one per app)
 │   ├── changeBus: ChangeBus
 │   └── transact() / begin(): Transaction of invertible patches
 ├── mode, isPlaying, onAnimate(delta, time), requestRender()
+├── selection: SelectionModel (of the active document; one per document)
 ├── operators: OperatorRegistry (run, modal operators, lastCommand)
 └── tools: ToolRegistry + activeTools per '<viewKind>:<mode>'
 
@@ -141,6 +142,28 @@ editor.setActiveTool("3d", "object", "slide");
 viewport.view.profile = "navigate"; // 'full' | 'select' | 'navigate' | 'none'
 ```
 
+### Selection
+
+`editor.selection` is the selection of the active document ([ADR-0007](./docs/adr/0007-selection-by-object-id-and-attribute-domain.md)). It is session state: each document keeps its own, and it never syncs to other users. It stores object uuids and an active object; one committed edit bumps `version` once and sends one `'selection'` change. Objects removed through transactions leave the selection.
+
+```typescript
+editor.selection.set([a.uuid, b.uuid]); // b becomes active
+editor.selection.edit().toggle(c.uuid).remove(a.uuid).commit();
+editor.selection.getObjects(); // objects still in the document
+editor.selection.getActiveObject();
+```
+
+Bind UI to `selection.active` / `selection.version`. Viewports with profile `full` or `select` install a `SelectBehavior`:
+
+| Action | default | blender | maya |
+| --- | --- | --- | --- |
+| Select (click; Shift toggles, Ctrl removes) | LMB click | LMB click | LMB click |
+| Box select | Alt+LMB drag | LMB drag (Shift extend, Ctrl subtract) | LMB drag (Shift toggle, Ctrl subtract) |
+| All / none / invert | Ctrl+A / Escape / - | A / Alt+A / Ctrl+I | - / - / Ctrl+Shift+I |
+| Frame selected | F | Numpad . | F |
+
+Clicks are presses that moved less than `CLICK_TOLERANCE` (4 px); the router offers them after any drag binding on the same button, so LMB can both orbit and select. Picking goes through the async `Picker` interface; `RaycastPicker` is the default (box select tests projected bounds). Mark helpers with `object.userData.selectable = false` to keep them out of picking.
+
 ### ThreeApplet
 
 Compatibility shim: a `ThreeEditor` with one document, whose `scene`, `toneMapping` and `toneMappingExposure` are two-way bound to the document. Existing applets keep working.
@@ -194,12 +217,12 @@ Each viewport has one `InputRouter` ([ADR-0004](./docs/adr/0004-input-arbitrated
 | Gizmos | 800 | (later) |
 | Tool | 500 | `ToolBase` subclasses |
 | Navigation | 300 | `NavigationBehavior` |
-| Fallback selection | 100 | (later) |
+| Fallback selection | 100 | `SelectBehavior` |
 
-**Navigation** is driven by a keymap (data): `navigationKeymaps.default` (OrbitControls-like: LMB orbit, RMB / Shift+LMB pan, MMB dolly, wheel zoom, Home frame all), `.blender` (MMB orbit, Shift+MMB pan, Ctrl+MMB dolly, numpad axis views) and `.maya` (Alt+LMB/MMB/RMB). Two-finger touch pans and pinch-dollies. Axis views pan instead of orbit. Navigation is off while looking through a scene camera.
+**Navigation** (and selection) is driven by a keymap (data); `keymaps.default | blender | maya` combine both. Navigation alone: `navigationKeymaps.default` (OrbitControls-like: LMB orbit, RMB / Shift+LMB pan, MMB dolly, wheel zoom, Home frame all), `.blender` (MMB orbit, Shift+MMB pan, Ctrl+MMB dolly, numpad axis views) and `.maya` (Alt+LMB/MMB/RMB). Two-finger touch pans and pinch-dollies. Axis views pan instead of orbit. Navigation is off while looking through a scene camera.
 
 ```typescript
-ioThreeViewport({ applet, keymap: navigationKeymaps.blender });
+ioThreeViewport({ editor, keymap: keymaps.blender });
 const keymap = Keymap.layer(myBindings, navigationKeymaps.default); // first match wins
 ```
 

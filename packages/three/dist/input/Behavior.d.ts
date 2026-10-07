@@ -40,4 +40,9 @@ export interface Behavior {
     hoverEnd?(event?: ViewInputEvent): void;
     /** Key events. Return true when handled. */
     key?(event: ViewInputEvent): boolean;
+    /**
+     * A press and release that did not drag, offered after any capture of that press ended, in priority order.
+     * Lets click bindings (select) share a button with drag bindings (orbit). Return true when handled.
+     */
+    click?(event: ViewInputEvent): boolean;
 }

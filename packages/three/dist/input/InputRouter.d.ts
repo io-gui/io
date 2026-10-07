@@ -1,5 +1,7 @@
 import { Behavior } from './Behavior.js';
 import { InputHost } from './ViewInputEvent.js';
+/** Max pixels between press and release for a click. */
+export declare const CLICK_TOLERANCE = 4;
 /**
  * Routes input for one viewport (ADR-0004). It is the only code that listens to the viewport's
  * pointer, wheel and context-menu events and takes pointer capture. Behaviors are offered events in
@@ -15,6 +17,8 @@ export declare class InputRouter {
     private readonly _lastPositions;
     private _suppressContextMenu;
     private _modal;
+    /** Press position per pointer, for click detection; `multi` marks presses that became multi-touch. */
+    private readonly _presses;
     constructor(host: InputHost);
     get behaviors(): readonly Behavior[];
     get captured(): Behavior | null;
@@ -38,6 +42,8 @@ export declare class InputRouter {
     private _onPointerDown;
     private _onPointerMove;
     private _onPointerUp;
+    private _offerClick;
+    private _handleRelease;
     private _releasePointer;
     private _onPointerCancel;
     private _onWheel;

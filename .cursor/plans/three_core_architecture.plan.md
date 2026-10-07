@@ -64,13 +64,13 @@ todos:
     status: completed
   - id: selection-model
     content: "P5: SelectionModel (object domain), transactions, undo, change notifications"
-    status: pending
+    status: completed
   - id: object-picking
     content: "P5: Async Picker interface; plain Raycaster implementation for objects"
-    status: pending
+    status: completed
   - id: select-behaviors
     content: "P5: Click and box select as fallback behaviors; inspector follows selection.active"
-    status: pending
+    status: completed
   - id: pipeline-registry
     content: "P6: ViewPipeline contract + registry; ForwardPipeline; tone mapping from document settings"
     status: pending
@@ -360,6 +360,14 @@ Operator contract (`poll`, `invoke`, `modal`, `exec`, `cancel`), registry by id,
 ---
 
 ## Phase 5: Object selection (ADR-0007)
+
+**Done 2026-10-07.** Notes from implementation:
+- Files: `selection/SelectionModel.ts` (+ `SelectionEdit`), `selection/Picker.ts` (`Picker`, `RaycastPicker`, `defaultPicker`, `isSelectable`, `collectSelectable`), `input/behaviors/SelectBehavior.ts`, demo `demos/examples/IoSelectionExample.ts` (index.html: Three > Editor > Selection).
+- `editor.selection` is a reactive property swapped per document from a map keyed by document uuid. Selection changes notify `'selection'` on the document bus; removed objects (remove patches) are pruned via a commit listener.
+- Router clicks: presses that moved < 4 px, single pointer, not modal, offered after any capture ends via `Behavior.click`. Keymap grammar gained `LMB click`. This lets the default (OrbitControls-like) keymap orbit on LMB drag and select on LMB click.
+- `keymaps.default | blender | maya` combine navigation and selection presets; viewport default is `keymaps.default`. `view.frameSelected` added (F / Numpad . / F).
+- Picking: Line/Points thresholds are `PICK_RADIUS` (4 px) in world units at the target distance; `userData.selectable = false` opts out (helpers). Box select tests projected bounds (approximate) until the ID-buffer picker.
+- Not done: outliner adapter (io-menus), selection highlight (P6 overlay), lasso, select-through.
 
 ### `selection-model`
 

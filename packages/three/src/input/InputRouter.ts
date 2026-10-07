@@ -5,6 +5,9 @@ const _routers = new Set<InputRouter>()
 let _hoveredRouter: InputRouter | null = null
 let _keyListenersInstalled = false
 
+/** Max pixels between press and release for a click. */
+export const CLICK_TOLERANCE = 4
+
 function setHoveredRouter(router: InputRouter | null) {
   _hoveredRouter = router
 }
@@ -54,6 +57,8 @@ export class InputRouter {
   private readonly _lastPositions = new Map<number, {x: number; y: number}>()
   private _suppressContextMenu = false
   private _modal = false
+  /** Press position per pointer, for click detection; `multi` marks presses that became multi-touch. */
+  private readonly _presses = new Map<number, {x: number; y: number; multi: boolean}>()
 
   constructor(host: InputHost) {
     this.host = host
@@ -212,6 +217,9 @@ export class InputRouter {
   private _onPointerDown = (native: PointerEvent) => {
     this._suppressContextMenu = false
     const event = this._event('pointerdown', native)
+    const multi = this._presses.size > 0
+    if (multi) for (const press of this._presses.values()) press.multi = true
+    this._presses.set(native.pointerId, {x: event.x, y: event.y, multi})
     const captured = this._captured
     if (captured && this._modal) {
       this._capturePointer(event.pointerId)
@@ -272,6 +280,26 @@ export class InputRouter {
   private _onPointerUp = (native: PointerEvent) => {
     const event = this._event('pointerup', native)
     this._lastPositions.delete(native.pointerId)
+    this._handleRelease(event)
+    this._offerClick(event)
+  }
+
+  private _offerClick(event: ViewInputEvent) {
+    const press = this._presses.get(event.pointerId)
+    this._presses.delete(event.pointerId)
+    if (!press || press.multi || this._modal || this._captured) return
+    if (Math.hypot(event.x - press.x, event.y - press.y) > CLICK_TOLERANCE) return
+    const click = new ViewInputEvent('click', event.native, this.host, this.host.getBoundingClientRect())
+    for (const behavior of this._behaviors) {
+      if (behavior.click?.(click)) {
+        this._consume(event.native)
+        return
+      }
+    }
+  }
+
+  private _handleRelease(event: ViewInputEvent) {
+    const native = event.native as PointerEvent
     const captured = this._captured
     if (captured && this._modal) {
       this._consume(native)
@@ -306,6 +334,7 @@ export class InputRouter {
 
   private _onPointerCancel = (native: PointerEvent) => {
     this._lastPositions.delete(native.pointerId)
+    this._presses.delete(native.pointerId)
     if (this._modal) {
       this._capturedPointers.delete(native.pointerId)
       return
