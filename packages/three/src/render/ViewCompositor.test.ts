@@ -77,8 +77,9 @@ describe('ViewCompositor', () => {
   it('creates overlays from the registry by view kind and flags', () => {
     const ids = () => compositor.overlays.map(overlay => overlay.root.name)
     compositor.syncOverlays(view)
-    expect(ids()).toEqual(['SelectionOutlineOverlay', 'CameraFrameOverlay'])
+    expect(ids()).toEqual(['ComponentOverlay', 'SelectionOutlineOverlay', 'CameraFrameOverlay'])
     view.setOverlay('grid', true)
+    view.setOverlay('components', false)
     view.setOverlay('cameraFrame', false)
     compositor.syncOverlays(view)
     expect(ids()).toEqual(['GridOverlay', 'SelectionOutlineOverlay'])

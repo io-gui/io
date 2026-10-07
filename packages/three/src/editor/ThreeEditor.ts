@@ -8,6 +8,7 @@ import { ToolDefinition, ToolRegistry } from '../tools/Tool.js'
 import { SelectionModel } from '../selection/SelectionModel.js'
 import { translateOperatorType } from '../tools/operators/TranslateOperator.js'
 import { translateTool } from '../tools/TranslateTool.js'
+import { editModeToggleOperatorType, selectModeOperatorType } from '../tools/operators/EditModeOperators.js'
 import type { ViewKind } from '../view/ThreeView.js'
 import type { IoThreeViewport } from '../elements/IoThreeViewport.js'
 
@@ -54,11 +55,13 @@ export class ThreeEditor extends ReactiveObject implements ScheduledTicker {
     this.isPlayingChanged()
   }
 
-  /** Operators of this editor; built-ins (`transform.translate`) are registered. */
+  /** Operators of this editor; built-ins (`transform.translate`, `object.editmode_toggle`, `mesh.select_mode`) are registered. */
   get operators(): OperatorRegistry {
     if (!this._operators) {
       this._operators = new OperatorRegistry(this)
       this._operators.register(translateOperatorType)
+      this._operators.register(editModeToggleOperatorType)
+      this._operators.register(selectModeOperatorType)
     }
     return this._operators
   }

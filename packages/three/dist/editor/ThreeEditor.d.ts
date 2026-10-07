@@ -31,7 +31,7 @@ export declare class ThreeEditor extends ReactiveObject implements ScheduledTick
     private _tools;
     private _selections;
     constructor(args?: ThreeEditorProps);
-    /** Operators of this editor; built-ins (`transform.translate`) are registered. */
+    /** Operators of this editor; built-ins (`transform.translate`, `object.editmode_toggle`, `mesh.select_mode`) are registered. */
     get operators(): OperatorRegistry;
     /** Tools of this editor; built-ins (`transform.translate`) are registered but not active. */
     get tools(): ToolRegistry;

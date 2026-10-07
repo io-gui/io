@@ -6,6 +6,7 @@ import type { ThreeEditor } from '../editor/ThreeEditor.js';
 import type { ThreeView, ViewKind } from '../view/ThreeView.js';
 import type { SelectionModel } from '../selection/SelectionModel.js';
 import type { Picker } from '../selection/Picker.js';
+import type { ComponentPicker } from '../selection/ComponentPicker.js';
 /** Everything a pipeline or overlay needs for one draw of one view. */
 export interface PipelineContext {
     readonly renderer: WebGPURenderer;
@@ -41,6 +42,8 @@ export interface ViewPipeline {
     readonly toneMapping?: ToneMapping;
     /** How picking works in views drawn by this pipeline. Default: raycasting the content scene. */
     readonly picker?: Picker;
+    /** How components are picked in edit mode. Default: the viewport's ID-buffer picker. */
+    readonly componentPicker?: ComponentPicker;
     /** Drawing-buffer size in physical pixels. */
     setSize(width: number, height: number): void;
     /** Draws the content. Return `{converged: false}` to be drawn again next frame (progressive pipelines). */

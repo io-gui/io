@@ -2,6 +2,8 @@ import { OrthographicCamera, PerspectiveCamera, Ray, Raycaster, Scene, Vector2 }
 import type { ThreeView } from '../view/ThreeView.js'
 import type { SelectionModel } from '../selection/SelectionModel.js'
 import type { Picker } from '../selection/Picker.js'
+import type { ComponentPicker } from '../selection/ComponentPicker.js'
+import type { ThreeEditor } from '../editor/ThreeEditor.js'
 
 /** What an InputRouter needs from the element it routes for. Implemented by IoThreeViewport. */
 export interface InputHost extends HTMLElement {
@@ -13,6 +15,10 @@ export interface InputHost extends HTMLElement {
   readonly selection?: SelectionModel | null
   /** How this view picks, when it differs from raycasting the content scene (the UV view's pipeline). */
   readonly picker?: Picker | null
+  /** How this view picks components in edit mode (ADR-0007). */
+  readonly componentPicker?: ComponentPicker | null
+  /** The editor shown, for running operators from key bindings. */
+  readonly editor?: ThreeEditor | null
   getViewCamera(): PerspectiveCamera | OrthographicCamera
 }
 

@@ -88,37 +88,16 @@ todos:
     status: completed
   - id: topology-cache
     content: "P7: Versioned topology cache (welded points, edge table, corners)"
-    status: pending
+    status: completed
   - id: geometry-adapters
     content: "P7: GeometryAdapter contract + Mesh/Points/LineSegments adapters"
-    status: pending
+    status: completed
   - id: id-pass-picking
     content: "P7: GPU ID pass picking for components (pixel and rectangle readback)"
-    status: pending
+    status: completed
   - id: component-selection
     content: "P7: Component selection (point/edge/primitive/corner bitsets), edit mode, UV sync"
-    status: pending
-  - id: document-schema
-    content: "P8 (future): Per-class schema of document fields, seeded from src/configs"
-    status: pending
-  - id: editor-writes-through-transactions
-    content: "P8 (future): ioPropertyEditor write hook so inspector edits become patches"
-    status: pending
-  - id: undo-stack
-    content: "P8 (future): Per-document local UndoStack of transactions; optional selection steps"
-    status: pending
-  - id: command-registry
-    content: "P8 (future): Command registry + journal: repeat last, actions, macros, adjust last operation"
-    status: pending
-  - id: blob-storage
-    content: "P8 (future): Immutable content-addressed blobs for geometry/texture data"
-    status: pending
-  - id: bvh-picker
-    content: "P8 (future): three-mesh-bvh accelerated Picker as optional peer dependency"
-    status: pending
-  - id: collaboration
-    content: "P8 (future): Multi-user sync of transactions (server order, LWW, fractional index, per-user undo)"
-    status: pending
+    status: completed
   - id: docs-sync
     content: "Docs: CONTEXT.md glossary, README, io-gui-three skill updated at the end of each phase"
     status: pending
@@ -143,7 +122,7 @@ Full analysis and prior art (Blender, Maya, Houdini, Unreal ITF): the design doc
 
 ## Approach
 
-Seven phases, plus a future Phase 8 for undo, commands and collaboration. Each phase ships on its own, keeps the 16 demos in `src/demos/examples` working, and ends with a docs sync. Order follows dependencies: frame layer, then view state, then input, then app concepts, then selection, then rendering variety, then components.
+Seven phases. Future work (undo, commands, collaboration) moved to [three_future_work.plan.md](./three_future_work.plan.md). Each phase ships on its own, keeps the 16 demos in `src/demos/examples` working, and ends with a docs sync. Order follows dependencies: frame layer, then view state, then input, then app concepts, then selection, then rendering variety, then components.
 
 Compatibility rule for every phase: `ThreeApplet`, `ioThreeViewport({applet, cameraSelect, tool})` and `ToolBase` subclasses keep working until the final cleanup, with `debug:` deprecation warnings. External apps subclass `ToolBase` (for example a globe tool with drag orbit and wheel zoom), so the adapter matters.
 
@@ -174,7 +153,7 @@ packages/three/src/
 
 - **Naming.** `ThreeEditor` is the app object. `ThreeApplet` remains only as a compatibility shim.
 - **Documents.** One active `ThreeDocument` per editor, switchable at runtime via `editor.document`. Per-document session state (selection, navigation per view, undo) lives in editor maps keyed by document id. Recorded in ADR-0002.
-- **Undo.** Commands run transactions of invertible patches; undo replays inverse patches; commands are Maya-style intents for repeat, journal, actions and macros; the patch stream is the future multi-user sync unit. Recorded in ADR-0008 (proposed). Only the mutation API (`document-transactions`) is built now, because undo is robust only if every edit goes through it from the start. The undo stack and commands come in Phase 8.
+- **Undo.** Commands run transactions of invertible patches; undo replays inverse patches; commands are Maya-style intents for repeat, journal, actions and macros; the patch stream is the future multi-user sync unit. Recorded in ADR-0008 (proposed). Only the mutation API (`document-transactions`) is built now, because undo is robust only if every edit goes through it from the start. The undo stack and commands are future work ([three_future_work.plan.md](./three_future_work.plan.md)).
 - **Picking.** Async `Picker` interface, plain `Raycaster` first. `three-mesh-bvh` (optional peer) and rasterised ID buffers come later behind the same interface. Recorded in ADR-0007.
 
 ### `adr-0008-review`
@@ -315,8 +294,8 @@ Orbit, pan, dolly, zoom to cursor, wheel, two-finger pan and pinch, frame select
 **Done 2026-10-07.** Notes from implementation:
 - Files: `editor/ThreeEditor.ts`, `editor/ThreeDocument.ts`, `editor/Transaction.ts`, `editor/Patch.ts`, `tools/Operator.ts` (+ `OperatorRegistry`, modal behavior, `Command`), `tools/Tool.ts` (`ToolDefinition`, `ToolRegistry`, `InteractionProfile`).
 - The change bus lives on the document; change `source` is always the document. `editor.notify()` overrides any source. Document render-setting changes notify `'settings'`.
-- `setAttribute` patches are deferred to geometry editing (P7) with blob storage (P8); `set` / `insert` / `remove` exist. `set` copies math objects in place and clones values for the record.
-- `document.history` keeps the last 100 committed transactions; `revert()` / `reapply()` / commit listeners are the hooks for the P8 undo stack. Empty transactions are not recorded.
+- `setAttribute` patches are deferred to geometry editing (P7) with blob storage (future work); `set` / `insert` / `remove` exist. `set` copies math objects in place and clones values for the record.
+- `document.history` keeps the last 100 committed transactions; `revert()` / `reapply()` / commit listeners are the hooks for the future undo stack. Empty transactions are not recorded.
 - Modal operators use `InputRouter.startModal()` / `endModal()` (new `Behavior.modal`): all pointer, wheel and key events go to the operator; Escape cancels. One running operator at a time; starting another or switching documents cancels it.
 - `operators.lastCommand` records `{name: id, args: props}` of finished runs (command layer seed).
 - Viewport has `editor` (and `applet` alias). Per-document navigation is session state on `ThreeView` (`switchDocument`), not serialized. A view first attached keeps its navigation; only real switches park/restore.
@@ -445,39 +424,16 @@ ID pass into an `R32Uint` target per view, async pixel / rectangle readback in t
 
 ---
 
-## Phase 8 (future): Undo, commands, collaboration (ADR-0008)
+### P7 notes (Done 2026-10-07)
 
-Not scheduled. Listed so earlier phases do not close these doors.
-
-### `document-schema`
-
-Which fields of each Three.js class are document state (synced, undoable) versus runtime caches. Seed from the per-class configs in `src/configs/**`. Debug builds warn when a schema field changes without a patch.
-
-### `editor-writes-through-transactions`
-
-A write hook in `ioPropertyEditor` (in `@io-gui/editors`) so editing a document object's property in an inspector becomes a transaction. Needs an editors-package API decision.
-
-### `undo-stack`
-
-Per-document local stack of committed transactions. Undo applies inverses; redo re-applies. Optional selection steps. Undo grouping for command macros.
-
-### `command-registry`
-
-Maya-style commands: a registry of named commands with argument schemas, a journal (script-editor style echo), "repeat last", commands as menu and keymap actions, macros, and "adjust last operation" (undo, then re-run with changed arguments).
-
-### `blob-storage`
-
-Immutable, content-addressed blobs for geometry and texture data, so patches swap references and undo of heavy edits is cheap.
-
-### `bvh-picker`
-
-`three-mesh-bvh` as an optional peer dependency implementing `Picker` for objects.
-
-### `collaboration`
-
-Transactions over the network: server ordering, last-writer-wins per path, fractional indices for child order, per-user undo that skips paths changed by others since. Selection, hover and navigation stay local.
-
----
+- `geometry/Topology.ts`: welded points by exact position, unique point-pair edges, triangles/segments, corners = triangle corners; cached per geometry by position/index count + version. Quad diagonals are edges (no polygon detection).
+- `SelectionModel`: `ComponentSet` bitsets per uuid per domain; `edit().components(uuid, domain, size)` copy-on-write, `clearComponents`, `setDomain`. Sets of another size are ignored/replaced. Removed objects drop their components. `componentDomain` remembers the select mode across object mode.
+- Adapters: `MeshAdapter`, `LineSegmentsAdapter`, `PointsAdapter`; `registerGeometryAdapter`. Edit set = selected objects + descendants with an adapter.
+- ID pass: RGBA32F target at CSS-pixel size (slot, primitive + 1, view depth), not R32Uint; occluders = other visible meshes; one full readback cached by camera/size/edit set and invalidated on `content` tags. Faces from the buffer; points/edges CPU-projected with a 3x3 depth test (1 % tolerance). `view.xray` (new ThreeView prop) = no occlusion. Rest shape only.
+- Highlights: `components` overlay (wire, instanced sprite points, selected faces) with a view-space depth bias, built from CPU state attributes rather than storage-buffer bitsets. Selection outline hidden in edit mode.
+- Operators `object.editmode_toggle` (Tab) and `mesh.select_mode` (1/2/3, Blender-style conversion). `editModeKeymap` layered into all presets.
+- UV edit: `UVComponentPicker` (CPU, UV space) + `UVEditCage`. uvSync off: shows faces selected in 3D, stores `corner` (UV vertex = corners of one buffer vertex). uvSync on: picks map to point/edge/primitive.
+- Not done: active element, pre-selection hover, loop/linked select, component transform (needs `setAttribute` patches, future work), select-all limited to visible UVs.
 
 ## Docs
 

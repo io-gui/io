@@ -1,6 +1,8 @@
 import { BufferAttribute, BufferGeometry, Color, DoubleSide, Float32BufferAttribute, Group, LineBasicNodeMaterial, LineSegments, Mesh, MeshBasicNodeMaterial, NoToneMapping, PlaneGeometry, Scene, WireframeGeometry } from 'three/webgpu';
 import { RaycastPicker } from '../../selection/Picker.js';
 import { RenderTargetPipeline } from './RenderTargetPipeline.js';
+import { attributeVersion } from '../../geometry/Topology.js';
+import { UVComponentPicker, UVEditCage, getUVEditMeshes, getUVEditState, uvKey } from './UVEdit.js';
 /** Meshes with a `uv` attribute under the selected objects: the edit set the UV view shows. */
 export function collectUVMeshes(objects) {
     const meshes = new Set();
@@ -41,10 +43,13 @@ function unitGridGeometry(divisions = 10) {
  * The `uv` view kind's pipeline (ADR-0006). It never draws the content scene: it draws the 0–1 grid, the
  * active object's color texture, and the UV layout of every selected mesh (the edit set), active brighter.
  * Picking hits the UV layouts and resolves to their meshes. Redraws on selection and geometry changes.
+ * In edit mode it draws UV faces, edges and vertices with their selection instead, and picks components
+ * (`componentPicker`, ADR-0007).
  */
 export class UVPipeline extends RenderTargetPipeline {
     toneMapping = NoToneMapping;
     picker;
+    componentPicker = new UVComponentPicker();
     uvScene = new Scene();
     /** Show the active object's `material.map` behind the layout. */
     showTexture = true;
@@ -52,6 +57,8 @@ export class UVPipeline extends RenderTargetPipeline {
     activeColor = new Color(0xffaa33);
     _layouts = new Group();
     _entries = new Map();
+    _cages = new Map();
+    _editLayouts = new Group();
     _grid;
     _textureMaterial = new MeshBasicNodeMaterial({ transparent: true, opacity: 0.6, depthWrite: false });
     _texturePlane;
@@ -74,7 +81,7 @@ export class UVPipeline extends RenderTargetPipeline {
         this._texturePlane = new Mesh(new PlaneGeometry(1, 1), this._textureMaterial);
         this._texturePlane.position.set(0.5, 0.5, -0.01);
         this._texturePlane.userData.selectable = false;
-        this.uvScene.add(this._texturePlane, this._grid, this._layouts);
+        this.uvScene.add(this._texturePlane, this._grid, this._layouts, this._editLayouts);
     }
     listens(change) {
         // The layout follows the selection and the geometry, not object transforms.
@@ -83,11 +90,42 @@ export class UVPipeline extends RenderTargetPipeline {
         return 'content';
     }
     draw(ctx) {
-        const meshes = collectUVMeshes(ctx.selection?.getObjects() ?? []);
+        const editMode = ctx.editor.mode === 'edit' && !!ctx.selection;
         const active = ctx.selection?.getActiveObject();
-        this._syncLayouts(meshes, active);
+        this._syncLayouts(editMode ? [] : collectUVMeshes(ctx.selection?.getObjects() ?? []), active);
+        this._syncEditLayouts(editMode ? getUVEditMeshes(ctx.selection) : [], ctx);
         this._syncTexture(active);
         ctx.renderer.render(this.uvScene, ctx.camera);
+    }
+    _syncEditLayouts(meshes, ctx) {
+        const shown = new Set();
+        const selection = ctx.selection;
+        const showPoints = selection.domain === 'point' || (!selection.uvSync && selection.domain === 'object');
+        for (const mesh of meshes) {
+            let cage = this._cages.get(mesh.uuid);
+            if (cage && cage.key !== uvKey(mesh)) {
+                this._removeCage(mesh.uuid);
+                cage = undefined;
+            }
+            if (!cage) {
+                cage = new UVEditCage(mesh);
+                this._cages.set(mesh.uuid, cage);
+                this._editLayouts.add(cage.group);
+            }
+            cage.update(getUVEditState(selection, mesh), showPoints);
+            shown.add(mesh.uuid);
+        }
+        for (const uuid of [...this._cages.keys()])
+            if (!shown.has(uuid))
+                this._removeCage(uuid);
+    }
+    _removeCage(uuid) {
+        const cage = this._cages.get(uuid);
+        if (!cage)
+            return;
+        this._editLayouts.remove(cage.group);
+        cage.dispose();
+        this._cages.delete(uuid);
     }
     _syncLayouts(meshes, active) {
         const shown = new Set();
@@ -144,6 +182,8 @@ export class UVPipeline extends RenderTargetPipeline {
     dispose() {
         for (const uuid of [...this._entries.keys()])
             this._removeEntry(uuid);
+        for (const uuid of [...this._cages.keys()])
+            this._removeCage(uuid);
         this._grid.geometry.dispose();
         this._grid.material.dispose();
         this._texturePlane.geometry.dispose();
@@ -151,9 +191,6 @@ export class UVPipeline extends RenderTargetPipeline {
             material.dispose();
         super.dispose();
     }
-}
-function attributeVersion(attribute) {
-    return attribute.isInterleavedBufferAttribute ? attribute.data.version : attribute.version;
 }
 function isAncestor(ancestor, object) {
     for (let node = object.parent; node; node = node.parent)

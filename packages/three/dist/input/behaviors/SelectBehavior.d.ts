@@ -4,9 +4,11 @@ import { InputHost, ViewInputEvent } from '../ViewInputEvent.js';
 import { Picker } from '../../selection/Picker.js';
 export type SelectMode = 'set' | 'extend' | 'toggle' | 'subtract';
 /**
- * Object selection in the fallback band (ADR-0004, ADR-0007): click select through router clicks
+ * Selection in the fallback band (ADR-0004, ADR-0007): click select through router clicks
  * (`select.click`), box select (`select.box`), and `select.all` / `select.none` / `select.invert` keys.
  * Bindings come from the keymap; picking from a Picker. Edits the host's `selection`.
+ * In edit mode the same bindings select components through the host's `componentPicker`, and
+ * `mode.editToggle` / `select.mode` keys run the `object.editmode_toggle` / `mesh.select_mode` operators.
  */
 export declare class SelectBehavior implements Behavior {
     readonly priority: number;
@@ -19,6 +21,8 @@ export declare class SelectBehavior implements Behavior {
     constructor(host: InputHost, keymap?: Keymap, picker?: Picker);
     private get _picker();
     private get _selection();
+    /** The component picker while the host is in edit mode. */
+    private get _components();
     wantsCapture(event: ViewInputEvent): boolean;
     begin(): void;
     update(event: ViewInputEvent): void;

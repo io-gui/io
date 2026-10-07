@@ -53,7 +53,8 @@ export class SelectionOutlineOverlay {
         this.root.add(this._quad);
     }
     prepare(ctx) {
-        const objects = ctx.selection?.getObjects() ?? [];
+        // Edit mode draws components instead (ComponentOverlay).
+        const objects = ctx.editor.mode === 'edit' ? [] : ctx.selection?.getObjects() ?? [];
         const active = ctx.selection?.active ?? '';
         const shown = new Set();
         for (const object of objects) {

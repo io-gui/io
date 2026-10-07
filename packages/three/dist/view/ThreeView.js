@@ -181,6 +181,7 @@ let ThreeView = class ThreeView extends ReactiveObject {
             kind: this.kind,
             pipeline: this.pipeline,
             overlays: { ...this.overlays },
+            xray: this.xray,
             profile: this.profile,
             overscan: this.overscan,
             clearColor: this.clearColor,
@@ -198,6 +199,8 @@ let ThreeView = class ThreeView extends ReactiveObject {
             props.pipeline = data.pipeline;
         if (data.overlays !== undefined)
             props.overlays = { ...data.overlays };
+        if (data.xray !== undefined)
+            props.xray = data.xray;
         if (data.profile !== undefined)
             props.profile = data.profile;
         if (data.overscan !== undefined)
@@ -220,6 +223,9 @@ __decorate([
 __decorate([
     Property({ type: Object, init: null })
 ], ThreeView.prototype, "overlays", void 0);
+__decorate([
+    Property({ type: Boolean, value: false })
+], ThreeView.prototype, "xray", void 0);
 __decorate([
     Property({ value: null })
 ], ThreeView.prototype, "toneMapping", void 0);
