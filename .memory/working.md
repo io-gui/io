@@ -116,6 +116,11 @@ Renamed instance `fromJSON` → `applyJSON` to distinguish apply-to-existing fro
 
 ### io-three
 
+- **Arch (2026-10-07, ADR 0001-0007):** WebGPU only, no WebGL fallback. Layers: app (ThreeEditor: doc, selection, tools, ops, undo, clock, change bus) / view (ThreeView data outlives IoThreeViewport element) / frame (RenderScheduler only renderer, typed dirty tags, phases, budget). Reactive mutation never triggers draws.
+- **Input:** InputRouter per viewport owns DOM listeners + capture. Priority bands modal 1000, gizmo 800, tool 500, nav 300, fallback select 100. ToolBase multi-viewport reach (registerViewport) moves into routers; tool shared, behaviors per view. ToolBase kept as adapter (external GlobeTool subclasses it).
+- **Selection:** by Object3D.uuid + attribute domain (object/point/edge/primitive/corner), bitsets, transactions. UV sel = corner domain; uvSync = mapping.
+- RenderScheduler rAF must run after core FrameScheduler rAF in same frame (import order).
+- **Undo (ADR-0008 proposed):** command (Maya-like intent: repeat/journal/actions/macros) -> transaction (undo+sync unit) -> patch (set/insert/remove/setAttribute by uuid, old value auto-recorded). No hand-written undoIt. Build mutation API now (P4), undo stack + commands later (P8). Selection/nav/hover = session state, never synced. Multi-user target: Figma-style server order + LWW + fractional index; per-user undo skips paths changed by others.
 - `IoThreeViewport` lazy-inits a shared default `WebGPURenderer`. Must assign onto `args` before `super()` — `@Property({value: _renderer})` snapshots at class def, so a later `let` assign never reaches instances. Custom `renderer` prop still wins.
 - `ToolBase` stores hover and active pointers per `IoThreeViewport` in viewport-keyed `WeakMap`s. Pointer events should resolve the source viewport from `event.currentTarget` so hover/move/down/up payloads stay isolated to the viewport that emitted the event.
 - Dev import map needs bare `"three"` entry (OrbitControls imports `from 'three'`).
