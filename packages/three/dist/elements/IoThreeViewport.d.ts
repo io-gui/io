@@ -10,7 +10,10 @@ import { NavigationBehavior } from '../input/behaviors/NavigationBehavior.js';
 import { SelectBehavior } from '../input/behaviors/SelectBehavior.js';
 import type { SelectionModel } from '../selection/SelectionModel.js';
 import { DocumentChange, ChangeBus } from '../editor/ChangeBus.js';
-import { ScheduledView, DirtyReason } from '../render/RenderScheduler.js';
+import { ScheduledView, DirtyReason, FrameInfo, ViewRenderResult } from '../render/RenderScheduler.js';
+import { ViewCompositor } from '../render/ViewCompositor.js';
+import { GizmoLayer } from '../tools/Gizmo.js';
+import type { Picker } from '../selection/Picker.js';
 export type IoThreeViewportProps = ReactiveElementProps & {
     /** The editor whose active document this viewport shows. */
     editor?: WithBinding<ThreeEditor>;
@@ -51,10 +54,18 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
     private _inputRouter;
     private _navigation;
     private _select;
+    private _gizmos;
     private _toolBehaviors;
+    private _compositor;
     private _shownDocument;
     /** Routes this viewport's input to behaviors: navigation, tools, later gizmos and operators (ADR-0004). */
     get inputRouter(): InputRouter;
+    /** Runs this viewport's pipeline and draws its overlays (ADR-0006). Recreated when the renderer changes. */
+    get compositor(): ViewCompositor;
+    /** Gizmos of the active tool in this viewport. */
+    get gizmoLayer(): GizmoLayer;
+    /** The pipeline's picker when it has one (UV view), otherwise null (raycast the content scene). */
+    get picker(): Picker | null;
     get navigationBehavior(): NavigationBehavior;
     get selectBehavior(): SelectBehavior;
     constructor(args: IoThreeViewportProps);
@@ -68,8 +79,8 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
     /** Marks this viewport for redraw on the next frame. */
     tag(reason: DirtyReason): void;
     isRenderable(): boolean;
-    getPriority(): 2 | 1 | 0;
-    listens(change: DocumentChange): boolean;
+    getPriority(): 0 | 1 | 2;
+    listens(change: DocumentChange): DirtyReason | false;
     onRendererError(error: Error): void;
     /** The camera this viewport draws and picks with, built from its view at the current size. */
     getViewCamera(): PerspectiveCamera | OrthographicCamera;
@@ -81,10 +92,16 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
     private _syncView;
     /** On a document switch, park this view's navigation for the old document and restore it for the new one. */
     private _syncDocument;
-    /** Installs navigation and the editor's active tool according to the view's interaction profile. */
+    /**
+     * Installs navigation, selection, gizmos and the editor's active tool according to the view's interaction
+     * profile. Gizmos need the `full` profile and the view's `gizmos` overlay flag (default on).
+     */
     private _syncBehaviors;
+    /** Matches the compositor's pipeline and overlays to the view. */
+    private _syncRendering;
     toolChanged(change: Change<ToolBase>): void;
     onResized(): void;
+    rendererChanged(change: Change<WebGPURenderer>): void;
     appletChanged(): void;
     editorChanged(): void;
     editorMutated(): void;
@@ -94,7 +111,7 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
     viewMutated(): void;
     mutated(): void;
     /** Called by the RenderScheduler only (ADR-0003). */
-    renderView(): void;
+    renderView(reasons: ReadonlySet<DirtyReason>, frame: FrameInfo): ViewRenderResult | void;
     dispose(): void;
 }
 export declare const ioThreeViewport: (arg0: IoThreeViewportProps) => import("@io-gui/core").VDOMElement;

@@ -1,13 +1,23 @@
 import { Register, ReactiveObject, ReactiveObjectProps, Property } from '@io-gui/core'
-import { Camera, Object3D, OrthographicCamera, PerspectiveCamera, Scene } from 'three/webgpu'
+import { Box3, Camera, Object3D, OrthographicCamera, PerspectiveCamera, Scene, ToneMapping, Vector3 } from 'three/webgpu'
 import { AxisView, ViewNavigation, ViewNavigationData } from './ViewNavigation.js'
 import { copyProjection } from '../utils/copyProjection.js'
 import type { InteractionProfile } from '../tools/Tool.js'
 
-export type ViewKind = '3d'
+/** `3d` shows the content scene; `uv` shows the UV layout of the edit set in a 2D view of the 0–1 square. */
+export type ViewKind = '3d' | 'uv'
+
+/** Overlay ids switched on or off for one view; ids it does not name use the overlay's default. */
+export type ViewOverlays = Record<string, boolean>
+
+const UV_BOX = new Box3(new Vector3(0, 0, 0), new Vector3(1, 1, 0))
 
 export type ThreeViewProps = ReactiveObjectProps & {
   kind?: ViewKind
+  pipeline?: string
+  overlays?: ViewOverlays
+  toneMapping?: ToneMapping | null
+  toneMappingExposure?: number | null
   profile?: InteractionProfile
   overscan?: number
   clearColor?: number
@@ -16,6 +26,8 @@ export type ThreeViewProps = ReactiveObjectProps & {
 
 export type ThreeViewData = {
   kind?: ViewKind
+  pipeline?: string
+  overlays?: ViewOverlays
   profile?: InteractionProfile
   overscan?: number
   clearColor?: number
@@ -34,6 +46,22 @@ export class ThreeView extends ReactiveObject {
 
   @Property({type: String, value: '3d'})
   declare kind: ViewKind
+
+  /** Registered pipeline id (ADR-0006). Empty uses the view kind's default: `forward` for 3d, `uv` for uv. */
+  @Property({type: String, value: ''})
+  declare pipeline: string
+
+  /** Overlays switched on or off (`grid`, `selection`, `cameraFrame`, `gizmos`, ...). Replace the object, or use `setOverlay`. */
+  @Property({type: Object, init: null})
+  declare overlays: ViewOverlays
+
+  /** Overrides the document's tone mapping in this view; `null` uses the pipeline's or the document's. */
+  @Property({value: null})
+  declare toneMapping: ToneMapping | null
+
+  /** Overrides the document's exposure in this view; `null` uses the document's. */
+  @Property({value: null})
+  declare toneMappingExposure: number | null
 
   /** What the viewport's router installs: `full` (tool + navigation), `select`, `navigate`, `none`. */
   @Property({type: String, value: 'full'})
@@ -82,8 +110,24 @@ export class ThreeView extends ReactiveObject {
   }
 
   frame(object: Object3D | readonly Object3D[], padding = 1) {
+    if (this.kind === 'uv') return this.frameUV()
     this.navigation.frame(object, padding)
     this.markNavigationChanged()
+  }
+
+  /** Shows the 0–1 UV square, looking down -Z (2D views). */
+  frameUV(padding = 1.05) {
+    if (this.navigation.axisView !== 'front') this.navigation.setAxisView('front')
+    this.navigation.frameBox(UV_BOX, padding)
+    this.markNavigationChanged()
+  }
+
+  isOverlayEnabled(id: string, enabledByDefault = true) {
+    return this.overlays[id] ?? enabledByDefault
+  }
+
+  setOverlay(id: string, enabled: boolean) {
+    this.overlays = {...this.overlays, [id]: enabled}
   }
 
   /**
@@ -202,6 +246,8 @@ export class ThreeView extends ReactiveObject {
   override toJSON(): ThreeViewData {
     return {
       kind: this.kind,
+      pipeline: this.pipeline,
+      overlays: {...this.overlays},
       profile: this.profile,
       overscan: this.overscan,
       clearColor: this.clearColor,
@@ -214,6 +260,8 @@ export class ThreeView extends ReactiveObject {
     if (data.navigation) this.navigation.applyJSON(data.navigation)
     const props: ThreeViewProps = {}
     if (data.kind !== undefined) props.kind = data.kind
+    if (data.pipeline !== undefined) props.pipeline = data.pipeline
+    if (data.overlays !== undefined) props.overlays = {...data.overlays}
     if (data.profile !== undefined) props.profile = data.profile
     if (data.overscan !== undefined) props.overscan = data.overscan
     if (data.clearColor !== undefined) props.clearColor = data.clearColor

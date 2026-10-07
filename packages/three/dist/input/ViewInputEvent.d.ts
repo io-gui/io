@@ -1,6 +1,7 @@
 import { OrthographicCamera, PerspectiveCamera, Ray, Scene, Vector2 } from 'three/webgpu';
 import type { ThreeView } from '../view/ThreeView.js';
 import type { SelectionModel } from '../selection/SelectionModel.js';
+import type { Picker } from '../selection/Picker.js';
 /** What an InputRouter needs from the element it routes for. Implemented by IoThreeViewport. */
 export interface InputHost extends HTMLElement {
     readonly view: ThreeView;
@@ -9,6 +10,8 @@ export interface InputHost extends HTMLElement {
     readonly mode?: string;
     /** Selection of the shown document, when the host has one. */
     readonly selection?: SelectionModel | null;
+    /** How this view picks, when it differs from raycasting the content scene (the UV view's pipeline). */
+    readonly picker?: Picker | null;
     getViewCamera(): PerspectiveCamera | OrthographicCamera;
 }
 /** `click` is synthesized by the router: a press and release on one pointer that moved less than a few pixels. */

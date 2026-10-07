@@ -124,8 +124,9 @@ export class RenderScheduler {
                 continue;
             for (const change of bus.drain()) {
                 for (const [view, tags] of this._views) {
-                    if (view.listens(change))
-                        tags.add('content');
+                    const reason = view.listens(change);
+                    if (reason)
+                        tags.add(reason === true ? 'content' : reason);
                 }
             }
         }

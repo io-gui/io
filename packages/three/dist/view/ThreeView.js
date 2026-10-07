@@ -5,9 +5,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register, ReactiveObject, Property } from '@io-gui/core';
-import { OrthographicCamera, PerspectiveCamera } from 'three/webgpu';
+import { Box3, OrthographicCamera, PerspectiveCamera, Vector3 } from 'three/webgpu';
 import { ViewNavigation } from './ViewNavigation.js';
 import { copyProjection } from '../utils/copyProjection.js';
+const UV_BOX = new Box3(new Vector3(0, 0, 0), new Vector3(1, 1, 0));
 /**
  * State of one view (ADR-0002): navigation and display settings, independent of any element.
  * An IoThreeViewport shows it; the view survives the element being unmounted or moved.
@@ -40,8 +41,23 @@ let ThreeView = class ThreeView extends ReactiveObject {
         this.markNavigationChanged();
     }
     frame(object, padding = 1) {
+        if (this.kind === 'uv')
+            return this.frameUV();
         this.navigation.frame(object, padding);
         this.markNavigationChanged();
+    }
+    /** Shows the 0–1 UV square, looking down -Z (2D views). */
+    frameUV(padding = 1.05) {
+        if (this.navigation.axisView !== 'front')
+            this.navigation.setAxisView('front');
+        this.navigation.frameBox(UV_BOX, padding);
+        this.markNavigationChanged();
+    }
+    isOverlayEnabled(id, enabledByDefault = true) {
+        return this.overlays[id] ?? enabledByDefault;
+    }
+    setOverlay(id, enabled) {
+        this.overlays = { ...this.overlays, [id]: enabled };
     }
     /**
      * Stores the current navigation for `fromDocument` and restores the one saved for `toDocument`,
@@ -163,6 +179,8 @@ let ThreeView = class ThreeView extends ReactiveObject {
     toJSON() {
         return {
             kind: this.kind,
+            pipeline: this.pipeline,
+            overlays: { ...this.overlays },
             profile: this.profile,
             overscan: this.overscan,
             clearColor: this.clearColor,
@@ -176,6 +194,10 @@ let ThreeView = class ThreeView extends ReactiveObject {
         const props = {};
         if (data.kind !== undefined)
             props.kind = data.kind;
+        if (data.pipeline !== undefined)
+            props.pipeline = data.pipeline;
+        if (data.overlays !== undefined)
+            props.overlays = { ...data.overlays };
         if (data.profile !== undefined)
             props.profile = data.profile;
         if (data.overscan !== undefined)
@@ -192,6 +214,18 @@ let ThreeView = class ThreeView extends ReactiveObject {
 __decorate([
     Property({ type: String, value: '3d' })
 ], ThreeView.prototype, "kind", void 0);
+__decorate([
+    Property({ type: String, value: '' })
+], ThreeView.prototype, "pipeline", void 0);
+__decorate([
+    Property({ type: Object, init: null })
+], ThreeView.prototype, "overlays", void 0);
+__decorate([
+    Property({ value: null })
+], ThreeView.prototype, "toneMapping", void 0);
+__decorate([
+    Property({ value: null })
+], ThreeView.prototype, "toneMappingExposure", void 0);
 __decorate([
     Property({ type: String, value: 'full' })
 ], ThreeView.prototype, "profile", void 0);

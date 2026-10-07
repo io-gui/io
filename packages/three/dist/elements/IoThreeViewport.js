@@ -17,6 +17,8 @@ import { Keymap, keymaps } from '../input/Keymap.js';
 import { NavigationBehavior } from '../input/behaviors/NavigationBehavior.js';
 import { SelectBehavior } from '../input/behaviors/SelectBehavior.js';
 import { renderScheduler, getDefaultRenderer } from '../render/RenderScheduler.js';
+import { ViewCompositor } from '../render/ViewCompositor.js';
+import { GizmoLayer } from '../tools/Gizmo.js';
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         const viewport = entry.target;
@@ -75,10 +77,26 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
             this._inputRouter = new InputRouter(this);
             this._navigation = new NavigationBehavior(this, this.keymap);
             this._select = new SelectBehavior(this, this.keymap);
+            this._gizmos = new GizmoLayer(this);
             this._inputRouter.add(this._navigation);
             this._inputRouter.add(this._select);
         }
         return this._inputRouter;
+    }
+    /** Runs this viewport's pipeline and draws its overlays (ADR-0006). Recreated when the renderer changes. */
+    get compositor() {
+        if (!this._compositor)
+            this._compositor = new ViewCompositor(this.renderer);
+        return this._compositor;
+    }
+    /** Gizmos of the active tool in this viewport. */
+    get gizmoLayer() {
+        void this.inputRouter;
+        return this._gizmos;
+    }
+    /** The pipeline's picker when it has one (UV view), otherwise null (raycast the content scene). */
+    get picker() {
+        return this._compositor?.pipeline?.picker ?? null;
     }
     get navigationBehavior() {
         void this.inputRouter;
@@ -141,7 +159,10 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         return 0;
     }
     listens(change) {
-        return !!this.editor && change.source === this.editor.document;
+        if (!this.editor || change.source !== this.editor.document)
+            return false;
+        this._syncRendering();
+        return this.compositor.listens(change);
     }
     onRendererError(error) {
         this.textContent = error.message;
@@ -163,8 +184,13 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         if (!view)
             return;
         this._sceneCameraPending = !applyCameraSelect(view, this.cameraSelect, scene);
-        if (!view.navigation.framed && scene)
+        if (view.kind === 'uv') {
+            if (!view.navigation.framed || view.navigation.axisView !== 'front')
+                view.frameUV();
+        }
+        else if (!view.navigation.framed && scene) {
             view.frame(scene);
+        }
     }
     /** On a document switch, park this view's navigation for the old document and restore it for the new one. */
     _syncDocument() {
@@ -175,12 +201,16 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
             this.view.switchDocument(this._shownDocument.uuid, document.uuid);
         this._shownDocument = document;
     }
-    /** Installs navigation and the editor's active tool according to the view's interaction profile. */
+    /**
+     * Installs navigation, selection, gizmos and the editor's active tool according to the view's interaction
+     * profile. Gizmos need the `full` profile and the view's `gizmos` overlay flag (default on).
+     */
     _syncBehaviors() {
         const view = this.view;
         if (!view || !this._inputRouter)
             return;
         const router = this._inputRouter;
+        const gizmos = this._gizmos;
         if (view.profile === 'none')
             router.remove(this._navigation);
         else
@@ -189,6 +219,14 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
             router.add(this._select);
         else
             router.remove(this._select);
+        if (view.profile === 'full' && view.isOverlayEnabled('gizmos')) {
+            router.add(gizmos);
+            this.compositor.addOverlay(gizmos, 300);
+        }
+        else {
+            router.remove(gizmos);
+            this._compositor?.removeOverlay(gizmos);
+        }
         const tool = this.editor?.getActiveTool(view.kind) ?? null;
         const toolId = tool && toolAllowsProfile(tool, view.profile) ? tool.id : null;
         if ((this._toolBehaviors?.toolId ?? null) === toolId)
@@ -197,11 +235,24 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
             router.remove(behavior);
         this._toolBehaviors = undefined;
         if (tool && toolId) {
-            const behaviors = tool.createBehaviors({ editor: this.editor, host: this, view });
+            const ctx = { editor: this.editor, host: this, view };
+            const behaviors = tool.createBehaviors(ctx);
             for (const behavior of behaviors)
                 router.add(behavior);
             this._toolBehaviors = { toolId, behaviors };
+            gizmos.setGroups(tool.createGizmoGroups?.(ctx) ?? []);
         }
+        else {
+            gizmos.setGroups([]);
+        }
+    }
+    /** Matches the compositor's pipeline and overlays to the view. */
+    _syncRendering() {
+        const view = this.view;
+        if (!view || !this.renderer)
+            return;
+        this.compositor.syncPipeline(view);
+        this.compositor.syncOverlays(view);
     }
     toolChanged(change) {
         const newTool = change.value;
@@ -224,6 +275,13 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         if (width && height)
             this.editor?.onResized(width, height, this);
         this.tag('resize');
+    }
+    rendererChanged(change) {
+        if (change.oldValue && change.oldValue !== change.value && this._compositor) {
+            this._compositor.dispose();
+            this._compositor = undefined;
+            this._syncBehaviors();
+        }
     }
     appletChanged() {
         if (this.applet)
@@ -262,13 +320,14 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
     }
     viewMutated() {
         this._syncBehaviors();
+        this._syncRendering();
         this.tag('view');
     }
     mutated() {
         this.tag('view');
     }
     /** Called by the RenderScheduler only (ADR-0003). */
-    renderView() {
+    renderView(reasons, frame) {
         if (this._sceneCameraPending)
             this._syncView();
         const editor = this.editor;
@@ -276,17 +335,24 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         if (editor.isRendererInitialized() === false) {
             void editor.onRendererInitialized(this.renderer);
         }
-        this.renderer.setCanvasTarget(this.renderTarget);
-        this.renderer.setClearColor(this.view.clearColor, this.view.clearAlpha);
-        this.renderer.setSize(this.width, this.height);
-        this.renderer.clear();
-        const toneMapping = this.renderer.toneMapping;
-        const toneMappingExposure = this.renderer.toneMappingExposure;
-        this.renderer.toneMapping = document.toneMapping;
-        this.renderer.toneMappingExposure = document.toneMappingExposure;
-        this.renderer.render(document.scene, this.getViewCamera());
-        this.renderer.toneMapping = toneMapping;
-        this.renderer.toneMappingExposure = toneMappingExposure;
+        const renderer = this.renderer;
+        renderer.setCanvasTarget(this.renderTarget);
+        renderer.setSize(this.width, this.height);
+        this._syncRendering();
+        return this.compositor.render({
+            renderer,
+            editor,
+            document,
+            scene: document.scene,
+            view: this.view,
+            camera: this.getViewCamera(),
+            selection: this.selection,
+            width: this.width,
+            height: this.height,
+            pixelRatio: renderer.getPixelRatio(),
+            reasons,
+            frame,
+        });
     }
     dispose() {
         renderScheduler.unregister(this);
@@ -294,6 +360,8 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         delete this.editor;
         this.renderTarget.dispose();
         this._inputRouter?.dispose();
+        this._gizmos?.dispose();
+        this._compositor?.dispose();
         if (this._ownsView)
             this.view.dispose();
         if (this.tool) {

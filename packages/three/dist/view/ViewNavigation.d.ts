@@ -1,4 +1,4 @@
-import { Object3D, Quaternion, Vector3 } from 'three/webgpu';
+import { Box3, Object3D, Quaternion, Vector3 } from 'three/webgpu';
 export type AxisView = 'top' | 'bottom' | 'left' | 'right' | 'front' | 'back';
 export type ViewProjection = 'perspective' | 'orthographic';
 export type ViewNavigationData = {
@@ -57,6 +57,8 @@ export declare class ViewNavigation {
      * `padding` > 1 leaves room around the object.
      */
     frame(object: Object3D | readonly Object3D[], padding?: number): void;
+    /** Fits a world-space box, like `frame`. */
+    frameBox(box: Box3, padding?: number): void;
     copy(source: ViewNavigation): this;
     toJSON(): ViewNavigationData;
     applyJSON(data: Partial<ViewNavigationData>): this;

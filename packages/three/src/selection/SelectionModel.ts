@@ -66,6 +66,14 @@ export class SelectionModel extends ReactiveObject {
     return objects
   }
 
+  /** Selected objects without a selected ancestor: what transforms move, so children are not moved twice. */
+  getRootObjects(): Object3D[] {
+    return this.getObjects().filter(object => {
+      for (let node = object.parent; node; node = node.parent) if (this._objects.has(node.uuid)) return false
+      return true
+    })
+  }
+
   getActiveObject(): Object3D | undefined {
     return this.active ? this.document.getObject(this.active) : undefined
   }

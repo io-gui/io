@@ -37,11 +37,18 @@ const _corner = new Vector3();
 /**
  * Picks with a plain `Raycaster` against the view's draw camera. Box selection tests each object's
  * projected world bounds against the rectangle (approximate: bounds, not drawn pixels).
+ * Views that draw stand-ins for document objects (the UV view) pass `root` and `resolve`.
  */
 export class RaycastPicker {
+    _root;
+    _resolve;
+    constructor(options = {}) {
+        this._root = options.root ?? (host => host.scene);
+        this._resolve = options.resolve ?? (object => object);
+    }
     pick(host, x, y, filter) {
-        const scene = host.scene;
-        if (!scene)
+        const root = this._root(host);
+        if (!root)
             return Promise.resolve(null);
         const rect = host.getBoundingClientRect();
         const camera = host.getViewCamera();
@@ -49,28 +56,33 @@ export class RaycastPicker {
         _raycaster.setFromCamera(_ndc, camera);
         _raycaster.layers.mask = camera.layers.mask;
         // Raycaster thresholds are world units (default 1); keep line and point hits to a few pixels.
-        const threshold = host.view.getWorldPerPixel(rect.width, rect.height, scene) * PICK_RADIUS;
+        const threshold = host.view.getWorldPerPixel(rect.width, rect.height, host.scene) * PICK_RADIUS;
         _raycaster.params.Line.threshold = threshold;
         _raycaster.params.Points.threshold = threshold;
-        for (const intersection of _raycaster.intersectObject(scene, true)) {
-            const object = intersection.object;
-            if (!isSelectable(object) || (filter && !filter(object)))
+        for (const intersection of _raycaster.intersectObject(root, true)) {
+            if (!isSelectable(intersection.object))
+                continue;
+            const object = this._resolve(intersection.object);
+            if (!object || (filter && !filter(object)))
                 continue;
             return Promise.resolve({ object, uuid: object.uuid, distance: intersection.distance, point: intersection.point });
         }
         return Promise.resolve(null);
     }
     pickRect(host, rect, filter) {
-        const scene = host.scene;
-        if (!scene)
+        const root = this._root(host);
+        if (!root)
             return Promise.resolve([]);
         const bounds = host.getBoundingClientRect();
         const camera = host.getViewCamera();
         const minX = Math.min(rect.x0, rect.x1), maxX = Math.max(rect.x0, rect.x1);
         const minY = Math.min(rect.y0, rect.y1), maxY = Math.max(rect.y0, rect.y1);
-        const hits = [];
-        for (const object of collectSelectable(scene, camera, filter)) {
-            _box.setFromObject(object, true);
+        const hits = new Map();
+        for (const candidate of collectSelectable(root, camera)) {
+            const object = this._resolve(candidate);
+            if (!object || hits.has(object.uuid) || (filter && !filter(object)))
+                continue;
+            _box.setFromObject(candidate, true);
             if (_box.isEmpty())
                 continue;
             let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
@@ -91,9 +103,9 @@ export class RaycastPicker {
             if (!inFront || right < minX || left > maxX || bottom < minY || top > maxY)
                 continue;
             _box.getCenter(_corner);
-            hits.push({ object, uuid: object.uuid, distance: _corner.distanceTo(camera.position), point: _corner.clone() });
+            hits.set(object.uuid, { object, uuid: object.uuid, distance: _corner.distanceTo(camera.position), point: _corner.clone() });
         }
-        return Promise.resolve(hits);
+        return Promise.resolve([...hits.values()]);
     }
 }
 export const defaultPicker = new RaycastPicker();

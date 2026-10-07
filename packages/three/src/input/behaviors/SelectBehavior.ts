@@ -16,6 +16,7 @@ export class SelectBehavior implements Behavior {
 
   readonly priority: number = BehaviorPriority.fallback
   keymap: Keymap
+  /** Used unless the host provides its own (`InputHost.picker`). */
   picker: Picker
 
   private readonly _host: InputHost
@@ -26,6 +27,10 @@ export class SelectBehavior implements Behavior {
     this._host = host
     this.keymap = keymap
     this.picker = picker
+  }
+
+  private get _picker(): Picker {
+    return this._host.picker ?? this.picker
   }
 
   private get _selection(): SelectionModel | null {
@@ -56,7 +61,7 @@ export class SelectBehavior implements Behavior {
     if (!box || !selection) return
     // A press without a drag is a click; the router offers it as one.
     if (Math.abs(box.x1 - box.x0) <= CLICK_TOLERANCE && Math.abs(box.y1 - box.y0) <= CLICK_TOLERANCE) return
-    void this.picker.pickRect(this._host, box).then(hits => {
+    void this._picker.pickRect(this._host, box).then(hits => {
       if (this._selection !== selection) return
       apply(selection, box.mode, hits.map(hit => hit.uuid), '')
     })
@@ -72,7 +77,7 @@ export class SelectBehavior implements Behavior {
     const entry = this.keymap.match(event, action => action === 'select.click')
     if (!entry) return false
     const mode = (entry.props?.mode as SelectMode) ?? 'set'
-    void this.picker.pick(this._host, event.x, event.y).then((hit: PickHit | null) => {
+    void this._picker.pick(this._host, event.x, event.y).then((hit: PickHit | null) => {
       if (this._selection !== selection) return
       apply(selection, mode, hit ? [hit.uuid] : [], hit?.uuid ?? '')
     })

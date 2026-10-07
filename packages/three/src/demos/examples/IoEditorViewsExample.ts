@@ -1,0 +1,126 @@
+import { Register, ReactiveElement, ReactiveElementProps, Property, div, span } from '@io-gui/core'
+import { AmbientLight, BoxGeometry, CanvasTexture, DirectionalLight, Mesh, MeshStandardMaterial, SRGBColorSpace, SphereGeometry, TorusKnotGeometry } from 'three/webgpu'
+import { mrt, output, velocity } from 'three/tsl'
+import { traa } from 'three/addons/tsl/display/TRAANode.js'
+import { PostProcessingPipeline, SelectionModel, ThreeEditor, ThreeView, ioThreeViewport, registerPipeline } from '@io-gui/three'
+
+registerPipeline({
+  id: 'traa',
+  label: 'Forward + TRAA',
+  create: renderer => new PostProcessingPipeline(renderer, (scenePass, camera) => {
+    scenePass.setMRT(mrt({output, velocity}))
+    return traa(scenePass.getTextureNode('output'), scenePass.getTextureNode('depth'), scenePass.getTextureNode('velocity'), camera)
+  }, {convergeFrames: 32}),
+})
+
+function checkerTexture() {
+  const canvas = document.createElement('canvas')
+  canvas.width = canvas.height = 256
+  const context = canvas.getContext('2d')!
+  for (let y = 0; y < 8; y++) {
+    for (let x = 0; x < 8; x++) {
+      context.fillStyle = (x + y) % 2 ? '#3a6ea5' : '#d8e2ef'
+      context.fillRect(x * 32, y * 32, 32, 32)
+    }
+  }
+  const texture = new CanvasTexture(canvas)
+  texture.colorSpace = SRGBColorSpace
+  return texture
+}
+
+/**
+ * Three views of one ThreeEditor, each drawn by a different pipeline (ADR-0006): a forward perspective view
+ * with the grid overlay and the Move tool, a TRAA post-processed camera view, and a select-only UV view of the
+ * selection. Drag a gizmo arrow to move along an axis, the center to move in the view plane; X / Y / Z switch
+ * the axis while dragging, Escape or right click cancels.
+ */
+@Register
+export class IoEditorViewsExample extends ReactiveElement {
+
+  static override get Style() {
+    return /* css */`
+      :host {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        grid-template-rows: 1fr 1fr auto;
+        flex: 1 1 auto;
+        max-width: 100%;
+        max-height: 100%;
+        gap: var(--io_spacing);
+      }
+      :host > io-three-viewport:first-child {
+        grid-row: 1 / 3;
+      }
+      :host > .status {
+        grid-column: 1 / 3;
+        padding: var(--io_spacing);
+      }
+    `
+  }
+
+  @Property({type: ThreeEditor, init: null})
+  declare editor: ThreeEditor
+
+  @Property({type: SelectionModel})
+  declare selection: SelectionModel
+
+  @Property({type: ThreeView, init: {overlays: {grid: true}}})
+  declare perspective: ThreeView
+
+  @Property({type: ThreeView, init: {pipeline: 'traa'}})
+  declare antialiased: ThreeView
+
+  @Property({type: ThreeView, init: {kind: 'uv', profile: 'select'}})
+  declare uv: ThreeView
+
+  override ready() {
+    const scene = this.editor.document.scene
+    scene.add(new AmbientLight(0xffffff, 0.6))
+    const light = new DirectionalLight(0xffffff, 2)
+    light.position.set(3, 5, 4)
+    scene.add(light)
+    const map = checkerTexture()
+    const shapes = [
+      {name: 'Box', geometry: new BoxGeometry(1, 1, 1)},
+      {name: 'Sphere', geometry: new SphereGeometry(0.6, 32, 16)},
+      {name: 'Knot', geometry: new TorusKnotGeometry(0.45, 0.15, 96, 12)},
+    ]
+    shapes.forEach((shape, i) => {
+      const mesh = new Mesh(shape.geometry, new MeshStandardMaterial({map}))
+      mesh.name = shape.name
+      mesh.position.set((i - 1) * 2, 0.6, 0)
+      scene.add(mesh)
+    })
+    this.editor.setActiveTool('3d', 'object', 'transform.translate')
+    this.selection = this.editor.selection
+    this.editor.document.addCommitListener(() => this.changed())
+    this.selection.set([scene.getObjectByName('Knot')!.uuid])
+    this.changed()
+  }
+
+  selectionMutated() {
+    this.changed()
+  }
+
+  changed() {
+    const names = this.selection?.getObjects().map(object => object.name).join(', ') || 'nothing'
+    const command = this.editor.operators.lastCommand
+    const last = command ? `${command.name} ${JSON.stringify(command.args)}` : 'none'
+    this.render([
+      ioThreeViewport({editor: this.editor, view: this.perspective}),
+      ioThreeViewport({editor: this.editor, view: this.antialiased}),
+      ioThreeViewport({editor: this.editor, view: this.uv}),
+      div({class: 'status'}, [span(`Selected: ${names}. Last command: ${last}`)]),
+    ])
+  }
+
+  override dispose() {
+    this.editor.dispose()
+    this.perspective.dispose()
+    this.antialiased.dispose()
+    this.uv.dispose()
+    super.dispose()
+  }
+}
+
+export const ioEditorViewsExample = (arg0: ReactiveElementProps) => IoEditorViewsExample.vConstructor(arg0)

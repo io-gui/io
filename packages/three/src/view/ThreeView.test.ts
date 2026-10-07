@@ -165,10 +165,12 @@ describe('ThreeView', () => {
   })
 
   it('round-trips through JSON', () => {
-    const view = new ThreeView({overscan: 1.5, clearColor: 0x223344})
+    const view = new ThreeView({overscan: 1.5, clearColor: 0x223344, pipeline: 'probe', overlays: {grid: true}})
     view.setAxisView('top')
     const copy = new ThreeView().applyJSON(JSON.parse(JSON.stringify(view.toJSON())))
     expect(copy.toJSON()).toEqual(view.toJSON())
+    expect(copy.pipeline).toBe('probe')
+    expect(copy.isOverlayEnabled('grid', false)).toBe(true)
     view.dispose()
     copy.dispose()
   })

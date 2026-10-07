@@ -73,19 +73,19 @@ todos:
     status: completed
   - id: pipeline-registry
     content: "P6: ViewPipeline contract + registry; ForwardPipeline; tone mapping from document settings"
-    status: pending
+    status: completed
   - id: postprocessing-pipeline
     content: "P6: PostProcessing-based pipeline exposing depth; continuous/converged support"
-    status: pending
+    status: completed
   - id: overlay-system
     content: "P6: Overlay providers (grid, selection outline, passepartout); overlay-only redraw"
-    status: pending
+    status: completed
   - id: gizmos-transform
     content: "P6: GizmoGroup + translate gizmo + modal transform operator"
-    status: pending
+    status: completed
   - id: uv-view
     content: "P6: uv view kind: UVPipeline, 2D navigation, edit set UV layout, select-only profile"
-    status: pending
+    status: completed
   - id: topology-cache
     content: "P7: Versioned topology cache (welded points, edge table, corners)"
     status: pending
@@ -390,6 +390,18 @@ Click and box select in the fallback band (shift extends, ctrl toggles). Propert
 ---
 
 ## Phase 6: Pipelines, overlays, gizmos, UV view (ADR-0006)
+
+**Done 2026-10-07.** Notes from implementation:
+- Files: `render/ViewPipeline.ts` (contract + registry, `DEFAULT_PIPELINES`), `render/ViewCompositor.ts`, `render/Overlay.ts` (+ registry), `render/screenQuad.ts`, `render/builtins.ts`, `render/pipelines/{RenderTargetPipeline,ForwardPipeline,PostProcessingPipeline,UVPipeline}.ts`, `render/overlays/{Grid,SelectionOutline,CameraFrame}Overlay.ts`, `tools/Gizmo.ts` (`Gizmo`, `GizmoGroup`, `GizmoLayer`), `tools/gizmos/TranslateGizmoGroup.ts`, `tools/operators/TranslateOperator.ts`, `tools/TranslateTool.ts`, demo `IoEditorViewsExample`.
+- Every pipeline renders into its own half-float target (linear, no tone mapping). The compositor presents it with a screen quad that writes the pipeline depth (`material.depthNode`), then overlays, in **one** `renderer.render(overlayScene)` to the canvas. Tone mapping happens there: `view.toneMapping ?? pipeline.toneMapping ?? document.toneMapping`. No save/restore of renderer state. Overlay-only draws (`overlay` tag) skip the pipeline. Cost: one extra full-screen pass per draw; pixel output of existing demos is unchanged (checked against HEAD screenshots).
+- `ScheduledView.listens` may return a `DirtyReason`; viewports return `'overlay'` for selection changes (UV pipeline: `'content'`; transforms ignored there).
+- Overlay hook is `prepare(ctx)` (not `update`, which clashes with `Behavior.update` on `GizmoLayer`). Grid is off by default (existing demos have their own helpers); `selection`, `cameraFrame` and `gizmos` are on. Passepartout is now visible in demos that look through scene cameras with a different aspect (keyframes SceneCamera, log-depth).
+- Selection outline: mask target of proxies sharing geometry (skinned, instanced, morph, lines), 8-tap edge pass. Not occlusion-aware (outlines show through occluders).
+- `PostProcessingPipeline(renderer, (scenePass, camera) => node, {convergeFrames})` rebuilds its graph when the view camera object changes (TRAA holds the camera). TRAA demo converges in 33 draws, then stops.
+- Gizmo flow: `GizmoLayer` (gizmo band) hit-tests in pixels; press → `gizmo.invoke` → `operators.run('transform.translate', {axis}, {host, event})` → modal. `InputRouter.startModal` marks open presses as non-clicks, so a gizmo press never selects through. Zero-move runs cancel (no command, no history).
+- Translate operator: median pivot, root objects only (`SelectionModel.getRootObjects`), X/Y/Z keys toggle constraint, Enter/release confirm, RMB/Escape cancel; `exec` applies `props.delta` (repeatable command). `lastCommand` is now set before commit so commit listeners see it.
+- UV view: `ThreeView.kind = 'uv'` → `uv` pipeline (grid, active texture, edit-set layouts via `buildUVGeometry` + `WireframeGeometry`, cached by attribute versions), `frameUV()`, orbit → pan, axis keys ignored. Picker = `RaycastPicker({root, resolve})` on the layouts; hosts expose `picker` and `SelectBehavior` prefers it.
+- Not done: shading modes (solid/wireframe/matcap as pipelines), rotate/scale gizmos, keyboard-started grab (G) without a press, overlay MSAA, outline occlusion, ioLayout in the demo (CSS grid instead).
 
 ### `pipeline-registry`
 

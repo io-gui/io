@@ -120,8 +120,9 @@ export class OperatorRegistry {
         if (transaction.state !== 'open')
             return;
         if (status === 'finished') {
-            transaction.commit();
+            // Before commit, so commit listeners already see this run as the last command.
             this._lastCommand = { name: run.type.id, args: run.props };
+            transaction.commit();
         }
         else {
             transaction.rollback();

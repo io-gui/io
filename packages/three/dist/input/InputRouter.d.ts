@@ -17,7 +17,7 @@ export declare class InputRouter {
     private readonly _lastPositions;
     private _suppressContextMenu;
     private _modal;
-    /** Press position per pointer, for click detection; `multi` marks presses that became multi-touch. */
+    /** Press position per pointer, for click detection; `multi` marks presses that cannot be clicks (multi-touch, started a modal operator). */
     private readonly _presses;
     constructor(host: InputHost);
     get behaviors(): readonly Behavior[];

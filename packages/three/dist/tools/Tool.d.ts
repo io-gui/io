@@ -2,6 +2,7 @@ import type { ThreeEditor } from '../editor/ThreeEditor.js';
 import type { Behavior } from '../input/Behavior.js';
 import type { ThreeView, ViewKind } from '../view/ThreeView.js';
 import type { OperatorHost } from './Operator.js';
+import type { GizmoGroup } from './Gizmo.js';
 /** What a view's router installs (ADR-0004). */
 export type InteractionProfile = 'full' | 'select' | 'navigate' | 'none';
 export interface ToolContext {
@@ -22,6 +23,8 @@ export interface ToolDefinition {
     /** Interaction profiles the tool installs in. Default `['full']`; selection tools add `'select'`. */
     readonly profiles?: readonly InteractionProfile[];
     createBehaviors(ctx: ToolContext): Behavior[];
+    /** Gizmo groups the tool shows in each view (Blender: a tool's gizmo group). Per view, like behaviors. */
+    createGizmoGroups?(ctx: ToolContext): GizmoGroup[];
 }
 export declare class ToolRegistry {
     private readonly _tools;

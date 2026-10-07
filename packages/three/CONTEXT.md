@@ -1,6 +1,6 @@
 # Three
 
-The `@io-gui/three` context: WebGPU Three.js viewports wired into Io-Gui's reactive graph. A ThreeApplet owns the scene and lifecycle; IoThreeViewport shows it through a per-viewport canvas target; the RenderScheduler is the only thing that renders. WebGPU only. Architecture decisions: `docs/adr/`. Math editor elements and side-effect EditorConfigs integrate Three types with `@io-gui/editors`.
+The `@io-gui/three` context: WebGPU Three.js viewports wired into Io-Gui's reactive graph. A ThreeEditor owns the document and lifecycle; IoThreeViewport shows it through a per-viewport canvas target, a pipeline and overlays; the RenderScheduler is the only thing that renders. WebGPU only. Architecture decisions: `docs/adr/`. Math editor elements and side-effect EditorConfigs integrate Three types with `@io-gui/editors`.
 
 ## Language
 
@@ -57,7 +57,7 @@ Per-viewport render surface the shared renderer draws into. Each `IoThreeViewpor
 _Avoid_: canvas, framebuffer (as the Io-Gui term)
 
 **Shared renderer**:
-The single default `WebGPURenderer` (`getDefaultRenderer()`) reused across viewports and initialized once by the scheduler. Renderer state is reset per viewport draw; a custom renderer may be passed in for renderer-level options. Viewports never dispose the renderer.
+The single default `WebGPURenderer` (`getDefaultRenderer()`) reused across viewports and initialized once by the scheduler. Renderer state (tone mapping, clear color, target) is set by each viewport's compositor per draw; a custom renderer may be passed in for renderer-level options. Viewports never dispose the renderer.
 _Avoid_: global GL context, IoGl (core 2D shader quad)
 
 **RenderScheduler**:
@@ -77,8 +77,32 @@ _Avoid_: notifier, event bus
 _Avoid_: animating, running, live
 
 **ThreeView**:
-Serializable ReactiveObject holding one view's state: navigation, overscan and clear color. Shown by an IoThreeViewport and outlives it.
+Serializable ReactiveObject holding one view's state: kind, pipeline, overlay flags, profile, navigation, overscan, clear color and tone-mapping overrides. Shown by an IoThreeViewport and outlives it.
 _Avoid_: viewport state, ViewCameras (removed)
+
+**View kind**:
+`ThreeView.kind`: `3d` (shows the content scene) or `uv` (shows the UV layout of the edit set in 2D). Picks the default pipeline, overlays, gizmos and tools.
+_Avoid_: view type, editor type
+
+**ViewPipeline**:
+How one view draws its content (forward, post-processed, UV, ...), into its own target in linear color with optional depth. Registered by id; created per viewport; runs only when content, navigation or size changed, or while not converged.
+_Avoid_: renderer (the shared WebGPURenderer), render pass, effect composer
+
+**ViewCompositor**:
+Per-viewport owner of the pipeline and overlays. Presents the pipeline output to the canvas in one pass with the overlay scene, applying tone mapping; overlay-only redraws reuse the cached output.
+_Avoid_: post-processing (that is a pipeline), output pass
+
+**Overlay**:
+Something a view draws on top of its pipeline output from its own small scene, never the content scene: grid, selection outline, camera frame (passepartout), gizmos. Switched per view in `ThreeView.overlays`.
+_Avoid_: helper (three.js objects added to the scene), decoration
+
+**Edit set**:
+The objects a component or UV view works on: the selected meshes. The UV view shows their UV layouts.
+_Avoid_: active objects, target set
+
+**Gizmo / GizmoGroup**:
+A gizmo is an on-screen handle with a screen-space hit test that starts an operator when pressed; a gizmo group (`poll`, `refresh`, `drawPrepare`) shows related gizmos, usually for the active tool. Each viewport's GizmoLayer is both their overlay and their input behavior.
+_Avoid_: manipulator, TransformControls, handle (alone)
 
 **ViewNavigation**:
 A view's navigation as numbers: target, rotation, distance, projection, fov, clip range, axis view and an optional scene camera (`cameraSource`, by uuid). The draw camera is built from it per frame.
@@ -93,7 +117,7 @@ Per-viewport owner of all DOM input listeners and pointer capture. Offers events
 _Avoid_: input manager, event handler, controls
 
 **Behavior**:
-Anything that wants viewport input (navigation, a tool, later gizmos and modal operators), with a priority band. Implements `wantsCapture`, `begin`, `update`, `end`, `cancel`, and optionally `hover`, `key`.
+Anything that wants viewport input (modal operators, gizmos, tools, navigation, selection), with a priority band. Implements `wantsCapture`, `begin`, `update`, `end`, `cancel`, and optionally `hover`, `key`.
 _Avoid_: controller, handler, interaction
 
 **Keymap**:

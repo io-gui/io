@@ -123,6 +123,18 @@ describe('RenderScheduler', () => {
     expect(bus.pending).toBe(false)
   })
 
+  it('tags the reason a view returns from listens', () => {
+    const scheduler = new RenderScheduler({autoStart: false})
+    const bus = new ChangeBus()
+    const view = fakeView({bus})
+    view.listens = (change: DocumentChange) => change.kind === 'selection' ? 'overlay' : 'content'
+    scheduler.register(view)
+    scheduler.step()
+    bus.notify({kind: 'selection', source: {}})
+    scheduler.step()
+    expect([...view.draws[1]]).toEqual(['overlay'])
+  })
+
   it('ticks tickers before collecting their changes, in the same frame', () => {
     const scheduler = new RenderScheduler({autoStart: false})
     const source = {}

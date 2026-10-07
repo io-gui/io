@@ -31,7 +31,9 @@ export declare class ThreeEditor extends ReactiveObject implements ScheduledTick
     private _tools;
     private _selections;
     constructor(args?: ThreeEditorProps);
+    /** Operators of this editor; built-ins (`transform.translate`) are registered. */
     get operators(): OperatorRegistry;
+    /** Tools of this editor; built-ins (`transform.translate`) are registered but not active. */
     get tools(): ToolRegistry;
     /** The active document's change bus; the scheduler drains it each frame. */
     get changeBus(): ChangeBus;
