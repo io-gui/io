@@ -4,6 +4,8 @@ import { ReactiveObject, ReactiveObjectProps, Register, Property } from '@io-gui
 import { IoThreeViewport } from '../elements/IoThreeViewport'
 import { Vector2, Ray, Raycaster, Vector3 } from 'three/webgpu'
 import { ThreeApplet } from './ThreeApplet'
+import { Behavior, BehaviorPriority } from '../input/Behavior.js'
+import { ViewInputEvent } from '../input/ViewInputEvent.js'
 
 export type ToolBaseProps = ReactiveObjectProps & {
   applet: ThreeApplet
@@ -23,6 +25,48 @@ export interface Pointer3D {
 
 const _raycaster = new Raycaster()
 
+/**
+ * Adapts a ToolBase to the InputRouter (ADR-0004): one shared behavior at tool priority that forwards
+ * router events to the tool's existing pointer handlers. The router dispatches synchronously from the
+ * viewport's own listeners, so `event.currentTarget` is still the viewport.
+ */
+class ToolBaseBehavior implements Behavior {
+  readonly priority: number = BehaviorPriority.tool
+
+  constructor(private readonly tool: ToolBase) {}
+
+  wantsCapture(event: ViewInputEvent) {
+    return (event.type === 'pointerdown' || event.type === 'wheel') && this.tool.capturesInput(event.native as PointerEvent | WheelEvent)
+  }
+  begin(event: ViewInputEvent) {
+    if (event.type === 'wheel') this.tool._onWheel(event.native as WheelEvent)
+    else this.tool._onPointerDown(event.native as PointerEvent)
+  }
+  update(event: ViewInputEvent) {
+    switch (event.type) {
+      case 'pointerdown': this.tool._onPointerDown(event.native as PointerEvent); break
+      case 'pointermove': this.tool._onPointerMove(event.native as PointerEvent); break
+      case 'pointerup': this.tool._onPointerUp(event.native as PointerEvent); break
+      case 'wheel': this.tool._onWheel(event.native as WheelEvent); break
+    }
+  }
+  end(event: ViewInputEvent) {
+    if (event.type === 'pointerup') this.tool._onPointerUp(event.native as PointerEvent)
+  }
+  cancel(event?: ViewInputEvent) {
+    if (event?.type === 'pointercancel') this.tool._onPointerCancel(event.native as PointerEvent)
+    else if (event) this.tool._resetPointers(event.host as IoThreeViewport)
+  }
+  hover(event: ViewInputEvent) {
+    // Tools track hover passively and never block lower behaviors.
+    this.tool._onPointerMove(event.native as PointerEvent)
+    return false
+  }
+  hoverEnd(event?: ViewInputEvent) {
+    if (event) this.tool._onPointerLeave(event.native as PointerEvent)
+  }
+}
+
 @Register
 export class ToolBase extends ReactiveObject {
 
@@ -32,37 +76,40 @@ export class ToolBase extends ReactiveObject {
   private readonly _viewports: IoThreeViewport[] = []
   private _activePointers = new WeakMap<IoThreeViewport, Pointer3D[]>()
   private _hoverPointers = new WeakMap<IoThreeViewport, Pointer3D[]>()
+  private readonly _behavior: Behavior = new ToolBaseBehavior(this)
 
   constructor(args?: ToolBaseProps) {
     super(args)
   }
 
+  /** The behavior this tool adds to each registered viewport's InputRouter. */
+  get behavior(): Behavior {
+    return this._behavior
+  }
+
   registerViewport(viewport: IoThreeViewport) {
     if (this._viewports.includes(viewport)) return
     this._viewports.push(viewport)
-    viewport.addEventListener('contextmenu', this._onContextMenu)
-    viewport.addEventListener('pointerdown', this._onPointerDown)
-    viewport.addEventListener('pointermove', this._onPointerMove)
-    viewport.addEventListener('pointerleave', this._onPointerLeave)
-    viewport.addEventListener('pointerout', this._onPointerOut)
-    viewport.addEventListener('pointerup', this._onPointerUp)
-    viewport.addEventListener('pointercancel', this._onPointerCancel)
-    viewport.addEventListener('lostpointercapture', this._onLostPointerCapture)
-    viewport.addEventListener('wheel', this._onWheel as EventListener)
+    viewport.inputRouter.add(this._behavior)
   }
 
   unregisterViewport(viewport: IoThreeViewport) {
     if (!this._viewports.includes(viewport)) return
     this._viewports.splice(this._viewports.indexOf(viewport), 1)
-    viewport.removeEventListener('contextmenu', this._onContextMenu)
-    viewport.removeEventListener('pointerdown', this._onPointerDown)
-    viewport.removeEventListener('pointermove', this._onPointerMove)
-    viewport.removeEventListener('pointerleave', this._onPointerLeave)
-    viewport.removeEventListener('pointerout', this._onPointerOut)
-    viewport.removeEventListener('pointerup', this._onPointerUp)
-    viewport.removeEventListener('pointercancel', this._onPointerCancel)
-    viewport.removeEventListener('lostpointercapture', this._onLostPointerCapture)
-    viewport.removeEventListener('wheel', this._onWheel as EventListener)
+    viewport.inputRouter.remove(this._behavior)
+    this._resetPointers(viewport)
+  }
+
+  /**
+   * Whether this tool captures a press or wheel event. Defaults to everything, so lower-priority behaviors
+   * (camera navigation) only get input the tool lets through. Override to share, for example
+   * `return event.button === 0` to leave other buttons and the wheel to navigation.
+   */
+  capturesInput(event: PointerEvent | WheelEvent): boolean {
+    return true
+  }
+
+  _resetPointers(viewport: IoThreeViewport) {
     this._activePointers.delete(viewport)
     this._hoverPointers.delete(viewport)
   }

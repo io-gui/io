@@ -3,6 +3,9 @@ import { WebGPURenderer, CanvasTarget, Scene, Object3D, OrthographicCamera, Pers
 import { ThreeApplet } from '../nodes/ThreeApplet.js';
 import { ToolBase } from '../nodes/ToolBase.js';
 import { ThreeView } from '../view/ThreeView.js';
+import { InputRouter } from '../input/InputRouter.js';
+import { Keymap } from '../input/Keymap.js';
+import { NavigationBehavior } from '../input/behaviors/NavigationBehavior.js';
 import { DocumentChange, ChangeBus } from '../editor/ChangeBus.js';
 import { ScheduledView, DirtyReason } from '../render/RenderScheduler.js';
 export type IoThreeViewportProps = ReactiveElementProps & {
@@ -11,6 +14,8 @@ export type IoThreeViewportProps = ReactiveElementProps & {
     view?: WithBinding<ThreeView>;
     /** Shorthand that sets the view: `'perspective'`, an axis (`'top'`, `'front'`, ...), `'scene'` or `'scene:<camera name>'`. */
     cameraSelect?: WithBinding<string>;
+    /** Navigation bindings (default: `navigationKeymaps.default`, OrbitControls-like). */
+    keymap?: Keymap;
     renderer?: WebGPURenderer;
     tool?: WithBinding<ToolBase>;
 };
@@ -23,6 +28,7 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
     /** Empty leaves the view as it is. */
     cameraSelect: string;
     renderer: WebGPURenderer;
+    keymap: Keymap;
     tool: ToolBase;
     tabIndex: number;
     private _renderTarget;
@@ -35,7 +41,11 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
     private _ownsView;
     /** `cameraSelect` asks for a scene camera that is not in the scene yet (assets still loading). */
     private _sceneCameraPending;
-    private _orbitControls;
+    private _inputRouter;
+    private _navigation;
+    /** Routes this viewport's input to behaviors: navigation, tools, later gizmos and operators (ADR-0004). */
+    get inputRouter(): InputRouter;
+    get navigationBehavior(): NavigationBehavior;
     constructor(args: IoThreeViewportProps);
     ready(): void;
     connectedCallback(): void;
@@ -45,7 +55,7 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
     /** Marks this viewport for redraw on the next frame. */
     tag(reason: DirtyReason): void;
     isRenderable(): boolean;
-    getPriority(): 1 | 0 | 2;
+    getPriority(): 0 | 2 | 1;
     listens(change: DocumentChange): boolean;
     onRendererError(error: Error): void;
     /** The camera this viewport draws and picks with, built from its view at the current size. */
@@ -62,6 +72,7 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
     appletMutated(): void;
     cameraSelectChanged(): void;
     viewChanged(change: Change<ThreeView>): void;
+    keymapChanged(): void;
     viewMutated(): void;
     mutated(): void;
     /** Called by the RenderScheduler only (ADR-0003). */

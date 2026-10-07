@@ -4,7 +4,9 @@ import { ThreeApplet } from '../nodes/ThreeApplet.js'
 import { ToolBase } from '../nodes/ToolBase.js'
 import { ThreeView } from '../view/ThreeView.js'
 import { AXIS_VIEW_DIRECTIONS, AxisView } from '../view/ViewNavigation.js'
-import { ViewOrbitControls } from '../view/ViewOrbitControls.js'
+import { InputRouter } from '../input/InputRouter.js'
+import { Keymap, navigationKeymaps } from '../input/Keymap.js'
+import { NavigationBehavior } from '../input/behaviors/NavigationBehavior.js'
 import { DocumentChange, ChangeBus } from '../editor/ChangeBus.js'
 import { renderScheduler, getDefaultRenderer, ScheduledView, DirtyReason } from '../render/RenderScheduler.js'
 
@@ -22,6 +24,8 @@ export type IoThreeViewportProps = ReactiveElementProps & {
   view?: WithBinding<ThreeView>
   /** Shorthand that sets the view: `'perspective'`, an axis (`'top'`, `'front'`, ...), `'scene'` or `'scene:<camera name>'`. */
   cameraSelect?: WithBinding<string>
+  /** Navigation bindings (default: `navigationKeymaps.default`, OrbitControls-like). */
+  keymap?: Keymap
   renderer?: WebGPURenderer
   tool?: WithBinding<ToolBase>
 }
@@ -45,6 +49,9 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
 
   @Property({type: WebGPURenderer})
   declare renderer: WebGPURenderer
+
+  @Property({type: Keymap, value: navigationKeymaps.default})
+  declare keymap: Keymap
 
   @Property({type: ToolBase})
   declare tool: ToolBase
@@ -70,6 +77,7 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
     return /* css */`
       :host {
         position: relative;
+        touch-action: none;
         display: flex;
         flex: 1 1 auto;
         flex-direction: column;
@@ -99,7 +107,24 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   declare private _ownsView: boolean
   /** `cameraSelect` asks for a scene camera that is not in the scene yet (assets still loading). */
   declare private _sceneCameraPending: boolean
-  declare private _orbitControls: ViewOrbitControls
+  // Lazy, like renderTarget: a `tool` passed to the constructor registers before the constructor body runs.
+  declare private _inputRouter: InputRouter | undefined
+  declare private _navigation: NavigationBehavior | undefined
+
+  /** Routes this viewport's input to behaviors: navigation, tools, later gizmos and operators (ADR-0004). */
+  get inputRouter(): InputRouter {
+    if (!this._inputRouter) {
+      this._inputRouter = new InputRouter(this)
+      this._navigation = new NavigationBehavior(this, this.keymap)
+      this._inputRouter.add(this._navigation)
+    }
+    return this._inputRouter
+  }
+
+  get navigationBehavior(): NavigationBehavior {
+    void this.inputRouter
+    return this._navigation!
+  }
 
   constructor(args: IoThreeViewportProps) {
     super({
@@ -108,7 +133,7 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
       renderer: args.renderer ?? getDefaultRenderer(),
     } as ReactiveElementProps)
     this._ownsView = !args.view
-    this._orbitControls = new ViewOrbitControls(this)
+    void this.inputRouter
   }
 
   override ready() {
@@ -178,7 +203,6 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
     if (!view) return
     this._sceneCameraPending = !applyCameraSelect(view, this.cameraSelect, scene)
     if (!view.navigation.framed && scene) view.frame(scene)
-    this._orbitControls?.updateEnabled()
   }
 
   toolChanged(change: Change<ToolBase>) {
@@ -220,8 +244,10 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
     this._syncView()
     this.tag('view')
   }
+  keymapChanged() {
+    if (this._navigation) this._navigation.keymap = this.keymap
+  }
   viewMutated() {
-    this._orbitControls?.updateEnabled()
     this.tag('view')
   }
   override mutated() {
@@ -256,7 +282,7 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
     renderScheduler.unregister(this)
     delete (this as Record<string, unknown>).applet
     this.renderTarget.dispose()
-    this._orbitControls.dispose()
+    this._inputRouter?.dispose()
     if (this._ownsView) this.view.dispose()
     if (this.tool) {
       this.tool.unregisterViewport(this)

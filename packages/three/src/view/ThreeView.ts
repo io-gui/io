@@ -130,6 +130,18 @@ export class ThreeView extends ReactiveObject {
     return camera
   }
 
+  /** World units covered by one CSS pixel at the target distance. */
+  getWorldPerPixel(width: number, height: number, scene: Scene | null) {
+    const camera = this.getCamera(width, height, scene)
+    let visibleHeight: number
+    if (camera instanceof PerspectiveCamera) {
+      visibleHeight = 2 * this.navigation.distance * Math.tan(camera.fov * Math.PI / 360) / camera.zoom
+    } else {
+      visibleHeight = (camera.top - camera.bottom) / camera.zoom
+    }
+    return height > 0 ? visibleHeight / height : 0
+  }
+
   private _fromSceneCamera(source: ViewCamera, aspect: number): ViewCamera {
     source.updateWorldMatrix(true, false)
     const camera: ViewCamera = (source as PerspectiveCamera).isPerspectiveCamera ? this._scenePerspective : this._sceneOrthographic

@@ -1,0 +1,38 @@
+import { Behavior } from './Behavior.js';
+import { InputHost } from './ViewInputEvent.js';
+/**
+ * Routes input for one viewport (ADR-0004). It is the only code that listens to the viewport's
+ * pointer, wheel and context-menu events and takes pointer capture. Behaviors are offered events in
+ * priority order; only events a behavior captured are `preventDefault`ed and stopped.
+ * Key events go to the viewport under the pointer, else to the focused one.
+ */
+export declare class InputRouter {
+    readonly host: InputHost;
+    private _behaviors;
+    private _captured;
+    private readonly _capturedPointers;
+    private _hovered;
+    private readonly _lastPositions;
+    private _suppressContextMenu;
+    constructor(host: InputHost);
+    get behaviors(): readonly Behavior[];
+    get captured(): Behavior | null;
+    add(behavior: Behavior): void;
+    remove(behavior: Behavior): void;
+    handleKey(type: 'keydown' | 'keyup', native: KeyboardEvent): boolean;
+    dispose(): void;
+    private _event;
+    private _consume;
+    private _capture;
+    private _capturePointer;
+    private _releaseAll;
+    private _endHover;
+    private _onPointerDown;
+    private _onPointerMove;
+    private _onPointerUp;
+    private _onPointerCancel;
+    private _onWheel;
+    private _onContextMenu;
+    private _onPointerEnter;
+    private _onPointerLeave;
+}

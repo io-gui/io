@@ -548,3 +548,11 @@
 - Viewport: view prop (owns default, created in ctor not via init since init builds default even when arg passed), cameraSelect '' default, applyCameraSelect pending retry for late scene cameras, frame-object listener, getViewCamera(). ViewCameras deleted.
 - Bug found: OrbitControls(camera, element) ctor -> connect() disconnects first -> io-gui 'Listener not found' errors. Construct without element, then connect().
 - Tests 927->44 three tests; manual headed check: axis views, ortho wheel zoom, persp orbit, scene cameras, train camera after GLTF load.
+
+## 2026-10-07 — io-three Phase 3 (input) implemented
+
+### [three][input]
+- InputRouter per viewport (lazy getter; tool in ctor registers before ctor body). Priority capture, wheel one-shot, stealing, hover pass, contextmenu suppress after captured RMB, focus on capture, document key routing (hovered > focused, skip editable). NavigationBehavior (keymap-driven orbit/pan/dolly/zoom, pinch, axis/frame keys, disabled for scene camera). Keymap data + presets. ToolBase -> ToolBaseBehavior adapter + capturesInput hook.
+- Lint: `_hoveredRouter = this` trips no-this-alias -> setHoveredRouter(this).
+- Headed check: LMB orbit, RMB pan, wheel (no page scroll), top-view LMB pans, Home frames, probe ToolBase gets LMB while RMB still pans. 952 tests pass.
+- Gotcha for ad-hoc classes in page: must core.Register() a ToolBase subclass before `new`.

@@ -2,6 +2,7 @@ import { ReactiveObject, ReactiveObjectProps } from '@io-gui/core';
 import { IoThreeViewport } from '../elements/IoThreeViewport';
 import { Vector2, Ray } from 'three/webgpu';
 import { ThreeApplet } from './ThreeApplet';
+import { Behavior } from '../input/Behavior.js';
 export type ToolBaseProps = ReactiveObjectProps & {
     applet: ThreeApplet;
 };
@@ -21,9 +22,19 @@ export declare class ToolBase extends ReactiveObject {
     private readonly _viewports;
     private _activePointers;
     private _hoverPointers;
+    private readonly _behavior;
     constructor(args?: ToolBaseProps);
+    /** The behavior this tool adds to each registered viewport's InputRouter. */
+    get behavior(): Behavior;
     registerViewport(viewport: IoThreeViewport): void;
     unregisterViewport(viewport: IoThreeViewport): void;
+    /**
+     * Whether this tool captures a press or wheel event. Defaults to everything, so lower-priority behaviors
+     * (camera navigation) only get input the tool lets through. Override to share, for example
+     * `return event.button === 0` to leave other buttons and the wheel to navigation.
+     */
+    capturesInput(event: PointerEvent | WheelEvent): boolean;
+    _resetPointers(viewport: IoThreeViewport): void;
     _onContextMenu(event: PointerEvent): void;
     _onPointerDown(event: PointerEvent): void;
     _onPointerMove(event: PointerEvent): void;

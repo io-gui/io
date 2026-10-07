@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { nextFrame } from '@io-gui/core'
-import { IoThreeViewport, ThreeApplet, ThreeView, ToolBase, renderScheduler } from '@io-gui/three'
+import { IoThreeViewport, ThreeApplet, ThreeView, ToolBase, renderScheduler, NavigationBehavior, navigationKeymaps } from '@io-gui/three'
 import { BoxGeometry, Mesh, PerspectiveCamera, Scene, WebGPURenderer } from 'three/webgpu'
 
 describe('IoThreeViewport', () => {
@@ -17,6 +17,17 @@ describe('IoThreeViewport', () => {
   afterEach(() => {
     container.remove()
     applet.dispose()
+  })
+
+  it('routes input through its router: tool first, then navigation', () => {
+    const tool = new ToolBase({ applet })
+    const viewport = new IoThreeViewport({ applet, tool })
+    expect(viewport.navigationBehavior).toBeInstanceOf(NavigationBehavior)
+    expect(viewport.inputRouter.behaviors).toEqual([tool.behavior, viewport.navigationBehavior])
+    viewport.keymap = navigationKeymaps.blender
+    expect(viewport.navigationBehavior.keymap).toBe(navigationKeymaps.blender)
+    viewport.dispose()
+    tool.dispose()
   })
 
   it('registers tool on assignment and unregisters previous tool', async () => {

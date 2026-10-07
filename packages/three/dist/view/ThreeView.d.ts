@@ -48,6 +48,8 @@ export declare class ThreeView extends ReactiveObject {
      * Scene cameras are copied, never mutated (ADR-0005).
      */
     getCamera(width: number, height: number, scene: Scene | null): ViewCamera;
+    /** World units covered by one CSS pixel at the target distance. */
+    getWorldPerPixel(width: number, height: number, scene: Scene | null): number;
     private _fromSceneCamera;
     toJSON(): ThreeViewData;
     applyJSON(data: ThreeViewData): this;

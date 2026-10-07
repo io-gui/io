@@ -40,6 +40,7 @@ type IoThreeViewportProps = {
   view?: ThreeView; // View state; pass one to keep navigation across remounts (default: the viewport makes its own)
   cameraSelect?: string; // Shorthand setting the view: 'perspective' | 'top' | 'bottom' | 'left' | 'right' | 'front' | 'back' | 'scene' | 'scene:<cameraName>'
   renderer?: WebGPURenderer; // Custom renderer (optional)
+  keymap?: Keymap; // Navigation bindings (default: navigationKeymaps.default, OrbitControls-like)
   tool?: ToolBase; // Active 3D pointer tool (optional)
 };
 ```
@@ -54,6 +55,7 @@ type IoThreeViewportProps = {
 - `getViewCamera()` returns the camera it draws and picks with
 - Frames an object when its applet dispatches `frame-object` with `{object, overscan?}`
 - A `'scene'` / `'scene:<name>'` camera added later (async asset load) is picked up when it appears
+- All input goes through `viewport.inputRouter` (see Input below)
 
 **Usage:**
 
@@ -125,7 +127,37 @@ ioThreeViewport({ applet, view }); // the view survives the element being remoun
 - Scene cameras are copied, never mutated
 - A new view frames its scene once; restored views keep their navigation
 - After changing `view.navigation` directly, call `view.markNavigationChanged()`
-- Orbit/pan/zoom use `OrbitControls` on the view's private camera until the input router lands
+- Navigation is done by the viewport's `NavigationBehavior`, which edits `view.navigation`
+
+## Input
+
+Each viewport has one `InputRouter` ([ADR-0004](./docs/adr/0004-input-arbitrated-by-priority-capture-router.md)). It owns the viewport's pointer, wheel and context-menu listeners and pointer capture, and offers events to `Behavior`s in priority order: the first whose `wantsCapture(event)` returns true owns the pointer stream until release. Only captured events are `preventDefault`ed and stopped. Key events go to the viewport under the pointer, else to the focused one.
+
+| Band | Priority | Today |
+| --- | --- | --- |
+| Modal operator | 1000 | (later) |
+| Gizmos | 800 | (later) |
+| Tool | 500 | `ToolBase` subclasses |
+| Navigation | 300 | `NavigationBehavior` |
+| Fallback selection | 100 | (later) |
+
+**Navigation** is driven by a keymap (data): `navigationKeymaps.default` (OrbitControls-like: LMB orbit, RMB / Shift+LMB pan, MMB dolly, wheel zoom, Home frame all), `.blender` (MMB orbit, Shift+MMB pan, Ctrl+MMB dolly, numpad axis views) and `.maya` (Alt+LMB/MMB/RMB). Two-finger touch pans and pinch-dollies. Axis views pan instead of orbit. Navigation is off while looking through a scene camera.
+
+```typescript
+ioThreeViewport({ applet, keymap: navigationKeymaps.blender });
+const keymap = Keymap.layer(myBindings, navigationKeymaps.default); // first match wins
+```
+
+**Tools**: `ToolBase` registers one behavior on each viewport router at tool priority. By default it captures every press and wheel event; override `capturesInput(event)` to leave some to navigation:
+
+```typescript
+class PaintTool extends ToolBase {
+  capturesInput(event: PointerEvent | WheelEvent) {
+    return event.type === "pointerdown" && (event as PointerEvent).button === 0;
+  }
+  on3DPointerDown(pointer: Pointer3D) { /* ... */ }
+}
+```
 
 ## Editor Configurations
 
