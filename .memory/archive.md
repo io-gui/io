@@ -516,3 +516,18 @@
 - Verify: midpoint-in-tile check leaf-only (coarse chords can leave tile).
 - Archive 163.2 MiB; L0 280804 pl / 561608 pts; weight ~20.2M all levels. Exclusive residency already correct.
 
+
+## 2026-10-07 — io-three core architecture ADRs + plan
+
+### [three][architecture]
+- Deep analysis of packages/three vs Blender (ScrArea/ARegion/RegionView3D, notifiers, handler stack, wmGizmo, bToolRef), Maya, Houdini, Unreal ITF. Design doc in Claude Docs (artifact cb23d4fe-...).
+- Found: ThreeApplet single _width/_height/onResized written by last-drawn viewport; per-frame three-applet-needs-render reaches all graph parents (native stopPropagation does not stop graph walk — redraws do work); OrbitControls + ToolBase both listen, no arbitration; ViewCameras overscan mutates scene cameras; WebGL fallback moves single canvas.
+- User decisions: drop WebGL fallback (WebGPU only). Confirmed current design already multi-viewport; ToolBase.registerViewport role → InputRouter.
+- Wrote ADR 0001-0007 (packages/three/docs/adr), plan .cursor/plans/three_core_architecture.plan.md.
+
+## 2026-10-07 — io-three decisions: naming, documents, undo, picking
+
+### [three][decision]
+- ThreeEditor name. One active ThreeDocument, switchable at runtime; per-doc session maps on editor (selection, view nav, undo).
+- Undo advised: commands + transactions of auto-inverted patches (not Maya undoIt, not Blender memfile). ADR-0008 status proposed. Mutation API in P4; undo stack/commands/collab in future P8.
+- Selection moved to session state (per user) in ADR-0007. Picker async interface; plain Raycaster now; BVH + ID buffer later.
