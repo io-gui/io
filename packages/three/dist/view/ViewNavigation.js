@@ -14,6 +14,7 @@ const POLE_EPSILON = 1e-4;
 const MIN_DISTANCE = 1e-6;
 const _lookAtCamera = new PerspectiveCamera();
 const _box = new Box3();
+const _frameBox = new Box3();
 const _center = new Vector3();
 const _size = new Vector3();
 const _right = new Vector3();
@@ -109,13 +110,18 @@ export class ViewNavigation {
      */
     frame(object, padding = 1) {
         // precise=true: use current morph influences, not unused morph extremes
-        _box.makeEmpty();
+        _frameBox.makeEmpty();
         for (const item of Array.isArray(object) ? object : [object])
-            _box.expandByObject(item, true);
-        if (_box.isEmpty()) {
+            _frameBox.expandByObject(item, true);
+        if (_frameBox.isEmpty()) {
             // Focusing on a Group, AmbientLight, etc
-            _box.setFromCenterAndSize(_center.set(0, 0, 0), _size.set(0.2, 0.2, 0.2));
+            _frameBox.setFromCenterAndSize(_center.set(0, 0, 0), _size.set(0.2, 0.2, 0.2));
         }
+        this.frameBox(_frameBox, padding);
+    }
+    /** Fits a world-space box, like `frame`. */
+    frameBox(box, padding = 1) {
+        _box.copy(box);
         _box.getCenter(_center);
         _box.getSize(_size).multiplyScalar(0.5 * padding);
         _box.min.copy(_center).sub(_size);

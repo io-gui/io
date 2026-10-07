@@ -50,7 +50,8 @@ export class NavigationBehavior implements Behavior {
       return
     }
     let action = this._pending!.action as DragAction
-    if (action === 'view.orbit' && this.lockAxisViews && event.view.navigation.axisView) action = 'view.pan'
+    const view = event.view
+    if (action === 'view.orbit' && (view.kind === 'uv' || (this.lockAxisViews && view.navigation.axisView))) action = 'view.pan'
     this._action = action
     this._pointers.set(event.pointerId, {x: event.x, y: event.y})
   }
@@ -89,6 +90,12 @@ export class NavigationBehavior implements Behavior {
     const entry = this.keymap.match(event, action => action === 'view.frameAll' || action === 'view.frameSelected' || action === 'view.axis')
     if (!entry) return false
     const view = event.view
+    if (view.kind === 'uv') {
+      // 2D views have no axis views; framing shows the UV square.
+      if (entry.action === 'view.axis') return false
+      view.frameUV()
+      return true
+    }
     if (entry.action === 'view.frameSelected') {
       const selected = this._host.selection?.getObjects() ?? []
       if (selected.length) view.frame(selected)

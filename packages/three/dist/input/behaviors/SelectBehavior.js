@@ -10,6 +10,7 @@ import { collectSelectable, defaultPicker } from '../../selection/Picker.js';
 export class SelectBehavior {
     priority = BehaviorPriority.fallback;
     keymap;
+    /** Used unless the host provides its own (`InputHost.picker`). */
     picker;
     _host;
     _box = null;
@@ -18,6 +19,9 @@ export class SelectBehavior {
         this._host = host;
         this.keymap = keymap;
         this.picker = picker;
+    }
+    get _picker() {
+        return this._host.picker ?? this.picker;
     }
     get _selection() {
         return this._host.selection ?? null;
@@ -48,7 +52,7 @@ export class SelectBehavior {
         // A press without a drag is a click; the router offers it as one.
         if (Math.abs(box.x1 - box.x0) <= CLICK_TOLERANCE && Math.abs(box.y1 - box.y0) <= CLICK_TOLERANCE)
             return;
-        void this.picker.pickRect(this._host, box).then(hits => {
+        void this._picker.pickRect(this._host, box).then(hits => {
             if (this._selection !== selection)
                 return;
             apply(selection, box.mode, hits.map(hit => hit.uuid), '');
@@ -65,7 +69,7 @@ export class SelectBehavior {
         if (!entry)
             return false;
         const mode = entry.props?.mode ?? 'set';
-        void this.picker.pick(this._host, event.x, event.y).then((hit) => {
+        void this._picker.pick(this._host, event.x, event.y).then((hit) => {
             if (this._selection !== selection)
                 return;
             apply(selection, mode, hit ? [hit.uuid] : [], hit?.uuid ?? '');

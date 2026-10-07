@@ -11,11 +11,13 @@ export type SelectMode = 'set' | 'extend' | 'toggle' | 'subtract';
 export declare class SelectBehavior implements Behavior {
     readonly priority: number;
     keymap: Keymap;
+    /** Used unless the host provides its own (`InputHost.picker`). */
     picker: Picker;
     private readonly _host;
     private _box;
     private _marquee;
     constructor(host: InputHost, keymap?: Keymap, picker?: Picker);
+    private get _picker();
     private get _selection();
     wantsCapture(event: ViewInputEvent): boolean;
     begin(): void;

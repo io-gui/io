@@ -58,42 +58,61 @@ const _ndc = new Vector2()
 const _box = new Box3()
 const _corner = new Vector3()
 
+export type RaycastPickerOptions = {
+  /** What to raycast. Default: the host's content scene. */
+  root?: (host: InputHost) => Object3D | null
+  /** Maps a hit object to the document object it stands for (or null to skip). Default: the hit itself. */
+  resolve?: (object: Object3D) => Object3D | null
+}
+
 /**
  * Picks with a plain `Raycaster` against the view's draw camera. Box selection tests each object's
  * projected world bounds against the rectangle (approximate: bounds, not drawn pixels).
+ * Views that draw stand-ins for document objects (the UV view) pass `root` and `resolve`.
  */
 export class RaycastPicker implements Picker {
 
+  private readonly _root: (host: InputHost) => Object3D | null
+  private readonly _resolve: (object: Object3D) => Object3D | null
+
+  constructor(options: RaycastPickerOptions = {}) {
+    this._root = options.root ?? (host => host.scene)
+    this._resolve = options.resolve ?? (object => object)
+  }
+
   pick(host: InputHost, x: number, y: number, filter?: PickFilter): Promise<PickHit | null> {
-    const scene = host.scene
-    if (!scene) return Promise.resolve(null)
+    const root = this._root(host)
+    if (!root) return Promise.resolve(null)
     const rect = host.getBoundingClientRect()
     const camera = host.getViewCamera()
     _ndc.set((x / rect.width) * 2 - 1, -(y / rect.height) * 2 + 1)
     _raycaster.setFromCamera(_ndc, camera)
     _raycaster.layers.mask = camera.layers.mask
     // Raycaster thresholds are world units (default 1); keep line and point hits to a few pixels.
-    const threshold = host.view.getWorldPerPixel(rect.width, rect.height, scene) * PICK_RADIUS
+    const threshold = host.view.getWorldPerPixel(rect.width, rect.height, host.scene) * PICK_RADIUS
     _raycaster.params.Line.threshold = threshold
     _raycaster.params.Points.threshold = threshold
-    for (const intersection of _raycaster.intersectObject(scene, true)) {
-      const object = intersection.object
-      if (!isSelectable(object) || (filter && !filter(object))) continue
+    for (const intersection of _raycaster.intersectObject(root, true)) {
+      if (!isSelectable(intersection.object)) continue
+      const object = this._resolve(intersection.object)
+      if (!object || (filter && !filter(object))) continue
       return Promise.resolve({object, uuid: object.uuid, distance: intersection.distance, point: intersection.point})
     }
     return Promise.resolve(null)
   }
 
   pickRect(host: InputHost, rect: PickRect, filter?: PickFilter): Promise<PickHit[]> {
-    const scene = host.scene
-    if (!scene) return Promise.resolve([])
+    const root = this._root(host)
+    if (!root) return Promise.resolve([])
     const bounds = host.getBoundingClientRect()
     const camera = host.getViewCamera()
     const minX = Math.min(rect.x0, rect.x1), maxX = Math.max(rect.x0, rect.x1)
     const minY = Math.min(rect.y0, rect.y1), maxY = Math.max(rect.y0, rect.y1)
-    const hits: PickHit[] = []
-    for (const object of collectSelectable(scene, camera, filter)) {
-      _box.setFromObject(object, true)
+    const hits = new Map<string, PickHit>()
+    for (const candidate of collectSelectable(root, camera)) {
+      const object = this._resolve(candidate)
+      if (!object || hits.has(object.uuid) || (filter && !filter(object))) continue
+      _box.setFromObject(candidate, true)
       if (_box.isEmpty()) continue
       let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity
       let inFront = false
@@ -109,9 +128,9 @@ export class RaycastPicker implements Picker {
       }
       if (!inFront || right < minX || left > maxX || bottom < minY || top > maxY) continue
       _box.getCenter(_corner)
-      hits.push({object, uuid: object.uuid, distance: _corner.distanceTo(camera.position), point: _corner.clone()})
+      hits.set(object.uuid, {object, uuid: object.uuid, distance: _corner.distanceTo(camera.position), point: _corner.clone()})
     }
-    return Promise.resolve(hits)
+    return Promise.resolve([...hits.values()])
   }
 }
 

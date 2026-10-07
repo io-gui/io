@@ -1,10 +1,17 @@
 import { ReactiveObject, ReactiveObjectProps } from '@io-gui/core';
-import { Object3D, OrthographicCamera, PerspectiveCamera, Scene } from 'three/webgpu';
+import { Object3D, OrthographicCamera, PerspectiveCamera, Scene, ToneMapping } from 'three/webgpu';
 import { AxisView, ViewNavigation, ViewNavigationData } from './ViewNavigation.js';
 import type { InteractionProfile } from '../tools/Tool.js';
-export type ViewKind = '3d';
+/** `3d` shows the content scene; `uv` shows the UV layout of the edit set in a 2D view of the 0–1 square. */
+export type ViewKind = '3d' | 'uv';
+/** Overlay ids switched on or off for one view; ids it does not name use the overlay's default. */
+export type ViewOverlays = Record<string, boolean>;
 export type ThreeViewProps = ReactiveObjectProps & {
     kind?: ViewKind;
+    pipeline?: string;
+    overlays?: ViewOverlays;
+    toneMapping?: ToneMapping | null;
+    toneMappingExposure?: number | null;
     profile?: InteractionProfile;
     overscan?: number;
     clearColor?: number;
@@ -12,6 +19,8 @@ export type ThreeViewProps = ReactiveObjectProps & {
 };
 export type ThreeViewData = {
     kind?: ViewKind;
+    pipeline?: string;
+    overlays?: ViewOverlays;
     profile?: InteractionProfile;
     overscan?: number;
     clearColor?: number;
@@ -25,6 +34,14 @@ type ViewCamera = PerspectiveCamera | OrthographicCamera;
  */
 export declare class ThreeView extends ReactiveObject {
     kind: ViewKind;
+    /** Registered pipeline id (ADR-0006). Empty uses the view kind's default: `forward` for 3d, `uv` for uv. */
+    pipeline: string;
+    /** Overlays switched on or off (`grid`, `selection`, `cameraFrame`, `gizmos`, ...). Replace the object, or use `setOverlay`. */
+    overlays: ViewOverlays;
+    /** Overrides the document's tone mapping in this view; `null` uses the pipeline's or the document's. */
+    toneMapping: ToneMapping | null;
+    /** Overrides the document's exposure in this view; `null` uses the document's. */
+    toneMappingExposure: number | null;
     /** What the viewport's router installs: `full` (tool + navigation), `select`, `navigate`, `none`. */
     profile: InteractionProfile;
     /** Extra margin drawn around the framed area (1 = none). */
@@ -48,6 +65,10 @@ export declare class ThreeView extends ReactiveObject {
     /** Looks through a scene camera by `uuid`, or stops with `null`. */
     setCameraSource(uuid: string | null): void;
     frame(object: Object3D | readonly Object3D[], padding?: number): void;
+    /** Shows the 0–1 UV square, looking down -Z (2D views). */
+    frameUV(padding?: number): void;
+    isOverlayEnabled(id: string, enabledByDefault?: boolean): boolean;
+    setOverlay(id: string, enabled: boolean): void;
     /**
      * Stores the current navigation for `fromDocument` and restores the one saved for `toDocument`,
      * or starts unframed (the viewport then frames the new scene).

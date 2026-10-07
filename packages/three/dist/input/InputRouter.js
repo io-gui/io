@@ -50,7 +50,7 @@ export class InputRouter {
     _lastPositions = new Map();
     _suppressContextMenu = false;
     _modal = false;
-    /** Press position per pointer, for click detection; `multi` marks presses that became multi-touch. */
+    /** Press position per pointer, for click detection; `multi` marks presses that cannot be clicks (multi-touch, started a modal operator). */
     _presses = new Map();
     constructor(host) {
         this.host = host;
@@ -104,6 +104,9 @@ export class InputRouter {
         this._endHover();
         this._captured = behavior;
         this._modal = true;
+        // Presses that started the modal operator (a gizmo drag) must not end as clicks.
+        for (const press of this._presses.values())
+            press.multi = true;
     }
     endModal(behavior) {
         if (this._captured !== behavior || !this._modal)

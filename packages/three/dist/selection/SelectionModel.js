@@ -36,6 +36,15 @@ let SelectionModel = class SelectionModel extends ReactiveObject {
         }
         return objects;
     }
+    /** Selected objects without a selected ancestor: what transforms move, so children are not moved twice. */
+    getRootObjects() {
+        return this.getObjects().filter(object => {
+            for (let node = object.parent; node; node = node.parent)
+                if (this._objects.has(node.uuid))
+                    return false;
+            return true;
+        });
+    }
     getActiveObject() {
         return this.active ? this.document.getObject(this.active) : undefined;
     }

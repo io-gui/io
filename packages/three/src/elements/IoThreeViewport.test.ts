@@ -23,7 +23,7 @@ describe('IoThreeViewport', () => {
     const tool = new ToolBase({ applet })
     const viewport = new IoThreeViewport({ applet, tool })
     expect(viewport.navigationBehavior).toBeInstanceOf(NavigationBehavior)
-    expect(viewport.inputRouter.behaviors).toEqual([tool.behavior, viewport.navigationBehavior, viewport.selectBehavior])
+    expect(viewport.inputRouter.behaviors).toEqual([viewport.gizmoLayer, tool.behavior, viewport.navigationBehavior, viewport.selectBehavior])
     viewport.keymap = navigationKeymaps.blender
     expect(viewport.navigationBehavior.keymap).toBe(navigationKeymaps.blender)
     viewport.dispose()
@@ -197,7 +197,8 @@ describe('IoThreeViewport', () => {
     expect(viewport.editor).toBe(applet)
     expect(viewport.changeBus).toBe(applet.document.changeBus)
     expect(viewport.scene).toBe(applet.scene)
-    expect(viewport.listens({kind: 'transform', source: applet.document})).toBe(true)
+    expect(viewport.listens({kind: 'transform', source: applet.document})).toBe('content')
+    expect(viewport.listens({kind: 'selection', source: applet.document})).toBe('overlay')
     expect(viewport.listens({kind: 'transform', source: other.document})).toBe(false)
     other.dispose()
     viewport.dispose()
@@ -227,7 +228,7 @@ describe('IoThreeViewport', () => {
     viewport.view.profile = 'none'
     expect(viewport.inputRouter.behaviors).toEqual([])
     viewport.view.profile = 'full'
-    expect(viewport.inputRouter.behaviors).toEqual([behavior, viewport.navigationBehavior, viewport.selectBehavior])
+    expect(viewport.inputRouter.behaviors).toEqual([viewport.gizmoLayer, behavior, viewport.navigationBehavior, viewport.selectBehavior])
     viewport.dispose()
     editor.dispose()
   })

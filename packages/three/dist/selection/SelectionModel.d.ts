@@ -28,6 +28,8 @@ export declare class SelectionModel extends ReactiveObject {
     ids(): string[];
     /** Selected objects that are still in the document. */
     getObjects(): Object3D[];
+    /** Selected objects without a selected ancestor: what transforms move, so children are not moved twice. */
+    getRootObjects(): Object3D[];
     getActiveObject(): Object3D | undefined;
     edit(): SelectionEdit;
     /** Replaces the selection; the last id becomes active unless `active` is given. */

@@ -10,6 +10,8 @@ import { renderScheduler } from '../render/RenderScheduler.js';
 import { OperatorRegistry } from '../tools/Operator.js';
 import { ToolRegistry } from '../tools/Tool.js';
 import { SelectionModel } from '../selection/SelectionModel.js';
+import { translateOperatorType } from '../tools/operators/TranslateOperator.js';
+import { translateTool } from '../tools/TranslateTool.js';
 /**
  * The app object (ADR-0002): one active ThreeDocument (switchable at runtime), the editor mode,
  * playback, operators and tools. Viewports read `editor.document`; they never hold a document themselves.
@@ -20,14 +22,20 @@ let ThreeEditor = class ThreeEditor extends ReactiveObject {
         super({ ...args, document: args?.document ?? new ThreeDocument() });
         this.isPlayingChanged();
     }
+    /** Operators of this editor; built-ins (`transform.translate`) are registered. */
     get operators() {
-        if (!this._operators)
+        if (!this._operators) {
             this._operators = new OperatorRegistry(this);
+            this._operators.register(translateOperatorType);
+        }
         return this._operators;
     }
+    /** Tools of this editor; built-ins (`transform.translate`) are registered but not active. */
     get tools() {
-        if (!this._tools)
+        if (!this._tools) {
             this._tools = new ToolRegistry();
+            this._tools.register(translateTool);
+        }
         return this._tools;
     }
     /** The active document's change bus; the scheduler drains it each frame. */

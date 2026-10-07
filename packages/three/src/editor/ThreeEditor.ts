@@ -6,6 +6,8 @@ import { renderScheduler, FrameInfo, ScheduledTicker } from '../render/RenderSch
 import { OperatorRegistry } from '../tools/Operator.js'
 import { ToolDefinition, ToolRegistry } from '../tools/Tool.js'
 import { SelectionModel } from '../selection/SelectionModel.js'
+import { translateOperatorType } from '../tools/operators/TranslateOperator.js'
+import { translateTool } from '../tools/TranslateTool.js'
 import type { ViewKind } from '../view/ThreeView.js'
 import type { IoThreeViewport } from '../elements/IoThreeViewport.js'
 
@@ -52,13 +54,21 @@ export class ThreeEditor extends ReactiveObject implements ScheduledTicker {
     this.isPlayingChanged()
   }
 
+  /** Operators of this editor; built-ins (`transform.translate`) are registered. */
   get operators(): OperatorRegistry {
-    if (!this._operators) this._operators = new OperatorRegistry(this)
+    if (!this._operators) {
+      this._operators = new OperatorRegistry(this)
+      this._operators.register(translateOperatorType)
+    }
     return this._operators
   }
 
+  /** Tools of this editor; built-ins (`transform.translate`) are registered but not active. */
   get tools(): ToolRegistry {
-    if (!this._tools) this._tools = new ToolRegistry()
+    if (!this._tools) {
+      this._tools = new ToolRegistry()
+      this._tools.register(translateTool)
+    }
     return this._tools
   }
 

@@ -21,7 +21,8 @@ export interface ScheduledView {
     isRenderable(): boolean;
     /** Higher draws first: focused 2, hovered 1, other 0. */
     getPriority(): number;
-    listens(change: DocumentChange): boolean;
+    /** How a change affects this view: `true` or `'content'` redraws it, `'overlay'` redraws only overlays. */
+    listens(change: DocumentChange): boolean | DirtyReason;
     renderView(reasons: ReadonlySet<DirtyReason>, frame: FrameInfo): ViewRenderResult | void;
     onRendererError?(error: Error): void;
 }
@@ -61,7 +62,7 @@ export declare class RenderScheduler {
     getTags(view: ScheduledView): ReadonlySet<DirtyReason>;
     addTicker(ticker: ScheduledTicker): void;
     removeTicker(ticker: ScheduledTicker): void;
-    getRendererState(renderer: WebGPURenderer): "pending" | "ready" | "failed" | undefined;
+    getRendererState(renderer: WebGPURenderer): "ready" | "pending" | "failed" | undefined;
     /**
      * Runs one frame. Called by the rAF loop; tests call it directly with `autoStart: false`.
      */

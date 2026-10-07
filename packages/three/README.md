@@ -14,9 +14,14 @@ RenderScheduler (singleton, the only thing that renders)
 
 IoThreeViewport (element)
 ├── CanvasTarget (per viewport)
+├── compositor: ViewCompositor
+│   ├── pipeline: ViewPipeline ('forward', 'uv', or a registered one such as a PostProcessingPipeline)
+│   └── overlays (grid, selection outline, camera frame, gizmo layer) in one overlay scene
+├── inputRouter: InputRouter (gizmos, tool, navigation, selection)
 └── view: ThreeView (object, outlives the element)
     ├── navigation: ViewNavigation (target, rotation, distance, projection, axis view, scene camera)
-    └── overscan, clearColor, clearAlpha
+    ├── kind ('3d' | 'uv'), pipeline, overlays, profile
+    └── overscan, clearColor, clearAlpha, toneMapping / toneMappingExposure overrides
 
 ThreeEditor (object, one per app)
 ├── document: ThreeDocument (switchable at runtime)
@@ -25,8 +30,8 @@ ThreeEditor (object, one per app)
 │   └── transact() / begin(): Transaction of invertible patches
 ├── mode, isPlaying, onAnimate(delta, time), requestRender()
 ├── selection: SelectionModel (of the active document; one per document)
-├── operators: OperatorRegistry (run, modal operators, lastCommand)
-└── tools: ToolRegistry + activeTools per '<viewKind>:<mode>'
+├── operators: OperatorRegistry (run, modal operators, lastCommand; built-in transform.translate)
+└── tools: ToolRegistry + activeTools per '<viewKind>:<mode>' (built-in Move tool, not active)
 
 ThreeApplet (object, compatibility shim)
 └── a ThreeEditor whose scene / toneMapping props are bound to its document
@@ -47,7 +52,7 @@ type IoThreeViewportProps = {
   view?: ThreeView; // View state; pass one to keep navigation across remounts (default: the viewport makes its own)
   cameraSelect?: string; // Shorthand setting the view: 'perspective' | 'top' | 'bottom' | 'left' | 'right' | 'front' | 'back' | 'scene' | 'scene:<cameraName>'
   renderer?: WebGPURenderer; // Custom renderer (optional)
-  keymap?: Keymap; // Navigation bindings (default: navigationKeymaps.default, OrbitControls-like)
+  keymap?: Keymap; // Navigation and selection bindings (default: keymaps.default, OrbitControls-like)
   tool?: ToolBase; // Active 3D pointer tool (optional)
 };
 ```
@@ -63,6 +68,7 @@ type IoThreeViewportProps = {
 - Frames an object when its applet dispatches `frame-object` with `{object, overscan?}`
 - A `'scene'` / `'scene:<name>'` camera added later (async asset load) is picked up when it appears
 - All input goes through `viewport.inputRouter` (see Input below)
+- Draws through `viewport.compositor`: the view's pipeline, then overlays and `viewport.gizmoLayer` (see Pipelines and Overlays)
 
 **Usage:**
 
@@ -131,6 +137,12 @@ editor.operators.run("object.slide", {}, { host: viewport, event }); // modal in
 editor.operators.lastCommand; // { name: "object.rename", args: {...} }
 ```
 
+Built in: `transform.translate` moves the selected objects (objects with a selected ancestor move with it, once). Interactive runs are modal: drag along an axis or in the view plane, X / Y / Z switch the axis constraint (again to release it), release or Enter confirms, Escape or right click cancels. A finished run records `{axis, delta}` as its command, and `exec` applies a `delta` directly:
+
+```typescript
+editor.operators.run("transform.translate", { delta: [1, 0, 0] }); // repeat without a viewport
+```
+
 ### Tools
 
 A tool is a definition registered on the editor and active per view kind + mode. Each viewport whose view `profile` allows it gets its own behaviors from `createBehaviors`.
@@ -141,6 +153,14 @@ editor.tools.register({ id: "slide", label: "Slide", viewKinds: ["3d"], modes: [
 editor.setActiveTool("3d", "object", "slide");
 viewport.view.profile = "navigate"; // 'full' | 'select' | 'navigate' | 'none'
 ```
+
+Tools can also show gizmos with `createGizmoGroups`. The built-in Move tool (`transform.translate`) shows the translate gizmo on the selection: X / Y / Z arrows and a center handle for the view plane, at the median of the selected objects and at a constant screen size. Pressing a handle runs the `transform.translate` operator modally, so the gizmo, navigation and click selection share the viewport:
+
+```typescript
+editor.setActiveTool("3d", "object", "transform.translate");
+```
+
+A gizmo group (`GizmoGroup`, after Blender's gizmo group types) has `poll` (show it in this view?), `refresh` (follow the selection), `drawPrepare` (follow the camera) and `gizmos`. Each `Gizmo` has an `object` drawn as an overlay, a screen-space `hitTest(ctx, x, y)` in pixels, a `highlight` flag and `invoke(ctx, event)`, which starts an operator. Each viewport's `GizmoLayer` hit-tests them in the gizmo band of its router; hovering redraws only overlays. Gizmos need the `full` profile and can be hidden with `view.setOverlay("gizmos", false)`.
 
 ### Selection
 
@@ -162,7 +182,7 @@ Bind UI to `selection.active` / `selection.version`. Viewports with profile `ful
 | All / none / invert | Ctrl+A / Escape / - | A / Alt+A / Ctrl+I | - / - / Ctrl+Shift+I |
 | Frame selected | F | Numpad . | F |
 
-Clicks are presses that moved less than `CLICK_TOLERANCE` (4 px); the router offers them after any drag binding on the same button, so LMB can both orbit and select. Picking goes through the async `Picker` interface; `RaycastPicker` is the default (box select tests projected bounds). Mark helpers with `object.userData.selectable = false` to keep them out of picking.
+Clicks are presses that moved less than `CLICK_TOLERANCE` (4 px); the router offers them after any drag binding on the same button, so LMB can both orbit and select. Presses that start a modal operator (a gizmo drag) are never clicks. Selected objects are outlined in 3D views (active brighter); selection changes redraw only overlays. Picking goes through the async `Picker` interface; `RaycastPicker` is the default (box select tests projected bounds). Mark helpers with `object.userData.selectable = false` to keep them out of picking.
 
 ### ThreeApplet
 
@@ -207,15 +227,51 @@ ioThreeViewport({ applet, view }); // the view survives the element being remoun
 - After changing `view.navigation` directly, call `view.markNavigationChanged()`
 - Navigation is done by the viewport's `NavigationBehavior`, which edits `view.navigation`
 
+### Pipelines and Overlays
+
+Each view draws through a `ViewPipeline` and then `Overlay`s ([ADR-0006](./docs/adr/0006-content-scene-holds-only-content.md)). The content scene holds only content: grids, outlines, camera frames and gizmos live in a per-viewport overlay scene.
+
+- A **pipeline** draws the content into its own target in linear color (`output.color`, plus `output.depth` when it has one). It runs only when content, navigation or size changed, or while it reports `{converged: false}`.
+- The viewport then **presents** that output to its canvas in one pass with the overlays, writing the pipeline's depth so overlays can be hidden behind content. Tone mapping is applied here: `view.toneMapping` if set, else the pipeline's, else the document's.
+- Changes that only affect overlays (selection, gizmo hover) skip the pipeline and reuse its output.
+
+```typescript
+new ThreeView({ pipeline: "traa" }); // a registered pipeline; '' uses the kind's default ('forward' / 'uv')
+view.setOverlay("grid", true); // grid (off by default), selection, cameraFrame, gizmos (on)
+view.toneMapping = NoToneMapping; // per-view override; null uses the document's
+
+registerPipeline({ id: "traa", create: (renderer) => new PostProcessingPipeline(renderer, (scenePass, camera) => {
+  scenePass.setMRT(mrt({ output, velocity }));
+  return traa(scenePass.getTextureNode("output"), scenePass.getTextureNode("depth"), scenePass.getTextureNode("velocity"), camera);
+}, { convergeFrames: 32 }) }); // accumulates for 32 frames after each change, then stops drawing
+```
+
+Custom pipelines implement `ViewPipeline` (`output`, `setSize`, `render(ctx)`, optional `toneMapping`, `picker`, `listens`) or extend `RenderTargetPipeline`. Custom overlays implement `Overlay` (`root`, `prepare(ctx)`, `dispose`) and are registered with `registerOverlay({id, viewKinds, enabledByDefault, create})`. Full-screen overlays use `createScreenQuad(material)`.
+
+| Overlay | Default | |
+| --- | --- | --- |
+| `grid` | off | Floor grid with axes; on the plane facing axis views; spacing follows zoom |
+| `selection` | on | Outline of selected meshes and lines (mask of proxies sharing their geometry) |
+| `cameraFrame` | on | Darkens what lies outside a scene camera's frame when looking through it |
+| `gizmos` | on | The active tool's gizmos (`full` profile only) |
+
+### UV View
+
+A view with `kind: 'uv'` shows the UV layout of the selected meshes (the edit set) over the 0–1 grid, with the active object's color texture behind it, active brighter. It uses the `uv` pipeline, which never draws the content scene. Navigation is 2D (orbit gestures pan; frame keys show the UV square). Picking hits the layouts and selects their meshes, so a `select` profile UV view works as a selection view.
+
+```typescript
+ioThreeViewport({ editor, view: new ThreeView({ kind: "uv", profile: "select" }) });
+```
+
 ## Input
 
 Each viewport has one `InputRouter` ([ADR-0004](./docs/adr/0004-input-arbitrated-by-priority-capture-router.md)). It owns the viewport's pointer, wheel and context-menu listeners and pointer capture, and offers events to `Behavior`s in priority order: the first whose `wantsCapture(event)` returns true owns the pointer stream until release. Only captured events are `preventDefault`ed and stopped. Key events go to the viewport under the pointer, else to the focused one.
 
 | Band | Priority | Today |
 | --- | --- | --- |
-| Modal operator | 1000 | (later) |
-| Gizmos | 800 | (later) |
-| Tool | 500 | `ToolBase` subclasses |
+| Modal operator | 1000 | Running modal operators (`transform.translate`) |
+| Gizmos | 800 | `GizmoLayer` (active tool's gizmo groups) |
+| Tool | 500 | Tool behaviors, `ToolBase` subclasses |
 | Navigation | 300 | `NavigationBehavior` |
 | Fallback selection | 100 | `SelectBehavior` |
 
@@ -276,7 +332,7 @@ applet.notify({kind: 'transform', source: applet, ids: [mesh.uuid]}); // same, w
 
 1. Tick playing applets: `onAnimate(delta, time)` (one shared three.js `Timer`).
 2. Drain change buses; tag viewports whose `listens(change)` is true.
-3. Update each scene's world matrices once, then draw tagged, visible viewports in priority order (focused, hovered, other) within a frame budget (`renderScheduler.frameBudget`, 12 ms). Views not reached draw next frame.
+3. Update each scene's world matrices once, then draw tagged, visible viewports in priority order (focused, hovered, other) within a frame budget (`renderScheduler.frameBudget`, 12 ms). Views not reached draw next frame. A view tagged only `overlay` presents its cached pipeline output with fresh overlays.
 
 Plain Three.js edits made outside `onAnimate` must call `applet.requestRender()` (or `viewport.tag('content')`), or nothing redraws.
 
@@ -288,7 +344,7 @@ The package requires WebGPU ([ADR-0001](./docs/adr/0001-webgpu-only-one-renderer
 
 ### Shared Renderer
 
-All `IoThreeViewport` instances share a single `WebGPURenderer` by default (`getDefaultRenderer()`). Renderer state (tone mapping, clear color) is reset per viewport render. A viewport may be given its own `renderer` for renderer-level options such as `logarithmicDepthBuffer`; GPU resources are then not shared with other renderers.
+All `IoThreeViewport` instances share a single `WebGPURenderer` by default (`getDefaultRenderer()`). Tone mapping, exposure, clear color and render target are set for every draw by the viewport's compositor; nothing should rely on them between draws. A viewport may be given its own `renderer` for renderer-level options such as `logarithmicDepthBuffer`; GPU resources are then not shared with other renderers.
 
 ### Visibility Optimization
 

@@ -571,3 +571,11 @@
 - SelectionModel (domain, version, active, uvSync props; plain Set of uuids; edit()/commit one bump + one 'selection' notify; prune on remove patches). Editor selection per doc. RaycastPicker async (visible + layers + userData.selectable filter; line/points threshold 4px via worldPerPixel); pickRect by projected AABB. SelectBehavior (click/box/all/none/invert, DOM marquee). Router click synthesis + Behavior.click + keymap 'LMB click'. keymaps.* combined presets. frameSelected.
 - Bugs found in headed run: GridHelper won clicks (Raycaster Line threshold default 1 world unit) -> pixel threshold + selectable opt-out. Demo class fields in ready() again -> use @Property init.
 - 984 tests pass.
+
+## 2026-10-07 — io-three Phase 6 (pipelines, overlays, gizmos, UV view) implemented
+
+### [three][render][tools]
+- ViewPipeline contract + registry (forward, uv; PostProcessingPipeline w/ convergeFrames), ViewCompositor (pipeline + overlays, overlay-only redraw reuses output, tone mapping at present), Overlay registry (grid off, selection outline on, cameraFrame passepartout on), GizmoLayer/GizmoGroup/TranslateGizmoGroup, TranslateOperator (modal axis/view plane, XYZ keys, exec delta), Move tool built in. UV view kind + UVPipeline + picker via RaycastPicker({root, resolve}). Demo IoEditorViewsExample (forward+grid+gizmo, TRAA, UV).
+- Verified: pixel diff vs HEAD for 14 demos -> unchanged except animation + passepartout on scene-camera views. TRAA converges in 33 draws then idle. Gizmo hover redraws one view.
+- Bugs found headed: lastCommand set after commit (listeners saw stale) -> set before; gizmo press w/o move recorded empty command -> cancel on zero delta.
+- Gotcha: `git stash` + headed playwright loop; browser.close() hung -> killed shell parent first, then popped stash manually.
