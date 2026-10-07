@@ -19,6 +19,8 @@ import { SelectBehavior } from '../input/behaviors/SelectBehavior.js';
 import { renderScheduler, getDefaultRenderer } from '../render/RenderScheduler.js';
 import { ViewCompositor } from '../render/ViewCompositor.js';
 import { GizmoLayer } from '../tools/Gizmo.js';
+import { IdComponentPicker } from '../selection/ComponentPicker.js';
+import { IdPass } from '../render/IdPass.js';
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         const viewport = entry.target;
@@ -98,6 +100,28 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
     get picker() {
         return this._compositor?.pipeline?.picker ?? null;
     }
+    /**
+     * How edit mode picks components here: the pipeline's (UV view) or an ID-buffer picker drawing this
+     * viewport's camera at its size (ADR-0007). The ID buffer is cached until content changes.
+     */
+    get componentPicker() {
+        const pipelinePicker = this._compositor?.pipeline?.componentPicker;
+        if (pipelinePicker)
+            return pipelinePicker;
+        if (!this._idPicker) {
+            this._idPicker = new IdComponentPicker({
+                source: (_host, camera, objects, width, height) => {
+                    const scene = this.scene;
+                    if (!scene || !this.renderer?.initialized)
+                        return Promise.resolve(null);
+                    if (!this._idPass)
+                        this._idPass = new IdPass(this.renderer);
+                    return this._idPass.read(scene, camera, objects, width, height);
+                },
+            });
+        }
+        return this._idPicker;
+    }
     get navigationBehavior() {
         void this.inputRouter;
         return this._navigation;
@@ -146,6 +170,8 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
     }
     /** Marks this viewport for redraw on the next frame. */
     tag(reason) {
+        if (reason === 'content')
+            this._idPicker?.invalidate();
         renderScheduler.tag(this, reason);
     }
     isRenderable() {
@@ -162,7 +188,10 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         if (!this.editor || change.source !== this.editor.document)
             return false;
         this._syncRendering();
-        return this.compositor.listens(change);
+        const reason = this.compositor.listens(change);
+        if (reason === 'content')
+            this._idPicker?.invalidate();
+        return reason;
     }
     onRendererError(error) {
         this.textContent = error.message;
@@ -277,6 +306,11 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         this.tag('resize');
     }
     rendererChanged(change) {
+        if (change.oldValue && change.oldValue !== change.value) {
+            this._idPass?.dispose();
+            this._idPass = undefined;
+            this._idPicker?.invalidate();
+        }
         if (change.oldValue && change.oldValue !== change.value && this._compositor) {
             this._compositor.dispose();
             this._compositor = undefined;
@@ -362,6 +396,7 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         this._inputRouter?.dispose();
         this._gizmos?.dispose();
         this._compositor?.dispose();
+        this._idPass?.dispose();
         if (this._ownsView)
             this.view.dispose();
         if (this.tool) {

@@ -16,11 +16,12 @@ IoThreeViewport (element)
 ├── CanvasTarget (per viewport)
 ├── compositor: ViewCompositor
 │   ├── pipeline: ViewPipeline ('forward', 'uv', or a registered one such as a PostProcessingPipeline)
-│   └── overlays (grid, selection outline, camera frame, gizmo layer) in one overlay scene
+│   └── overlays (grid, edit-mode components, selection outline, camera frame, gizmo layer) in one overlay scene
 ├── inputRouter: InputRouter (gizmos, tool, navigation, selection)
+├── componentPicker: the pipeline's, or an ID-buffer picker (edit mode)
 └── view: ThreeView (object, outlives the element)
     ├── navigation: ViewNavigation (target, rotation, distance, projection, axis view, scene camera)
-    ├── kind ('3d' | 'uv'), pipeline, overlays, profile
+    ├── kind ('3d' | 'uv'), pipeline, overlays, profile, xray
     └── overscan, clearColor, clearAlpha, toneMapping / toneMappingExposure overrides
 
 ThreeEditor (object, one per app)
@@ -29,8 +30,9 @@ ThreeEditor (object, one per app)
 │   ├── changeBus: ChangeBus
 │   └── transact() / begin(): Transaction of invertible patches
 ├── mode, isPlaying, onAnimate(delta, time), requestRender()
-├── selection: SelectionModel (of the active document; one per document)
-├── operators: OperatorRegistry (run, modal operators, lastCommand; built-in transform.translate)
+├── selection: SelectionModel (of the active document; objects + component bitsets per domain)
+├── operators: OperatorRegistry (run, modal operators, lastCommand; built-ins transform.translate,
+│   object.editmode_toggle, mesh.select_mode)
 └── tools: ToolRegistry + activeTools per '<viewKind>:<mode>' (built-in Move tool, not active)
 
 ThreeApplet (object, compatibility shim)
@@ -184,6 +186,23 @@ Bind UI to `selection.active` / `selection.version`. Viewports with profile `ful
 
 Clicks are presses that moved less than `CLICK_TOLERANCE` (4 px); the router offers them after any drag binding on the same button, so LMB can both orbit and select. Presses that start a modal operator (a gizmo drag) are never clicks. Selected objects are outlined in 3D views (active brighter); selection changes redraw only overlays. Picking goes through the async `Picker` interface; `RaycastPicker` is the default (box select tests projected bounds). Mark helpers with `object.userData.selectable = false` to keep them out of picking.
 
+### Edit Mode and Components
+
+Tab (every keymap preset) runs `object.editmode_toggle`: the editor's `mode` becomes `'edit'` and the selected meshes, line segments and point clouds (and their descendants) form the edit set. The same select bindings then select components; 1 / 2 / 3 run `mesh.select_mode` to switch between points, edges and faces. Switching converts the selection like Blender: going down (faces → edges → points) keeps everything touched, going up keeps elements whose points are all selected.
+
+Components are stored per object per domain as bitsets (`ComponentSet`), inside the same `SelectionModel` and the same `edit()` transactions:
+
+```typescript
+const edit = editor.selection.edit();
+edit.components(mesh.uuid, "point", topology.pointCount).add(0).add(3);
+edit.setDomain("point").commit();
+editor.selection.getComponents(mesh.uuid, "point")?.toArray(); // [0, 3]
+```
+
+Domains come from a cached topology per `BufferGeometry` (`getTopology(geometry, kind)`): `point` welds vertices with identical positions (`BoxGeometry` has 24 vertices, 8 points), `edge` is a unique point pair, `primitive` is a triangle (or a line segment), `corner` is a triangle corner (where UVs live). Indices are valid for one topology; sets made for another size are ignored and replaced. Quads are two triangles: their diagonals are edges. A `GeometryAdapter` per object type (`MeshAdapter`, `LineSegmentsAdapter`, `PointsAdapter`; `registerGeometryAdapter` for more) provides domains, sizes, element positions and the triangles for the ID pass.
+
+Picking in 3D views (`IdComponentPicker`) draws an ID buffer: the edit set's triangles carrying their index, every other visible mesh as an occluder, with view depth, at CSS-pixel size, read back once and cached until the camera, size, edit set or content changes. Faces come from the buffer (front-most under the pointer); points and edges are projected on the CPU within 10 px and kept only where the buffer's depth shows them. With `view.xray = true` nothing is occluded. Deformation (skinning, morph targets) is not applied: components are picked on the rest shape. The `components` overlay draws the wire, points (point mode) and selected faces of the edit set; the selection outline is hidden in edit mode.
+
 ### ThreeApplet
 
 Compatibility shim: a `ThreeEditor` with one document, whose `scene`, `toneMapping` and `toneMappingExposure` are two-way bound to the document. Existing applets keep working.
@@ -251,6 +270,7 @@ Custom pipelines implement `ViewPipeline` (`output`, `setSize`, `render(ctx)`, o
 | Overlay | Default | |
 | --- | --- | --- |
 | `grid` | off | Floor grid with axes; on the plane facing axis views; spacing follows zoom |
+| `components` | on | Edit mode: wire, points and selected faces of the edit set |
 | `selection` | on | Outline of selected meshes and lines (mask of proxies sharing their geometry) |
 | `cameraFrame` | on | Darkens what lies outside a scene camera's frame when looking through it |
 | `gizmos` | on | The active tool's gizmos (`full` profile only) |
@@ -263,6 +283,8 @@ A view with `kind: 'uv'` shows the UV layout of the selected meshes (the edit se
 ioThreeViewport({ editor, view: new ThreeView({ kind: "uv", profile: "select" }) });
 ```
 
+In edit mode the UV view edits UVs (`UVComponentPicker`, on the CPU in UV space). With `selection.uvSync` off (default, like Blender) it shows only the faces selected in 3D and keeps its own `corner` selection: a UV vertex selects every shown corner of one buffer vertex, a face its three corners. With `uvSync` on it shows every face and picks map to the mesh's points, edges and faces, so both views select the same components.
+
 ## Input
 
 Each viewport has one `InputRouter` ([ADR-0004](./docs/adr/0004-input-arbitrated-by-priority-capture-router.md)). It owns the viewport's pointer, wheel and context-menu listeners and pointer capture, and offers events to `Behavior`s in priority order: the first whose `wantsCapture(event)` returns true owns the pointer stream until release. Only captured events are `preventDefault`ed and stopped. Key events go to the viewport under the pointer, else to the focused one.
@@ -273,7 +295,7 @@ Each viewport has one `InputRouter` ([ADR-0004](./docs/adr/0004-input-arbitrated
 | Gizmos | 800 | `GizmoLayer` (active tool's gizmo groups) |
 | Tool | 500 | Tool behaviors, `ToolBase` subclasses |
 | Navigation | 300 | `NavigationBehavior` |
-| Fallback selection | 100 | `SelectBehavior` |
+| Fallback selection | 100 | `SelectBehavior` (objects; components in edit mode; Tab, 1 / 2 / 3) |
 
 **Navigation** (and selection) is driven by a keymap (data); `keymaps.default | blender | maya` combine both. Navigation alone: `navigationKeymaps.default` (OrbitControls-like: LMB orbit, RMB / Shift+LMB pan, MMB dolly, wheel zoom, Home frame all), `.blender` (MMB orbit, Shift+MMB pan, Ctrl+MMB dolly, numpad axis views) and `.maya` (Alt+LMB/MMB/RMB). Two-finger touch pans and pinch-dollies. Axis views pan instead of orbit. Navigation is off while looking through a scene camera.
 

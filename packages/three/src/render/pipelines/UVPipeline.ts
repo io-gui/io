@@ -1,9 +1,11 @@
-import { BufferAttribute, BufferGeometry, InterleavedBufferAttribute, Color, DoubleSide, Float32BufferAttribute, Group, LineBasicNodeMaterial, LineSegments, Material, Mesh, MeshBasicNodeMaterial, NoToneMapping, Object3D, PlaneGeometry, Scene, Texture, WireframeGeometry } from 'three/webgpu'
+import { BufferAttribute, BufferGeometry, Color, DoubleSide, Float32BufferAttribute, Group, LineBasicNodeMaterial, LineSegments, Material, Mesh, MeshBasicNodeMaterial, NoToneMapping, Object3D, PlaneGeometry, Scene, Texture, WireframeGeometry } from 'three/webgpu'
 import type { DocumentChange } from '../../editor/ChangeBus.js'
 import type { DirtyReason } from '../RenderScheduler.js'
 import type { PipelineContext } from '../ViewPipeline.js'
 import { RaycastPicker } from '../../selection/Picker.js'
 import { RenderTargetPipeline } from './RenderTargetPipeline.js'
+import { attributeVersion } from '../../geometry/Topology.js'
+import { UVComponentPicker, UVEditCage, getUVEditMeshes, getUVEditState, uvKey } from './UVEdit.js'
 
 type UVEntry = {key: string; group: Group; fill: Mesh; wire: LineSegments}
 
@@ -48,11 +50,14 @@ function unitGridGeometry(divisions = 10) {
  * The `uv` view kind's pipeline (ADR-0006). It never draws the content scene: it draws the 0–1 grid, the
  * active object's color texture, and the UV layout of every selected mesh (the edit set), active brighter.
  * Picking hits the UV layouts and resolves to their meshes. Redraws on selection and geometry changes.
+ * In edit mode it draws UV faces, edges and vertices with their selection instead, and picks components
+ * (`componentPicker`, ADR-0007).
  */
 export class UVPipeline extends RenderTargetPipeline {
 
   readonly toneMapping = NoToneMapping
   readonly picker: RaycastPicker
+  readonly componentPicker = new UVComponentPicker()
   readonly uvScene = new Scene()
   /** Show the active object's `material.map` behind the layout. */
   showTexture = true
@@ -62,6 +67,8 @@ export class UVPipeline extends RenderTargetPipeline {
 
   private readonly _layouts = new Group()
   private readonly _entries = new Map<string, UVEntry>()
+  private readonly _cages = new Map<string, UVEditCage>()
+  private readonly _editLayouts = new Group()
   private readonly _grid: LineSegments
   private readonly _textureMaterial = new MeshBasicNodeMaterial({transparent: true, opacity: 0.6, depthWrite: false})
   private readonly _texturePlane: Mesh
@@ -86,7 +93,7 @@ export class UVPipeline extends RenderTargetPipeline {
     this._texturePlane = new Mesh(new PlaneGeometry(1, 1), this._textureMaterial)
     this._texturePlane.position.set(0.5, 0.5, -0.01)
     this._texturePlane.userData.selectable = false
-    this.uvScene.add(this._texturePlane, this._grid, this._layouts)
+    this.uvScene.add(this._texturePlane, this._grid, this._layouts, this._editLayouts)
   }
 
   listens(change: DocumentChange): DirtyReason | false {
@@ -96,11 +103,41 @@ export class UVPipeline extends RenderTargetPipeline {
   }
 
   protected draw(ctx: PipelineContext) {
-    const meshes = collectUVMeshes(ctx.selection?.getObjects() ?? [])
+    const editMode = ctx.editor.mode === 'edit' && !!ctx.selection
     const active = ctx.selection?.getActiveObject()
-    this._syncLayouts(meshes, active)
+    this._syncLayouts(editMode ? [] : collectUVMeshes(ctx.selection?.getObjects() ?? []), active)
+    this._syncEditLayouts(editMode ? getUVEditMeshes(ctx.selection) : [], ctx)
     this._syncTexture(active)
     ctx.renderer.render(this.uvScene, ctx.camera)
+  }
+
+  private _syncEditLayouts(meshes: Mesh[], ctx: PipelineContext) {
+    const shown = new Set<string>()
+    const selection = ctx.selection!
+    const showPoints = selection.domain === 'point' || (!selection.uvSync && selection.domain === 'object')
+    for (const mesh of meshes) {
+      let cage = this._cages.get(mesh.uuid)
+      if (cage && cage.key !== uvKey(mesh)) {
+        this._removeCage(mesh.uuid)
+        cage = undefined
+      }
+      if (!cage) {
+        cage = new UVEditCage(mesh)
+        this._cages.set(mesh.uuid, cage)
+        this._editLayouts.add(cage.group)
+      }
+      cage.update(getUVEditState(selection, mesh), showPoints)
+      shown.add(mesh.uuid)
+    }
+    for (const uuid of [...this._cages.keys()]) if (!shown.has(uuid)) this._removeCage(uuid)
+  }
+
+  private _removeCage(uuid: string) {
+    const cage = this._cages.get(uuid)
+    if (!cage) return
+    this._editLayouts.remove(cage.group)
+    cage.dispose()
+    this._cages.delete(uuid)
   }
 
   private _syncLayouts(meshes: Mesh[], active: Object3D | undefined) {
@@ -158,16 +195,13 @@ export class UVPipeline extends RenderTargetPipeline {
 
   override dispose() {
     for (const uuid of [...this._entries.keys()]) this._removeEntry(uuid)
+    for (const uuid of [...this._cages.keys()]) this._removeCage(uuid)
     this._grid.geometry.dispose()
     ;(this._grid.material as Material).dispose()
     this._texturePlane.geometry.dispose()
     for (const material of [this._textureMaterial, this._wire, this._wireActive, this._fill, this._fillActive]) material.dispose()
     super.dispose()
   }
-}
-
-function attributeVersion(attribute: BufferAttribute | InterleavedBufferAttribute) {
-  return (attribute as InterleavedBufferAttribute).isInterleavedBufferAttribute ? (attribute as InterleavedBufferAttribute).data.version : (attribute as BufferAttribute).version
 }
 
 function isAncestor(ancestor: Object3D, object: Object3D) {

@@ -16,6 +16,7 @@ export type ThreeViewProps = ReactiveObjectProps & {
   kind?: ViewKind
   pipeline?: string
   overlays?: ViewOverlays
+  xray?: boolean
   toneMapping?: ToneMapping | null
   toneMappingExposure?: number | null
   profile?: InteractionProfile
@@ -28,6 +29,7 @@ export type ThreeViewData = {
   kind?: ViewKind
   pipeline?: string
   overlays?: ViewOverlays
+  xray?: boolean
   profile?: InteractionProfile
   overscan?: number
   clearColor?: number
@@ -54,6 +56,10 @@ export class ThreeView extends ReactiveObject {
   /** Overlays switched on or off (`grid`, `selection`, `cameraFrame`, `gizmos`, ...). Replace the object, or use `setOverlay`. */
   @Property({type: Object, init: null})
   declare overlays: ViewOverlays
+
+  /** Component picking sees through surfaces: hidden points, edges and faces can be picked too. */
+  @Property({type: Boolean, value: false})
+  declare xray: boolean
 
   /** Overrides the document's tone mapping in this view; `null` uses the pipeline's or the document's. */
   @Property({value: null})
@@ -248,6 +254,7 @@ export class ThreeView extends ReactiveObject {
       kind: this.kind,
       pipeline: this.pipeline,
       overlays: {...this.overlays},
+      xray: this.xray,
       profile: this.profile,
       overscan: this.overscan,
       clearColor: this.clearColor,
@@ -262,6 +269,7 @@ export class ThreeView extends ReactiveObject {
     if (data.kind !== undefined) props.kind = data.kind
     if (data.pipeline !== undefined) props.pipeline = data.pipeline
     if (data.overlays !== undefined) props.overlays = {...data.overlays}
+    if (data.xray !== undefined) props.xray = data.xray
     if (data.profile !== undefined) props.profile = data.profile
     if (data.overscan !== undefined) props.overscan = data.overscan
     if (data.clearColor !== undefined) props.clearColor = data.clearColor

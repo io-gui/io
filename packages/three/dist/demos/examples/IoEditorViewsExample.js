@@ -35,7 +35,8 @@ function checkerTexture() {
  * Three views of one ThreeEditor, each drawn by a different pipeline (ADR-0006): a forward perspective view
  * with the grid overlay and the Move tool, a TRAA post-processed camera view, and a select-only UV view of the
  * selection. Drag a gizmo arrow to move along an axis, the center to move in the view plane; X / Y / Z switch
- * the axis while dragging, Escape or right click cancels.
+ * the axis while dragging, Escape or right click cancels. Tab enters edit mode on the selection; 1 / 2 / 3
+ * pick points, edges or faces; the UV view then edits UVs of the faces selected in 3D.
  */
 let IoEditorViewsExample = class IoEditorViewsExample extends ReactiveElement {
     static get Style() {
@@ -85,15 +86,24 @@ let IoEditorViewsExample = class IoEditorViewsExample extends ReactiveElement {
     selectionMutated() {
         this.changed();
     }
+    editorMutated() {
+        this.changed();
+    }
     changed() {
         const names = this.selection?.getObjects().map(object => object.name).join(', ') || 'nothing';
         const command = this.editor.operators.lastCommand;
         const last = command ? `${command.name} ${JSON.stringify(command.args)}` : 'none';
+        const selection = this.selection;
+        const domain = selection?.domain ?? 'object';
+        const components = this.editor.mode === 'edit' && selection
+            ? selection.componentIds(domain).reduce((sum, uuid) => sum + (selection.getComponents(uuid, domain)?.count() ?? 0), 0)
+            : 0;
+        const mode = this.editor.mode === 'edit' ? `Edit mode (${domain}: ${components} selected). ` : '';
         this.render([
             ioThreeViewport({ editor: this.editor, view: this.perspective }),
             ioThreeViewport({ editor: this.editor, view: this.antialiased }),
             ioThreeViewport({ editor: this.editor, view: this.uv }),
-            div({ class: 'status' }, [span(`Selected: ${names}. Last command: ${last}`)]),
+            div({ class: 'status' }, [span(`${mode}Selected: ${names}. Last command: ${last}. Tab: edit mode, 1/2/3: points/edges/faces.`)]),
         ]);
     }
     dispose() {

@@ -10,6 +10,7 @@ export type ThreeViewProps = ReactiveObjectProps & {
     kind?: ViewKind;
     pipeline?: string;
     overlays?: ViewOverlays;
+    xray?: boolean;
     toneMapping?: ToneMapping | null;
     toneMappingExposure?: number | null;
     profile?: InteractionProfile;
@@ -21,6 +22,7 @@ export type ThreeViewData = {
     kind?: ViewKind;
     pipeline?: string;
     overlays?: ViewOverlays;
+    xray?: boolean;
     profile?: InteractionProfile;
     overscan?: number;
     clearColor?: number;
@@ -38,6 +40,8 @@ export declare class ThreeView extends ReactiveObject {
     pipeline: string;
     /** Overlays switched on or off (`grid`, `selection`, `cameraFrame`, `gizmos`, ...). Replace the object, or use `setOverlay`. */
     overlays: ViewOverlays;
+    /** Component picking sees through surfaces: hidden points, edges and faces can be picked too. */
+    xray: boolean;
     /** Overrides the document's tone mapping in this view; `null` uses the pipeline's or the document's. */
     toneMapping: ToneMapping | null;
     /** Overrides the document's exposure in this view; `null` uses the document's. */

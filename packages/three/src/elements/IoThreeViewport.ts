@@ -18,6 +18,8 @@ import { renderScheduler, getDefaultRenderer, ScheduledView, DirtyReason, FrameI
 import { ViewCompositor } from '../render/ViewCompositor.js'
 import { GizmoLayer } from '../tools/Gizmo.js'
 import type { Picker } from '../selection/Picker.js'
+import { ComponentPicker, IdComponentPicker } from '../selection/ComponentPicker.js'
+import { IdPass } from '../render/IdPass.js'
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
@@ -130,6 +132,8 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   declare private _toolBehaviors: {toolId: string; behaviors: Behavior[]} | undefined
   declare private _compositor: ViewCompositor | undefined
   declare private _shownDocument: ThreeDocument | undefined
+  declare private _idPass: IdPass | undefined
+  declare private _idPicker: IdComponentPicker | undefined
 
   /** Routes this viewport's input to behaviors: navigation, tools, later gizmos and operators (ADR-0004). */
   get inputRouter(): InputRouter {
@@ -159,6 +163,26 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   /** The pipeline's picker when it has one (UV view), otherwise null (raycast the content scene). */
   get picker(): Picker | null {
     return this._compositor?.pipeline?.picker ?? null
+  }
+
+  /**
+   * How edit mode picks components here: the pipeline's (UV view) or an ID-buffer picker drawing this
+   * viewport's camera at its size (ADR-0007). The ID buffer is cached until content changes.
+   */
+  get componentPicker(): ComponentPicker {
+    const pipelinePicker = this._compositor?.pipeline?.componentPicker
+    if (pipelinePicker) return pipelinePicker
+    if (!this._idPicker) {
+      this._idPicker = new IdComponentPicker({
+        source: (_host, camera, objects, width, height) => {
+          const scene = this.scene
+          if (!scene || !this.renderer?.initialized) return Promise.resolve(null)
+          if (!this._idPass) this._idPass = new IdPass(this.renderer)
+          return this._idPass.read(scene, camera, objects, width, height)
+        },
+      })
+    }
+    return this._idPicker
   }
 
   get navigationBehavior(): NavigationBehavior {
@@ -218,6 +242,7 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
 
   /** Marks this viewport for redraw on the next frame. */
   tag(reason: DirtyReason) {
+    if (reason === 'content') this._idPicker?.invalidate()
     renderScheduler.tag(this, reason)
   }
 
@@ -234,7 +259,9 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   listens(change: DocumentChange): DirtyReason | false {
     if (!this.editor || change.source !== this.editor.document) return false
     this._syncRendering()
-    return this.compositor.listens(change)
+    const reason = this.compositor.listens(change)
+    if (reason === 'content') this._idPicker?.invalidate()
+    return reason
   }
 
   onRendererError(error: Error) {
@@ -339,6 +366,11 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   }
 
   rendererChanged(change: Change<WebGPURenderer>) {
+    if (change.oldValue && change.oldValue !== change.value) {
+      this._idPass?.dispose()
+      this._idPass = undefined
+      this._idPicker?.invalidate()
+    }
     if (change.oldValue && change.oldValue !== change.value && this._compositor) {
       this._compositor.dispose()
       this._compositor = undefined
@@ -421,6 +453,7 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
     this._inputRouter?.dispose()
     this._gizmos?.dispose()
     this._compositor?.dispose()
+    this._idPass?.dispose()
     if (this._ownsView) this.view.dispose()
     if (this.tool) {
       this.tool.unregisterViewport(this)

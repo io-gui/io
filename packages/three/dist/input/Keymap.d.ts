@@ -61,6 +61,8 @@ export declare const selectionKeymaps: {
     blender: Keymap;
     maya: Keymap;
 };
+/** Edit-mode bindings shared by every preset (Blender's): Tab toggles edit mode, 1 / 2 / 3 pick the select mode. */
+export declare const editModeKeymap: Keymap;
 /** Navigation and selection together, per preset. Behaviors pick their own actions (`view.*`, `select.*`). */
 export declare const keymaps: {
     default: Keymap;

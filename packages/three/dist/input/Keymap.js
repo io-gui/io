@@ -176,9 +176,16 @@ export const selectionKeymaps = {
         { input: 'Ctrl+Shift+KeyI', action: 'select.invert' },
     ]),
 };
+/** Edit-mode bindings shared by every preset (Blender's): Tab toggles edit mode, 1 / 2 / 3 pick the select mode. */
+export const editModeKeymap = new Keymap([
+    { input: 'Tab', action: 'mode.editToggle', when: { viewKind: '3d' } },
+    { input: 'Digit1', action: 'select.mode', props: { domain: 'point' }, when: { mode: 'edit' } },
+    { input: 'Digit2', action: 'select.mode', props: { domain: 'edge' }, when: { mode: 'edit' } },
+    { input: 'Digit3', action: 'select.mode', props: { domain: 'primitive' }, when: { mode: 'edit' } },
+]);
 /** Navigation and selection together, per preset. Behaviors pick their own actions (`view.*`, `select.*`). */
 export const keymaps = {
-    default: Keymap.layer(navigationKeymaps.default, selectionKeymaps.default),
-    blender: Keymap.layer(navigationKeymaps.blender, selectionKeymaps.blender),
-    maya: Keymap.layer(navigationKeymaps.maya, selectionKeymaps.maya),
+    default: Keymap.layer(navigationKeymaps.default, selectionKeymaps.default, editModeKeymap),
+    blender: Keymap.layer(navigationKeymaps.blender, selectionKeymaps.blender, editModeKeymap),
+    maya: Keymap.layer(navigationKeymaps.maya, selectionKeymaps.maya, editModeKeymap),
 };

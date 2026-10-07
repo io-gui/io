@@ -14,6 +14,7 @@ import { ScheduledView, DirtyReason, FrameInfo, ViewRenderResult } from '../rend
 import { ViewCompositor } from '../render/ViewCompositor.js';
 import { GizmoLayer } from '../tools/Gizmo.js';
 import type { Picker } from '../selection/Picker.js';
+import { ComponentPicker } from '../selection/ComponentPicker.js';
 export type IoThreeViewportProps = ReactiveElementProps & {
     /** The editor whose active document this viewport shows. */
     editor?: WithBinding<ThreeEditor>;
@@ -58,6 +59,8 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
     private _toolBehaviors;
     private _compositor;
     private _shownDocument;
+    private _idPass;
+    private _idPicker;
     /** Routes this viewport's input to behaviors: navigation, tools, later gizmos and operators (ADR-0004). */
     get inputRouter(): InputRouter;
     /** Runs this viewport's pipeline and draws its overlays (ADR-0006). Recreated when the renderer changes. */
@@ -66,6 +69,11 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
     get gizmoLayer(): GizmoLayer;
     /** The pipeline's picker when it has one (UV view), otherwise null (raycast the content scene). */
     get picker(): Picker | null;
+    /**
+     * How edit mode picks components here: the pipeline's (UV view) or an ID-buffer picker drawing this
+     * viewport's camera at its size (ADR-0007). The ID buffer is cached until content changes.
+     */
+    get componentPicker(): ComponentPicker;
     get navigationBehavior(): NavigationBehavior;
     get selectBehavior(): SelectBehavior;
     constructor(args: IoThreeViewportProps);

@@ -579,3 +579,10 @@
 - Verified: pixel diff vs HEAD for 14 demos -> unchanged except animation + passepartout on scene-camera views. TRAA converges in 33 draws then idle. Gizmo hover redraws one view.
 - Bugs found headed: lastCommand set after commit (listeners saw stale) -> set before; gizmo press w/o move recorded empty command -> cancel on zero delta.
 - Gotcha: `git stash` + headed playwright loop; browser.close() hung -> killed shell parent first, then popped stash manually.
+
+## 2026-10-07 — io-three Phase 7 (component selection) implemented
+
+### [three][selection][render]
+- Topology cache (welded points, edges, prims, corners; key = position/index count+version), ComponentSet bitsets in SelectionModel (copy-on-write edit().components, setDomain, size mismatch = replace), GeometryAdapters (mesh/lineSegments/points), IdPass + IdComponentPicker (faces from GPU buffer, points/edges CPU + depth occlusion, view.xray), ComponentOverlay, operators object.editmode_toggle (Tab) + mesh.select_mode (1/2/3, Blender conversion), UVComponentPicker + UVEditCage (corner sel, uvSync). Selection outline hidden in edit mode.
+- Verified headed (GPU): face picks resolve top/front/right correctly (y orientation ok), hidden corner skipped, faces->points conversion, UV face click = 3 corners, no console errors. 1016 tests pass.
+- Bug found headed: cage disposed a geometry sharing the ID geometry's position attribute -> RenderObject error; clone attribute instead.

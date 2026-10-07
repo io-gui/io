@@ -33,12 +33,40 @@ A persistent mode of interaction registered on the editor, active per view kind 
 _Avoid_: ToolBase (legacy adapter), manipulator
 
 **SelectionModel**:
-Session selection of one document: object uuids, the active object, the select domain, a `version` bumped once per committed edit. Owned by the editor per document; never document data.
+Session selection of one document: object uuids, the active object, the select domain, component sets per object per domain, a `version` bumped once per committed edit. Owned by the editor per document; never document data.
 _Avoid_: selected list, selection set (as the type name)
 
 **Picker**:
-Async "what is under the pointer" for a view: `pick` and `pickRect`. `RaycastPicker` now; BVH and ID-buffer pickers later.
+Async "what is under the pointer" for a view: `pick` and `pickRect`. `RaycastPicker` for objects; a BVH picker later. Components use a **ComponentPicker** (ID buffer in 3D, CPU in UV space).
 _Avoid_: raycaster (as the concept), hit tester
+
+**Domain**:
+A selection level: `object`, `point` (welded position), `edge` (unique point pair), `primitive` (triangle or segment), `corner` (triangle corner, where UVs live). The select mode is `selection.domain`.
+_Avoid_: vertex (for a welded point; a vertex is a buffer vertex), face (in code; say primitive), component type
+
+**ComponentSet**:
+Bitset of selected elements of one domain of one object, sized for one topology.
+_Avoid_: index list, selection mask
+
+**Topology**:
+Derived connectivity of a `BufferGeometry` (welded points, edges, primitives, corners), cached and rebuilt when positions or the index change.
+_Avoid_: mesh data, half-edge (there is none)
+
+**GeometryAdapter**:
+Component access for one kind of object (mesh, line segments, points): domains, sizes, element positions, ID-pass triangles.
+_Avoid_: mesh wrapper
+
+**ID buffer / ID pass**:
+Offscreen float target where each pixel holds edit object slot, primitive index and view depth; read back once per camera/content state for component picking and occlusion.
+_Avoid_: GPU picking (alone), color picking
+
+**Edit mode**:
+`editor.mode === 'edit'`: the edit set's components are selected instead of objects. Entered with `object.editmode_toggle` (Tab).
+_Avoid_: component mode
+
+**uvSync**:
+UV view option: on, UV picks select mesh points/edges/faces; off, the UV view keeps its own corner selection over the faces selected in 3D.
+_Avoid_: sticky selection
 
 **Click**:
 A press and release that moved less than `CLICK_TOLERANCE`; synthesized by the InputRouter after any capture of that press, so click bindings share a button with drag bindings.
@@ -97,7 +125,7 @@ Something a view draws on top of its pipeline output from its own small scene, n
 _Avoid_: helper (three.js objects added to the scene), decoration
 
 **Edit set**:
-The objects a component or UV view works on: the selected meshes. The UV view shows their UV layouts.
+The objects edit mode and the UV view work on: selected objects and their descendants that have a geometry adapter.
 _Avoid_: active objects, target set
 
 **Gizmo / GizmoGroup**:

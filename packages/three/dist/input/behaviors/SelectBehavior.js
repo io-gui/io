@@ -2,10 +2,13 @@ import { BehaviorPriority } from '../Behavior.js';
 import { keymaps } from '../Keymap.js';
 import { CLICK_TOLERANCE } from '../InputRouter.js';
 import { collectSelectable, defaultPicker } from '../../selection/Picker.js';
+import { getGeometryAdapter } from '../../geometry/GeometryAdapter.js';
 /**
- * Object selection in the fallback band (ADR-0004, ADR-0007): click select through router clicks
+ * Selection in the fallback band (ADR-0004, ADR-0007): click select through router clicks
  * (`select.click`), box select (`select.box`), and `select.all` / `select.none` / `select.invert` keys.
  * Bindings come from the keymap; picking from a Picker. Edits the host's `selection`.
+ * In edit mode the same bindings select components through the host's `componentPicker`, and
+ * `mode.editToggle` / `select.mode` keys run the `object.editmode_toggle` / `mesh.select_mode` operators.
  */
 export class SelectBehavior {
     priority = BehaviorPriority.fallback;
@@ -25,6 +28,10 @@ export class SelectBehavior {
     }
     get _selection() {
         return this._host.selection ?? null;
+    }
+    /** The component picker while the host is in edit mode. */
+    get _components() {
+        return this._host.mode === 'edit' ? this._host.componentPicker ?? null : null;
     }
     wantsCapture(event) {
         if (event.type !== 'pointerdown' || !this._selection)
@@ -52,6 +59,17 @@ export class SelectBehavior {
         // A press without a drag is a click; the router offers it as one.
         if (Math.abs(box.x1 - box.x0) <= CLICK_TOLERANCE && Math.abs(box.y1 - box.y0) <= CLICK_TOLERANCE)
             return;
+        const components = this._components;
+        if (components) {
+            const objects = components.objects(this._host);
+            const domain = components.domain(this._host);
+            void components.pickRect(this._host, box).then(hits => {
+                if (this._selection !== selection)
+                    return;
+                applyComponents(selection, box.mode, hits, objects, domain);
+            });
+            return;
+        }
         void this._picker.pickRect(this._host, box).then(hits => {
             if (this._selection !== selection)
                 return;
@@ -69,6 +87,17 @@ export class SelectBehavior {
         if (!entry)
             return false;
         const mode = entry.props?.mode ?? 'set';
+        const components = this._components;
+        if (components) {
+            const objects = components.objects(this._host);
+            const domain = components.domain(this._host);
+            void components.pick(this._host, event.x, event.y).then(hits => {
+                if (this._selection !== selection)
+                    return;
+                applyComponents(selection, mode, hits, objects, domain);
+            });
+            return true;
+        }
         void this._picker.pick(this._host, event.x, event.y).then((hit) => {
             if (this._selection !== selection)
                 return;
@@ -80,9 +109,38 @@ export class SelectBehavior {
         const selection = this._selection;
         if (event.type !== 'keydown' || !selection)
             return false;
-        const entry = this.keymap.match(event, action => action === 'select.all' || action === 'select.none' || action === 'select.invert');
+        const entry = this.keymap.match(event, action => KEY_ACTIONS.has(action));
         if (!entry)
             return false;
+        if (entry.action === 'mode.editToggle' || entry.action === 'select.mode') {
+            const operators = this._host.editor?.operators;
+            if (!operators)
+                return false;
+            const status = entry.action === 'mode.editToggle'
+                ? operators.run('object.editmode_toggle')
+                : operators.run('mesh.select_mode', { domain: entry.props?.domain });
+            return status !== 'cancelled' || entry.action === 'select.mode';
+        }
+        const components = this._components;
+        if (components) {
+            const objects = components.objects(this._host);
+            const domain = components.domain(this._host);
+            const edit = selection.edit();
+            for (const object of objects) {
+                const size = getGeometryAdapter(object)?.domainSize(object, domain) ?? 0;
+                if (!size)
+                    continue;
+                const set = edit.components(object.uuid, domain, size);
+                if (entry.action === 'select.all')
+                    set.fill();
+                else if (entry.action === 'select.none')
+                    set.clear();
+                else
+                    set.invert();
+            }
+            edit.commit();
+            return true;
+        }
         if (entry.action === 'select.none') {
             selection.clear();
             return true;
@@ -115,6 +173,35 @@ export class SelectBehavior {
         this._marquee?.remove();
         this._marquee = null;
     }
+}
+const KEY_ACTIONS = new Set(['select.all', 'select.none', 'select.invert', 'select.mode', 'mode.editToggle']);
+/** Applies component hits: `set` first clears `domain` on the picker's objects (a click on nothing deselects). */
+function applyComponents(selection, mode, hits, objects, domain) {
+    const edit = selection.edit();
+    if (mode === 'set')
+        edit.clearComponents(domain, objects.map(object => object.uuid));
+    const groups = new Map();
+    for (const hit of hits) {
+        const key = `${hit.uuid}\n${hit.domain}`;
+        const group = groups.get(key);
+        if (group)
+            group.push(hit);
+        else
+            groups.set(key, [hit]);
+    }
+    for (const group of groups.values()) {
+        const { uuid, domain: hitDomain, size } = group[0];
+        const set = edit.components(uuid, hitDomain, size);
+        // Toggling a group (a UV vertex is several corners) flips it as one element.
+        const remove = mode === 'subtract' || (mode === 'toggle' && group.every(hit => set.has(hit.index)));
+        for (const hit of group) {
+            if (remove)
+                set.delete(hit.index);
+            else
+                set.add(hit.index);
+        }
+    }
+    edit.commit();
 }
 function apply(selection, mode, uuids, active) {
     const edit = selection.edit();
