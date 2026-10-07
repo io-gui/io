@@ -1,17 +1,15 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { ToolBase, ViewCameras, ThreeApplet } from '@io-gui/three'
+import { ToolBase, ThreeView, ThreeApplet } from '@io-gui/three'
 import type { IoThreeViewport } from '@io-gui/three'
 import { Scene } from 'three/webgpu'
 
 function createViewportStub(width = 200, height = 100): IoThreeViewport {
-  const applet = new ThreeApplet({ scene: new Scene() })
   const element = document.createElement('div')
   document.body.appendChild(element)
 
   const viewport = element as unknown as IoThreeViewport
   viewport.width = width
   viewport.height = height
-  viewport.overscan = 1
   viewport.getBoundingClientRect = () => ({
     left: 0,
     top: 0,
@@ -27,11 +25,8 @@ function createViewportStub(width = 200, height = 100): IoThreeViewport {
   viewport.removeEventListener = element.removeEventListener.bind(element)
   viewport.setPointerCapture = () => {}
   viewport.releasePointerCapture = () => {}
-  viewport.viewCameras = new ViewCameras({
-    viewport,
-    applet,
-    cameraSelect: 'perspective',
-  })
+  const view = new ThreeView()
+  viewport.getViewCamera = () => view.getCamera(width, height, null)
 
   return viewport
 }

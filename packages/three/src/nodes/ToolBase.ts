@@ -219,10 +219,7 @@ export class ToolBase extends ReactiveObject {
       -((event.clientY - _rect.top) / _rect.height) * 2 + 1,
     )
 
-    viewport.viewCameras.setOverscan(viewport.width, viewport.height, viewport.overscan)
-    const camera = viewport.viewCameras.camera
-    _raycaster.setFromCamera(screen, camera)
-    viewport.viewCameras.resetOverscan()
+    _raycaster.setFromCamera(screen, viewport.getViewCamera())
     const { origin, direction } = _raycaster.ray
 
     const previousPointer3D = this._findPointer(activePointers, event.pointerId) || this._findPointer(hoverPointers, event.pointerId)

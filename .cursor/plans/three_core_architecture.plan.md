@@ -28,13 +28,13 @@ todos:
     status: completed
   - id: three-view-model
     content: "P2: ThreeView model (kind, navigation, shading, overlays, profile) with JSON round-trip"
-    status: pending
+    status: completed
   - id: view-navigation
     content: "P2: ViewNavigation + buildViewCamera(); replace ViewCameras and overscan mutation"
-    status: pending
+    status: completed
   - id: viewport-takes-view
     content: "P2: IoThreeViewport({view}); cameraSelect compat mapping; views survive layout tab moves"
-    status: pending
+    status: completed
   - id: input-router
     content: "P3: InputRouter + Behavior: capture by priority, hover pass, stealing, keyboard routing"
     status: pending
@@ -235,6 +235,15 @@ Remove the module `rAFLoop`, per-applet `Timer`, `_renderer`, `_width`, `_height
 ---
 
 ## Phase 2: View layer (ADR-0002, ADR-0005)
+
+**Done 2026-10-07.** Notes from implementation:
+- Files: `view/ThreeView.ts` (model + `getCamera()` builder, no separate `buildViewCamera.ts`), `view/ViewNavigation.ts`, `view/ViewOrbitControls.ts` (temporary OrbitControls bridge, removed in P3). `nodes/ViewCameras.ts` deleted.
+- `shading`, `overlays` and `profile` were not added yet: they land with the phases that use them (P3 profile, P6 shading/overlays).
+- Navigation frames a square; the camera builder fits it into any aspect ("contain"), so framing does not depend on viewport size. Orthographic size = `distance * tan(fov/2)`; orthographic clip is symmetric around the eye.
+- `cameraSelect` stays as a non-deprecated shorthand; default `''` leaves a passed-in view untouched. Scene cameras resolve to uuid; a camera added later (async load) is picked up on `frame-object`, applet mutation or draw.
+- `frame-object` is handled by the viewport; framing keeps the view direction (old code reset every camera to its default direction first).
+- Breaking: `IoThreeViewport.overscan/clearColor/clearAlpha/viewCameras` removed (moved to `view`); `ViewCameras` export removed. External code using `viewport.viewCameras.camera` should use `viewport.getViewCamera()`.
+- Gotcha: construct `OrbitControls` without the element and call `connect()`; passing it to the constructor makes `connect()` disconnect first and io-gui logs "Listener not found".
 
 ### `three-view-model`
 

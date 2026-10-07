@@ -3,7 +3,7 @@ name: io-gui-three
 description: >-
   Build Three.js WebGPU applets with ThreeApplet and IoThreeViewport, including
   shared renderer lifecycle and editor config side-effects. Use when working with
-  @io-gui/three, viewports, ViewCameras, or ToolBase.
+  @io-gui/three, viewports, ThreeView, view navigation, or ToolBase.
 ---
 
 # @io-gui/three
@@ -22,6 +22,7 @@ description: >-
 - Renderer init is **async** — do GPU setup in `onRendererInitialized(renderer)`.
 - `isPlaying: false` on the applet ⇒ no `onAnimate`; non-visible viewport ⇒ no draw.
 - `onResized` on the applet is deprecated: size belongs to each viewport.
+- **View state lives on `ThreeView`**, not the viewport: `viewport.view.navigation` (target, rotation, distance, axis view, scene camera by uuid), `overscan`, `clearColor`. Pass a `view` to keep navigation across remounts. Use `viewport.getViewCamera()` for picking; never mutate scene cameras to fit a viewport. After editing `view.navigation` directly, call `view.markNavigationChanged()`.
 - **Not core `IoGl`.** IoGl is 2D shader quads for sliders/colors; this package is full Three WebGPU.
 - `ToolBase` registers on viewports and supplies Pointer3D rays — subclass for tools; don't re-wire pointer→ray ad hoc.
 
