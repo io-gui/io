@@ -23,7 +23,7 @@ export interface ScheduledView {
   readonly scene: Scene | null
   readonly changeBus: ChangeBus | null
   isRenderable(): boolean
-  /** Higher draws first: focused 2, hovered 1, other 0. */
+  /** Higher draws first: focused 2, hovered 1, other 0. Each frame a view waits past the budget adds 1. */
   getPriority(): number
   /** How a change affects this view: `true` or `'content'` redraws it, `'overlay'` redraws only overlays. */
   listens(change: DocumentChange): boolean | DirtyReason
@@ -56,6 +56,8 @@ export class RenderScheduler {
   frameBudget: number
 
   private readonly _views = new Map<ScheduledView, Set<DirtyReason>>()
+  /** Frames each tagged view has waited past the budget. Added to its priority so no view starves. */
+  private readonly _waits = new Map<ScheduledView, number>()
   private readonly _tickers = new Set<ScheduledTicker>()
   private readonly _rendererStates = new Map<WebGPURenderer, 'pending' | 'ready' | 'failed'>()
   private readonly _timer = new Timer()
@@ -83,6 +85,7 @@ export class RenderScheduler {
 
   unregister(view: ScheduledView) {
     this._views.delete(view)
+    this._waits.delete(view)
   }
 
   isRegistered(view: ScheduledView) {
@@ -136,7 +139,8 @@ export class RenderScheduler {
       drawList.push(view)
     }
     if (drawList.length === 0) return
-    drawList.sort((a, b) => b.getPriority() - a.getPriority())
+    const rank = (view: ScheduledView) => view.getPriority() + (this._waits.get(view) ?? 0)
+    drawList.sort((a, b) => rank(b) - rank(a))
 
     // Evaluate each scene once; views then draw without re-traversing it.
     const scenes = new Map<Scene, boolean>()
@@ -151,8 +155,12 @@ export class RenderScheduler {
 
     const start = this._now()
     for (let i = 0; i < drawList.length; i++) {
-      if (i > 0 && this._now() - start > this.frameBudget) break
       const view = drawList[i]
+      if (i > 0 && this._now() - start > this.frameBudget) {
+        this._waits.set(view, (this._waits.get(view) ?? 0) + 1)
+        continue
+      }
+      this._waits.delete(view)
       const tags = this._views.get(view)!
       const reasons = new Set(tags)
       tags.clear()

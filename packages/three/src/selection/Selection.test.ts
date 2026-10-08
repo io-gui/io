@@ -71,6 +71,16 @@ describe('SelectionModel', () => {
     expect(selection.getObjects()).toEqual([])
   })
 
+  it('drops ids of objects removed outside a transaction after the lookup that missed them', async () => {
+    selection.set([a.uuid, b.uuid])
+    document.scene.remove(b)
+    expect(selection.getObjects()).toEqual([a])
+    expect(selection.ids()).toEqual([a.uuid, b.uuid])
+    await Promise.resolve()
+    expect(selection.ids()).toEqual([a.uuid])
+    expect(selection.active).toBe('')
+  })
+
   it('is kept per document by the editor', () => {
     const editor = new ThreeEditor({document})
     const first = editor.selection

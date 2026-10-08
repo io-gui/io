@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { ThreeDocument, ThreeEditor, Transaction } from '@io-gui/three'
 import { Color, Group, Mesh, MeshBasicMaterial, Object3D, Vector3 } from 'three/webgpu'
 
@@ -105,6 +105,23 @@ describe('ThreeDocument transactions', () => {
     mesh.remove(late)
     expect(document.getObject(late.uuid)).toBe(undefined)
     expect(document.getObject(document.scene.uuid)).toBe(document.scene)
+  })
+
+  it('walks the scene once per task for an id that keeps missing', async () => {
+    const gone = new Object3D()
+    mesh.add(gone)
+    expect(document.getObject(gone.uuid)).toBe(gone)
+    mesh.remove(gone)
+    const traverse = vi.spyOn(document.scene, 'traverse')
+    for (let i = 0; i < 10; i++) expect(document.getObject(gone.uuid)).toBe(undefined)
+    expect(traverse).toHaveBeenCalledTimes(1)
+
+    await Promise.resolve()
+    const back = new Object3D()
+    back.uuid = gone.uuid
+    mesh.add(back)
+    expect(document.getObject(gone.uuid)).toBe(back)
+    expect(traverse).toHaveBeenCalledTimes(2)
   })
 
   it('tells commit listeners about committed, non-empty transactions only', () => {

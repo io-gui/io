@@ -37,6 +37,8 @@ export class ThreeDocument extends ReactiveObject {
   readonly changeBus = new ChangeBus()
 
   private readonly _index = new Map<string, Object3D>()
+  /** Ids not found since the last index rebuild; cleared when the current task ends. */
+  private readonly _misses = new Set<string>()
   private _active: Transaction | null = null
   private readonly _history: Transaction[] = []
   private readonly _commitListeners = new Set<CommitListener>()
@@ -58,15 +60,23 @@ export class ThreeDocument extends ReactiveObject {
     this.changeBus.notify({...change, source: this})
   }
 
-  /** Finds a scene object by uuid. Objects added outside transactions are found too. */
+  /**
+   * Finds a scene object by uuid. Objects added outside transactions are found too: a miss rebuilds the
+   * index, but an id that already missed in the current task does not walk the scene again.
+   */
   getObject(uuid: string): Object3D | undefined {
     const scene = this.scene
     if (!scene) return undefined
     if (uuid === scene.uuid) return scene
     const cached = this._index.get(uuid)
     if (cached && this._isInScene(cached)) return cached
+    if (this._misses.has(uuid)) return undefined
     this._rebuildIndex()
-    return this._index.get(uuid)
+    const found = this._index.get(uuid)
+    if (found) return found
+    if (this._misses.size === 0) queueMicrotask(() => this._misses.clear())
+    this._misses.add(uuid)
+    return undefined
   }
 
   /** Opens a long-running transaction (an interactive drag). Commit or roll it back when done. */
@@ -132,7 +142,10 @@ export class ThreeDocument extends ReactiveObject {
       if (!parent) throw new Error(`Patch: parent ${patch.parentId} is not in the document`)
       if (patch.op === 'insert') {
         insertChild(parent, patch.object, patch.index)
-        patch.object.traverse(object => { this._index.set(object.uuid, object) })
+        patch.object.traverse(object => {
+          this._index.set(object.uuid, object)
+          this._misses.delete(object.uuid)
+        })
       } else {
         parent.remove(patch.object)
         patch.object.traverse(object => { this._index.delete(object.uuid) })

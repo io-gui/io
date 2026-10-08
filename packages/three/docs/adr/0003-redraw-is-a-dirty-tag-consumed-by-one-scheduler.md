@@ -11,7 +11,7 @@ Each frame the scheduler runs fixed phases:
 1. **Collect.** Drain the editor's change bus and tag every view whose `listens(change)` is true.
 2. **Tick.** If playback is on, advance the clock once and run animation hooks.
 3. **Evaluate.** Once per document, call `scene.updateMatrixWorld()` and later any derived-data step. Then turn off `matrixWorldAutoUpdate` while views draw.
-4. **Draw.** Draw tagged, visible, non-empty views in priority order (focused, hovered, then the rest) within a frame budget. Views not reached stay tagged for the next frame.
+4. **Draw.** Draw tagged, visible, non-empty views in priority order (focused, hovered, then the rest) within a frame budget. Views not reached stay tagged for the next frame, and each frame they wait raises their priority by one, so a slow focused view cannot starve the rest.
 5. **Settle.** Resolve pick readbacks. Keep `continuous` pipelines tagged until they report `converged`.
 
 Dirty reasons are typed: `content`, `view`, `overlay`, `resize`, `continuous`. An `overlay`-only redraw can reuse the pipeline's cached colour and depth, which keeps hover highlights cheap in heavy scenes.
