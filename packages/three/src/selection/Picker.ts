@@ -83,6 +83,8 @@ export class RaycastPicker implements Picker {
   pick(host: InputHost, x: number, y: number, filter?: PickFilter): Promise<PickHit | null> {
     const root = this._root(host)
     if (!root) return Promise.resolve(null)
+    // Picks run from input handlers, between frames: edits since the last draw have not moved matrices yet.
+    root.updateMatrixWorld()
     const rect = host.getBoundingClientRect()
     const camera = host.getViewCamera()
     _ndc.set((x / rect.width) * 2 - 1, -(y / rect.height) * 2 + 1)
@@ -104,6 +106,7 @@ export class RaycastPicker implements Picker {
   pickRect(host: InputHost, rect: PickRect, filter?: PickFilter): Promise<PickHit[]> {
     const root = this._root(host)
     if (!root) return Promise.resolve([])
+    root.updateMatrixWorld()
     const bounds = host.getBoundingClientRect()
     const camera = host.getViewCamera()
     const minX = Math.min(rect.x0, rect.x1), maxX = Math.max(rect.x0, rect.x1)

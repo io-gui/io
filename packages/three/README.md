@@ -224,7 +224,7 @@ ioThreeViewport({ editor, view }); // the view survives the element being remoun
 - Viewport aspect and overscan are applied at draw time, never stored
 - Scene cameras are copied, never mutated
 - A new view frames its scene once; restored views keep their navigation
-- After changing `view.navigation` directly, call `view.markNavigationChanged()`
+- After changing `view.navigation` directly, call `view.markNavigationChanged()`. It redraws viewports but is not a reactive mutation; use `view.addNavigationListener()` to follow camera moves
 - Navigation is done by the viewport's `NavigationBehavior`, which edits `view.navigation`
 
 ### Pipelines and Overlays

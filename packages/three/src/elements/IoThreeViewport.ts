@@ -112,7 +112,7 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   declare private _navigation: NavigationBehavior | undefined
   declare private _select: SelectBehavior | undefined
   declare private _gizmos: GizmoLayer | undefined
-  declare private _toolBehaviors: {toolId: string; behaviors: Behavior[]} | undefined
+  declare private _toolBehaviors: {toolId: string; view: ThreeView; editor: ThreeEditor; behaviors: Behavior[]} | undefined
   declare private _compositor: ViewCompositor | undefined
   declare private _shownDocument: ThreeDocument | undefined
   declare private _idPass: IdPass | undefined
@@ -185,6 +185,7 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
       renderer: args.renderer ?? getDefaultRenderer(),
     } as ReactiveElementProps)
     this._ownsView = !args.view
+    this.view.addNavigationListener(this._onNavigation)
     void this.inputRouter
     this._syncBehaviors()
   }
@@ -241,8 +242,8 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
 
   listens(change: DocumentChange): DirtyReason | false {
     if (!this.editor || change.source !== this.editor.document) return false
-    this._syncRendering()
-    const reason = this.compositor.listens(change)
+    // Pipeline and overlays are synced on view changes and before each draw, not here.
+    const reason = this._compositor?.listens(change) ?? 'content'
     if (reason === 'content') this._idPicker?.invalidate()
     return reason
   }
@@ -304,14 +305,16 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
 
     const tool = this.editor?.getActiveTool(view.kind) ?? null
     const toolId = tool && toolAllowsProfile(tool, view.profile) ? tool.id : null
-    if ((this._toolBehaviors?.toolId ?? null) === toolId) return
+    // Behaviors and gizmo groups get the view and editor at creation, so a swap of either rebuilds them.
+    const current = this._toolBehaviors
+    if ((current?.toolId ?? null) === toolId && (!current || (current.view === view && current.editor === this.editor))) return
     for (const behavior of this._toolBehaviors?.behaviors ?? []) router.remove(behavior)
     this._toolBehaviors = undefined
     if (tool && toolId) {
       const ctx = {editor: this.editor, host: this, view}
       const behaviors = tool.createBehaviors(ctx)
       for (const behavior of behaviors) router.add(behavior)
-      this._toolBehaviors = {toolId, behaviors}
+      this._toolBehaviors = {toolId, view, editor: this.editor, behaviors}
       gizmos.setGroups(tool.createGizmoGroups?.(ctx) ?? [])
     } else {
       gizmos.setGroups([])
@@ -363,6 +366,11 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
     this.tag('content')
   }
   viewChanged(change: Change<ThreeView>) {
+    // Runs during construction too, before `_onNavigation` exists; the constructor adds it then.
+    if (this._onNavigation) {
+      change.oldValue?.removeNavigationListener(this._onNavigation)
+      this.view?.addNavigationListener(this._onNavigation)
+    }
     if (this._ownsView && change.oldValue && change.oldValue !== change.value) {
       change.oldValue.dispose()
       this._ownsView = false
@@ -378,6 +386,10 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   viewMutated() {
     this._syncBehaviors()
     this._syncRendering()
+    this.tag('view')
+  }
+  /** Camera moves only redraw: they change no behaviors, pipeline or overlays. */
+  private _onNavigation = () => {
     this.tag('view')
   }
   override mutated() {
@@ -419,6 +431,7 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
     this._gizmos?.dispose()
     this._compositor?.dispose()
     this._idPass?.dispose()
+    this.view?.removeNavigationListener(this._onNavigation)
     if (this._ownsView) this.view.dispose()
     super.dispose()
   }

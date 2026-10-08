@@ -600,3 +600,19 @@
 - SelectionOutlineOverlay `_proxy`: re-assigns geometry, skeleton/bindMatrix/bindMode, instanceMatrix/count every draw; rebuilds proxy when object kind changes. Mask mesh materials DoubleSide (open surfaces like lathe outlined fully).
 - ThreeDocument.getObject: per-id miss cache (`_misses`, cleared next microtask, and on insert patches) -> a dead id walks the scene once per task. SelectionModel drops ids that miss lookup (deferred microtask `_dropLater`).
 - Not changed (user: design choice): `transact()` joining an open operator transaction.
+
+### [three][fix] 2026-10-08 ADR drift review
+- Navigation no longer dispatchMutation: `ThreeView.markNavigationChanged()` calls listeners (`addNavigationListener`/`removeNavigationListener`); IoThreeViewport subscribes (`_onNavigation` -> tag 'view'; constructor + viewChanged + dispose). viewMutated (behaviors/rendering resync) now only on real view prop changes.
+- `listens()` no longer calls `_syncRendering`; uses `this._compositor?.listens(change) ?? 'content'`.
+- Picks update matrices first: `IdPass.read`, `RaycastPicker.pick/pickRect` call `updateMatrixWorld()`.
+- ADR text: 0003 (Tick before Collect, picks outside frame, no untagged-draw debug error), 0002 (view kinds, per-document navigation on ThreeView, not in toJSON), 0005 (lockCameraToView/lockGroup planned; navigation skips mutation). README + SKILL note.
+- Open (user: later): default keymap LMB-drag orbit vs ADR-0004 "tools own LMB".
+
+### [three][fix] 2026-10-08 minor review items
+- ThreeView toJSON/applyJSON include toneMapping + toneMappingExposure.
+- Removed dead `OverlayType.listens`.
+- `getWorldPerPixel` through a perspective scene camera measures at scene bounds centre depth (`sceneDistance`), not nav.distance.
+- `getSourceCamera` caches the found camera (`_sourceCamera`, valid while in scene) + per-task miss (`_missingSource`).
+- `_syncBehaviors` rebuilds tool behaviors/gizmo groups when view or editor swaps (not only tool id).
+- ChangeBus: `LIMIT` 10000 -> collapses to one `other`; `clear()`; editor clears old doc bus on switch.
+- Skipped (user): migration notes - no users yet.

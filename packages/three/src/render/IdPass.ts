@@ -64,6 +64,8 @@ export class IdPass {
     width = Math.max(1, Math.floor(width))
     height = Math.max(1, Math.floor(height))
     if (this._target.width !== width || this._target.height !== height) this._target.setSize(width, height)
+    // Picks run from input handlers, between frames: edits since the last draw have not moved matrices yet.
+    scene.updateMatrixWorld()
     this._sync(scene, camera, objects)
 
     const renderer = this._renderer

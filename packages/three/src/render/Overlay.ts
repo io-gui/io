@@ -1,5 +1,4 @@
 import type { Object3D } from 'three/webgpu'
-import type { DocumentChange } from '../editor/ChangeBus.js'
 import type { ViewKind } from '../view/ThreeView.js'
 import type { PipelineContext, PipelineOutput, ViewPipeline } from './ViewPipeline.js'
 
@@ -30,8 +29,6 @@ export interface OverlayType {
   readonly enabledByDefault: boolean
   /** Lower draws first. */
   readonly order?: number
-  /** Document changes that need this overlay redrawn (beyond content redraws, which redraw everything). */
-  listens?(change: DocumentChange): boolean
   create(): Overlay
 }
 
