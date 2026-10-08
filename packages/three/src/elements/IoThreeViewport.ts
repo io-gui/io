@@ -5,7 +5,6 @@ import type { ThreeDocument } from '../editor/ThreeDocument.js'
 import type { Behavior } from '../input/Behavior.js'
 import { toolAllowsProfile } from '../tools/Tool.js'
 import { ThreeView } from '../view/ThreeView.js'
-import { AXIS_VIEW_DIRECTIONS, AxisView } from '../view/ViewNavigation.js'
 import { InputRouter } from '../input/InputRouter.js'
 import { Keymap, keymaps } from '../input/Keymap.js'
 import { NavigationBehavior } from '../input/behaviors/NavigationBehavior.js'
@@ -30,10 +29,11 @@ const observer = new IntersectionObserver((entries) => {
 export type IoThreeViewportProps = ReactiveElementProps & {
   /** The editor whose active document this viewport shows. */
   editor?: WithBinding<ThreeEditor>
-  /** View state to show. Pass one to keep navigation across remounts; otherwise the viewport makes its own. */
+  /**
+   * View state to show, including its camera (`new ThreeView().setAxisView('top')`, `.setCameraView('name:shot')`).
+   * Pass one to keep navigation across remounts; otherwise the viewport makes its own default perspective view.
+   */
   view?: WithBinding<ThreeView>
-  /** Shorthand that sets the view: `'perspective'`, an axis (`'top'`, `'front'`, ...), `'scene'` or `'scene:<camera name>'`. */
-  cameraSelect?: WithBinding<string>
   /** Navigation and selection bindings (default: `keymaps.default`, OrbitControls-like navigation). */
   keymap?: Keymap
   renderer?: WebGPURenderer
@@ -51,10 +51,6 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
 
   @Property({type: ThreeView})
   declare view: ThreeView
-
-  /** Empty leaves the view as it is. */
-  @Property({type: String, value: ''})
-  declare cameraSelect: string
 
   @Property({type: WebGPURenderer})
   declare renderer: WebGPURenderer
@@ -111,8 +107,6 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   }
 
   declare private _ownsView: boolean
-  /** `cameraSelect` asks for a scene camera that is not in the scene yet (assets still loading). */
-  declare private _sceneCameraPending: boolean
   // Lazy, like renderTarget: `ready()` runs inside the base constructor.
   declare private _inputRouter: InputRouter | undefined
   declare private _navigation: NavigationBehavior | undefined
@@ -265,7 +259,6 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   /** Event `frame-object` with `{object, overscan?}`: frames the object in this viewport's view. */
   onFrameObject(event: CustomEvent<{object: Object3D; overscan?: number}>) {
     event.stopPropagation()
-    if (this._sceneCameraPending) this._syncView()
     this.view.frame(event.detail.object, event.detail.overscan ?? 1)
   }
 
@@ -273,7 +266,6 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
     const view = this.view
     const scene = this.scene
     if (!view) return
-    this._sceneCameraPending = !applyCameraSelect(view, this.cameraSelect, scene)
     if (view.kind === 'uv') {
       if (!view.navigation.framed || view.navigation.axisView !== 'front') view.frameUV()
     } else if (!view.navigation.framed && scene) {
@@ -366,12 +358,9 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
   }
   editorMutated() {
     this._syncDocument()
-    if (this._sceneCameraPending || !this.view?.navigation.framed) this._syncView()
+    if (!this.view?.navigation.framed) this._syncView()
     this._syncBehaviors()
     this.tag('content')
-  }
-  cameraSelectChanged() {
-    this._syncView()
   }
   viewChanged(change: Change<ThreeView>) {
     if (this._ownsView && change.oldValue && change.oldValue !== change.value) {
@@ -397,7 +386,6 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
 
   /** Called by the RenderScheduler only (ADR-0003). */
   renderView(reasons: ReadonlySet<DirtyReason>, frame: FrameInfo): ViewRenderResult | void {
-    if (this._sceneCameraPending) this._syncView()
     const editor = this.editor
     const document = editor.document
     if (editor.isRendererInitialized() === false) {
@@ -434,42 +422,6 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
     if (this._ownsView) this.view.dispose()
     super.dispose()
   }
-}
-
-/**
- * Maps the `cameraSelect` shorthand onto a view: `'perspective'`, an axis view, `'scene'` (first scene camera)
- * or `'scene:<name>'` (scene camera by name, resolved to its uuid).
- * Returns false when a requested scene camera is not in the scene yet; the view then shows the default
- * perspective view until it appears.
- */
-function applyCameraSelect(view: ThreeView, cameraSelect: string, scene: Scene | null): boolean {
-  if (!cameraSelect) return true
-  const nav = view.navigation
-  let resolved = true
-  if (cameraSelect.startsWith('scene')) {
-    const name = cameraSelect.split(':')[1] || ''
-    const cameras = scene ? [
-      ...scene.getObjectsByProperty('isPerspectiveCamera', true),
-      ...scene.getObjectsByProperty('isOrthographicCamera', true),
-    ] : []
-    const camera = name ? cameras.find(camera => camera.name === name) : cameras[0]
-    if (camera) {
-      if (nav.cameraSource !== camera.uuid) view.setCameraSource(camera.uuid)
-      return true
-    }
-    resolved = false
-    cameraSelect = 'perspective'
-  }
-  if (nav.cameraSource !== null) view.setCameraSource(null)
-  if (cameraSelect === 'perspective') {
-    if (nav.axisView !== null) view.setAxisView(null)
-  } else if (cameraSelect in AXIS_VIEW_DIRECTIONS) {
-    if (nav.axisView !== cameraSelect) view.setAxisView(cameraSelect as AxisView)
-  } else {
-    console.warn(`Unknown cameraSelect "${cameraSelect}", using default perspective view`)
-    if (nav.axisView !== null) view.setAxisView(null)
-  }
-  return resolved
 }
 
 export const ioThreeViewport = function(arg0: IoThreeViewportProps) {

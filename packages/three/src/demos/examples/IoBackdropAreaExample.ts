@@ -6,6 +6,7 @@ import {
   DoubleSide,
   Mesh,
   MeshBasicNodeMaterial,
+  PerspectiveCamera,
   Vector3,
 } from 'three/webgpu'
 import {
@@ -23,7 +24,7 @@ import {
 } from 'three/tsl'
 import { hashBlur } from 'three/addons/tsl/display/hashBlur.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { ThreeEditor, IoThreeExample, ThreeEditorProps, ioThreeViewport, ioVector3 } from '@io-gui/three'
+import { ThreeEditor, ThreeView, IoThreeExample, ThreeEditorProps, ioThreeViewport, ioVector3 } from '@io-gui/three'
 import { ioLayout, Layout } from '@io-gui/layout'
 import { ioPropertyEditor } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
@@ -98,6 +99,12 @@ export class BackdropAreaExample extends ThreeEditor {
       'pixel': this.pixelMaterial
     }
 
+    // Camera
+    const camera = new PerspectiveCamera(50, 1, 0.1, 100)
+    camera.position.set(3, 2, 3)
+    camera.lookAt(0, 1, 0)
+    this.document.scene.add(camera)
+
     // Box
     this.box = new Mesh(new BoxGeometry(2, 2, 2), this.blurredBlurMaterial)
     this.box.position.set(0, 1, 0)
@@ -137,7 +144,7 @@ export class BackdropAreaExample extends ThreeEditor {
       this.document.scene.add(object)
 
       this.dispatchMutation()
-      this.dispatch('frame-object', {object: this.document.scene.children[1]}, true)
+      this.dispatch('frame-object', {object: this.box}, true)
     })
   }
 
@@ -158,10 +165,10 @@ export class IoBackdropAreaExample extends IoThreeExample {
     this.render([
       ioLayout({
         elements: [
-          ioThreeViewport({id: 'Top', editor: this.editor, cameraSelect: 'top'}),
-          ioThreeViewport({id: 'Left', editor: this.editor, cameraSelect: 'left'}),
-          ioThreeViewport({id: 'Back', editor: this.editor, cameraSelect: 'back'}),
-          ioThreeViewport({id: 'SceneCamera', editor: this.editor, cameraSelect: 'scene'}),
+          ioThreeViewport({id: 'Top', editor: this.editor, view: new ThreeView().setAxisView('top')}),
+          ioThreeViewport({id: 'Left', editor: this.editor, view: new ThreeView().setAxisView('left')}),
+          ioThreeViewport({id: 'Back', editor: this.editor, view: new ThreeView().setAxisView('back')}),
+          ioThreeViewport({id: 'SceneCamera', editor: this.editor, view: new ThreeView().setCameraView()}),
           ioPropertyEditor({id: 'PropertyEditor', value: this.editor,
             properties: ['material', 'boxScale'],
             config: [

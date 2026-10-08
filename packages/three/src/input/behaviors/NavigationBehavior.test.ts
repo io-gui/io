@@ -105,7 +105,7 @@ describe('NavigationBehavior', () => {
   it('does nothing while looking through a scene camera', () => {
     const camera = new PerspectiveCamera()
     host.scene!.add(camera)
-    host.view.setCameraSource(camera.uuid)
+    host.view.setCameraView(`uuid:${camera.uuid}`)
     const before = JSON.stringify(host.view.navigation.toJSON())
     drag(host, [100, 50], [150, 50])
     const event = new WheelEvent('wheel', {bubbles: true, cancelable: true, deltaY: 100})

@@ -18,7 +18,7 @@ import { instancedBufferAttribute, texture, float, color } from 'three/tsl'
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js'
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
 import { Register, Property } from '@io-gui/core'
-import { ThreeEditor, IoThreeExample, ThreeEditorProps } from '@io-gui/three'
+import { ThreeEditor, ThreeView, IoThreeExample, ThreeEditorProps } from '@io-gui/three'
 import { ioLayout, Layout } from '@io-gui/layout'
 import { ioThreeViewport } from '@io-gui/three'
 
@@ -125,10 +125,10 @@ export class IoGeometryConvexExample extends IoThreeExample {
     this.render([
       ioLayout({
         elements: [
-          ioThreeViewport({id: 'Top', editor: this.editor, cameraSelect: 'top'}),
-          ioThreeViewport({id: 'Left', editor: this.editor, cameraSelect: 'left'}),
-          ioThreeViewport({id: 'Front', editor: this.editor, cameraSelect: 'front'}),
-          ioThreeViewport({id: 'Perspective', editor: this.editor, cameraSelect: 'perspective'}),
+          ioThreeViewport({id: 'Top', editor: this.editor, view: new ThreeView().setAxisView('top')}),
+          ioThreeViewport({id: 'Left', editor: this.editor, view: new ThreeView().setAxisView('left')}),
+          ioThreeViewport({id: 'Front', editor: this.editor, view: new ThreeView().setAxisView('front')}),
+          ioThreeViewport({id: 'Perspective', editor: this.editor}),
         ],
         model: new Layout({
           child: {

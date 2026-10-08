@@ -51,7 +51,7 @@ export class NavigationBehavior implements Behavior {
     }
     let action = this._pending!.action as DragAction
     const view = event.view
-    if (action === 'view.orbit' && (view.kind === 'uv' || (this.lockAxisViews && view.navigation.axisView))) action = 'view.pan'
+    if (action === 'view.orbit' && (view.kind === 'uv' || (this.lockAxisViews && view.navigation.axisView !== 'free'))) action = 'view.pan'
     this._action = action
     this._pointers.set(event.pointerId, {x: event.x, y: event.y})
   }
@@ -104,7 +104,7 @@ export class NavigationBehavior implements Behavior {
       const scene = this._host.scene
       if (scene) view.frame(scene)
     } else {
-      view.setAxisView((entry.props?.axis as AxisView | undefined) ?? null)
+      view.setAxisView((entry.props?.axis as AxisView | undefined) ?? 'free')
     }
     return true
   }

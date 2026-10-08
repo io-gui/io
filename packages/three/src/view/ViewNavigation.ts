@@ -1,7 +1,8 @@
 import { Box3, MathUtils, Object3D, PerspectiveCamera, Quaternion, Spherical, Vector3 } from 'three/webgpu'
 import { clipPlanesFromBox } from '../utils/clipPlanesFromBox.js'
 
-export type AxisView = 'top' | 'bottom' | 'left' | 'right' | 'front' | 'back'
+/** `free` is the default perspective view the user orbits; the others are orthographic views along an axis. */
+export type AxisView = 'free' | 'top' | 'bottom' | 'left' | 'right' | 'front' | 'back'
 export type ViewProjection = 'perspective' | 'orthographic'
 
 export type ViewNavigationData = {
@@ -12,12 +13,12 @@ export type ViewNavigationData = {
   fov: number
   near: number
   far: number
-  axisView: AxisView | null
+  axisView: AxisView
   cameraSource: string | null
   framed: boolean
 }
 
-export const AXIS_VIEW_DIRECTIONS: Readonly<Record<AxisView, readonly [number, number, number]>> = {
+export const AXIS_VIEW_DIRECTIONS: Readonly<Record<Exclude<AxisView, 'free'>, readonly [number, number, number]>> = {
   top: [0, 1, 0],
   bottom: [0, -1, 0],
   left: [-1, 0, 0],
@@ -59,7 +60,7 @@ export class ViewNavigation {
   fov = 50
   near = 0.1
   far = 1000
-  axisView: AxisView | null = null
+  axisView: AxisView = 'free'
   /** `uuid` of a scene camera to look through, or null. */
   cameraSource: string | null = null
   /** False until the view has been framed or restored, so a new view frames its scene once. */
@@ -77,10 +78,10 @@ export class ViewNavigation {
     this.rotation.copy(_lookAtCamera.quaternion)
   }
 
-  /** Switches to an orthographic axis view, or back to the default perspective view with `null`. */
-  setAxisView(axis: AxisView | null) {
+  /** Switches to an orthographic axis view, or back to the default perspective view with `free`. */
+  setAxisView(axis: AxisView) {
     if (axis === this.axisView) return
-    if (axis) {
+    if (axis !== 'free') {
       this.projection = 'orthographic'
       this.setDirection(_corner.fromArray(AXIS_VIEW_DIRECTIONS[axis]))
     } else {
@@ -101,7 +102,7 @@ export class ViewNavigation {
     _spherical.phi = MathUtils.clamp(_spherical.phi + deltaPhi, POLE_EPSILON, Math.PI - POLE_EPSILON)
     _offset.setFromSpherical(_spherical)
     this.setDirection(_offset)
-    this.axisView = null
+    this.axisView = 'free'
   }
 
   /** Moves the target in the view plane by screen pixels, so the scene follows the pointer. */
@@ -217,7 +218,7 @@ export class ViewNavigation {
     if (data.fov !== undefined) this.fov = data.fov
     if (data.near !== undefined) this.near = data.near
     if (data.far !== undefined) this.far = data.far
-    if (data.axisView !== undefined) this.axisView = data.axisView
+    if (data.axisView !== undefined) this.axisView = data.axisView ?? 'free'
     if (data.cameraSource !== undefined) this.cameraSource = data.cameraSource
     this.framed = data.framed ?? true
     return this

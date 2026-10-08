@@ -10,7 +10,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
 import { Register, Property } from '@io-gui/core'
-import { ThreeEditor, IoThreeExample, ThreeEditorProps, ioThreeViewport   } from '@io-gui/three'
+import { ThreeEditor, ThreeView, IoThreeExample, ThreeEditorProps, ioThreeViewport   } from '@io-gui/three'
 import { ioLayout, Layout } from '@io-gui/layout'
 
 @Register
@@ -78,10 +78,10 @@ export class IoAnimationKeyframesExample extends IoThreeExample {
     this.render([
       ioLayout({
         elements: [
-          ioThreeViewport({id: 'Top', editor: this.editor, cameraSelect: 'top'}),
-          ioThreeViewport({id: 'Left', editor: this.editor, cameraSelect: 'left'}),
-          ioThreeViewport({id: 'Perspective', editor: this.editor, cameraSelect: 'perspective'}),
-          ioThreeViewport({id: 'SceneCamera', editor: this.editor, cameraSelect: 'scene'}),
+          ioThreeViewport({id: 'Top', editor: this.editor, view: new ThreeView().setAxisView('top')}),
+          ioThreeViewport({id: 'Left', editor: this.editor, view: new ThreeView().setAxisView('left')}),
+          ioThreeViewport({id: 'Perspective', editor: this.editor}),
+          ioThreeViewport({id: 'SceneCamera', editor: this.editor, view: new ThreeView().setCameraView()}),
         ],
         model: new Layout({
           child: {

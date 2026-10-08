@@ -1,7 +1,7 @@
 import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture, WebGPURenderer, ComputeNode } from 'three/webgpu'
 import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl'
 import { Register, Property } from '@io-gui/core'
-import { ThreeEditor, IoThreeExample, ioThreeViewport, ThreeEditorProps } from '@io-gui/three'
+import { ThreeEditor, ThreeView, IoThreeExample, ioThreeViewport, ThreeEditorProps } from '@io-gui/three'
 
 @Register
 export class ComputeTextureExample extends ThreeEditor {
@@ -56,7 +56,7 @@ export class IoComputeTextureExample extends IoThreeExample {
   override ready() {
 
     this.render([
-      ioThreeViewport({id: 'Front', editor: this.editor, cameraSelect: 'front'}),
+      ioThreeViewport({id: 'Front', editor: this.editor, view: new ThreeView().setAxisView('front')}),
     ])
 
   }

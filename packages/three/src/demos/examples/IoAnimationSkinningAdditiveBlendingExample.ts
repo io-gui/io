@@ -14,7 +14,7 @@ import {
   PlaneGeometry,
 } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { ThreeEditor, IoThreeExample, ThreeEditorProps, ioThreeViewport } from '@io-gui/three'
+import { ThreeEditor, ThreeView, IoThreeExample, ThreeEditorProps, ioThreeViewport } from '@io-gui/three'
 import { ioLayout, Layout } from '@io-gui/layout'
 import { ioObject, ioPropertyEditor } from '@io-gui/editors'
 
@@ -223,10 +223,10 @@ export class IoAnimationSkinningAdditiveBlendingExample extends IoThreeExample {
     this.render([
       ioLayout({
         elements: [
-          ioThreeViewport({id: 'Top', editor: this.editor, cameraSelect: 'top'}),
-          ioThreeViewport({id: 'Left', editor: this.editor, cameraSelect: 'left'}),
-          ioThreeViewport({id: 'Back', editor: this.editor, cameraSelect: 'back'}),
-          ioThreeViewport({id: 'Perspective', editor: this.editor, cameraSelect: 'perspective'}),
+          ioThreeViewport({id: 'Top', editor: this.editor, view: new ThreeView().setAxisView('top')}),
+          ioThreeViewport({id: 'Left', editor: this.editor, view: new ThreeView().setAxisView('left')}),
+          ioThreeViewport({id: 'Back', editor: this.editor, view: new ThreeView().setAxisView('back')}),
+          ioThreeViewport({id: 'Perspective', editor: this.editor}),
           ioPropertyEditor({id: 'PropertyEditor', value: this.editor,
             config: [
               [AnimationMixer, ioObject({expanded: true, properties: ['timeScale']})],
