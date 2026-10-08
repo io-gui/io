@@ -7,8 +7,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture } from 'three/webgpu';
 import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl';
 import { Register, Property } from '@io-gui/core';
-import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
-let ComputeTextureExample = class ComputeTextureExample extends ThreeApplet {
+import { ThreeEditor, ThreeView, IoThreeExample, ioThreeViewport } from '@io-gui/three';
+let ComputeTextureExample = class ComputeTextureExample extends ThreeEditor {
     storageTexture;
     computeNode;
     constructor(args) {
@@ -36,7 +36,7 @@ let ComputeTextureExample = class ComputeTextureExample extends ThreeApplet {
         const material = new MeshBasicNodeMaterial({ color: 0x00ff00 });
         material.colorNode = texture(this.storageTexture);
         const plane = new Mesh(new PlaneGeometry(1, 1), material);
-        this.scene.add(plane);
+        this.document.scene.add(plane);
     }
     async onRendererInitialized(renderer) {
         super.onRendererInitialized(renderer);
@@ -50,13 +50,13 @@ export { ComputeTextureExample };
 let IoComputeTextureExample = class IoComputeTextureExample extends IoThreeExample {
     ready() {
         this.render([
-            ioThreeViewport({ id: 'Front', applet: this.applet, cameraSelect: 'front' }),
+            ioThreeViewport({ id: 'Front', editor: this.editor, view: new ThreeView().setAxisView('front') }),
         ]);
     }
 };
 __decorate([
     Property({ type: ComputeTextureExample, init: null })
-], IoComputeTextureExample.prototype, "applet", void 0);
+], IoComputeTextureExample.prototype, "editor", void 0);
 IoComputeTextureExample = __decorate([
     Register
 ], IoComputeTextureExample);

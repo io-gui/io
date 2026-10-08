@@ -10,7 +10,7 @@ import { color, screenUV, vec2, vec4, reflector, positionWorld, } from 'three/ts
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
-import { ThreeApplet, IoThreeExample } from '@io-gui/three';
+import { ThreeEditor, IoThreeExample } from '@io-gui/three';
 const gltfLoader = new GLTFLoader();
 const fbxLoader = new FBXLoader();
 const loadFbx = (url) => new Promise((resolve, reject) => {
@@ -19,23 +19,23 @@ const loadFbx = (url) => new Promise((resolve, reject) => {
 const loadGltf = (url) => new Promise((resolve, reject) => {
     gltfLoader.load(url, resolve, undefined, reject);
 });
-let AnimationRetargetingReadyplayerExample = class AnimationRetargetingReadyplayerExample extends ThreeApplet {
+let AnimationRetargetingReadyplayerExample = class AnimationRetargetingReadyplayerExample extends ThreeEditor {
     constructor(args) {
         super(args);
         const horizontalEffect = screenUV.x.mix(color(0x13172b), color(0x311649));
         const lightEffect = screenUV.distance(vec2(0.5, 1.0)).oneMinus().mul(color(0x0c5d68));
-        this.scene.backgroundNode = horizontalEffect.add(lightEffect);
+        this.document.scene.backgroundNode = horizontalEffect.add(lightEffect);
         const light = new HemisphereLight(0x311649, 0x0c5d68, 10);
-        this.scene.add(light);
+        this.document.scene.add(light);
         const backLight = new DirectionalLight(0xffffff, 10);
         backLight.position.set(0, 5, -5);
-        this.scene.add(backLight);
+        this.document.scene.add(backLight);
         const keyLight = new DirectionalLight(0xfff9ea, 4);
         keyLight.position.set(3, 5, 3);
-        this.scene.add(keyLight);
+        this.document.scene.add(keyLight);
         const reflection = reflector();
         reflection.target.rotateX(-Math.PI / 2);
-        this.scene.add(reflection.target);
+        this.document.scene.add(reflection.target);
         const reflectionMask = positionWorld.xz.distance(0).mul(.1).clamp().oneMinus();
         const floorMaterial = new NodeMaterial();
         floorMaterial.colorNode = vec4(reflection.rgb, reflectionMask);
@@ -44,7 +44,7 @@ let AnimationRetargetingReadyplayerExample = class AnimationRetargetingReadyplay
         const floor = new Mesh(new BoxGeometry(50, .001, 50), floorMaterial);
         floor.receiveShadow = true;
         floor.position.set(0, 0, 0);
-        this.scene.add(floor);
+        this.document.scene.add(floor);
         void this.loadModels();
     }
     async loadModels() {
@@ -55,7 +55,7 @@ let AnimationRetargetingReadyplayerExample = class AnimationRetargetingReadyplay
         const models = new Group();
         models.add(sourceModel);
         models.add(targetModel.scene);
-        this.scene.add(models);
+        this.document.scene.add(models);
         sourceModel.position.x -= .9;
         targetModel.scene.position.x += .9;
         sourceModel.scale.setScalar(.01);
@@ -116,7 +116,7 @@ let IoAnimationRetargetingReadyplayerExample = class IoAnimationRetargetingReady
 };
 __decorate([
     Property({ type: AnimationRetargetingReadyplayerExample, init: { isPlaying: true } })
-], IoAnimationRetargetingReadyplayerExample.prototype, "applet", void 0);
+], IoAnimationRetargetingReadyplayerExample.prototype, "editor", void 0);
 IoAnimationRetargetingReadyplayerExample = __decorate([
     Register
 ], IoAnimationRetargetingReadyplayerExample);

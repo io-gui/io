@@ -5,27 +5,27 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Property, Register } from '@io-gui/core';
-import { ThreeApplet, IoThreeExample } from '@io-gui/three';
+import { ThreeEditor, IoThreeExample } from '@io-gui/three';
 import { AnimationMixer, Group, Mesh, MeshStandardNodeMaterial, SphereGeometry, SpotLight, MathUtils, NeutralToneMapping, } from 'three/webgpu';
 import { float, vec3, color, viewportSharedTexture, hue, blendOverlay, posterize, grayscale, saturation, viewportSafeUV, screenUV, checker, uv, time, oscSine, output, } from 'three/tsl';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-let BackdropExample = class BackdropExample extends ThreeApplet {
+let BackdropExample = class BackdropExample extends ThreeEditor {
     portals;
     constructor(args) {
         super(args);
-        this.toneMapping = NeutralToneMapping;
-        this.toneMappingExposure = 0.3;
+        this.document.toneMapping = NeutralToneMapping;
+        this.document.toneMappingExposure = 0.3;
         // Background
-        this.scene.backgroundNode = screenUV.y.mix(color(0x66bbff), color(0x4466ff));
+        this.document.scene.backgroundNode = screenUV.y.mix(color(0x66bbff), color(0x4466ff));
         // Light
         const light = new SpotLight(0xffffff, 1);
         light.position.set(1, 2, 3);
         light.lookAt(0, 1, 0);
         light.power = 2000;
-        this.scene.add(light);
+        this.document.scene.add(light);
         // Portals
         this.portals = new Group();
-        this.scene.add(this.portals);
+        this.document.scene.add(this.portals);
         const geometry = new SphereGeometry(.3, 32, 16);
         const addBackdropSphere = (backdropNode, backdropAlphaNode = null) => {
             const distance = 1;
@@ -63,7 +63,7 @@ let BackdropExample = class BackdropExample extends ThreeApplet {
             material.outputNode = oscSine(time.mul(.1)).mix(output, posterize(output.add(.1), 4).mul(2));
             const action = this.mixer.clipAction(gltf.animations[0]);
             action.play();
-            this.scene.add(object);
+            this.document.scene.add(object);
         });
     }
     onAnimate(delta) {
@@ -85,7 +85,7 @@ let IoBackdropExample = class IoBackdropExample extends IoThreeExample {
 };
 __decorate([
     Property({ type: BackdropExample, init: { isPlaying: true } })
-], IoBackdropExample.prototype, "applet", void 0);
+], IoBackdropExample.prototype, "editor", void 0);
 IoBackdropExample = __decorate([
     Register
 ], IoBackdropExample);

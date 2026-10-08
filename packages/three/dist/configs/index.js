@@ -228,3 +228,4 @@ registerEditorGroups(Object, {
     Advanced: ['id', 'uuid', 'type', 'userData'],
     Hidden: [new RegExp(/^is[A-Z0-9]/), '_listeners']
 });
+import './editor/ThreeEditor.js';

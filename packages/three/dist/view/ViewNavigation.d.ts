@@ -1,0 +1,66 @@
+import { Box3, Object3D, Quaternion, Vector3 } from 'three/webgpu';
+/** `free` is the default perspective view the user orbits; the others are orthographic views along an axis. */
+export type AxisView = 'free' | 'top' | 'bottom' | 'left' | 'right' | 'front' | 'back';
+export type ViewProjection = 'perspective' | 'orthographic';
+export type ViewNavigationData = {
+    target: [number, number, number];
+    rotation: [number, number, number, number];
+    distance: number;
+    projection: ViewProjection;
+    fov: number;
+    near: number;
+    far: number;
+    axisView: AxisView;
+    cameraSource: string | null;
+    framed: boolean;
+};
+export declare const AXIS_VIEW_DIRECTIONS: Readonly<Record<Exclude<AxisView, 'free'>, readonly [number, number, number]>>;
+/**
+ * Navigation state of one view, stored as numbers (ADR-0005), modelled on Blender's RegionView3D.
+ * The camera used for drawing and picking is built from this state per frame by `ThreeView.getCamera()`.
+ */
+export declare class ViewNavigation {
+    /** Orbit pivot. */
+    readonly target: Vector3;
+    /** View orientation; the view looks down its local -Z. */
+    readonly rotation: Quaternion;
+    /** Distance from the target. In orthographic views it also sets the frustum size. */
+    distance: number;
+    projection: ViewProjection;
+    /** Vertical field of view in degrees, for a square viewport. */
+    fov: number;
+    near: number;
+    far: number;
+    axisView: AxisView;
+    /** `uuid` of a scene camera to look through, or null. */
+    cameraSource: string | null;
+    /** False until the view has been framed or restored, so a new view frames its scene once. */
+    framed: boolean;
+    constructor();
+    /** Orients the view to look at the target from `direction` (pointing from target to eye). */
+    setDirection(direction: Vector3): void;
+    /** Switches to an orthographic axis view, or back to the default perspective view with `free`. */
+    setAxisView(axis: AxisView): void;
+    /**
+     * Turntable orbit around the target: `deltaTheta` turns around world Y, `deltaPhi` tilts toward or away
+     * from the poles (radians). Leaves any axis view.
+     */
+    orbit(deltaTheta: number, deltaPhi: number): void;
+    /** Moves the target in the view plane by screen pixels, so the scene follows the pointer. */
+    pan(dx: number, dy: number, worldPerPixel: number): void;
+    /** Scales the distance to the target (> 1 moves away). Perspective clip planes scale along. */
+    dolly(factor: number): void;
+    getPosition(out: Vector3): Vector3;
+    /** Half height of the visible area at the target, for a square viewport. */
+    getHalfHeight(): number;
+    /**
+     * Fits `object` (or several) into a square viewport without changing the view direction.
+     * `padding` > 1 leaves room around the object.
+     */
+    frame(object: Object3D | readonly Object3D[], padding?: number): void;
+    /** Fits a world-space box, like `frame`. */
+    frameBox(box: Box3, padding?: number): void;
+    copy(source: ViewNavigation): this;
+    toJSON(): ViewNavigationData;
+    applyJSON(data: Partial<ViewNavigationData>): this;
+}

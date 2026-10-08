@@ -9,11 +9,11 @@ import { Break, If, vec3, vec4, texture3D, uniform, Fn } from 'three/tsl';
 import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js';
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 import { Register, Property } from '@io-gui/core';
-import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
+import { ThreeEditor, IoThreeExample, ioThreeViewport } from '@io-gui/three';
 import { ioPropertyEditor } from '@io-gui/editors';
 import { ioLayout, Layout } from '@io-gui/layout';
 import { ioNumberSlider } from '@io-gui/sliders';
-let VolumePerlinExample = class VolumePerlinExample extends ThreeApplet {
+let VolumePerlinExample = class VolumePerlinExample extends ThreeEditor {
     thresholdUniform;
     stepsUniform;
     constructor(args) {
@@ -62,7 +62,7 @@ let VolumePerlinExample = class VolumePerlinExample extends ThreeApplet {
         material.side = BackSide;
         material.transparent = true;
         const mesh = new Mesh(new BoxGeometry(1, 1, 1), material);
-        this.scene.add(mesh);
+        this.document.scene.add(mesh);
     }
     thresholdChanged() {
         this.thresholdUniform.value = this.threshold;
@@ -86,8 +86,8 @@ let IoVolumePerlinExample = class IoVolumePerlinExample extends IoThreeExample {
         this.render([
             ioLayout({
                 elements: [
-                    ioThreeViewport({ id: 'Perspective', applet: this.applet, cameraSelect: 'perspective' }),
-                    ioPropertyEditor({ id: 'PropertyEditor', value: this.applet,
+                    ioThreeViewport({ id: 'Perspective', editor: this.editor }),
+                    ioPropertyEditor({ id: 'PropertyEditor', value: this.editor,
                         properties: ['threshold', 'steps'],
                         config: [
                             ['threshold', ioNumberSlider({ min: 0, max: 1, step: 0.01 })],
@@ -121,7 +121,7 @@ let IoVolumePerlinExample = class IoVolumePerlinExample extends IoThreeExample {
 };
 __decorate([
     Property({ type: VolumePerlinExample, init: null })
-], IoVolumePerlinExample.prototype, "applet", void 0);
+], IoVolumePerlinExample.prototype, "editor", void 0);
 IoVolumePerlinExample = __decorate([
     Register
 ], IoVolumePerlinExample);

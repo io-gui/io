@@ -1,19 +1,18 @@
 import { AnimationMixer, PerspectiveCamera, Group } from 'three/webgpu';
-import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three';
-export declare class AnimationRetargetingExample extends ThreeApplet {
+import { ThreeEditor, IoThreeExample, ThreeEditorProps } from '@io-gui/three';
+export declare class AnimationRetargetingExample extends ThreeEditor {
     sourceMixer?: AnimationMixer;
     targetMixer?: AnimationMixer;
     camera: PerspectiveCamera;
     group: Group;
-    constructor(args: ThreeAppletProps);
-    onResized(width: number, height: number): void;
+    constructor(args: ThreeEditorProps);
     private loadModels;
     private getSource;
     private retargetModel;
     onAnimate(delta: number): void;
 }
 export declare class IoAnimationRetargetingExample extends IoThreeExample {
-    applet: AnimationRetargetingExample;
+    editor: AnimationRetargetingExample;
     ready(): void;
 }
 export declare const ioAnimationRetargetingExample: (arg0: any) => import("@io-gui/core").VDOMElement;

@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Property, Register } from '@io-gui/core';
 import { AnimationAction, AnimationMixer, Color, DirectionalLight, Fog, Group, HemisphereLight, Mesh, MeshPhongMaterial, PerspectiveCamera, PlaneGeometry, } from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
+import { ThreeEditor, ThreeView, IoThreeExample, ioThreeViewport } from '@io-gui/three';
 import { ioLayout, Layout } from '@io-gui/layout';
 import { ioObject, ioPropertyEditor } from '@io-gui/editors';
 import { ioNumberSlider } from '@io-gui/sliders';
@@ -16,7 +16,7 @@ const loader = new GLTFLoader();
 const loadGltf = (url) => new Promise((resolve, reject) => {
     loader.load(url, resolve, undefined, reject);
 });
-let AnimationSkinningBlendingExample = class AnimationSkinningBlendingExample extends ThreeApplet {
+let AnimationSkinningBlendingExample = class AnimationSkinningBlendingExample extends ThreeEditor {
     camera;
     mixer = new AnimationMixer(new Group());
     actions = {};
@@ -29,14 +29,14 @@ let AnimationSkinningBlendingExample = class AnimationSkinningBlendingExample ex
         this.camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 100);
         this.camera.position.set(1, 2, -3);
         this.camera.lookAt(0, 1, 0);
-        this.scene.add(this.camera);
+        this.document.scene.add(this.camera);
         // Scene setup
-        this.scene.background = new Color(0xa0a0a0);
-        this.scene.fog = new Fog(0xa0a0a0, 10, 50);
+        this.document.scene.background = new Color(0xa0a0a0);
+        this.document.scene.fog = new Fog(0xa0a0a0, 10, 50);
         // Lights
         const hemiLight = new HemisphereLight(0xffffff, 0x8d8d8d, 3);
         hemiLight.position.set(0, 20, 0);
-        this.scene.add(hemiLight);
+        this.document.scene.add(hemiLight);
         const dirLight = new DirectionalLight(0xffffff, 3);
         dirLight.position.set(-3, 10, -10);
         dirLight.castShadow = true;
@@ -46,17 +46,17 @@ let AnimationSkinningBlendingExample = class AnimationSkinningBlendingExample ex
         dirLight.shadow.camera.right = 2;
         dirLight.shadow.camera.near = 0.1;
         dirLight.shadow.camera.far = 40;
-        this.scene.add(dirLight);
+        this.document.scene.add(dirLight);
         const ground = new Mesh(new PlaneGeometry(10, 10), new MeshPhongMaterial({ color: 0xcbcbcb, depthWrite: false }));
         ground.rotation.x = -Math.PI / 2;
         ground.receiveShadow = true;
-        this.scene.add(ground);
+        this.document.scene.add(ground);
         void this.loadModel();
     }
     async loadModel() {
         const gltf = await loadGltf('https://threejs.org/examples/models/gltf/Soldier.glb');
         const model = gltf.scene;
-        this.scene.add(model);
+        this.document.scene.add(model);
         model.traverse((object) => {
             if (object.isMesh) {
                 object.castShadow = true;
@@ -96,7 +96,7 @@ let AnimationSkinningBlendingExample = class AnimationSkinningBlendingExample ex
         if (this.mixer) {
             this.mixer.update(this.stepSize);
         }
-        this.dispatch('three-applet-needs-render', undefined, true);
+        this.requestRender();
     };
     getCurrentAction() {
         for (const action of Object.values(this.actions)) {
@@ -185,18 +185,18 @@ let IoAnimationSkinningBlendingExample = class IoAnimationSkinningBlendingExampl
         this.render([
             ioLayout({
                 elements: [
-                    ioThreeViewport({ id: 'Top', applet: this.applet, cameraSelect: 'top' }),
-                    ioThreeViewport({ id: 'Left', applet: this.applet, cameraSelect: 'left' }),
-                    ioThreeViewport({ id: 'Back', applet: this.applet, cameraSelect: 'back' }),
-                    ioThreeViewport({ id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene' }),
-                    ioPropertyEditor({ id: 'PropertyEditor', value: this.applet,
+                    ioThreeViewport({ id: 'Top', editor: this.editor, view: new ThreeView().setAxisView('top') }),
+                    ioThreeViewport({ id: 'Left', editor: this.editor, view: new ThreeView().setAxisView('left') }),
+                    ioThreeViewport({ id: 'Back', editor: this.editor, view: new ThreeView().setAxisView('back') }),
+                    ioThreeViewport({ id: 'SceneCamera', editor: this.editor, view: new ThreeView().setCameraView() }),
+                    ioPropertyEditor({ id: 'PropertyEditor', value: this.editor,
                         config: [
                             [AnimationMixer, ioObject({ expanded: true, properties: ['timeScale'] })],
                             [AnimationAction, ioObject({ expanded: true, properties: ['weight'] })],
                             ['makeSingleStep', ioButton({ label: 'Make Single Step' })],
                             ['stepSize', ioNumberSlider({ min: 0, max: 1, step: 0.01 })],
                             ['actions', ioPropertyEditor({ label: '_hidden_' })],
-                            [Function, ioButton({ disabled: this.applet.bind('isCrossfading') })],
+                            [Function, ioButton({ disabled: this.editor.bind('isCrossfading') })],
                         ],
                         groups: {
                             Main: [
@@ -262,7 +262,7 @@ let IoAnimationSkinningBlendingExample = class IoAnimationSkinningBlendingExampl
 };
 __decorate([
     Property({ type: AnimationSkinningBlendingExample, init: { isPlaying: true } })
-], IoAnimationSkinningBlendingExample.prototype, "applet", void 0);
+], IoAnimationSkinningBlendingExample.prototype, "editor", void 0);
 IoAnimationSkinningBlendingExample = __decorate([
     Register
 ], IoAnimationSkinningBlendingExample);

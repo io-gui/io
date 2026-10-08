@@ -6,9 +6,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { AmbientLight, ArrayCamera, CylinderGeometry, DirectionalLight, Mesh, MeshPhongMaterial, PerspectiveCamera, PlaneGeometry, Vector4 } from 'three/webgpu';
 import { Register, Property } from '@io-gui/core';
-import { ThreeApplet, IoThreeViewport } from '@io-gui/three';
+import { ThreeEditor, IoThreeViewport } from '@io-gui/three';
 const AMOUNT = 6;
-let CameraArrayExample = class CameraArrayExample extends ThreeApplet {
+let CameraArrayExample = class CameraArrayExample extends ThreeEditor {
     arrayCamera;
     mesh;
     constructor(args) {
@@ -22,33 +22,29 @@ let CameraArrayExample = class CameraArrayExample extends ThreeApplet {
         this.arrayCamera = new ArrayCamera(subCameras);
         this.arrayCamera.name = 'arrayCamera';
         this.arrayCamera.position.z = 3;
-        this.scene.add(this.arrayCamera);
+        this.document.scene.add(this.arrayCamera);
         // Lighting
-        this.scene.add(new AmbientLight(0x999999));
+        this.document.scene.add(new AmbientLight(0x999999));
         const light = new DirectionalLight(0xffffff, 3);
         light.position.set(0.5, 0.5, 1);
         light.castShadow = true;
         light.shadow.bias = -0.001;
         light.shadow.camera.zoom = 4;
-        this.scene.add(light);
+        this.document.scene.add(light);
         // Background plane
         const geometryBackground = new PlaneGeometry(100, 100);
         const materialBackground = new MeshPhongMaterial({ color: 0x000066 });
         const background = new Mesh(geometryBackground, materialBackground);
         background.receiveShadow = true;
         background.position.set(0, 0, -1);
-        this.scene.add(background);
+        this.document.scene.add(background);
         // Cylinder
         const geometryCylinder = new CylinderGeometry(0.5, 0.5, 1, 32);
         const materialCylinder = new MeshPhongMaterial({ color: 0xff0000 });
         this.mesh = new Mesh(geometryCylinder, materialCylinder);
         this.mesh.castShadow = true;
         this.mesh.receiveShadow = true;
-        this.scene.add(this.mesh);
-    }
-    onResized(width, height) {
-        super.onResized(width, height);
-        this.updateCameras(width, height);
+        this.document.scene.add(this.mesh);
     }
     updateCameras(width, height) {
         const aspectRatio = width / height;
@@ -81,10 +77,15 @@ CameraArrayExample = __decorate([
 ], CameraArrayExample);
 export { CameraArrayExample };
 let IoCameraArrayExample = class IoCameraArrayExample extends IoThreeViewport {
+    onResized() {
+        super.onResized();
+        if (this.width && this.height)
+            this.editor.updateCameras(this.width, this.height);
+    }
 };
 __decorate([
     Property({ type: CameraArrayExample, init: { isPlaying: true } })
-], IoCameraArrayExample.prototype, "applet", void 0);
+], IoCameraArrayExample.prototype, "editor", void 0);
 IoCameraArrayExample = __decorate([
     Register
 ], IoCameraArrayExample);

@@ -1,12 +1,12 @@
 import { AnimationAction, AnimationMixer } from 'three/webgpu';
-import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three';
-export declare class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
+import { ThreeEditor, IoThreeExample, ThreeEditorProps } from '@io-gui/three';
+export declare class AnimationSkinningAdditiveBlendingExample extends ThreeEditor {
     isLoaded: boolean;
     mixer: AnimationMixer;
     currentBaseAction: string;
     baseActions: Record<string, AnimationAction | null>;
     additiveActions: Record<string, AnimationAction | null>;
-    constructor(args: ThreeAppletProps);
+    constructor(args: ThreeEditorProps);
     private loadModel;
     private setWeight;
     none: () => void;
@@ -19,7 +19,7 @@ export declare class AnimationSkinningAdditiveBlendingExample extends ThreeApple
     onAnimate(delta: number): void;
 }
 export declare class IoAnimationSkinningAdditiveBlendingExample extends IoThreeExample {
-    applet: AnimationSkinningAdditiveBlendingExample;
+    editor: AnimationSkinningAdditiveBlendingExample;
     ready(): void;
 }
 export declare const ioAnimationSkinningAdditiveBlendingExample: (arg0: any) => import("@io-gui/core").VDOMElement;

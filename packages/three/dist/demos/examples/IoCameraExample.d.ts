@@ -1,16 +1,15 @@
 import { PerspectiveCamera, OrthographicCamera, Group, Mesh } from 'three/webgpu';
-import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three';
-export declare class CameraExample extends ThreeApplet {
+import { ThreeEditor, IoThreeExample, ThreeEditorProps } from '@io-gui/three';
+export declare class CameraExample extends ThreeEditor {
     perspectiveCamera: PerspectiveCamera;
     orthographicCamera: OrthographicCamera;
     cameraRig: Group;
     mesh: Mesh;
-    constructor(args: ThreeAppletProps);
-    onResized(width: number, height: number): void;
+    constructor(args: ThreeEditorProps);
     onAnimate(): void;
 }
 export declare class IoCameraExample extends IoThreeExample {
-    applet: CameraExample;
+    editor: CameraExample;
     ready(): void;
 }
 export declare const ioCameraExample: (arg0: any) => import("@io-gui/core").VDOMElement;

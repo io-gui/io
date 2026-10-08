@@ -6,14 +6,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { BufferAttribute, CanvasTexture, Color, DirectionalLight, IcosahedronGeometry, Mesh, MeshBasicMaterial, MeshPhongMaterial, PlaneGeometry, SRGBColorSpace } from 'three/webgpu';
 import { Register, Property } from '@io-gui/core';
-import { ThreeApplet, IoThreeViewport } from '@io-gui/three';
-let GeometryColorsExample = class GeometryColorsExample extends ThreeApplet {
+import { ThreeEditor, IoThreeViewport } from '@io-gui/three';
+let GeometryColorsExample = class GeometryColorsExample extends ThreeEditor {
     constructor(args) {
         super(args);
-        this.scene.background = new Color(0xffffff);
+        this.document.scene.background = new Color(0xffffff);
         const light = new DirectionalLight(0xffffff, 3);
         light.position.set(0, 0, 1);
-        this.scene.add(light);
+        this.document.scene.add(light);
         // shadow
         const canvas = document.createElement('canvas');
         canvas.width = 128;
@@ -31,17 +31,17 @@ let GeometryColorsExample = class GeometryColorsExample extends ThreeApplet {
         shadowMesh = new Mesh(shadowGeo, shadowMaterial);
         shadowMesh.position.y = -250;
         shadowMesh.rotation.x = -Math.PI / 2;
-        this.scene.add(shadowMesh);
+        this.document.scene.add(shadowMesh);
         shadowMesh = new Mesh(shadowGeo, shadowMaterial);
         shadowMesh.position.y = -250;
         shadowMesh.position.x = -400;
         shadowMesh.rotation.x = -Math.PI / 2;
-        this.scene.add(shadowMesh);
+        this.document.scene.add(shadowMesh);
         shadowMesh = new Mesh(shadowGeo, shadowMaterial);
         shadowMesh.position.y = -250;
         shadowMesh.position.x = 400;
         shadowMesh.rotation.x = -Math.PI / 2;
-        this.scene.add(shadowMesh);
+        this.document.scene.add(shadowMesh);
         const radius = 200;
         const geometry1 = new IcosahedronGeometry(radius, 1);
         const count = geometry1.attributes.position.count;
@@ -77,16 +77,16 @@ let GeometryColorsExample = class GeometryColorsExample extends ThreeApplet {
         mesh.add(wireframe);
         mesh.position.x = -400;
         mesh.rotation.x = -1.87;
-        this.scene.add(mesh);
+        this.document.scene.add(mesh);
         mesh = new Mesh(geometry2, material);
         wireframe = new Mesh(geometry2, wireframeMaterial);
         mesh.add(wireframe);
         mesh.position.x = 400;
-        this.scene.add(mesh);
+        this.document.scene.add(mesh);
         mesh = new Mesh(geometry3, material);
         wireframe = new Mesh(geometry3, wireframeMaterial);
         mesh.add(wireframe);
-        this.scene.add(mesh);
+        this.document.scene.add(mesh);
     }
 };
 GeometryColorsExample = __decorate([
@@ -97,7 +97,7 @@ let IoGeometryColorsExample = class IoGeometryColorsExample extends IoThreeViewp
 };
 __decorate([
     Property({ type: GeometryColorsExample, init: null })
-], IoGeometryColorsExample.prototype, "applet", void 0);
+], IoGeometryColorsExample.prototype, "editor", void 0);
 IoGeometryColorsExample = __decorate([
     Register
 ], IoGeometryColorsExample);

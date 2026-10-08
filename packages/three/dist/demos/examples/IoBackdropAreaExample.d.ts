@@ -1,6 +1,6 @@
 import { AnimationMixer, Mesh, MeshBasicNodeMaterial, Vector3 } from 'three/webgpu';
-import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three';
-export declare class BackdropAreaExample extends ThreeApplet {
+import { ThreeEditor, IoThreeExample, ThreeEditorProps } from '@io-gui/three';
+export declare class BackdropAreaExample extends ThreeEditor {
     mixer?: AnimationMixer;
     box: Mesh;
     blurredBlurMaterial: MeshBasicNodeMaterial;
@@ -10,13 +10,13 @@ export declare class BackdropAreaExample extends ThreeApplet {
     materials: Record<string, MeshBasicNodeMaterial>;
     boxScale: Vector3;
     material: string;
-    constructor(args: ThreeAppletProps);
+    constructor(args: ThreeEditorProps);
     materialChanged(): void;
     private loadModel;
     onAnimate(delta: number): void;
 }
 export declare class IoBackdropAreaExample extends IoThreeExample {
-    applet: BackdropAreaExample;
+    editor: BackdropAreaExample;
     ready(): void;
 }
 export declare const ioBackdropAreaExample: (arg0: any) => import("@io-gui/core").VDOMElement;

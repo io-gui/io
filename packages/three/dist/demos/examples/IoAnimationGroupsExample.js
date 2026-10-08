@@ -6,8 +6,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { AnimationClip, AnimationMixer, AnimationObjectGroup, BoxGeometry, ColorKeyframeTrack, InterpolateDiscrete, Mesh, MeshBasicMaterial, NumberKeyframeTrack, Quaternion, QuaternionKeyframeTrack, Vector3 } from 'three/webgpu';
 import { Register, Property } from '@io-gui/core';
-import { ThreeApplet, IoThreeExample } from '@io-gui/three';
-let AnimationGroupsExample = class AnimationGroupsExample extends ThreeApplet {
+import { ThreeEditor, IoThreeExample } from '@io-gui/three';
+let AnimationGroupsExample = class AnimationGroupsExample extends ThreeEditor {
     mixer;
     constructor(args) {
         super(args);
@@ -21,7 +21,7 @@ let AnimationGroupsExample = class AnimationGroupsExample extends ThreeApplet {
                 mesh.position.x = 32 - (16 * i);
                 mesh.position.y = 0;
                 mesh.position.z = 32 - (16 * j);
-                this.scene.add(mesh);
+                this.document.scene.add(mesh);
                 animationGroup.add(mesh);
             }
         }
@@ -51,7 +51,7 @@ let IoAnimationGroupsExample = class IoAnimationGroupsExample extends IoThreeExa
 };
 __decorate([
     Property({ type: AnimationGroupsExample, init: { isPlaying: true } })
-], IoAnimationGroupsExample.prototype, "applet", void 0);
+], IoAnimationGroupsExample.prototype, "editor", void 0);
 IoAnimationGroupsExample = __decorate([
     Register
 ], IoAnimationGroupsExample);

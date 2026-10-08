@@ -1,13 +1,13 @@
 import { AnimationMixer, WebGPURenderer } from 'three/webgpu';
-import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three';
-export declare class AnimationKeyframesExample extends ThreeApplet {
+import { ThreeEditor, IoThreeExample, ThreeEditorProps } from '@io-gui/three';
+export declare class AnimationKeyframesExample extends ThreeEditor {
     mixer: AnimationMixer;
-    constructor(args: ThreeAppletProps);
+    constructor(args: ThreeEditorProps);
     onRendererInitialized(renderer: WebGPURenderer): Promise<void>;
     onAnimate(delta: number): void;
 }
 export declare class IoAnimationKeyframesExample extends IoThreeExample {
-    applet: AnimationKeyframesExample;
+    editor: AnimationKeyframesExample;
     ready(): void;
 }
 export declare const ioAnimationKeyframesExample: (arg0: any) => import("@io-gui/core").VDOMElement;

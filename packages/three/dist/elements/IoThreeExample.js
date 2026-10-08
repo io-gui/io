@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { Register, ReactiveElement, Property } from '@io-gui/core';
 import { ioThreeViewport } from '@io-gui/three';
-import { ThreeApplet } from '../nodes/ThreeApplet.js';
+import { ThreeEditor } from '../editor/ThreeEditor.js';
 export class IoThreeExample extends ReactiveElement {
     static get Style() {
         return /* css */ `
@@ -33,16 +33,16 @@ export class IoThreeExample extends ReactiveElement {
     }
     ready() {
         this.render([
-            ioThreeViewport({ applet: this.applet, cameraSelect: 'perspective' }),
+            ioThreeViewport({ editor: this.editor }),
         ]);
     }
     dispose() {
-        this.applet.dispose();
+        this.editor.dispose();
         super.dispose();
     }
 }
 __decorate([
-    Property({ type: ThreeApplet, init: null })
-], IoThreeExample.prototype, "applet", void 0);
+    Property({ type: ThreeEditor, init: null })
+], IoThreeExample.prototype, "editor", void 0);
 Register(IoThreeExample);
 export const ioThreeExample = (arg0) => IoThreeExample.vConstructor(arg0);
