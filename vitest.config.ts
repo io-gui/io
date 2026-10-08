@@ -4,7 +4,7 @@
 
 import { defineConfig } from 'vitest/config'
 import { playwright } from '@vitest/browser-playwright'
-import { resolveConfig } from './vite.config'
+import { resolveConfig, oxcConfig } from './vite.config'
 
 function browserConfig(instanceName: string) {
   return {
@@ -17,6 +17,7 @@ function browserConfig(instanceName: string) {
 
 export default defineConfig({
   resolve: resolveConfig,
+  oxc: oxcConfig,
   test: {
     projects: [
       {

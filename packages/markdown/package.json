@@ -50,7 +50,7 @@
   "devDependencies": {
     "@io-gui/core": "workspace:*",
     "dompurify": "3.4.16",
-    "marked": "18.0.5",
+    "marked": "18.1.0",
     "marked-highlight": "2.2.4"
   },
   "peerDependencies": {
