@@ -46,6 +46,12 @@ export const resolveConfig = {
   ],
 }
 
+// Oxc resolves tsconfig per file and honors `exclude`, so *.test.ts files
+// (excluded from package tsconfigs) would miss `experimentalDecorators`.
+export const oxcConfig = {
+  decorator: { legacy: true },
+}
+
 const DEV_HOST = 'dev.tabanovic.xyz'
 
 export default defineConfig({
@@ -67,4 +73,5 @@ export default defineConfig({
     },
   },
   resolve: resolveConfig,
+  oxc: oxcConfig,
 })
