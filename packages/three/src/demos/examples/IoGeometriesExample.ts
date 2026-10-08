@@ -26,7 +26,7 @@ import {
 import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js'
 import { plane, klein, mobius } from 'three/addons/geometries/ParametricFunctions.js'
 import { Register, Property } from '@io-gui/core'
-import { ThreeEditor, IoThreeExample, ioThreeViewport, ThreeEditorProps } from '@io-gui/three'
+import { ThreeEditor, ThreeView, IoThreeExample, ioThreeViewport, ThreeEditorProps } from '@io-gui/three'
 import { Layout, ioLayout } from '@io-gui/layout'
 import { ioPropertyEditor, ioObject } from '@io-gui/editors'
 
@@ -171,7 +171,7 @@ export class IoGeometriesExample extends IoThreeExample {
     this.render([
       ioLayout({
         elements: [
-          ioThreeViewport({id: 'Top', editor: this.editor, cameraSelect: 'top'}),
+          ioThreeViewport({id: 'Top', editor: this.editor, view: new ThreeView().setAxisView('top')}),
           ioPropertyEditor({id: 'PropertyEditor', value: this.editor, properties: ['material', 'geometries'], config: [
             ['geometries', ioPropertyEditor({label: '_hidden_'})],
             [BufferGeometry, ioObject({properties: []})],

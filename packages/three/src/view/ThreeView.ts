@@ -89,6 +89,8 @@ export class ThreeView extends ReactiveObject {
   private readonly _orthographic = new OrthographicCamera()
   private readonly _scenePerspective = new PerspectiveCamera()
   private readonly _sceneOrthographic = new OrthographicCamera()
+  /** Scene camera name `setCameraView` waits for (`''` = first scene camera); null when none is pending. */
+  private _cameraSourceName: string | null = null
   /** Session state: navigation per document uuid, so switching documents back restores the camera. */
   private readonly _navigationByDocument = new Map<string, ViewNavigationData>()
 
@@ -104,15 +106,37 @@ export class ThreeView extends ReactiveObject {
     this.dispatchMutation()
   }
 
-  setAxisView(axis: AxisView | null) {
+  /** Looks through the view's own navigation: an orthographic axis view, or the default perspective view with `free`. */
+  setAxisView(axis: AxisView) {
+    this.navigation.cameraSource = null
+    this._cameraSourceName = null
     this.navigation.setAxisView(axis)
     this.markNavigationChanged()
+    return this
   }
 
-  /** Looks through a scene camera by `uuid`, or stops with `null`. */
-  setCameraSource(uuid: string | null) {
-    this.navigation.cameraSource = uuid
+  /**
+   * Looks through a scene camera. `'uuid:<uuid>'` picks a camera by uuid, `'name:<name>'` by name; with no id
+   * (or `null`) the first camera found in the scene is used. Names and the first camera resolve to a uuid once
+   * a camera is in the scene, so a camera that is still loading is picked up when it is added; until then, or
+   * when the scene has no camera, the view shows its own `free` perspective view. An id without a prefix warns
+   * and uses the `free` view.
+   */
+  setCameraView(id: string | null = null) {
+    this.navigation.cameraSource = null
+    this._cameraSourceName = null
+    this.navigation.setAxisView('free')
+    if (id === null) {
+      this._cameraSourceName = ''
+    } else if (id.startsWith('uuid:')) {
+      this.navigation.cameraSource = id.slice(5)
+    } else if (id.startsWith('name:')) {
+      this._cameraSourceName = id.slice(5)
+    } else {
+      console.warn(`ThreeView.setCameraView: "${id}" needs a "uuid:" or "name:" prefix; using the free view`)
+    }
     this.markNavigationChanged()
+    return this
   }
 
   frame(object: Object3D | readonly Object3D[], padding = 1) {
@@ -151,6 +175,7 @@ export class ThreeView extends ReactiveObject {
 
   /** The scene camera this view looks through, if it is set and present in `scene`. */
   getSourceCamera(scene: Scene | null): ViewCamera | null {
+    if (this._cameraSourceName !== null && scene) this._resolveCameraSourceName(scene)
     const uuid = this.navigation.cameraSource
     if (!uuid || !scene) return null
     const camera = scene.getObjectByProperty('uuid', uuid) as Camera | undefined
@@ -158,6 +183,20 @@ export class ThreeView extends ReactiveObject {
       return camera as ViewCamera
     }
     return null
+  }
+
+  private _resolveCameraSourceName(scene: Scene) {
+    const name = this._cameraSourceName
+    let found: Object3D | undefined
+    scene.traverse(object => {
+      if (found) return
+      const isCamera = (object as PerspectiveCamera).isPerspectiveCamera || (object as OrthographicCamera).isOrthographicCamera
+      if (isCamera && (!name || object.name === name)) found = object
+    })
+    if (!found) return
+    // Resolved while drawing or picking with this camera, so no mutation is dispatched.
+    this.navigation.cameraSource = found.uuid
+    this._cameraSourceName = null
   }
 
   /**

@@ -13,7 +13,7 @@ import {
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'
 import { Register, Property } from '@io-gui/core'
-import { ThreeEditor, IoThreeExample, ioThreeViewport, ThreeEditorProps } from '@io-gui/three'
+import { ThreeEditor, ThreeView, IoThreeExample, ioThreeViewport, ThreeEditorProps } from '@io-gui/three'
 import { Layout, ioLayout } from '@io-gui/layout'
 
 // 1 micrometer to 100 billion light years in one scene, with 1 unit = 1 meter
@@ -158,8 +158,8 @@ export class IoCameraLogarithmicDepthBufferExample extends IoThreeExample {
     this.render([
       ioLayout({
         elements: [
-          ioThreeViewport({id: 'SceneCamera', editor: this.editor, cameraSelect: 'scene'}),
-          ioThreeViewport({id: 'SceneCameraLog', editor: this.editor, cameraSelect: 'scene', renderer: this.renderer}),
+          ioThreeViewport({id: 'SceneCamera', editor: this.editor, view: new ThreeView().setCameraView()}),
+          ioThreeViewport({id: 'SceneCameraLog', editor: this.editor, view: new ThreeView().setCameraView(), renderer: this.renderer}),
         ],
         model: new Layout({
           child: {

@@ -48,8 +48,7 @@ WebGPU-powered viewport element for rendering Three.js scenes.
 ```typescript
 type IoThreeViewportProps = {
   editor?: ThreeEditor; // App object whose active document the viewport shows
-  view?: ThreeView; // View state; pass one to keep navigation across remounts (default: the viewport makes its own)
-  cameraSelect?: string; // Shorthand setting the view: 'perspective' | 'top' | 'bottom' | 'left' | 'right' | 'front' | 'back' | 'scene' | 'scene:<cameraName>'
+  view?: ThreeView; // View state and camera; pass one to keep navigation across remounts (default: a perspective view the viewport makes)
   renderer?: WebGPURenderer; // Custom renderer (optional)
   keymap?: Keymap; // Navigation and selection bindings (default: keymaps.default, OrbitControls-like)
 };
@@ -64,7 +63,7 @@ type IoThreeViewportProps = {
 - Drawn by the RenderScheduler only when tagged dirty
 - `getViewCamera()` returns the camera it draws and picks with
 - Frames an object when its editor dispatches `frame-object` with `{object, overscan?}`
-- A `'scene'` / `'scene:<name>'` camera added later (async asset load) is picked up when it appears
+- The camera comes from the view: `view: new ThreeView().setAxisView('top')` for an axis view (`'free'` is the default perspective view), or `.setCameraView()` to look through the first scene camera. Pick one of several with `.setCameraView('name:shot')` or `.setCameraView('uuid:<uuid>')`. A scene camera added later (async asset load) is picked up when it appears, then tracked by uuid; until then the view shows its `free` view
 - All input goes through `viewport.inputRouter` (see Input below)
 - Draws through `viewport.compositor`: the view's pipeline, then overlays and `viewport.gizmoLayer` (see Pipelines and Overlays)
 
@@ -211,8 +210,8 @@ Serializable state of one view ([ADR-0002](./docs/adr/0002-app-view-frame-layers
 
 ```typescript
 const view = new ThreeView({ overscan: 1.1, clearColor: 0x000000 });
-view.setAxisView("top"); // orthographic axis view, or null for perspective
-view.setCameraSource(sceneCamera.uuid); // look through a scene camera (never mutated)
+view.setAxisView("top"); // orthographic axis view, or "free" for the perspective view (leaves any scene camera)
+view.setCameraView(`uuid:${sceneCamera.uuid}`); // look through a scene camera (never mutated); 'name:<name>' also works, no id = first scene camera
 view.frame(object); // fit an object
 view.getCamera(width, height, scene); // camera for this size
 view.toJSON(); // persist with a layout; restore with applyJSON()

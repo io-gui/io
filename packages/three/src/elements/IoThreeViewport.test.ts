@@ -43,28 +43,15 @@ describe('IoThreeViewport', () => {
     view.dispose()
   })
 
-  it('maps cameraSelect onto the view', () => {
-    const sceneCamera = new PerspectiveCamera()
-    sceneCamera.name = 'shot'
-    editor.document.scene.add(sceneCamera)
-    const viewport = new IoThreeViewport({ editor, cameraSelect: 'top' })
-    expect(viewport.view.navigation.axisView).toBe('top')
-    viewport.cameraSelect = 'scene:shot'
-    expect(viewport.view.navigation.cameraSource).toBe(sceneCamera.uuid)
-    expect(viewport.getViewCamera()).not.toBe(sceneCamera)
-    viewport.cameraSelect = 'perspective'
-    expect(viewport.view.navigation.cameraSource).toBe(null)
-    expect(viewport.view.navigation.axisView).toBe(null)
-    viewport.dispose()
-  })
-
-  it('switches to a requested scene camera once it is added to the scene', () => {
-    const viewport = new IoThreeViewport({ editor, cameraSelect: 'scene' })
+  it('switches to a named scene camera once it is added to the scene', () => {
+    const viewport = new IoThreeViewport({ editor, view: new ThreeView().setCameraView('name:late') })
     expect(viewport.view.navigation.cameraSource).toBe(null)
     const late = new PerspectiveCamera()
+    late.name = 'late'
     editor.document.scene.add(late)
-    editor.dispatch('frame-object', {object: editor.document.scene}, true)
+    viewport.getViewCamera()
     expect(viewport.view.navigation.cameraSource).toBe(late.uuid)
+    viewport.view.dispose()
     viewport.dispose()
   })
 
@@ -76,7 +63,7 @@ describe('IoThreeViewport', () => {
     expect(fresh.view.navigation.target.x).toBeCloseTo(10, 5)
 
     const view = new ThreeView().applyJSON({navigation: {target: [1, 2, 3], distance: 5}})
-    const restored = new IoThreeViewport({ editor, view, cameraSelect: '' })
+    const restored = new IoThreeViewport({ editor, view })
     expect(view.navigation.target.toArray()).toEqual([1, 2, 3])
     expect(view.navigation.distance).toBe(5)
     fresh.dispose()

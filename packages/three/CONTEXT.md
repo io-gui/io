@@ -129,7 +129,7 @@ A gizmo is an on-screen handle with a screen-space hit test that starts an opera
 _Avoid_: manipulator, TransformControls, handle (alone)
 
 **ViewNavigation**:
-A view's navigation as numbers: target, rotation, distance, projection, fov, clip range, axis view and an optional scene camera (`cameraSource`, by uuid). The draw camera is built from it per frame.
+A view's navigation as numbers: target, rotation, distance, projection, fov, clip range, axis view (`free` or an axis) and an optional scene camera (`cameraSource`, by uuid; `ThreeView.setCameraView()` resolves the first scene camera, or a `name:`, to it once the camera is in the scene). The draw camera is built from it per frame.
 _Avoid_: camera rig, camera controller, orbit state
 
 **Axis view**:

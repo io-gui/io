@@ -3,7 +3,7 @@ import { Register, Property } from '@io-gui/core'
 import { Layout, ioLayout } from '@io-gui/layout'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioPropertyEditor, registerEditorConfig, ioObject } from '@io-gui/editors'
-import { ThreeEditor, IoThreeExample, ioThreeViewport, ThreeEditorProps } from '@io-gui/three'
+import { ThreeEditor, ThreeView, IoThreeExample, ioThreeViewport, ThreeEditorProps } from '@io-gui/three'
 
 const frustumSize = 600
 
@@ -143,9 +143,9 @@ export class IoCameraExample extends IoThreeExample {
     this.render([
       ioLayout({
         elements: [
-          ioThreeViewport({id: 'Perspective', editor: this.editor, cameraSelect: 'perspective'}),
-          ioThreeViewport({id: 'ScenePerspective', editor: this.editor, cameraSelect: 'scene:perspective'}),
-          ioThreeViewport({id: 'SceneOrthographic', editor: this.editor, cameraSelect: 'scene:orthographic'}),
+          ioThreeViewport({id: 'Perspective', editor: this.editor}),
+          ioThreeViewport({id: 'ScenePerspective', editor: this.editor, view: new ThreeView().setCameraView('name:perspective')}),
+          ioThreeViewport({id: 'SceneOrthographic', editor: this.editor, view: new ThreeView().setCameraView('name:orthographic')}),
           ioPropertyEditor({id: 'PropertyEditor', value: this.editor, properties: ['perspectiveCamera','orthographicCamera']})
         ],
         model: new Layout({

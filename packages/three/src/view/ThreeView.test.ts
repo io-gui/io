@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { ThreeView, ViewNavigation } from '@io-gui/three'
 import { Box3, BoxGeometry, BufferAttribute, Mesh, OrthographicCamera, PerspectiveCamera, Scene, Vector3 } from 'three/webgpu'
 
@@ -11,7 +11,7 @@ describe('ViewNavigation', () => {
     const nav = new ViewNavigation()
     const position = nav.getPosition(new Vector3())
     expect(nav.projection).toBe('perspective')
-    expect(nav.axisView).toBe(null)
+    expect(nav.axisView).toBe('free')
     expect(nav.framed).toBe(false)
     const toTarget = nav.target.clone().sub(position).normalize()
     const forward = new Vector3(0, 0, -1).applyQuaternion(nav.rotation)
@@ -29,7 +29,7 @@ describe('ViewNavigation', () => {
       const forward = new Vector3(0, 0, -1).applyQuaternion(nav.rotation)
       expect(forward.toArray().map(v => Math.round(v) + 0)).toEqual(expected[axis])
     }
-    nav.setAxisView(null)
+    nav.setAxisView('free')
     expect(nav.projection).toBe('perspective')
   })
 
@@ -138,7 +138,7 @@ describe('ThreeView', () => {
     const before = JSON.stringify(sceneCamera.toJSON())
 
     const view = new ThreeView({overscan: 2})
-    view.setCameraSource(sceneCamera.uuid)
+    view.setCameraView(`uuid:${sceneCamera.uuid}`)
     const camera = view.getCamera(800, 400, scene) as PerspectiveCamera
     expect(camera).not.toBe(sceneCamera)
     expect(camera.position.toArray()).toEqual([1, 2, 3])
@@ -150,12 +150,54 @@ describe('ThreeView', () => {
     view.dispose()
   })
 
+  it('resolves a named scene camera to its uuid once it is in the scene', () => {
+    const scene = new Scene()
+    const other = new OrthographicCamera()
+    const shot = new PerspectiveCamera()
+    shot.name = 'shot'
+    scene.add(other, shot)
+
+    const view = new ThreeView().setCameraView('name:shot')
+    expect(view.getSourceCamera(new Scene())).toBe(null)
+    expect(view.getSourceCamera(scene)).toBe(shot)
+    expect(view.navigation.cameraSource).toBe(shot.uuid)
+    shot.name = 'renamed'
+    expect(view.getSourceCamera(scene)).toBe(shot)
+
+    view.setAxisView('free')
+    expect(view.getSourceCamera(scene)).toBe(null)
+    view.dispose()
+  })
+
+  it('looks through the first scene camera without an id, and uses the free view until one is added', () => {
+    const scene = new Scene()
+    const view = new ThreeView().setAxisView('top').setCameraView()
+    expect(view.getSourceCamera(scene)).toBe(null)
+    expect(view.navigation.axisView).toBe('free')
+    const first = new OrthographicCamera()
+    scene.add(first, new PerspectiveCamera())
+    expect(view.getSourceCamera(scene)).toBe(first)
+    expect(new ThreeView().setCameraView(null).getSourceCamera(scene)).toBe(first)
+    view.dispose()
+  })
+
+  it('warns and falls back to the free view for an id without a prefix', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const view = new ThreeView().setAxisView('top')
+    view.setCameraView('shot')
+    expect(warn).toHaveBeenCalledOnce()
+    expect(view.navigation.cameraSource).toBe(null)
+    expect(view.navigation.axisView).toBe('free')
+    warn.mockRestore()
+    view.dispose()
+  })
+
   it('keeps the orthographic scene camera frustum center when fitting', () => {
     const scene = new Scene()
     const board = new OrthographicCamera(2, 10, 8, 0, 0.1, 1000)
     scene.add(board)
     const view = new ThreeView({overscan: 1})
-    view.setCameraSource(board.uuid)
+    view.setCameraView(`uuid:${board.uuid}`)
     const camera = view.getCamera(800, 400, scene) as OrthographicCamera
     expect((camera.left + camera.right) / 2).toBeCloseTo(6, 5)
     expect((camera.top + camera.bottom) / 2).toBeCloseTo(4, 5)

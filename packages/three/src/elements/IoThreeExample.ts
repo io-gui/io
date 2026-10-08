@@ -33,7 +33,7 @@ export class IoThreeExample extends ReactiveElement {
   override ready() {
 
     this.render([
-      ioThreeViewport({editor: this.editor, cameraSelect: 'perspective'}),
+      ioThreeViewport({editor: this.editor}),
     ])
 
   }

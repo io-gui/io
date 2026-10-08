@@ -96,7 +96,7 @@ export class IoVolumePerlinExample extends IoThreeExample {
     this.render([
       ioLayout({
         elements: [
-          ioThreeViewport({id: 'Perspective', editor: this.editor, cameraSelect: 'perspective'}),
+          ioThreeViewport({id: 'Perspective', editor: this.editor}),
           ioPropertyEditor({id: 'PropertyEditor', value: this.editor,
             properties: ['threshold', 'steps'],
             config: [
