@@ -28,6 +28,9 @@
 
 ### Code Patterns That Failed
 
+- **three `Float32BufferAttribute(array)` copies the array.** Keep `attribute.array`, not the array passed in, when writing per-vertex data later. `InstancedBufferAttribute`/`BufferAttribute` do not copy.
+- **Vitest browser hang** ("no tests", ~10 min): stale Chrome for Testing processes. Kill them; run `npx vitest run --project unit <path> --browser.headless`.
+
 - **NodeArray assignment copy path** when source is already a `NodeArray`: copying via push inside `withInternalOperation` duplicates mutation listeners on kept items. Assign by reference or use explicit `splice`.
 - **NodeArray in-place filter via `length = 0` + `push`**: same duplicate-listener issue; use `splice(0, length, ...items)`.
 

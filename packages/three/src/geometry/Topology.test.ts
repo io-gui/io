@@ -15,7 +15,8 @@ describe('Topology', () => {
       for (let k = 0; k < 3; k++) {
         const a = topology.vertexToPoint[topology.corners[f * 3 + k]]
         const b = topology.vertexToPoint[topology.corners[f * 3 + (k + 1) % 3]]
-        expect(topology.primitiveEdges[f * 3 + k]).toBe(topology.edgeIndex(a, b))
+        const edge = topology.primitiveEdges[f * 3 + k]
+        expect([topology.edgePoints[edge * 2], topology.edgePoints[edge * 2 + 1]]).toEqual([Math.min(a, b), Math.max(a, b)])
       }
     }
   })

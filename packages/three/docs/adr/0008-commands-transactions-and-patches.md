@@ -8,7 +8,7 @@ Every change to a `ThreeDocument` goes through three levels:
 
 - **Command**: a named, serialisable intent with explicit arguments, for example `{name: 'transform.translate', args: {ids, delta, space}}`. Commands are what get repeated ("repeat last"), journaled, scripted, bound to menus and keymaps as actions, and grouped into macros. This is Maya's model: tools are interactive drivers that end by issuing a command.
 - **Transaction**: one atomic group of patches produced by running a command. It is the unit of undo, of change notification and of network sync.
-- **Patch**: the smallest invertible edit, keyed by stable id: `set(id, path, value)`, `insert(parentId, index, node)`, `remove(id)`, `setAttribute(geometryId, name, range | blobRef)`. The document's mutation API records the old value as each patch is applied, so the inverse is computed by the data layer, not written by hand.
+- **Patch**: the smallest invertible edit, keyed by stable id: `set(id, path, value)` (assigns), `copy(id, path, value)` (copies into the object at `path`, for Three.js properties that are read-only such as `position`), `insert(parentId, index, node)`, `remove(id)`, `setAttribute(geometryId, name, range | blobRef)`. The document's mutation API records the old value as each patch is applied, so the inverse is computed by the data layer, not written by hand.
 
 Undo applies a transaction's inverse patches; redo re-applies its forward patches. No command implements `undo()`.
 

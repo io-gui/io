@@ -147,9 +147,7 @@ class IoNumberLadder extends ReactiveElement {
         this.style.marginTop = - (selfRect.height / 2 + ThemeSingleton.lineHeight / 2 + ThemeSingleton.spacing) + 'px'
       }
     } else {
-      setTimeout(() => {
-        this.src?.setCaretPosition(this.src.textNode!.length)
-      })
+      queueMicrotask(() => { this.src?.setCaretPosition(this.src.textNode!.length) })
       this.removeAttribute('style')
     }
     this.dispatch('expanded', {value: this.expanded}, true)

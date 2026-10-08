@@ -17,7 +17,7 @@ One atomic group of patches: the unit of undo, change notification and sync. App
 _Avoid_: change set, batch, command (a command is the intent that runs one)
 
 **Patch**:
-The smallest invertible edit, addressed by object uuid: `set` (property path), `insert`, `remove`.
+The smallest invertible edit, addressed by object uuid: `set` (assign a property path), `copy` (copy into the object a path holds, such as `position`), `insert`, `remove`.
 _Avoid_: diff, delta, mutation (core term)
 
 **Operator**:
@@ -141,7 +141,7 @@ Per-viewport owner of all DOM input listeners and pointer capture. Offers events
 _Avoid_: input manager, event handler, controls
 
 **Behavior**:
-Anything that wants viewport input (modal operators, gizmos, tools, navigation, selection), with a priority band. Implements `wantsCapture`, `begin`, `update`, `end`, `cancel`, and optionally `hover`, `key`.
+Anything that wants viewport input (modal operators, gizmos, tools, navigation, selection), with a priority band. Implements any of `wantsCapture`, `begin`, `update`, `end`, `cancel` (capture), `hover`, `key` and `click`.
 _Avoid_: controller, handler, interaction
 
 **Keymap**:

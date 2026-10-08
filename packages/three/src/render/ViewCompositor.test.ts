@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { ACESFilmicToneMapping, AgXToneMapping, Mesh, NeutralToneMapping, NoToneMapping, PlaneGeometry, Texture, WebGPURenderer } from 'three/webgpu'
-import { DirtyReason, ForwardPipeline, PipelineContext, SelectionModel, ThreeEditor, ThreeView, UVPipeline, ViewCompositor, ViewPipeline, buildUVGeometry, collectUVMeshes, registerPipeline } from '@io-gui/three'
+import { DirtyReason, ForwardPipeline, PipelineContext, SelectionModel, ThreeEditor, ThreeView, UVPipeline, ViewCompositor, ViewPipeline, collectUVMeshes, pipelineTypes } from '@io-gui/three'
 
 type FakeRenderer = WebGPURenderer & {renders: unknown[]}
 
@@ -28,7 +28,7 @@ class ProbePipeline implements ViewPipeline {
 }
 
 let probe: ProbePipeline | null = null
-registerPipeline({id: 'probe', create: () => (probe = new ProbePipeline())})
+pipelineTypes.register({id: 'probe', create: () => (probe = new ProbePipeline())})
 
 describe('ViewCompositor', () => {
   let editor: ThreeEditor
@@ -129,15 +129,12 @@ describe('ViewCompositor', () => {
 })
 
 describe('UVPipeline', () => {
-  it('builds flat UV layouts of selected meshes and picks them as their meshes', async () => {
+  it('draws UV layouts of selected meshes and picks them as their meshes', async () => {
     const editor = new ThreeEditor()
     const plane = new Mesh(new PlaneGeometry(1, 1))
     plane.position.set(5, 5, 5)
     editor.document.scene.add(plane)
     expect(collectUVMeshes([editor.document.scene])).toEqual([plane])
-    const flat = buildUVGeometry(plane.geometry)
-    expect(flat.getAttribute('position').getX(1)).toBe(plane.geometry.getAttribute('uv').getX(1))
-    expect(flat.getAttribute('position').getZ(1)).toBe(0)
 
     const view = new ThreeView({kind: 'uv', overscan: 1})
     view.frameUV()

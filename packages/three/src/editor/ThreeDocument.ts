@@ -1,8 +1,9 @@
-import { Register, ReactiveObject, ReactiveObjectProps, Property } from '@io-gui/core'
+import { Register, ReactiveObject, ReactiveObjectProps, Property, Field } from '@io-gui/core'
 import { MathUtils, NoToneMapping, Object3D, Scene, ToneMapping } from 'three/webgpu'
 import { ChangeBus, DocumentChange } from './ChangeBus.js'
 import { Patch, changeKindForPatch, insertChild, invertPatch, resolvePath, writeValue } from './Patch.js'
 import { Transaction } from './Transaction.js'
+import { isDescendant } from '../utils/sceneGraph.js'
 
 export type ThreeDocumentProps = ReactiveObjectProps & {
   scene?: Scene
@@ -10,14 +11,13 @@ export type ThreeDocumentProps = ReactiveObjectProps & {
   toneMappingExposure?: number
 }
 
-export type CommitListener = (transaction: Transaction) => void
-
 const HISTORY_LIMIT = 100
 
 /**
  * The content of a ThreeEditor (ADR-0002): the scene of authored objects plus scene render settings.
  * Edits go through transactions of invertible patches (ADR-0008); every applied patch is reported on
- * the change bus, so views redraw without extra calls.
+ * the change bus, so views redraw without extra calls. Each committed transaction is dispatched as a
+ * `commit` event with the transaction as `detail` (future undo stack and sync).
  */
 @Register
 export class ThreeDocument extends ReactiveObject {
@@ -34,14 +34,15 @@ export class ThreeDocument extends ReactiveObject {
   /** Stable id of this document, used to key per-document session state (selection, view navigation). */
   readonly uuid: string = MathUtils.generateUUID()
 
-  readonly changeBus = new ChangeBus()
+  /** A Field: `mutated()` reports settings changes from inside the base constructor. */
+  @Field(ChangeBus)
+  declare readonly changeBus: ChangeBus
 
   private readonly _index = new Map<string, Object3D>()
   /** Ids not found since the last index rebuild; cleared when the current task ends. */
   private readonly _misses = new Set<string>()
   private _active: Transaction | null = null
   private readonly _history: Transaction[] = []
-  private readonly _commitListeners = new Set<CommitListener>()
 
   constructor(args?: ThreeDocumentProps) {
     super(args)
@@ -69,7 +70,7 @@ export class ThreeDocument extends ReactiveObject {
     if (!scene) return undefined
     if (uuid === scene.uuid) return scene
     const cached = this._index.get(uuid)
-    if (cached && this._isInScene(cached)) return cached
+    if (cached && isDescendant(cached, scene)) return cached
     if (this._misses.has(uuid)) return undefined
     this._rebuildIndex()
     const found = this._index.get(uuid)
@@ -116,27 +117,17 @@ export class ThreeDocument extends ReactiveObject {
     for (const patch of transaction.patches) this._applyPatch(patch)
   }
 
-  /** Called with every committed transaction (future undo stack and sync). */
-  addCommitListener(listener: CommitListener) {
-    this._commitListeners.add(listener)
-  }
-
-  removeCommitListener(listener: CommitListener) {
-    this._commitListeners.delete(listener)
-  }
-
   override mutated() {
-    // Also runs inside the base constructor, before class fields exist.
-    if (this.changeBus) this.notify({kind: 'settings'})
+    this.notify({kind: 'settings'})
   }
 
   /** @internal Applies a patch and reports it. */
   _applyPatch(patch: Patch) {
-    if (patch.op === 'set') {
+    if (patch.op === 'set' || patch.op === 'copy') {
       const object = this.getObject(patch.id)
       if (!object) throw new Error(`Patch: object ${patch.id} is not in the document`)
       const {owner, key} = resolvePath(object, patch.path)
-      writeValue(owner, key, patch.value)
+      writeValue(patch.op, owner, key, patch.value)
     } else {
       const parent = this.getObject(patch.parentId)
       if (!parent) throw new Error(`Patch: parent ${patch.parentId} is not in the document`)
@@ -161,7 +152,7 @@ export class ThreeDocument extends ReactiveObject {
 
   /** @internal */
   _onPatchApplied(patch: Patch) {
-    const id = patch.op === 'set' ? patch.id : patch.object.uuid
+    const id = 'id' in patch ? patch.id : patch.object.uuid
     this.notify({kind: changeKindForPatch(patch), ids: [id]})
   }
 
@@ -171,16 +162,7 @@ export class ThreeDocument extends ReactiveObject {
     if (transaction.state !== 'committed' || transaction.patches.length === 0) return
     this._history.push(transaction)
     if (this._history.length > HISTORY_LIMIT) this._history.shift()
-    for (const listener of this._commitListeners) listener(transaction)
-  }
-
-  private _isInScene(object: Object3D) {
-    let node: Object3D | null = object
-    while (node) {
-      if (node === this.scene) return true
-      node = node.parent
-    }
-    return false
+    this.dispatch('commit', transaction)
   }
 
   private _rebuildIndex() {

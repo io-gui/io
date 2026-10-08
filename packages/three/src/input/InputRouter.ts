@@ -62,15 +62,7 @@ export class InputRouter {
 
   constructor(host: InputHost) {
     this.host = host
-    host.addEventListener('pointerdown', this._onPointerDown)
-    host.addEventListener('pointermove', this._onPointerMove)
-    host.addEventListener('pointerup', this._onPointerUp)
-    host.addEventListener('pointercancel', this._onPointerCancel)
-    host.addEventListener('lostpointercapture', this._onPointerCancel)
-    host.addEventListener('pointerenter', this._onPointerEnter)
-    host.addEventListener('pointerleave', this._onPointerLeave)
-    host.addEventListener('wheel', this._onWheel as EventListener, {passive: false})
-    host.addEventListener('contextmenu', this._onContextMenu)
+    for (const [type, listener, options] of this._listeners()) host.addEventListener(type, listener, options)
     _routers.add(this)
     installKeyListeners()
   }
@@ -95,7 +87,7 @@ export class InputRouter {
     if (index === -1) return
     if (this._captured === behavior) {
       this._releaseAll()
-      behavior.cancel()
+      behavior.cancel?.()
     }
     if (this._hovered === behavior) {
       this._hovered = null
@@ -110,7 +102,7 @@ export class InputRouter {
    */
   startModal(behavior: Behavior) {
     const previous = this._captured
-    if (previous && previous !== behavior) previous.cancel()
+    if (previous && previous !== behavior) previous.cancel?.()
     this._endHover()
     this._captured = behavior
     this._modal = true
@@ -141,24 +133,29 @@ export class InputRouter {
   }
 
   dispose() {
-    if (this._captured) {
-      const captured = this._captured
+    const captured = this._captured
+    if (captured) {
       this._releaseAll()
-      captured.cancel()
+      captured.cancel?.()
     }
-    const host = this.host
-    host.removeEventListener('pointerdown', this._onPointerDown)
-    host.removeEventListener('pointermove', this._onPointerMove)
-    host.removeEventListener('pointerup', this._onPointerUp)
-    host.removeEventListener('pointercancel', this._onPointerCancel)
-    host.removeEventListener('lostpointercapture', this._onPointerCancel)
-    host.removeEventListener('pointerenter', this._onPointerEnter)
-    host.removeEventListener('pointerleave', this._onPointerLeave)
-    host.removeEventListener('wheel', this._onWheel as EventListener)
-    host.removeEventListener('contextmenu', this._onContextMenu)
+    for (const [type, listener, options] of this._listeners()) this.host.removeEventListener(type, listener, options)
     _routers.delete(this)
     if (_hoveredRouter === this) _hoveredRouter = null
     this._behaviors.length = 0
+  }
+
+  private _listeners(): [string, EventListener, AddEventListenerOptions?][] {
+    return [
+      ['pointerdown', this._onPointerDown as EventListener],
+      ['pointermove', this._onPointerMove as EventListener],
+      ['pointerup', this._onPointerUp as EventListener],
+      ['pointercancel', this._onPointerCancel as EventListener],
+      ['lostpointercapture', this._onPointerCancel as EventListener],
+      ['pointerenter', this._onPointerEnter],
+      ['pointerleave', this._onPointerLeave as EventListener],
+      ['wheel', this._onWheel as EventListener, {passive: false}],
+      ['contextmenu', this._onContextMenu],
+    ]
   }
 
   private _event(type: ViewInputType, native: PointerEvent | WheelEvent | KeyboardEvent) {
@@ -183,7 +180,7 @@ export class InputRouter {
     // preventDefault on pointerdown stops the browser from focusing; focus explicitly for key routing.
     if (this.host.tabIndex >= 0 && !this.host.contains(document.activeElement)) this.host.focus({preventScroll: true})
     this._consume(event.native)
-    behavior.begin(event)
+    behavior.begin?.(event)
   }
 
   private _capturePointer(pointerId: number) {
@@ -196,14 +193,7 @@ export class InputRouter {
   }
 
   private _releaseAll() {
-    for (const pointerId of this._capturedPointers) {
-      try {
-        if (this.host.hasPointerCapture(pointerId)) this.host.releasePointerCapture(pointerId)
-      } catch {
-        // Pointer already gone.
-      }
-    }
-    this._capturedPointers.clear()
+    for (const pointerId of this._capturedPointers) this._releasePointer(pointerId)
     this._captured = null
     this._modal = false
   }
@@ -223,34 +213,27 @@ export class InputRouter {
     if (multi) for (const press of this._presses.values()) press.multi = true
     this._presses.set(native.pointerId, {x: event.x, y: event.y, multi})
     const captured = this._captured
-    if (captured && this._modal) {
-      this._capturePointer(event.pointerId)
-      if (event.button === 2) this._suppressContextMenu = true
-      this._consume(native)
-      captured.update(event)
-      return
-    }
     if (captured) {
-      if (captured.allowsStealing) {
-        const thief = this._behaviors.find(behavior => behavior !== captured && behavior.wantsCapture(event))
+      if (!this._modal && captured.allowsStealing) {
+        const thief = this._behaviors.find(behavior => behavior !== captured && behavior.wantsCapture?.(event))
         if (thief) {
           // The thief takes over every captured pointer plus the new one.
-          captured.cancel(event)
+          captured.cancel?.(event)
           this._captured = thief
           this._capturePointer(event.pointerId)
           this._consume(native)
-          thief.begin(event)
+          thief.begin?.(event)
           return
         }
       }
       this._capturePointer(event.pointerId)
       if (event.button === 2) this._suppressContextMenu = true
       this._consume(native)
-      captured.update(event)
+      captured.update?.(event)
       return
     }
     for (const behavior of this._behaviors) {
-      if (behavior.wantsCapture(event)) {
+      if (behavior.wantsCapture?.(event)) {
         this._capture(behavior, event)
         return
       }
@@ -262,7 +245,7 @@ export class InputRouter {
     if (this._captured) {
       if (this._modal || this._capturedPointers.has(native.pointerId)) {
         this._consume(native)
-        this._captured.update(event)
+        this._captured.update?.(event)
       }
       return
     }
@@ -306,22 +289,17 @@ export class InputRouter {
     if (captured && this._modal) {
       this._consume(native)
       this._releasePointer(native.pointerId)
-      captured.update(event)
+      captured.update?.(event)
       return
     }
     if (!captured || !this._capturedPointers.has(native.pointerId)) return
     this._consume(native)
-    this._capturedPointers.delete(native.pointerId)
-    try {
-      if (this.host.hasPointerCapture(native.pointerId)) this.host.releasePointerCapture(native.pointerId)
-    } catch {
-      // Pointer already gone.
-    }
+    this._releasePointer(native.pointerId)
     if (this._capturedPointers.size === 0) {
       this._captured = null
-      captured.end(event)
+      captured.end?.(event)
     } else {
-      captured.update(event)
+      captured.update?.(event)
     }
   }
 
@@ -347,7 +325,7 @@ export class InputRouter {
     this._capturedPointers.delete(native.pointerId)
     if (this._capturedPointers.size === 0) {
       this._captured = null
-      captured.cancel(event)
+      captured.cancel?.(event)
     }
   }
 
@@ -355,14 +333,14 @@ export class InputRouter {
     const event = this._event('wheel', native)
     if (this._captured) {
       this._consume(native)
-      this._captured.update(event)
+      this._captured.update?.(event)
       return
     }
     for (const behavior of this._behaviors) {
-      if (behavior.wantsCapture(event)) {
+      if (behavior.wantsCapture?.(event)) {
         this._consume(native)
-        behavior.begin(event)
-        behavior.end(event)
+        behavior.begin?.(event)
+        behavior.end?.(event)
         return
       }
     }
