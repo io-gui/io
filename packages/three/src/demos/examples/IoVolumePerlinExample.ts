@@ -3,13 +3,13 @@ import { Break, If, vec3, vec4, texture3D, uniform, Fn} from 'three/tsl'
 import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js'
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js'
 import { Register, Property } from '@io-gui/core'
-import { ThreeApplet, IoThreeExample, ThreeAppletProps, ioThreeViewport } from '@io-gui/three'
+import { ThreeEditor, IoThreeExample, ThreeEditorProps, ioThreeViewport } from '@io-gui/three'
 import { ioPropertyEditor } from '@io-gui/editors'
 import { ioLayout, Layout } from '@io-gui/layout'
 import { ioNumberSlider } from '@io-gui/sliders'
 
 @Register
-export class VolumePerlinExample extends ThreeApplet {
+export class VolumePerlinExample extends ThreeEditor {
   private thresholdUniform: UniformNode<number>
   private stepsUniform: UniformNode<number>
 
@@ -19,7 +19,7 @@ export class VolumePerlinExample extends ThreeApplet {
   @Property({type: Number, value: 200})
   declare steps: number
 
-  constructor(args: ThreeAppletProps) {
+  constructor(args: ThreeEditorProps) {
     super(args)
 
     const size = 128
@@ -73,7 +73,7 @@ export class VolumePerlinExample extends ThreeApplet {
     material.transparent = true
 
     const mesh = new Mesh( new BoxGeometry( 1, 1, 1 ), material )
-    this.scene.add( mesh )
+    this.document.scene.add( mesh )
   }
 
   thresholdChanged() {
@@ -89,15 +89,15 @@ export class VolumePerlinExample extends ThreeApplet {
 export class IoVolumePerlinExample extends IoThreeExample {
 
   @Property({type: VolumePerlinExample, init: null})
-  declare applet: VolumePerlinExample
+  declare editor: VolumePerlinExample
 
   override ready() {
 
     this.render([
       ioLayout({
         elements: [
-          ioThreeViewport({id: 'Perspective', applet: this.applet, cameraSelect: 'perspective'}),
-          ioPropertyEditor({id: 'PropertyEditor', value: this.applet,
+          ioThreeViewport({id: 'Perspective', editor: this.editor}),
+          ioPropertyEditor({id: 'PropertyEditor', value: this.editor,
             properties: ['threshold', 'steps'],
             config: [
               ['threshold', ioNumberSlider({min: 0, max: 1, step: 0.01})],

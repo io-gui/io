@@ -116,9 +116,16 @@ Renamed instance `fromJSON` → `applyJSON` to distinguish apply-to-existing fro
 
 ### io-three
 
+- **Arch (2026-10-07, ADR 0001-0007):** WebGPU only, no WebGL fallback. Layers: app (ThreeEditor: doc, selection, tools, ops, undo, clock, change bus) / view (ThreeView data outlives IoThreeViewport element) / frame (RenderScheduler only renderer, typed dirty tags, phases, budget). Reactive mutation never triggers draws.
+- **Input:** InputRouter per viewport owns DOM listeners + capture. Priority bands modal 1000, gizmo 800, tool 500, nav 300, fallback select 100. Tools = ToolDefinition only (shared), behaviors per view. ThreeApplet/ToolBase/viewport `applet`+`tool` props/editor onResized removed 2026-10-07 (no back-compat going forward; external GlobeTool must port to ToolDefinition).
+- **Selection:** by Object3D.uuid + attribute domain (object/point/edge/primitive/corner), bitsets, transactions. UV sel = corner domain; uvSync = mapping.
+- RenderScheduler rAF must run after core FrameScheduler rAF in same frame (import order).
+- **Undo (ADR-0008 proposed):** command (Maya-like intent: repeat/journal/actions/macros) -> transaction (undo+sync unit) -> patch (set/insert/remove/setAttribute by uuid, old value auto-recorded). No hand-written undoIt. Build mutation API now (P4), undo stack + commands later (P8). Selection/nav/hover = session state, never synced. Multi-user target: Figma-style server order + LWW + fractional index; per-user undo skips paths changed by others.
 - `IoThreeViewport` lazy-inits a shared default `WebGPURenderer`. Must assign onto `args` before `super()` — `@Property({value: _renderer})` snapshots at class def, so a later `let` assign never reaches instances. Custom `renderer` prop still wins.
-- `ToolBase` stores hover and active pointers per `IoThreeViewport` in viewport-keyed `WeakMap`s. Pointer events should resolve the source viewport from `event.currentTarget` so hover/move/down/up payloads stay isolated to the viewport that emitted the event.
 - Dev import map needs bare `"three"` entry (OrbitControls imports `from 'three'`).
+- **Render path (P6):** pipeline -> own half-float RT (linear) -> compositor presents RT + overlays in ONE renderer.render(overlayScene) to canvas; present quad writes pipeline depth via material.depthNode. Tone mapping only at present (view ?? pipeline ?? document). PostProcessing in a pipeline: outputColorTransform=false. Renderer's shared frameBufferTarget does tone mapping per canvas render call -> keep canvas draws to one call.
+- Overlay hook = `prepare` (GizmoLayer is Behavior + Overlay; `update` name clash). Router startModal marks presses non-click.
+- **Components (P7):** ID pass = RGBA32F RT (slot, prim+1, view depth), readback rows padded to 256 B (stride = ceil(w*16/256)*256/4 floats), row 0 = top. Points/edges CPU-projected + 3x3 depth test. Overlay wires/points need depth bias: `material.depthNode` = viewZToPerspectiveDepth(viewZ*(1-eps)) (positionView in fragment). WebGPU points are 1px: use `Sprite` + PointsNodeMaterial(positionNode=instancedBufferAttribute) with `sprite.count`. Disposing a geometry frees GPU buffers of ALL its attributes -> never share an attribute with a geometry you dispose (clone it).
 - **Framing AABB:** always `Box3.setFromObject(obj, true)`. Default path unions morph-target extremes via `geometry.computeBoundingBox()` — absolute morphs often inflate to origin. Also: both cams `lookAt(center)`, near/far from AABB corner depths, `orbitControls.update()`.
 
 ### io-layout

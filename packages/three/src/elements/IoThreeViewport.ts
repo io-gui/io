@@ -1,96 +1,75 @@
 import { Register, ReactiveElement, ReactiveElementProps, Property, Change, Field, WithBinding } from '@io-gui/core'
-import { WebGPURenderer, CanvasTarget, NeutralToneMapping, Object3D } from 'three/webgpu'
-import WebGPU from 'three/addons/capabilities/WebGPU.js'
-import { ThreeApplet } from '../nodes/ThreeApplet.js'
-import { ViewCameras } from '../nodes/ViewCameras.js'
-import { ToolBase } from '../nodes/ToolBase.js'
+import { WebGPURenderer, CanvasTarget, Scene, Object3D, OrthographicCamera, PerspectiveCamera } from 'three/webgpu'
+import { ThreeEditor } from '../editor/ThreeEditor.js'
+import type { ThreeDocument } from '../editor/ThreeDocument.js'
+import type { Behavior } from '../input/Behavior.js'
+import { toolAllowsProfile } from '../tools/Tool.js'
+import { ThreeView } from '../view/ThreeView.js'
+import { InputRouter } from '../input/InputRouter.js'
+import { Keymap, keymaps } from '../input/Keymap.js'
+import { NavigationBehavior } from '../input/behaviors/NavigationBehavior.js'
+import { SelectBehavior } from '../input/behaviors/SelectBehavior.js'
+import type { SelectionModel } from '../selection/SelectionModel.js'
+import { DocumentChange, ChangeBus } from '../editor/ChangeBus.js'
+import { renderScheduler, getDefaultRenderer, ScheduledView, DirtyReason, FrameInfo, ViewRenderResult } from '../render/RenderScheduler.js'
+import { ViewCompositor } from '../render/ViewCompositor.js'
+import { GizmoLayer } from '../tools/Gizmo.js'
+import type { Picker } from '../selection/Picker.js'
+import { ComponentPicker, IdComponentPicker } from '../selection/ComponentPicker.js'
+import { IdPass } from '../render/IdPass.js'
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    (entry.target as IoThreeViewport).visible = entry.isIntersecting
+    const viewport = entry.target as IoThreeViewport
+    viewport.visible = entry.isIntersecting
+    if (entry.isIntersecting) viewport.tag('view')
   })
 })
 
-// TODO: Add support for logarithmic depth buffer
-// TODO: Add support for unique renderer instances per viewport
-let _renderer: WebGPURenderer | null = null
-
-function getDefaultRenderer() {
-  if (!_renderer) {
-    if (WebGPU.isAvailable() === false) {
-      console.error('No WebGPU support!')
-    }
-    _renderer = new WebGPURenderer({antialias: false, alpha: true})
-    _renderer.toneMapping = NeutralToneMapping
-    _renderer.setPixelRatio(window.devicePixelRatio)
-    _renderer.shadowMap.enabled = true
-    void _renderer.init()
-  }
-  return _renderer
-}
-
 export type IoThreeViewportProps = ReactiveElementProps & {
-  applet: WithBinding<ThreeApplet>
-  overscan?: WithBinding<number>
-  clearColor?: WithBinding<number>
-  clearAlpha?: WithBinding<number>
-  cameraSelect?: WithBinding<string>
+  /** The editor whose active document this viewport shows. */
+  editor?: WithBinding<ThreeEditor>
+  /**
+   * View state to show, including its camera (`new ThreeView().setAxisView('top')`, `.setCameraView('name:shot')`).
+   * Pass one to keep navigation across remounts; otherwise the viewport makes its own default perspective view.
+   */
+  view?: WithBinding<ThreeView>
+  /** Navigation and selection bindings (default: `keymaps.default`, OrbitControls-like navigation). */
+  keymap?: Keymap
   renderer?: WebGPURenderer
-  tool?: WithBinding<ToolBase>
 }
 
 @Register
-export class IoThreeViewport extends ReactiveElement {
+export class IoThreeViewport extends ReactiveElement implements ScheduledView {
 
   public width: number = 0
   public height: number = 0
   public visible: boolean = false
 
-  @Property({type: ThreeApplet, init: null})
-  declare applet: ThreeApplet
+  @Property({type: ThreeEditor})
+  declare editor: ThreeEditor
 
-  @Property({type: Number, value: 1.1})
-  declare public overscan: number
-
-  @Property({type: Number, value: 0x000000})
-  declare public clearColor: number
-
-  @Property({type: Number, value: 1})
-  declare public clearAlpha: number
-
-  @Property({type: String, value: 'perspective'})
-  declare cameraSelect: string
+  @Property({type: ThreeView})
+  declare view: ThreeView
 
   @Property({type: WebGPURenderer})
   declare renderer: WebGPURenderer
 
-  @Property({type: ViewCameras})
-  declare viewCameras: ViewCameras
-
-  @Property({type: ToolBase})
-  declare tool: ToolBase
+  @Property({type: Keymap, value: keymaps.default})
+  declare keymap: Keymap
 
   @Field(0)
   declare tabIndex: number
 
-  public renderTarget: CanvasTarget | undefined
-
-  public isWebGPUBackend() {
-    return (this.renderer.backend as { isWebGPUBackend?: boolean }).isWebGPUBackend === true
+  // Lazy: `ready()` runs inside the base constructor, before class fields are initialized.
+  declare private _renderTarget: CanvasTarget | undefined
+  get renderTarget(): CanvasTarget {
+    if (!this._renderTarget) this._renderTarget = new CanvasTarget(document.createElement('canvas'))
+    return this._renderTarget
   }
 
   public attachSurface() {
-    if (this.isWebGPUBackend()) {
-      if (!this.renderTarget) {
-        this.renderTarget = new CanvasTarget(document.createElement('canvas'))
-      }
-      const canvas = this.renderTarget.domElement
-      if (canvas.parentElement !== this) {
-        this.appendChild(canvas)
-      }
-      return
-    }
-    const canvas = this.renderer.domElement
+    const canvas = this.renderTarget.domElement
     if (canvas.parentElement !== this) {
       this.appendChild(canvas)
     }
@@ -100,6 +79,7 @@ export class IoThreeViewport extends ReactiveElement {
     return /* css */`
       :host {
         position: relative;
+        touch-action: none;
         display: flex;
         flex: 1 1 auto;
         flex-direction: column;
@@ -122,131 +102,337 @@ export class IoThreeViewport extends ReactiveElement {
 
   static override get Listeners() {
     return {
-      'three-applet-needs-render': 'onAppletNeedsRender',
-      'three-applet-frame-object-all': 'onAppletFrameObjectAll',
+      'frame-object': 'onFrameObject',
     }
+  }
+
+  declare private _ownsView: boolean
+  // Lazy, like renderTarget: `ready()` runs inside the base constructor.
+  declare private _inputRouter: InputRouter | undefined
+  declare private _navigation: NavigationBehavior | undefined
+  declare private _select: SelectBehavior | undefined
+  declare private _gizmos: GizmoLayer | undefined
+  declare private _toolBehaviors: {toolId: string; view: ThreeView; editor: ThreeEditor; behaviors: Behavior[]} | undefined
+  declare private _compositor: ViewCompositor | undefined
+  declare private _shownDocument: ThreeDocument | undefined
+  declare private _idPass: IdPass | undefined
+  declare private _idPicker: IdComponentPicker | undefined
+
+  /** Routes this viewport's input to behaviors: navigation, tools, later gizmos and operators (ADR-0004). */
+  get inputRouter(): InputRouter {
+    if (!this._inputRouter) {
+      this._inputRouter = new InputRouter(this)
+      this._navigation = new NavigationBehavior(this, this.keymap)
+      this._select = new SelectBehavior(this, this.keymap)
+      this._gizmos = new GizmoLayer(this)
+      this._inputRouter.add(this._navigation)
+      this._inputRouter.add(this._select)
+    }
+    return this._inputRouter
+  }
+
+  /** Runs this viewport's pipeline and draws its overlays (ADR-0006). Recreated when the renderer changes. */
+  get compositor(): ViewCompositor {
+    if (!this._compositor) this._compositor = new ViewCompositor(this.renderer)
+    return this._compositor
+  }
+
+  /** Gizmos of the active tool in this viewport. */
+  get gizmoLayer(): GizmoLayer {
+    void this.inputRouter
+    return this._gizmos!
+  }
+
+  /** The pipeline's picker when it has one (UV view), otherwise null (raycast the content scene). */
+  get picker(): Picker | null {
+    return this._compositor?.pipeline?.picker ?? null
+  }
+
+  /**
+   * How edit mode picks components here: the pipeline's (UV view) or an ID-buffer picker drawing this
+   * viewport's camera at its size (ADR-0007). The ID buffer is cached until content changes.
+   */
+  get componentPicker(): ComponentPicker {
+    const pipelinePicker = this._compositor?.pipeline?.componentPicker
+    if (pipelinePicker) return pipelinePicker
+    if (!this._idPicker) {
+      this._idPicker = new IdComponentPicker({
+        source: (_host, camera, objects, width, height) => {
+          const scene = this.scene
+          if (!scene || !this.renderer?.initialized) return Promise.resolve(null)
+          if (!this._idPass) this._idPass = new IdPass(this.renderer)
+          return this._idPass.read(scene, camera, objects, width, height)
+        },
+      })
+    }
+    return this._idPicker
+  }
+
+  get navigationBehavior(): NavigationBehavior {
+    void this.inputRouter
+    return this._navigation!
+  }
+
+  get selectBehavior(): SelectBehavior {
+    void this.inputRouter
+    return this._select!
   }
 
   constructor(args: IoThreeViewportProps) {
     super({
       ...args,
+      view: args.view ?? new ThreeView(),
       renderer: args.renderer ?? getDefaultRenderer(),
     } as ReactiveElementProps)
-    this.viewCameras = new ViewCameras({viewport: this, applet: this.bind('applet'), cameraSelect: this.bind('cameraSelect')})
-    this.debounce(this.renderViewportDebounced)
+    this._ownsView = !args.view
+    this.view.addNavigationListener(this._onNavigation)
+    void this.inputRouter
+    this._syncBehaviors()
   }
 
   override ready() {
     this.attachSurface()
-    if (!this.isWebGPUBackend()) {
-      console.log('WebGL fallback enabled')
-    }
   }
 
   override connectedCallback() {
     super.connectedCallback()
     observer.observe(this)
     this.attachSurface()
+    renderScheduler.register(this)
     this.onResized()
   }
   override disconnectedCallback() {
     super.disconnectedCallback()
     observer.unobserve(this)
-    // TODO: Visibility observe
+    renderScheduler.unregister(this)
     this.visible = false
   }
 
-  toolChanged(change: Change<ToolBase>) {
-    const newTool = change.value
-    const oldTool = change.oldValue
-    if (oldTool) oldTool.unregisterViewport(this)
-    if (newTool) newTool.registerViewport(this)
+  get scene(): Scene | null {
+    return this.editor?.document?.scene ?? null
   }
 
-  onAppletNeedsRender(event: CustomEvent) {
-    event.stopPropagation() // TODO: Test with multiple viewports
-    if (!this.visible) return
-    this.debounce(this.renderViewportDebounced)
+  get changeBus(): ChangeBus | null {
+    return this.editor?.document?.changeBus ?? null
   }
 
-  onAppletFrameObjectAll(event: CustomEvent) {
-    event.stopPropagation() // TODO: Test with multiple viewports
-    if (!this.visible) return
-    this.viewCameras.frameObjectAll(event.detail as Object3D)
+  get mode(): string | undefined {
+    return this.editor?.mode
+  }
+
+  get selection(): SelectionModel | null {
+    return this.editor?.selection ?? null
+  }
+
+  /** Marks this viewport for redraw on the next frame. */
+  tag(reason: DirtyReason) {
+    if (reason === 'content') this._idPicker?.invalidate()
+    renderScheduler.tag(this, reason)
+  }
+
+  isRenderable() {
+    return this.visible && this.width > 0 && this.height > 0 && !!this.scene
+  }
+
+  getPriority() {
+    if (this.matches(':focus-within')) return 2
+    if (this.matches(':hover')) return 1
+    return 0
+  }
+
+  listens(change: DocumentChange): DirtyReason | false {
+    if (!this.editor || change.source !== this.editor.document) return false
+    // Pipeline and overlays are synced on view changes and before each draw, not here.
+    const reason = this._compositor?.listens(change) ?? 'content'
+    if (reason === 'content') this._idPicker?.invalidate()
+    return reason
+  }
+
+  onRendererError(error: Error) {
+    this.textContent = error.message
+  }
+
+  /** The camera this viewport draws and picks with, built from its view at the current size. */
+  getViewCamera(): PerspectiveCamera | OrthographicCamera {
+    return this.view.getCamera(this.width, this.height, this.scene)
+  }
+
+  /** Event `frame-object` with `{object, overscan?}`: frames the object in this viewport's view. */
+  onFrameObject(event: CustomEvent<{object: Object3D; overscan?: number}>) {
+    event.stopPropagation()
+    this.view.frame(event.detail.object, event.detail.overscan ?? 1)
+  }
+
+  private _syncView() {
+    const view = this.view
+    const scene = this.scene
+    if (!view) return
+    if (view.kind === 'uv') {
+      if (!view.navigation.framed || view.navigation.axisView !== 'front') view.frameUV()
+    } else if (!view.navigation.framed && scene) {
+      view.frame(scene)
+    }
+  }
+
+  /** On a document switch, park this view's navigation for the old document and restore it for the new one. */
+  private _syncDocument() {
+    const document = this.editor?.document
+    if (document === this._shownDocument) return
+    if (this._shownDocument && document && this.view) this.view.switchDocument(this._shownDocument.uuid, document.uuid)
+    this._shownDocument = document
+  }
+
+  /**
+   * Installs navigation, selection, gizmos and the editor's active tool according to the view's interaction
+   * profile. Gizmos need the `full` profile and the view's `gizmos` overlay flag (default on).
+   */
+  private _syncBehaviors() {
+    const view = this.view
+    if (!view || !this._inputRouter) return
+    const router = this._inputRouter
+    const gizmos = this._gizmos!
+    if (view.profile === 'none') router.remove(this._navigation!)
+    else router.add(this._navigation!)
+    if (view.profile === 'full' || view.profile === 'select') router.add(this._select!)
+    else router.remove(this._select!)
+    if (view.profile === 'full' && view.isOverlayEnabled('gizmos')) {
+      router.add(gizmos)
+      this.compositor.addOverlay(gizmos, 300)
+    } else {
+      router.remove(gizmos)
+      this._compositor?.removeOverlay(gizmos)
+    }
+
+    const tool = this.editor?.getActiveTool(view.kind) ?? null
+    const toolId = tool && toolAllowsProfile(tool, view.profile) ? tool.id : null
+    // Behaviors and gizmo groups get the view and editor at creation, so a swap of either rebuilds them.
+    const current = this._toolBehaviors
+    if ((current?.toolId ?? null) === toolId && (!current || (current.view === view && current.editor === this.editor))) return
+    for (const behavior of this._toolBehaviors?.behaviors ?? []) router.remove(behavior)
+    this._toolBehaviors = undefined
+    if (tool && toolId) {
+      const ctx = {editor: this.editor, host: this, view}
+      const behaviors = tool.createBehaviors(ctx)
+      for (const behavior of behaviors) router.add(behavior)
+      this._toolBehaviors = {toolId, view, editor: this.editor, behaviors}
+      gizmos.setGroups(tool.createGizmoGroups?.(ctx) ?? [])
+    } else {
+      gizmos.setGroups([])
+    }
+  }
+
+  /** Matches the compositor's pipeline and overlays to the view. */
+  private _syncRendering() {
+    const view = this.view
+    if (!view || !this.renderer) return
+    this.compositor.syncPipeline(view)
+    this.compositor.syncOverlays(view)
   }
 
   onResized() {
     const rect = this.getBoundingClientRect()
-    this.width = Math.floor(rect.width)
-    this.height = Math.floor(rect.height)
-    if (this.isWebGPUBackend() && this.renderTarget) {
-      this.renderTarget.setSize(this.width, this.height)
-      this.renderTarget.setPixelRatio(window.devicePixelRatio)
-    }
-    this.renderViewportDebounced()
+    const width = Math.floor(rect.width)
+    const height = Math.floor(rect.height)
+    if (width === this.width && height === this.height) return
+    this.width = width
+    this.height = height
+    this.renderTarget.setSize(width, height)
+    this.renderTarget.setPixelRatio(window.devicePixelRatio)
+    this.tag('resize')
   }
 
-  appletChanged() {
-    this.debounce(this.renderViewportDebounced)
+  rendererChanged(change: Change<WebGPURenderer>) {
+    if (change.oldValue && change.oldValue !== change.value) {
+      this._idPass?.dispose()
+      this._idPass = undefined
+      this._idPicker?.invalidate()
+    }
+    if (change.oldValue && change.oldValue !== change.value && this._compositor) {
+      this._compositor.dispose()
+      this._compositor = undefined
+      this._syncBehaviors()
+    }
   }
-  appletMutated() {
-    this.debounce(this.renderViewportDebounced)
+  editorChanged() {
+    this._syncDocument()
+    this._syncView()
+    this._syncBehaviors()
+    this.tag('content')
   }
-  viewCamerasMutated() {
-    this.debounce(this.renderViewportDebounced)
+  editorMutated() {
+    this._syncDocument()
+    if (!this.view?.navigation.framed) this._syncView()
+    this._syncBehaviors()
+    this.tag('content')
+  }
+  viewChanged(change: Change<ThreeView>) {
+    // Runs during construction too, before `_onNavigation` exists; the constructor adds it then.
+    if (this._onNavigation) {
+      change.oldValue?.removeNavigationListener(this._onNavigation)
+      this.view?.addNavigationListener(this._onNavigation)
+    }
+    if (this._ownsView && change.oldValue && change.oldValue !== change.value) {
+      change.oldValue.dispose()
+      this._ownsView = false
+    }
+    this._syncView()
+    this._syncBehaviors()
+    this.tag('view')
+  }
+  keymapChanged() {
+    if (this._navigation) this._navigation.keymap = this.keymap
+    if (this._select) this._select.keymap = this.keymap
+  }
+  viewMutated() {
+    this._syncBehaviors()
+    this._syncRendering()
+    this.tag('view')
+  }
+  /** Camera moves only redraw: they change no behaviors, pipeline or overlays. */
+  private _onNavigation = () => {
+    this.tag('view')
   }
   override mutated() {
-    this.debounce(this.renderViewportDebounced)
+    this.tag('view')
   }
 
-  renderViewportDebounced() {
-    if (this.renderer.initialized === false) {
-      this.debounce(this.renderViewportDebounced, undefined, 2)
-      return
+  /** Called by the RenderScheduler only (ADR-0003). */
+  renderView(reasons: ReadonlySet<DirtyReason>, frame: FrameInfo): ViewRenderResult | void {
+    const editor = this.editor
+    const document = editor.document
+    if (editor.isRendererInitialized() === false) {
+      void editor.onRendererInitialized(this.renderer)
     }
-    this.applet.updateViewportSize(this.width, this.height)
-    this.renderViewport()
-  }
-  renderViewport() {
-    if (this.renderer.initialized === false) return
-    if (this.applet.isRendererInitialized() === false) {
-      void this.applet.onRendererInitialized(this.renderer)
-    }
-    if (!this.width || !this.height) return
-
-    if (this.isWebGPUBackend() && this.renderTarget) {
-      this.renderer.setCanvasTarget(this.renderTarget)
-    }
-
-    this.renderer.setClearColor(this.clearColor, this.clearAlpha)
-    this.renderer.setSize(this.width, this.height)
-    this.renderer.clear()
-
-    this.applet.updateViewportSize(this.width, this.height)
-
-    const toneMapping = this.renderer.toneMapping
-    const toneMappingExposure = this.renderer.toneMappingExposure
-
-    this.renderer.toneMapping = this.applet.toneMapping
-    this.renderer.toneMappingExposure = this.applet.toneMappingExposure
-
-    this.viewCameras.setOverscan(this.width, this.height, this.overscan)
-    this.renderer.render(this.applet.scene, this.viewCameras.camera)
-    this.viewCameras.resetOverscan()
-
-    this.renderer.toneMapping = toneMapping
-    this.renderer.toneMappingExposure = toneMappingExposure
+    const renderer = this.renderer
+    renderer.setCanvasTarget(this.renderTarget)
+    renderer.setSize(this.width, this.height)
+    this._syncRendering()
+    return this.compositor.render({
+      renderer,
+      editor,
+      document,
+      scene: document.scene,
+      view: this.view,
+      camera: this.getViewCamera(),
+      selection: this.selection,
+      width: this.width,
+      height: this.height,
+      pixelRatio: renderer.getPixelRatio(),
+      reasons,
+      frame,
+    })
   }
 
   override dispose() {
-    delete (this as Record<string, unknown>).applet
-    if (this.renderTarget) {
-      this.renderTarget.dispose()
-    }
-    this.viewCameras.dispose()
-    if (this.tool) {
-      this.tool.unregisterViewport(this)
-    }
+    renderScheduler.unregister(this)
+    delete (this as Record<string, unknown>).editor
+    this.renderTarget.dispose()
+    this._inputRouter?.dispose()
+    this._gizmos?.dispose()
+    this._compositor?.dispose()
+    this._idPass?.dispose()
+    this.view?.removeNavigationListener(this._onNavigation)
+    if (this._ownsView) this.view.dispose()
     super.dispose()
   }
 }

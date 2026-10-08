@@ -13,14 +13,14 @@ import {
   Vector3
 } from 'three/webgpu'
 import { Register, Property } from '@io-gui/core'
-import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
+import { ThreeEditor, IoThreeExample, ThreeEditorProps } from '@io-gui/three'
 
 @Register
-export class AnimationGroupsExample extends ThreeApplet {
+export class AnimationGroupsExample extends ThreeEditor {
 
   public mixer: AnimationMixer
 
-  constructor(args: ThreeAppletProps) {
+  constructor(args: ThreeEditorProps) {
     super(args)
 
     // all objects of this animation group share a common animation state
@@ -35,7 +35,7 @@ export class AnimationGroupsExample extends ThreeApplet {
         mesh.position.x = 32 - ( 16 * i )
         mesh.position.y = 0
         mesh.position.z = 32 - ( 16 * j )
-        this.scene.add( mesh )
+        this.document.scene.add( mesh )
         animationGroup.add( mesh )
       }
     }
@@ -72,7 +72,7 @@ export class AnimationGroupsExample extends ThreeApplet {
 export class IoAnimationGroupsExample extends IoThreeExample {
 
   @Property({type: AnimationGroupsExample, init: {isPlaying: true}})
-  declare applet: AnimationGroupsExample
+  declare editor: AnimationGroupsExample
 
 }
 

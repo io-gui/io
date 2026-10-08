@@ -273,6 +273,13 @@
                 id: "Three",
                 options: [
                   {
+                    id: "Editor",
+                    options: [
+                      { id: "Selection" },
+                      { id: "Views" },
+                    ],
+                  },
+                  {
                     id: "Camera Examples",
                     options: [
                       { id: "Camera" },
@@ -498,6 +505,16 @@
                 select: "deep",
                 caching: "reactive",
                 elements: [
+                  {
+                    tag: "io-selection-example",
+                    props: { id: "Selection" },
+                    import: "./packages/three/dist/demos/examples/IoSelectionExample.js",
+                  },
+                  {
+                    tag: "io-editor-views-example",
+                    props: { id: "Views" },
+                    import: "./packages/three/dist/demos/examples/IoEditorViewsExample.js",
+                  },
                   {
                     tag: "io-camera-example",
                     props: { id: "Camera" },

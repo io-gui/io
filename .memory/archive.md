@@ -516,3 +516,103 @@
 - Verify: midpoint-in-tile check leaf-only (coarse chords can leave tile).
 - Archive 163.2 MiB; L0 280804 pl / 561608 pts; weight ~20.2M all levels. Exclusive residency already correct.
 
+
+## 2026-10-07 — io-three core architecture ADRs + plan
+
+### [three][architecture]
+- Deep analysis of packages/three vs Blender (ScrArea/ARegion/RegionView3D, notifiers, handler stack, wmGizmo, bToolRef), Maya, Houdini, Unreal ITF. Design doc in Claude Docs (artifact cb23d4fe-...).
+- Found: ThreeApplet single _width/_height/onResized written by last-drawn viewport; per-frame three-applet-needs-render reaches all graph parents (native stopPropagation does not stop graph walk — redraws do work); OrbitControls + ToolBase both listen, no arbitration; ViewCameras overscan mutates scene cameras; WebGL fallback moves single canvas.
+- User decisions: drop WebGL fallback (WebGPU only). Confirmed current design already multi-viewport; ToolBase.registerViewport role → InputRouter.
+- Wrote ADR 0001-0007 (packages/three/docs/adr), plan .cursor/plans/three_core_architecture.plan.md.
+
+## 2026-10-07 — io-three decisions: naming, documents, undo, picking
+
+### [three][decision]
+- ThreeEditor name. One active ThreeDocument, switchable at runtime; per-doc session maps on editor (selection, view nav, undo).
+- Undo advised: commands + transactions of auto-inverted patches (not Maya undoIt, not Blender memfile). ADR-0008 status proposed. Mutation API in P4; undo stack/commands/collab in future P8.
+- Selection moved to session state (per user) in ADR-0007. Picker async interface; plain Raycaster now; BVH + ID buffer later.
+
+## 2026-10-07 — io-three Phase 1 (frame layer) implemented
+
+### [three][render]
+- New: src/editor/ChangeBus.ts (DocumentChange, kinds + 'other'), src/render/RenderScheduler.ts (ScheduledView/Ticker, typed dirty tags, tick->collect->evaluate once->draw by priority within budget, continuous, renderer init + WebGPU backend check, getDefaultRenderer, renderScheduler singleton).
+- IoThreeViewport: registers on connect, tag() instead of debounce draws, renderView() called by scheduler only, WebGL path removed, renderTarget lazy getter (ready() runs inside base ctor before class fields).
+- ThreeApplet: no own rAF/Timer/_width/_height; ticker via scheduler; changeBus, notify(), requestRender(); onResized(w,h,viewport) on resize only.
+- Tests 918/918 pass; new RenderScheduler.test.ts (14), ThreeApplet.test.ts, viewport tests.
+- Gotchas: headless Chromium screenshots of WebGPU canvases blank -> use headed playwright. Vite aliases @io-gui/* to src; page.evaluate import('@io-gui/three') hits import map dist -> double registration; import '/packages/three/src/index.ts'. Demos render children in ctor -> construct with new, not document.createElement.
+
+## 2026-10-07 — io-three Phase 2 (view layer) implemented
+
+### [three][view]
+- ThreeView (ReactiveObject: kind, overscan, clearColor, clearAlpha; navigation plain; getCamera builds private persp/ortho per call; scene camera copied via decompose+copyProjection, never mutated; toJSON/applyJSON). ViewNavigation (target, rotation, distance, projection, fov, near/far, axisView, cameraSource uuid, framed). ViewOrbitControls bridge (OrbitControls drives view private camera; change -> write back nav; ortho zoom folded into distance).
+- Viewport: view prop (owns default, created in ctor not via init since init builds default even when arg passed), cameraSelect '' default, applyCameraSelect pending retry for late scene cameras, frame-object listener, getViewCamera(). ViewCameras deleted.
+- Bug found: OrbitControls(camera, element) ctor -> connect() disconnects first -> io-gui 'Listener not found' errors. Construct without element, then connect().
+- Tests 927->44 three tests; manual headed check: axis views, ortho wheel zoom, persp orbit, scene cameras, train camera after GLTF load.
+
+## 2026-10-07 — io-three Phase 3 (input) implemented
+
+### [three][input]
+- InputRouter per viewport (lazy getter; tool in ctor registers before ctor body). Priority capture, wheel one-shot, stealing, hover pass, contextmenu suppress after captured RMB, focus on capture, document key routing (hovered > focused, skip editable). NavigationBehavior (keymap-driven orbit/pan/dolly/zoom, pinch, axis/frame keys, disabled for scene camera). Keymap data + presets. ToolBase -> ToolBaseBehavior adapter + capturesInput hook.
+- Lint: `_hoveredRouter = this` trips no-this-alias -> setHoveredRouter(this).
+- Headed check: LMB orbit, RMB pan, wheel (no page scroll), top-view LMB pans, Home frames, probe ToolBase gets LMB while RMB still pans. 952 tests pass.
+- Gotcha for ad-hoc classes in page: must core.Register() a ToolBase subclass before `new`.
+
+## 2026-10-07 — io-three Phase 4 (app layer) implemented
+
+### [three][editor]
+- ThreeEditor (document, mode, isPlaying, activeTools, lazy operators/tools registries, ticker, notify->document), ThreeDocument (scene, toneMapping*, uuid, changeBus, index by uuid w/ rebuild on miss, begin/transact (joins open tx), revert/reapply, history 100, commit listeners), Transaction (set coalesce, insert, remove, commit, rollback), Patch helpers. ThreeApplet = editor shim with props bound to document.
+- OperatorRegistry: run (poll, begin tx, invoke/exec, modal via router.startModal), Escape cancel, lastCommand. ToolRegistry + ToolDefinition + profiles. Viewport: editor prop, _syncDocument (park/restore nav per doc), _syncBehaviors (profile + active tool).
+- Gotchas: ThreeDocument.mutated() runs inside base ctor before changeBus field -> guard. In page.evaluate, import('three/webgpu') resolves via index.html import map = second three copy -> renders nothing; use Vite's /node_modules/.vite/deps/three_webgpu.js URL.
+- 971 tests pass. Headed: tool -> modal operator -> 1 transaction -> both views redraw; navigate profile blocks tool; doc switch restores nav.
+
+## 2026-10-07 — io-three Phase 5 (object selection) implemented
+
+### [three][selection]
+- SelectionModel (domain, version, active, uvSync props; plain Set of uuids; edit()/commit one bump + one 'selection' notify; prune on remove patches). Editor selection per doc. RaycastPicker async (visible + layers + userData.selectable filter; line/points threshold 4px via worldPerPixel); pickRect by projected AABB. SelectBehavior (click/box/all/none/invert, DOM marquee). Router click synthesis + Behavior.click + keymap 'LMB click'. keymaps.* combined presets. frameSelected.
+- Bugs found in headed run: GridHelper won clicks (Raycaster Line threshold default 1 world unit) -> pixel threshold + selectable opt-out. Demo class fields in ready() again -> use @Property init.
+- 984 tests pass.
+
+## 2026-10-07 — io-three Phase 6 (pipelines, overlays, gizmos, UV view) implemented
+
+### [three][render][tools]
+- ViewPipeline contract + registry (forward, uv; PostProcessingPipeline w/ convergeFrames), ViewCompositor (pipeline + overlays, overlay-only redraw reuses output, tone mapping at present), Overlay registry (grid off, selection outline on, cameraFrame passepartout on), GizmoLayer/GizmoGroup/TranslateGizmoGroup, TranslateOperator (modal axis/view plane, XYZ keys, exec delta), Move tool built in. UV view kind + UVPipeline + picker via RaycastPicker({root, resolve}). Demo IoEditorViewsExample (forward+grid+gizmo, TRAA, UV).
+- Verified: pixel diff vs HEAD for 14 demos -> unchanged except animation + passepartout on scene-camera views. TRAA converges in 33 draws then idle. Gizmo hover redraws one view.
+- Bugs found headed: lastCommand set after commit (listeners saw stale) -> set before; gizmo press w/o move recorded empty command -> cancel on zero delta.
+- Gotcha: `git stash` + headed playwright loop; browser.close() hung -> killed shell parent first, then popped stash manually.
+
+## 2026-10-07 — io-three Phase 7 (component selection) implemented
+
+### [three][selection][render]
+- Topology cache (welded points, edges, prims, corners; key = position/index count+version), ComponentSet bitsets in SelectionModel (copy-on-write edit().components, setDomain, size mismatch = replace), GeometryAdapters (mesh/lineSegments/points), IdPass + IdComponentPicker (faces from GPU buffer, points/edges CPU + depth occlusion, view.xray), ComponentOverlay, operators object.editmode_toggle (Tab) + mesh.select_mode (1/2/3, Blender conversion), UVComponentPicker + UVEditCage (corner sel, uvSync). Selection outline hidden in edit mode.
+- Verified headed (GPU): face picks resolve top/front/right correctly (y orientation ok), hidden corner skipped, faces->points conversion, UV face click = 3 corners, no console errors. 1016 tests pass.
+- Bug found headed: cage disposed a geometry sharing the ID geometry's position attribute -> RenderObject error; clone attribute instead.
+
+### [three][cleanup] 2026-10-07
+- Removed ThreeApplet shim, ToolBase + Pointer3D, IoThreeViewport `applet` alias + `tool` prop, ThreeEditor.onResized (deprecated) and notify `source` param. 16 demos -> `extends ThreeEditor`, `this.document.scene`, IoThreeExample prop `applet` -> `editor`. CameraArray updates sub-camera viewports from its viewport's onResized. Editor configs moved to `configs/editor/ThreeEditor.ts` (ThreeDocument tone mapping + ThreeEditor hidden group). dist restored to dev version for PR (commit 7f62b677).
+
+### [three][cleanup] 2026-10-08
+- Removed IoThreeViewport `cameraSelect` (+ `_sceneCameraPending`, `applyCameraSelect`). Camera now chosen on ThreeView: `setAxisView`, `setCameraSource`, new `setCameraSourceByName(name?)` (no name = first scene camera; resolved lazily in `getSourceCamera` to uuid, no mutation dispatch since it runs during draw). Setters return `this` for `view: new ThreeView().setAxisView('top')`. Demos migrated; 'perspective' = default view. Docs/skill/plan/ADR-0002 note updated. tsc + 125 tests pass.
+- Follow-up: replaced `setCameraSource` + `setCameraSourceByName` with `ThreeView.setCameraView(id: string | null)` (`uuid:`/`name:` prefix; none -> console.warn + default perspective). Demo scene cameras named (`sceneCamera`, Keyframes `trainCamera`); BackdropArea got a `sceneCamera` (frames `this.box` instead of `children[1]`).
+- Follow-up 2: `setCameraView()`/`null` = first scene camera (lazy; `free` view until one exists). `AxisView` gained `'free'` replacing null (applyJSON maps old null -> free); `ThreeView.setAxisView` clears scene camera. Single-camera demos use `setCameraView()`, added names reverted (Retargeting back to `camera`); BackdropArea keeps its added unnamed camera; IoCameraExample keeps `name:`.
+
+### [three][fix] 2026-10-08 review findings
+- RenderScheduler: views skipped by the frame budget age (+1 priority per waited frame, `_waits`), so a slow focused view no longer starves others. ADR-0003 step 4 updated.
+- SelectionOutlineOverlay `_proxy`: re-assigns geometry, skeleton/bindMatrix/bindMode, instanceMatrix/count every draw; rebuilds proxy when object kind changes. Mask mesh materials DoubleSide (open surfaces like lathe outlined fully).
+- ThreeDocument.getObject: per-id miss cache (`_misses`, cleared next microtask, and on insert patches) -> a dead id walks the scene once per task. SelectionModel drops ids that miss lookup (deferred microtask `_dropLater`).
+- Not changed (user: design choice): `transact()` joining an open operator transaction.
+
+### [three][fix] 2026-10-08 ADR drift review
+- Navigation no longer dispatchMutation: `ThreeView.markNavigationChanged()` calls listeners (`addNavigationListener`/`removeNavigationListener`); IoThreeViewport subscribes (`_onNavigation` -> tag 'view'; constructor + viewChanged + dispose). viewMutated (behaviors/rendering resync) now only on real view prop changes.
+- `listens()` no longer calls `_syncRendering`; uses `this._compositor?.listens(change) ?? 'content'`.
+- Picks update matrices first: `IdPass.read`, `RaycastPicker.pick/pickRect` call `updateMatrixWorld()`.
+- ADR text: 0003 (Tick before Collect, picks outside frame, no untagged-draw debug error), 0002 (view kinds, per-document navigation on ThreeView, not in toJSON), 0005 (lockCameraToView/lockGroup planned; navigation skips mutation). README + SKILL note.
+- Open (user: later): default keymap LMB-drag orbit vs ADR-0004 "tools own LMB".
+
+### [three][fix] 2026-10-08 minor review items
+- ThreeView toJSON/applyJSON include toneMapping + toneMappingExposure.
+- Removed dead `OverlayType.listens`.
+- `getWorldPerPixel` through a perspective scene camera measures at scene bounds centre depth (`sceneDistance`), not nav.distance.
+- `getSourceCamera` caches the found camera (`_sourceCamera`, valid while in scene) + per-task miss (`_missingSource`).
+- `_syncBehaviors` rebuilds tool behaviors/gizmo groups when view or editor swaps (not only tool id).
+- ChangeBus: `LIMIT` 10000 -> collapses to one `other`; `clear()`; editor clears old doc bus on switch.
+- Skipped (user): migration notes - no users yet.

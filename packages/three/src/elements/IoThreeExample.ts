@@ -1,6 +1,6 @@
 import { Register, ReactiveElement, Property } from '@io-gui/core'
 import { ioThreeViewport } from '@io-gui/three'
-import { ThreeApplet } from '../nodes/ThreeApplet.js'
+import { ThreeEditor } from '../editor/ThreeEditor.js'
 
 export class IoThreeExample extends ReactiveElement {
   static override get Style() {
@@ -27,19 +27,19 @@ export class IoThreeExample extends ReactiveElement {
     `
   }
 
-  @Property({type: ThreeApplet, init: null})
-  declare applet: ThreeApplet
+  @Property({type: ThreeEditor, init: null})
+  declare editor: ThreeEditor
 
   override ready() {
 
     this.render([
-      ioThreeViewport({applet: this.applet, cameraSelect: 'perspective'}),
+      ioThreeViewport({editor: this.editor}),
     ])
 
   }
 
   override dispose() {
-    this.applet.dispose()
+    this.editor.dispose()
     super.dispose()
   }
 }
