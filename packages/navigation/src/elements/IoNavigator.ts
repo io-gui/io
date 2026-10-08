@@ -1,6 +1,6 @@
 import { ReactiveElement, VDOMElement, Property, ReactiveElementProps, WithBinding, Register, div } from '@io-gui/core'
 import { Menu, Option, ioMenu, ioMenuTree } from '@io-gui/menus'
-import { CachingType, ioSelector } from './IoSelector.js'
+import { CachingType, ioSelector, SelectorElement } from './IoSelector.js'
 import { ioNavigatorDrawer, IoNavigatorDrawer } from './IoNavigatorDrawer.js'
 
 export type SelectType = 'shallow' | 'deep' | 'all' | 'none'
@@ -9,7 +9,7 @@ export type MenuPosition = 'top' | 'left' | 'none'
 
 export type IoNavigatorProps = ReactiveElementProps & {
   model?: Menu | Option
-  elements?: VDOMElement[]
+  elements?: SelectorElement[]
   widget?: VDOMElement
   menu?: MenuPosition
   depth?: number
@@ -69,7 +69,7 @@ export class IoNavigator extends ReactiveElement {
   }
 
   @Property({type: Array, init: null})
-  declare elements: VDOMElement[]
+  declare elements: SelectorElement[]
 
   @Property({type: Option})
   declare model: Menu | Option

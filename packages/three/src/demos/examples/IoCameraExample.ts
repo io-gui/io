@@ -3,19 +3,19 @@ import { Register, Property } from '@io-gui/core'
 import { Layout, ioLayout } from '@io-gui/layout'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioPropertyEditor, registerEditorConfig, ioObject } from '@io-gui/editors'
-import { ThreeApplet, IoThreeExample, ioThreeViewport, ThreeAppletProps } from '@io-gui/three'
+import { ThreeEditor, ThreeView, IoThreeExample, ioThreeViewport, ThreeEditorProps } from '@io-gui/three'
 
 const frustumSize = 600
 
 @Register
-export class CameraExample extends ThreeApplet {
+export class CameraExample extends ThreeEditor {
 
   public perspectiveCamera: PerspectiveCamera
   public orthographicCamera: OrthographicCamera
   public cameraRig: Group
   public mesh: Mesh
 
-  constructor(args: ThreeAppletProps) {
+  constructor(args: ThreeEditorProps) {
     super(args)
 
     this.perspectiveCamera = new PerspectiveCamera( 50, 0.5, 150, 1000 )
@@ -32,7 +32,7 @@ export class CameraExample extends ThreeApplet {
     this.cameraRig.add( this.perspectiveCamera )
     this.cameraRig.add( this.orthographicCamera )
 
-    this.scene.add( this.cameraRig )
+    this.document.scene.add( this.cameraRig )
 
     //
 
@@ -40,7 +40,7 @@ export class CameraExample extends ThreeApplet {
       new SphereGeometry( 100, 16, 8 ),
       new MeshBasicMaterial( { color: 0xffffff, wireframe: true } )
     )
-    this.scene.add( this.mesh )
+    this.document.scene.add( this.mesh )
 
     const mesh2 = new Mesh(
       new SphereGeometry( 50, 16, 8 ),
@@ -70,13 +70,9 @@ export class CameraExample extends ThreeApplet {
     geometry.setAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) )
 
     const particles = new Points( geometry, new PointsMaterial( { color: 0xffffff } ) )
-    this.scene.add( particles )
+    this.document.scene.add( particles )
   }
 
-  override onResized(width: number, height: number) {
-    super.onResized(width, height)
-    this.perspectiveCamera.aspect =  width / height
-  }
   override onAnimate() {
     const r = Date.now() * 0.0005
 
@@ -140,17 +136,17 @@ registerEditorConfig(CameraExample, [
 export class IoCameraExample extends IoThreeExample {
 
   @Property({type: CameraExample, init: {isPlaying: true}})
-  declare applet: CameraExample
+  declare editor: CameraExample
 
   override ready() {
 
     this.render([
       ioLayout({
         elements: [
-          ioThreeViewport({id: 'Perspective', applet: this.applet, cameraSelect: 'perspective'}),
-          ioThreeViewport({id: 'ScenePerspective', applet: this.applet, cameraSelect: 'scene:perspective'}),
-          ioThreeViewport({id: 'SceneOrthographic', applet: this.applet, cameraSelect: 'scene:orthographic'}),
-          ioPropertyEditor({id: 'PropertyEditor', value: this.applet, properties: ['perspectiveCamera','orthographicCamera']})
+          ioThreeViewport({id: 'Perspective', editor: this.editor}),
+          ioThreeViewport({id: 'ScenePerspective', editor: this.editor, view: new ThreeView().setCameraView('name:perspective')}),
+          ioThreeViewport({id: 'SceneOrthographic', editor: this.editor, view: new ThreeView().setCameraView('name:orthographic')}),
+          ioPropertyEditor({id: 'PropertyEditor', value: this.editor, properties: ['perspectiveCamera','orthographicCamera']})
         ],
         model: new Layout({
           child: {

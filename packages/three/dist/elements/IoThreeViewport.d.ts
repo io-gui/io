@@ -1,5 +1,5 @@
 import { ReactiveElement, ReactiveElementProps, Change, WithBinding } from '@io-gui/core';
-import { WebGPURenderer } from 'three/webgpu';
+import { WebGPURenderer, CanvasTarget } from 'three/webgpu';
 import { ThreeApplet } from '../nodes/ThreeApplet.js';
 import { ViewCameras } from '../nodes/ViewCameras.js';
 import { ToolBase } from '../nodes/ToolBase.js';
@@ -25,9 +25,9 @@ export declare class IoThreeViewport extends ReactiveElement {
     viewCameras: ViewCameras;
     tool: ToolBase;
     tabIndex: number;
-    private renderTarget;
-    private isWebGPUBackend;
-    private attachSurface;
+    renderTarget: CanvasTarget | undefined;
+    isWebGPUBackend(): boolean;
+    attachSurface(): void;
     static get Style(): string;
     static get Listeners(): {
         'three-applet-needs-render': string;

@@ -1,15 +1,16 @@
 import { VDOMElement, ReactiveElement, ReactiveElementProps, WithBinding } from '@io-gui/core';
+import { SelectorElement } from '@io-gui/navigation';
 import { IoDrawer } from './IoDrawer.js';
 import { Split } from '../models/Split.js';
 import { Panel } from '../models/Panel.js';
 export type IoSplitData = ReactiveElementProps & {
     model: WithBinding<Split>;
-    elements: VDOMElement[];
+    elements: SelectorElement[];
 };
 export declare class IoSplit extends ReactiveElement {
     static get Style(): string;
     model: Split;
-    elements: VDOMElement[];
+    elements: SelectorElement[];
     leadingCollapsedChildModel: Split | Panel | null;
     trailingCollapsedChildModel: Split | Panel | null;
     hasVisibleAutoSize: boolean;

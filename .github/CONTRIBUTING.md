@@ -48,13 +48,14 @@ Io-Gui is organized as a monorepo with the following packages:
 ## Development Commands
 
 ### Essential Commands
-- `pnpm dev` - Start Vite dev server and TypeScript watch mode (`tsc -b -w`) in parallel
-- `pnpm build` - Build all packages
-- `pnpm bundle` - Bundle all packages with Rollup
-- `pnpm lint` - Lint all packages (auto-fixes)
-- `pnpm test` - Run tests with Vitest
-- `pnpm test:watch` - Run tests in watch mode
-- `pnpm bench` - Run all `*.bench.ts` benchmarks (Node); writes `benchmarks/results.json`. First run shows absolute numbers; later runs compare against the previous local run in the terminal. Optionally attach `benchmarks/results.json` to performance PRs.
+- `pnpm dev` - Start Vite dev server
+- `pnpm build:watch` - TypeScript watch mode (`tsc -b -w`)
+- `pnpm build` - Lint, clean and build all packages (`tsc -b`)
+- `pnpm bundle` - Build, then bundle each package with Vite (debug blocks stripped, minified)
+- `pnpm lint` - Lint all packages (auto-fixes); `pnpm lint:check` lints without fixing
+- `pnpm test` - Run all tests with Vitest in browser mode (Playwright, Chromium); `pnpm test packages/<name>` runs one package
+- `pnpm coverage` - Run core tests with coverage
+- `pnpm bench` - Run all `*.bench.ts` benchmarks (Vitest, Chromium); writes `benchmarks/results.json`. First run shows absolute numbers; later runs compare against the previous local run in the terminal. Optionally attach `benchmarks/results.json` to performance PRs.
 - `pnpm clean` - Clean all build directories
 
 ## Development Workflow

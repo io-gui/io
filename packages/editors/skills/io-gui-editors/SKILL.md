@@ -17,15 +17,15 @@ description: >-
 
 ## Gotchas
 
-- **README `{ name, type, tag, props }` examples are stale.** Do not emit that object shape — use tuples + vDOM factories.
+- Do not emit a `{ name, type, tag, props }` object shape — use tuples + vDOM factories.
+- Matching is **last match wins** in config order (registered constructors, then the `config` prop) — not name-before-type priority.
 - Configs inherit along the prototype chain; `Object` defaults apply broadly.
 - `IoPropertyEditor` listens for `io-mutation`. Editing plain objects in place requires `dispatchMutation()` on the owner/graph.
 - Functions render as buttons invoked with the object as `this`.
-- `IoObject` expand persistence keys off guid/uuid/id/name when present → localStorage.
+- `IoObject` expand persistence keys off guid/uuid/id/name/label when present → localStorage.
 - `IoContextEditorSingleton` owns the right-click popup — forward gestures; don't fork panel state.
 
 ## Read next
 
 - Glossary: [CONTEXT.md](../../CONTEXT.md)
-- Prefer source/`CONTEXT` over README config snippets when they conflict.
 - API overview: [README.md](../../README.md)

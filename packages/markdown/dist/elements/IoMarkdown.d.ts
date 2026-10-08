@@ -4,7 +4,6 @@ export type IoMarkdownProps = ReactiveElementProps & {
     strip?: string[];
     loading?: WithBinding<boolean>;
     sanitize?: boolean;
-    scroll?: WithBinding<string>;
 };
 /**
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.

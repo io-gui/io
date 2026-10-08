@@ -166,17 +166,20 @@ let IoSelector = class IoSelector extends ReactiveElement {
             this.render([span(`Could not find elements with id: "${id}"!`)], this, cache);
             return;
         }
-        const importPath = vElement.props?.import;
+        const importPath = vElement.import;
         if (!importPath) {
             this.debounce(this.renderDebounced, vElement);
         }
         else {
             this.loading = true;
             this._preaching = false;
-            void importModule(importPath).then(() => {
+            importModule(importPath).then(() => {
                 this.loading = false;
                 this.debounce(this.renderDebounced, vElement);
                 this.debounce(this.startPreache);
+            }).catch(() => {
+                this.loading = false;
+                this.render([span(`Failed to import "${importPath}"!`)], this, cache);
             });
         }
     }
@@ -213,7 +216,7 @@ let IoSelector = class IoSelector extends ReactiveElement {
             const props = vElement.props;
             const id = props.id;
             if (id && this._caches[id] === undefined) {
-                if (!props.import) {
+                if (!vElement.import) {
                     this.render([vElement], dummyElement, true);
                     this._caches[id] = dummyElement.childNodes[0];
                     dummyElement.removeChild(dummyElement.childNodes[0]);
@@ -221,14 +224,16 @@ let IoSelector = class IoSelector extends ReactiveElement {
                     return;
                 }
                 else {
-                    void importModule(props.import).then(() => {
+                    importModule(vElement.import).then(() => {
                         if (!this._preaching)
                             return;
                         this.render([vElement], dummyElement, true);
                         this._caches[id] = dummyElement.childNodes[0];
                         dummyElement.removeChild(dummyElement.childNodes[0]);
                         this.debounce(this.preacheNext);
-                        delete props.import;
+                    }).catch(() => {
+                        // Stop preaching; otherwise the failed entry would be retried forever.
+                        this._preaching = false;
                     });
                     return;
                 }

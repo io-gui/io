@@ -1,4 +1,5 @@
 import { Register, Property, VDOMElement, ReactiveElement, ReactiveElementProps, ThemeSingleton, WithBinding } from '@io-gui/core'
+import { SelectorElement } from '@io-gui/navigation'
 import { IoPanel, ioPanel } from './IoPanel.js'
 import { ioDivider } from './IoDivider.js'
 import { ioDrawer, IoDrawer } from './IoDrawer.js'
@@ -10,7 +11,7 @@ import { isAutoSize, parseSizeBudgetPx, sizeToFlex } from '../utils/layoutSize.j
 
 export type IoSplitData = ReactiveElementProps & {
   model: WithBinding<Split>
-  elements: VDOMElement[]
+  elements: SelectorElement[]
 }
 
 @Register
@@ -53,7 +54,7 @@ export class IoSplit extends ReactiveElement {
   declare model: Split
 
   @Property(Array)
-  declare elements: VDOMElement[]
+  declare elements: SelectorElement[]
 
   @Property({type: Object, value: null})
   declare leadingCollapsedChildModel: Split | Panel | null

@@ -11,19 +11,19 @@ import {
   SRGBColorSpace
 } from 'three/webgpu'
 import { Register, Property } from '@io-gui/core'
-import { ThreeApplet, IoThreeViewport, ThreeAppletProps } from '@io-gui/three'
+import { ThreeEditor, IoThreeViewport, ThreeEditorProps } from '@io-gui/three'
 
 @Register
-export class GeometryColorsExample extends ThreeApplet {
+export class GeometryColorsExample extends ThreeEditor {
 
-  constructor(args: ThreeAppletProps) {
+  constructor(args: ThreeEditorProps) {
     super(args)
 
-    this.scene.background = new Color( 0xffffff )
+    this.document.scene.background = new Color( 0xffffff )
 
     const light = new DirectionalLight( 0xffffff, 3 )
     light.position.set( 0, 0, 1 )
-    this.scene.add( light )
+    this.document.scene.add( light )
 
     // shadow
 
@@ -49,19 +49,19 @@ export class GeometryColorsExample extends ThreeApplet {
     shadowMesh = new Mesh( shadowGeo, shadowMaterial )
     shadowMesh.position.y = -250
     shadowMesh.rotation.x = -Math.PI / 2
-    this.scene.add( shadowMesh )
+    this.document.scene.add( shadowMesh )
 
     shadowMesh = new Mesh( shadowGeo, shadowMaterial )
     shadowMesh.position.y = -250
     shadowMesh.position.x = -400
     shadowMesh.rotation.x = -Math.PI / 2
-    this.scene.add( shadowMesh )
+    this.document.scene.add( shadowMesh )
 
     shadowMesh = new Mesh( shadowGeo, shadowMaterial )
     shadowMesh.position.y = -250
     shadowMesh.position.x = 400
     shadowMesh.rotation.x = -Math.PI / 2
-    this.scene.add( shadowMesh )
+    this.document.scene.add( shadowMesh )
 
     const radius = 200
 
@@ -110,18 +110,18 @@ export class GeometryColorsExample extends ThreeApplet {
     mesh.add( wireframe )
     mesh.position.x = -400
     mesh.rotation.x = -1.87
-    this.scene.add( mesh )
+    this.document.scene.add( mesh )
 
     mesh = new Mesh( geometry2, material )
     wireframe = new Mesh( geometry2, wireframeMaterial )
     mesh.add( wireframe )
     mesh.position.x = 400
-    this.scene.add( mesh )
+    this.document.scene.add( mesh )
 
     mesh = new Mesh( geometry3, material )
     wireframe = new Mesh( geometry3, wireframeMaterial )
     mesh.add( wireframe )
-    this.scene.add( mesh )
+    this.document.scene.add( mesh )
   }
 }
 
@@ -129,7 +129,7 @@ export class GeometryColorsExample extends ThreeApplet {
 export class IoGeometryColorsExample extends IoThreeViewport {
 
   @Property({type: GeometryColorsExample, init: null})
-  declare applet: GeometryColorsExample
+  declare editor: GeometryColorsExample
 
 }
 

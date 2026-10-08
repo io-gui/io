@@ -18,27 +18,27 @@ import { instancedBufferAttribute, texture, float, color } from 'three/tsl'
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js'
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
 import { Register, Property } from '@io-gui/core'
-import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
+import { ThreeEditor, ThreeView, IoThreeExample, ThreeEditorProps } from '@io-gui/three'
 import { ioLayout, Layout } from '@io-gui/layout'
 import { ioThreeViewport } from '@io-gui/three'
 
 @Register
-export class GeometryConvexExample extends ThreeApplet {
+export class GeometryConvexExample extends ThreeEditor {
 
   public group: Group
 
-  constructor(args: ThreeAppletProps) {
+  constructor(args: ThreeEditorProps) {
     super(args)
 
     // ambient light
 
-    this.scene.add( new AmbientLight( 0x666666 ) )
+    this.document.scene.add( new AmbientLight( 0x666666 ) )
 
     // point light
 
     const light = new PointLight( 0xffffff, 3, 0, 0 )
     light.position.set( 15, 20, 30 )
-    this.scene.add( light )
+    this.document.scene.add( light )
 
     // textures
 
@@ -47,7 +47,7 @@ export class GeometryConvexExample extends ThreeApplet {
     spriteTexture.colorSpace = SRGBColorSpace
 
     this.group = new Group()
-    this.scene.add( this.group )
+    this.document.scene.add( this.group )
 
     // points
 
@@ -118,17 +118,17 @@ export class GeometryConvexExample extends ThreeApplet {
 export class IoGeometryConvexExample extends IoThreeExample {
 
   @Property({type: GeometryConvexExample, init: {isPlaying: true}})
-  declare applet: GeometryConvexExample
+  declare editor: GeometryConvexExample
 
   override ready() {
 
     this.render([
       ioLayout({
         elements: [
-          ioThreeViewport({id: 'Top', applet: this.applet, cameraSelect: 'top'}),
-          ioThreeViewport({id: 'Left', applet: this.applet, cameraSelect: 'left'}),
-          ioThreeViewport({id: 'Front', applet: this.applet, cameraSelect: 'front'}),
-          ioThreeViewport({id: 'Perspective', applet: this.applet, cameraSelect: 'perspective'}),
+          ioThreeViewport({id: 'Top', editor: this.editor, view: new ThreeView().setAxisView('top')}),
+          ioThreeViewport({id: 'Left', editor: this.editor, view: new ThreeView().setAxisView('left')}),
+          ioThreeViewport({id: 'Front', editor: this.editor, view: new ThreeView().setAxisView('front')}),
+          ioThreeViewport({id: 'Perspective', editor: this.editor}),
         ],
         model: new Layout({
           child: {

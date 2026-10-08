@@ -60,7 +60,7 @@ type IoMarkdownProps = {
 
 ### Syntax Highlighting
 
-Code blocks are highlighted using highlight.js with automatic language detection:
+Code blocks are highlighted using highlight.js, using the fence's language tag (unknown or missing languages fall back to `plaintext`):
 
 ````markdown
 ```typescript
@@ -73,7 +73,7 @@ Supported languages include JavaScript, TypeScript, HTML, CSS, Python, and many 
 
 ### Theme Integration
 
-Syntax highlighting themes automatically switch based on `ThemeSingleton.themeID`:
+Syntax highlighting themes automatically switch based on `$ThemeID` (from `@io-gui/core`):
 
 - **Light theme** - Light background code blocks
 - **Dark theme** - Dark background code blocks
@@ -173,17 +173,17 @@ The `data-heading` attributes enable scroll-to-anchor when selecting menu items.
 ## Edge Cases
 
 ### Fetch Errors
-Network errors during fetch are not caught - the loading spinner will persist. Consider wrapping in error handling for production use.
+Network errors and non-OK HTTP responses (e.g. 404) are caught: `loading` resets to `false` and the content stays empty. No error is surfaced to the user.
 
-### Empty Source
-Setting `src=""` clears the content but does not trigger loading state.
+### Source Validation
+`src` must point to a markdown file: `.md`, `.markdown`, `.mdown`, `.mkd`, `.mkdn`, or `.txt` (case-insensitive; query strings and hashes are ignored). Setting `src` to `""` or to any other extension clears the content without fetching. Debug builds log a warning for unsupported extensions.
 
 ### Multiple Theme Changes
-Theme changes are handled via event listener on `ThemeSingleton`. The highlight theme updates immediately without re-parsing markdown.
+Theme changes are handled via a `value-changed` listener on `$ThemeID`. The highlight theme updates immediately without re-parsing markdown.
 
 ### Raw HTML in Markdown
 With `sanitize: true`, raw HTML in markdown is filtered through DOMPurify. Some advanced HTML may be stripped. Set `sanitize: false` only for trusted content.
 
 ## Packaging
 
-Published `dist/index.js` is a bundled ES module. `@io-gui/core` is a peer dependency and stays external. `marked`, `marked-highlight`, and `dompurify` are runtime dependencies — install them alongside this package. The bundle does not inline those libraries.
+Published `dist/index.js` is a bundled ES module. `@io-gui/core` is a peer dependency and stays external. `marked`, `marked-highlight`, `dompurify`, and the vendored highlight.js are inlined into the bundle (only `@io-gui/*` imports are external), so they are dev dependencies only — nothing to install alongside this package.

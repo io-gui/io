@@ -16,8 +16,8 @@ description: >-
 ## Gotchas
 
 - Headings get **`data-heading`** for navigation Anchor sync — preserve ids if you strip content.
-- Highlight theme follows **`ThemeSingleton.themeID`**.
-- `marked` / `dompurify` are runtime deps (not inlined away).
+- Highlight theme follows **`$ThemeID`** (core Storage binding).
+- `marked` / `dompurify` are inlined in the published bundle (dev dependencies only); only `@io-gui/*` stays external.
 - Failed fetch can leave loading spinner — handle errors if you need a visible failure state.
 - `src=""` clears content without a loading flash.
 

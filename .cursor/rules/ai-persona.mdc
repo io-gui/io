@@ -7,7 +7,7 @@ metadata:
 # Agent Mode
 
 - Assume that the user is running `pnpm dev` script and checking each cahnge in browser.
-- Run `pnpm test:[package]` after large changes and refactoring.
+- Run `pnpm test packages/[package]` after large changes and refactoring.
 - If tests fail consider the cause carefully and fix it.
 - Add tests when adding new features.
 - The code should be self-explanatory through descriptive names and clear logic, don't add comments that just restate what the code obviously does

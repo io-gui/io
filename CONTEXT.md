@@ -14,7 +14,7 @@ Io-Gui has one foundational context (the reactive core) plus application-domain 
 - [Layout](./packages/layout/CONTEXT.md) — IDE-like tabbed, split, drag-and-drop panel layouts (`@io-gui/layout`).
 - [Editors](./packages/editors/CONTEXT.md) — universal property inspection via PropertyConfig / EditorGroups (`@io-gui/editors`).
 - [Markdown](./packages/markdown/CONTEXT.md) — fetch-and-render markdown with sanitize and highlight themes (`@io-gui/markdown`).
-- [Three](./packages/three/CONTEXT.md) — WebGPU Three.js applets, viewports, and editor config side-effects (`@io-gui/three`).
+- [Three](./packages/three/CONTEXT.md) — WebGPU Three.js editor, viewports, and editor config side-effects (`@io-gui/three`).
 
 ## Relationships
 
@@ -29,5 +29,5 @@ Io-Gui has one foundational context (the reactive core) plus application-domain 
 - **Menus → Editors**: Default editor widgets include `ioOptionSelect` with Menu models for enum-like properties.
 - **Layout Drawer ≠ Navigation IoNavigatorDrawer**: Same everyday word, different packages and jobs (collapsed Split child vs navigator chrome host).
 - **Editors → inspected objects**: Inspects arbitrary objects; ReactiveNodes get live `io-mutation` updates. Non-nodes need `dispatchMutation()` after in-place edits.
-- **Three → Editors**: Importing `@io-gui/three` registers PropertyConfigs / EditorGroups for Three.js classes. ThreeApplet may supply `uiConfig` / `uiGroups`.
+- **Three → Editors**: Importing `@io-gui/three` registers PropertyConfigs / EditorGroups for Three.js classes (plus ThreeEditor and ThreeDocument).
 - **Markdown → Navigation**: Rendered headings expose `data-heading` for selector Anchor sync.
