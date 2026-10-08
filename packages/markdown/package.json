@@ -47,13 +47,11 @@
       "default": "./dist/index.js"
     }
   },
-  "dependencies": {
-    "dompurify": "3.4.11",
+  "devDependencies": {
+    "@io-gui/core": "workspace:*",
+    "dompurify": "3.4.13",
     "marked": "18.0.5",
     "marked-highlight": "2.2.4"
-  },
-  "devDependencies": {
-    "@io-gui/core": "workspace:*"
   },
   "peerDependencies": {
     "@io-gui/core": "^2.0.0-alpha.5"
