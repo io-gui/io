@@ -30,6 +30,8 @@ export type ThreeViewData = {
   pipeline?: string
   overlays?: ViewOverlays
   xray?: boolean
+  toneMapping?: ToneMapping | null
+  toneMappingExposure?: number | null
   profile?: InteractionProfile
   overscan?: number
   clearColor?: number
@@ -38,6 +40,23 @@ export type ThreeViewData = {
 }
 
 type ViewCamera = PerspectiveCamera | OrthographicCamera
+
+const _box = new Box3()
+const _center = new Vector3()
+const _forward = new Vector3()
+
+function isInScene(object: Object3D, scene: Scene) {
+  for (let node: Object3D | null = object; node; node = node.parent) if (node === scene) return true
+  return false
+}
+
+/** Depth of the scene's bounds centre in front of `camera`: a scene camera has no orbit distance. */
+function sceneDistance(camera: Camera, scene: Scene) {
+  _box.setFromObject(scene)
+  if (_box.isEmpty()) return 1
+  _box.getCenter(_center).sub(camera.position)
+  return Math.max(_center.dot(camera.getWorldDirection(_forward)), (camera as PerspectiveCamera).near || 0.01)
+}
 
 /**
  * State of one view (ADR-0002): navigation and display settings, independent of any element.
@@ -91,8 +110,13 @@ export class ThreeView extends ReactiveObject {
   private readonly _sceneOrthographic = new OrthographicCamera()
   /** Scene camera name `setCameraView` waits for (`''` = first scene camera); null when none is pending. */
   private _cameraSourceName: string | null = null
+  /** Last scene camera found for `navigation.cameraSource`; reused while it is still in the scene. */
+  private _sourceCamera: Object3D | null = null
+  /** A `cameraSource` uuid not found in the scene; not searched again until the current task ends. */
+  private _missingSource: string | null = null
   /** Session state: navigation per document uuid, so switching documents back restores the camera. */
   private readonly _navigationByDocument = new Map<string, ViewNavigationData>()
+  private readonly _navigationListeners = new Set<() => void>()
 
   constructor(args?: ThreeViewProps) {
     super(args)
@@ -103,7 +127,19 @@ export class ThreeView extends ReactiveObject {
    * The methods below call it themselves.
    */
   markNavigationChanged() {
-    this.dispatchMutation()
+    for (const listener of this._navigationListeners) listener()
+  }
+
+  /**
+   * Calls `listener` on every navigation change. Navigation runs per pointer move, so it skips reactive
+   * mutation: viewports redraw, but inspectors and bindings of the view are not woken.
+   */
+  addNavigationListener(listener: () => void) {
+    this._navigationListeners.add(listener)
+  }
+
+  removeNavigationListener(listener: () => void) {
+    this._navigationListeners.delete(listener)
   }
 
   /** Looks through the view's own navigation: an orthographic axis view, or the default perspective view with `free`. */
@@ -178,7 +214,17 @@ export class ThreeView extends ReactiveObject {
     if (this._cameraSourceName !== null && scene) this._resolveCameraSourceName(scene)
     const uuid = this.navigation.cameraSource
     if (!uuid || !scene) return null
-    const camera = scene.getObjectByProperty('uuid', uuid) as Camera | undefined
+    // Called several times per draw and per pointer event: avoid walking the scene each time.
+    let camera = this._sourceCamera?.uuid === uuid && isInScene(this._sourceCamera, scene) ? this._sourceCamera as Camera : undefined
+    if (!camera) {
+      if (this._missingSource === uuid) return null
+      camera = scene.getObjectByProperty('uuid', uuid) as Camera | undefined
+      this._sourceCamera = camera ?? null
+      if (!camera) {
+        this._missingSource = uuid
+        queueMicrotask(() => { this._missingSource = null })
+      }
+    }
     if ((camera as PerspectiveCamera)?.isPerspectiveCamera || (camera as OrthographicCamera)?.isOrthographicCamera) {
       return camera as ViewCamera
     }
@@ -241,12 +287,13 @@ export class ThreeView extends ReactiveObject {
     return camera
   }
 
-  /** World units covered by one CSS pixel at the target distance. */
+  /** World units covered by one CSS pixel at the target distance (at the scene's centre through a scene camera). */
   getWorldPerPixel(width: number, height: number, scene: Scene | null) {
     const camera = this.getCamera(width, height, scene)
     let visibleHeight: number
     if (camera instanceof PerspectiveCamera) {
-      visibleHeight = 2 * this.navigation.distance * Math.tan(camera.fov * Math.PI / 360) / camera.zoom
+      const distance = this.getSourceCamera(scene) && scene ? sceneDistance(camera, scene) : this.navigation.distance
+      visibleHeight = 2 * distance * Math.tan(camera.fov * Math.PI / 360) / camera.zoom
     } else {
       visibleHeight = (camera.top - camera.bottom) / camera.zoom
     }
@@ -294,6 +341,8 @@ export class ThreeView extends ReactiveObject {
       pipeline: this.pipeline,
       overlays: {...this.overlays},
       xray: this.xray,
+      toneMapping: this.toneMapping,
+      toneMappingExposure: this.toneMappingExposure,
       profile: this.profile,
       overscan: this.overscan,
       clearColor: this.clearColor,
@@ -309,6 +358,8 @@ export class ThreeView extends ReactiveObject {
     if (data.pipeline !== undefined) props.pipeline = data.pipeline
     if (data.overlays !== undefined) props.overlays = {...data.overlays}
     if (data.xray !== undefined) props.xray = data.xray
+    if (data.toneMapping !== undefined) props.toneMapping = data.toneMapping
+    if (data.toneMappingExposure !== undefined) props.toneMappingExposure = data.toneMappingExposure
     if (data.profile !== undefined) props.profile = data.profile
     if (data.overscan !== undefined) props.overscan = data.overscan
     if (data.clearColor !== undefined) props.clearColor = data.clearColor

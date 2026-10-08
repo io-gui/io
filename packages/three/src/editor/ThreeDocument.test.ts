@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { ThreeDocument, ThreeEditor, Transaction } from '@io-gui/three'
+import { ChangeBus, ThreeDocument, ThreeEditor, Transaction } from '@io-gui/three'
 import { Color, Group, Mesh, MeshBasicMaterial, Object3D, Vector3 } from 'three/webgpu'
 
 function snapshot(document: ThreeDocument) {
@@ -122,6 +122,17 @@ describe('ThreeDocument transactions', () => {
     mesh.add(back)
     expect(document.getObject(gone.uuid)).toBe(back)
     expect(traverse).toHaveBeenCalledTimes(2)
+  })
+
+  it('bounds undrained changes, and drops them when the document is switched away', () => {
+    for (let i = 0; i < ChangeBus.LIMIT + 5; i++) document.notify({kind: 'transform'})
+    expect(document.changeBus.drain().length).toBeLessThan(10)
+    const editor = new ThreeEditor({document})
+    document.notify({kind: 'transform'})
+    editor.document = new ThreeDocument()
+    expect(document.changeBus.pending).toBe(false)
+    editor.document.dispose()
+    editor.dispose()
   })
 
   it('tells commit listeners about committed, non-empty transactions only', () => {

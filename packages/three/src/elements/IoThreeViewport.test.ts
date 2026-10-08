@@ -101,6 +101,33 @@ describe('IoThreeViewport', () => {
     viewport.dispose()
   })
 
+  it('redraws every viewport of a view on camera moves without a reactive mutation', () => {
+    const view = new ThreeView()
+    const a = new IoThreeViewport({ editor, view })
+    const b = new IoThreeViewport({ editor, view })
+    container.append(a as Node, b as Node)
+    renderScheduler.step()
+    let mutations = 0
+    const count = () => { mutations++ }
+    view.addEventListener('io-mutation', count)
+    window.addEventListener('io-mutation', count)
+    view.navigation.orbit(0.1, 0)
+    view.markNavigationChanged()
+    window.removeEventListener('io-mutation', count)
+    expect(mutations).toBe(0)
+    expect(renderScheduler.getTags(a).has('view')).toBe(true)
+    expect(renderScheduler.getTags(b).has('view')).toBe(true)
+
+    a.remove()
+    a.dispose()
+    renderScheduler.step()
+    view.markNavigationChanged()
+    expect(renderScheduler.getTags(b).has('view')).toBe(true)
+    b.remove()
+    b.dispose()
+    view.dispose()
+  })
+
   it('frames objects on the editor frame-object event', () => {
     const viewport = new IoThreeViewport({ editor })
     const mesh = new Mesh(new BoxGeometry(1, 1, 1))
@@ -165,6 +192,20 @@ describe('IoThreeViewport', () => {
     expect(viewport.listens({kind: 'transform', source: other.document})).toBe(false)
     other.dispose()
     viewport.dispose()
+  })
+
+  it('rebuilds tool behaviors with the new view when the view is swapped', () => {
+    const editor = new ThreeEditor()
+    const views: ThreeView[] = []
+    editor.tools.register({id: 'probe', label: 'Probe', viewKinds: ['3d'], modes: ['object'], createBehaviors: ctx => { views.push(ctx.view); return [] }})
+    editor.setActiveTool('3d', 'object', 'probe')
+    const viewport = new IoThreeViewport({ editor })
+    const next = new ThreeView()
+    viewport.view = next
+    expect(views.at(-1)).toBe(next)
+    viewport.dispose()
+    next.dispose()
+    editor.dispose()
   })
 
   it('installs the editor\'s active tool according to the view profile', () => {

@@ -7,7 +7,7 @@ status: accepted
 io-three is split into three layers with one job each:
 
 - **App layer.** One `ThreeEditor` per app. It owns the `ThreeDocument` (the content scene), the `SelectionModel`, the current mode, tools and operators, undo, the clock and the change bus.
-- **View layer.** Any number of `ThreeView` models. Each holds the view kind (`3d`, `uv`, `image`, `preview`), navigation state, shading / pipeline choice, overlay flags and the interaction profile. It is shown by an `IoThreeViewport` element that owns only DOM concerns: `CanvasTarget`, CSS size, pixel ratio, visibility, focus and its `InputRouter`.
+- **View layer.** Any number of `ThreeView` models. Each holds the view kind (`3d` and `uv` today; `image` and `preview` are planned), navigation state, shading / pipeline choice, overlay flags and the interaction profile. It is shown by an `IoThreeViewport` element that owns only DOM concerns: `CanvasTarget`, CSS size, pixel ratio, visibility, focus and its `InputRouter`.
 - **Frame layer.** One `RenderScheduler` (ADR-0003).
 
 `ThreeView` is a serialisable `ReactiveObject`, not part of the element. `ioLayout` may dispose and recreate an element when a tab moves, and a view's camera, shading and overlays must survive that. Layouts can then serialise views.
@@ -18,7 +18,7 @@ The old `ThreeApplet` mixed the document, the clock, per-viewport size (`_width`
 
 ## One active document, switchable at runtime
 
-A `ThreeEditor` has exactly one active `ThreeDocument` at a time, and `editor.document` can be reassigned while the app runs (open file, new scene, revert). Views read `editor.document`; they never hold their own document reference, so a switch reaches every view with one assignment. Per-document session state lives on the editor in maps keyed by document id: selection, undo stack, and each view's navigation (so switching back restores camera positions). On switch the editor cancels any running modal operator, then tags every view with `content`.
+A `ThreeEditor` has exactly one active `ThreeDocument` at a time, and `editor.document` can be reassigned while the app runs (open file, new scene, revert). Views read `editor.document`; they never hold their own document reference, so a switch reaches every view with one assignment. Per-document session state is kept in maps keyed by document id: selection (and later the undo stack) on the editor, and each view's navigation on its `ThreeView`, so switching back restores camera positions. The per-document navigation map is session state and is not saved by `ThreeView.toJSON()`; only the current navigation is. On switch the editor cancels any running modal operator, then tags every view with `content`.
 
 Previews that need their own scene (material balls, asset thumbnails) use private documents rendered by preview views. They are not "the" document and cannot be edited through the editor.
 

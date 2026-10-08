@@ -154,6 +154,15 @@ describe('RaycastPicker and SelectBehavior', () => {
     expect(await picker.pick(host, ...screenOf(left))).toBe(null)
   })
 
+  it('picks objects where they are now, even if no frame has drawn since they moved', async () => {
+    const before = screenOf(left)
+    left.position.y += 3
+    const point = left.position.clone().project(host.getViewCamera())
+    const after: [number, number] = [(point.x + 1) / 2 * 200, (1 - point.y) / 2 * 100]
+    expect((await picker.pick(host, ...after))?.object).toBe(left)
+    expect((await picker.pick(host, ...before))?.object).not.toBe(left)
+  })
+
   it('hits lines only within a few pixels', async () => {
     const line = new LineSegments(new BufferGeometry().setFromPoints([new Vector3(0, -5, 0), new Vector3(0, 5, 0)]))
     document.scene.add(line)

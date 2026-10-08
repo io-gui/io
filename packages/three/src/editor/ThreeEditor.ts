@@ -92,7 +92,11 @@ export class ThreeEditor extends ReactiveObject implements ScheduledTicker {
   }
 
   documentChanged(change: Change<ThreeDocument>) {
-    if (change.oldValue && change.oldValue !== change.value) this._operators?.cancelRunning()
+    if (change.oldValue && change.oldValue !== change.value) {
+      this._operators?.cancelRunning()
+      // Views tag themselves for the new document; changes left for the old one would never be drained.
+      change.oldValue.changeBus.clear()
+    }
     if (change.value) this.selection = this._selectionFor(change.value)
   }
 

@@ -206,12 +206,40 @@ describe('ThreeView', () => {
     view.dispose()
   })
 
+  it('finds its scene camera without walking the scene on every call', () => {
+    const scene = new Scene()
+    const camera = new PerspectiveCamera()
+    scene.add(new Mesh(new BoxGeometry()), camera)
+    const view = new ThreeView().setCameraView(`uuid:${camera.uuid}`)
+    const walk = vi.spyOn(scene, 'getObjectByProperty')
+    for (let i = 0; i < 5; i++) expect(view.getSourceCamera(scene)).toBe(camera)
+    expect(walk).toHaveBeenCalledTimes(1)
+    scene.remove(camera)
+    for (let i = 0; i < 5; i++) expect(view.getSourceCamera(scene)).toBe(null)
+    expect(walk).toHaveBeenCalledTimes(2)
+    view.dispose()
+  })
+
+  it('measures pick tolerance at the scene, not the orbit distance, through a scene camera', () => {
+    const scene = new Scene()
+    const camera = new PerspectiveCamera(60, 1, 0.1, 100)
+    camera.position.set(0, 0, 20)
+    scene.add(new Mesh(new BoxGeometry()), camera)
+    const view = new ThreeView({overscan: 1}).setCameraView(`uuid:${camera.uuid}`)
+    view.navigation.distance = 2
+    const drawn = view.getCamera(100, 100, scene) as PerspectiveCamera
+    expect(view.getWorldPerPixel(100, 100, scene)).toBeCloseTo(2 * 20 * Math.tan(drawn.fov * Math.PI / 360) / drawn.zoom / 100, 5)
+    view.dispose()
+  })
+
   it('round-trips through JSON', () => {
-    const view = new ThreeView({overscan: 1.5, clearColor: 0x223344, pipeline: 'probe', overlays: {grid: true}})
+    const view = new ThreeView({overscan: 1.5, clearColor: 0x223344, pipeline: 'probe', overlays: {grid: true}, toneMapping: 4, toneMappingExposure: 0.5})
     view.setAxisView('top')
     const copy = new ThreeView().applyJSON(JSON.parse(JSON.stringify(view.toJSON())))
     expect(copy.toJSON()).toEqual(view.toJSON())
     expect(copy.pipeline).toBe('probe')
+    expect(copy.toneMapping).toBe(4)
+    expect(copy.toneMappingExposure).toBe(0.5)
     expect(copy.isOverlayEnabled('grid', false)).toBe(true)
     view.dispose()
     copy.dispose()
