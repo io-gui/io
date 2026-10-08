@@ -5,52 +5,38 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register, ReactiveElement, Property, Field } from '@io-gui/core';
-import { WebGPURenderer, CanvasTarget, NeutralToneMapping } from 'three/webgpu';
-import WebGPU from 'three/addons/capabilities/WebGPU.js';
-import { ThreeApplet } from '../nodes/ThreeApplet.js';
-import { ViewCameras } from '../nodes/ViewCameras.js';
-import { ToolBase } from '../nodes/ToolBase.js';
+import { WebGPURenderer, CanvasTarget } from 'three/webgpu';
+import { ThreeEditor } from '../editor/ThreeEditor.js';
+import { toolAllowsProfile } from '../tools/Tool.js';
+import { ThreeView } from '../view/ThreeView.js';
+import { InputRouter } from '../input/InputRouter.js';
+import { Keymap, keymaps } from '../input/Keymap.js';
+import { NavigationBehavior } from '../input/behaviors/NavigationBehavior.js';
+import { SelectBehavior } from '../input/behaviors/SelectBehavior.js';
+import { renderScheduler, getDefaultRenderer } from '../render/RenderScheduler.js';
+import { ViewCompositor } from '../render/ViewCompositor.js';
+import { GizmoLayer } from '../tools/Gizmo.js';
+import { IdComponentPicker } from '../selection/ComponentPicker.js';
+import { IdPass } from '../render/IdPass.js';
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-        entry.target.visible = entry.isIntersecting;
+        const viewport = entry.target;
+        viewport.visible = entry.isIntersecting;
+        if (entry.isIntersecting)
+            viewport.tag('view');
     });
 });
-// TODO: Add support for logarithmic depth buffer
-// TODO: Add support for unique renderer instances per viewport
-let _renderer = null;
-function getDefaultRenderer() {
-    if (!_renderer) {
-        if (WebGPU.isAvailable() === false) {
-            console.error('No WebGPU support!');
-        }
-        _renderer = new WebGPURenderer({ antialias: false, alpha: true });
-        _renderer.toneMapping = NeutralToneMapping;
-        _renderer.setPixelRatio(window.devicePixelRatio);
-        _renderer.shadowMap.enabled = true;
-        void _renderer.init();
-    }
-    return _renderer;
-}
 let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
     width = 0;
     height = 0;
     visible = false;
-    renderTarget;
-    isWebGPUBackend() {
-        return this.renderer.backend.isWebGPUBackend === true;
+    get renderTarget() {
+        if (!this._renderTarget)
+            this._renderTarget = new CanvasTarget(document.createElement('canvas'));
+        return this._renderTarget;
     }
     attachSurface() {
-        if (this.isWebGPUBackend()) {
-            if (!this.renderTarget) {
-                this.renderTarget = new CanvasTarget(document.createElement('canvas'));
-            }
-            const canvas = this.renderTarget.domElement;
-            if (canvas.parentElement !== this) {
-                this.appendChild(canvas);
-            }
-            return;
-        }
-        const canvas = this.renderer.domElement;
+        const canvas = this.renderTarget.domElement;
         if (canvas.parentElement !== this) {
             this.appendChild(canvas);
         }
@@ -59,6 +45,7 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         return /* css */ `
       :host {
         position: relative;
+        touch-action: none;
         display: flex;
         flex: 1 1 auto;
         flex-direction: column;
@@ -80,147 +67,340 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
     }
     static get Listeners() {
         return {
-            'three-applet-needs-render': 'onAppletNeedsRender',
-            'three-applet-frame-object-all': 'onAppletFrameObjectAll',
+            'frame-object': 'onFrameObject',
         };
+    }
+    /** Routes this viewport's input to behaviors: navigation, tools, later gizmos and operators (ADR-0004). */
+    get inputRouter() {
+        if (!this._inputRouter) {
+            this._inputRouter = new InputRouter(this);
+            this._navigation = new NavigationBehavior(this, this.keymap);
+            this._select = new SelectBehavior(this, this.keymap);
+            this._gizmos = new GizmoLayer(this);
+            this._inputRouter.add(this._navigation);
+            this._inputRouter.add(this._select);
+        }
+        return this._inputRouter;
+    }
+    /** Runs this viewport's pipeline and draws its overlays (ADR-0006). Recreated when the renderer changes. */
+    get compositor() {
+        if (!this._compositor)
+            this._compositor = new ViewCompositor(this.renderer);
+        return this._compositor;
+    }
+    /** Gizmos of the active tool in this viewport. */
+    get gizmoLayer() {
+        void this.inputRouter;
+        return this._gizmos;
+    }
+    /** The pipeline's picker when it has one (UV view), otherwise null (raycast the content scene). */
+    get picker() {
+        return this._compositor?.pipeline?.picker ?? null;
+    }
+    /**
+     * How edit mode picks components here: the pipeline's (UV view) or an ID-buffer picker drawing this
+     * viewport's camera at its size (ADR-0007). The ID buffer is cached until content changes.
+     */
+    get componentPicker() {
+        const pipelinePicker = this._compositor?.pipeline?.componentPicker;
+        if (pipelinePicker)
+            return pipelinePicker;
+        if (!this._idPicker) {
+            this._idPicker = new IdComponentPicker({
+                source: (_host, camera, objects, width, height) => {
+                    const scene = this.scene;
+                    if (!scene || !this.renderer?.initialized)
+                        return Promise.resolve(null);
+                    if (!this._idPass)
+                        this._idPass = new IdPass(this.renderer);
+                    return this._idPass.read(scene, camera, objects, width, height);
+                },
+            });
+        }
+        return this._idPicker;
+    }
+    get navigationBehavior() {
+        void this.inputRouter;
+        return this._navigation;
+    }
+    get selectBehavior() {
+        void this.inputRouter;
+        return this._select;
     }
     constructor(args) {
         super({
             ...args,
+            view: args.view ?? new ThreeView(),
             renderer: args.renderer ?? getDefaultRenderer(),
         });
-        this.viewCameras = new ViewCameras({ viewport: this, applet: this.bind('applet'), cameraSelect: this.bind('cameraSelect') });
-        this.debounce(this.renderViewportDebounced);
+        this._ownsView = !args.view;
+        this.view.addNavigationListener(this._onNavigation);
+        void this.inputRouter;
+        this._syncBehaviors();
     }
     ready() {
         this.attachSurface();
-        if (!this.isWebGPUBackend()) {
-            console.log('WebGL fallback enabled');
-        }
     }
     connectedCallback() {
         super.connectedCallback();
         observer.observe(this);
         this.attachSurface();
+        renderScheduler.register(this);
         this.onResized();
     }
     disconnectedCallback() {
         super.disconnectedCallback();
         observer.unobserve(this);
-        // TODO: Visibility observe
+        renderScheduler.unregister(this);
         this.visible = false;
     }
-    toolChanged(change) {
-        const newTool = change.value;
-        const oldTool = change.oldValue;
-        if (oldTool)
-            oldTool.unregisterViewport(this);
-        if (newTool)
-            newTool.registerViewport(this);
+    get scene() {
+        return this.editor?.document?.scene ?? null;
     }
-    onAppletNeedsRender(event) {
-        event.stopPropagation(); // TODO: Test with multiple viewports
-        if (!this.visible)
-            return;
-        this.debounce(this.renderViewportDebounced);
+    get changeBus() {
+        return this.editor?.document?.changeBus ?? null;
     }
-    onAppletFrameObjectAll(event) {
-        event.stopPropagation(); // TODO: Test with multiple viewports
-        if (!this.visible)
+    get mode() {
+        return this.editor?.mode;
+    }
+    get selection() {
+        return this.editor?.selection ?? null;
+    }
+    /** Marks this viewport for redraw on the next frame. */
+    tag(reason) {
+        if (reason === 'content')
+            this._idPicker?.invalidate();
+        renderScheduler.tag(this, reason);
+    }
+    isRenderable() {
+        return this.visible && this.width > 0 && this.height > 0 && !!this.scene;
+    }
+    getPriority() {
+        if (this.matches(':focus-within'))
+            return 2;
+        if (this.matches(':hover'))
+            return 1;
+        return 0;
+    }
+    listens(change) {
+        if (!this.editor || change.source !== this.editor.document)
+            return false;
+        // Pipeline and overlays are synced on view changes and before each draw, not here.
+        const reason = this._compositor?.listens(change) ?? 'content';
+        if (reason === 'content')
+            this._idPicker?.invalidate();
+        return reason;
+    }
+    onRendererError(error) {
+        this.textContent = error.message;
+    }
+    /** The camera this viewport draws and picks with, built from its view at the current size. */
+    getViewCamera() {
+        return this.view.getCamera(this.width, this.height, this.scene);
+    }
+    /** Event `frame-object` with `{object, overscan?}`: frames the object in this viewport's view. */
+    onFrameObject(event) {
+        event.stopPropagation();
+        this.view.frame(event.detail.object, event.detail.overscan ?? 1);
+    }
+    _syncView() {
+        const view = this.view;
+        const scene = this.scene;
+        if (!view)
             return;
-        this.viewCameras.frameObjectAll(event.detail);
+        if (view.kind === 'uv') {
+            if (!view.navigation.framed || view.navigation.axisView !== 'front')
+                view.frameUV();
+        }
+        else if (!view.navigation.framed && scene) {
+            view.frame(scene);
+        }
+    }
+    /** On a document switch, park this view's navigation for the old document and restore it for the new one. */
+    _syncDocument() {
+        const document = this.editor?.document;
+        if (document === this._shownDocument)
+            return;
+        if (this._shownDocument && document && this.view)
+            this.view.switchDocument(this._shownDocument.uuid, document.uuid);
+        this._shownDocument = document;
+    }
+    /**
+     * Installs navigation, selection, gizmos and the editor's active tool according to the view's interaction
+     * profile. Gizmos need the `full` profile and the view's `gizmos` overlay flag (default on).
+     */
+    _syncBehaviors() {
+        const view = this.view;
+        if (!view || !this._inputRouter)
+            return;
+        const router = this._inputRouter;
+        const gizmos = this._gizmos;
+        if (view.profile === 'none')
+            router.remove(this._navigation);
+        else
+            router.add(this._navigation);
+        if (view.profile === 'full' || view.profile === 'select')
+            router.add(this._select);
+        else
+            router.remove(this._select);
+        if (view.profile === 'full' && view.isOverlayEnabled('gizmos')) {
+            router.add(gizmos);
+            this.compositor.addOverlay(gizmos, 300);
+        }
+        else {
+            router.remove(gizmos);
+            this._compositor?.removeOverlay(gizmos);
+        }
+        const tool = this.editor?.getActiveTool(view.kind) ?? null;
+        const toolId = tool && toolAllowsProfile(tool, view.profile) ? tool.id : null;
+        // Behaviors and gizmo groups get the view and editor at creation, so a swap of either rebuilds them.
+        const current = this._toolBehaviors;
+        if ((current?.toolId ?? null) === toolId && (!current || (current.view === view && current.editor === this.editor)))
+            return;
+        for (const behavior of this._toolBehaviors?.behaviors ?? [])
+            router.remove(behavior);
+        this._toolBehaviors = undefined;
+        if (tool && toolId) {
+            const ctx = { editor: this.editor, host: this, view };
+            const behaviors = tool.createBehaviors(ctx);
+            for (const behavior of behaviors)
+                router.add(behavior);
+            this._toolBehaviors = { toolId, view, editor: this.editor, behaviors };
+            gizmos.setGroups(tool.createGizmoGroups?.(ctx) ?? []);
+        }
+        else {
+            gizmos.setGroups([]);
+        }
+    }
+    /** Matches the compositor's pipeline and overlays to the view. */
+    _syncRendering() {
+        const view = this.view;
+        if (!view || !this.renderer)
+            return;
+        this.compositor.syncPipeline(view);
+        this.compositor.syncOverlays(view);
     }
     onResized() {
         const rect = this.getBoundingClientRect();
-        this.width = Math.floor(rect.width);
-        this.height = Math.floor(rect.height);
-        if (this.isWebGPUBackend() && this.renderTarget) {
-            this.renderTarget.setSize(this.width, this.height);
-            this.renderTarget.setPixelRatio(window.devicePixelRatio);
+        const width = Math.floor(rect.width);
+        const height = Math.floor(rect.height);
+        if (width === this.width && height === this.height)
+            return;
+        this.width = width;
+        this.height = height;
+        this.renderTarget.setSize(width, height);
+        this.renderTarget.setPixelRatio(window.devicePixelRatio);
+        this.tag('resize');
+    }
+    rendererChanged(change) {
+        if (change.oldValue && change.oldValue !== change.value) {
+            this._idPass?.dispose();
+            this._idPass = undefined;
+            this._idPicker?.invalidate();
         }
-        this.renderViewportDebounced();
+        if (change.oldValue && change.oldValue !== change.value && this._compositor) {
+            this._compositor.dispose();
+            this._compositor = undefined;
+            this._syncBehaviors();
+        }
     }
-    appletChanged() {
-        this.debounce(this.renderViewportDebounced);
+    editorChanged() {
+        this._syncDocument();
+        this._syncView();
+        this._syncBehaviors();
+        this.tag('content');
     }
-    appletMutated() {
-        this.debounce(this.renderViewportDebounced);
+    editorMutated() {
+        this._syncDocument();
+        if (!this.view?.navigation.framed)
+            this._syncView();
+        this._syncBehaviors();
+        this.tag('content');
     }
-    viewCamerasMutated() {
-        this.debounce(this.renderViewportDebounced);
+    viewChanged(change) {
+        // Runs during construction too, before `_onNavigation` exists; the constructor adds it then.
+        if (this._onNavigation) {
+            change.oldValue?.removeNavigationListener(this._onNavigation);
+            this.view?.addNavigationListener(this._onNavigation);
+        }
+        if (this._ownsView && change.oldValue && change.oldValue !== change.value) {
+            change.oldValue.dispose();
+            this._ownsView = false;
+        }
+        this._syncView();
+        this._syncBehaviors();
+        this.tag('view');
     }
+    keymapChanged() {
+        if (this._navigation)
+            this._navigation.keymap = this.keymap;
+        if (this._select)
+            this._select.keymap = this.keymap;
+    }
+    viewMutated() {
+        this._syncBehaviors();
+        this._syncRendering();
+        this.tag('view');
+    }
+    /** Camera moves only redraw: they change no behaviors, pipeline or overlays. */
+    _onNavigation = () => {
+        this.tag('view');
+    };
     mutated() {
-        this.debounce(this.renderViewportDebounced);
+        this.tag('view');
     }
-    renderViewportDebounced() {
-        if (this.renderer.initialized === false) {
-            this.debounce(this.renderViewportDebounced, undefined, 2);
-            return;
+    /** Called by the RenderScheduler only (ADR-0003). */
+    renderView(reasons, frame) {
+        const editor = this.editor;
+        const document = editor.document;
+        if (editor.isRendererInitialized() === false) {
+            void editor.onRendererInitialized(this.renderer);
         }
-        this.applet.updateViewportSize(this.width, this.height);
-        this.renderViewport();
-    }
-    renderViewport() {
-        if (this.renderer.initialized === false)
-            return;
-        if (this.applet.isRendererInitialized() === false) {
-            void this.applet.onRendererInitialized(this.renderer);
-        }
-        if (!this.width || !this.height)
-            return;
-        if (this.isWebGPUBackend() && this.renderTarget) {
-            this.renderer.setCanvasTarget(this.renderTarget);
-        }
-        this.renderer.setClearColor(this.clearColor, this.clearAlpha);
-        this.renderer.setSize(this.width, this.height);
-        this.renderer.clear();
-        this.applet.updateViewportSize(this.width, this.height);
-        const toneMapping = this.renderer.toneMapping;
-        const toneMappingExposure = this.renderer.toneMappingExposure;
-        this.renderer.toneMapping = this.applet.toneMapping;
-        this.renderer.toneMappingExposure = this.applet.toneMappingExposure;
-        this.viewCameras.setOverscan(this.width, this.height, this.overscan);
-        this.renderer.render(this.applet.scene, this.viewCameras.camera);
-        this.viewCameras.resetOverscan();
-        this.renderer.toneMapping = toneMapping;
-        this.renderer.toneMappingExposure = toneMappingExposure;
+        const renderer = this.renderer;
+        renderer.setCanvasTarget(this.renderTarget);
+        renderer.setSize(this.width, this.height);
+        this._syncRendering();
+        return this.compositor.render({
+            renderer,
+            editor,
+            document,
+            scene: document.scene,
+            view: this.view,
+            camera: this.getViewCamera(),
+            selection: this.selection,
+            width: this.width,
+            height: this.height,
+            pixelRatio: renderer.getPixelRatio(),
+            reasons,
+            frame,
+        });
     }
     dispose() {
-        delete this.applet;
-        if (this.renderTarget) {
-            this.renderTarget.dispose();
-        }
-        this.viewCameras.dispose();
-        if (this.tool) {
-            this.tool.unregisterViewport(this);
-        }
+        renderScheduler.unregister(this);
+        delete this.editor;
+        this.renderTarget.dispose();
+        this._inputRouter?.dispose();
+        this._gizmos?.dispose();
+        this._compositor?.dispose();
+        this._idPass?.dispose();
+        this.view?.removeNavigationListener(this._onNavigation);
+        if (this._ownsView)
+            this.view.dispose();
         super.dispose();
     }
 };
 __decorate([
-    Property({ type: ThreeApplet, init: null })
-], IoThreeViewport.prototype, "applet", void 0);
+    Property({ type: ThreeEditor })
+], IoThreeViewport.prototype, "editor", void 0);
 __decorate([
-    Property({ type: Number, value: 1.1 })
-], IoThreeViewport.prototype, "overscan", void 0);
-__decorate([
-    Property({ type: Number, value: 0x000000 })
-], IoThreeViewport.prototype, "clearColor", void 0);
-__decorate([
-    Property({ type: Number, value: 1 })
-], IoThreeViewport.prototype, "clearAlpha", void 0);
-__decorate([
-    Property({ type: String, value: 'perspective' })
-], IoThreeViewport.prototype, "cameraSelect", void 0);
+    Property({ type: ThreeView })
+], IoThreeViewport.prototype, "view", void 0);
 __decorate([
     Property({ type: WebGPURenderer })
 ], IoThreeViewport.prototype, "renderer", void 0);
 __decorate([
-    Property({ type: ViewCameras })
-], IoThreeViewport.prototype, "viewCameras", void 0);
-__decorate([
-    Property({ type: ToolBase })
-], IoThreeViewport.prototype, "tool", void 0);
+    Property({ type: Keymap, value: keymaps.default })
+], IoThreeViewport.prototype, "keymap", void 0);
 __decorate([
     Field(0)
 ], IoThreeViewport.prototype, "tabIndex", void 0);

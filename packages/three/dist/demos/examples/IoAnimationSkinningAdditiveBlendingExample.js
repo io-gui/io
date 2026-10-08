@@ -7,14 +7,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Property, Register } from '@io-gui/core';
 import { AnimationAction, AnimationMixer, AnimationUtils, Color, DirectionalLight, Fog, Group, HemisphereLight, Mesh, MeshPhongMaterial, PlaneGeometry, } from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
+import { ThreeEditor, ThreeView, IoThreeExample, ioThreeViewport } from '@io-gui/three';
 import { ioLayout, Layout } from '@io-gui/layout';
 import { ioObject, ioPropertyEditor } from '@io-gui/editors';
 const loader = new GLTFLoader();
 const loadGltf = (url) => new Promise((resolve, reject) => {
     loader.load(url, resolve, undefined, reject);
 });
-let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
+let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBlendingExample extends ThreeEditor {
     mixer = new AnimationMixer(new Group());
     currentBaseAction = 'idle';
     baseActions = {
@@ -31,12 +31,12 @@ let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBl
     constructor(args) {
         super(args);
         // Scene setup
-        this.scene.background = new Color(0xa0a0a0);
-        this.scene.fog = new Fog(0xa0a0a0, 10, 50);
+        this.document.scene.background = new Color(0xa0a0a0);
+        this.document.scene.fog = new Fog(0xa0a0a0, 10, 50);
         // Lights
         const hemiLight = new HemisphereLight(0xffffff, 0x8d8d8d, 3);
         hemiLight.position.set(0, 20, 0);
-        this.scene.add(hemiLight);
+        this.document.scene.add(hemiLight);
         const dirLight = new DirectionalLight(0xffffff, 3);
         dirLight.position.set(3, 10, 10);
         dirLight.castShadow = true;
@@ -46,17 +46,17 @@ let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBl
         dirLight.shadow.camera.right = 2;
         dirLight.shadow.camera.near = 0.1;
         dirLight.shadow.camera.far = 40;
-        this.scene.add(dirLight);
+        this.document.scene.add(dirLight);
         const ground = new Mesh(new PlaneGeometry(100, 100), new MeshPhongMaterial({ color: 0xcbcbcb, depthWrite: false }));
         ground.rotation.x = -Math.PI / 2;
         ground.receiveShadow = true;
-        this.scene.add(ground);
+        this.document.scene.add(ground);
         void this.loadModel();
     }
     async loadModel() {
         const gltf = await loadGltf('https://threejs.org/examples/models/gltf/Xbot.glb');
         const model = gltf.scene;
-        this.scene.add(model);
+        this.document.scene.add(model);
         model.traverse((object) => {
             if (object.isMesh) {
                 object.castShadow = true;
@@ -170,11 +170,11 @@ let IoAnimationSkinningAdditiveBlendingExample = class IoAnimationSkinningAdditi
         this.render([
             ioLayout({
                 elements: [
-                    ioThreeViewport({ id: 'Top', applet: this.applet, cameraSelect: 'top' }),
-                    ioThreeViewport({ id: 'Left', applet: this.applet, cameraSelect: 'left' }),
-                    ioThreeViewport({ id: 'Back', applet: this.applet, cameraSelect: 'back' }),
-                    ioThreeViewport({ id: 'Perspective', applet: this.applet, cameraSelect: 'perspective' }),
-                    ioPropertyEditor({ id: 'PropertyEditor', value: this.applet,
+                    ioThreeViewport({ id: 'Top', editor: this.editor, view: new ThreeView().setAxisView('top') }),
+                    ioThreeViewport({ id: 'Left', editor: this.editor, view: new ThreeView().setAxisView('left') }),
+                    ioThreeViewport({ id: 'Back', editor: this.editor, view: new ThreeView().setAxisView('back') }),
+                    ioThreeViewport({ id: 'Perspective', editor: this.editor }),
+                    ioPropertyEditor({ id: 'PropertyEditor', value: this.editor,
                         config: [
                             [AnimationMixer, ioObject({ expanded: true, properties: ['timeScale'] })],
                             [AnimationAction, ioObject({ expanded: true, properties: ['weight'] })],
@@ -242,7 +242,7 @@ let IoAnimationSkinningAdditiveBlendingExample = class IoAnimationSkinningAdditi
 };
 __decorate([
     Property({ type: AnimationSkinningAdditiveBlendingExample, init: { isPlaying: true } })
-], IoAnimationSkinningAdditiveBlendingExample.prototype, "applet", void 0);
+], IoAnimationSkinningAdditiveBlendingExample.prototype, "editor", void 0);
 IoAnimationSkinningAdditiveBlendingExample = __decorate([
     Register
 ], IoAnimationSkinningAdditiveBlendingExample);

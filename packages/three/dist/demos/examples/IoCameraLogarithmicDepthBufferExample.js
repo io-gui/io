@@ -8,7 +8,7 @@ import { AmbientLight, Color, DirectionalLight, Group, MathUtils, Mesh, MeshPhon
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { Register, Property } from '@io-gui/core';
-import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
+import { ThreeEditor, ThreeView, IoThreeExample, ioThreeViewport } from '@io-gui/three';
 import { Layout, ioLayout } from '@io-gui/layout';
 // 1 micrometer to 100 billion light years in one scene, with 1 unit = 1 meter
 const NEAR = 1e-6;
@@ -30,7 +30,7 @@ const labeldata = [
     { size: 3.08567758e16, scale: 1.0, label: 'ludicrous (1 parsec)' },
     { size: 1e19, scale: 1.0, label: 'mind boggling (1000 light years)' }
 ];
-let CameraLogarithmicDepthBufferExample = class CameraLogarithmicDepthBufferExample extends ThreeApplet {
+let CameraLogarithmicDepthBufferExample = class CameraLogarithmicDepthBufferExample extends ThreeEditor {
     camera;
     zoompos = -100;
     zoomspeed = 0.015;
@@ -40,12 +40,12 @@ let CameraLogarithmicDepthBufferExample = class CameraLogarithmicDepthBufferExam
         super(args);
         // Create camera with extreme near/far planes
         this.camera = new PerspectiveCamera(50, 1, NEAR, FAR);
-        this.scene.add(this.camera);
+        this.document.scene.add(this.camera);
         // Lighting
-        this.scene.add(new AmbientLight(0x777777));
+        this.document.scene.add(new AmbientLight(0x777777));
         const light = new DirectionalLight(0xffffff, 3);
         light.position.set(100, 100, 100);
-        this.scene.add(light);
+        this.document.scene.add(light);
     }
     async onRendererInitialized(renderer) {
         super.onRendererInitialized(renderer);
@@ -74,7 +74,7 @@ let CameraLogarithmicDepthBufferExample = class CameraLogarithmicDepthBufferExam
                 });
                 const group = new Group();
                 group.position.z = -labeldata[i].size * scale;
-                this.scene.add(group);
+                this.document.scene.add(group);
                 const textmesh = new Mesh(labelgeo, material);
                 textmesh.scale.set(scale, scale, scale);
                 textmesh.position.z = -labeldata[i].size * scale;
@@ -105,7 +105,7 @@ let CameraLogarithmicDepthBufferExample = class CameraLogarithmicDepthBufferExam
         this.camera.position.x = Math.sin(0.5 * Math.PI * (this.mouse[0] - 0.5)) * zoom;
         this.camera.position.y = Math.sin(0.25 * Math.PI * (this.mouse[1] - 0.5)) * zoom;
         this.camera.position.z = Math.cos(0.5 * Math.PI * (this.mouse[0] - 0.5)) * zoom;
-        this.camera.lookAt(this.scene.position);
+        this.camera.lookAt(this.document.scene.position);
         if (this.zoompos > 48) {
             this.zoompos = -100;
         }
@@ -122,8 +122,8 @@ let IoCameraLogarithmicDepthBufferExample = class IoCameraLogarithmicDepthBuffer
         this.render([
             ioLayout({
                 elements: [
-                    ioThreeViewport({ id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene' }),
-                    ioThreeViewport({ id: 'SceneCameraLog', applet: this.applet, cameraSelect: 'scene', renderer: this.renderer }),
+                    ioThreeViewport({ id: 'SceneCamera', editor: this.editor, view: new ThreeView().setCameraView() }),
+                    ioThreeViewport({ id: 'SceneCameraLog', editor: this.editor, view: new ThreeView().setCameraView(), renderer: this.renderer }),
                 ],
                 model: new Layout({
                     child: {
@@ -145,7 +145,7 @@ let IoCameraLogarithmicDepthBufferExample = class IoCameraLogarithmicDepthBuffer
 };
 __decorate([
     Property({ type: CameraLogarithmicDepthBufferExample, init: { isPlaying: true } })
-], IoCameraLogarithmicDepthBufferExample.prototype, "applet", void 0);
+], IoCameraLogarithmicDepthBufferExample.prototype, "editor", void 0);
 __decorate([
     Property({ type: WebGPURenderer, init: { antialias: true, logarithmicDepthBuffer: true } })
 ], IoCameraLogarithmicDepthBufferExample.prototype, "renderer", void 0);

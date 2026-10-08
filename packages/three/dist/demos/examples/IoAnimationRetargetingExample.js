@@ -9,7 +9,7 @@ import { AnimationMixer, BoxGeometry, DirectionalLight, Euler, PerspectiveCamera
 import { color, screenUV, hue, reflector, time, Fn, vec2, length, atan, float, sin, cos, vec3, sub, mul, pow, blendDodge, normalWorldGeometry, } from 'three/tsl';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
-import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
+import { ThreeEditor, ThreeView, IoThreeExample, ioThreeViewport } from '@io-gui/three';
 import { ioLayout, Layout } from '@io-gui/layout';
 const loadGltf = (url) => new Promise((resolve, reject) => {
     new GLTFLoader().load(url, resolve, undefined, reject);
@@ -31,30 +31,30 @@ const lightSpeed = /*#__PURE__*/ Fn(([suv_immutable]) => {
         { name: 'suv', type: 'vec2' }
     ]
 });
-let AnimationRetargetingExample = class AnimationRetargetingExample extends ThreeApplet {
+let AnimationRetargetingExample = class AnimationRetargetingExample extends ThreeEditor {
     sourceMixer;
     targetMixer;
     camera;
     group = new Group();
     constructor(args) {
         super(args);
-        // this.toneMapping = NeutralToneMapping;
+        // this.document.toneMapping = NeutralToneMapping;
         // Background
         const coloredVignette = screenUV.distance(.5).mix(hue(color(0x0175ad), time.mul(.1)), hue(color(0x02274f), time.mul(.5)));
         const lightSpeedEffect = lightSpeed(normalWorldGeometry).clamp();
         const lightSpeedSky = normalWorldGeometry.y.remapClamp(-.1, 1).mix(0, lightSpeedEffect);
         const composedBackground = blendDodge(coloredVignette, lightSpeedSky);
-        this.scene.backgroundNode = composedBackground;
+        this.document.scene.backgroundNode = composedBackground;
         // Lights
         const light = new HemisphereLight(0xe9c0a5, 0x0175ad, 5);
-        this.scene.add(light);
+        this.document.scene.add(light);
         const dirLight = new DirectionalLight(0xfff9ea, 4);
         dirLight.position.set(2, 5, 2);
-        this.scene.add(dirLight);
+        this.document.scene.add(dirLight);
         // Floor with reflection
         const reflection = reflector();
         reflection.target.rotateX(-Math.PI / 2);
-        this.scene.add(reflection.target);
+        this.document.scene.add(reflection.target);
         const floorMaterial = new NodeMaterial();
         floorMaterial.colorNode = reflection;
         floorMaterial.opacity = .2;
@@ -62,20 +62,14 @@ let AnimationRetargetingExample = class AnimationRetargetingExample extends Thre
         const floor = new Mesh(new BoxGeometry(50, .001, 50), floorMaterial);
         floor.receiveShadow = true;
         floor.position.set(0, 0, 0);
-        this.scene.add(floor);
+        this.document.scene.add(floor);
         this.camera = new PerspectiveCamera(40, 1, .25, 50);
         this.camera.position.set(0, 1, 4);
         this.camera.name = 'camera';
-        this.scene.add(this.camera);
-        this.scene.add(this.group);
+        this.document.scene.add(this.camera);
+        this.document.scene.add(this.group);
         // Load and setup models
         void this.loadModels();
-    }
-    onResized(width, height) {
-        super.onResized(width, height);
-        const aspect = width / height;
-        this.camera.aspect = aspect;
-        this.camera.updateProjectionMatrix();
     }
     async loadModels() {
         const [sourceModel, targetModel] = await Promise.all([
@@ -180,10 +174,10 @@ let IoAnimationRetargetingExample = class IoAnimationRetargetingExample extends 
         this.render([
             ioLayout({
                 elements: [
-                    ioThreeViewport({ id: 'Top', applet: this.applet, cameraSelect: 'top' }),
-                    ioThreeViewport({ id: 'Left', applet: this.applet, cameraSelect: 'left' }),
-                    ioThreeViewport({ id: 'Back', applet: this.applet, cameraSelect: 'back' }),
-                    ioThreeViewport({ id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene' }),
+                    ioThreeViewport({ id: 'Top', editor: this.editor, view: new ThreeView().setAxisView('top') }),
+                    ioThreeViewport({ id: 'Left', editor: this.editor, view: new ThreeView().setAxisView('left') }),
+                    ioThreeViewport({ id: 'Back', editor: this.editor, view: new ThreeView().setAxisView('back') }),
+                    ioThreeViewport({ id: 'SceneCamera', editor: this.editor, view: new ThreeView().setCameraView() }),
                 ],
                 model: new Layout({
                     child: {
@@ -217,7 +211,7 @@ let IoAnimationRetargetingExample = class IoAnimationRetargetingExample extends 
 };
 __decorate([
     Property({ type: AnimationRetargetingExample, init: { isPlaying: true } })
-], IoAnimationRetargetingExample.prototype, "applet", void 0);
+], IoAnimationRetargetingExample.prototype, "editor", void 0);
 IoAnimationRetargetingExample = __decorate([
     Register
 ], IoAnimationRetargetingExample);

@@ -1,6 +1,6 @@
 import { AnimationAction, AnimationMixer, PerspectiveCamera } from 'three/webgpu';
-import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three';
-export declare class AnimationSkinningBlendingExample extends ThreeApplet {
+import { ThreeEditor, IoThreeExample, ThreeEditorProps } from '@io-gui/three';
+export declare class AnimationSkinningBlendingExample extends ThreeEditor {
     isActive: boolean;
     isPlaying: boolean;
     isCrossfading: boolean;
@@ -10,7 +10,7 @@ export declare class AnimationSkinningBlendingExample extends ThreeApplet {
     stepSize: number;
     useDefaultDuration: boolean;
     customDuration: number;
-    constructor(args: ThreeAppletProps);
+    constructor(args: ThreeEditorProps);
     private loadModel;
     isActiveChanged(): void;
     idle: () => void;
@@ -25,7 +25,7 @@ export declare class AnimationSkinningBlendingExample extends ThreeApplet {
     onAnimate(delta: number): void;
 }
 export declare class IoAnimationSkinningBlendingExample extends IoThreeExample {
-    applet: AnimationSkinningBlendingExample;
+    editor: AnimationSkinningBlendingExample;
     ready(): void;
 }
 export declare const ioAnimationSkinningBlendingExample: (arg0: any) => import("@io-gui/core").VDOMElement;

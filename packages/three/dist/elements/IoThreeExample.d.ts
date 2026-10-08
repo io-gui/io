@@ -1,8 +1,8 @@
 import { ReactiveElement } from '@io-gui/core';
-import { ThreeApplet } from '../nodes/ThreeApplet.js';
+import { ThreeEditor } from '../editor/ThreeEditor.js';
 export declare class IoThreeExample extends ReactiveElement {
     static get Style(): string;
-    applet: ThreeApplet;
+    editor: ThreeEditor;
     ready(): void;
     dispose(): void;
 }
