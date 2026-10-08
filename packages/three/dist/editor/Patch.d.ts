@@ -1,16 +1,22 @@
 import type { Object3D } from 'three/webgpu';
 import type { ChangeKind } from './ChangeBus.js';
 /**
- * The smallest invertible document edit, addressed by stable id (ADR-0008).
- * `set` paths are dot-separated property paths on the object: `'position'`, `'visible'`, `'material.color'`.
+ * An edit of one property path of a document object (dot-separated: `'visible'`, `'position.x'`, `'material.color'`).
+ * `set` assigns the property, and its values are the assigned references. `copy` copies into the object the property
+ * holds (`Vector3`, `Euler`, `Color`, ...), keeping its identity, and its values are snapshots (clones).
  */
-export type Patch = {
-    op: 'set';
+export type ValuePatch = {
     id: string;
     path: string;
     value: unknown;
     oldValue: unknown;
+} & ({
+    op: 'set';
 } | {
+    op: 'copy';
+});
+/** The smallest invertible document edit, addressed by stable id (ADR-0008). */
+export type Patch = ValuePatch | {
     op: 'insert';
     parentId: string;
     index: number;
@@ -23,15 +29,15 @@ export type Patch = {
 };
 export declare function changeKindForPatch(patch: Patch): ChangeKind;
 export declare function invertPatch(patch: Patch): Patch;
-/** Snapshot of a value: math objects are cloned, arrays sliced, everything else kept as is. */
-export declare function cloneValue(value: unknown): unknown;
+/** The value a patch of `op` records: `copy` snapshots it, since the object it is copied into changes later. */
+export declare function patchValue(op: ValuePatch['op'], value: unknown): unknown;
 export declare function resolvePath(root: object, path: string): {
     owner: Record<string, unknown>;
     key: string;
 };
 /**
- * Writes a value in place. Math objects (`Vector3`, `Euler`, `Color`, ...) are copied into the existing
- * instance, because Three.js relies on their identity (`object.position` is read-only).
+ * Applies a value patch: `set` assigns, `copy` copies into the held object. Assigning a read-only property
+ * (`Object3D.position`, `rotation`, `quaternion`, `scale`) throws; those are written with `copy`.
  */
-export declare function writeValue(owner: Record<string, unknown>, key: string, value: unknown): void;
+export declare function writeValue(op: ValuePatch['op'], owner: Record<string, unknown>, key: string, value: unknown): void;
 export declare function insertChild(parent: Object3D, object: Object3D, index: number): void;

@@ -33,6 +33,7 @@ export declare class InputRouter {
     get isModal(): boolean;
     handleKey(type: 'keydown' | 'keyup', native: KeyboardEvent): boolean;
     dispose(): void;
+    private _listeners;
     private _event;
     private _consume;
     private _capture;

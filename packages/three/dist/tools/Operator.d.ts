@@ -4,6 +4,7 @@ import type { Transaction } from '../editor/Transaction.js';
 import type { ThreeView } from '../view/ThreeView.js';
 import type { InputRouter } from '../input/InputRouter.js';
 import type { InputHost, ViewInputEvent } from '../input/ViewInputEvent.js';
+import { Registry } from '../utils/Registry.js';
 export type OperatorStatus = 'running' | 'finished' | 'cancelled';
 export type OperatorProps = Record<string, unknown>;
 /** A viewport an operator can run in: input host plus its router (for modal operators). */
@@ -48,15 +49,11 @@ export interface Command {
  * Registered operator types of one editor, and the runner. At most one operator runs modally at a time;
  * starting another, or switching documents, cancels it.
  */
-export declare class OperatorRegistry {
+export declare class OperatorRegistry extends Registry<OperatorType> {
     private readonly editor;
-    private readonly _types;
     private _running;
     private _lastCommand;
     constructor(editor: ThreeEditor);
-    register(type: OperatorType): void;
-    get(id: string): OperatorType | undefined;
-    list(): OperatorType[];
     get running(): Operator | null;
     /** The command equivalent of the last finished run. */
     get lastCommand(): Command | null;

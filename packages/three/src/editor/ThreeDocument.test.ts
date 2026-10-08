@@ -24,7 +24,7 @@ describe('ThreeDocument transactions', () => {
 
   it('applies edits immediately and reports typed changes', () => {
     document.transact(tx => {
-      tx.set(mesh, 'position', new Vector3(1, 2, 3))
+      tx.copy(mesh, 'position', new Vector3(1, 2, 3))
       tx.set(mesh.uuid, 'material.color', new Color(0x00ff00))
       tx.set(mesh, 'name', 'renamed')
     })
@@ -35,10 +35,43 @@ describe('ThreeDocument transactions', () => {
       .toEqual([['transform', [mesh.uuid], true], ['material', [mesh.uuid], true], ['other', [mesh.uuid], true]])
   })
 
-  it('copies math values into the existing instance', () => {
+  it('copies into the held instance with copy, snapshotting the values', () => {
     const position = mesh.position
-    document.transact(tx => tx.set(mesh, 'position', new Vector3(4, 5, 6)))
+    const value = new Vector3(4, 5, 6)
+    const tx = document.transact(tx => (tx.copy(mesh, 'position', value), tx))
+    value.set(9, 9, 9)
     expect(mesh.position).toBe(position)
+    document.revert(tx)
+    expect(mesh.position.toArray()).toEqual([0, 0, 0])
+    document.reapply(tx)
+    expect(mesh.position.toArray()).toEqual([4, 5, 6])
+  })
+
+  it('assigns with set and restores the same instances on revert; read-only properties throw', () => {
+    const material = mesh.material
+    const next = new MeshBasicMaterial({color: 0x0000ff})
+    const tx = document.transact(tx => (tx.set(mesh, 'material', next), tx))
+    expect(mesh.material).toBe(next)
+    expect(material.color.getHex()).toBe(0xff0000)
+    document.revert(tx)
+    expect(mesh.material).toBe(material)
+    expect(() => document.transact(tx => tx.set(mesh, 'position', new Vector3(1, 1, 1)))).toThrow(TypeError)
+    expect(document.history.length).toBe(1)
+  })
+
+  it('keeps set and copy on one path in order', () => {
+    const color = mesh.material.color
+    const assigned = new Color(0x0000ff)
+    const tx = document.transact(tx => {
+      tx.set(mesh, 'material.color', assigned)
+      tx.copy(mesh, 'material.color', new Color(0x00ff00))
+      tx.set(mesh, 'material.color', new Color(0xffffff))
+      return tx
+    })
+    expect(tx.patches.map(patch => patch.op)).toEqual(['set', 'copy', 'set'])
+    document.revert(tx)
+    expect(mesh.material.color).toBe(color)
+    expect(assigned.getHex()).toBe(0x0000ff)
   })
 
   it('coalesces repeated writes to one path into one patch', () => {
@@ -53,7 +86,7 @@ describe('ThreeDocument transactions', () => {
     const group = new Group()
     const before = snapshot(document)
     const tx = document.begin('edit')
-    tx.set(mesh, 'position', new Vector3(1, 1, 1))
+    tx.copy(mesh, 'position', new Vector3(1, 1, 1))
     tx.set(mesh, 'name', 'moved')
     tx.insert(document.scene, group, 0)
     tx.remove(mesh)
@@ -135,9 +168,9 @@ describe('ThreeDocument transactions', () => {
     editor.dispose()
   })
 
-  it('tells commit listeners about committed, non-empty transactions only', () => {
+  it('dispatches commit events for committed, non-empty transactions only', () => {
     const committed: Transaction[] = []
-    document.addCommitListener(tx => committed.push(tx))
+    document.addEventListener('commit', (event: CustomEvent<Transaction>) => committed.push(event.detail))
     document.transact(tx => tx.set(mesh, 'name', 'a'))
     document.transact(() => {})
     const rolled = document.begin()

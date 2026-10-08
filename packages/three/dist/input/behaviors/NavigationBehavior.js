@@ -82,13 +82,9 @@ export class NavigationBehavior {
         if (!entry)
             return false;
         const view = event.view;
-        if (view.kind === 'uv') {
-            // 2D views have no axis views; framing shows the UV square.
-            if (entry.action === 'view.axis')
-                return false;
-            view.frameUV();
-            return true;
-        }
+        // 2D views have no axis views; framing there shows the UV square (`ThreeView.frame`).
+        if (view.kind === 'uv' && entry.action === 'view.axis')
+            return false;
         if (entry.action === 'view.frameSelected') {
             const selected = this._host.selection?.getObjects() ?? [];
             if (selected.length)

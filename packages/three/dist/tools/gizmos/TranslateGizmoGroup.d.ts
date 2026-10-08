@@ -1,5 +1,5 @@
 import { Vector3 } from 'three/webgpu';
-import { Gizmo, GizmoContext, GizmoGroup } from '../Gizmo.js';
+import type { Gizmo, GizmoContext, GizmoGroup } from '../Gizmo.js';
 /** Arrow length in CSS pixels. */
 export declare const TRANSLATE_GIZMO_SIZE = 90;
 /**

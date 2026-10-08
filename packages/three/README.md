@@ -33,7 +33,7 @@ ThreeEditor (object, one per app)
 ├── selection: SelectionModel (of the active document; objects + component bitsets per domain)
 ├── operators: OperatorRegistry (run, modal operators, lastCommand; built-ins transform.translate,
 │   object.editmode_toggle, mesh.select_mode)
-└── tools: ToolRegistry + activeTools per '<viewKind>:<mode>' (built-in Move tool, not active)
+└── tools: Registry of ToolDefinitions + activeTools per '<viewKind>:<mode>' (built-in Move tool, not active)
 
 EditorConfigs (configs/*)
 └── Property editors for Three.js classes
@@ -113,19 +113,19 @@ editor.document = new ThreeDocument(); // switch; switching back restores each v
 | `onRendererInitialized(renderer)` | Called when WebGPU renderer is ready |
 | `onAnimate(delta, time)`          | Called each frame while `isPlaying`  |
 
-**Edits go through transactions** of invertible patches ([ADR-0008](./docs/adr/0008-commands-transactions-and-patches.md)). Edits apply immediately and redraw the views; the old values are recorded, so a transaction can be rolled back, reverted or re-applied. Writes to the same path coalesce.
+**Edits go through transactions** of invertible patches ([ADR-0008](./docs/adr/0008-commands-transactions-and-patches.md)). Edits apply immediately and redraw the views; the old values are recorded, so a transaction can be rolled back, reverted or re-applied. Writes to the same path coalesce. `set` assigns a property (assigning a read-only one such as `position` throws); `copy` copies into the object a property holds, keeping its identity.
 
 ```typescript
 editor.document.transact((tx) => {
-  tx.set(mesh, "position", new Vector3(1, 2, 3)); // math objects are copied in place
-  tx.set(mesh.uuid, "material.color", new Color(0xff0000));
+  tx.copy(mesh, "position", new Vector3(1, 2, 3)); // copies into mesh.position (read-only in Three.js)
+  tx.set(mesh.uuid, "material", material); // assigns; undo restores the previous material itself
   tx.insert(group, mesh, 0);
 }, "Move mesh");
 
 const drag = editor.document.begin("Drag"); // long-running: commit() or rollback()
 ```
 
-The undo stack and multi-user sync are planned on top of `document.history`, `revert()` / `reapply()` and `addCommitListener()`.
+The undo stack and multi-user sync are planned on top of `document.history`, `revert()` / `reapply()` and the document's `commit` event (`detail` is the transaction).
 
 ### Operators
 
@@ -224,7 +224,7 @@ ioThreeViewport({ editor, view }); // the view survives the element being remoun
 - Viewport aspect and overscan are applied at draw time, never stored
 - Scene cameras are copied, never mutated
 - A new view frames its scene once; restored views keep their navigation
-- After changing `view.navigation` directly, call `view.markNavigationChanged()`. It redraws viewports but is not a reactive mutation; use `view.addNavigationListener()` to follow camera moves
+- After changing `view.navigation` directly, call `view.markNavigationChanged()`. It dispatches `navigation-changed` to the view's parents (its viewports) and is not a reactive mutation; listen to that event to follow camera moves
 - Navigation is done by the viewport's `NavigationBehavior`, which edits `view.navigation`
 
 ### Pipelines and Overlays
@@ -240,13 +240,13 @@ new ThreeView({ pipeline: "traa" }); // a registered pipeline; '' uses the kind'
 view.setOverlay("grid", true); // grid (off by default), selection, cameraFrame, gizmos (on)
 view.toneMapping = NoToneMapping; // per-view override; null uses the document's
 
-registerPipeline({ id: "traa", create: (renderer) => new PostProcessingPipeline(renderer, (scenePass, camera) => {
+pipelineTypes.register({ id: "traa", create: (renderer) => new PostProcessingPipeline(renderer, (scenePass, camera) => {
   scenePass.setMRT(mrt({ output, velocity }));
   return traa(scenePass.getTextureNode("output"), scenePass.getTextureNode("depth"), scenePass.getTextureNode("velocity"), camera);
 }, { convergeFrames: 32 }) }); // accumulates for 32 frames after each change, then stops drawing
 ```
 
-Custom pipelines implement `ViewPipeline` (`output`, `setSize`, `render(ctx)`, optional `toneMapping`, `picker`, `listens`) or extend `RenderTargetPipeline`. Custom overlays implement `Overlay` (`root`, `prepare(ctx)`, `dispose`) and are registered with `registerOverlay({id, viewKinds, enabledByDefault, create})`. Full-screen overlays use `createScreenQuad(material)`.
+Custom pipelines implement `ViewPipeline` (`output`, `setSize`, `render(ctx)`, optional `toneMapping`, `picker`, `listens`) or extend `RenderTargetPipeline`. Custom overlays implement `Overlay` (`root`, `prepare(ctx)`, `dispose`) and are registered with `overlayTypes.register({id, viewKinds, enabledByDefault, create})`. Full-screen overlays use `createScreenQuad(material)`.
 
 | Overlay | Default | |
 | --- | --- | --- |

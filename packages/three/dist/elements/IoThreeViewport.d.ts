@@ -34,29 +34,29 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
     renderer: WebGPURenderer;
     keymap: Keymap;
     tabIndex: number;
-    private _renderTarget;
-    get renderTarget(): CanvasTarget;
-    attachSurface(): void;
+    readonly renderTarget: CanvasTarget;
+    /**
+     * Routes this viewport's input to navigation, selection, gizmos and the active tool (ADR-0004).
+     * Class fields exist only after the base constructor, where change handlers already run; those skip routing.
+     */
+    readonly inputRouter: InputRouter;
+    readonly navigationBehavior: NavigationBehavior;
+    readonly selectBehavior: SelectBehavior;
+    /** Gizmos of the active tool in this viewport. */
+    readonly gizmoLayer: GizmoLayer;
     static get Style(): string;
     static get Listeners(): {
         'frame-object': string;
+        'navigation-changed': string;
     };
     private _ownsView;
-    private _inputRouter;
-    private _navigation;
-    private _select;
-    private _gizmos;
     private _toolBehaviors;
     private _compositor;
     private _shownDocument;
     private _idPass;
     private _idPicker;
-    /** Routes this viewport's input to behaviors: navigation, tools, later gizmos and operators (ADR-0004). */
-    get inputRouter(): InputRouter;
     /** Runs this viewport's pipeline and draws its overlays (ADR-0006). Recreated when the renderer changes. */
     get compositor(): ViewCompositor;
-    /** Gizmos of the active tool in this viewport. */
-    get gizmoLayer(): GizmoLayer;
     /** The pipeline's picker when it has one (UV view), otherwise null (raycast the content scene). */
     get picker(): Picker | null;
     /**
@@ -64,10 +64,7 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
      * viewport's camera at its size (ADR-0007). The ID buffer is cached until content changes.
      */
     get componentPicker(): ComponentPicker;
-    get navigationBehavior(): NavigationBehavior;
-    get selectBehavior(): SelectBehavior;
     constructor(args: IoThreeViewportProps);
-    ready(): void;
     connectedCallback(): void;
     disconnectedCallback(): void;
     get scene(): Scene | null;
@@ -87,6 +84,8 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
         object: Object3D;
         overscan?: number;
     }>): void;
+    /** Event `navigation-changed` from the view: camera moves only redraw, they change no behaviors, pipeline or overlays. */
+    onNavigationChanged(event: CustomEvent): void;
     private _syncView;
     /** On a document switch, park this view's navigation for the old document and restore it for the new one. */
     private _syncDocument;
@@ -104,8 +103,6 @@ export declare class IoThreeViewport extends ReactiveElement implements Schedule
     viewChanged(change: Change<ThreeView>): void;
     keymapChanged(): void;
     viewMutated(): void;
-    /** Camera moves only redraw: they change no behaviors, pipeline or overlays. */
-    private _onNavigation;
     mutated(): void;
     /** Called by the RenderScheduler only (ADR-0003). */
     renderView(reasons: ReadonlySet<DirtyReason>, frame: FrameInfo): ViewRenderResult | void;

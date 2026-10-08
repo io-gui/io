@@ -30,17 +30,16 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
     width = 0;
     height = 0;
     visible = false;
-    get renderTarget() {
-        if (!this._renderTarget)
-            this._renderTarget = new CanvasTarget(document.createElement('canvas'));
-        return this._renderTarget;
-    }
-    attachSurface() {
-        const canvas = this.renderTarget.domElement;
-        if (canvas.parentElement !== this) {
-            this.appendChild(canvas);
-        }
-    }
+    renderTarget = new CanvasTarget(document.createElement('canvas'));
+    /**
+     * Routes this viewport's input to navigation, selection, gizmos and the active tool (ADR-0004).
+     * Class fields exist only after the base constructor, where change handlers already run; those skip routing.
+     */
+    inputRouter = new InputRouter(this);
+    navigationBehavior = new NavigationBehavior(this);
+    selectBehavior = new SelectBehavior(this);
+    /** Gizmos of the active tool in this viewport. */
+    gizmoLayer = new GizmoLayer(this);
     static get Style() {
         return /* css */ `
       :host {
@@ -68,30 +67,14 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
     static get Listeners() {
         return {
             'frame-object': 'onFrameObject',
+            'navigation-changed': 'onNavigationChanged',
         };
-    }
-    /** Routes this viewport's input to behaviors: navigation, tools, later gizmos and operators (ADR-0004). */
-    get inputRouter() {
-        if (!this._inputRouter) {
-            this._inputRouter = new InputRouter(this);
-            this._navigation = new NavigationBehavior(this, this.keymap);
-            this._select = new SelectBehavior(this, this.keymap);
-            this._gizmos = new GizmoLayer(this);
-            this._inputRouter.add(this._navigation);
-            this._inputRouter.add(this._select);
-        }
-        return this._inputRouter;
     }
     /** Runs this viewport's pipeline and draws its overlays (ADR-0006). Recreated when the renderer changes. */
     get compositor() {
         if (!this._compositor)
             this._compositor = new ViewCompositor(this.renderer);
         return this._compositor;
-    }
-    /** Gizmos of the active tool in this viewport. */
-    get gizmoLayer() {
-        void this.inputRouter;
-        return this._gizmos;
     }
     /** The pipeline's picker when it has one (UV view), otherwise null (raycast the content scene). */
     get picker() {
@@ -119,14 +102,6 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         }
         return this._idPicker;
     }
-    get navigationBehavior() {
-        void this.inputRouter;
-        return this._navigation;
-    }
-    get selectBehavior() {
-        void this.inputRouter;
-        return this._select;
-    }
     constructor(args) {
         super({
             ...args,
@@ -134,17 +109,14 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
             renderer: args.renderer ?? getDefaultRenderer(),
         });
         this._ownsView = !args.view;
-        this.view.addNavigationListener(this._onNavigation);
-        void this.inputRouter;
+        this.keymapChanged();
         this._syncBehaviors();
-    }
-    ready() {
-        this.attachSurface();
     }
     connectedCallback() {
         super.connectedCallback();
         observer.observe(this);
-        this.attachSurface();
+        if (this.renderTarget.domElement.parentElement !== this)
+            this.appendChild(this.renderTarget.domElement);
         renderScheduler.register(this);
         this.onResized();
     }
@@ -203,6 +175,11 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         event.stopPropagation();
         this.view.frame(event.detail.object, event.detail.overscan ?? 1);
     }
+    /** Event `navigation-changed` from the view: camera moves only redraw, they change no behaviors, pipeline or overlays. */
+    onNavigationChanged(event) {
+        event.stopPropagation();
+        this.tag('view');
+    }
     _syncView() {
         const view = this.view;
         const scene = this.scene;
@@ -231,18 +208,18 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
      */
     _syncBehaviors() {
         const view = this.view;
-        if (!view || !this._inputRouter)
+        const router = this.inputRouter;
+        if (!view || !router)
             return;
-        const router = this._inputRouter;
-        const gizmos = this._gizmos;
+        const gizmos = this.gizmoLayer;
         if (view.profile === 'none')
-            router.remove(this._navigation);
+            router.remove(this.navigationBehavior);
         else
-            router.add(this._navigation);
+            router.add(this.navigationBehavior);
         if (view.profile === 'full' || view.profile === 'select')
-            router.add(this._select);
+            router.add(this.selectBehavior);
         else
-            router.remove(this._select);
+            router.remove(this.selectBehavior);
         if (view.profile === 'full' && view.isOverlayEnabled('gizmos')) {
             router.add(gizmos);
             this.compositor.addOverlay(gizmos, 300);
@@ -293,16 +270,15 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         this.tag('resize');
     }
     rendererChanged(change) {
-        if (change.oldValue && change.oldValue !== change.value) {
-            this._idPass?.dispose();
-            this._idPass = undefined;
-            this._idPicker?.invalidate();
-        }
-        if (change.oldValue && change.oldValue !== change.value && this._compositor) {
-            this._compositor.dispose();
-            this._compositor = undefined;
-            this._syncBehaviors();
-        }
+        if (!change.oldValue)
+            return;
+        this._idPass?.dispose();
+        this._idPass = undefined;
+        this._idPicker?.invalidate();
+        this._compositor?.dispose();
+        this._compositor = undefined;
+        // The gizmo layer is an overlay of the new compositor.
+        this._syncBehaviors();
     }
     editorChanged() {
         this._syncDocument();
@@ -311,19 +287,10 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         this.tag('content');
     }
     editorMutated() {
-        this._syncDocument();
-        if (!this.view?.navigation.framed)
-            this._syncView();
-        this._syncBehaviors();
-        this.tag('content');
+        this.editorChanged();
     }
     viewChanged(change) {
-        // Runs during construction too, before `_onNavigation` exists; the constructor adds it then.
-        if (this._onNavigation) {
-            change.oldValue?.removeNavigationListener(this._onNavigation);
-            this.view?.addNavigationListener(this._onNavigation);
-        }
-        if (this._ownsView && change.oldValue && change.oldValue !== change.value) {
+        if (this._ownsView && change.oldValue) {
             change.oldValue.dispose();
             this._ownsView = false;
         }
@@ -332,20 +299,16 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         this.tag('view');
     }
     keymapChanged() {
-        if (this._navigation)
-            this._navigation.keymap = this.keymap;
-        if (this._select)
-            this._select.keymap = this.keymap;
+        if (!this.navigationBehavior)
+            return;
+        this.navigationBehavior.keymap = this.keymap;
+        this.selectBehavior.keymap = this.keymap;
     }
     viewMutated() {
         this._syncBehaviors();
         this._syncRendering();
         this.tag('view');
     }
-    /** Camera moves only redraw: they change no behaviors, pipeline or overlays. */
-    _onNavigation = () => {
-        this.tag('view');
-    };
     mutated() {
         this.tag('view');
     }
@@ -379,11 +342,10 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         renderScheduler.unregister(this);
         delete this.editor;
         this.renderTarget.dispose();
-        this._inputRouter?.dispose();
-        this._gizmos?.dispose();
+        this.inputRouter.dispose();
+        this.gizmoLayer.dispose();
         this._compositor?.dispose();
         this._idPass?.dispose();
-        this.view?.removeNavigationListener(this._onNavigation);
         if (this._ownsView)
             this.view.dispose();
         super.dispose();

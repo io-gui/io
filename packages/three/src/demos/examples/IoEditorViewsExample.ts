@@ -2,9 +2,9 @@ import { Register, ReactiveElement, ReactiveElementProps, Property, div, span } 
 import { AmbientLight, BoxGeometry, CanvasTexture, DirectionalLight, Mesh, MeshStandardMaterial, SRGBColorSpace, SphereGeometry, TorusKnotGeometry } from 'three/webgpu'
 import { mrt, output, velocity } from 'three/tsl'
 import { traa } from 'three/addons/tsl/display/TRAANode.js'
-import { PostProcessingPipeline, SelectionModel, ThreeEditor, ThreeView, ioThreeViewport, registerPipeline } from '@io-gui/three'
+import { PostProcessingPipeline, SelectionModel, ThreeEditor, ThreeView, ioThreeViewport, pipelineTypes } from '@io-gui/three'
 
-registerPipeline({
+pipelineTypes.register({
   id: 'traa',
   label: 'Forward + TRAA',
   create: renderer => new PostProcessingPipeline(renderer, (scenePass, camera) => {
@@ -94,7 +94,7 @@ export class IoEditorViewsExample extends ReactiveElement {
     })
     this.editor.setActiveTool('3d', 'object', 'transform.translate')
     this.selection = this.editor.selection
-    this.editor.document.addCommitListener(() => this.changed())
+    this.editor.document.addEventListener('commit', () => this.changed())
     this.selection.set([scene.getObjectByName('Knot')!.uuid])
     this.changed()
   }

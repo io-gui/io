@@ -22,8 +22,6 @@ export class Topology {
     pointCount;
     /** Buffer vertex → point. */
     vertexToPoint;
-    /** One buffer vertex per point (the first one welded into it). */
-    pointToVertex;
     /** xyz per point, in the geometry's local space. */
     pointPositions;
     edgeCount;
@@ -36,7 +34,6 @@ export class Topology {
     corners;
     /** Edges of each primitive, `primitiveSize` per primitive (none for points). */
     primitiveEdges;
-    _edgeLookup;
     constructor(geometry, kind) {
         this.kind = kind;
         this.key = topologyKey(geometry, kind);
@@ -45,7 +42,6 @@ export class Topology {
         this.vertexCount = vertexCount;
         // Weld vertices with identical positions into points.
         const vertexToPoint = new Uint32Array(vertexCount);
-        const pointVertices = [];
         const positions = [];
         const lookup = new Map();
         for (let i = 0; i < vertexCount; i++) {
@@ -53,16 +49,14 @@ export class Topology {
             const key = `${x},${y},${z}`;
             let point = lookup.get(key);
             if (point === undefined) {
-                point = pointVertices.length;
+                point = positions.length / 3;
                 lookup.set(key, point);
-                pointVertices.push(i);
                 positions.push(x, y, z);
             }
             vertexToPoint[i] = point;
         }
         this.vertexToPoint = vertexToPoint;
-        this.pointCount = pointVertices.length;
-        this.pointToVertex = Uint32Array.from(pointVertices);
+        this.pointCount = positions.length / 3;
         this.pointPositions = Float32Array.from(positions);
         // Primitive corners as buffer vertices.
         const index = geometry.index;
@@ -103,7 +97,6 @@ export class Topology {
                 primitiveEdges[p] = addEdge(vertexToPoint[corners[p * 2]], vertexToPoint[corners[p * 2 + 1]]);
             }
         }
-        this._edgeLookup = edgeLookup;
         this.edgeCount = edgePoints.length / 2;
         this.edgePoints = Uint32Array.from(edgePoints);
         this.primitiveEdges = primitiveEdges;
@@ -111,10 +104,6 @@ export class Topology {
     /** Corners: buffer vertices of triangles (mesh only). */
     get cornerCount() {
         return this.kind === 'mesh' ? this.corners.length : 0;
-    }
-    /** Edge between two points, or -1. */
-    edgeIndex(a, b) {
-        return this._edgeLookup.get(Math.min(a, b) * this.pointCount + Math.max(a, b)) ?? -1;
     }
 }
 const _cache = new WeakMap();

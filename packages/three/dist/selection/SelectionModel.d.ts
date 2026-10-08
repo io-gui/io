@@ -62,6 +62,7 @@ export declare class SelectionModel extends ReactiveObject {
     private _dropLater;
     /** Objects removed from the document leave the selection, with their components. */
     private _onCommit;
+    private _forget;
 }
 /**
  * A pending selection change. Nothing is visible until `commit()`.

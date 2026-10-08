@@ -24,12 +24,16 @@ export declare class SelectBehavior implements Behavior {
     /** The component picker while the host is in edit mode. */
     private get _components();
     wantsCapture(event: ViewInputEvent): boolean;
-    begin(): void;
     update(event: ViewInputEvent): void;
     end(): void;
     cancel(): void;
     click(event: ViewInputEvent): boolean;
     key(event: ViewInputEvent): boolean;
+    /**
+     * Picks components in edit mode, objects otherwise, and applies the hits when the pick resolves, unless the
+     * host shows another selection by then. A click (`setsActive`) makes its hit the active object.
+     */
+    private _select;
     private _drawMarquee;
     private _reset;
 }

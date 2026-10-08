@@ -1,6 +1,7 @@
 import { DoubleSide, FloatType, Mesh, MeshBasicNodeMaterial, NoBlending, RenderTarget, Scene } from 'three/webgpu';
 import { attribute, positionView, uniform, vec4 } from 'three/tsl';
 import { getGeometryAdapter } from '../geometry/GeometryAdapter.js';
+import { KeyedPool } from '../utils/KeyedPool.js';
 /** Reads one pixel of an ID buffer (outside the buffer reads as nothing). */
 export function readIdBuffer(buffer, x, y, out = { slot: 0, element: 0, depth: 0 }) {
     const px = Math.floor(x), py = Math.floor(y);
@@ -24,7 +25,7 @@ export class IdPass {
     _renderer;
     _target = new RenderTarget(1, 1, { type: FloatType, depthBuffer: true });
     _scene = new Scene();
-    _proxies = new Map();
+    _proxies = new KeyedPool(proxy => this._scene.remove(proxy));
     _slot = uniform(0).onObjectUpdate(({ object }) => object?.userData.pickSlot ?? 0);
     _idMaterial = new MeshBasicNodeMaterial({ side: DoubleSide, blending: NoBlending });
     _occluderMaterial = new MeshBasicNodeMaterial({ side: DoubleSide, blending: NoBlending });
@@ -60,7 +61,6 @@ export class IdPass {
     }
     _sync(scene, camera, objects) {
         const slots = new Map(objects.map((object, i) => [object, i + 1]));
-        const shown = new Set();
         scene.traverseVisible(child => {
             const object = child;
             if (!object.isMesh || !object.geometry || !object.layers.test(camera.layers))
@@ -69,26 +69,18 @@ export class IdPass {
             const geometry = slot ? getGeometryAdapter(object)?.getPrimitiveIdGeometry(object) ?? null : object.isInstancedMesh ? null : object.geometry;
             if (!geometry)
                 return;
-            const key = `${object.uuid}:${slot ? 'id' : 'occluder'}`;
-            let proxy = this._proxies.get(key);
-            if (!proxy) {
-                proxy = new Mesh(geometry, slot ? this._idMaterial : this._occluderMaterial);
+            const proxy = this._proxies.get(`${object.uuid}:${slot ? 'id' : 'occluder'}`, () => {
+                const proxy = new Mesh(geometry, slot ? this._idMaterial : this._occluderMaterial);
                 proxy.matrixAutoUpdate = false;
                 proxy.frustumCulled = false;
-                this._proxies.set(key, proxy);
                 this._scene.add(proxy);
-            }
+                return proxy;
+            });
             proxy.geometry = geometry;
             proxy.userData.pickSlot = slot ?? 0;
             proxy.matrixWorld.copy(object.matrixWorld);
-            shown.add(key);
         });
-        for (const [key, proxy] of this._proxies) {
-            if (shown.has(key))
-                continue;
-            this._scene.remove(proxy);
-            this._proxies.delete(key);
-        }
+        this._proxies.sweep();
     }
     dispose() {
         this._target.dispose();

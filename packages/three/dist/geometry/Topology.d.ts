@@ -19,8 +19,6 @@ export declare class Topology {
     readonly pointCount: number;
     /** Buffer vertex → point. */
     readonly vertexToPoint: Uint32Array;
-    /** One buffer vertex per point (the first one welded into it). */
-    readonly pointToVertex: Uint32Array;
     /** xyz per point, in the geometry's local space. */
     readonly pointPositions: Float32Array;
     readonly edgeCount: number;
@@ -33,12 +31,9 @@ export declare class Topology {
     readonly corners: Uint32Array;
     /** Edges of each primitive, `primitiveSize` per primitive (none for points). */
     readonly primitiveEdges: Uint32Array;
-    private readonly _edgeLookup;
     constructor(geometry: BufferGeometry, kind: TopologyKind);
     /** Corners: buffer vertices of triangles (mesh only). */
     get cornerCount(): number;
-    /** Edge between two points, or -1. */
-    edgeIndex(a: number, b: number): number;
 }
 /** The topology of `geometry` drawn as `kind`, rebuilt when its positions or index change. */
 export declare function getTopology(geometry: BufferGeometry, kind: TopologyKind): Topology;

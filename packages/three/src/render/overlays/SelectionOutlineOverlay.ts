@@ -2,6 +2,7 @@ import { Color, DoubleSide, Group, InstancedMesh, Line, LineBasicNodeMaterial, L
 import { Fn, float, max, screenUV, select, texture, uniform, vec2, vec4 } from 'three/tsl'
 import type { Overlay, OverlayContext, OverlayType } from '../Overlay.js'
 import { createScreenQuad } from '../screenQuad.js'
+import { KeyedPool } from '../../utils/KeyedPool.js'
 
 /** Outline width in CSS pixels. */
 export const OUTLINE_WIDTH = 2
@@ -25,7 +26,7 @@ export class SelectionOutlineOverlay implements Overlay {
 
   private readonly _mask = new RenderTarget(1, 1, {type: UnsignedByteType, depthBuffer: false})
   private readonly _maskScene = new Scene()
-  private readonly _proxies = new Map<string, Object3D>()
+  private readonly _proxies = new KeyedPool<Mesh | Line>(proxy => this._maskScene.remove(proxy))
   private readonly _meshMaterials = [new MeshBasicNodeMaterial(), new MeshBasicNodeMaterial()]
   private readonly _lineMaterials = [new LineBasicNodeMaterial(), new LineBasicNodeMaterial()]
   private readonly _texel = uniform(new Vector2(1, 1))
@@ -69,23 +70,16 @@ export class SelectionOutlineOverlay implements Overlay {
     // Edit mode draws components instead (ComponentOverlay).
     const objects = ctx.editor.mode === 'edit' ? [] : ctx.selection?.getObjects() ?? []
     const active = ctx.selection?.active ?? ''
-    const shown = new Set<string>()
     for (const object of objects) {
       object.traverseVisible(child => {
         const proxy = this._proxy(child as Drawable, child.uuid === active || object.uuid === active)
         if (!proxy) return
-        shown.add(child.uuid)
         proxy.matrix.copy(child.matrixWorld)
         proxy.matrixWorld.copy(child.matrixWorld)
       })
     }
-    for (const [uuid, proxy] of this._proxies) {
-      if (shown.has(uuid)) continue
-      this._maskScene.remove(proxy)
-      this._proxies.delete(uuid)
-    }
-    this._quad.visible = shown.size > 0
-    if (!shown.size) return
+    this._quad.visible = this._proxies.sweep() > 0
+    if (!this._quad.visible) return
 
     const renderer = ctx.renderer
     const width = Math.max(1, Math.floor(ctx.width * ctx.pixelRatio))
@@ -103,27 +97,19 @@ export class SelectionOutlineOverlay implements Overlay {
    * A mask proxy for `object` sharing its geometry (and skeleton or instances), or null if it draws nothing
    * outlinable. Shared state is re-assigned every draw, so swapped geometry, skeletons and instances show.
    */
-  private _proxy(object: Drawable, isActive: boolean): Object3D | null {
+  private _proxy(object: Drawable, isActive: boolean): Mesh | Line | null {
     const index = isActive ? 0 : 1
     const kind = object.isSkinnedMesh ? 'skinned' : object.isInstancedMesh ? 'instanced' : object.isMesh ? 'mesh' : object.isLineSegments ? 'segments' : object.isLine ? 'line' : null
     if (!kind) return null
-    let proxy = this._proxies.get(object.uuid) as (Mesh | Line) | undefined
-    if (proxy && proxy.userData.kind !== kind) {
-      this._maskScene.remove(proxy)
-      proxy = undefined
-    }
-    if (!proxy) {
-      if (kind === 'skinned') proxy = new SkinnedMesh()
-      else if (kind === 'instanced') proxy = new InstancedMesh(undefined, undefined, 0)
-      else if (kind === 'mesh') proxy = new Mesh()
-      else if (kind === 'segments') proxy = new LineSegments()
-      else proxy = new Line()
+    const proxy = this._proxies.get(object.uuid, () => {
+      const proxy = kind === 'skinned' ? new SkinnedMesh() : kind === 'instanced' ? new InstancedMesh(undefined, undefined, 0)
+        : kind === 'mesh' ? new Mesh() : kind === 'segments' ? new LineSegments() : new Line()
       proxy.userData.kind = kind
       proxy.matrixAutoUpdate = false
       proxy.frustumCulled = false
-      this._proxies.set(object.uuid, proxy)
       this._maskScene.add(proxy)
-    }
+      return proxy
+    }, proxy => proxy.userData.kind === kind)
     proxy.geometry = (object as Mesh | Line).geometry
     if (kind === 'skinned') {
       const source = object as SkinnedMesh

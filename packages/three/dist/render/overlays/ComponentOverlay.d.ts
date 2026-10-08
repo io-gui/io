@@ -12,7 +12,6 @@ export declare class ComponentOverlay implements Overlay {
     private readonly _cages;
     constructor();
     prepare(ctx: OverlayContext): void;
-    private _remove;
     dispose(): void;
 }
 export declare const componentOverlayType: OverlayType;

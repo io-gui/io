@@ -1,4 +1,5 @@
 import { BehaviorPriority } from '../input/Behavior.js';
+import { Registry } from '../utils/Registry.js';
 class ModalOperatorBehavior {
     registry;
     priority = BehaviorPriority.modal;
@@ -6,9 +7,6 @@ class ModalOperatorBehavior {
     constructor(registry) {
         this.registry = registry;
     }
-    wantsCapture() { return false; }
-    begin() { }
-    end() { }
     update(event) { this.registry._modalEvent(event); }
     cancel() { this.registry.cancelRunning(); }
     key(event) {
@@ -23,26 +21,13 @@ class ModalOperatorBehavior {
  * Registered operator types of one editor, and the runner. At most one operator runs modally at a time;
  * starting another, or switching documents, cancels it.
  */
-export class OperatorRegistry {
+export class OperatorRegistry extends Registry {
     editor;
-    _types = new Map();
     _running = null;
     _lastCommand = null;
     constructor(editor) {
+        super();
         this.editor = editor;
-    }
-    register(type) {
-        debug: {
-            if (this._types.has(type.id))
-                console.warn(`OperatorRegistry: replacing operator "${type.id}"`);
-        }
-        this._types.set(type.id, type);
-    }
-    get(id) {
-        return this._types.get(id);
-    }
-    list() {
-        return [...this._types.values()];
     }
     get running() {
         return this._running?.operator ?? null;
@@ -56,7 +41,7 @@ export class OperatorRegistry {
      * (`InputRouter.startModal`) until it finishes; Escape cancels it.
      */
     run(id, props = {}, options = {}) {
-        const type = this._types.get(id);
+        const type = this.get(id);
         if (!type) {
             console.error(`OperatorRegistry: no operator "${id}"`);
             return 'cancelled';

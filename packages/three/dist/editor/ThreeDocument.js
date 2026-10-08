@@ -4,27 +4,27 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveObject, Property } from '@io-gui/core';
+import { Register, ReactiveObject, Property, Field } from '@io-gui/core';
 import { MathUtils, NoToneMapping, Scene } from 'three/webgpu';
 import { ChangeBus } from './ChangeBus.js';
 import { changeKindForPatch, insertChild, invertPatch, resolvePath, writeValue } from './Patch.js';
 import { Transaction } from './Transaction.js';
+import { isDescendant } from '../utils/sceneGraph.js';
 const HISTORY_LIMIT = 100;
 /**
  * The content of a ThreeEditor (ADR-0002): the scene of authored objects plus scene render settings.
  * Edits go through transactions of invertible patches (ADR-0008); every applied patch is reported on
- * the change bus, so views redraw without extra calls.
+ * the change bus, so views redraw without extra calls. Each committed transaction is dispatched as a
+ * `commit` event with the transaction as `detail` (future undo stack and sync).
  */
 let ThreeDocument = class ThreeDocument extends ReactiveObject {
     /** Stable id of this document, used to key per-document session state (selection, view navigation). */
     uuid = MathUtils.generateUUID();
-    changeBus = new ChangeBus();
     _index = new Map();
     /** Ids not found since the last index rebuild; cleared when the current task ends. */
     _misses = new Set();
     _active = null;
     _history = [];
-    _commitListeners = new Set();
     constructor(args) {
         super(args);
     }
@@ -49,7 +49,7 @@ let ThreeDocument = class ThreeDocument extends ReactiveObject {
         if (uuid === scene.uuid)
             return scene;
         const cached = this._index.get(uuid);
-        if (cached && this._isInScene(cached))
+        if (cached && isDescendant(cached, scene))
             return cached;
         if (this._misses.has(uuid))
             return undefined;
@@ -100,26 +100,17 @@ let ThreeDocument = class ThreeDocument extends ReactiveObject {
         for (const patch of transaction.patches)
             this._applyPatch(patch);
     }
-    /** Called with every committed transaction (future undo stack and sync). */
-    addCommitListener(listener) {
-        this._commitListeners.add(listener);
-    }
-    removeCommitListener(listener) {
-        this._commitListeners.delete(listener);
-    }
     mutated() {
-        // Also runs inside the base constructor, before class fields exist.
-        if (this.changeBus)
-            this.notify({ kind: 'settings' });
+        this.notify({ kind: 'settings' });
     }
     /** @internal Applies a patch and reports it. */
     _applyPatch(patch) {
-        if (patch.op === 'set') {
+        if (patch.op === 'set' || patch.op === 'copy') {
             const object = this.getObject(patch.id);
             if (!object)
                 throw new Error(`Patch: object ${patch.id} is not in the document`);
             const { owner, key } = resolvePath(object, patch.path);
-            writeValue(owner, key, patch.value);
+            writeValue(patch.op, owner, key, patch.value);
         }
         else {
             const parent = this.getObject(patch.parentId);
@@ -146,7 +137,7 @@ let ThreeDocument = class ThreeDocument extends ReactiveObject {
     }
     /** @internal */
     _onPatchApplied(patch) {
-        const id = patch.op === 'set' ? patch.id : patch.object.uuid;
+        const id = 'id' in patch ? patch.id : patch.object.uuid;
         this.notify({ kind: changeKindForPatch(patch), ids: [id] });
     }
     /** @internal */
@@ -158,17 +149,7 @@ let ThreeDocument = class ThreeDocument extends ReactiveObject {
         this._history.push(transaction);
         if (this._history.length > HISTORY_LIMIT)
             this._history.shift();
-        for (const listener of this._commitListeners)
-            listener(transaction);
-    }
-    _isInScene(object) {
-        let node = object;
-        while (node) {
-            if (node === this.scene)
-                return true;
-            node = node.parent;
-        }
-        return false;
+        this.dispatch('commit', transaction);
     }
     _rebuildIndex() {
         this._index.clear();
@@ -184,6 +165,9 @@ __decorate([
 __decorate([
     Property({ type: Number, value: 1 })
 ], ThreeDocument.prototype, "toneMappingExposure", void 0);
+__decorate([
+    Field(ChangeBus)
+], ThreeDocument.prototype, "changeBus", void 0);
 ThreeDocument = __decorate([
     Register
 ], ThreeDocument);

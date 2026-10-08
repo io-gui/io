@@ -1,5 +1,5 @@
-import { registerPipeline } from './ViewPipeline.js'
-import { registerOverlay } from './Overlay.js'
+import { pipelineTypes } from './ViewPipeline.js'
+import { overlayTypes } from './Overlay.js'
 import { ForwardPipeline } from './pipelines/ForwardPipeline.js'
 import { UVPipeline } from './pipelines/UVPipeline.js'
 import { gridOverlayType } from './overlays/GridOverlay.js'
@@ -7,10 +7,12 @@ import { selectionOutlineOverlayType } from './overlays/SelectionOutlineOverlay.
 import { cameraFrameOverlayType } from './overlays/CameraFrameOverlay.js'
 import { componentOverlayType } from './overlays/ComponentOverlay.js'
 
-registerPipeline({id: 'forward', label: 'Forward', viewKinds: ['3d'], create: () => new ForwardPipeline()})
-registerPipeline({id: 'uv', label: 'UV layout', viewKinds: ['uv'], create: () => new UVPipeline()})
+pipelineTypes
+  .register({id: 'forward', label: 'Forward', viewKinds: ['3d'], create: () => new ForwardPipeline()})
+  .register({id: 'uv', label: 'UV layout', viewKinds: ['uv'], create: () => new UVPipeline()})
 
-registerOverlay(gridOverlayType)
-registerOverlay(selectionOutlineOverlayType)
-registerOverlay(cameraFrameOverlayType)
-registerOverlay(componentOverlayType)
+overlayTypes
+  .register(gridOverlayType)
+  .register(selectionOutlineOverlayType)
+  .register(cameraFrameOverlayType)
+  .register(componentOverlayType)

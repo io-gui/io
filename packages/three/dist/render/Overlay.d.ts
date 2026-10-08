@@ -1,6 +1,7 @@
 import type { Object3D } from 'three/webgpu';
 import type { ViewKind } from '../view/ThreeView.js';
 import type { PipelineContext, PipelineOutput, ViewPipeline } from './ViewPipeline.js';
+import { Registry } from '../utils/Registry.js';
 export interface OverlayContext extends PipelineContext {
     readonly pipeline: ViewPipeline;
     readonly output: PipelineOutput;
@@ -28,8 +29,5 @@ export interface OverlayType {
     readonly order?: number;
     create(): Overlay;
 }
-/** Registers an overlay type. Replaces one with the same id. */
-export declare function registerOverlay(type: OverlayType): void;
-export declare function getOverlayType(id: string): OverlayType | undefined;
-/** Registered overlay types for a view kind, in draw order. */
-export declare function listOverlays(viewKind?: ViewKind): OverlayType[];
+/** Overlays views create by kind and `ThreeView.overlays` flags. */
+export declare const overlayTypes: Registry<OverlayType>;

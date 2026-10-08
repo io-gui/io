@@ -1,4 +1,4 @@
-import { Group, Vector3 } from 'three/webgpu';
+import { Group } from 'three/webgpu';
 import { BehaviorPriority } from '../input/Behavior.js';
 /** Pointer distance in CSS pixels within which a gizmo can be hovered and pressed. */
 export const GIZMO_HIT_RADIUS = 8;
@@ -78,9 +78,6 @@ export class GizmoLayer {
         if (gizmo && ctx)
             gizmo.invoke(ctx, event);
     }
-    update() { }
-    end() { }
-    cancel() { }
     _context() {
         const editor = this._host.editor;
         if (!editor)
@@ -119,24 +116,4 @@ export class GizmoLayer {
             gizmo.highlight = true;
         this._host.tag('overlay');
     }
-}
-const _toCamera = new Vector3();
-const _forward = new Vector3();
-/** World units per CSS pixel at `point` (constant screen-size gizmos). */
-export function worldPerPixelAt(camera, point, height) {
-    if (height <= 0)
-        return 0;
-    if (camera.isPerspectiveCamera) {
-        const perspective = camera;
-        camera.getWorldDirection(_forward);
-        const depth = Math.max(_toCamera.subVectors(point, camera.position).dot(_forward), perspective.near);
-        return 2 * depth * Math.tan(perspective.fov * Math.PI / 360) / perspective.zoom / height;
-    }
-    const orthographic = camera;
-    return (orthographic.top - orthographic.bottom) / orthographic.zoom / height;
-}
-/** Projects a world point to CSS pixels in a view of `width` x `height`. */
-export function projectToPixels(camera, point, width, height, out) {
-    out.copy(point).project(camera);
-    return out.set((out.x + 1) / 2 * width, (1 - out.y) / 2 * height, out.z);
 }

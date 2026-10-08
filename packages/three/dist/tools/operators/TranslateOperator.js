@@ -1,5 +1,6 @@
 import { Matrix4, Plane, Ray, Vector3 } from 'three/webgpu';
-const AXES = {
+/** Unit direction of each world axis. */
+export const AXES = {
     x: new Vector3(1, 0, 0),
     y: new Vector3(0, 1, 0),
     z: new Vector3(0, 0, 1),
@@ -110,7 +111,7 @@ export class TranslateOperator {
     _write(ctx) {
         for (const target of this._targets) {
             const local = _world.copy(target.start).add(this._delta).applyMatrix4(target.parentInverse);
-            ctx.transaction.set(target.object, 'position', local);
+            ctx.transaction.copy(target.object, 'position', local);
         }
     }
     _finish() {

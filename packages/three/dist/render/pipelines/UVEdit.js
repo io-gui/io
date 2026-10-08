@@ -1,11 +1,12 @@
-import { BufferGeometry, Color, Float32BufferAttribute, Group, InstancedBufferAttribute, LineSegments, Mesh, Sprite, Vector3 } from 'three/webgpu';
+import { Color, Vector3 } from 'three/webgpu';
 import { ComponentSet } from '../../selection/ComponentSet.js';
 import { COMPONENT_PICK_RADIUS } from '../../selection/ComponentPicker.js';
 import { getEditObjects, getGeometryAdapter } from '../../geometry/GeometryAdapter.js';
-import { deriveComponents } from '../../geometry/componentDomains.js';
+import { cornersFromPoints, deriveComponents } from '../../geometry/componentDomains.js';
 import { attributeVersion, getTopology } from '../../geometry/Topology.js';
-import { stateFaceMaterial, stateLineMaterial, statePointMaterial } from '../overlays/componentMaterials.js';
+import { StateCage } from '../overlays/componentMaterials.js';
 import { COMPONENT_POINT_SIZE } from '../overlays/ComponentOverlay.js';
+import { projectToPixels } from '../../utils/camera.js';
 /** Meshes of the edit set that have UVs. */
 export function getUVEditMeshes(selection) {
     if (!selection)
@@ -22,14 +23,12 @@ export function getUVEditState(selection, mesh) {
     const derived = deriveComponents(topology, domain, selection.getComponents(mesh.uuid, domain));
     const count = topology.primitiveCount;
     const shown = new ComponentSet(count);
-    const corners = new ComponentSet(topology.cornerCount);
+    let corners = new ComponentSet(topology.cornerCount);
     const faces = new ComponentSet(count);
     const edges = new ComponentSet(count * 3);
     if (selection.uvSync) {
         shown.fill();
-        for (let c = 0; c < topology.cornerCount; c++)
-            if (derived.point.has(topology.vertexToPoint[topology.corners[c]]))
-                corners.add(c);
+        corners = cornersFromPoints(topology, derived.point);
         for (let f = 0; f < count; f++) {
             if (derived.primitive.has(f))
                 faces.add(f);
@@ -62,80 +61,67 @@ export function getUVEditState(selection, mesh) {
     }
     return { topology, shown, corners, faces, edges };
 }
+/** Object mode: every face shown, nothing selected but the layout of the active mesh. */
+export function getUVLayoutState(mesh, isActive) {
+    const topology = getTopology(mesh.geometry, 'mesh');
+    const faces = new ComponentSet(topology.primitiveCount);
+    const edges = new ComponentSet(topology.primitiveCount * 3);
+    if (isActive) {
+        faces.fill();
+        edges.fill();
+    }
+    return { topology, shown: new ComponentSet(topology.primitiveCount).fill(), corners: new ComponentSet(topology.cornerCount), faces, edges };
+}
 const SELECTED = new Color(0xffaa33);
 const WIRE = new Color(0xb0b0b0);
-const FACE_COLORS = { normal: WIRE, normalAlpha: 0.08, selected: SELECTED, selectedAlpha: 0.3 };
-const EDGE_COLORS = { normal: WIRE, normalAlpha: 0.9, selected: SELECTED, selectedAlpha: 1 };
-const POINT_COLORS = { normal: new Color(0x202020), normalAlpha: 1, selected: SELECTED, selectedAlpha: 1 };
-/** The UV layout of one mesh in edit mode: faces, triangle edges and UV vertices (corners) with states. */
-export class UVEditCage {
-    group = new Group();
+const COLORS = {
+    faces: { normal: WIRE, normalAlpha: 0.08, selected: SELECTED, selectedAlpha: 0.3 },
+    edges: { normal: WIRE, normalAlpha: 0.9, selected: SELECTED, selectedAlpha: 1 },
+    points: { normal: new Color(0x202020), normalAlpha: 1, selected: SELECTED, selectedAlpha: 1 },
+};
+/**
+ * The UV layout of one mesh: faces, triangle edges and UV vertices (corners) with states. Its faces pick as
+ * the mesh (`userData.source`), so the UV view selects objects by their layout.
+ */
+export class UVEditCage extends StateCage {
     key;
-    _fill;
-    _wire;
-    _points;
-    _pointStates;
     constructor(mesh) {
         const topology = getTopology(mesh.geometry, 'mesh');
         const uv = mesh.geometry.getAttribute('uv');
-        this.key = uvKey(mesh);
-        const cornerPositions = new Float32Array(topology.cornerCount * 3);
+        const corners = new Float32Array(topology.cornerCount * 3);
         for (let c = 0; c < topology.cornerCount; c++) {
-            cornerPositions[c * 3] = uv.getX(topology.corners[c]);
-            cornerPositions[c * 3 + 1] = uv.getY(topology.corners[c]);
+            corners[c * 3] = uv.getX(topology.corners[c]);
+            corners[c * 3 + 1] = uv.getY(topology.corners[c]);
         }
-        const fill = new BufferGeometry();
-        fill.setAttribute('position', new Float32BufferAttribute(cornerPositions, 3));
-        fill.setAttribute('state', new Float32BufferAttribute(new Float32Array(topology.cornerCount), 1));
-        this._fill = new Mesh(fill, stateFaceMaterial(FACE_COLORS, false));
-        const wirePositions = new Float32Array(topology.primitiveCount * 18);
+        // Triangle edge `f * 3 + k` runs from corner k to k + 1.
+        const wire = new Float32Array(topology.primitiveCount * 18);
         for (let f = 0; f < topology.primitiveCount; f++) {
             for (let k = 0; k < 3; k++) {
                 const from = f * 3 + k, to = f * 3 + (k + 1) % 3;
-                wirePositions.set(cornerPositions.subarray(from * 3, from * 3 + 3), f * 18 + k * 6);
-                wirePositions.set(cornerPositions.subarray(to * 3, to * 3 + 3), f * 18 + k * 6 + 3);
+                wire.set(corners.subarray(from * 3, from * 3 + 3), f * 18 + k * 6);
+                wire.set(corners.subarray(to * 3, to * 3 + 3), f * 18 + k * 6 + 3);
             }
         }
-        const wire = new BufferGeometry();
-        wire.setAttribute('position', new Float32BufferAttribute(wirePositions, 3));
-        wire.setAttribute('state', new Float32BufferAttribute(new Float32Array(topology.primitiveCount * 6), 1));
-        this._wire = new LineSegments(wire, stateLineMaterial(EDGE_COLORS, false));
-        this._pointStates = new InstancedBufferAttribute(new Float32Array(topology.cornerCount), 1);
-        this._points = new Sprite(statePointMaterial(new InstancedBufferAttribute(cornerPositions, 3), this._pointStates, POINT_COLORS, COMPONENT_POINT_SIZE - 1, false));
-        this._points.count = topology.cornerCount;
-        this._wire.renderOrder = 1;
-        this._points.renderOrder = 2;
-        for (const child of [this._fill, this._wire, this._points]) {
-            child.frustumCulled = false;
-            child.userData.selectable = false;
-        }
-        this.group.add(this._fill, this._wire, this._points);
+        super(corners, wire, corners, COLORS, COMPONENT_POINT_SIZE - 1, false);
+        this.key = uvKey(mesh);
+        this.edges.renderOrder = 1;
+        this.points.renderOrder = 2;
+        this.faces.userData.source = mesh;
+        this.edges.userData.selectable = this.points.userData.selectable = false;
     }
     update(state, showPoints) {
         const { topology, shown, corners, faces, edges } = state;
-        const fillStates = this._fill.geometry.getAttribute('state');
-        const wireStates = this._wire.geometry.getAttribute('state');
-        const fillArray = fillStates.array;
-        const wireArray = wireStates.array;
-        const pointArray = this._pointStates.array;
+        const faceStates = this.faceStates;
         for (let f = 0; f < topology.primitiveCount; f++) {
             const visible = shown.has(f);
-            fillArray.fill(!visible ? 0 : faces.has(f) ? 2 : 1, f * 3, f * 3 + 3);
+            faceStates.fill(!visible ? 0 : faces.has(f) ? 2 : 1, f * 3, f * 3 + 3);
             for (let k = 0; k < 3; k++) {
-                wireArray.fill(!visible ? 0 : edges.has(f * 3 + k) ? 2 : 1, f * 6 + k * 2, f * 6 + k * 2 + 2);
-                pointArray[f * 3 + k] = !visible ? 0 : corners.has(f * 3 + k) ? 2 : 1;
+                this.edgeStates.fill(!visible ? 0 : edges.has(f * 3 + k) ? 2 : 1, f * 6 + k * 2, f * 6 + k * 2 + 2);
+                this.pointStates[f * 3 + k] = !visible ? 0 : corners.has(f * 3 + k) ? 2 : 1;
             }
         }
-        fillStates.needsUpdate = true;
-        wireStates.needsUpdate = true;
-        this._pointStates.needsUpdate = true;
-        this._points.visible = showPoints;
-    }
-    dispose() {
-        this._fill.geometry.dispose();
-        this._wire.geometry.dispose();
-        for (const child of [this._fill, this._wire, this._points])
-            child.material.dispose();
+        this.updateStates();
+        this.points.visible = showPoints;
     }
 }
 /** Changes when the mesh's topology or UVs change. */
@@ -287,9 +273,9 @@ function projector(host) {
     const rect = host.getBoundingClientRect();
     const camera = host.getViewCamera();
     return (u, v, out, offset) => {
-        _p.set(u, v, 0).project(camera);
-        out[offset] = (_p.x + 1) / 2 * rect.width;
-        out[offset + 1] = (1 - _p.y) / 2 * rect.height;
+        projectToPixels(camera, _p.set(u, v, 0), rect.width, rect.height, _p);
+        out[offset] = _p.x;
+        out[offset + 1] = _p.y;
     };
 }
 function projectCorners(topology, uv, project) {

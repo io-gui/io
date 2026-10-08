@@ -1,6 +1,7 @@
 import { Matrix4, Raycaster, Vector2, Vector3 } from 'three/webgpu';
 import { getEditObjects, getGeometryAdapter } from '../geometry/GeometryAdapter.js';
 import { readIdBuffer } from '../render/IdPass.js';
+import { isShown } from '../utils/sceneGraph.js';
 /** Point and edge hit radius in CSS pixels. */
 export const COMPONENT_PICK_RADIUS = 10;
 const _world = new Vector3();
@@ -189,12 +190,6 @@ export class IdComponentPicker {
                 consider(hitOf(object, domain, index, distance));
         }
     }
-}
-function isShown(object) {
-    for (let node = object; node; node = node.parent)
-        if (!node.visible)
-            return false;
-    return true;
 }
 function viewOf(host) {
     const rect = host.getBoundingClientRect();

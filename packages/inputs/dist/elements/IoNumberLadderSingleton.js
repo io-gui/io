@@ -134,9 +134,7 @@ let IoNumberLadder = class IoNumberLadder extends ReactiveElement {
             }
         }
         else {
-            setTimeout(() => {
-                this.src?.setCaretPosition(this.src.textNode.length);
-            });
+            queueMicrotask(() => { this.src?.setCaretPosition(this.src.textNode.length); });
             this.removeAttribute('style');
         }
         this.dispatch('expanded', { value: this.expanded }, true);

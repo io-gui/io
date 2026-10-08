@@ -26,11 +26,4 @@ export interface ToolDefinition {
     /** Gizmo groups the tool shows in each view (Blender: a tool's gizmo group). Per view, like behaviors. */
     createGizmoGroups?(ctx: ToolContext): GizmoGroup[];
 }
-export declare class ToolRegistry {
-    private readonly _tools;
-    register(tool: ToolDefinition): void;
-    get(id: string): ToolDefinition | undefined;
-    /** Tools available for a view kind and mode. */
-    list(viewKind?: ViewKind, mode?: string): ToolDefinition[];
-}
 export declare function toolAllowsProfile(tool: ToolDefinition, profile: InteractionProfile): boolean;

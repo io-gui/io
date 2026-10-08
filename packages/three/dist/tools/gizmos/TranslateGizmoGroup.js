@@ -1,11 +1,11 @@
 import { BufferGeometry, Color, ConeGeometry, Float32BufferAttribute, Group, LineBasicNodeMaterial, LineSegments, Mesh, MeshBasicNodeMaterial, SphereGeometry, Vector3 } from 'three/webgpu';
-import { projectToPixels, worldPerPixelAt } from '../Gizmo.js';
+import { AXES } from '../operators/TranslateOperator.js';
+import { projectToPixels, worldPerPixelAt } from '../../utils/camera.js';
 /** Arrow length in CSS pixels. */
 export const TRANSLATE_GIZMO_SIZE = 90;
 const CENTER_RADIUS = 7;
 const HIGHLIGHT = new Color(0xffee55);
 const AXIS_COLORS = { x: 0xff3352, y: 0x8bdc00, z: 0x2890ff };
-const AXIS_DIRECTIONS = { x: new Vector3(1, 0, 0), y: new Vector3(0, 1, 0), z: new Vector3(0, 0, 1) };
 const _a = new Vector3();
 const _b = new Vector3();
 const _tip = new Vector3();
@@ -49,7 +49,7 @@ class AxisHandle extends TranslateHandle {
     constructor(group, axis) {
         super(group, axis);
         this.color = new Color(AXIS_COLORS[axis]);
-        this._direction = AXIS_DIRECTIONS[axis];
+        this._direction = AXES[axis];
         const lineGeometry = new BufferGeometry();
         lineGeometry.setAttribute('position', new Float32BufferAttribute([0, 0, 0, ...this._direction.toArray()], 3));
         const lineMaterial = gizmoMaterial(new LineBasicNodeMaterial(), AXIS_COLORS[axis]);
@@ -57,7 +57,7 @@ class AxisHandle extends TranslateHandle {
         const line = new LineSegments(lineGeometry, lineMaterial);
         const cone = new Mesh(new ConeGeometry(0.06, 0.22, 16), coneMaterial);
         // Cones point along +Y; turn them onto the axis.
-        cone.quaternion.setFromUnitVectors(AXIS_DIRECTIONS.y, this._direction);
+        cone.quaternion.setFromUnitVectors(AXES.y, this._direction);
         cone.position.copy(this._direction).multiplyScalar(0.89);
         this.object.add(line, cone);
         this.object.renderOrder = 1;

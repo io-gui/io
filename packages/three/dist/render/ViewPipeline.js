@@ -1,14 +1,6 @@
-const _pipelines = new Map();
-/** Registers a pipeline for `ThreeView.pipeline` to name. Replaces one with the same id. */
-export function registerPipeline(type) {
-    _pipelines.set(type.id, type);
-}
-export function getPipelineType(id) {
-    return _pipelines.get(id);
-}
-export function listPipelines(viewKind) {
-    return [..._pipelines.values()].filter(type => !viewKind || (type.viewKinds ?? ['3d']).includes(viewKind));
-}
+import { Registry } from '../utils/Registry.js';
+/** Pipelines `ThreeView.pipeline` can name. */
+export const pipelineTypes = new Registry();
 /** The pipeline a view kind uses when `ThreeView.pipeline` is empty. */
 export const DEFAULT_PIPELINES = {
     '3d': 'forward',

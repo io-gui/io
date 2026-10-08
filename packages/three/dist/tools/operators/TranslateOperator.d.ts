@@ -8,6 +8,8 @@ export type TranslateProps = OperatorProps & {
     /** World-space offset. Set when an interactive run finishes, so the command can be repeated with `exec`. */
     delta?: [number, number, number];
 };
+/** Unit direction of each world axis. */
+export declare const AXES: Readonly<Record<Exclude<TranslateAxis, 'view'>, Vector3>>;
 /**
  * Moves the selected objects (`transform.translate`). Interactive runs are modal: drag along an axis or in the
  * view plane, X / Y / Z switch the constraint (again to release it), release or Enter confirms, Escape or right

@@ -2,6 +2,7 @@ import { DoubleSide, FloatType, Mesh, MeshBasicNodeMaterial, NoBlending, Object3
 import { attribute, positionView, uniform, vec4 } from 'three/tsl'
 import type { BufferGeometry } from 'three/webgpu'
 import { getGeometryAdapter } from '../geometry/GeometryAdapter.js'
+import { KeyedPool } from '../utils/KeyedPool.js'
 
 /**
  * One read-back ID buffer of a view: per CSS pixel, which edit object (`slot`, 1-based index into
@@ -47,7 +48,7 @@ export class IdPass {
   private readonly _renderer: WebGPURenderer
   private readonly _target = new RenderTarget(1, 1, {type: FloatType, depthBuffer: true})
   private readonly _scene = new Scene()
-  private readonly _proxies = new Map<string, Mesh>()
+  private readonly _proxies = new KeyedPool<Mesh>(proxy => this._scene.remove(proxy))
   private readonly _slot = uniform(0).onObjectUpdate(({object}) => (object?.userData.pickSlot as number | undefined) ?? 0)
   private readonly _idMaterial = new MeshBasicNodeMaterial({side: DoubleSide, blending: NoBlending})
   private readonly _occluderMaterial = new MeshBasicNodeMaterial({side: DoubleSide, blending: NoBlending})
@@ -85,32 +86,24 @@ export class IdPass {
 
   private _sync(scene: Object3D, camera: PerspectiveCamera | OrthographicCamera, objects: readonly Object3D[]) {
     const slots = new Map(objects.map((object, i) => [object, i + 1]))
-    const shown = new Set<string>()
     scene.traverseVisible(child => {
       const object = child as Drawable
       if (!object.isMesh || !object.geometry || !object.layers.test(camera.layers)) return
       const slot = slots.get(object)
       const geometry = slot ? getGeometryAdapter(object)?.getPrimitiveIdGeometry(object) ?? null : object.isInstancedMesh ? null : object.geometry
       if (!geometry) return
-      const key = `${object.uuid}:${slot ? 'id' : 'occluder'}`
-      let proxy = this._proxies.get(key)
-      if (!proxy) {
-        proxy = new Mesh(geometry, slot ? this._idMaterial : this._occluderMaterial)
+      const proxy = this._proxies.get(`${object.uuid}:${slot ? 'id' : 'occluder'}`, () => {
+        const proxy = new Mesh(geometry, slot ? this._idMaterial : this._occluderMaterial)
         proxy.matrixAutoUpdate = false
         proxy.frustumCulled = false
-        this._proxies.set(key, proxy)
         this._scene.add(proxy)
-      }
+        return proxy
+      })
       proxy.geometry = geometry
       proxy.userData.pickSlot = slot ?? 0
       proxy.matrixWorld.copy(object.matrixWorld)
-      shown.add(key)
     })
-    for (const [key, proxy] of this._proxies) {
-      if (shown.has(key)) continue
-      this._scene.remove(proxy)
-      this._proxies.delete(key)
-    }
+    this._proxies.sweep()
   }
 
   dispose() {

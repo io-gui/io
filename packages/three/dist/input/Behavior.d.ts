@@ -11,6 +11,7 @@ export declare const BehaviorPriority: {
 /**
  * Anything that wants input in a viewport. The InputRouter offers presses, wheel and key events in
  * priority order; the first behavior whose `wantsCapture` returns true owns the pointer stream until it ends.
+ * Every handler is optional: a behavior that only hovers, clicks or handles keys leaves out the capture ones.
  */
 export interface Behavior {
     readonly priority: number;
@@ -25,15 +26,15 @@ export interface Behavior {
      */
     readonly modal?: boolean;
     /** Called for `pointerdown` and `wheel` when nothing has captured (and for stealing). */
-    wantsCapture(event: ViewInputEvent): boolean;
+    wantsCapture?(event: ViewInputEvent): boolean;
     /** Capture starts. For `wheel` the router calls `end` right after. */
-    begin(event: ViewInputEvent): void;
+    begin?(event: ViewInputEvent): void;
     /** Moves of captured pointers, and extra `pointerdown` / `pointerup` while other captured pointers remain. */
-    update(event: ViewInputEvent): void;
+    update?(event: ViewInputEvent): void;
     /** The last captured pointer was released. */
-    end(event: ViewInputEvent): void;
+    end?(event: ViewInputEvent): void;
     /** Capture was lost or taken away. */
-    cancel(event?: ViewInputEvent): void;
+    cancel?(event?: ViewInputEvent): void;
     /** Pointer moves while nothing has captured. Return true to claim hover; lower behaviors are not asked. */
     hover?(event: ViewInputEvent): boolean;
     /** Hover moved to another behavior, or the pointer left the viewport. */

@@ -1,6 +1,6 @@
 const TRANSFORM_PATHS = ['position', 'quaternion', 'rotation', 'scale', 'matrix', 'up'];
 export function changeKindForPatch(patch) {
-    if (patch.op !== 'set')
+    if (patch.op === 'insert' || patch.op === 'remove')
         return 'structure';
     const head = patch.path.split('.')[0];
     if (TRANSFORM_PATHS.includes(head))
@@ -13,19 +13,15 @@ export function changeKindForPatch(patch) {
 }
 export function invertPatch(patch) {
     switch (patch.op) {
-        case 'set': return { op: 'set', id: patch.id, path: patch.path, value: patch.oldValue, oldValue: patch.value };
+        case 'set':
+        case 'copy': return { ...patch, value: patch.oldValue, oldValue: patch.value };
         case 'insert': return { op: 'remove', parentId: patch.parentId, index: patch.index, object: patch.object };
         case 'remove': return { op: 'insert', parentId: patch.parentId, index: patch.index, object: patch.object };
     }
 }
-/** Snapshot of a value: math objects are cloned, arrays sliced, everything else kept as is. */
-export function cloneValue(value) {
-    if (Array.isArray(value))
-        return value.slice();
-    if (value && typeof value.clone === 'function' && typeof value.copy === 'function') {
-        return value.clone();
-    }
-    return value;
+/** The value a patch of `op` records: `copy` snapshots it, since the object it is copied into changes later. */
+export function patchValue(op, value) {
+    return op === 'copy' ? value.clone() : value;
 }
 export function resolvePath(root, path) {
     const segments = path.split('.');
@@ -39,17 +35,14 @@ export function resolvePath(root, path) {
     return { owner, key };
 }
 /**
- * Writes a value in place. Math objects (`Vector3`, `Euler`, `Color`, ...) are copied into the existing
- * instance, because Three.js relies on their identity (`object.position` is read-only).
+ * Applies a value patch: `set` assigns, `copy` copies into the held object. Assigning a read-only property
+ * (`Object3D.position`, `rotation`, `quaternion`, `scale`) throws; those are written with `copy`.
  */
-export function writeValue(owner, key, value) {
-    const current = owner[key];
-    if (current && value && typeof current.copy === 'function' && value.constructor === current.constructor) {
-        current.copy(value);
-    }
-    else {
+export function writeValue(op, owner, key, value) {
+    if (op === 'set')
         owner[key] = value;
-    }
+    else
+        owner[key].copy(value);
 }
 export function insertChild(parent, object, index) {
     parent.add(object);

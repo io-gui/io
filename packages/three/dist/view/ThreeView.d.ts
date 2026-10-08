@@ -1,12 +1,13 @@
 import { ReactiveObject, ReactiveObjectProps } from '@io-gui/core';
-import { Object3D, OrthographicCamera, PerspectiveCamera, Scene, ToneMapping } from 'three/webgpu';
+import { Object3D, Scene, ToneMapping } from 'three/webgpu';
 import { AxisView, ViewNavigation, ViewNavigationData } from './ViewNavigation.js';
+import { ViewCamera } from '../utils/camera.js';
 import type { InteractionProfile } from '../tools/Tool.js';
 /** `3d` shows the content scene; `uv` shows the UV layout of the edit set in a 2D view of the 0–1 square. */
 export type ViewKind = '3d' | 'uv';
 /** Overlay ids switched on or off for one view; ids it does not name use the overlay's default. */
 export type ViewOverlays = Record<string, boolean>;
-export type ThreeViewProps = ReactiveObjectProps & {
+type ThreeViewSettings = {
     kind?: ViewKind;
     pipeline?: string;
     overlays?: ViewOverlays;
@@ -18,20 +19,10 @@ export type ThreeViewProps = ReactiveObjectProps & {
     clearColor?: number;
     clearAlpha?: number;
 };
-export type ThreeViewData = {
-    kind?: ViewKind;
-    pipeline?: string;
-    overlays?: ViewOverlays;
-    xray?: boolean;
-    toneMapping?: ToneMapping | null;
-    toneMappingExposure?: number | null;
-    profile?: InteractionProfile;
-    overscan?: number;
-    clearColor?: number;
-    clearAlpha?: number;
+export type ThreeViewProps = ReactiveObjectProps & ThreeViewSettings;
+export type ThreeViewData = ThreeViewSettings & {
     navigation?: Partial<ViewNavigationData>;
 };
-type ViewCamera = PerspectiveCamera | OrthographicCamera;
 /**
  * State of one view (ADR-0002): navigation and display settings, independent of any element.
  * An IoThreeViewport shows it; the view survives the element being unmounted or moved.
@@ -67,19 +58,13 @@ export declare class ThreeView extends ReactiveObject {
     private _missingSource;
     /** Session state: navigation per document uuid, so switching documents back restores the camera. */
     private readonly _navigationByDocument;
-    private readonly _navigationListeners;
     constructor(args?: ThreeViewProps);
     /**
-     * Call after changing `navigation` directly, so viewports showing this view redraw.
-     * The methods below call it themselves.
+     * Call after changing `navigation` directly, so viewports showing this view redraw. The methods below call
+     * it themselves. It dispatches `navigation-changed` to the view's parents (the viewports holding it), not a
+     * reactive mutation: navigation runs per pointer move, and inspectors or bindings of the view need not wake.
      */
     markNavigationChanged(): void;
-    /**
-     * Calls `listener` on every navigation change. Navigation runs per pointer move, so it skips reactive
-     * mutation: viewports redraw, but inspectors and bindings of the view are not woken.
-     */
-    addNavigationListener(listener: () => void): void;
-    removeNavigationListener(listener: () => void): void;
     /** Looks through the view's own navigation: an orthographic axis view, or the default perspective view with `free`. */
     setAxisView(axis: AxisView): this;
     /**
@@ -108,9 +93,10 @@ export declare class ThreeView extends ReactiveObject {
      * Scene cameras are copied, never mutated (ADR-0005).
      */
     getCamera(width: number, height: number, scene: Scene | null): ViewCamera;
-    /** World units covered by one CSS pixel at the target distance (at the scene's centre through a scene camera). */
+    /** World units covered by one CSS pixel at the target (at the scene's centre through a scene camera, which has no target). */
     getWorldPerPixel(width: number, height: number, scene: Scene | null): number;
     private _fromSceneCamera;
+    /** Core serializes the primitive settings; the overlay flags, tone mapping overrides (also `null`) and navigation are added. */
     toJSON(): ThreeViewData;
     applyJSON(data: ThreeViewData): this;
 }

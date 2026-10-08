@@ -5,6 +5,7 @@ import type { ThreeView } from '../view/ThreeView.js'
 import type { InputRouter } from '../input/InputRouter.js'
 import type { InputHost, ViewInputEvent } from '../input/ViewInputEvent.js'
 import { Behavior, BehaviorPriority } from '../input/Behavior.js'
+import { Registry } from '../utils/Registry.js'
 
 export type OperatorStatus = 'running' | 'finished' | 'cancelled'
 export type OperatorProps = Record<string, unknown>
@@ -65,9 +66,6 @@ class ModalOperatorBehavior implements Behavior {
 
   constructor(private readonly registry: OperatorRegistry) {}
 
-  wantsCapture() { return false }
-  begin() {}
-  end() {}
   update(event: ViewInputEvent) { this.registry._modalEvent(event) }
   cancel() { this.registry.cancelRunning() }
   key(event: ViewInputEvent) {
@@ -81,27 +79,13 @@ class ModalOperatorBehavior implements Behavior {
  * Registered operator types of one editor, and the runner. At most one operator runs modally at a time;
  * starting another, or switching documents, cancels it.
  */
-export class OperatorRegistry {
+export class OperatorRegistry extends Registry<OperatorType> {
 
-  private readonly _types = new Map<string, OperatorType>()
   private _running: RunningOperator | null = null
   private _lastCommand: Command | null = null
 
-  constructor(private readonly editor: ThreeEditor) {}
-
-  register(type: OperatorType) {
-    debug: {
-      if (this._types.has(type.id)) console.warn(`OperatorRegistry: replacing operator "${type.id}"`)
-    }
-    this._types.set(type.id, type)
-  }
-
-  get(id: string) {
-    return this._types.get(id)
-  }
-
-  list(): OperatorType[] {
-    return [...this._types.values()]
+  constructor(private readonly editor: ThreeEditor) {
+    super()
   }
 
   get running(): Operator | null {
@@ -118,7 +102,7 @@ export class OperatorRegistry {
    * (`InputRouter.startModal`) until it finishes; Escape cancels it.
    */
   run(id: string, props: OperatorProps = {}, options: {host?: OperatorHost | null; event?: ViewInputEvent} = {}): OperatorStatus {
-    const type = this._types.get(id)
+    const type = this.get(id)
     if (!type) {
       console.error(`OperatorRegistry: no operator "${id}"`)
       return 'cancelled'

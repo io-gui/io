@@ -4,11 +4,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveObject, Property } from '@io-gui/core';
+import { Register, ReactiveObject, Property, Field } from '@io-gui/core';
 import { ThreeDocument } from './ThreeDocument.js';
 import { renderScheduler } from '../render/RenderScheduler.js';
 import { OperatorRegistry } from '../tools/Operator.js';
-import { ToolRegistry } from '../tools/Tool.js';
+import { Registry } from '../utils/Registry.js';
 import { SelectionModel } from '../selection/SelectionModel.js';
 import { translateOperatorType } from '../tools/operators/TranslateOperator.js';
 import { translateTool } from '../tools/TranslateTool.js';
@@ -19,27 +19,16 @@ import { editModeToggleOperatorType, selectModeOperatorType } from '../tools/ope
  */
 let ThreeEditor = class ThreeEditor extends ReactiveObject {
     _renderer = null;
+    /** Operators of this editor; built-ins (`transform.translate`, `object.editmode_toggle`, `mesh.select_mode`) are registered. */
+    operators = new OperatorRegistry(this)
+        .register(translateOperatorType)
+        .register(editModeToggleOperatorType)
+        .register(selectModeOperatorType);
+    /** Tools of this editor; built-ins (`transform.translate`) are registered but not active. */
+    tools = new Registry().register(translateTool);
     constructor(args) {
         super({ ...args, document: args?.document ?? new ThreeDocument() });
         this.isPlayingChanged();
-    }
-    /** Operators of this editor; built-ins (`transform.translate`, `object.editmode_toggle`, `mesh.select_mode`) are registered. */
-    get operators() {
-        if (!this._operators) {
-            this._operators = new OperatorRegistry(this);
-            this._operators.register(translateOperatorType);
-            this._operators.register(editModeToggleOperatorType);
-            this._operators.register(selectModeOperatorType);
-        }
-        return this._operators;
-    }
-    /** Tools of this editor; built-ins (`transform.translate`) are registered but not active. */
-    get tools() {
-        if (!this._tools) {
-            this._tools = new ToolRegistry();
-            this._tools.register(translateTool);
-        }
-        return this._tools;
     }
     /** The active document's change bus; the scheduler drains it each frame. */
     get changeBus() {
@@ -58,8 +47,8 @@ let ThreeEditor = class ThreeEditor extends ReactiveObject {
         return id ? this.tools.get(id) ?? null : null;
     }
     documentChanged(change) {
-        if (change.oldValue && change.oldValue !== change.value) {
-            this._operators?.cancelRunning();
+        if (change.oldValue) {
+            this.operators.cancelRunning();
             // Views tag themselves for the new document; changes left for the old one would never be drained.
             change.oldValue.changeBus.clear();
         }
@@ -67,8 +56,6 @@ let ThreeEditor = class ThreeEditor extends ReactiveObject {
             this.selection = this._selectionFor(change.value);
     }
     _selectionFor(document) {
-        if (!this._selections)
-            this._selections = new Map();
         let selection = this._selections.get(document.uuid);
         if (!selection) {
             selection = new SelectionModel({ document });
@@ -107,8 +94,8 @@ let ThreeEditor = class ThreeEditor extends ReactiveObject {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onAnimate(delta, time) { }
     dispose() {
-        this._operators?.cancelRunning();
-        for (const selection of this._selections?.values() ?? [])
+        this.operators.cancelRunning();
+        for (const selection of this._selections.values())
             selection.dispose();
         this.isPlaying = false;
         renderScheduler.removeTicker(this);
@@ -130,6 +117,9 @@ __decorate([
 __decorate([
     Property({ type: SelectionModel })
 ], ThreeEditor.prototype, "selection", void 0);
+__decorate([
+    Field(Map)
+], ThreeEditor.prototype, "_selections", void 0);
 ThreeEditor = __decorate([
     Register
 ], ThreeEditor);

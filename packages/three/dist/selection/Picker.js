@@ -1,4 +1,5 @@
 import { Box3, Raycaster, Vector2, Vector3 } from 'three/webgpu';
+import { projectToPixels } from '../utils/camera.js';
 /** Line and point hit radius, in screen pixels. */
 export const PICK_RADIUS = 4;
 /**
@@ -92,16 +93,14 @@ export class RaycastPicker {
             let inFront = false;
             for (let i = 0; i < 8; i++) {
                 _corner.set((i & 1) ? _box.max.x : _box.min.x, (i & 2) ? _box.max.y : _box.min.y, (i & 4) ? _box.max.z : _box.min.z);
-                _corner.project(camera);
+                projectToPixels(camera, _corner, bounds.width, bounds.height, _corner);
                 if (_corner.z < -1 || _corner.z > 1)
                     continue;
                 inFront = true;
-                const px = (_corner.x + 1) / 2 * bounds.width;
-                const py = (1 - _corner.y) / 2 * bounds.height;
-                left = Math.min(left, px);
-                right = Math.max(right, px);
-                top = Math.min(top, py);
-                bottom = Math.max(bottom, py);
+                left = Math.min(left, _corner.x);
+                right = Math.max(right, _corner.x);
+                top = Math.min(top, _corner.y);
+                bottom = Math.max(bottom, _corner.y);
             }
             if (!inFront || right < minX || left > maxX || bottom < minY || top > maxY)
                 continue;

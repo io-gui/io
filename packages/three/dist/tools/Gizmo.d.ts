@@ -1,4 +1,4 @@
-import { Group, Object3D, OrthographicCamera, PerspectiveCamera, Vector3 } from 'three/webgpu';
+import { Group, Object3D } from 'three/webgpu';
 import type { ThreeEditor } from '../editor/ThreeEditor.js';
 import type { ThreeView } from '../view/ThreeView.js';
 import type { DirtyReason } from '../render/RenderScheduler.js';
@@ -6,13 +6,14 @@ import type { Overlay, OverlayContext } from '../render/Overlay.js';
 import { Behavior } from '../input/Behavior.js';
 import type { ViewInputEvent } from '../input/ViewInputEvent.js';
 import type { OperatorHost } from './Operator.js';
+import type { ViewCamera } from '../utils/camera.js';
 /** Pointer distance in CSS pixels within which a gizmo can be hovered and pressed. */
 export declare const GIZMO_HIT_RADIUS = 8;
 export interface GizmoContext {
     readonly editor: ThreeEditor;
     readonly host: OperatorHost;
     readonly view: ThreeView;
-    readonly camera: PerspectiveCamera | OrthographicCamera;
+    readonly camera: ViewCamera;
     /** CSS pixels. */
     readonly width: number;
     readonly height: number;
@@ -68,14 +69,7 @@ export declare class GizmoLayer implements Behavior, Overlay {
     hoverEnd(): void;
     wantsCapture(event: ViewInputEvent): boolean;
     begin(event: ViewInputEvent): void;
-    update(): void;
-    end(): void;
-    cancel(): void;
     private _context;
     private _hitTest;
     private _setHovered;
 }
-/** World units per CSS pixel at `point` (constant screen-size gizmos). */
-export declare function worldPerPixelAt(camera: PerspectiveCamera | OrthographicCamera, point: Vector3, height: number): number;
-/** Projects a world point to CSS pixels in a view of `width` x `height`. */
-export declare function projectToPixels(camera: PerspectiveCamera | OrthographicCamera, point: Vector3, width: number, height: number, out: Vector3): Vector3;

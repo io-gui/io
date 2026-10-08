@@ -30,8 +30,6 @@ export class Topology {
   readonly pointCount: number
   /** Buffer vertex → point. */
   readonly vertexToPoint: Uint32Array
-  /** One buffer vertex per point (the first one welded into it). */
-  readonly pointToVertex: Uint32Array
   /** xyz per point, in the geometry's local space. */
   readonly pointPositions: Float32Array
   readonly edgeCount: number
@@ -45,8 +43,6 @@ export class Topology {
   /** Edges of each primitive, `primitiveSize` per primitive (none for points). */
   readonly primitiveEdges: Uint32Array
 
-  private readonly _edgeLookup: Map<number, number>
-
   constructor(geometry: BufferGeometry, kind: TopologyKind) {
     this.kind = kind
     this.key = topologyKey(geometry, kind)
@@ -56,7 +52,6 @@ export class Topology {
 
     // Weld vertices with identical positions into points.
     const vertexToPoint = new Uint32Array(vertexCount)
-    const pointVertices: number[] = []
     const positions: number[] = []
     const lookup = new Map<string, number>()
     for (let i = 0; i < vertexCount; i++) {
@@ -64,16 +59,14 @@ export class Topology {
       const key = `${x},${y},${z}`
       let point = lookup.get(key)
       if (point === undefined) {
-        point = pointVertices.length
+        point = positions.length / 3
         lookup.set(key, point)
-        pointVertices.push(i)
         positions.push(x, y, z)
       }
       vertexToPoint[i] = point
     }
     this.vertexToPoint = vertexToPoint
-    this.pointCount = pointVertices.length
-    this.pointToVertex = Uint32Array.from(pointVertices)
+    this.pointCount = positions.length / 3
     this.pointPositions = Float32Array.from(positions)
 
     // Primitive corners as buffer vertices.
@@ -114,7 +107,6 @@ export class Topology {
         primitiveEdges[p] = addEdge(vertexToPoint[corners[p * 2]], vertexToPoint[corners[p * 2 + 1]])
       }
     }
-    this._edgeLookup = edgeLookup
     this.edgeCount = edgePoints.length / 2
     this.edgePoints = Uint32Array.from(edgePoints)
     this.primitiveEdges = primitiveEdges
@@ -123,11 +115,6 @@ export class Topology {
   /** Corners: buffer vertices of triangles (mesh only). */
   get cornerCount() {
     return this.kind === 'mesh' ? this.corners.length : 0
-  }
-
-  /** Edge between two points, or -1. */
-  edgeIndex(a: number, b: number) {
-    return this._edgeLookup.get(Math.min(a, b) * this.pointCount + Math.max(a, b)) ?? -1
   }
 }
 

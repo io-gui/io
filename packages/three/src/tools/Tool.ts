@@ -30,28 +30,6 @@ export interface ToolDefinition {
   createGizmoGroups?(ctx: ToolContext): GizmoGroup[]
 }
 
-export class ToolRegistry {
-
-  private readonly _tools = new Map<string, ToolDefinition>()
-
-  register(tool: ToolDefinition) {
-    debug: {
-      if (this._tools.has(tool.id)) console.warn(`ToolRegistry: replacing tool "${tool.id}"`)
-    }
-    this._tools.set(tool.id, tool)
-  }
-
-  get(id: string) {
-    return this._tools.get(id)
-  }
-
-  /** Tools available for a view kind and mode. */
-  list(viewKind?: ViewKind, mode?: string): ToolDefinition[] {
-    return [...this._tools.values()].filter(tool =>
-      (!viewKind || tool.viewKinds.includes(viewKind)) && (!mode || tool.modes.includes(mode)))
-  }
-}
-
 export function toolAllowsProfile(tool: ToolDefinition, profile: InteractionProfile) {
   return (tool.profiles ?? ['full']).includes(profile)
 }

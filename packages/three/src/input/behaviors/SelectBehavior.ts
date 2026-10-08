@@ -55,8 +55,6 @@ export class SelectBehavior implements Behavior {
     return true
   }
 
-  begin() {}
-
   update(event: ViewInputEvent) {
     if (!this._box || event.type !== 'pointermove') return
     this._box.x1 = event.x
@@ -71,20 +69,7 @@ export class SelectBehavior implements Behavior {
     if (!box || !selection) return
     // A press without a drag is a click; the router offers it as one.
     if (Math.abs(box.x1 - box.x0) <= CLICK_TOLERANCE && Math.abs(box.y1 - box.y0) <= CLICK_TOLERANCE) return
-    const components = this._components
-    if (components) {
-      const objects = components.objects(this._host)
-      const domain = components.domain(this._host)
-      void components.pickRect(this._host, box).then(hits => {
-        if (this._selection !== selection) return
-        applyComponents(selection, box.mode, hits, objects, domain)
-      })
-      return
-    }
-    void this._picker.pickRect(this._host, box).then(hits => {
-      if (this._selection !== selection) return
-      apply(selection, box.mode, hits.map(hit => hit.uuid), '')
-    })
+    this._select(selection, box.mode, false, components => components.pickRect(this._host, box), picker => picker.pickRect(this._host, box))
   }
 
   cancel() {
@@ -97,20 +82,9 @@ export class SelectBehavior implements Behavior {
     const entry = this.keymap.match(event, action => action === 'select.click')
     if (!entry) return false
     const mode = (entry.props?.mode as SelectMode) ?? 'set'
-    const components = this._components
-    if (components) {
-      const objects = components.objects(this._host)
-      const domain = components.domain(this._host)
-      void components.pick(this._host, event.x, event.y).then(hits => {
-        if (this._selection !== selection) return
-        applyComponents(selection, mode, hits, objects, domain)
-      })
-      return true
-    }
-    void this._picker.pick(this._host, event.x, event.y).then((hit: PickHit | null) => {
-      if (this._selection !== selection) return
-      apply(selection, mode, hit ? [hit.uuid] : [], hit?.uuid ?? '')
-    })
+    this._select(selection, mode, true,
+      components => components.pick(this._host, event.x, event.y),
+      picker => picker.pick(this._host, event.x, event.y).then(hit => hit ? [hit] : []))
     return true
   }
 
@@ -153,6 +127,26 @@ export class SelectBehavior implements Behavior {
     if (entry.action === 'select.all') selection.set(all, selection.active || undefined)
     else selection.edit().set(all.filter(uuid => !selection.has(uuid))).commit()
     return true
+  }
+
+  /**
+   * Picks components in edit mode, objects otherwise, and applies the hits when the pick resolves, unless the
+   * host shows another selection by then. A click (`setsActive`) makes its hit the active object.
+   */
+  private _select(selection: SelectionModel, mode: SelectMode, setsActive: boolean,
+    pickComponents: (picker: ComponentPicker) => Promise<ComponentHit[]>, pickObjects: (picker: Picker) => Promise<PickHit[]>) {
+    const components = this._components
+    if (components) {
+      const objects = components.objects(this._host)
+      const domain = components.domain(this._host)
+      void pickComponents(components).then(hits => {
+        if (this._selection === selection) applyComponents(selection, mode, hits, objects, domain)
+      })
+    } else {
+      void pickObjects(this._picker).then(hits => {
+        if (this._selection === selection) apply(selection, mode, hits.map(hit => hit.uuid), setsActive ? hits[0]?.uuid ?? '' : '')
+      })
+    }
   }
 
   private _drawMarquee() {

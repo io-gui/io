@@ -4,7 +4,8 @@ import { ChangeBus, DocumentChange } from './ChangeBus.js';
 import { ThreeDocument } from './ThreeDocument.js';
 import { FrameInfo, ScheduledTicker } from '../render/RenderScheduler.js';
 import { OperatorRegistry } from '../tools/Operator.js';
-import { ToolDefinition, ToolRegistry } from '../tools/Tool.js';
+import type { ToolDefinition } from '../tools/Tool.js';
+import { Registry } from '../utils/Registry.js';
 import { SelectionModel } from '../selection/SelectionModel.js';
 import type { ViewKind } from '../view/ThreeView.js';
 export type ThreeEditorProps = ReactiveObjectProps & {
@@ -26,14 +27,13 @@ export declare class ThreeEditor extends ReactiveObject implements ScheduledTick
     /** Selection of the active document. Session state; each document keeps its own (ADR-0007). */
     selection: SelectionModel;
     _renderer: WebGPURenderer | null;
-    private _operators;
-    private _tools;
+    /** Operators of this editor; built-ins (`transform.translate`, `object.editmode_toggle`, `mesh.select_mode`) are registered. */
+    readonly operators: OperatorRegistry;
+    /** Tools of this editor; built-ins (`transform.translate`) are registered but not active. */
+    readonly tools: Registry<ToolDefinition>;
+    /** Selection per document uuid. A Field: `documentChanged` runs inside the base constructor. */
     private _selections;
     constructor(args?: ThreeEditorProps);
-    /** Operators of this editor; built-ins (`transform.translate`, `object.editmode_toggle`, `mesh.select_mode`) are registered. */
-    get operators(): OperatorRegistry;
-    /** Tools of this editor; built-ins (`transform.translate`) are registered but not active. */
-    get tools(): ToolRegistry;
     /** The active document's change bus; the scheduler drains it each frame. */
     get changeBus(): ChangeBus;
     setActiveTool(viewKind: ViewKind, mode: string, toolId: string | null): void;

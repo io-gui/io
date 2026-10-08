@@ -55,7 +55,7 @@ export class SelectionModel extends ReactiveObject {
 
   constructor(args: SelectionModelProps) {
     super(args)
-    this.document.addCommitListener(this._onCommit)
+    this.document.addEventListener('commit', this._onCommit)
   }
 
   get size() {
@@ -149,7 +149,8 @@ export class SelectionModel extends ReactiveObject {
   }
 
   override dispose() {
-    this.document.removeCommitListener(this._onCommit)
+    // A disposed document has dropped its listeners already.
+    if (!this.document._disposed) this.document.removeEventListener('commit', this._onCommit)
     super.dispose()
   }
 
@@ -162,17 +163,21 @@ export class SelectionModel extends ReactiveObject {
     this._missing.add(uuid)
     if (this._missing.size > 1) return
     queueMicrotask(() => {
-      const ids = [...this._missing].filter(id => this._objects.has(id) && !this.document.getObject(id))
+      this._forget([...this._missing].filter(id => this._objects.has(id) && !this.document.getObject(id)))
       this._missing.clear()
-      if (ids.length) this.edit().remove(ids).clearComponents(undefined, ids).commit()
     })
   }
 
   /** Objects removed from the document leave the selection, with their components. */
-  private _onCommit = (transaction: Transaction) => {
-    const removed = transaction.patches.filter(patch => patch.op === 'remove').map(patch => patch.op === 'remove' ? patch.object : null)
+  private _onCommit = (event: CustomEvent<Transaction>) => {
     const ids: string[] = []
-    for (const object of removed) object?.traverse(child => { if (this._objects.has(child.uuid) || this._components.has(child.uuid)) ids.push(child.uuid) })
+    for (const patch of event.detail.patches) {
+      if (patch.op === 'remove') patch.object.traverse(child => { if (this._objects.has(child.uuid) || this._components.has(child.uuid)) ids.push(child.uuid) })
+    }
+    this._forget(ids)
+  }
+
+  private _forget(ids: string[]) {
     if (ids.length) this.edit().remove(ids).clearComponents(undefined, ids).commit()
   }
 }

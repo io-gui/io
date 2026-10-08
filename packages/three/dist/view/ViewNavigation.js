@@ -188,7 +188,7 @@ export class ViewNavigation {
         if (data.far !== undefined)
             this.far = data.far;
         if (data.axisView !== undefined)
-            this.axisView = data.axisView ?? 'free';
+            this.axisView = data.axisView;
         if (data.cameraSource !== undefined)
             this.cameraSource = data.cameraSource;
         this.framed = data.framed ?? true;
