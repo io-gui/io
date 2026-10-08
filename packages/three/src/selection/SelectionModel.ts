@@ -50,6 +50,8 @@ export class SelectionModel extends ReactiveObject {
 
   private readonly _objects = new Set<string>()
   private readonly _components = new Map<string, Map<SelectionDomain, ComponentSet>>()
+  /** Selected ids no longer in the document, dropped from the selection after the current task. */
+  private readonly _missing = new Set<string>()
 
   constructor(args: SelectionModelProps) {
     super(args)
@@ -75,6 +77,7 @@ export class SelectionModel extends ReactiveObject {
     for (const uuid of this._objects) {
       const object = this.document.getObject(uuid)
       if (object) objects.push(object)
+      else this._dropLater(uuid)
     }
     return objects
   }
@@ -88,7 +91,10 @@ export class SelectionModel extends ReactiveObject {
   }
 
   getActiveObject(): Object3D | undefined {
-    return this.active ? this.document.getObject(this.active) : undefined
+    if (!this.active) return undefined
+    const object = this.document.getObject(this.active)
+    if (!object) this._dropLater(this.active)
+    return object
   }
 
   /** Selected components of one object in one domain. Do not modify; use `edit().components()`. */
@@ -145,6 +151,21 @@ export class SelectionModel extends ReactiveObject {
   override dispose() {
     this.document.removeCommitListener(this._onCommit)
     super.dispose()
+  }
+
+  /**
+   * Drops a selected id whose object was removed outside a transaction. Deferred, so a lookup made while
+   * drawing or iterating the selection does not change it underneath.
+   */
+  private _dropLater(uuid: string) {
+    if (this._missing.has(uuid)) return
+    this._missing.add(uuid)
+    if (this._missing.size > 1) return
+    queueMicrotask(() => {
+      const ids = [...this._missing].filter(id => this._objects.has(id) && !this.document.getObject(id))
+      this._missing.clear()
+      if (ids.length) this.edit().remove(ids).clearComponents(undefined, ids).commit()
+    })
   }
 
   /** Objects removed from the document leave the selection, with their components. */

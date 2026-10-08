@@ -185,6 +185,21 @@ describe('RenderScheduler', () => {
     expect(views.map(view => view.draws.length)).toEqual([1, 1, 1])
   })
 
+  it('does not let a slow, always-tagged focused view starve the others', () => {
+    let clock = 0
+    const scheduler = new RenderScheduler({autoStart: false, frameBudget: 12, now: () => clock})
+    const focused = fakeView({onDraw: () => { clock += 20 }})
+    const other = fakeView()
+    focused.priority = 2
+    focused.converged = false
+    other.converged = false
+    scheduler.register(focused)
+    scheduler.register(other)
+    for (let i = 0; i < 100; i++) scheduler.step()
+    expect(other.draws.length).toBeGreaterThan(20)
+    expect(focused.draws.length).toBeGreaterThan(other.draws.length)
+  })
+
   it('keeps unconverged views tagged continuous', () => {
     const scheduler = new RenderScheduler({autoStart: false})
     const view = fakeView()

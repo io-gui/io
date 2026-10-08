@@ -1,4 +1,4 @@
-import { Color, Group, InstancedMesh, Line, LineBasicNodeMaterial, LineSegments, Material, Mesh, MeshBasicNodeMaterial, Object3D, RenderTarget, Scene, SkinnedMesh, UnsignedByteType, Vector2 } from 'three/webgpu'
+import { Color, DoubleSide, Group, InstancedMesh, Line, LineBasicNodeMaterial, LineSegments, Material, Mesh, MeshBasicNodeMaterial, Object3D, RenderTarget, Scene, SkinnedMesh, UnsignedByteType, Vector2 } from 'three/webgpu'
 import { Fn, float, max, screenUV, select, texture, uniform, vec2, vec4 } from 'three/tsl'
 import type { Overlay, OverlayContext, OverlayType } from '../Overlay.js'
 import { createScreenQuad } from '../screenQuad.js'
@@ -39,6 +39,8 @@ export class SelectionOutlineOverlay implements Overlay {
     this._maskScene.matrixWorldAutoUpdate = false
     for (const [i, value] of [ACTIVE, SELECTED].entries()) {
       this._meshMaterials[i].colorNode = vec4(value, value, value, 1)
+      // Back faces count too: open surfaces (lathes, planes) show their inside.
+      this._meshMaterials[i].side = DoubleSide
       this._lineMaterials[i].colorNode = vec4(value, value, value, 1)
     }
     const mask = texture(this._mask.texture)
@@ -97,36 +99,46 @@ export class SelectionOutlineOverlay implements Overlay {
     renderer.setRenderTarget(null)
   }
 
-  /** A mask proxy for `object` sharing its geometry (and skeleton or instances), or null if it draws nothing outlinable. */
+  /**
+   * A mask proxy for `object` sharing its geometry (and skeleton or instances), or null if it draws nothing
+   * outlinable. Shared state is re-assigned every draw, so swapped geometry, skeletons and instances show.
+   */
   private _proxy(object: Drawable, isActive: boolean): Object3D | null {
     const index = isActive ? 0 : 1
+    const kind = object.isSkinnedMesh ? 'skinned' : object.isInstancedMesh ? 'instanced' : object.isMesh ? 'mesh' : object.isLineSegments ? 'segments' : object.isLine ? 'line' : null
+    if (!kind) return null
     let proxy = this._proxies.get(object.uuid) as (Mesh | Line) | undefined
+    if (proxy && proxy.userData.kind !== kind) {
+      this._maskScene.remove(proxy)
+      proxy = undefined
+    }
     if (!proxy) {
-      if (object.isMesh) {
-        const source = object as Mesh
-        if (object.isSkinnedMesh) {
-          const skinned = new SkinnedMesh(source.geometry)
-          skinned.bind((source as SkinnedMesh).skeleton, (source as SkinnedMesh).bindMatrix)
-          proxy = skinned
-        } else if (object.isInstancedMesh) {
-          const instanced = source as InstancedMesh
-          const copy = new InstancedMesh(source.geometry, undefined, instanced.count)
-          copy.instanceMatrix = instanced.instanceMatrix
-          proxy = copy
-        } else {
-          proxy = new Mesh(source.geometry)
-        }
-        proxy.morphTargetInfluences = source.morphTargetInfluences
-      } else if (object.isLine) {
-        proxy = object.isLineSegments ? new LineSegments((object as Line).geometry) : new Line((object as Line).geometry)
-      } else {
-        return null
-      }
+      if (kind === 'skinned') proxy = new SkinnedMesh()
+      else if (kind === 'instanced') proxy = new InstancedMesh(undefined, undefined, 0)
+      else if (kind === 'mesh') proxy = new Mesh()
+      else if (kind === 'segments') proxy = new LineSegments()
+      else proxy = new Line()
+      proxy.userData.kind = kind
       proxy.matrixAutoUpdate = false
       proxy.frustumCulled = false
       this._proxies.set(object.uuid, proxy)
       this._maskScene.add(proxy)
     }
+    proxy.geometry = (object as Mesh | Line).geometry
+    if (kind === 'skinned') {
+      const source = object as SkinnedMesh
+      const skinned = proxy as SkinnedMesh
+      if (skinned.skeleton !== source.skeleton) skinned.bind(source.skeleton, source.bindMatrix)
+      else skinned.bindMatrix.copy(source.bindMatrix)
+      skinned.bindMatrixInverse.copy(source.bindMatrixInverse)
+      skinned.bindMode = source.bindMode
+    } else if (kind === 'instanced') {
+      const source = object as InstancedMesh
+      const instanced = proxy as InstancedMesh
+      instanced.instanceMatrix = source.instanceMatrix
+      instanced.count = source.count
+    }
+    if (kind !== 'segments' && kind !== 'line') proxy.morphTargetInfluences = (object as Mesh).morphTargetInfluences
     proxy.material = ((proxy as Mesh).isMesh ? this._meshMaterials : this._lineMaterials)[index] as Material
     return proxy
   }
