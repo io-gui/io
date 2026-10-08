@@ -7,6 +7,7 @@ import type { ThreeView, ViewKind } from '../view/ThreeView.js'
 import type { SelectionModel } from '../selection/SelectionModel.js'
 import type { Picker } from '../selection/Picker.js'
 import type { ComponentPicker } from '../selection/ComponentPicker.js'
+import { Registry } from '../utils/Registry.js'
 
 /** Everything a pipeline or overlay needs for one draw of one view. */
 export interface PipelineContext {
@@ -59,30 +60,16 @@ export interface ViewPipeline {
   dispose(): void
 }
 
-export type ViewPipelineFactory = (renderer: WebGPURenderer) => ViewPipeline
-
 export interface ViewPipelineType {
   readonly id: string
   readonly label?: string
   /** View kinds that can use this pipeline. Default: `['3d']`. */
   readonly viewKinds?: readonly ViewKind[]
-  readonly create: ViewPipelineFactory
+  create(renderer: WebGPURenderer): ViewPipeline
 }
 
-const _pipelines = new Map<string, ViewPipelineType>()
-
-/** Registers a pipeline for `ThreeView.pipeline` to name. Replaces one with the same id. */
-export function registerPipeline(type: ViewPipelineType) {
-  _pipelines.set(type.id, type)
-}
-
-export function getPipelineType(id: string): ViewPipelineType | undefined {
-  return _pipelines.get(id)
-}
-
-export function listPipelines(viewKind?: ViewKind): ViewPipelineType[] {
-  return [..._pipelines.values()].filter(type => !viewKind || (type.viewKinds ?? ['3d']).includes(viewKind))
-}
+/** Pipelines `ThreeView.pipeline` can name. */
+export const pipelineTypes = new Registry<ViewPipelineType>()
 
 /** The pipeline a view kind uses when `ThreeView.pipeline` is empty. */
 export const DEFAULT_PIPELINES: Record<ViewKind, string> = {

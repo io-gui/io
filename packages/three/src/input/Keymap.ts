@@ -114,6 +114,17 @@ export class Keymap {
   }
 }
 
+const zoom: KeymapEntry[] = [
+  {input: 'wheel', action: 'view.zoom'},
+  {input: 'Ctrl+wheel', action: 'view.zoom'},
+]
+
+const clickSelect: KeymapEntry[] = [
+  {input: 'LMB click', action: 'select.click', props: {mode: 'set'}},
+  {input: 'Shift+LMB click', action: 'select.click', props: {mode: 'toggle'}},
+  {input: 'Ctrl+LMB click', action: 'select.click', props: {mode: 'subtract'}},
+]
+
 const axisKeys = (front: string, right: string, top: string, mod = 'Ctrl'): KeymapEntry[] => [
   {input: front, action: 'view.axis', props: {axis: 'front'}},
   {input: `${mod}+${front}`, action: 'view.axis', props: {axis: 'back'}},
@@ -132,8 +143,7 @@ export const navigationKeymaps = {
     {input: 'Ctrl+LMB drag', action: 'view.pan'},
     {input: 'Meta+LMB drag', action: 'view.pan'},
     {input: 'MMB drag', action: 'view.dolly'},
-    {input: 'wheel', action: 'view.zoom'},
-    {input: 'Ctrl+wheel', action: 'view.zoom'},
+    ...zoom,
     {input: 'Home', action: 'view.frameAll'},
     {input: 'KeyF', action: 'view.frameSelected'},
   ]),
@@ -141,8 +151,7 @@ export const navigationKeymaps = {
     {input: 'MMB drag', action: 'view.orbit'},
     {input: 'Shift+MMB drag', action: 'view.pan'},
     {input: 'Ctrl+MMB drag', action: 'view.dolly'},
-    {input: 'wheel', action: 'view.zoom'},
-    {input: 'Ctrl+wheel', action: 'view.zoom'},
+    ...zoom,
     {input: 'Home', action: 'view.frameAll'},
     {input: 'NumpadDecimal', action: 'view.frameSelected'},
     ...axisKeys('Numpad1', 'Numpad3', 'Numpad7'),
@@ -151,8 +160,7 @@ export const navigationKeymaps = {
     {input: 'Alt+LMB drag', action: 'view.orbit'},
     {input: 'Alt+MMB drag', action: 'view.pan'},
     {input: 'Alt+RMB drag', action: 'view.dolly'},
-    {input: 'wheel', action: 'view.zoom'},
-    {input: 'Ctrl+wheel', action: 'view.zoom'},
+    ...zoom,
     {input: 'KeyA', action: 'view.frameAll'},
     {input: 'KeyF', action: 'view.frameSelected'},
   ]),
@@ -164,18 +172,14 @@ export const navigationKeymaps = {
  */
 export const selectionKeymaps = {
   default: new Keymap([
-    {input: 'LMB click', action: 'select.click', props: {mode: 'set'}},
-    {input: 'Shift+LMB click', action: 'select.click', props: {mode: 'toggle'}},
-    {input: 'Ctrl+LMB click', action: 'select.click', props: {mode: 'subtract'}},
+    ...clickSelect,
     {input: 'Alt+LMB drag', action: 'select.box', props: {mode: 'set'}},
     {input: 'Shift+Alt+LMB drag', action: 'select.box', props: {mode: 'extend'}},
     {input: 'Ctrl+KeyA', action: 'select.all'},
     {input: 'Escape', action: 'select.none'},
   ]),
   blender: new Keymap([
-    {input: 'LMB click', action: 'select.click', props: {mode: 'set'}},
-    {input: 'Shift+LMB click', action: 'select.click', props: {mode: 'toggle'}},
-    {input: 'Ctrl+LMB click', action: 'select.click', props: {mode: 'subtract'}},
+    ...clickSelect,
     {input: 'LMB drag', action: 'select.box', props: {mode: 'set'}},
     {input: 'Shift+LMB drag', action: 'select.box', props: {mode: 'extend'}},
     {input: 'Ctrl+LMB drag', action: 'select.box', props: {mode: 'subtract'}},
@@ -184,9 +188,7 @@ export const selectionKeymaps = {
     {input: 'Ctrl+KeyI', action: 'select.invert'},
   ]),
   maya: new Keymap([
-    {input: 'LMB click', action: 'select.click', props: {mode: 'set'}},
-    {input: 'Shift+LMB click', action: 'select.click', props: {mode: 'toggle'}},
-    {input: 'Ctrl+LMB click', action: 'select.click', props: {mode: 'subtract'}},
+    ...clickSelect,
     {input: 'LMB drag', action: 'select.box', props: {mode: 'set'}},
     {input: 'Shift+LMB drag', action: 'select.box', props: {mode: 'toggle'}},
     {input: 'Ctrl+LMB drag', action: 'select.box', props: {mode: 'subtract'}},

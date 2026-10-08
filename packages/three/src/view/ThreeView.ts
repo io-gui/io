@@ -1,7 +1,8 @@
 import { Register, ReactiveObject, ReactiveObjectProps, Property } from '@io-gui/core'
 import { Box3, Camera, Object3D, OrthographicCamera, PerspectiveCamera, Scene, ToneMapping, Vector3 } from 'three/webgpu'
 import { AxisView, ViewNavigation, ViewNavigationData } from './ViewNavigation.js'
-import { copyProjection } from '../utils/copyProjection.js'
+import { ViewCamera, cameraAspect, copyProjection, worldPerPixelAt } from '../utils/camera.js'
+import { isDescendant } from '../utils/sceneGraph.js'
 import type { InteractionProfile } from '../tools/Tool.js'
 
 /** `3d` shows the content scene; `uv` shows the UV layout of the edit set in a 2D view of the 0–1 square. */
@@ -12,7 +13,7 @@ export type ViewOverlays = Record<string, boolean>
 
 const UV_BOX = new Box3(new Vector3(0, 0, 0), new Vector3(1, 1, 0))
 
-export type ThreeViewProps = ReactiveObjectProps & {
+type ThreeViewSettings = {
   kind?: ViewKind
   pipeline?: string
   overlays?: ViewOverlays
@@ -25,38 +26,12 @@ export type ThreeViewProps = ReactiveObjectProps & {
   clearAlpha?: number
 }
 
-export type ThreeViewData = {
-  kind?: ViewKind
-  pipeline?: string
-  overlays?: ViewOverlays
-  xray?: boolean
-  toneMapping?: ToneMapping | null
-  toneMappingExposure?: number | null
-  profile?: InteractionProfile
-  overscan?: number
-  clearColor?: number
-  clearAlpha?: number
-  navigation?: Partial<ViewNavigationData>
-}
+export type ThreeViewProps = ReactiveObjectProps & ThreeViewSettings
 
-type ViewCamera = PerspectiveCamera | OrthographicCamera
+export type ThreeViewData = ThreeViewSettings & {navigation?: Partial<ViewNavigationData>}
 
 const _box = new Box3()
 const _center = new Vector3()
-const _forward = new Vector3()
-
-function isInScene(object: Object3D, scene: Scene) {
-  for (let node: Object3D | null = object; node; node = node.parent) if (node === scene) return true
-  return false
-}
-
-/** Depth of the scene's bounds centre in front of `camera`: a scene camera has no orbit distance. */
-function sceneDistance(camera: Camera, scene: Scene) {
-  _box.setFromObject(scene)
-  if (_box.isEmpty()) return 1
-  _box.getCenter(_center).sub(camera.position)
-  return Math.max(_center.dot(camera.getWorldDirection(_forward)), (camera as PerspectiveCamera).near || 0.01)
-}
 
 /**
  * State of one view (ADR-0002): navigation and display settings, independent of any element.
@@ -116,30 +91,18 @@ export class ThreeView extends ReactiveObject {
   private _missingSource: string | null = null
   /** Session state: navigation per document uuid, so switching documents back restores the camera. */
   private readonly _navigationByDocument = new Map<string, ViewNavigationData>()
-  private readonly _navigationListeners = new Set<() => void>()
 
   constructor(args?: ThreeViewProps) {
     super(args)
   }
 
   /**
-   * Call after changing `navigation` directly, so viewports showing this view redraw.
-   * The methods below call it themselves.
+   * Call after changing `navigation` directly, so viewports showing this view redraw. The methods below call
+   * it themselves. It dispatches `navigation-changed` to the view's parents (the viewports holding it), not a
+   * reactive mutation: navigation runs per pointer move, and inspectors or bindings of the view need not wake.
    */
   markNavigationChanged() {
-    for (const listener of this._navigationListeners) listener()
-  }
-
-  /**
-   * Calls `listener` on every navigation change. Navigation runs per pointer move, so it skips reactive
-   * mutation: viewports redraw, but inspectors and bindings of the view are not woken.
-   */
-  addNavigationListener(listener: () => void) {
-    this._navigationListeners.add(listener)
-  }
-
-  removeNavigationListener(listener: () => void) {
-    this._navigationListeners.delete(listener)
+    this.dispatch('navigation-changed', undefined, true)
   }
 
   /** Looks through the view's own navigation: an orthographic axis view, or the default perspective view with `free`. */
@@ -215,7 +178,7 @@ export class ThreeView extends ReactiveObject {
     const uuid = this.navigation.cameraSource
     if (!uuid || !scene) return null
     // Called several times per draw and per pointer event: avoid walking the scene each time.
-    let camera = this._sourceCamera?.uuid === uuid && isInScene(this._sourceCamera, scene) ? this._sourceCamera as Camera : undefined
+    let camera = this._sourceCamera?.uuid === uuid && isDescendant(this._sourceCamera, scene) ? this._sourceCamera as Camera : undefined
     if (!camera) {
       if (this._missingSource === uuid) return null
       camera = scene.getObjectByProperty('uuid', uuid) as Camera | undefined
@@ -287,17 +250,14 @@ export class ThreeView extends ReactiveObject {
     return camera
   }
 
-  /** World units covered by one CSS pixel at the target distance (at the scene's centre through a scene camera). */
+  /** World units covered by one CSS pixel at the target (at the scene's centre through a scene camera, which has no target). */
   getWorldPerPixel(width: number, height: number, scene: Scene | null) {
     const camera = this.getCamera(width, height, scene)
-    let visibleHeight: number
-    if (camera instanceof PerspectiveCamera) {
-      const distance = this.getSourceCamera(scene) && scene ? sceneDistance(camera, scene) : this.navigation.distance
-      visibleHeight = 2 * distance * Math.tan(camera.fov * Math.PI / 360) / camera.zoom
-    } else {
-      visibleHeight = (camera.top - camera.bottom) / camera.zoom
+    let point = this.navigation.target
+    if (scene && this.getSourceCamera(scene)) {
+      point = _box.setFromObject(scene).isEmpty() ? camera.localToWorld(_center.set(0, 0, -1)) : _box.getCenter(_center)
     }
-    return height > 0 ? visibleHeight / height : 0
+    return worldPerPixelAt(camera, point, height)
   }
 
   private _fromSceneCamera(source: ViewCamera, aspect: number): ViewCamera {
@@ -307,9 +267,8 @@ export class ThreeView extends ReactiveObject {
     copyProjection(source, camera)
     if (camera instanceof PerspectiveCamera) {
       // Fit the source frame inside the viewport.
-      const sourceAspect = (source as PerspectiveCamera).aspect
       camera.aspect = aspect
-      camera.fov = 2 * Math.atan(Math.tan(camera.fov * Math.PI / 360) * Math.max(1, sourceAspect / aspect)) * 180 / Math.PI
+      camera.fov = 2 * Math.atan(Math.tan(camera.fov * Math.PI / 360) * Math.max(1, cameraAspect(source) / aspect)) * 180 / Math.PI
       camera.zoom = source.zoom / this.overscan
     } else {
       const frustumHeight = camera.top - camera.bottom
@@ -335,36 +294,22 @@ export class ThreeView extends ReactiveObject {
     return camera
   }
 
+  /** Core serializes the primitive settings; the overlay flags, tone mapping overrides (also `null`) and navigation are added. */
   override toJSON(): ThreeViewData {
     return {
-      kind: this.kind,
-      pipeline: this.pipeline,
+      ...super.toJSON() as ThreeViewData,
       overlays: {...this.overlays},
-      xray: this.xray,
       toneMapping: this.toneMapping,
       toneMappingExposure: this.toneMappingExposure,
-      profile: this.profile,
-      overscan: this.overscan,
-      clearColor: this.clearColor,
-      clearAlpha: this.clearAlpha,
       navigation: this.navigation.toJSON(),
     }
   }
 
   override applyJSON(data: ThreeViewData) {
-    if (data.navigation) this.navigation.applyJSON(data.navigation)
-    const props: ThreeViewProps = {}
-    if (data.kind !== undefined) props.kind = data.kind
-    if (data.pipeline !== undefined) props.pipeline = data.pipeline
-    if (data.overlays !== undefined) props.overlays = {...data.overlays}
-    if (data.xray !== undefined) props.xray = data.xray
-    if (data.toneMapping !== undefined) props.toneMapping = data.toneMapping
-    if (data.toneMappingExposure !== undefined) props.toneMappingExposure = data.toneMappingExposure
-    if (data.profile !== undefined) props.profile = data.profile
-    if (data.overscan !== undefined) props.overscan = data.overscan
-    if (data.clearColor !== undefined) props.clearColor = data.clearColor
-    if (data.clearAlpha !== undefined) props.clearAlpha = data.clearAlpha
-    this.setProperties(props)
+    const {navigation, ...settings} = data
+    if (navigation) this.navigation.applyJSON(navigation)
+    if (settings.overlays) settings.overlays = {...settings.overlays}
+    this.setProperties(settings)
     this.markNavigationChanged()
     return this
   }

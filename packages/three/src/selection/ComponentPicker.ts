@@ -4,6 +4,7 @@ import type { SelectionDomain } from './SelectionModel.js'
 import type { PickRect } from './Picker.js'
 import { getEditObjects, getGeometryAdapter } from '../geometry/GeometryAdapter.js'
 import { IdBufferData, IdSample, readIdBuffer } from '../render/IdPass.js'
+import { isShown } from '../utils/sceneGraph.js'
 
 /** One picked component. `size` is the domain size the index belongs to (for `SelectionEdit.components`). */
 export interface ComponentHit {
@@ -222,11 +223,6 @@ export class IdComponentPicker implements ComponentPicker {
       if (index !== -1) consider(hitOf(object, domain, index, distance))
     }
   }
-}
-
-function isShown(object: Object3D) {
-  for (let node: Object3D | null = object; node; node = node.parent) if (!node.visible) return false
-  return true
 }
 
 function viewOf(host: InputHost) {

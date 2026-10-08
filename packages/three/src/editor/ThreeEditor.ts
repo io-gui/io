@@ -1,10 +1,11 @@
-import { Register, ReactiveObject, ReactiveObjectProps, Property, Change } from '@io-gui/core'
+import { Register, ReactiveObject, ReactiveObjectProps, Property, Field, Change } from '@io-gui/core'
 import { WebGPURenderer } from 'three/webgpu'
 import { ChangeBus, DocumentChange } from './ChangeBus.js'
 import { ThreeDocument } from './ThreeDocument.js'
 import { renderScheduler, FrameInfo, ScheduledTicker } from '../render/RenderScheduler.js'
 import { OperatorRegistry } from '../tools/Operator.js'
-import { ToolDefinition, ToolRegistry } from '../tools/Tool.js'
+import type { ToolDefinition } from '../tools/Tool.js'
+import { Registry } from '../utils/Registry.js'
 import { SelectionModel } from '../selection/SelectionModel.js'
 import { translateOperatorType } from '../tools/operators/TranslateOperator.js'
 import { translateTool } from '../tools/TranslateTool.js'
@@ -44,34 +45,22 @@ export class ThreeEditor extends ReactiveObject implements ScheduledTicker {
 
   public _renderer: WebGPURenderer | null = null
 
-  // Created lazily: change handlers can run inside the base constructor, before class fields exist.
-  declare private _operators: OperatorRegistry | undefined
-  declare private _tools: ToolRegistry | undefined
-  declare private _selections: Map<string, SelectionModel> | undefined
+  /** Operators of this editor; built-ins (`transform.translate`, `object.editmode_toggle`, `mesh.select_mode`) are registered. */
+  readonly operators = new OperatorRegistry(this)
+    .register(translateOperatorType)
+    .register(editModeToggleOperatorType)
+    .register(selectModeOperatorType)
+
+  /** Tools of this editor; built-ins (`transform.translate`) are registered but not active. */
+  readonly tools = new Registry<ToolDefinition>().register(translateTool)
+
+  /** Selection per document uuid. A Field: `documentChanged` runs inside the base constructor. */
+  @Field(Map)
+  declare private _selections: Map<string, SelectionModel>
 
   constructor(args?: ThreeEditorProps) {
     super({...args, document: args?.document ?? new ThreeDocument()})
     this.isPlayingChanged()
-  }
-
-  /** Operators of this editor; built-ins (`transform.translate`, `object.editmode_toggle`, `mesh.select_mode`) are registered. */
-  get operators(): OperatorRegistry {
-    if (!this._operators) {
-      this._operators = new OperatorRegistry(this)
-      this._operators.register(translateOperatorType)
-      this._operators.register(editModeToggleOperatorType)
-      this._operators.register(selectModeOperatorType)
-    }
-    return this._operators
-  }
-
-  /** Tools of this editor; built-ins (`transform.translate`) are registered but not active. */
-  get tools(): ToolRegistry {
-    if (!this._tools) {
-      this._tools = new ToolRegistry()
-      this._tools.register(translateTool)
-    }
-    return this._tools
   }
 
   /** The active document's change bus; the scheduler drains it each frame. */
@@ -92,8 +81,8 @@ export class ThreeEditor extends ReactiveObject implements ScheduledTicker {
   }
 
   documentChanged(change: Change<ThreeDocument>) {
-    if (change.oldValue && change.oldValue !== change.value) {
-      this._operators?.cancelRunning()
+    if (change.oldValue) {
+      this.operators.cancelRunning()
       // Views tag themselves for the new document; changes left for the old one would never be drained.
       change.oldValue.changeBus.clear()
     }
@@ -101,7 +90,6 @@ export class ThreeEditor extends ReactiveObject implements ScheduledTicker {
   }
 
   private _selectionFor(document: ThreeDocument) {
-    if (!this._selections) this._selections = new Map()
     let selection = this._selections.get(document.uuid)
     if (!selection) {
       selection = new SelectionModel({document})
@@ -146,8 +134,8 @@ export class ThreeEditor extends ReactiveObject implements ScheduledTicker {
   onAnimate(delta: number, time: number) {}
 
   override dispose() {
-    this._operators?.cancelRunning()
-    for (const selection of this._selections?.values() ?? []) selection.dispose()
+    this.operators.cancelRunning()
+    for (const selection of this._selections.values()) selection.dispose()
     this.isPlaying = false
     renderScheduler.removeTicker(this)
     super.dispose()

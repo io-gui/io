@@ -3,8 +3,8 @@ import { screenUV, texture } from 'three/tsl'
 import type { DocumentChange } from '../editor/ChangeBus.js'
 import type { ThreeView } from '../view/ThreeView.js'
 import type { DirtyReason, ViewRenderResult } from './RenderScheduler.js'
-import { DEFAULT_PIPELINES, PipelineContext, PipelineOutput, ViewPipeline, getPipelineType } from './ViewPipeline.js'
-import { Overlay, OverlayContext, OverlayType, listOverlays } from './Overlay.js'
+import { DEFAULT_PIPELINES, PipelineContext, PipelineOutput, ViewPipeline, pipelineTypes } from './ViewPipeline.js'
+import { Overlay, OverlayContext, OverlayType, overlayTypes } from './Overlay.js'
 import { createScreenQuad } from './screenQuad.js'
 import { ForwardPipeline } from './pipelines/ForwardPipeline.js'
 import './builtins.js'
@@ -63,7 +63,7 @@ export class ViewCompositor {
     const id = view.pipeline || DEFAULT_PIPELINES[view.kind] || 'forward'
     if (this._pipeline && id === this._pipelineId) return
     this._pipeline?.dispose()
-    const type = getPipelineType(id)
+    const type = pipelineTypes.get(id)
     if (!type) console.warn(`ViewCompositor: no pipeline "${id}", using "forward"`)
     this._pipeline = type ? type.create(this._renderer) : new ForwardPipeline()
     this._pipelineId = id
@@ -74,7 +74,7 @@ export class ViewCompositor {
 
   /** Creates and disposes registered overlays to match the view's kind and `overlays` flags. */
   syncOverlays(view: ThreeView) {
-    const wanted = listOverlays(view.kind).filter(type => view.overlays[type.id] ?? type.enabledByDefault)
+    const wanted = overlayTypes.list(type => type.viewKinds.includes(view.kind) && view.isOverlayEnabled(type.id, type.enabledByDefault))
     for (const entry of [...this._overlays]) {
       if (entry.type && !wanted.includes(entry.type)) this.removeOverlay(entry.overlay)
     }

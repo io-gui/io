@@ -218,7 +218,7 @@ export class ViewNavigation {
     if (data.fov !== undefined) this.fov = data.fov
     if (data.near !== undefined) this.near = data.near
     if (data.far !== undefined) this.far = data.far
-    if (data.axisView !== undefined) this.axisView = data.axisView ?? 'free'
+    if (data.axisView !== undefined) this.axisView = data.axisView
     if (data.cameraSource !== undefined) this.cameraSource = data.cameraSource
     this.framed = data.framed ?? true
     return this

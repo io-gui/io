@@ -1,4 +1,4 @@
-import { Group, Object3D, OrthographicCamera, PerspectiveCamera, Vector3 } from 'three/webgpu'
+import { Group, Object3D } from 'three/webgpu'
 import type { ThreeEditor } from '../editor/ThreeEditor.js'
 import type { ThreeView } from '../view/ThreeView.js'
 import type { DirtyReason } from '../render/RenderScheduler.js'
@@ -6,6 +6,7 @@ import type { Overlay, OverlayContext } from '../render/Overlay.js'
 import { Behavior, BehaviorPriority } from '../input/Behavior.js'
 import type { ViewInputEvent } from '../input/ViewInputEvent.js'
 import type { OperatorHost } from './Operator.js'
+import type { ViewCamera } from '../utils/camera.js'
 
 /** Pointer distance in CSS pixels within which a gizmo can be hovered and pressed. */
 export const GIZMO_HIT_RADIUS = 8
@@ -14,7 +15,7 @@ export interface GizmoContext {
   readonly editor: ThreeEditor
   readonly host: OperatorHost
   readonly view: ThreeView
-  readonly camera: PerspectiveCamera | OrthographicCamera
+  readonly camera: ViewCamera
   /** CSS pixels. */
   readonly width: number
   readonly height: number
@@ -135,10 +136,6 @@ export class GizmoLayer implements Behavior, Overlay {
     if (gizmo && ctx) gizmo.invoke(ctx, event)
   }
 
-  update() {}
-  end() {}
-  cancel() {}
-
   private _context(): GizmoContext | null {
     const editor = this._host.editor
     if (!editor) return null
@@ -173,26 +170,4 @@ export class GizmoLayer implements Behavior, Overlay {
     if (gizmo) gizmo.highlight = true
     this._host.tag('overlay')
   }
-}
-
-const _toCamera = new Vector3()
-const _forward = new Vector3()
-
-/** World units per CSS pixel at `point` (constant screen-size gizmos). */
-export function worldPerPixelAt(camera: PerspectiveCamera | OrthographicCamera, point: Vector3, height: number) {
-  if (height <= 0) return 0
-  if ((camera as PerspectiveCamera).isPerspectiveCamera) {
-    const perspective = camera as PerspectiveCamera
-    camera.getWorldDirection(_forward)
-    const depth = Math.max(_toCamera.subVectors(point, camera.position).dot(_forward), perspective.near)
-    return 2 * depth * Math.tan(perspective.fov * Math.PI / 360) / perspective.zoom / height
-  }
-  const orthographic = camera as OrthographicCamera
-  return (orthographic.top - orthographic.bottom) / orthographic.zoom / height
-}
-
-/** Projects a world point to CSS pixels in a view of `width` x `height`. */
-export function projectToPixels(camera: PerspectiveCamera | OrthographicCamera, point: Vector3, width: number, height: number, out: Vector3) {
-  out.copy(point).project(camera)
-  return out.set((out.x + 1) / 2 * width, (1 - out.y) / 2 * height, out.z)
 }
