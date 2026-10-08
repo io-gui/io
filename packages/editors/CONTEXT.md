@@ -11,7 +11,7 @@ A tuple `[PropertyIdentifier, VDOMElement]` that maps a matcher (property name s
 _Avoid_: `{tag, props}` object shape, widget descriptor object
 
 **EditorConfig**:
-The per-constructor collection of PropertyConfigs used to resolve which widget edits each property. Match priority: exact name, then value type, then RegExp.
+The per-constructor collection of PropertyConfigs used to resolve which widget edits each property. Configs from every matching constructor, then the element's `config` prop, are applied in order; the last matching entry wins.
 _Avoid_: schema, form config
 
 **EditorGroups**:
@@ -29,7 +29,7 @@ _Avoid_: control, field editor, input type
 ### Inspection
 
 **Persistent expand**:
-Whether an `IoObject` row stays expanded across sessions, keyed by a stable object identifier (`guid` / `uuid` / `id` / `name` when present). Stored in localStorage.
+Whether an `IoObject` row stays expanded across sessions, keyed by a stable object identifier (`guid` / `uuid` / `id` / `name` / `label` when present). Stored in localStorage; objects without one get a temporary identifier and are not persisted.
 _Avoid_: open state, collapsed flag
 
 **Breadcrumb drill-down**:

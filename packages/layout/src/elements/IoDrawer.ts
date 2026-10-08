@@ -1,4 +1,5 @@
 import { Register, Property, ReactiveElement, ReactiveElementProps, VDOMElement, div, ThemeSingleton } from '@io-gui/core'
+import { SelectorElement } from '@io-gui/navigation'
 import { Split } from '../models/Split.js'
 import { Panel } from '../models/Panel.js'
 import { IoSplit, ioSplit } from './IoSplit.js'
@@ -15,7 +16,7 @@ export type IoDrawerProps = ReactiveElementProps & {
   direction: DrawerDirection
   parent: IoSplit
   model: Split | Panel | null
-  elements: VDOMElement[]
+  elements: SelectorElement[]
 }
 
 @Register
@@ -145,7 +146,7 @@ export class IoDrawer extends ReactiveElement {
   declare model: Split | Panel
 
   @Property(Array)
-  declare elements: VDOMElement[]
+  declare elements: SelectorElement[]
 
   static override get Listeners() {
     return {

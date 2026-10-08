@@ -13,7 +13,7 @@ Regex patterns applied to raw markdown (or intermediate HTML) to remove marked r
 _Avoid_: filter, exclude blocks
 
 **Highlight theme**:
-Syntax-highlight stylesheet pair that follows `ThemeSingleton.themeID` (light vs dark code blocks).
+Syntax-highlight stylesheet pair that follows `$ThemeID` (light vs dark code blocks).
 _Avoid_: highlight.js theme name (as the Io-Gui term)
 
 **Sanitize**:

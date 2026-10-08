@@ -50,12 +50,13 @@ Most frameworks keep two worlds apart: a component/DOM tree the framework owns a
 
 That boundary-crossing is the design goal: a domain model deep in your data layer can emit a change or mutation that an element several hops away handles, even though the model has no DOM presence of its own.
 
-#### Two kinds of parent/child
+#### Three kinds of parent/child
 
 A `ReactiveElement` can take part in three overlapping but independent parent/child relations. For ordinary elements they often coincide, but they are not the same relation, and the space between them is where cross-domain reactivity lives:
 
 - **Reactive graph** — `_parents`/`_children`, the edges used for event and mutation bubbling and for data ownership. Edges are created through `addParent()`/`removeParent()`, and they come from *data*, not layout: assigning a node-valued reactive property makes the owner a parent of that node, and `NodeArray` items are parented to the node that holds them. The graph follows ownership, not DOM placement.
 - **DOM tree** — the real `parentElement`/`childNodes` the browser maintains after vDOM reconciliation. Used for layout and native DOM events.
+- **VDOM children** — the array passed to `render()`. It describes what the DOM tree should become; it is not itself a live relation.
 
 Because the reactive graph is built from ownership rather than placement, a node can be a reactive child of one object while sitting elsewhere in the DOM — or nowhere in the DOM at all.
 
@@ -74,7 +75,7 @@ Synthetic events (including `io-mutation`) bubble by walking `_parents` recursiv
 - **ChangeQueue** - Detects property changes and dispatches change/mutation events and handlers
 - **FrameScheduler** - Generic frame scheduler with throttle and debounce capability
 - **Binding** - Manages two-way data flow; forward sync settles the outbound binding graph inside a shared binding wave
-- **BindingWave** - Epoch that defers spoke `dispatchQueue` until parallel networks in one ChangeQueue pass have all settled
+- **Binding wave** - Epoch (`enterBindingEpoch`/`leaveBindingEpoch`) that defers spoke `dispatchQueue` until parallel networks in one ChangeQueue pass have all settled
 - **VDOM** - Virtual DOM implementation for efficient rendering
 
 ### Registration
@@ -191,7 +192,7 @@ class MyObject extends MySuperObject {
 
 ### Property Declaration Fields
 
-Now let's get into each specific field of the PropertyDeclaration object. Note that each field is optional.
+Now let's get into each specific field of the property definition object (`PropertyDefinition`). Note that each field is optional.
 
 | field   | type       | default     | description                                 |
 | :------ | :--------: | :---------: | :------------------------------------------ |
@@ -199,10 +200,11 @@ Now let's get into each specific field of the PropertyDeclaration object. Note t
 | type    | `Function` | `undefined` | The type of the property                    |
 | init    | `any`      | `undefined` | Specifies how to initialize object property |
 | reflect | `boolean`  | `false`     | Reflects property to attribute              |
+| binding | `Binding`  | `undefined` | Binds the property to another node's property |
 
 We already covered `value` and `type` in examples above. Now let's dig into the other fields.
 
-**`init`** field is `undefined` by default and it can be used in conjunction with an object constructor in the `type` field. `init: null` will initialize the constructor without any arguments, `"this"` will pass the object itself as the argument. You can also specify arguments as arrays.
+**`init`** field is `undefined` by default and it can be used in conjunction with an object constructor in the `type` field. `init: null` will initialize the constructor without any arguments, `"this"` will pass the object itself as the argument, and a `"this.path.to.value"` string will pass the value found at that path on the object. You can also specify arguments as arrays (spread as constructor arguments) or as an object (passed as a single props argument); `"this"` strings are resolved inside both.
 
 **`reflect`** field is `false` by default and it can enable reflection of properties to attributes in DOM elements. Enabling this on properties of objects makes no effect. Reflected attributes can be used for CSS selectors for example.
 
@@ -250,7 +252,7 @@ The above style rule is effectively the same as adding the following style block
 </style>
 ```
 
-In fact, this is automatically done by the `Register` decorator. Each element will have its own style block inside the document head.
+In fact, this is automatically done by the `Register` decorator. Each element's processed style is added to the document as its own adopted stylesheet (`document.adoptedStyleSheets`).
 
 ### Theming
 
@@ -267,7 +269,7 @@ CSS mixins are a feature polyfilled by `ReactiveElement`. It allows you to defin
 }
 ```
 
-To use the mixin in any element use `@apply` CSS rule. It is important that the element defining the mixin is declared before the element(s) using the mixin.
+To use the mixin in any element use `@apply` CSS rule. It is important that the element defining the mixin is registered before the element(s) using the mixin.
 
 ```css
 :host {
@@ -295,7 +297,7 @@ class MyElement extends ReactiveElement {
 
 Listeners with handlers specified with `string` value assume that a function with that name exists on the class.
 
-> **Note:** Function names prefixed with `on` or `_` are automatically bound to class instances. Also functions suffixed with `Changed`, `Debounced` or `Throttled` are automatically bound to instance.
+> **Note:** Function names prefixed with `on` or `_on` (followed by an uppercase letter) are automatically bound to class instances. So are `mutated()` and functions suffixed with `Changed`, `Mutated`, `Debounced` or `Throttled`.
 
 You can also specify handlers as functions such as:
 
@@ -396,7 +398,7 @@ Here is a simple element expressed in the Io-Gui template syntax:
 
 ```javascript
 myElement({prop: "propvalue"}, "Hello io!")
-// returns {tag: 'my-element', props: {prop: "propvalue"}, children: 'Hello io!'}
+// returns {tag: 'my-element', props: {prop: "propvalue"}, children: ['Hello io!']}
 ```
 
 DOM output:
@@ -405,16 +407,14 @@ DOM output:
 <my-element prop="propvalue">Hello io!</my-element>
 ```
 
-The first array item is element name's, followed by **optional** properties and innerText or an array of children.
+Each vDOM factory takes **optional** properties, followed by text content or an array of children.
 
 Here is a slightly more complex vDOM tree with array iterator:
 
 ```javascript
 this.render([
   h4('Array indices:'),
-  div([
-    this.items.map(i => span({class: 'item'}, i))
-  ])
+  div(this.items.map(i => span({class: 'item'}, String(i))))
 ])
 ```
 
@@ -434,7 +434,8 @@ DOM output:
 * render() can be brute-forced while DOM updates as performed when needed.
 * Inline event listeners can be added using `"@"` syntax
 * References are created using `"id"` property and are accessible as `this.$[id]`.
-* VDOM templates do not set HTML attributes - only properties are set.
+* VDOM templates set properties, not HTML attributes. The exception is `data-*` props, which are set as attributes.
+* Children are reconciled by position and tag name: an element whose tag matches the template is updated in place, otherwise it is replaced.
 
 ### Data Binding
 
@@ -469,4 +470,4 @@ Bindings listen for `[prop]-changed` on the source and on each target. Leaf→hu
 
 ## Reactive WebGL Elements
 
-One of the unique features of Io-Gui is its ability to render custom elements using WebGL shaders. Elements that extend the `IoGl` element have the ability to render their contents using GLSL shading language. Element properties and CSS theme variables are reactively mapped to shader uniforms.  
+One of the unique features of Io-Gui is its ability to render custom elements using WebGL shaders. Elements that extend the `IoGl` element have the ability to render their contents using GLSL shading language. Element properties and CSS theme variables are reactively mapped to shader uniforms.

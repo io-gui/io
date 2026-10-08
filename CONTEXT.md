@@ -29,5 +29,5 @@ Io-Gui has one foundational context (the reactive core) plus application-domain 
 - **Menus → Editors**: Default editor widgets include `ioOptionSelect` with Menu models for enum-like properties.
 - **Layout Drawer ≠ Navigation IoNavigatorDrawer**: Same everyday word, different packages and jobs (collapsed Split child vs navigator chrome host).
 - **Editors → inspected objects**: Inspects arbitrary objects; ReactiveNodes get live `io-mutation` updates. Non-nodes need `dispatchMutation()` after in-place edits.
-- **Three → Editors**: Importing `@io-gui/three` registers PropertyConfigs / EditorGroups for Three.js classes. ThreeApplet may supply `uiConfig` / `uiGroups`.
+- **Three → Editors**: Importing `@io-gui/three` registers PropertyConfigs / EditorGroups for Three.js classes (including ThreeApplet itself).
 - **Markdown → Navigation**: Rendered headings expose `data-heading` for selector Anchor sync.

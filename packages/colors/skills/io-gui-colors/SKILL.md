@@ -11,7 +11,7 @@ description: >-
 
 - Import from `@io-gui/colors`.
 - Element `value` is **ColorValue**: `{r,g,b,a?}` each **0–1**, plain object.
-- Compact UI: `IoColorPicker` → expands `IoColorPanelSingleton`. Expanded: `IoColorRgba`.
+- Compact UI: `IoColorPicker` → expands `IoColorPanelSingleton`. Inline per-channel number fields + picker: `IoColorRgba`.
 
 ## Gotchas
 

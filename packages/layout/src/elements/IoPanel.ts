@@ -1,5 +1,5 @@
-import { Register, ReactiveElement, VDOMElement, ReactiveElementProps, Property, CallbackFunction } from '@io-gui/core'
-import { ioSelector } from '@io-gui/navigation'
+import { Register, ReactiveElement, ReactiveElementProps, Property, CallbackFunction } from '@io-gui/core'
+import { ioSelector, SelectorElement } from '@io-gui/navigation'
 import { ioTabs } from './IoTabs.js'
 import { Tab } from '../models/Tab.js'
 import { Panel } from '../models/Panel.js'
@@ -7,7 +7,7 @@ import { TabActions } from './IoTab.js'
 
 export type IoPanelData = ReactiveElementProps & {
   model: Panel
-  elements: VDOMElement[]
+  elements: SelectorElement[]
 }
 
 @Register
@@ -28,7 +28,7 @@ export class IoPanel extends ReactiveElement {
   declare model: Panel
 
   @Property(Array)
-  declare elements: VDOMElement[]
+  declare elements: SelectorElement[]
 
   static override get Listeners() {
     return {

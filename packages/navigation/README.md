@@ -33,6 +33,7 @@ type IoNavigatorProps = {
   caching?: 'proactive' | 'reactive' | 'none'
   anchor?: string               // Scroll anchor
   widget?: VDOMElement          // Custom menu widget
+  minWidth?: number             // Below this width (px) the menu collapses (default 570)
 }
 ```
 
@@ -99,20 +100,20 @@ type IoSelectorProps = {
 
 ### Dynamic Imports
 
-Elements can specify an `import` path for lazy loading:
+Entries can specify an `import` path for lazy loading. `import` sits next to `tag` and `props`, not inside `props`: the selector reads it and imports the module before rendering the entry, and it is never passed to the element.
 
 ```typescript
 ioSelector({
   selected: 'heavy-page',
   elements: [
     div({ id: 'light-page' }, 'Immediate content'),
-    div({ 
-      id: 'heavy-page',
-      import: './pages/heavy-page.js'  // Loaded on demand
-    }),
+    { tag: 'heavy-page', props: { id: 'heavy-page' }, import: './pages/heavy-page.js' },
+    { ...div({ id: 'other-page' }), import: './pages/other-page.js' },
   ]
 })
 ```
+
+Use a plain `{ tag, props }` literal for elements defined by the imported module; importing their factory up front would defeat lazy loading. Entries are typed as `SelectorElement` (`VDOMElement & { import?: string }`).
 
 **Loading flow:**
 1. Shows loading spinner

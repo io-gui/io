@@ -31,13 +31,20 @@ function importModule(path: string) {
 
 export type CachingType = 'proactive' | 'reactive' | 'none'
 
+/**
+ * Selector entry. `import` sits next to `tag` and `props` (not inside `props`) because it is
+ * read by the selector, not by the element: the module is imported before the element is rendered.
+ **/
+export type SelectorElement = VDOMElement & {
+  import?: string
+}
+
 export type IoSelectorProps = ReactiveElementProps & {
-  elements?: VDOMElement[]
+  elements?: SelectorElement[]
   selected?: WithBinding<string>
   anchor?: WithBinding<string>
   caching?: CachingType
   loading?: WithBinding<boolean>
-  import?: string // TODO: move to core?
 }
 
 @Register
@@ -82,7 +89,7 @@ export class IoSelector extends ReactiveElement {
   }
 
   @Property({type: Array, init: null})
-  declare elements: VDOMElement[]
+  declare elements: SelectorElement[]
 
   @Property({value: '', type: String})
   declare selected: string
@@ -198,7 +205,7 @@ export class IoSelector extends ReactiveElement {
     this.render([], this, cache)
     this.scrollTo(0, 0)
 
-    const vElement = this.elements.find((element: VDOMElement) => { return element.props?.id === id })
+    const vElement = this.elements.find((element: SelectorElement) => { return element.props?.id === id })
 
     if (!vElement) {
       console.warn(`IoSelector: Could not find elements with id: "${id}"!`)
@@ -206,7 +213,7 @@ export class IoSelector extends ReactiveElement {
       return
     }
 
-    const importPath = vElement.props?.import
+    const importPath = vElement.import
 
     if (!importPath) {
       this.debounce(this.renderDebounced as CallbackFunction, vElement)
@@ -250,20 +257,20 @@ export class IoSelector extends ReactiveElement {
       const props = vElement.props!
       const id = props.id
       if (id && this._caches[id] === undefined) {
-        if (!props.import) {
+        if (!vElement.import) {
           this.render([vElement], dummyElement, true)
           this._caches[id] = dummyElement.childNodes[0] as HTMLElement
           dummyElement.removeChild(dummyElement.childNodes[0])
           this.debounce(this.preacheNext)
           return
         } else {
-          void importModule(props.import).then(() => {
+          void importModule(vElement.import).then(() => {
             if (!this._preaching) return
             this.render([vElement], dummyElement, true)
             this._caches[id] = dummyElement.childNodes[0] as HTMLElement
             dummyElement.removeChild(dummyElement.childNodes[0])
             this.debounce(this.preacheNext)
-            delete props.import
+            delete vElement.import
           })
           return
         }

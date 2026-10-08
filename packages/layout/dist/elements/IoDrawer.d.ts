@@ -1,4 +1,5 @@
 import { ReactiveElement, ReactiveElementProps, VDOMElement } from '@io-gui/core';
+import { SelectorElement } from '@io-gui/navigation';
 import { Split } from '../models/Split.js';
 import { Panel } from '../models/Panel.js';
 import { IoSplit } from './IoSplit.js';
@@ -9,7 +10,7 @@ export type IoDrawerProps = ReactiveElementProps & {
     direction: DrawerDirection;
     parent: IoSplit;
     model: Split | Panel | null;
-    elements: VDOMElement[];
+    elements: SelectorElement[];
 };
 export declare class IoDrawer extends ReactiveElement {
     static get Style(): string;
@@ -18,7 +19,7 @@ export declare class IoDrawer extends ReactiveElement {
     expanded: boolean;
     parent: IoSplit;
     model: Split | Panel;
-    elements: VDOMElement[];
+    elements: SelectorElement[];
     static get Listeners(): {
         'io-divider-move': string;
         'io-divider-move-end': string;

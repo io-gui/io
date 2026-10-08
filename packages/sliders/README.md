@@ -96,6 +96,7 @@ type IoNumberSliderProps = {
   max?: number
   exponent?: number
   conversion?: number  // Display multiplier (default 1)
+  disabled?: boolean
 }
 ```
 
