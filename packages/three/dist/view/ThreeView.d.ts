@@ -52,6 +52,8 @@ export declare class ThreeView extends ReactiveObject {
     private readonly _sceneOrthographic;
     /** Scene camera name `setCameraView` waits for (`''` = first scene camera); null when none is pending. */
     private _cameraSourceName;
+    /** What `setCameraView` asked for by name (`''` = first scene camera), looked for again in each document shown; null otherwise. */
+    private _cameraRequest;
     /** Last scene camera found for `navigation.cameraSource`; reused while it is still in the scene. */
     private _sourceCamera;
     /** A `cameraSource` uuid not found in the scene; not searched again until the current task ends. */
@@ -82,7 +84,8 @@ export declare class ThreeView extends ReactiveObject {
     setOverlay(id: string, enabled: boolean): void;
     /**
      * Stores the current navigation for `fromDocument` and restores the one saved for `toDocument`,
-     * or starts unframed (the viewport then frames the new scene).
+     * or starts unframed in the same axis view (the viewport then frames the new scene). A view set with
+     * `setCameraView()` or `setCameraView('name:…')` looks for that camera in the new document.
      */
     switchDocument(fromDocument: string | null, toDocument: string): void;
     /** The scene camera this view looks through, if it is set and present in `scene`. */

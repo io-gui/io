@@ -5,11 +5,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register, ReactiveObject, Property, Field } from '@io-gui/core';
-import { MathUtils, NoToneMapping, Scene } from 'three/webgpu';
+import { MathUtils, NoToneMapping, Scene, ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, LinearToneMapping, NeutralToneMapping, ReinhardToneMapping } from 'three/webgpu';
 import { ChangeBus } from './ChangeBus.js';
 import { changeKindForPatch, insertChild, invertPatch, resolvePath, writeValue } from './Patch.js';
 import { Transaction } from './Transaction.js';
 import { isDescendant } from '../utils/sceneGraph.js';
+import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
+import { ioNumberSlider } from '@io-gui/sliders';
+import { ioOptionSelect, Menu } from '@io-gui/menus';
 const HISTORY_LIMIT = 100;
 /**
  * The content of a ThreeEditor (ADR-0002): the scene of authored objects plus scene render settings.
@@ -25,6 +28,8 @@ let ThreeDocument = class ThreeDocument extends ReactiveObject {
     _misses = new Set();
     _active = null;
     _history = [];
+    /** Renderers `onRendererInitialized` has run for. */
+    _renderers = new WeakSet();
     constructor(args) {
         super(args);
     }
@@ -100,8 +105,27 @@ let ThreeDocument = class ThreeDocument extends ReactiveObject {
         for (const patch of transaction.patches)
             this._applyPatch(patch);
     }
+    /**
+     * Called once per renderer, when it is ready and about to draw this document for the first time
+     * (a document opened later still gets it). Do GPU setup here: compute passes, PMREM environments.
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onRendererInitialized(renderer) { }
+    /**
+     * Called each frame while the editor showing this document plays (`isPlaying`), after the editor's `onAnimate`.
+     * Views redraw after it; scene writes here bypass transactions.
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onAnimate(delta, time) { }
     mutated() {
         this.notify({ kind: 'settings' });
+    }
+    /** @internal Called by viewports before each draw; runs `onRendererInitialized` once per renderer. */
+    _prepareRenderer(renderer) {
+        if (this._renderers.has(renderer))
+            return;
+        this._renderers.add(renderer);
+        void this.onRendererInitialized(renderer);
     }
     /** @internal Applies a patch and reports it. */
     _applyPatch(patch) {
@@ -166,9 +190,28 @@ __decorate([
     Property({ type: Number, value: 1 })
 ], ThreeDocument.prototype, "toneMappingExposure", void 0);
 __decorate([
+    Property({ type: Boolean, value: false })
+], ThreeDocument.prototype, "autoplay", void 0);
+__decorate([
     Field(ChangeBus)
 ], ThreeDocument.prototype, "changeBus", void 0);
 ThreeDocument = __decorate([
     Register
 ], ThreeDocument);
 export { ThreeDocument };
+registerEditorConfig(ThreeDocument, [
+    ['toneMappingExposure', ioNumberSlider({ min: 0, max: 3, step: 0.01, exponent: 2 })],
+    ['toneMapping', ioOptionSelect({ model: new Menu({ options: [
+                    { value: NoToneMapping, id: 'NoToneMapping' },
+                    { value: LinearToneMapping, id: 'LinearToneMapping' },
+                    { value: ReinhardToneMapping, id: 'ReinhardToneMapping' },
+                    { value: CineonToneMapping, id: 'CineonToneMapping' },
+                    { value: ACESFilmicToneMapping, id: 'ACESFilmicToneMapping' },
+                    { value: AgXToneMapping, id: 'AgXToneMapping' },
+                    { value: NeutralToneMapping, id: 'NeutralToneMapping' },
+                ] }) })],
+]);
+registerEditorGroups(ThreeDocument, {
+    Main: ['toneMapping', 'toneMappingExposure'],
+    Advanced: [new RegExp(/^[\s\S]*$/)]
+});

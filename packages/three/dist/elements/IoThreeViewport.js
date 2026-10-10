@@ -319,6 +319,7 @@ let IoThreeViewport = class IoThreeViewport extends ReactiveElement {
         if (editor.isRendererInitialized() === false) {
             void editor.onRendererInitialized(this.renderer);
         }
+        document._prepareRenderer(this.renderer);
         const renderer = this.renderer;
         renderer.setCanvasTarget(this.renderTarget);
         renderer.setSize(this.width, this.height);

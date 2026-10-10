@@ -29,9 +29,7 @@ registerEditorGroups(Object3D, {
     Advanced: [
         'quaternion', 'up',
         'matrix', 'matrixWorld', 'normalMatrix', 'matrixWorldInverse', 'modelViewMatrix',
-        'matrixAutoUpdate', 'matrixWorldAutoUpdate', 'matrixWorldNeedsUpdate'
+        'matrixAutoUpdate', 'matrixWorldAutoUpdate', 'matrixWorldNeedsUpdate', 'static', 'parent', 'children'
     ],
-    Hidden: [
-        'static', 'parent', 'children'
-    ],
+    Hidden: [],
 });

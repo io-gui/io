@@ -1,5 +1,5 @@
 import { ReactiveObject, ReactiveObjectProps } from '@io-gui/core';
-import type { Object3D } from 'three/webgpu';
+import { Object3D } from 'three/webgpu';
 import type { ThreeDocument } from '../editor/ThreeDocument.js';
 import { ComponentSet } from './ComponentSet.js';
 /**
@@ -26,6 +26,7 @@ export declare class SelectionModel extends ReactiveObject {
     version: number;
     /** uuid of the active object, or `''`. */
     active: string;
+    activeObject: Object3D | undefined;
     uvSync: boolean;
     readonly document: ThreeDocument;
     /** The component domain edit mode returns to (`domain` is `'object'` outside edit mode). */

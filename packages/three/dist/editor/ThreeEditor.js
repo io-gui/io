@@ -13,6 +13,7 @@ import { SelectionModel } from '../selection/SelectionModel.js';
 import { translateOperatorType } from '../tools/operators/TranslateOperator.js';
 import { translateTool } from '../tools/TranslateTool.js';
 import { editModeToggleOperatorType, selectModeOperatorType } from '../tools/operators/EditModeOperators.js';
+import { registerEditorGroups } from '@io-gui/editors';
 /**
  * The app object (ADR-0002): one active ThreeDocument (switchable at runtime), the editor mode,
  * playback, operators and tools. Viewports read `editor.document`; they never hold a document themselves.
@@ -75,6 +76,7 @@ let ThreeEditor = class ThreeEditor extends ReactiveObject {
         if (!this.isPlaying)
             return;
         this.onAnimate(frame.delta, frame.time);
+        this.document.onAnimate(frame.delta, frame.time);
         this.document.notify({ kind: 'time' });
     }
     /** Reports a change in the active document (the source is always the document). */
@@ -124,3 +126,7 @@ ThreeEditor = __decorate([
     Register
 ], ThreeEditor);
 export { ThreeEditor };
+// Session and runtime state of the editor stay out of property editors that show an editor subclass.
+registerEditorGroups(ThreeEditor, {
+    Hidden: [new RegExp(/^_/), 'isPlaying', 'changeBus', 'document', 'selection', 'mode', 'activeTools', 'operators', 'tools'],
+});

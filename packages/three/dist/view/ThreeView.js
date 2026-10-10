@@ -24,6 +24,8 @@ let ThreeView = class ThreeView extends ReactiveObject {
     _sceneOrthographic = new OrthographicCamera();
     /** Scene camera name `setCameraView` waits for (`''` = first scene camera); null when none is pending. */
     _cameraSourceName = null;
+    /** What `setCameraView` asked for by name (`''` = first scene camera), looked for again in each document shown; null otherwise. */
+    _cameraRequest = null;
     /** Last scene camera found for `navigation.cameraSource`; reused while it is still in the scene. */
     _sourceCamera = null;
     /** A `cameraSource` uuid not found in the scene; not searched again until the current task ends. */
@@ -45,6 +47,7 @@ let ThreeView = class ThreeView extends ReactiveObject {
     setAxisView(axis) {
         this.navigation.cameraSource = null;
         this._cameraSourceName = null;
+        this._cameraRequest = null;
         this.navigation.setAxisView(axis);
         this.markNavigationChanged();
         return this;
@@ -60,14 +63,15 @@ let ThreeView = class ThreeView extends ReactiveObject {
         this.navigation.cameraSource = null;
         this._cameraSourceName = null;
         this.navigation.setAxisView('free');
+        this._cameraRequest = null;
         if (id === null) {
-            this._cameraSourceName = '';
+            this._cameraSourceName = this._cameraRequest = '';
         }
         else if (id.startsWith('uuid:')) {
             this.navigation.cameraSource = id.slice(5);
         }
         else if (id.startsWith('name:')) {
-            this._cameraSourceName = id.slice(5);
+            this._cameraSourceName = this._cameraRequest = id.slice(5);
         }
         else {
             console.warn(`ThreeView.setCameraView: "${id}" needs a "uuid:" or "name:" prefix; using the free view`);
@@ -96,7 +100,8 @@ let ThreeView = class ThreeView extends ReactiveObject {
     }
     /**
      * Stores the current navigation for `fromDocument` and restores the one saved for `toDocument`,
-     * or starts unframed (the viewport then frames the new scene).
+     * or starts unframed in the same axis view (the viewport then frames the new scene). A view set with
+     * `setCameraView()` or `setCameraView('name:…')` looks for that camera in the new document.
      */
     switchDocument(fromDocument, toDocument) {
         if (fromDocument === toDocument)
@@ -104,10 +109,16 @@ let ThreeView = class ThreeView extends ReactiveObject {
         if (fromDocument)
             this._navigationByDocument.set(fromDocument, this.navigation.toJSON());
         const saved = this._navigationByDocument.get(toDocument);
-        if (saved)
+        if (saved) {
             this.navigation.applyJSON(saved);
-        else
+        }
+        else {
+            const axisView = this.navigation.axisView;
             this.navigation.copy(new ViewNavigation()).framed = false;
+            this.navigation.setAxisView(axisView);
+        }
+        // A view on the first or a named scene camera looks for it in a document where it has none yet.
+        this._cameraSourceName = this._cameraRequest !== null && !this.navigation.cameraSource ? this._cameraRequest : null;
         this.markNavigationChanged();
     }
     /** The scene camera this view looks through, if it is set and present in `scene`. */

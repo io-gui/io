@@ -5,6 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register, ReactiveObject, Property } from '@io-gui/core';
+import { Object3D } from 'three/webgpu';
 import { ComponentSet } from './ComponentSet.js';
 /**
  * Session selection of one document (ADR-0007): object uuids, the active object, and component bitsets per
@@ -112,7 +113,10 @@ let SelectionModel = class SelectionModel extends ReactiveObject {
         this._objects.clear();
         for (const uuid of objects)
             this._objects.add(uuid);
-        this.setProperties({ active, domain, version: this.version + 1 });
+        this.setProperties({
+            active, domain, version: this.version + 1,
+            activeObject: this.document.getObject(active),
+        });
         this.document.notify({ kind: 'selection', ids: changed.size ? [...changed] : [active] });
         return true;
     }
@@ -161,6 +165,9 @@ __decorate([
 __decorate([
     Property({ type: String, value: '' })
 ], SelectionModel.prototype, "active", void 0);
+__decorate([
+    Property({ type: Object3D, value: undefined })
+], SelectionModel.prototype, "activeObject", void 0);
 __decorate([
     Property({ type: Boolean, value: false })
 ], SelectionModel.prototype, "uvSync", void 0);

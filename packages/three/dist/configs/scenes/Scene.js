@@ -25,5 +25,6 @@ registerEditorGroups(Scene, {
         'environmentRotation',
         'overrideMaterial',
     ],
-    Advanced: [''],
+    // Advanced: [''],
+    // Advanced: [new RegExp(/^[\s\S]*$/)]
 });
