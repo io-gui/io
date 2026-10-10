@@ -4,6 +4,35 @@ import { IoLayout, IoPanel, Layout, Split } from '@io-gui/layout'
 
 describe('IoLayout', () => {
 
+  describe('add menu', () => {
+
+    let layout: IoLayout
+
+    afterEach(() => {
+      layout?.dispose()
+      layout?.remove()
+    })
+
+    it('nests elements that share a group', () => {
+      layout = new IoLayout({
+        model: new Layout({
+          child: { type: 'panel', tabs: [{ id: 'tab1' }] },
+        }),
+        elements: [
+          {tag: 'div', props: {id: 'Top', label: 'Top'}, group: 'view'},
+          {tag: 'div', props: {id: 'Inspector', label: 'Inspector'}},
+          {tag: 'div', props: {id: 'Front', label: 'Front'}, group: 'view'},
+        ],
+      })
+
+      const options = layout.$addMenu.model.options
+      expect(options.map(option => option.id)).toEqual(['view', 'Inspector'])
+      expect(options[0].options.map(option => option.id)).toEqual(['Top', 'Front'])
+      expect(options[1].options.length).toBe(0)
+    })
+
+  })
+
   describe('dispose', () => {
 
     let layout: IoLayout

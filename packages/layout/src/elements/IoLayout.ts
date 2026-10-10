@@ -6,16 +6,18 @@ import { Split } from '../models/Split.js'
 import { Panel } from '../models/Panel.js'
 import { ioSplit } from './IoSplit.js'
 import { ioPanel, IoPanel } from './IoPanel.js'
-import { IoMenu, Menu } from '@io-gui/menus'
+import { IoMenu, Menu, OptionProps } from '@io-gui/menus'
 import { Tab } from '../models/Tab.js'
 import { IoTab, TabDragPhase } from './IoTab.js'
 import { IoTabDragGhost } from './IoTabDragGhost.js'
 import { DropTarget } from './IoTabDragGhost.js'
 import { resolveDropIndex, resolveSplitEdge } from '../utils/dropZone.js'
 
+export type LayoutElement = SelectorElement & { group?: string }
+
 export type IoLayoutData = ReactiveElementProps & {
   model: WithBinding<Layout>
-  elements: SelectorElement[]
+  elements: LayoutElement[]
 }
 
 @Register
@@ -38,7 +40,7 @@ export class IoLayout extends ReactiveElement {
   declare model: Layout
 
   @Property(Array)
-  declare elements: SelectorElement[]
+  declare elements: LayoutElement[]
 
   // TODO: Improve once Menu models have better (de)serialization
   @Property({type: IoMenu, init: null})
@@ -171,15 +173,28 @@ export class IoLayout extends ReactiveElement {
 
   elementsMutated() {
     // TODO: Improve once Menu models have better (de)serialization
-    this.$addMenu.model = new Menu({
-      id: 'root',
-      options: this.elements.map(element => ({
+    const options: OptionProps[] = []
+    const groups = new Map<string, OptionProps>()
+    for (const element of this.elements) {
+      const option: OptionProps = {
         id: element.props?.id,
         label: element.props?.label || element.props?.id,
         icon: element.props?.icon || '',
         action: this.addTab.bind(this, element),
-      })),
-    })
+      }
+      if (element.group) {
+        let group = groups.get(element.group)
+        if (!group) {
+          group = {id: element.group, label: element.group, options: []}
+          groups.set(element.group, group)
+          options.push(group)
+        }
+        group.options!.push(option)
+      } else {
+        options.push(option)
+      }
+    }
+    this.$addMenu.model = new Menu({id: 'root', options})
   }
 
   override mutated() {

@@ -16,7 +16,7 @@ export function sizeToPx(size: string): number {
 }
 
 export function sizeToFlex(size: string): string {
-  if (isAutoSize(size)) return '1 1 auto'
+  if (isAutoSize(size)) return '1 1 0%'
   return `0 0 ${size}`
 }
 
