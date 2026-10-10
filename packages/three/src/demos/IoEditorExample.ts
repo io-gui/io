@@ -1,10 +1,11 @@
 import { Register, ReactiveElement, ReactiveElementProps, Property, div, Field } from '@io-gui/core'
-import { ioBoolean, ioButton } from '@io-gui/inputs'
+import { ioBoolean, ioField } from '@io-gui/inputs'
 import { ioPropertyEditor } from '@io-gui/editors'
+import { ioOptionSelect, Menu } from '@io-gui/menus'
 import { Object3D } from 'three/webgpu'
 import { mrt, output, velocity } from 'three/tsl'
 import { traa } from 'three/addons/tsl/display/TRAANode.js'
-import { PostProcessingPipeline, SelectionModel, Document, Editor, ThreeView, threeViewport, pipelineTypes } from '@io-gui/three'
+import { PostProcessingPipeline, SelectionModel, Document, Editor, View, threeViewport, pipelineTypes } from '@io-gui/three'
 import { ioLayout, Layout } from '@io-gui/layout'
 import { threeEditorStatus } from '../elements/ThreeEditorStatus.js'
 
@@ -31,8 +32,7 @@ const editorLayout = new Layout({
                           { id: 'Front', selected: true },
                           { id: 'Back' }
                       ]
-                  },
-                  {
+                  }, {
                       type: 'panel',
                       tabs: [
                           { id: 'Right', selected: true },
@@ -41,8 +41,7 @@ const editorLayout = new Layout({
                   }
               ],
               orientation: 'vertical'
-          },
-          {
+          }, {
               type: 'split',
               size: 'auto',
               children: [
@@ -53,8 +52,7 @@ const editorLayout = new Layout({
                           { id: 'Top' },
                           { id: 'Bottom' }
                       ]
-                  },
-                  {
+                  }, {
                       type: 'panel',
                       tabs: [
                           { id: 'UV' },
@@ -63,12 +61,23 @@ const editorLayout = new Layout({
                   }
               ],
               orientation: 'vertical'
-          },
-          {
-              type: 'panel',
-              tabs: [
-                  { id: 'Inspector' },
-                  { id: 'Document' }
+          }, {
+              type: 'split',
+              orientation: 'vertical',
+              children: [
+                {
+                  type: 'panel',
+                  size: '320px',
+                  tabs: [
+                    { id: 'Document' }
+                  ]
+                }, {
+                  type: 'panel',
+                  size: 'auto',
+                  tabs: [
+                    { id: 'Inspector' },
+                  ]
+                }
               ],
               size: '253.0390625px'
           }
@@ -134,17 +143,17 @@ export class IoEditorExample extends ReactiveElement {
   declare editor: Editor
 
   @Field({
-    top: new ThreeView({pipeline: 'traa', overlays: {grid: true}}),
-    bottom: new ThreeView({pipeline: 'traa', overlays: {grid: true}}),
-    left: new ThreeView({pipeline: 'traa', overlays: {grid: true}}),
-    right: new ThreeView({pipeline: 'traa', overlays: {grid: true}}),
-    front: new ThreeView({pipeline: 'traa', overlays: {grid: true}}),
-    back: new ThreeView({pipeline: 'traa', overlays: {grid: true}}),
-    perspective: new ThreeView({overlays: {grid: true}}),
-    uv: new ThreeView({kind: 'uv', profile: 'select'}),
-    camera: new ThreeView({profile: 'select'}),
+    top: new View({pipeline: 'traa', overlays: {grid: true}}),
+    bottom: new View({pipeline: 'traa', overlays: {grid: true}}),
+    left: new View({pipeline: 'traa', overlays: {grid: true}}),
+    right: new View({pipeline: 'traa', overlays: {grid: true}}),
+    front: new View({pipeline: 'traa', overlays: {grid: true}}),
+    back: new View({pipeline: 'traa', overlays: {grid: true}}),
+    perspective: new View({overlays: {grid: true}}),
+    uv: new View({kind: 'uv', profile: 'select'}),
+    camera: new View({profile: 'select'}),
   })
-  declare views: Record<'top' | 'bottom' | 'left' | 'right' | 'front' | 'back' | 'perspective' | 'uv' | 'camera', ThreeView>
+  declare views: Record<'top' | 'bottom' | 'left' | 'right' | 'front' | 'back' | 'perspective' | 'uv' | 'camera', View>
 
   /** Selection of the editor's current document; each document has its own. */
   @Property({type: SelectionModel})
@@ -177,44 +186,18 @@ export class IoEditorExample extends ReactiveElement {
 
     this.editor.setActiveTool('3d', 'object', 'transform.translate')
     this.selection = this.editor.selection
-    void this.open('EditorDocument1')
-    this.changed()
-  }
-
-  editorMutated() {
-    this.selection = this.editor.selection
-  }
-
-  selectionChanged() {
-    this.activeObject = this.selection.activeObject
-  }
-
-  selectionMutated() {
-    this.activeObject = this.selection.activeObject
-  }
-
-  documentNameChanged() {
-    this.changed()
-  }
-
-  async open(name: string) {
-    this.documentName = name
-    let loading = this._documents.get(name)
-    if (!loading) {
-      loading = DOCUMENTS[name]()
-      this._documents.set(name, loading)
-    }
-    const document = await loading
-    // Another document may have been asked for while this one loaded.
-    if (this.documentName !== name) return
-    this.editor.document = document
-    this.editor.isPlaying = document.autoplay
-  }
-
-  changed() {
+    
     this.render([
       div({class: 'heading'}, [
-        ...Object.keys(DOCUMENTS).map(name => ioButton({label: name, selected: name === this.documentName, action: () => this.open(name)})),
+        ioField({value: this.bind('documentName')}),
+        ioOptionSelect({
+          label: 'Load Example',
+          model: new Menu({
+            id: 'example-menu',
+            options: Object.keys(DOCUMENTS).map(name => ({id: name})),
+          }),
+          value: this.bind('documentName'),
+        }),
         ioBoolean({value: this.editor.bind('isPlaying'), true: 'Pause', false: 'Play'}),
       ]),
       ioLayout({class: 'content',
@@ -235,6 +218,38 @@ export class IoEditorExample extends ReactiveElement {
       }),
       threeEditorStatus({editor: this.editor}),
     ])
+
+    this.documentName = 'EditorDocument1'
+  }
+
+  editorMutated() {
+    this.selection = this.editor.selection
+  }
+
+  selectionChanged() {
+    this.activeObject = this.selection.activeObject
+  }
+
+  selectionMutated() {
+    this.activeObject = this.selection.activeObject
+  }
+
+  documentNameChanged() {
+    void this.open(this.documentName)
+  }
+
+  async open(name: string) {
+    this.documentName = name
+    let loading = this._documents.get(name)
+    if (!loading) {
+      loading = DOCUMENTS[name]()
+      this._documents.set(name, loading)
+    }
+    const document = await loading
+    // Another document may have been asked for while this one loaded.
+    if (this.documentName !== name) return
+    this.editor.document = document
+    this.editor.isPlaying = document.autoplay
   }
 
   override dispose() {

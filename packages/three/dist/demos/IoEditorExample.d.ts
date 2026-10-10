@@ -1,6 +1,6 @@
 import { ReactiveElement, ReactiveElementProps } from '@io-gui/core';
 import { Object3D } from 'three/webgpu';
-import { SelectionModel, Editor, ThreeView } from '@io-gui/three';
+import { SelectionModel, Editor, View } from '@io-gui/three';
 /**
  * One Editor in tabbed views, each with its own pipeline (ADR-0006) and interaction profile: a forward
  * perspective view with the grid overlay and the Move tool, select-only axis views post-processed with TRAA, and a
@@ -16,7 +16,7 @@ import { SelectionModel, Editor, ThreeView } from '@io-gui/three';
 export declare class IoEditorExample extends ReactiveElement {
     static get Style(): string;
     editor: Editor;
-    views: Record<'top' | 'bottom' | 'left' | 'right' | 'front' | 'back' | 'perspective' | 'uv' | 'camera', ThreeView>;
+    views: Record<'top' | 'bottom' | 'left' | 'right' | 'front' | 'back' | 'perspective' | 'uv' | 'camera', View>;
     /** Selection of the editor's current document; each document has its own. */
     selection: SelectionModel;
     /**

@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { InputHost, InputRouter, NavigationBehavior, ThreeView, navigationKeymaps } from '@io-gui/three'
+import { InputHost, InputRouter, NavigationBehavior, View, navigationKeymaps } from '@io-gui/three'
 import { BoxGeometry, Mesh, PerspectiveCamera, Scene, Spherical, Vector3 } from 'three/webgpu'
 
 function createHost(): InputHost {
   const element = document.createElement('div') as unknown as InputHost
-  const view = new ThreeView({overscan: 1})
+  const view = new View({overscan: 1})
   const scene = new Scene()
   Object.assign(element, {view, scene, getViewCamera: () => view.getCamera(200, 100, scene)})
   element.style.cssText = 'position:fixed;left:0;top:0;width:200px;height:100px'
@@ -19,7 +19,7 @@ function drag(host: InputHost, from: [number, number], to: [number, number], opt
   host.dispatchEvent(new PointerEvent('pointerup', {...init, clientX: to[0], clientY: to[1]}))
 }
 
-function theta(view: ThreeView) {
+function theta(view: View) {
   return new Spherical().setFromVector3(new Vector3(0, 0, 1).applyQuaternion(view.navigation.rotation)).theta
 }
 

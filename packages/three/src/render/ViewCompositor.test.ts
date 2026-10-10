@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { ACESFilmicToneMapping, AgXToneMapping, Mesh, NeutralToneMapping, NoToneMapping, PlaneGeometry, Texture, WebGPURenderer } from 'three/webgpu'
-import { DirtyReason, ForwardPipeline, PipelineContext, SelectionModel, Editor, ThreeView, UVPipeline, ViewCompositor, ViewPipeline, collectUVMeshes, pipelineTypes } from '@io-gui/three'
+import { DirtyReason, ForwardPipeline, PipelineContext, SelectionModel, Editor, View, UVPipeline, ViewCompositor, ViewPipeline, collectUVMeshes, pipelineTypes } from '@io-gui/three'
 
 type FakeRenderer = WebGPURenderer & {renders: unknown[]}
 
@@ -34,7 +34,7 @@ describe('ViewCompositor', () => {
   let editor: Editor
   let renderer: FakeRenderer
   let compositor: ViewCompositor
-  let view: ThreeView
+  let view: View
 
   function context(reasons: DirtyReason[], width = 100): PipelineContext {
     return {
@@ -48,7 +48,7 @@ describe('ViewCompositor', () => {
     editor = new Editor()
     renderer = fakeRenderer()
     compositor = new ViewCompositor(renderer)
-    view = new ThreeView()
+    view = new View()
   })
 
   afterEach(() => {
@@ -136,7 +136,7 @@ describe('UVPipeline', () => {
     editor.document.scene.add(plane)
     expect(collectUVMeshes([editor.document.scene])).toEqual([plane])
 
-    const view = new ThreeView({kind: 'uv', overscan: 1})
+    const view = new View({kind: 'uv', overscan: 1})
     view.frameUV()
     expect(view.navigation.axisView).toBe('front')
     expect(view.navigation.target.toArray()).toEqual([0.5, 0.5, 0])

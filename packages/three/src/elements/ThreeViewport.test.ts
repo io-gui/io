@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { nextFrame } from '@io-gui/core'
-import { ThreeViewport, Document, Editor, ThreeView, renderScheduler, NavigationBehavior, navigationKeymaps } from '@io-gui/three'
+import { ThreeViewport, Document, Editor, View, renderScheduler, NavigationBehavior, navigationKeymaps } from '@io-gui/three'
 import { BoxGeometry, Mesh, PerspectiveCamera, WebGPURenderer } from 'three/webgpu'
 
 describe('ThreeViewport', () => {
@@ -30,12 +30,12 @@ describe('ThreeViewport', () => {
 
   it('owns a default view, or shows a given one without owning it', () => {
     const own = new ThreeViewport({ editor })
-    expect(own.view).toBeInstanceOf(ThreeView)
+    expect(own.view).toBeInstanceOf(View)
     const ownView = own.view
     own.dispose()
     expect(ownView._disposed).toBe(true)
 
-    const view = new ThreeView()
+    const view = new View()
     const shared = new ThreeViewport({ editor, view })
     expect(shared.view).toBe(view)
     shared.dispose()
@@ -44,7 +44,7 @@ describe('ThreeViewport', () => {
   })
 
   it('switches to a named scene camera once it is added to the scene', () => {
-    const viewport = new ThreeViewport({ editor, view: new ThreeView().setCameraView('name:late') })
+    const viewport = new ThreeViewport({ editor, view: new View().setCameraView('name:late') })
     expect(viewport.view.navigation.cameraSource).toBe(null)
     const late = new PerspectiveCamera()
     late.name = 'late'
@@ -62,7 +62,7 @@ describe('ThreeViewport', () => {
     const fresh = new ThreeViewport({ editor })
     expect(fresh.view.navigation.target.x).toBeCloseTo(10, 5)
 
-    const view = new ThreeView().applyJSON({navigation: {target: [1, 2, 3], distance: 5}})
+    const view = new View().applyJSON({navigation: {target: [1, 2, 3], distance: 5}})
     const restored = new ThreeViewport({ editor, view })
     expect(view.navigation.target.toArray()).toEqual([1, 2, 3])
     expect(view.navigation.distance).toBe(5)
@@ -72,7 +72,7 @@ describe('ThreeViewport', () => {
   })
 
   it('keeps navigation when a view moves to a new viewport element', async () => {
-    const view = new ThreeView()
+    const view = new View()
     const first = new ThreeViewport({ editor, view })
     container.appendChild(first as Node)
     view.setAxisView('front')
@@ -102,7 +102,7 @@ describe('ThreeViewport', () => {
   })
 
   it('redraws every viewport of a view on camera moves without a reactive mutation', () => {
-    const view = new ThreeView()
+    const view = new View()
     const a = new ThreeViewport({ editor, view })
     const b = new ThreeViewport({ editor, view })
     container.append(a as Node, b as Node)
@@ -196,11 +196,11 @@ describe('ThreeViewport', () => {
 
   it('rebuilds tool behaviors with the new view when the view is swapped', () => {
     const editor = new Editor()
-    const views: ThreeView[] = []
+    const views: View[] = []
     editor.tools.register({id: 'probe', label: 'Probe', viewKinds: ['3d'], modes: ['object'], createBehaviors: ctx => { views.push(ctx.view); return [] }})
     editor.setActiveTool('3d', 'object', 'probe')
     const viewport = new ThreeViewport({ editor })
-    const next = new ThreeView()
+    const next = new View()
     viewport.view = next
     expect(views.at(-1)).toBe(next)
     viewport.dispose()

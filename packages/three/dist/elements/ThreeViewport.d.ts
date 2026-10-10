@@ -1,7 +1,7 @@
 import { ReactiveElement, ReactiveElementProps, Change, WithBinding } from '@io-gui/core';
 import { WebGPURenderer, CanvasTarget, Scene, Object3D, OrthographicCamera, PerspectiveCamera } from 'three/webgpu';
 import { Editor } from '../editor/Editor.js';
-import { ThreeView } from '../view/ThreeView.js';
+import { View } from '../view/View.js';
 import { InputRouter } from '../input/InputRouter.js';
 import { Keymap } from '../input/Keymap.js';
 import { NavigationBehavior } from '../input/behaviors/NavigationBehavior.js';
@@ -17,10 +17,10 @@ export type ThreeViewportProps = ReactiveElementProps & {
     /** The editor whose active document this viewport shows. */
     editor?: WithBinding<Editor>;
     /**
-     * View state to show, including its camera (`new ThreeView().setAxisView('top')`, `.setCameraView('name:shot')`).
+     * View state to show, including its camera (`new View().setAxisView('top')`, `.setCameraView('name:shot')`).
      * Pass one to keep navigation across remounts; otherwise the viewport makes its own default perspective view.
      */
-    view?: WithBinding<ThreeView>;
+    view?: WithBinding<View>;
     /** Navigation and selection bindings (default: `keymaps.default`, OrbitControls-like navigation). */
     keymap?: Keymap;
     renderer?: WebGPURenderer;
@@ -30,7 +30,7 @@ export declare class ThreeViewport extends ReactiveElement implements ScheduledV
     height: number;
     visible: boolean;
     editor: Editor;
-    view: ThreeView;
+    view: View;
     renderer: WebGPURenderer;
     keymap: Keymap;
     tabIndex: number;
@@ -74,7 +74,7 @@ export declare class ThreeViewport extends ReactiveElement implements ScheduledV
     /** Marks this viewport for redraw on the next frame. */
     tag(reason: DirtyReason): void;
     isRenderable(): boolean;
-    getPriority(): 0 | 1 | 2;
+    getPriority(): 1 | 0 | 2;
     listens(change: DocumentChange): DirtyReason | false;
     onRendererError(error: Error): void;
     /** The camera this viewport draws and picks with, built from its view at the current size. */
@@ -100,7 +100,7 @@ export declare class ThreeViewport extends ReactiveElement implements ScheduledV
     rendererChanged(change: Change<WebGPURenderer>): void;
     editorChanged(): void;
     editorMutated(): void;
-    viewChanged(change: Change<ThreeView>): void;
+    viewChanged(change: Change<View>): void;
     keymapChanged(): void;
     viewMutated(): void;
     mutated(): void;

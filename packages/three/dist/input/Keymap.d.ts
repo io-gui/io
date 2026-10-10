@@ -1,4 +1,4 @@
-import type { ViewKind } from '../view/ThreeView.js';
+import type { ViewKind } from '../view/View.js';
 import type { ViewInputEvent, Modifiers } from './ViewInputEvent.js';
 /**
  * One binding, as data. `input` grammar: optional modifiers joined with `+`, then one of

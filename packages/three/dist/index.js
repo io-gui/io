@@ -60,7 +60,7 @@ export * from './tools/operators/EditModeOperators.js';
 export * from './tools/TranslateTool.js';
 export * from './elements/ThreeBuildGeometry.js';
 export * from './elements/ThreeViewport.js';
-export * from './view/ThreeView.js';
+export * from './view/View.js';
 export * from './view/ViewNavigation.js';
 export * from './input/Behavior.js';
 export * from './input/ViewInputEvent.js';

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { ThreeView, ViewNavigation } from '@io-gui/three'
+import { View, ViewNavigation } from '@io-gui/three'
 import { Box3, BoxGeometry, BufferAttribute, Mesh, OrthographicCamera, PerspectiveCamera, Scene, Vector3 } from 'three/webgpu'
 
 function forwardOf(camera: PerspectiveCamera | OrthographicCamera) {
@@ -71,12 +71,12 @@ describe('ViewNavigation', () => {
   })
 })
 
-describe('ThreeView', () => {
+describe('View', () => {
   it('builds a perspective camera aimed at the framed AABB center with the box inside clip planes', () => {
     const mesh = new Mesh(new BoxGeometry(2, 2, 2))
     mesh.position.set(100, 50, -80)
     mesh.updateMatrixWorld(true)
-    const view = new ThreeView()
+    const view = new View()
     view.frame(mesh)
 
     const camera = view.getCamera(400, 400, null) as PerspectiveCamera
@@ -102,7 +102,7 @@ describe('ThreeView', () => {
   })
 
   it('applies viewport aspect and overscan without storing them', () => {
-    const view = new ThreeView({overscan: 2})
+    const view = new View({overscan: 2})
     const wide = view.getCamera(800, 400, null) as PerspectiveCamera
     expect(wide.aspect).toBeCloseTo(2, 5)
     expect(wide.zoom).toBeCloseTo(0.5, 5)
@@ -118,7 +118,7 @@ describe('ThreeView', () => {
     const scene = new Scene()
     scene.add(new Mesh(new BoxGeometry(2, 4, 6)))
     scene.updateMatrixWorld(true)
-    const view = new ThreeView({overscan: 1})
+    const view = new View({overscan: 1})
     view.setAxisView('left')
     view.frame(scene)
     const camera = view.getCamera(400, 400, scene) as OrthographicCamera
@@ -130,7 +130,7 @@ describe('ThreeView', () => {
   })
 
   it('keeps its axis view for a new document and restores each document\'s navigation', () => {
-    const view = new ThreeView()
+    const view = new View()
     view.setAxisView('top')
     view.navigation.target.set(1, 2, 3)
     view.switchDocument('a', 'b')
@@ -151,7 +151,7 @@ describe('ThreeView', () => {
     const second = new Scene()
     const secondCamera = new PerspectiveCamera()
     second.add(secondCamera)
-    const view = new ThreeView().setCameraView()
+    const view = new View().setCameraView()
     expect(view.getSourceCamera(first)).toBe(firstCamera)
     view.switchDocument('a', 'b')
     expect(view.getSourceCamera(second)).toBe(secondCamera)
@@ -171,7 +171,7 @@ describe('ThreeView', () => {
     scene.updateMatrixWorld(true)
     const before = JSON.stringify(sceneCamera.toJSON())
 
-    const view = new ThreeView({overscan: 2})
+    const view = new View({overscan: 2})
     view.setCameraView(`uuid:${sceneCamera.uuid}`)
     const camera = view.getCamera(800, 400, scene) as PerspectiveCamera
     expect(camera).not.toBe(sceneCamera)
@@ -191,7 +191,7 @@ describe('ThreeView', () => {
     shot.name = 'shot'
     scene.add(other, shot)
 
-    const view = new ThreeView().setCameraView('name:shot')
+    const view = new View().setCameraView('name:shot')
     expect(view.getSourceCamera(new Scene())).toBe(null)
     expect(view.getSourceCamera(scene)).toBe(shot)
     expect(view.navigation.cameraSource).toBe(shot.uuid)
@@ -205,19 +205,19 @@ describe('ThreeView', () => {
 
   it('looks through the first scene camera without an id, and uses the free view until one is added', () => {
     const scene = new Scene()
-    const view = new ThreeView().setAxisView('top').setCameraView()
+    const view = new View().setAxisView('top').setCameraView()
     expect(view.getSourceCamera(scene)).toBe(null)
     expect(view.navigation.axisView).toBe('free')
     const first = new OrthographicCamera()
     scene.add(first, new PerspectiveCamera())
     expect(view.getSourceCamera(scene)).toBe(first)
-    expect(new ThreeView().setCameraView(null).getSourceCamera(scene)).toBe(first)
+    expect(new View().setCameraView(null).getSourceCamera(scene)).toBe(first)
     view.dispose()
   })
 
   it('warns and falls back to the free view for an id without a prefix', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
-    const view = new ThreeView().setAxisView('top')
+    const view = new View().setAxisView('top')
     view.setCameraView('shot')
     expect(warn).toHaveBeenCalledOnce()
     expect(view.navigation.cameraSource).toBe(null)
@@ -230,7 +230,7 @@ describe('ThreeView', () => {
     const scene = new Scene()
     const board = new OrthographicCamera(2, 10, 8, 0, 0.1, 1000)
     scene.add(board)
-    const view = new ThreeView({overscan: 1})
+    const view = new View({overscan: 1})
     view.setCameraView(`uuid:${board.uuid}`)
     const camera = view.getCamera(800, 400, scene) as OrthographicCamera
     expect((camera.left + camera.right) / 2).toBeCloseTo(6, 5)
@@ -244,7 +244,7 @@ describe('ThreeView', () => {
     const scene = new Scene()
     const camera = new PerspectiveCamera()
     scene.add(new Mesh(new BoxGeometry()), camera)
-    const view = new ThreeView().setCameraView(`uuid:${camera.uuid}`)
+    const view = new View().setCameraView(`uuid:${camera.uuid}`)
     const walk = vi.spyOn(scene, 'getObjectByProperty')
     for (let i = 0; i < 5; i++) expect(view.getSourceCamera(scene)).toBe(camera)
     expect(walk).toHaveBeenCalledTimes(1)
@@ -259,7 +259,7 @@ describe('ThreeView', () => {
     const camera = new PerspectiveCamera(60, 1, 0.1, 100)
     camera.position.set(0, 0, 20)
     scene.add(new Mesh(new BoxGeometry()), camera)
-    const view = new ThreeView({overscan: 1}).setCameraView(`uuid:${camera.uuid}`)
+    const view = new View({overscan: 1}).setCameraView(`uuid:${camera.uuid}`)
     view.navigation.distance = 2
     const drawn = view.getCamera(100, 100, scene) as PerspectiveCamera
     expect(view.getWorldPerPixel(100, 100, scene)).toBeCloseTo(2 * 20 * Math.tan(drawn.fov * Math.PI / 360) / drawn.zoom / 100, 5)
@@ -267,9 +267,9 @@ describe('ThreeView', () => {
   })
 
   it('round-trips through JSON', () => {
-    const view = new ThreeView({overscan: 1.5, clearColor: 0x223344, pipeline: 'probe', overlays: {grid: true}, toneMapping: 4, toneMappingExposure: 0.5})
+    const view = new View({overscan: 1.5, clearColor: 0x223344, pipeline: 'probe', overlays: {grid: true}, toneMapping: 4, toneMappingExposure: 0.5})
     view.setAxisView('top')
-    const copy = new ThreeView().applyJSON(JSON.parse(JSON.stringify(view.toJSON())))
+    const copy = new View().applyJSON(JSON.parse(JSON.stringify(view.toJSON())))
     expect(copy.toJSON()).toEqual(view.toJSON())
     expect(copy.pipeline).toBe('probe')
     expect(copy.toneMapping).toBe(4)

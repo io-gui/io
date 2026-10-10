@@ -1,7 +1,7 @@
 import { Mesh, MeshBasicNodeMaterial, NoBlending, Scene, TextureNode, WebGPURenderer } from 'three/webgpu'
 import { screenUV, texture } from 'three/tsl'
 import type { DocumentChange } from '../editor/ChangeBus.js'
-import type { ThreeView } from '../view/ThreeView.js'
+import type { View } from '../view/View.js'
 import type { DirtyReason, ViewRenderResult } from './RenderScheduler.js'
 import { DEFAULT_PIPELINES, PipelineContext, PipelineOutput, ViewPipeline, pipelineTypes } from './ViewPipeline.js'
 import { Overlay, OverlayContext, OverlayType, overlayTypes } from './Overlay.js'
@@ -59,7 +59,7 @@ export class ViewCompositor {
   }
 
   /** Creates the view's pipeline, or replaces it when `view.pipeline` or `view.kind` changed. */
-  syncPipeline(view: ThreeView) {
+  syncPipeline(view: View) {
     const id = view.pipeline || DEFAULT_PIPELINES[view.kind] || 'forward'
     if (this._pipeline && id === this._pipelineId) return
     this._pipeline?.dispose()
@@ -73,7 +73,7 @@ export class ViewCompositor {
   }
 
   /** Creates and disposes registered overlays to match the view's kind and `overlays` flags. */
-  syncOverlays(view: ThreeView) {
+  syncOverlays(view: View) {
     const wanted = overlayTypes.list(type => type.viewKinds.includes(view.kind) && view.isOverlayEnabled(type.id, type.enabledByDefault))
     for (const entry of [...this._overlays]) {
       if (entry.type && !wanted.includes(entry.type)) this.removeOverlay(entry.overlay)

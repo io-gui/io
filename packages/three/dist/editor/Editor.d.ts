@@ -7,7 +7,7 @@ import { OperatorRegistry } from '../tools/Operator.js';
 import type { ToolDefinition } from '../tools/Tool.js';
 import { Registry } from '../utils/Registry.js';
 import { SelectionModel } from '../selection/SelectionModel.js';
-import type { ViewKind } from '../view/ThreeView.js';
+import type { ViewKind } from '../view/View.js';
 export type EditorProps = ReactiveObjectProps & {
     document?: Document;
     mode?: string;

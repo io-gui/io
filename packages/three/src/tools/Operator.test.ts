@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { InputRouter, Operator, OperatorContext, OperatorHost, Document, Editor, ThreeView, ViewInputEvent } from '@io-gui/three'
+import { InputRouter, Operator, OperatorContext, OperatorHost, Document, Editor, View, ViewInputEvent } from '@io-gui/three'
 import { Mesh } from 'three/webgpu'
 
 function createHost(): OperatorHost {
   const element = document.createElement('div') as unknown as OperatorHost
-  const view = new ThreeView()
+  const view = new View()
   Object.assign(element, {view, scene: null, getViewCamera: () => view.getCamera(200, 100, null)})
   Object.defineProperty(element, 'inputRouter', {value: new InputRouter(element)})
   element.style.cssText = 'position:fixed;left:0;top:0;width:200px;height:100px'

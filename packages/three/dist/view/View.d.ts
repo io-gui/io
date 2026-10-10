@@ -7,7 +7,7 @@ import type { InteractionProfile } from '../tools/Tool.js';
 export type ViewKind = '3d' | 'uv';
 /** Overlay ids switched on or off for one view; ids it does not name use the overlay's default. */
 export type ViewOverlays = Record<string, boolean>;
-type ThreeViewSettings = {
+type ViewSettings = {
     kind?: ViewKind;
     pipeline?: string;
     overlays?: ViewOverlays;
@@ -19,15 +19,15 @@ type ThreeViewSettings = {
     clearColor?: number;
     clearAlpha?: number;
 };
-export type ThreeViewProps = ReactiveObjectProps & ThreeViewSettings;
-export type ThreeViewData = ThreeViewSettings & {
+export type ViewProps = ReactiveObjectProps & ViewSettings;
+export type ViewData = ViewSettings & {
     navigation?: Partial<ViewNavigationData>;
 };
 /**
  * State of one view (ADR-0002): navigation and display settings, independent of any element.
  * A ThreeViewport shows it; the view survives the element being unmounted or moved.
  */
-export declare class ThreeView extends ReactiveObject {
+export declare class View extends ReactiveObject {
     kind: ViewKind;
     /** Registered pipeline id (ADR-0006). Empty uses the view kind's default: `forward` for 3d, `uv` for uv. */
     pipeline: string;
@@ -60,7 +60,7 @@ export declare class ThreeView extends ReactiveObject {
     private _missingSource;
     /** Session state: navigation per document uuid, so switching documents back restores the camera. */
     private readonly _navigationByDocument;
-    constructor(args?: ThreeViewProps);
+    constructor(args?: ViewProps);
     /**
      * Call after changing `navigation` directly, so viewports showing this view redraw. The methods below call
      * it themselves. It dispatches `navigation-changed` to the view's parents (the viewports holding it), not a
@@ -100,7 +100,7 @@ export declare class ThreeView extends ReactiveObject {
     getWorldPerPixel(width: number, height: number, scene: Scene | null): number;
     private _fromSceneCamera;
     /** Core serializes the primitive settings; the overlay flags, tone mapping overrides (also `null`) and navigation are added. */
-    toJSON(): ThreeViewData;
-    applyJSON(data: ThreeViewData): this;
+    toJSON(): ViewData;
+    applyJSON(data: ViewData): this;
 }
 export {};

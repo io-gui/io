@@ -1,6 +1,6 @@
 import { Scene, WebGPURenderer } from 'three/webgpu';
 import type { DocumentChange } from '../editor/ChangeBus.js';
-import type { ThreeView } from '../view/ThreeView.js';
+import type { View } from '../view/View.js';
 import type { DirtyReason, ViewRenderResult } from './RenderScheduler.js';
 import { PipelineContext, ViewPipeline } from './ViewPipeline.js';
 import { Overlay } from './Overlay.js';
@@ -29,9 +29,9 @@ export declare class ViewCompositor {
     get pipeline(): ViewPipeline | null;
     get overlays(): readonly Overlay[];
     /** Creates the view's pipeline, or replaces it when `view.pipeline` or `view.kind` changed. */
-    syncPipeline(view: ThreeView): void;
+    syncPipeline(view: View): void;
     /** Creates and disposes registered overlays to match the view's kind and `overlays` flags. */
-    syncOverlays(view: ThreeView): void;
+    syncOverlays(view: View): void;
     /** Adds an overlay that is not in the registry (the viewport's gizmo layer). */
     addOverlay(overlay: Overlay, order?: number): void;
     removeOverlay(overlay: Overlay): void;

@@ -16,7 +16,7 @@ const _center = new Vector3();
  * State of one view (ADR-0002): navigation and display settings, independent of any element.
  * A ThreeViewport shows it; the view survives the element being unmounted or moved.
  */
-let ThreeView = class ThreeView extends ReactiveObject {
+let View = class View extends ReactiveObject {
     navigation = new ViewNavigation();
     _perspective = new PerspectiveCamera();
     _orthographic = new OrthographicCamera();
@@ -74,7 +74,7 @@ let ThreeView = class ThreeView extends ReactiveObject {
             this._cameraSourceName = this._cameraRequest = id.slice(5);
         }
         else {
-            console.warn(`ThreeView.setCameraView: "${id}" needs a "uuid:" or "name:" prefix; using the free view`);
+            console.warn(`View.setCameraView: "${id}" needs a "uuid:" or "name:" prefix; using the free view`);
         }
         this.markNavigationChanged();
         return this;
@@ -270,35 +270,35 @@ let ThreeView = class ThreeView extends ReactiveObject {
 };
 __decorate([
     Property({ type: String, value: '3d' })
-], ThreeView.prototype, "kind", void 0);
+], View.prototype, "kind", void 0);
 __decorate([
     Property({ type: String, value: '' })
-], ThreeView.prototype, "pipeline", void 0);
+], View.prototype, "pipeline", void 0);
 __decorate([
     Property({ type: Object, init: null })
-], ThreeView.prototype, "overlays", void 0);
+], View.prototype, "overlays", void 0);
 __decorate([
     Property({ type: Boolean, value: false })
-], ThreeView.prototype, "xray", void 0);
+], View.prototype, "xray", void 0);
 __decorate([
     Property({ value: null })
-], ThreeView.prototype, "toneMapping", void 0);
+], View.prototype, "toneMapping", void 0);
 __decorate([
     Property({ value: null })
-], ThreeView.prototype, "toneMappingExposure", void 0);
+], View.prototype, "toneMappingExposure", void 0);
 __decorate([
     Property({ type: String, value: 'full' })
-], ThreeView.prototype, "profile", void 0);
+], View.prototype, "profile", void 0);
 __decorate([
     Property({ type: Number, value: 1.1 })
-], ThreeView.prototype, "overscan", void 0);
+], View.prototype, "overscan", void 0);
 __decorate([
     Property({ type: Number, value: 0x000000 })
-], ThreeView.prototype, "clearColor", void 0);
+], View.prototype, "clearColor", void 0);
 __decorate([
     Property({ type: Number, value: 1 })
-], ThreeView.prototype, "clearAlpha", void 0);
-ThreeView = __decorate([
+], View.prototype, "clearAlpha", void 0);
+View = __decorate([
     Register
-], ThreeView);
-export { ThreeView };
+], View);
+export { View };

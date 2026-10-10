@@ -122,7 +122,7 @@ Renamed instance `fromJSON` → `applyJSON` to distinguish apply-to-existing fro
 
 ### io-three
 
-- **Arch (2026-10-07, ADR 0001-0007):** WebGPU only, no WebGL fallback. Layers: app (Editor: doc, selection, tools, ops, undo, clock, change bus) / view (ThreeView data outlives ThreeViewport element) / frame (RenderScheduler only renderer, typed dirty tags, phases, budget). Reactive mutation never triggers draws.
+- **Arch (2026-10-07, ADR 0001-0007):** WebGPU only, no WebGL fallback. Layers: app (Editor: doc, selection, tools, ops, undo, clock, change bus) / view (View data outlives ThreeViewport element) / frame (RenderScheduler only renderer, typed dirty tags, phases, budget). Reactive mutation never triggers draws.
 - **Input:** InputRouter per viewport owns DOM listeners + capture. Priority bands modal 1000, gizmo 800, tool 500, nav 300, fallback select 100. Tools = ToolDefinition only (shared), behaviors per view. ThreeApplet/ToolBase/viewport `applet`+`tool` props/editor onResized removed 2026-10-07 (no back-compat going forward; external GlobeTool must port to ToolDefinition).
 - **Selection:** by Object3D.uuid + attribute domain (object/point/edge/primitive/corner), bitsets, transactions. UV sel = corner domain; uvSync = mapping.
 - RenderScheduler rAF must run after core FrameScheduler rAF in same frame (import order).

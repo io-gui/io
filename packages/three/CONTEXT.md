@@ -73,7 +73,7 @@ A press and release that moved less than `CLICK_TOLERANCE`; synthesized by the I
 _Avoid_: tap, tweak
 
 **Interaction profile**:
-`ThreeView.profile`: what a viewport's router installs — `full`, `select`, `navigate`, `none`.
+`View.profile`: what a viewport's router installs — `full`, `select`, `navigate`, `none`.
 _Avoid_: view mode, read-only
 
 **CanvasTarget**:
@@ -100,12 +100,12 @@ _Avoid_: notifier, event bus
 `Editor.isPlaying`: whether the scheduler ticks the editor and its active document (`onAnimate(delta, time)`) each frame. Independently, non-visible viewports skip draws via IntersectionObserver.
 _Avoid_: animating, running, live
 
-**ThreeView**:
+**View**:
 Serializable ReactiveObject holding one view's state: kind, pipeline, overlay flags, profile, navigation, overscan, clear color and tone-mapping overrides. Shown by a ThreeViewport and outlives it.
 _Avoid_: viewport state, ViewCameras (removed)
 
 **View kind**:
-`ThreeView.kind`: `3d` (shows the content scene) or `uv` (shows the UV layout of the edit set in 2D). Picks the default pipeline, overlays, gizmos and tools.
+`View.kind`: `3d` (shows the content scene) or `uv` (shows the UV layout of the edit set in 2D). Picks the default pipeline, overlays, gizmos and tools.
 _Avoid_: view type, editor type
 
 **ViewPipeline**:
@@ -117,7 +117,7 @@ Per-viewport owner of the pipeline and overlays. Presents the pipeline output to
 _Avoid_: post-processing (that is a pipeline), output pass
 
 **Overlay**:
-Something a view draws on top of its pipeline output from its own small scene, never the content scene: grid, selection outline, camera frame (passepartout), gizmos. Switched per view in `ThreeView.overlays`.
+Something a view draws on top of its pipeline output from its own small scene, never the content scene: grid, selection outline, camera frame (passepartout), gizmos. Switched per view in `View.overlays`.
 _Avoid_: helper (three.js objects added to the scene), decoration
 
 **Edit set**:
@@ -129,7 +129,7 @@ A gizmo is an on-screen handle with a screen-space hit test that starts an opera
 _Avoid_: manipulator, TransformControls, handle (alone)
 
 **ViewNavigation**:
-A view's navigation as numbers: target, rotation, distance, projection, fov, clip range, axis view (`free` or an axis) and an optional scene camera (`cameraSource`, by uuid; `ThreeView.setCameraView()` resolves the first scene camera, or a `name:`, to it once the camera is in the scene, and again in each newly shown document). The draw camera is built from it per frame.
+A view's navigation as numbers: target, rotation, distance, projection, fov, clip range, axis view (`free` or an axis) and an optional scene camera (`cameraSource`, by uuid; `View.setCameraView()` resolves the first scene camera, or a `name:`, to it once the camera is in the scene, and again in each newly shown document). The draw camera is built from it per frame.
 _Avoid_: camera rig, camera controller, orbit state
 
 **Axis view**:

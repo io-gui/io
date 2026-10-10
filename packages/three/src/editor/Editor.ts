@@ -10,7 +10,7 @@ import { SelectionModel } from '../selection/SelectionModel.js'
 import { translateOperatorType } from '../tools/operators/TranslateOperator.js'
 import { translateTool } from '../tools/TranslateTool.js'
 import { editModeToggleOperatorType, selectModeOperatorType } from '../tools/operators/EditModeOperators.js'
-import type { ViewKind } from '../view/ThreeView.js'
+import type { ViewKind } from '../view/View.js'
 import { registerEditorGroups } from '@io-gui/editors'
 
 export type EditorProps = ReactiveObjectProps & {

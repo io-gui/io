@@ -3,7 +3,7 @@ import type { DirtyReason, FrameInfo, ViewRenderResult } from './RenderScheduler
 import type { DocumentChange } from '../editor/ChangeBus.js';
 import type { Document } from '../editor/Document.js';
 import type { Editor } from '../editor/Editor.js';
-import type { ThreeView, ViewKind } from '../view/ThreeView.js';
+import type { View, ViewKind } from '../view/View.js';
 import type { SelectionModel } from '../selection/SelectionModel.js';
 import type { Picker } from '../selection/Picker.js';
 import type { ComponentPicker } from '../selection/ComponentPicker.js';
@@ -15,7 +15,7 @@ export interface PipelineContext {
     readonly document: Document;
     /** The document's content scene. */
     readonly scene: Scene;
-    readonly view: ThreeView;
+    readonly view: View;
     /** The view's draw camera at this size (ADR-0005). */
     readonly camera: PerspectiveCamera | OrthographicCamera;
     readonly selection: SelectionModel | null;
@@ -63,7 +63,7 @@ export interface ViewPipelineType {
     readonly viewKinds?: readonly ViewKind[];
     create(renderer: WebGPURenderer): ViewPipeline;
 }
-/** Pipelines `ThreeView.pipeline` can name. */
+/** Pipelines `View.pipeline` can name. */
 export declare const pipelineTypes: Registry<ViewPipelineType>;
-/** The pipeline a view kind uses when `ThreeView.pipeline` is empty. */
+/** The pipeline a view kind uses when `View.pipeline` is empty. */
 export declare const DEFAULT_PIPELINES: Record<ViewKind, string>;

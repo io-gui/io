@@ -19,7 +19,7 @@ ThreeViewport (element)
 │   └── overlays (grid, edit-mode components, selection outline, camera frame, gizmo layer) in one overlay scene
 ├── inputRouter: InputRouter (gizmos, tool, navigation, selection)
 ├── componentPicker: the pipeline's, or an ID-buffer picker (edit mode)
-└── view: ThreeView (object, outlives the element)
+└── view: View (object, outlives the element)
     ├── navigation: ViewNavigation (target, rotation, distance, projection, axis view, scene camera)
     ├── kind ('3d' | 'uv'), pipeline, overlays, profile, xray
     └── overscan, clearColor, clearAlpha, toneMapping / toneMappingExposure overrides
@@ -48,7 +48,7 @@ WebGPU-powered viewport element for rendering Three.js scenes.
 ```typescript
 type ThreeViewportProps = {
   editor?: Editor; // App object whose active document the viewport shows
-  view?: ThreeView; // View state and camera; pass one to keep navigation across remounts (default: a perspective view the viewport makes)
+  view?: View; // View state and camera; pass one to keep navigation across remounts (default: a perspective view the viewport makes)
   renderer?: WebGPURenderer; // Custom renderer (optional)
   keymap?: Keymap; // Navigation and selection bindings (default: keymaps.default, OrbitControls-like)
 };
@@ -63,7 +63,7 @@ type ThreeViewportProps = {
 - Drawn by the RenderScheduler only when tagged dirty
 - `getViewCamera()` returns the camera it draws and picks with
 - Frames an object when its editor dispatches `frame-object` with `{object, overscan?}`
-- The camera comes from the view: `view: new ThreeView().setAxisView('top')` for an axis view (`'free'` is the default perspective view), or `.setCameraView()` to look through the first scene camera. Pick one of several with `.setCameraView('name:shot')` or `.setCameraView('uuid:<uuid>')`. A scene camera added later (async asset load) is picked up when it appears, then tracked by uuid; until then the view shows its `free` view. Without a uuid, the view looks for the camera again in each document the editor switches to
+- The camera comes from the view: `view: new View().setAxisView('top')` for an axis view (`'free'` is the default perspective view), or `.setCameraView()` to look through the first scene camera. Pick one of several with `.setCameraView('name:shot')` or `.setCameraView('uuid:<uuid>')`. A scene camera added later (async asset load) is picked up when it appears, then tracked by uuid; until then the view shows its `free` view. Without a uuid, the view looks for the camera again in each document the editor switches to
 - All input goes through `viewport.inputRouter` (see Input below)
 - Draws through `viewport.compositor`: the view's pipeline, then overlays and `viewport.gizmoLayer` (see Pipelines and Overlays)
 
@@ -206,12 +206,12 @@ Domains come from a cached topology per `BufferGeometry` (`getTopology(geometry,
 
 Picking in 3D views (`IdComponentPicker`) draws an ID buffer: the edit set's triangles carrying their index, every other visible mesh as an occluder, with view depth, at CSS-pixel size, read back once and cached until the camera, size, edit set or content changes. Faces come from the buffer (front-most under the pointer); points and edges are projected on the CPU within 10 px and kept only where the buffer's depth shows them. With `view.xray = true` nothing is occluded. Deformation (skinning, morph targets) is not applied: components are picked on the rest shape. The `components` overlay draws the wire, points (point mode) and selected faces of the edit set; the selection outline is hidden in edit mode.
 
-### ThreeView
+### View
 
 Serializable state of one view ([ADR-0002](./docs/adr/0002-app-view-frame-layers.md), [ADR-0005](./docs/adr/0005-navigation-is-view-state-camera-built-per-draw.md)). Navigation is stored as numbers in `view.navigation`; the camera is built from it for each draw and pick.
 
 ```typescript
-const view = new ThreeView({ overscan: 1.1, clearColor: 0x000000 });
+const view = new View({ overscan: 1.1, clearColor: 0x000000 });
 view.setAxisView("top"); // orthographic axis view, or "free" for the perspective view (leaves any scene camera)
 view.setCameraView(`uuid:${sceneCamera.uuid}`); // look through a scene camera (never mutated); 'name:<name>' also works, no id = first scene camera
 view.frame(object); // fit an object
@@ -238,7 +238,7 @@ Each view draws through a `ViewPipeline` and then `Overlay`s ([ADR-0006](./docs/
 - Changes that only affect overlays (selection, gizmo hover) skip the pipeline and reuse its output.
 
 ```typescript
-new ThreeView({ pipeline: "traa" }); // a registered pipeline; '' uses the kind's default ('forward' / 'uv')
+new View({ pipeline: "traa" }); // a registered pipeline; '' uses the kind's default ('forward' / 'uv')
 view.setOverlay("grid", true); // grid (off by default), selection, cameraFrame, gizmos (on)
 view.toneMapping = NoToneMapping; // per-view override; null uses the document's
 
@@ -263,7 +263,7 @@ Custom pipelines implement `ViewPipeline` (`output`, `setSize`, `render(ctx)`, o
 A view with `kind: 'uv'` shows the UV layout of the selected meshes (the edit set) over the 0–1 grid, with the active object's color texture behind it, active brighter. It uses the `uv` pipeline, which never draws the content scene. Navigation is 2D (orbit gestures pan; frame keys show the UV square). Picking hits the layouts and selects their meshes, so a `select` profile UV view works as a selection view.
 
 ```typescript
-threeViewport({ editor, view: new ThreeView({ kind: "uv", profile: "select" }) });
+threeViewport({ editor, view: new View({ kind: "uv", profile: "select" }) });
 ```
 
 In edit mode the UV view edits UVs (`UVComponentPicker`, on the CPU in UV space). With `selection.uvSync` off (default, like Blender) it shows only the faces selected in 3D and keeps its own `corner` selection: a UV vertex selects every shown corner of one buffer vertex, a face its three corners. With `uvSync` on it shows every face and picks map to the mesh's points, edges and faces, so both views select the same components.

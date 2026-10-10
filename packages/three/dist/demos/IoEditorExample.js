@@ -10,7 +10,7 @@ import { ioPropertyEditor } from '@io-gui/editors';
 import { Object3D } from 'three/webgpu';
 import { mrt, output, velocity } from 'three/tsl';
 import { traa } from 'three/addons/tsl/display/TRAANode.js';
-import { PostProcessingPipeline, SelectionModel, Editor, ThreeView, threeViewport, pipelineTypes } from '@io-gui/three';
+import { PostProcessingPipeline, SelectionModel, Editor, View, threeViewport, pipelineTypes } from '@io-gui/three';
 import { ioLayout, Layout } from '@io-gui/layout';
 import { threeEditorStatus } from '../elements/ThreeEditorStatus.js';
 pipelineTypes.register({
@@ -215,15 +215,15 @@ __decorate([
 ], IoEditorExample.prototype, "editor", void 0);
 __decorate([
     Field({
-        top: new ThreeView({ pipeline: 'traa', overlays: { grid: true } }),
-        bottom: new ThreeView({ pipeline: 'traa', overlays: { grid: true } }),
-        left: new ThreeView({ pipeline: 'traa', overlays: { grid: true } }),
-        right: new ThreeView({ pipeline: 'traa', overlays: { grid: true } }),
-        front: new ThreeView({ pipeline: 'traa', overlays: { grid: true } }),
-        back: new ThreeView({ pipeline: 'traa', overlays: { grid: true } }),
-        perspective: new ThreeView({ overlays: { grid: true } }),
-        uv: new ThreeView({ kind: 'uv', profile: 'select' }),
-        camera: new ThreeView({ profile: 'select' }),
+        top: new View({ pipeline: 'traa', overlays: { grid: true } }),
+        bottom: new View({ pipeline: 'traa', overlays: { grid: true } }),
+        left: new View({ pipeline: 'traa', overlays: { grid: true } }),
+        right: new View({ pipeline: 'traa', overlays: { grid: true } }),
+        front: new View({ pipeline: 'traa', overlays: { grid: true } }),
+        back: new View({ pipeline: 'traa', overlays: { grid: true } }),
+        perspective: new View({ overlays: { grid: true } }),
+        uv: new View({ kind: 'uv', profile: 'select' }),
+        camera: new View({ profile: 'select' }),
     })
 ], IoEditorExample.prototype, "views", void 0);
 __decorate([

@@ -1,7 +1,7 @@
 import type { Editor } from '../editor/Editor.js'
 import type { Document } from '../editor/Document.js'
 import type { Transaction } from '../editor/Transaction.js'
-import type { ThreeView } from '../view/ThreeView.js'
+import type { View } from '../view/View.js'
 import type { InputRouter } from '../input/InputRouter.js'
 import type { InputHost, ViewInputEvent } from '../input/ViewInputEvent.js'
 import { Behavior, BehaviorPriority } from '../input/Behavior.js'
@@ -19,7 +19,7 @@ export interface OperatorContext {
   /** Open transaction for this run; committed on `finished`, rolled back on `cancelled`. */
   readonly transaction: Transaction
   readonly host: OperatorHost | null
-  readonly view: ThreeView | null
+  readonly view: View | null
 }
 
 export type OperatorPollContext = Omit<OperatorContext, 'transaction'>

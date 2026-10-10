@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { ComponentPicker, IdBufferSource, IdComponentPicker, InputHost, InputRouter, SelectBehavior, SelectionModel, Document, Editor, ThreeView, UVComponentPicker, getTopology, keymaps } from '@io-gui/three'
+import { ComponentPicker, IdBufferSource, IdComponentPicker, InputHost, InputRouter, SelectBehavior, SelectionModel, Document, Editor, View, UVComponentPicker, getTopology, keymaps } from '@io-gui/three'
 import { BoxGeometry, Mesh, Object3D, PlaneGeometry, Raycaster, Vector2, Vector3 } from 'three/webgpu'
 
 const WIDTH = 200
@@ -7,7 +7,7 @@ const HEIGHT = 100
 
 type Host = InputHost & {selection: SelectionModel; editor: Editor; mode: string; componentPicker: ComponentPicker}
 
-function createHost(editor: Editor, view: ThreeView, componentPicker: ComponentPicker): Host {
+function createHost(editor: Editor, view: View, componentPicker: ComponentPicker): Host {
   const element = window.document.createElement('div') as unknown as Host
   Object.defineProperties(element, {
     view: {value: view},
@@ -113,7 +113,7 @@ describe('SelectionModel components', () => {
 
 describe('Component picking and edit mode', () => {
   let editor: Editor
-  let view: ThreeView
+  let view: View
   let host: Host
   let router: InputRouter
   let mesh: Mesh
@@ -124,7 +124,7 @@ describe('Component picking and edit mode', () => {
     mesh = new Mesh(new BoxGeometry(1, 1, 1))
     editor.document.scene.add(mesh)
     editor.document.scene.updateMatrixWorld(true)
-    view = new ThreeView({overscan: 1})
+    view = new View({overscan: 1})
     view.navigation.setDirection(new Vector3(1, 0.6, 0.8))
     view.frame(mesh, 1.5)
     picker = new IdComponentPicker({source: raycastSource})
@@ -290,7 +290,7 @@ describe('Component picking and edit mode', () => {
 
 describe('UV component picking', () => {
   let editor: Editor
-  let view: ThreeView
+  let view: View
   let host: Host
   let mesh: Mesh
   const picker = new UVComponentPicker()
@@ -300,7 +300,7 @@ describe('UV component picking', () => {
     // 2x1 segments: 6 points, 4 triangles, UVs spanning 0..1.
     mesh = new Mesh(new PlaneGeometry(2, 1, 2, 1))
     editor.document.scene.add(mesh)
-    view = new ThreeView({kind: 'uv'})
+    view = new View({kind: 'uv'})
     host = createHost(editor, view, picker)
     view.frameUV(1)
     editor.selection.set([mesh.uuid])

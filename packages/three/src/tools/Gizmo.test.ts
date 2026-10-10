@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { Behavior, BehaviorPriority, GizmoHost, GizmoLayer, InputRouter, Editor, ThreeView, TranslateGizmoGroup, closestPointOnLine } from '@io-gui/three'
+import { Behavior, BehaviorPriority, GizmoHost, GizmoLayer, InputRouter, Editor, View, TranslateGizmoGroup, closestPointOnLine } from '@io-gui/three'
 import { Mesh, Ray, Vector3 } from 'three/webgpu'
 
 type Host = GizmoHost & {tags: string[]}
@@ -7,7 +7,7 @@ type Host = GizmoHost & {tags: string[]}
 /** 200x100 orthographic front view: x right, y up, about 0.0093 world units per pixel. */
 function createHost(editor: Editor): Host {
   const element = document.createElement('div') as unknown as Host
-  const view = new ThreeView({overscan: 1})
+  const view = new View({overscan: 1})
   view.setAxisView('front')
   const tags: string[] = []
   Object.assign(element, {

@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { InputHost, InputRouter, NavigationBehavior, RaycastPicker, SelectBehavior, SelectionModel, Document, Editor, ThreeView, keymaps, selectionKeymaps, navigationKeymaps } from '@io-gui/three'
+import { InputHost, InputRouter, NavigationBehavior, RaycastPicker, SelectBehavior, SelectionModel, Document, Editor, View, keymaps, selectionKeymaps, navigationKeymaps } from '@io-gui/three'
 import { BoxGeometry, BufferGeometry, LineSegments, Mesh, Object3D, Vector3 } from 'three/webgpu'
 
 type Host = InputHost & {selection: SelectionModel}
 
 function createHost(document: Document, selection: SelectionModel): Host {
   const element = window.document.createElement('div') as unknown as Host
-  const view = new ThreeView({overscan: 1})
+  const view = new View({overscan: 1})
   Object.assign(element, {view, scene: document.scene, selection, getViewCamera: () => view.getCamera(200, 100, document.scene)})
   element.style.cssText = 'position:fixed;left:0;top:0;width:200px;height:100px'
   window.document.body.appendChild(element)

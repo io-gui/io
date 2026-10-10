@@ -1,6 +1,6 @@
 ---
 name: io-three Core Architecture
-overview: Re-architect packages/three around app / view / frame layers (ADR-0001..0007). WebGPU only. One RenderScheduler renders typed dirty views; ThreeView holds per-view state; per-viewport InputRouter arbitrates navigation, tools and selection; one SelectionModel typed by attribute domain. Seven phases, each shippable, ThreeApplet kept as a shim.
+overview: Re-architect packages/three around app / view / frame layers (ADR-0001..0007). WebGPU only. One RenderScheduler renders typed dirty views; View holds per-view state; per-viewport InputRouter arbitrates navigation, tools and selection; one SelectionModel typed by attribute domain. Seven phases, each shippable, ThreeApplet kept as a shim.
 todos:
   - id: adrs
     content: "Docs: Write ADR-0001..0007 in packages/three/docs/adr"
@@ -15,7 +15,7 @@ todos:
     content: "P1: Remove WebGL fallback; explicit error when WebGPU is unavailable"
     status: completed
   - id: change-bus
-    content: "P1: ChangeBus with typed changes; ThreeView.listens(change) predicate"
+    content: "P1: ChangeBus with typed changes; View.listens(change) predicate"
     status: completed
   - id: render-scheduler
     content: "P1: RenderScheduler singleton: renderer init, rAF after core, typed dirty tags, phases, budget"
@@ -27,7 +27,7 @@ todos:
     content: "P1: ThreeApplet loses rAF loop, Timer, _width/_height; onAnimate via scheduler tick; fix demos"
     status: completed
   - id: three-view-model
-    content: "P2: ThreeView model (kind, navigation, shading, overlays, profile) with JSON round-trip"
+    content: "P2: View model (kind, navigation, shading, overlays, profile) with JSON round-trip"
     status: completed
   - id: view-navigation
     content: "P2: ViewNavigation + buildViewCamera(); replace ViewCameras and overscan mutation"
@@ -133,7 +133,7 @@ Verification for every phase: `pnpm lint:check`, `tsc -b`, `npx vitest run packa
 ```
 packages/three/src/
   editor/     Editor.ts, Document.ts, ChangeBus.ts
-  view/       ThreeView.ts, ViewNavigation.ts, buildViewCamera.ts
+  view/       View.ts, ViewNavigation.ts, buildViewCamera.ts
   render/     RenderScheduler.ts, ViewPipeline.ts, pipelines/*, overlays/*
   input/      InputRouter.ts, Behavior.ts, ViewInputEvent.ts, Keymap.ts, behaviors/*
   tools/      Tool.ts, ToolBase.ts (adapter), Operator.ts, UndoStack.ts, gizmos/*
@@ -217,17 +217,17 @@ Remove the module `rAFLoop`, per-applet `Timer`, `_renderer`, `_width`, `_height
 ## Phase 2: View layer (ADR-0002, ADR-0005)
 
 **Done 2026-10-07.** Notes from implementation:
-- Files: `view/ThreeView.ts` (model + `getCamera()` builder, no separate `buildViewCamera.ts`), `view/ViewNavigation.ts`, `view/ViewOrbitControls.ts` (temporary OrbitControls bridge, removed in P3). `nodes/ViewCameras.ts` deleted.
+- Files: `view/View.ts` (model + `getCamera()` builder, no separate `buildViewCamera.ts`), `view/ViewNavigation.ts`, `view/ViewOrbitControls.ts` (temporary OrbitControls bridge, removed in P3). `nodes/ViewCameras.ts` deleted.
 - `shading`, `overlays` and `profile` were not added yet: they land with the phases that use them (P3 profile, P6 shading/overlays).
 - Navigation frames a square; the camera builder fits it into any aspect ("contain"), so framing does not depend on viewport size. Orthographic size = `distance * tan(fov/2)`; orthographic clip is symmetric around the eye.
-- ~~`cameraSelect` stays as a non-deprecated shorthand; default `''` leaves a passed-in view untouched. Scene cameras resolve to uuid; a camera added later (async load) is picked up on `frame-object`, applet mutation or draw.~~ Removed 2026-10-08: the camera is chosen on `ThreeView` (`setAxisView('free' | axis)`, `setCameraView(id?)`: `'uuid:…'`, `'name:…'`, or none for the first scene camera).
+- ~~`cameraSelect` stays as a non-deprecated shorthand; default `''` leaves a passed-in view untouched. Scene cameras resolve to uuid; a camera added later (async load) is picked up on `frame-object`, applet mutation or draw.~~ Removed 2026-10-08: the camera is chosen on `View` (`setAxisView('free' | axis)`, `setCameraView(id?)`: `'uuid:…'`, `'name:…'`, or none for the first scene camera).
 - `frame-object` is handled by the viewport; framing keeps the view direction (old code reset every camera to its default direction first).
 - Breaking: `ThreeViewport.overscan/clearColor/clearAlpha/viewCameras` removed (moved to `view`); `ViewCameras` export removed. External code using `viewport.viewCameras.camera` should use `viewport.getViewCamera()`.
 - Gotcha: construct `OrbitControls` without the element and call `connect()`; passing it to the constructor makes `connect()` disconnect first and io-gui logs "Listener not found".
 
 ### `three-view-model`
 
-**Files:** `view/ThreeView.ts` (+ test)
+**Files:** `view/View.ts` (+ test)
 
 `ReactiveObject` with `kind`, `navigation`, `shading`, `overlays` (flags object), `profile`, `clearColor`, `clearAlpha`, `overscan`. `listens(change)` predicate (default: content changes of its document, selection changes when selection overlays are on). `toJSON` / `fromJSON` for layout persistence.
 
@@ -298,8 +298,8 @@ Orbit, pan, dolly, zoom to cursor, wheel, two-finger pan and pinch, frame select
 - `document.history` keeps the last 100 committed transactions; `revert()` / `reapply()` / commit listeners are the hooks for the future undo stack. Empty transactions are not recorded.
 - Modal operators use `InputRouter.startModal()` / `endModal()` (new `Behavior.modal`): all pointer, wheel and key events go to the operator; Escape cancels. One running operator at a time; starting another or switching documents cancels it.
 - `operators.lastCommand` records `{name: id, args: props}` of finished runs (command layer seed).
-- Viewport has `editor` (and `applet` alias). Per-document navigation is session state on `ThreeView` (`switchDocument`), not serialized. A view first attached keeps its navigation; only real switches park/restore.
-- `ThreeView.profile` added; active tool per `'<viewKind>:<mode>'` in `editor.activeTools`; keymap `when.mode` via `InputHost.mode`.
+- Viewport has `editor` (and `applet` alias). Per-document navigation is session state on `View` (`switchDocument`), not serialized. A view first attached keeps its navigation; only real switches park/restore.
+- `View.profile` added; active tool per `'<viewKind>:<mode>'` in `editor.activeTools`; keymap `when.mode` via `InputHost.mode`.
 - `ToolBase` stays as the legacy adapter alongside tool definitions (no deprecation yet).
 
 ### `editor-document`
@@ -379,7 +379,7 @@ Click and box select in the fallback band (shift extends, ctrl toggles). Propert
 - `PostProcessingPipeline(renderer, (scenePass, camera) => node, {convergeFrames})` rebuilds its graph when the view camera object changes (TRAA holds the camera). TRAA demo converges in 33 draws, then stops.
 - Gizmo flow: `GizmoLayer` (gizmo band) hit-tests in pixels; press → `gizmo.invoke` → `operators.run('transform.translate', {axis}, {host, event})` → modal. `InputRouter.startModal` marks open presses as non-clicks, so a gizmo press never selects through. Zero-move runs cancel (no command, no history).
 - Translate operator: median pivot, root objects only (`SelectionModel.getRootObjects`), X/Y/Z keys toggle constraint, Enter/release confirm, RMB/Escape cancel; `exec` applies `props.delta` (repeatable command). `lastCommand` is now set before commit so commit listeners see it.
-- UV view: `ThreeView.kind = 'uv'` → `uv` pipeline (grid, active texture, edit-set layouts via `buildUVGeometry` + `WireframeGeometry`, cached by attribute versions), `frameUV()`, orbit → pan, axis keys ignored. Picker = `RaycastPicker({root, resolve})` on the layouts; hosts expose `picker` and `SelectBehavior` prefers it.
+- UV view: `View.kind = 'uv'` → `uv` pipeline (grid, active texture, edit-set layouts via `buildUVGeometry` + `WireframeGeometry`, cached by attribute versions), `frameUV()`, orbit → pan, axis keys ignored. Picker = `RaycastPicker({root, resolve})` on the layouts; hosts expose `picker` and `SelectBehavior` prefers it.
 - Not done: shading modes (solid/wireframe/matcap as pipelines), rotate/scale gizmos, keyboard-started grab (G) without a press, overlay MSAA, outline occlusion, ioLayout in the demo (CSS grid instead).
 
 ### `pipeline-registry`
@@ -429,7 +429,7 @@ ID pass into an `R32Uint` target per view, async pixel / rectangle readback in t
 - `geometry/Topology.ts`: welded points by exact position, unique point-pair edges, triangles/segments, corners = triangle corners; cached per geometry by position/index count + version. Quad diagonals are edges (no polygon detection).
 - `SelectionModel`: `ComponentSet` bitsets per uuid per domain; `edit().components(uuid, domain, size)` copy-on-write, `clearComponents`, `setDomain`. Sets of another size are ignored/replaced. Removed objects drop their components. `componentDomain` remembers the select mode across object mode.
 - Adapters: `MeshAdapter`, `LineSegmentsAdapter`, `PointsAdapter`; `registerGeometryAdapter`. Edit set = selected objects + descendants with an adapter.
-- ID pass: RGBA32F target at CSS-pixel size (slot, primitive + 1, view depth), not R32Uint; occluders = other visible meshes; one full readback cached by camera/size/edit set and invalidated on `content` tags. Faces from the buffer; points/edges CPU-projected with a 3x3 depth test (1 % tolerance). `view.xray` (new ThreeView prop) = no occlusion. Rest shape only.
+- ID pass: RGBA32F target at CSS-pixel size (slot, primitive + 1, view depth), not R32Uint; occluders = other visible meshes; one full readback cached by camera/size/edit set and invalidated on `content` tags. Faces from the buffer; points/edges CPU-projected with a 3x3 depth test (1 % tolerance). `view.xray` (new View prop) = no occlusion. Rest shape only.
 - Highlights: `components` overlay (wire, instanced sprite points, selected faces) with a view-space depth bias, built from CPU state attributes rather than storage-buffer bitsets. Selection outline hidden in edit mode.
 - Operators `object.editmode_toggle` (Tab) and `mesh.select_mode` (1/2/3, Blender-style conversion). `editModeKeymap` layered into all presets.
 - UV edit: `UVComponentPicker` (CPU, UV space) + `UVEditCage`. uvSync off: shows faces selected in 3D, stores `corner` (UV vertex = corners of one buffer vertex). uvSync on: picks map to point/edge/primitive.
@@ -439,4 +439,4 @@ ID pass into an `R32Uint` target per view, async pixel / rectangle readback in t
 
 ### `docs-sync`
 
-At the end of each phase: update `packages/three/CONTEXT.md` (new terms: Editor, Document, ThreeView, RenderScheduler, ViewPipeline, Overlay, InputRouter, Behavior, Tool, Operator, SelectionModel, attribute domain; retire ViewCameras), `README.md`, `skills/io-gui-three/SKILL.md`, and root `CONTEXT.md` relationships if they change. Flip ADR status to `completed` when its phase lands.
+At the end of each phase: update `packages/three/CONTEXT.md` (new terms: Editor, Document, View, RenderScheduler, ViewPipeline, Overlay, InputRouter, Behavior, Tool, Operator, SelectionModel, attribute domain; retire ViewCameras), `README.md`, `skills/io-gui-three/SKILL.md`, and root `CONTEXT.md` relationships if they change. Flip ADR status to `completed` when its phase lands.

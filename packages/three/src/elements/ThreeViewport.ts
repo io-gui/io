@@ -4,7 +4,7 @@ import { Editor } from '../editor/Editor.js'
 import type { Document } from '../editor/Document.js'
 import type { Behavior } from '../input/Behavior.js'
 import { toolAllowsProfile } from '../tools/Tool.js'
-import { ThreeView } from '../view/ThreeView.js'
+import { View } from '../view/View.js'
 import { InputRouter } from '../input/InputRouter.js'
 import { Keymap, keymaps } from '../input/Keymap.js'
 import { NavigationBehavior } from '../input/behaviors/NavigationBehavior.js'
@@ -30,10 +30,10 @@ export type ThreeViewportProps = ReactiveElementProps & {
   /** The editor whose active document this viewport shows. */
   editor?: WithBinding<Editor>
   /**
-   * View state to show, including its camera (`new ThreeView().setAxisView('top')`, `.setCameraView('name:shot')`).
+   * View state to show, including its camera (`new View().setAxisView('top')`, `.setCameraView('name:shot')`).
    * Pass one to keep navigation across remounts; otherwise the viewport makes its own default perspective view.
    */
-  view?: WithBinding<ThreeView>
+  view?: WithBinding<View>
   /** Navigation and selection bindings (default: `keymaps.default`, OrbitControls-like navigation). */
   keymap?: Keymap
   renderer?: WebGPURenderer
@@ -49,8 +49,8 @@ export class ThreeViewport extends ReactiveElement implements ScheduledView {
   @Property({type: Editor})
   declare editor: Editor
 
-  @Property({type: ThreeView})
-  declare view: ThreeView
+  @Property({type: View})
+  declare view: View
 
   @Property({type: WebGPURenderer})
   declare renderer: WebGPURenderer
@@ -105,7 +105,7 @@ export class ThreeViewport extends ReactiveElement implements ScheduledView {
   }
 
   declare private _ownsView: boolean
-  declare private _toolBehaviors: {toolId: string; view: ThreeView; editor: Editor; behaviors: Behavior[]} | undefined
+  declare private _toolBehaviors: {toolId: string; view: View; editor: Editor; behaviors: Behavior[]} | undefined
   declare private _compositor: ViewCompositor | undefined
   declare private _shownDocument: Document | undefined
   declare private _idPass: IdPass | undefined
@@ -145,7 +145,7 @@ export class ThreeViewport extends ReactiveElement implements ScheduledView {
   constructor(args: ThreeViewportProps) {
     super({
       ...args,
-      view: args.view ?? new ThreeView(),
+      view: args.view ?? new View(),
       renderer: args.renderer ?? getDefaultRenderer(),
     } as ReactiveElementProps)
     this._ownsView = !args.view
@@ -325,7 +325,7 @@ export class ThreeViewport extends ReactiveElement implements ScheduledView {
   editorMutated() {
     this.editorChanged()
   }
-  viewChanged(change: Change<ThreeView>) {
+  viewChanged(change: Change<View>) {
     if (this._ownsView && change.oldValue) {
       change.oldValue.dispose()
       this._ownsView = false

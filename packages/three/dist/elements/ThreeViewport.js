@@ -8,7 +8,7 @@ import { Register, ReactiveElement, Property, Field } from '@io-gui/core';
 import { WebGPURenderer, CanvasTarget } from 'three/webgpu';
 import { Editor } from '../editor/Editor.js';
 import { toolAllowsProfile } from '../tools/Tool.js';
-import { ThreeView } from '../view/ThreeView.js';
+import { View } from '../view/View.js';
 import { InputRouter } from '../input/InputRouter.js';
 import { Keymap, keymaps } from '../input/Keymap.js';
 import { NavigationBehavior } from '../input/behaviors/NavigationBehavior.js';
@@ -105,7 +105,7 @@ let ThreeViewport = class ThreeViewport extends ReactiveElement {
     constructor(args) {
         super({
             ...args,
-            view: args.view ?? new ThreeView(),
+            view: args.view ?? new View(),
             renderer: args.renderer ?? getDefaultRenderer(),
         });
         this._ownsView = !args.view;
@@ -356,7 +356,7 @@ __decorate([
     Property({ type: Editor })
 ], ThreeViewport.prototype, "editor", void 0);
 __decorate([
-    Property({ type: ThreeView })
+    Property({ type: View })
 ], ThreeViewport.prototype, "view", void 0);
 __decorate([
     Property({ type: WebGPURenderer })

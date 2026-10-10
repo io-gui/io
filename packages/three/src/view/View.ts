@@ -13,7 +13,7 @@ export type ViewOverlays = Record<string, boolean>
 
 const UV_BOX = new Box3(new Vector3(0, 0, 0), new Vector3(1, 1, 0))
 
-type ThreeViewSettings = {
+type ViewSettings = {
   kind?: ViewKind
   pipeline?: string
   overlays?: ViewOverlays
@@ -26,9 +26,9 @@ type ThreeViewSettings = {
   clearAlpha?: number
 }
 
-export type ThreeViewProps = ReactiveObjectProps & ThreeViewSettings
+export type ViewProps = ReactiveObjectProps & ViewSettings
 
-export type ThreeViewData = ThreeViewSettings & {navigation?: Partial<ViewNavigationData>}
+export type ViewData = ViewSettings & {navigation?: Partial<ViewNavigationData>}
 
 const _box = new Box3()
 const _center = new Vector3()
@@ -38,7 +38,7 @@ const _center = new Vector3()
  * A ThreeViewport shows it; the view survives the element being unmounted or moved.
  */
 @Register
-export class ThreeView extends ReactiveObject {
+export class View extends ReactiveObject {
 
   @Property({type: String, value: '3d'})
   declare kind: ViewKind
@@ -94,7 +94,7 @@ export class ThreeView extends ReactiveObject {
   /** Session state: navigation per document uuid, so switching documents back restores the camera. */
   private readonly _navigationByDocument = new Map<string, ViewNavigationData>()
 
-  constructor(args?: ThreeViewProps) {
+  constructor(args?: ViewProps) {
     super(args)
   }
 
@@ -136,7 +136,7 @@ export class ThreeView extends ReactiveObject {
     } else if (id.startsWith('name:')) {
       this._cameraSourceName = this._cameraRequest = id.slice(5)
     } else {
-      console.warn(`ThreeView.setCameraView: "${id}" needs a "uuid:" or "name:" prefix; using the free view`)
+      console.warn(`View.setCameraView: "${id}" needs a "uuid:" or "name:" prefix; using the free view`)
     }
     this.markNavigationChanged()
     return this
@@ -307,9 +307,9 @@ export class ThreeView extends ReactiveObject {
   }
 
   /** Core serializes the primitive settings; the overlay flags, tone mapping overrides (also `null`) and navigation are added. */
-  override toJSON(): ThreeViewData {
+  override toJSON(): ViewData {
     return {
-      ...super.toJSON() as ThreeViewData,
+      ...super.toJSON() as ViewData,
       overlays: {...this.overlays},
       toneMapping: this.toneMapping,
       toneMappingExposure: this.toneMappingExposure,
@@ -317,7 +317,7 @@ export class ThreeView extends ReactiveObject {
     }
   }
 
-  override applyJSON(data: ThreeViewData) {
+  override applyJSON(data: ViewData) {
     const {navigation, ...settings} = data
     if (navigation) this.navigation.applyJSON(navigation)
     if (settings.overlays) settings.overlays = {...settings.overlays}

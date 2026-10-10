@@ -720,3 +720,6 @@
 - Docs, ADRs, CONTEXT (root + three), SKILL, io-gui.mdc, plans, working/now updated; archive + superseded plan left. Article fixes ("an Editor").
 - Gotcha: rg skips hidden dirs (.cursor, .memory) without --hidden. Math rename missed principles plan IoVectorBase; fixed.
 - Stale dist removed, rebuilt. tsc clean, eslint 0 errors, three tests 144.
+
+### [three][rename] 2026-10-10 (10)
+- ThreeView -> View (+ ViewProps, ViewSettings, ViewData; files view/View.ts, View.test.ts). Word-boundary replace so ThreeViewport untouched. Glossary term now **View**. Docs/ADRs/SKILL/io-gui.mdc/plans/working/now updated; archive left. Stale dist removed, rebuilt.

@@ -1,5 +1,5 @@
 import type { Object3D } from 'three/webgpu'
-import type { ViewKind } from '../view/ThreeView.js'
+import type { ViewKind } from '../view/View.js'
 import type { PipelineContext, PipelineOutput, ViewPipeline } from './ViewPipeline.js'
 import { Registry } from '../utils/Registry.js'
 
@@ -22,7 +22,7 @@ export interface Overlay {
 }
 
 export interface OverlayType {
-  /** Key in `ThreeView.overlays`. */
+  /** Key in `View.overlays`. */
   readonly id: string
   readonly label?: string
   readonly viewKinds: readonly ViewKind[]
@@ -33,5 +33,5 @@ export interface OverlayType {
   create(): Overlay
 }
 
-/** Overlays views create by kind and `ThreeView.overlays` flags. */
+/** Overlays views create by kind and `View.overlays` flags. */
 export const overlayTypes = new Registry<OverlayType>()
