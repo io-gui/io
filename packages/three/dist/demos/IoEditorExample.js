@@ -10,9 +10,9 @@ import { ioPropertyEditor } from '@io-gui/editors';
 import { Object3D } from 'three/webgpu';
 import { mrt, output, velocity } from 'three/tsl';
 import { traa } from 'three/addons/tsl/display/TRAANode.js';
-import { PostProcessingPipeline, SelectionModel, ThreeEditor, ThreeView, ioThreeViewport, pipelineTypes } from '@io-gui/three';
+import { PostProcessingPipeline, SelectionModel, Editor, ThreeView, threeViewport, pipelineTypes } from '@io-gui/three';
 import { ioLayout, Layout } from '@io-gui/layout';
-import { threeEditorStatus } from '../editor/ThreeEditorStatus.js';
+import { threeEditorStatus } from '../elements/ThreeEditorStatus.js';
 pipelineTypes.register({
     id: 'traa',
     label: 'Forward + TRAA',
@@ -79,7 +79,7 @@ const editorLayout = new Layout({
         ]
     }
 });
-// ThreeDocument subclasses, imported when first opened.
+// Document subclasses, imported when first opened.
 const DOCUMENTS = {
     EditorDocument1: () => import('./examples/EditorDocument1.js').then(module => new module.EditorDocument1()),
     EditorDocument2: () => import('./examples/EditorDocument2.js').then(module => new module.EditorDocument2()),
@@ -100,11 +100,11 @@ const DOCUMENTS = {
     ComputeTextureExample: () => import('./examples/ComputeTextureExample.js').then(module => new module.ComputeTextureExample()),
 };
 /**
- * One ThreeEditor in tabbed views, each with its own pipeline (ADR-0006) and interaction profile: a forward
+ * One Editor in tabbed views, each with its own pipeline (ADR-0006) and interaction profile: a forward
  * perspective view with the grid overlay and the Move tool, select-only axis views post-processed with TRAA, and a
  * select-only UV view of the selection, and a select-only Camera view through the document's first scene camera.
  * The inspector follows the active object; the Document tab shows the document's own properties.
- * The heading buttons load a ThreeDocument subclass and make it the editor's document. Each loaded document keeps
+ * The heading buttons load a Document subclass and make it the editor's document. Each loaded document keeps
  * its edits, selection and view navigation when switching back (ADR-0002). Play ticks the document's `onAnimate`; opening a document plays or pauses it by its `autoplay`.
  * Click selects (Shift toggles, Ctrl removes), Alt+drag box-selects, Ctrl+A selects all, Escape clears, F frames the
  * selection. Drag a gizmo arrow to move along an axis, the center to move in the view plane; X / Y / Z switch the
@@ -178,15 +178,15 @@ let IoEditorExample = class IoEditorExample extends ReactiveElement {
             ioLayout({ class: 'content',
                 model: editorLayout,
                 elements: [
-                    { group: 'view', ...ioThreeViewport({ id: 'Top', editor: this.editor, view: this.views.top }) },
-                    { group: 'view', ...ioThreeViewport({ id: 'Bottom', editor: this.editor, view: this.views.bottom }) },
-                    { group: 'view', ...ioThreeViewport({ id: 'Left', editor: this.editor, view: this.views.left }) },
-                    { group: 'view', ...ioThreeViewport({ id: 'Right', editor: this.editor, view: this.views.right }) },
-                    { group: 'view', ...ioThreeViewport({ id: 'Front', editor: this.editor, view: this.views.front }) },
-                    { group: 'view', ...ioThreeViewport({ id: 'Back', editor: this.editor, view: this.views.back }) },
-                    { group: 'view', ...ioThreeViewport({ id: 'Perspective', editor: this.editor, view: this.views.perspective }) },
-                    { group: 'view', ...ioThreeViewport({ id: 'UV', editor: this.editor, view: this.views.uv }) },
-                    { group: 'view', ...ioThreeViewport({ id: 'Scene Camera', editor: this.editor, view: this.views.camera }) },
+                    { group: 'view', ...threeViewport({ id: 'Top', editor: this.editor, view: this.views.top }) },
+                    { group: 'view', ...threeViewport({ id: 'Bottom', editor: this.editor, view: this.views.bottom }) },
+                    { group: 'view', ...threeViewport({ id: 'Left', editor: this.editor, view: this.views.left }) },
+                    { group: 'view', ...threeViewport({ id: 'Right', editor: this.editor, view: this.views.right }) },
+                    { group: 'view', ...threeViewport({ id: 'Front', editor: this.editor, view: this.views.front }) },
+                    { group: 'view', ...threeViewport({ id: 'Back', editor: this.editor, view: this.views.back }) },
+                    { group: 'view', ...threeViewport({ id: 'Perspective', editor: this.editor, view: this.views.perspective }) },
+                    { group: 'view', ...threeViewport({ id: 'UV', editor: this.editor, view: this.views.uv }) },
+                    { group: 'view', ...threeViewport({ id: 'Scene Camera', editor: this.editor, view: this.views.camera }) },
                     ioPropertyEditor({ id: 'Inspector', value: this.bind('activeObject') }),
                     ioPropertyEditor({ id: 'Document', value: this.editor.bind('document') }),
                 ]
@@ -211,7 +211,7 @@ let IoEditorExample = class IoEditorExample extends ReactiveElement {
     }
 };
 __decorate([
-    Property({ type: ThreeEditor, init: null })
+    Property({ type: Editor, init: null })
 ], IoEditorExample.prototype, "editor", void 0);
 __decorate([
     Field({

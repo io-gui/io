@@ -8,10 +8,10 @@ import { AmbientLight, BoxGeometry, CapsuleGeometry, CircleGeometry, CylinderGeo
 import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
 import { plane, klein, mobius } from 'three/addons/geometries/ParametricFunctions.js';
 import { Register, Property } from '@io-gui/core';
-import { ThreeDocument } from '@io-gui/three';
+import { Document } from '@io-gui/three';
 import { registerEditorGroups } from '@io-gui/editors';
 /** The built-in geometries in a 4×4 grid, sharing one UV grid textured material. Spins while playing; plays when opened. */
-let GeometriesExample = class GeometriesExample extends ThreeDocument {
+let GeometriesExample = class GeometriesExample extends Document {
     material;
     constructor(args) {
         super({ autoplay: true, ...args });

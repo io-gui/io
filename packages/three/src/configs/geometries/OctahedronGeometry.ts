@@ -1,9 +1,9 @@
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups, registerEditorWidget } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { OctahedronGeometry } from 'three/webgpu'
-import { ioBuildGeometry } from '../../elements/IoBuildGeometry.js'
+import { threeBuildGeometry } from '../../elements/ThreeBuildGeometry.js'
 
-registerEditorWidget(OctahedronGeometry, ioBuildGeometry())
+registerEditorWidget(OctahedronGeometry, threeBuildGeometry())
 
 registerEditorConfig(OctahedronGeometry, [
   ['parameters', ioPropertyEditor({config: [

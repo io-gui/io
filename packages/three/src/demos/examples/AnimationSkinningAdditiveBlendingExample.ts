@@ -14,7 +14,7 @@ import {
   PlaneGeometry,
 } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
+import { Document, DocumentProps } from '@io-gui/three'
 import { ioObject, ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 
 type GltfModel = {
@@ -39,7 +39,7 @@ const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
  * (weighted there). Plays when opened.
  */
 @Register
-export class AnimationSkinningAdditiveBlendingExample extends ThreeDocument {
+export class AnimationSkinningAdditiveBlendingExample extends Document {
 
   @Property({type: Boolean, value: false})
   declare isLoaded: boolean
@@ -61,7 +61,7 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeDocument {
     headShake: null,
   }
 
-  constructor(args?: ThreeDocumentProps) {
+  constructor(args?: DocumentProps) {
     super({autoplay: true, ...args})
 
     // Scene setup

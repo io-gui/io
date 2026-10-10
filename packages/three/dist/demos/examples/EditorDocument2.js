@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { Register } from '@io-gui/core';
 import { ACESFilmicToneMapping, BoxGeometry, CapsuleGeometry, CylinderGeometry, DirectionalLight, Group, HemisphereLight, IcosahedronGeometry, Mesh, MeshStandardMaterial, PlaneGeometry, TorusGeometry } from 'three/webgpu';
-import { ThreeDocument } from '@io-gui/three';
+import { Document } from '@io-gui/three';
 import { CanvasTexture, SRGBColorSpace } from 'three/webgpu';
 /** 8×8 checker of `color` and light gray, so the UV view shows whose texture it lays out. */
 export function checkerTexture(color) {
@@ -32,7 +32,7 @@ function shape(name, geometry, color, x, y, z) {
 /**
  * Primitives on a floor that cannot be selected, and a `Stack` group of two meshes; ACES tone mapping by default.
  */
-let EditorDocument2 = class EditorDocument2 extends ThreeDocument {
+let EditorDocument2 = class EditorDocument2 extends Document {
     constructor(args) {
         super({ toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1.2, ...args });
         const sky = new HemisphereLight(0xddeeff, 0x332211, 1.2);

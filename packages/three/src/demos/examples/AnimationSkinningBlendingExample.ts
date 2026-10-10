@@ -14,7 +14,7 @@ import {
   PlaneGeometry,
 } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
+import { Document, DocumentProps } from '@io-gui/three'
 import { ioObject, ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioButton } from '@io-gui/inputs'
@@ -41,7 +41,7 @@ const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
  * action weights, pause and single step. Plays when opened.
  */
 @Register
-export class AnimationSkinningBlendingExample extends ThreeDocument {
+export class AnimationSkinningBlendingExample extends Document {
 
   @Property({type: Boolean, value: false})
   declare isActive: boolean
@@ -62,7 +62,7 @@ export class AnimationSkinningBlendingExample extends ThreeDocument {
   public useDefaultDuration: boolean = true
   public customDuration: number = 3.5
 
-  constructor(args?: ThreeDocumentProps) {
+  constructor(args?: DocumentProps) {
     super({autoplay: true, ...args})
 
     // Camera

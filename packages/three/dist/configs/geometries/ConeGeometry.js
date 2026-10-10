@@ -2,8 +2,8 @@ import { ioPropertyEditor, registerEditorConfig, registerEditorGroups, registerE
 import { ioSwitch } from '@io-gui/inputs';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { ConeGeometry } from 'three/webgpu';
-import { ioBuildGeometry } from '../../elements/IoBuildGeometry.js';
-registerEditorWidget(ConeGeometry, ioBuildGeometry());
+import { threeBuildGeometry } from '../../elements/ThreeBuildGeometry.js';
+registerEditorWidget(ConeGeometry, threeBuildGeometry());
 registerEditorConfig(ConeGeometry, [
     ['parameters', ioPropertyEditor({ config: [
                 ['radius', ioNumberSlider({ min: 0, max: 1000, step: 0.1 })],

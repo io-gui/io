@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { Register } from '@io-gui/core';
 import { AmbientLight, BoxGeometry, ConeGeometry, DirectionalLight, Mesh, MeshStandardMaterial, SphereGeometry, TorusKnotGeometry } from 'three/webgpu';
-import { ThreeDocument } from '@io-gui/three';
+import { Document } from '@io-gui/three';
 import { CanvasTexture, SRGBColorSpace } from 'three/webgpu';
 /** 8×8 checker of `color` and light gray, so the UV view shows whose texture it lays out. */
 export function checkerTexture(color) {
@@ -24,7 +24,7 @@ export function checkerTexture(color) {
     return texture;
 }
 /** Four checker-textured primitives in a row, lit by an ambient and a directional light. */
-let EditorDocument1 = class EditorDocument1 extends ThreeDocument {
+let EditorDocument1 = class EditorDocument1 extends Document {
     constructor(args) {
         super(args);
         const ambient = new AmbientLight(0xffffff, 0.6);

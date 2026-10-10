@@ -13,15 +13,15 @@ import {
   Vector3
 } from 'three/webgpu'
 import { Register } from '@io-gui/core'
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
+import { Document, DocumentProps } from '@io-gui/three'
 
 /** A 5×5 grid of boxes in one AnimationObjectGroup, sharing one animation state. Plays when opened. */
 @Register
-export class AnimationGroupsExample extends ThreeDocument {
+export class AnimationGroupsExample extends Document {
 
   public mixer: AnimationMixer
 
-  constructor(args?: ThreeDocumentProps) {
+  constructor(args?: DocumentProps) {
     super({autoplay: true, ...args})
 
     // all objects of this animation group share a common animation state

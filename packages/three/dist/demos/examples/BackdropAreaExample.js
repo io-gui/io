@@ -9,14 +9,14 @@ import { AmbientLight, AnimationMixer, BoxGeometry, DoubleSide, Mesh, MeshBasicN
 import { color, positionWorld, linearDepth, viewportLinearDepth, viewportSharedTexture, screenUV, hue, time, checker, uv, modelScale, } from 'three/tsl';
 import { hashBlur } from 'three/addons/tsl/display/hashBlur.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { ThreeDocument, ioVector3 } from '@io-gui/three';
+import { Document, threeVector3 } from '@io-gui/three';
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
 import { ioOptionSelect, Menu } from '@io-gui/menus';
 /**
  * A box whose backdrop material (blurred, depth, checker or pixel; Document tab) filters the dancing Michelle
  * model behind it. Plays when opened.
  */
-let BackdropAreaExample = class BackdropAreaExample extends ThreeDocument {
+let BackdropAreaExample = class BackdropAreaExample extends Document {
     mixer;
     box;
     // Materials
@@ -128,7 +128,7 @@ registerEditorConfig(BackdropAreaExample, [
                 options: ['blurred', 'depth', 'checker', 'pixel']
             }),
         })],
-    [Vector3, ioVector3({ linkable: true })],
+    [Vector3, threeVector3({ linkable: true })],
 ]);
 registerEditorGroups(BackdropAreaExample, {
     Main: ['material', 'boxScale'],

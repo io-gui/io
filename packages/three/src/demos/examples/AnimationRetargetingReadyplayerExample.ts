@@ -23,7 +23,7 @@ import {
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
+import { Document, DocumentProps } from '@io-gui/three'
 
 type FbxModel = Group & {
   animations: AnimationClip[]
@@ -53,12 +53,12 @@ const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
 
 /** A Mixamo FBX animation retargeted onto a Ready Player Me avatar, over a masked reflective floor. Plays when opened. */
 @Register
-export class AnimationRetargetingReadyplayerExample extends ThreeDocument {
+export class AnimationRetargetingReadyplayerExample extends Document {
 
   public sourceMixer?: AnimationMixer
   public targetMixer?: AnimationMixer
 
-  constructor(args?: ThreeDocumentProps) {
+  constructor(args?: DocumentProps) {
     super({autoplay: true, ...args})
 
     const horizontalEffect = screenUV.x.mix(color(0x13172b), color(0x311649))

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { InputRouter, Operator, OperatorContext, OperatorHost, ThreeDocument, ThreeEditor, ThreeView, ViewInputEvent } from '@io-gui/three'
+import { InputRouter, Operator, OperatorContext, OperatorHost, Document, Editor, ThreeView, ViewInputEvent } from '@io-gui/three'
 import { Mesh } from 'three/webgpu'
 
 function createHost(): OperatorHost {
@@ -26,11 +26,11 @@ class DragOperator implements Operator {
 }
 
 describe('OperatorRegistry', () => {
-  let editor: ThreeEditor
+  let editor: Editor
   let mesh: Mesh
 
   beforeEach(() => {
-    editor = new ThreeEditor()
+    editor = new Editor()
     mesh = new Mesh()
     editor.document.scene.add(mesh)
     editor.operators.register({id: 'object.rename', label: 'Rename', create: props => ({
@@ -108,7 +108,7 @@ describe('OperatorRegistry', () => {
 
     editor.operators.run('object.drag')
     const previous = editor.document
-    editor.document = new ThreeDocument()
+    editor.document = new Document()
     expect(editor.operators.running).toBe(null)
     expect(previous.activeTransaction).toBe(null)
   })

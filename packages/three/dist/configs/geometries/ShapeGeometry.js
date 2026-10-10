@@ -2,8 +2,8 @@ import { ioPropertyEditor, registerEditorConfig, registerEditorGroups, registerE
 import { ioObject } from '@io-gui/editors';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { ShapeGeometry } from 'three/webgpu';
-import { ioBuildGeometry } from '../../elements/IoBuildGeometry.js';
-registerEditorWidget(ShapeGeometry, ioBuildGeometry());
+import { threeBuildGeometry } from '../../elements/ThreeBuildGeometry.js';
+registerEditorWidget(ShapeGeometry, threeBuildGeometry());
 registerEditorConfig(ShapeGeometry, [
     ['parameters', ioPropertyEditor({ config: [
                 // shapes is a Shape or array - displayed as object

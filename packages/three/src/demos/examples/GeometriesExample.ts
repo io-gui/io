@@ -26,18 +26,18 @@ import {
 import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js'
 import { plane, klein, mobius } from 'three/addons/geometries/ParametricFunctions.js'
 import { Register, Property } from '@io-gui/core'
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
+import { Document, DocumentProps } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
 
 /** The built-in geometries in a 4×4 grid, sharing one UV grid textured material. Spins while playing; plays when opened. */
 @Register
-export class GeometriesExample extends ThreeDocument {
+export class GeometriesExample extends Document {
   private material: MeshPhongMaterial
 
   @Property({type: Boolean, value: false})
   declare wireframe: boolean
 
-  constructor(args?: ThreeDocumentProps) {
+  constructor(args?: DocumentProps) {
     super({autoplay: true, ...args})
 
     const ambientLight = new AmbientLight( 0xcccccc, 1.5 )

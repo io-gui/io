@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { ACESFilmicToneMapping, AgXToneMapping, Mesh, NeutralToneMapping, NoToneMapping, PlaneGeometry, Texture, WebGPURenderer } from 'three/webgpu'
-import { DirtyReason, ForwardPipeline, PipelineContext, SelectionModel, ThreeEditor, ThreeView, UVPipeline, ViewCompositor, ViewPipeline, collectUVMeshes, pipelineTypes } from '@io-gui/three'
+import { DirtyReason, ForwardPipeline, PipelineContext, SelectionModel, Editor, ThreeView, UVPipeline, ViewCompositor, ViewPipeline, collectUVMeshes, pipelineTypes } from '@io-gui/three'
 
 type FakeRenderer = WebGPURenderer & {renders: unknown[]}
 
@@ -31,7 +31,7 @@ let probe: ProbePipeline | null = null
 pipelineTypes.register({id: 'probe', create: () => (probe = new ProbePipeline())})
 
 describe('ViewCompositor', () => {
-  let editor: ThreeEditor
+  let editor: Editor
   let renderer: FakeRenderer
   let compositor: ViewCompositor
   let view: ThreeView
@@ -45,7 +45,7 @@ describe('ViewCompositor', () => {
   }
 
   beforeEach(() => {
-    editor = new ThreeEditor()
+    editor = new Editor()
     renderer = fakeRenderer()
     compositor = new ViewCompositor(renderer)
     view = new ThreeView()
@@ -130,7 +130,7 @@ describe('ViewCompositor', () => {
 
 describe('UVPipeline', () => {
   it('draws UV layouts of selected meshes and picks them as their meshes', async () => {
-    const editor = new ThreeEditor()
+    const editor = new Editor()
     const plane = new Mesh(new PlaneGeometry(1, 1))
     plane.position.set(5, 5, 5)
     editor.document.scene.add(plane)

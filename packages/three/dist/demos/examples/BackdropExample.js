@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Property, Register } from '@io-gui/core';
-import { ThreeDocument } from '@io-gui/three';
+import { Document } from '@io-gui/three';
 import { registerEditorGroups } from '@io-gui/editors';
 import { AnimationMixer, Group, Mesh, MeshStandardNodeMaterial, SphereGeometry, SpotLight, MathUtils, NeutralToneMapping, } from 'three/webgpu';
 import { float, vec3, color, viewportSharedTexture, hue, blendOverlay, posterize, grayscale, saturation, viewportSafeUV, screenUV, checker, uv, time, oscSine, output, } from 'three/tsl';
@@ -14,7 +14,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  * Eight spheres whose backdrop nodes filter what is behind them, circling the dancing Michelle model.
  * The mixer's time scale (Document tab) also drives the circling. Plays when opened.
  */
-let BackdropExample = class BackdropExample extends ThreeDocument {
+let BackdropExample = class BackdropExample extends Document {
     portals;
     constructor(args) {
         super({ toneMapping: NeutralToneMapping, toneMappingExposure: 0.3, autoplay: true, ...args });

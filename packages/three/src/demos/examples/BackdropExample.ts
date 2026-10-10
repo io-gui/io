@@ -1,5 +1,5 @@
 import { Property, Register } from '@io-gui/core'
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
+import { Document, DocumentProps } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
 import {
   AnimationMixer,
@@ -37,14 +37,14 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
  * The mixer's time scale (Document tab) also drives the circling. Plays when opened.
  */
 @Register
-export class BackdropExample extends ThreeDocument {
+export class BackdropExample extends Document {
 
   @Property({type: AnimationMixer, init: new Group()})
   declare mixer: AnimationMixer
 
   public portals: Group
 
-  constructor(args?: ThreeDocumentProps) {
+  constructor(args?: DocumentProps) {
     super({toneMapping: NeutralToneMapping, toneMappingExposure: 0.3, autoplay: true, ...args})
 
     // Background

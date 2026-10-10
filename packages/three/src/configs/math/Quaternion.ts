@@ -1,7 +1,7 @@
 import { registerEditorConfig } from '@io-gui/editors'
-import { ioQuaternion } from '../../elements/math/IoQuaternion.js'
+import { threeQuaternion } from '../../elements/math/ThreeQuaternion.js'
 import { Quaternion } from 'three/webgpu'
 
 registerEditorConfig(Object, [
-  [Quaternion, ioQuaternion({min: -Infinity, max: Infinity, step: 0.1})],
+  [Quaternion, threeQuaternion({min: -Infinity, max: Infinity, step: 0.1})],
 ])

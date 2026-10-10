@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Property, Register } from '@io-gui/core';
 import { AnimationAction, AnimationMixer, AnimationUtils, Color, DirectionalLight, Fog, Group, HemisphereLight, Mesh, MeshPhongMaterial, PlaneGeometry, } from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { ThreeDocument } from '@io-gui/three';
+import { Document } from '@io-gui/three';
 import { ioObject, ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
 const loader = new GLTFLoader();
 const loadGltf = (url) => new Promise((resolve, reject) => {
@@ -17,7 +17,7 @@ const loadGltf = (url) => new Promise((resolve, reject) => {
  * The Xbot model with base actions (crossfaded with the Document tab buttons) and additive poses
  * (weighted there). Plays when opened.
  */
-let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBlendingExample extends ThreeDocument {
+let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBlendingExample extends Document {
     mixer = new AnimationMixer(new Group());
     currentBaseAction = 'idle';
     baseActions = {

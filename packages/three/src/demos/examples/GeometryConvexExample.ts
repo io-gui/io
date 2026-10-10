@@ -18,15 +18,15 @@ import { instancedBufferAttribute, texture, float, color } from 'three/tsl'
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js'
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
 import { Register } from '@io-gui/core'
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
+import { Document, DocumentProps } from '@io-gui/three'
 
 /** The convex hull of a dodecahedron's vertices, drawn as points and a translucent mesh. Spins while playing; plays when opened. */
 @Register
-export class GeometryConvexExample extends ThreeDocument {
+export class GeometryConvexExample extends Document {
 
   public group: Group
 
-  constructor(args?: ThreeDocumentProps) {
+  constructor(args?: DocumentProps) {
     super({autoplay: true, ...args})
 
     // ambient light

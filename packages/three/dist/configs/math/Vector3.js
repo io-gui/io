@@ -1,6 +1,6 @@
 import { registerEditorConfig } from '@io-gui/editors';
 import { Vector3 } from 'three/webgpu';
-import { ioVector3 } from '../../elements/math/IoVector3.js';
+import { threeVector3 } from '../../elements/math/ThreeVector3.js';
 registerEditorConfig(Object, [
-    [Vector3, ioVector3({ min: -Infinity, max: Infinity, step: 0.1 })],
+    [Vector3, threeVector3({ min: -Infinity, max: Infinity, step: 0.1 })],
 ]);

@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { InputHost, InputRouter, NavigationBehavior, RaycastPicker, SelectBehavior, SelectionModel, ThreeDocument, ThreeEditor, ThreeView, keymaps, selectionKeymaps, navigationKeymaps } from '@io-gui/three'
+import { InputHost, InputRouter, NavigationBehavior, RaycastPicker, SelectBehavior, SelectionModel, Document, Editor, ThreeView, keymaps, selectionKeymaps, navigationKeymaps } from '@io-gui/three'
 import { BoxGeometry, BufferGeometry, LineSegments, Mesh, Object3D, Vector3 } from 'three/webgpu'
 
 type Host = InputHost & {selection: SelectionModel}
 
-function createHost(document: ThreeDocument, selection: SelectionModel): Host {
+function createHost(document: Document, selection: SelectionModel): Host {
   const element = window.document.createElement('div') as unknown as Host
   const view = new ThreeView({overscan: 1})
   Object.assign(element, {view, scene: document.scene, selection, getViewCamera: () => view.getCamera(200, 100, document.scene)})
@@ -21,12 +21,12 @@ function box(x: number, name: string) {
 }
 
 describe('SelectionModel', () => {
-  let document: ThreeDocument
+  let document: Document
   let selection: SelectionModel
   let a: Mesh, b: Mesh
 
   beforeEach(() => {
-    document = new ThreeDocument()
+    document = new Document()
     a = box(0, 'a')
     b = box(2, 'b')
     document.scene.add(a, b)
@@ -82,11 +82,11 @@ describe('SelectionModel', () => {
   })
 
   it('is kept per document by the editor', () => {
-    const editor = new ThreeEditor({document})
+    const editor = new Editor({document})
     const first = editor.selection
     expect(first.document).toBe(document)
     first.set([a.uuid])
-    const other = new ThreeDocument()
+    const other = new Document()
     editor.document = other
     expect(editor.selection.document).toBe(other)
     expect(editor.selection.size).toBe(0)
@@ -99,7 +99,7 @@ describe('SelectionModel', () => {
 })
 
 describe('RaycastPicker and SelectBehavior', () => {
-  let document: ThreeDocument
+  let document: Document
   let selection: SelectionModel
   let host: Host
   let router: InputRouter
@@ -107,7 +107,7 @@ describe('RaycastPicker and SelectBehavior', () => {
   const picker = new RaycastPicker()
 
   beforeEach(() => {
-    document = new ThreeDocument()
+    document = new Document()
     left = box(-2, 'left')
     right = box(2, 'right')
     document.scene.add(left, right)
@@ -249,7 +249,7 @@ describe('RaycastPicker and SelectBehavior', () => {
 
 describe('Router clicks', () => {
   it('offers clicks after a capture ends, but not after drags or multi-touch', () => {
-    const host = createHost(new ThreeDocument(), null as unknown as SelectionModel)
+    const host = createHost(new Document(), null as unknown as SelectionModel)
     const router = new InputRouter(host)
     const clicks: number[] = []
     router.add({priority: 300, wantsCapture: () => true, begin() {}, update() {}, end() {}, cancel() {}})

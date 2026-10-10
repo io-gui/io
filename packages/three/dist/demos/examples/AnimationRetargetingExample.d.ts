@@ -1,15 +1,15 @@
 import { AnimationMixer, PerspectiveCamera, Group } from 'three/webgpu';
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three';
+import { Document, DocumentProps } from '@io-gui/three';
 /**
  * Michelle's animation retargeted onto the Soldier, over a reflective floor with a TSL light-speed background.
  * Plays when opened.
  */
-export declare class AnimationRetargetingExample extends ThreeDocument {
+export declare class AnimationRetargetingExample extends Document {
     sourceMixer?: AnimationMixer;
     targetMixer?: AnimationMixer;
     camera: PerspectiveCamera;
     group: Group;
-    constructor(args?: ThreeDocumentProps);
+    constructor(args?: DocumentProps);
     private loadModels;
     private getSource;
     private retargetModel;

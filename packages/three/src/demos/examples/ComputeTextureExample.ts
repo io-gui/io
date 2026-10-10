@@ -1,13 +1,13 @@
 import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture, ComputeNode, WebGPURenderer } from 'three/webgpu'
 import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl'
 import { Register } from '@io-gui/core'
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
+import { Document, DocumentProps } from '@io-gui/three'
 
 @Register
-export class ComputeTextureExample extends ThreeDocument {
+export class ComputeTextureExample extends Document {
   public storageTexture: StorageTexture
   public computeNode: ComputeNode
-  constructor(args?: ThreeDocumentProps) {
+  constructor(args?: DocumentProps) {
     super(args)
     const width = 512, height = 512
     this.storageTexture = new StorageTexture(width, height)

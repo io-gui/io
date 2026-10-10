@@ -6,14 +6,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { AmbientLight, ArrayCamera, CylinderGeometry, DirectionalLight, Mesh, MeshPhongMaterial, PerspectiveCamera, PlaneGeometry, Vector4 } from 'three/webgpu';
 import { Register } from '@io-gui/core';
-import { ThreeDocument } from '@io-gui/three';
+import { Document } from '@io-gui/three';
 const AMOUNT = 6;
 /**
  * A spinning cylinder in front of an ArrayCamera of 6×6 sub-cameras, laid out for a square canvas.
  * Views copy scene cameras into a plain camera (ADR-0005), so a camera view looks through the array's main
  * camera, not the grid. Plays when opened.
  */
-let CameraArrayExample = class CameraArrayExample extends ThreeDocument {
+let CameraArrayExample = class CameraArrayExample extends Document {
     arrayCamera;
     mesh;
     constructor(args) {

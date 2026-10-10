@@ -35,7 +35,7 @@ const _center = new Vector3()
 
 /**
  * State of one view (ADR-0002): navigation and display settings, independent of any element.
- * An IoThreeViewport shows it; the view survives the element being unmounted or moved.
+ * A ThreeViewport shows it; the view survives the element being unmounted or moved.
  */
 @Register
 export class ThreeView extends ReactiveObject {

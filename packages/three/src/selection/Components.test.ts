@@ -1,13 +1,13 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { ComponentPicker, IdBufferSource, IdComponentPicker, InputHost, InputRouter, SelectBehavior, SelectionModel, ThreeDocument, ThreeEditor, ThreeView, UVComponentPicker, getTopology, keymaps } from '@io-gui/three'
+import { ComponentPicker, IdBufferSource, IdComponentPicker, InputHost, InputRouter, SelectBehavior, SelectionModel, Document, Editor, ThreeView, UVComponentPicker, getTopology, keymaps } from '@io-gui/three'
 import { BoxGeometry, Mesh, Object3D, PlaneGeometry, Raycaster, Vector2, Vector3 } from 'three/webgpu'
 
 const WIDTH = 200
 const HEIGHT = 100
 
-type Host = InputHost & {selection: SelectionModel; editor: ThreeEditor; mode: string; componentPicker: ComponentPicker}
+type Host = InputHost & {selection: SelectionModel; editor: Editor; mode: string; componentPicker: ComponentPicker}
 
-function createHost(editor: ThreeEditor, view: ThreeView, componentPicker: ComponentPicker): Host {
+function createHost(editor: Editor, view: ThreeView, componentPicker: ComponentPicker): Host {
   const element = window.document.createElement('div') as unknown as Host
   Object.defineProperties(element, {
     view: {value: view},
@@ -52,12 +52,12 @@ const raycastSource: IdBufferSource = (host, camera, objects, width, height) => 
 const flush = () => new Promise(resolve => setTimeout(resolve, 0))
 
 describe('SelectionModel components', () => {
-  let document: ThreeDocument
+  let document: Document
   let selection: SelectionModel
   let mesh: Mesh
 
   beforeEach(() => {
-    document = new ThreeDocument()
+    document = new Document()
     mesh = new Mesh(new BoxGeometry(1, 1, 1))
     document.scene.add(mesh)
     selection = new SelectionModel({document})
@@ -112,7 +112,7 @@ describe('SelectionModel components', () => {
 })
 
 describe('Component picking and edit mode', () => {
-  let editor: ThreeEditor
+  let editor: Editor
   let view: ThreeView
   let host: Host
   let router: InputRouter
@@ -120,7 +120,7 @@ describe('Component picking and edit mode', () => {
   let picker: IdComponentPicker
 
   beforeEach(() => {
-    editor = new ThreeEditor()
+    editor = new Editor()
     mesh = new Mesh(new BoxGeometry(1, 1, 1))
     editor.document.scene.add(mesh)
     editor.document.scene.updateMatrixWorld(true)
@@ -289,14 +289,14 @@ describe('Component picking and edit mode', () => {
 })
 
 describe('UV component picking', () => {
-  let editor: ThreeEditor
+  let editor: Editor
   let view: ThreeView
   let host: Host
   let mesh: Mesh
   const picker = new UVComponentPicker()
 
   beforeEach(() => {
-    editor = new ThreeEditor()
+    editor = new Editor()
     // 2x1 segments: 6 points, 4 triangles, UVs spanning 0..1.
     mesh = new Mesh(new PlaneGeometry(2, 1, 2, 1))
     editor.document.scene.add(mesh)

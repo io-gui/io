@@ -15,7 +15,7 @@ export interface ViewRenderResult {
 }
 
 /**
- * What the scheduler needs from a view. Implemented by `IoThreeViewport`.
+ * What the scheduler needs from a view. Implemented by `ThreeViewport`.
  */
 export interface ScheduledView {
   readonly renderer: WebGPURenderer
@@ -32,7 +32,7 @@ export interface ScheduledView {
 }
 
 /**
- * Anything advanced by the scheduler clock while playing, such as a playing ThreeEditor.
+ * Anything advanced by the scheduler clock while playing, such as a playing Editor.
  */
 export interface ScheduledTicker {
   readonly changeBus: ChangeBus

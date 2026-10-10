@@ -2,7 +2,7 @@ import { PerspectiveCamera, OrthographicCamera, Group, BufferGeometry, Float32Bu
 import { Register } from '@io-gui/core'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { registerEditorConfig, registerEditorGroups, ioObject } from '@io-gui/editors'
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
+import { Document, DocumentProps } from '@io-gui/three'
 
 const frustumSize = 600
 
@@ -11,14 +11,14 @@ const frustumSize = 600
  * frustums change. Look through them in a camera view; the Document tab shows their projections. Plays when opened.
  */
 @Register
-export class CameraExample extends ThreeDocument {
+export class CameraExample extends Document {
 
   public perspectiveCamera: PerspectiveCamera
   public orthographicCamera: OrthographicCamera
   public cameraRig: Group
   public mesh: Mesh
 
-  constructor(args?: ThreeDocumentProps) {
+  constructor(args?: DocumentProps) {
     super({autoplay: true, ...args})
 
     this.perspectiveCamera = new PerspectiveCamera( 50, 0.5, 150, 1000 )

@@ -11,7 +11,7 @@ export interface ViewRenderResult {
     converged: boolean;
 }
 /**
- * What the scheduler needs from a view. Implemented by `IoThreeViewport`.
+ * What the scheduler needs from a view. Implemented by `ThreeViewport`.
  */
 export interface ScheduledView {
     readonly renderer: WebGPURenderer;
@@ -27,7 +27,7 @@ export interface ScheduledView {
     onRendererError?(error: Error): void;
 }
 /**
- * Anything advanced by the scheduler clock while playing, such as a playing ThreeEditor.
+ * Anything advanced by the scheduler clock while playing, such as a playing Editor.
  */
 export interface ScheduledTicker {
     readonly changeBus: ChangeBus;
@@ -64,7 +64,7 @@ export declare class RenderScheduler {
     getTags(view: ScheduledView): ReadonlySet<DirtyReason>;
     addTicker(ticker: ScheduledTicker): void;
     removeTicker(ticker: ScheduledTicker): void;
-    getRendererState(renderer: WebGPURenderer): "ready" | "pending" | "failed" | undefined;
+    getRendererState(renderer: WebGPURenderer): "pending" | "ready" | "failed" | undefined;
     /**
      * Runs one frame. Called by the rAF loop; tests call it directly with `autoStart: false`.
      */

@@ -9,7 +9,7 @@ import { AnimationMixer, BoxGeometry, DirectionalLight, Euler, PerspectiveCamera
 import { color, screenUV, hue, reflector, time, Fn, vec2, length, atan, float, sin, cos, vec3, sub, mul, pow, blendDodge, normalWorldGeometry, } from 'three/tsl';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
-import { ThreeDocument } from '@io-gui/three';
+import { Document } from '@io-gui/three';
 const loadGltf = (url) => new Promise((resolve, reject) => {
     new GLTFLoader().load(url, resolve, undefined, reject);
 });
@@ -34,7 +34,7 @@ const lightSpeed = /*#__PURE__*/ Fn(([suv_immutable]) => {
  * Michelle's animation retargeted onto the Soldier, over a reflective floor with a TSL light-speed background.
  * Plays when opened.
  */
-let AnimationRetargetingExample = class AnimationRetargetingExample extends ThreeDocument {
+let AnimationRetargetingExample = class AnimationRetargetingExample extends Document {
     sourceMixer;
     targetMixer;
     camera;

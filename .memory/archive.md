@@ -702,3 +702,21 @@
 - User correction: configs/index.ts is only for external three.js classes. Editor configs + groups live next to class definitions. Global `registerEditorGroups(Object, {is*, _listeners, id/uuid/type/userData})` removed on purpose (stepped over every Object-derived class); granular per-class configs to come. I had flagged its removal as a regression - wrong.
 - ThreeDocument/ThreeEditor configs moved (by user) from configs/editor/ThreeEditor.ts into the class modules. ThreeDocument groups: Main tone mapping + `Advanced: [/^[\s\S]*$/]` catch-all (explicit names beat regexes, so subclasses list Main props).
 - Distilled into rules: io-gui.mdc "Editor Configs" + "io-three: Document, Editor, View" (document = portable content, editor = host/session, view = intent resolved per document, apps = host + documents). Consumer versions in three SKILL (new-app + document + config bullets, selection.activeObject, view intent) and editors SKILL (colocate, narrowest class, whitelist pattern).
+
+### [three][rename] 2026-10-10 (6)
+- IoThreeViewport -> ThreeViewport (file, test, props type, factory `threeViewport`, tag `three-viewport`). IoBuildGeometry -> ThreeBuildGeometry (factory `threeBuildGeometry`, tag `three-build-geometry`; 22 geometry configs). Tag = class name kebab-cased by ReactiveElement.Register.
+- Docs updated (README, CONTEXT, SKILL, ADR 0001/0002/0004, core + principles plans, working.md); archive + superseded example plan left as history. Stale tracked dist Io* files removed (incl. IoThreeExample, src deleted by user), tsc -b re-emitted. tsc clean, eslint 0 errors, three tests 144.
+- External consumers still on old names: daily-routines (index, GlobeTool, RoutinesViewport), circuits, mandis-led-configurator. Not touched.
+
+### [three][rename] 2026-10-10 (7)
+- elements/math Io* -> Three*: ThreeEuler, ThreeMatrix2/3/4, ThreeMatrixBase, ThreeQuaternion, ThreeVector2/3/4, ThreeVectorBase (+ Props types, factories threeVector3 etc., tags three-vector-3 etc.). Configs (math, Object3D, Scene, CanvasTarget, SphericalHarmonics3), BackdropAreaExample, index.ts, three SKILL, editors README, principles plan updated. Stale dist removed, rebuilt. tsc clean, three+editors tests 194 pass.
+
+### [three][move] 2026-10-10 (8)
+- ThreeEditorStatus moved src/editor -> src/elements (git mv; imports now ../editor/ThreeEditor.js, ../editor/ThreeDocument.js). IoEditorExample import updated. Old dist/editor files removed, rebuilt to dist/elements. Not exported from index (was not before). tsc + eslint clean.
+
+### [three][rename] 2026-10-10 (9)
+- ThreeDocument -> Document, ThreeEditor -> Editor (+ DocumentProps/EditorProps; files editor/Document.ts, Document.test.ts, Editor.ts). ThreeEditorStatus kept (element; tag needs hyphen). Pattern: reactive objects drop prefix, elements use Three prefix.
+- `Document` shadows DOM `Document` type in importing modules (no src module uses the DOM type). No ReactiveObject name registry, so no runtime clash.
+- Docs, ADRs, CONTEXT (root + three), SKILL, io-gui.mdc, plans, working/now updated; archive + superseded plan left. Article fixes ("an Editor").
+- Gotcha: rg skips hidden dirs (.cursor, .memory) without --hidden. Math rename missed principles plan IoVectorBase; fixed.
+- Stale dist removed, rebuilt. tsc clean, eslint 0 errors, three tests 144.

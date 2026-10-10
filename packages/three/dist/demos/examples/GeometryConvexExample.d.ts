@@ -1,8 +1,8 @@
 import { Group } from 'three/webgpu';
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three';
+import { Document, DocumentProps } from '@io-gui/three';
 /** The convex hull of a dodecahedron's vertices, drawn as points and a translucent mesh. Spins while playing; plays when opened. */
-export declare class GeometryConvexExample extends ThreeDocument {
+export declare class GeometryConvexExample extends Document {
     group: Group;
-    constructor(args?: ThreeDocumentProps);
+    constructor(args?: DocumentProps);
     onAnimate(): void;
 }

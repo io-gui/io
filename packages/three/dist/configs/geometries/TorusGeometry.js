@@ -1,8 +1,8 @@
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups, registerEditorWidget } from '@io-gui/editors';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { TorusGeometry } from 'three/webgpu';
-import { ioBuildGeometry } from '../../elements/IoBuildGeometry.js';
-registerEditorWidget(TorusGeometry, ioBuildGeometry());
+import { threeBuildGeometry } from '../../elements/ThreeBuildGeometry.js';
+registerEditorWidget(TorusGeometry, threeBuildGeometry());
 registerEditorConfig(TorusGeometry, [
     ['parameters', ioPropertyEditor({ config: [
                 ['radius', ioNumberSlider({ min: 3, max: 1000, step: 0.1 })],

@@ -7,8 +7,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture } from 'three/webgpu';
 import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl';
 import { Register } from '@io-gui/core';
-import { ThreeDocument } from '@io-gui/three';
-let ComputeTextureExample = class ComputeTextureExample extends ThreeDocument {
+import { Document } from '@io-gui/three';
+let ComputeTextureExample = class ComputeTextureExample extends Document {
     storageTexture;
     computeNode;
     constructor(args) {

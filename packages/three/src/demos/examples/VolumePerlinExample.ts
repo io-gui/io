@@ -3,12 +3,12 @@ import { Break, If, vec3, vec4, texture3D, uniform, Fn} from 'three/tsl'
 import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js'
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js'
 import { Register, Property } from '@io-gui/core'
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
+import { Document, DocumentProps } from '@io-gui/three'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 
 @Register
-export class VolumePerlinExample extends ThreeDocument {
+export class VolumePerlinExample extends Document {
   private thresholdUniform: UniformNode<number>
   private stepsUniform: UniformNode<number>
 
@@ -18,7 +18,7 @@ export class VolumePerlinExample extends ThreeDocument {
   @Property({type: Number, value: 200})
   declare steps: number
 
-  constructor(args?: ThreeDocumentProps) {
+  constructor(args?: DocumentProps) {
     super(args)
 
     const size = 128

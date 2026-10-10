@@ -12,7 +12,7 @@ RenderScheduler (singleton, the only thing that renders)
 ├── one requestAnimationFrame loop
 └── typed dirty tags per viewport
 
-IoThreeViewport (element)
+ThreeViewport (element)
 ├── CanvasTarget (per viewport)
 ├── compositor: ViewCompositor
 │   ├── pipeline: ViewPipeline ('forward', 'uv', or a registered one such as a PostProcessingPipeline)
@@ -24,8 +24,8 @@ IoThreeViewport (element)
     ├── kind ('3d' | 'uv'), pipeline, overlays, profile, xray
     └── overscan, clearColor, clearAlpha, toneMapping / toneMappingExposure overrides
 
-ThreeEditor (object, one per app)
-├── document: ThreeDocument (switchable at runtime)
+Editor (object, one per app)
+├── document: Document (switchable at runtime)
 │   ├── scene, toneMapping, toneMappingExposure
 │   ├── changeBus: ChangeBus
 │   └── transact() / begin(): Transaction of invertible patches
@@ -41,13 +41,13 @@ EditorConfigs (configs/*)
 
 ## Elements
 
-### IoThreeViewport
+### ThreeViewport
 
 WebGPU-powered viewport element for rendering Three.js scenes.
 
 ```typescript
-type IoThreeViewportProps = {
-  editor?: ThreeEditor; // App object whose active document the viewport shows
+type ThreeViewportProps = {
+  editor?: Editor; // App object whose active document the viewport shows
   view?: ThreeView; // View state and camera; pass one to keep navigation across remounts (default: a perspective view the viewport makes)
   renderer?: WebGPURenderer; // Custom renderer (optional)
   keymap?: Keymap; // Navigation and selection bindings (default: keymaps.default, OrbitControls-like)
@@ -71,12 +71,12 @@ type IoThreeViewportProps = {
 
 ```typescript
 import { Register } from "@io-gui/core";
-import { IoThreeViewport, ThreeEditor, ThreeEditorProps } from "@io-gui/three";
+import { ThreeViewport, Editor, EditorProps } from "@io-gui/three";
 import { Mesh, BoxGeometry, MeshBasicMaterial } from "three/webgpu";
 
 @Register
-class MyEditor extends ThreeEditor {
-  constructor(args?: ThreeEditorProps) {
+class MyEditor extends Editor {
+  constructor(args?: EditorProps) {
     super(args);
     this.document.scene.add(
       new Mesh(new BoxGeometry(), new MeshBasicMaterial({ color: 0xff0000 })),
@@ -87,23 +87,23 @@ class MyEditor extends ThreeEditor {
   }
 }
 
-const viewport = new IoThreeViewport({
+const viewport = new ThreeViewport({
   editor: new MyEditor({ isPlaying: true }),
 });
 ```
 
 ## Objects
 
-### ThreeEditor and ThreeDocument
+### Editor and Document
 
 The app object and its content ([ADR-0002](./docs/adr/0002-app-view-frame-layers.md)). Viewports show `editor.document`; assigning a new document switches every viewport, and each view remembers its camera per document. A view seeing a document for the first time keeps its axis view (top, front, ...) and frames the new scene.
 
 ```typescript
-const editor = new ThreeEditor({ isPlaying: false });
+const editor = new Editor({ isPlaying: false });
 editor.document.scene.add(mesh);
-ioThreeViewport({ editor });
+threeViewport({ editor });
 
-editor.document = new ThreeDocument(); // switch; switching back restores each view's camera
+editor.document = new Document(); // switch; switching back restores each view's camera
 ```
 
 **Lifecycle methods** (override in a subclass):
@@ -113,7 +113,7 @@ editor.document = new ThreeDocument(); // switch; switching back restores each v
 | `onRendererInitialized(renderer)` | Called when WebGPU renderer is ready |
 | `onAnimate(delta, time)`          | Called each frame while `isPlaying`  |
 
-A `ThreeDocument` subclass has its own `onRendererInitialized(renderer)`. It runs once per renderer, before that renderer first draws the document, including for a document opened after the renderer was ready. GPU setup that belongs to the content, such as a compute pass that fills a texture, goes there, so the document works in any editor. Its `onAnimate(delta, time)` runs each frame while the editor showing it plays, after the editor's own. A document with `autoplay: true` asks to play when opened; the editor does not apply it, so whatever opens the document sets `editor.isPlaying = document.autoplay`.
+A `Document` subclass has its own `onRendererInitialized(renderer)`. It runs once per renderer, before that renderer first draws the document, including for a document opened after the renderer was ready. GPU setup that belongs to the content, such as a compute pass that fills a texture, goes there, so the document works in any editor. Its `onAnimate(delta, time)` runs each frame while the editor showing it plays, after the editor's own. A document with `autoplay: true` asks to play when opened; the editor does not apply it, so whatever opens the document sets `editor.isPlaying = document.autoplay`.
 
 **Edits go through transactions** of invertible patches ([ADR-0008](./docs/adr/0008-commands-transactions-and-patches.md)). Edits apply immediately and redraw the views; the old values are recorded, so a transaction can be rolled back, reverted or re-applied. Writes to the same path coalesce. `set` assigns a property (assigning a read-only one such as `position` throws); `copy` copies into the object a property holds, keeping its identity.
 
@@ -218,7 +218,7 @@ view.frame(object); // fit an object
 view.getCamera(width, height, scene); // camera for this size
 view.toJSON(); // persist with a layout; restore with applyJSON()
 
-ioThreeViewport({ editor, view }); // the view survives the element being remounted
+threeViewport({ editor, view }); // the view survives the element being remounted
 ```
 
 **Key behaviors:**
@@ -263,7 +263,7 @@ Custom pipelines implement `ViewPipeline` (`output`, `setSize`, `render(ctx)`, o
 A view with `kind: 'uv'` shows the UV layout of the selected meshes (the edit set) over the 0–1 grid, with the active object's color texture behind it, active brighter. It uses the `uv` pipeline, which never draws the content scene. Navigation is 2D (orbit gestures pan; frame keys show the UV square). Picking hits the layouts and selects their meshes, so a `select` profile UV view works as a selection view.
 
 ```typescript
-ioThreeViewport({ editor, view: new ThreeView({ kind: "uv", profile: "select" }) });
+threeViewport({ editor, view: new ThreeView({ kind: "uv", profile: "select" }) });
 ```
 
 In edit mode the UV view edits UVs (`UVComponentPicker`, on the CPU in UV space). With `selection.uvSync` off (default, like Blender) it shows only the faces selected in 3D and keeps its own `corner` selection: a UV vertex selects every shown corner of one buffer vertex, a face its three corners. With `uvSync` on it shows every face and picks map to the mesh's points, edges and faces, so both views select the same components.
@@ -283,7 +283,7 @@ Each viewport has one `InputRouter` ([ADR-0004](./docs/adr/0004-input-arbitrated
 **Navigation** (and selection) is driven by a keymap (data); `keymaps.default | blender | maya` combine both. Navigation alone: `navigationKeymaps.default` (OrbitControls-like: LMB orbit, RMB / Shift+LMB pan, MMB dolly, wheel zoom, Home frame all), `.blender` (MMB orbit, Shift+MMB pan, Ctrl+MMB dolly, numpad axis views) and `.maya` (Alt+LMB/MMB/RMB). Two-finger touch pans and pinch-dollies. Axis views pan instead of orbit. Navigation is off while looking through a scene camera.
 
 ```typescript
-ioThreeViewport({ editor, keymap: keymaps.blender });
+threeViewport({ editor, keymap: keymaps.blender });
 const keymap = Keymap.layer(myBindings, navigationKeymaps.default); // first match wins
 ```
 
@@ -340,7 +340,7 @@ The package requires WebGPU ([ADR-0001](./docs/adr/0001-webgpu-only-one-renderer
 
 ### Shared Renderer
 
-All `IoThreeViewport` instances share a single `WebGPURenderer` by default (`getDefaultRenderer()`). Tone mapping, exposure, clear color and render target are set for every draw by the viewport's compositor; nothing should rely on them between draws. A viewport may be given its own `renderer` for renderer-level options such as `logarithmicDepthBuffer`; GPU resources are then not shared with other renderers.
+All `ThreeViewport` instances share a single `WebGPURenderer` by default (`getDefaultRenderer()`). Tone mapping, exposure, clear color and render target are set for every draw by the viewport's compositor; nothing should rely on them between draws. A viewport may be given its own `renderer` for renderer-level options such as `logarithmicDepthBuffer`; GPU resources are then not shared with other renderers.
 
 ### Visibility Optimization
 

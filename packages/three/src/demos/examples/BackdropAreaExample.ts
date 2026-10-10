@@ -24,7 +24,7 @@ import {
 } from 'three/tsl'
 import { hashBlur } from 'three/addons/tsl/display/hashBlur.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { ThreeDocument, ThreeDocumentProps, ioVector3 } from '@io-gui/three'
+import { Document, DocumentProps, threeVector3 } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 
@@ -33,7 +33,7 @@ import { ioOptionSelect, Menu } from '@io-gui/menus'
  * model behind it. Plays when opened.
  */
 @Register
-export class BackdropAreaExample extends ThreeDocument {
+export class BackdropAreaExample extends Document {
   public mixer?: AnimationMixer
   public box: Mesh
 
@@ -50,7 +50,7 @@ export class BackdropAreaExample extends ThreeDocument {
   @Property({type: String, value: 'blurred'})
   declare material: string
 
-  constructor(args?: ThreeDocumentProps) {
+  constructor(args?: DocumentProps) {
     super({toneMappingExposure: 0.9, autoplay: true, ...args})
 
     // Background
@@ -165,7 +165,7 @@ registerEditorConfig(BackdropAreaExample, [
       options: ['blurred', 'depth', 'checker', 'pixel']
     }),
   })],
-  [Vector3, ioVector3({linkable: true})],
+  [Vector3, threeVector3({linkable: true})],
 ])
 
 registerEditorGroups(BackdropAreaExample, {

@@ -1,8 +1,8 @@
 import { StorageTexture, ComputeNode, WebGPURenderer } from 'three/webgpu';
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three';
-export declare class ComputeTextureExample extends ThreeDocument {
+import { Document, DocumentProps } from '@io-gui/three';
+export declare class ComputeTextureExample extends Document {
     storageTexture: StorageTexture;
     computeNode: ComputeNode;
-    constructor(args?: ThreeDocumentProps);
+    constructor(args?: DocumentProps);
     onRendererInitialized(renderer: WebGPURenderer): void;
 }

@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Property, Register } from '@io-gui/core';
 import { AnimationAction, AnimationMixer, Color, DirectionalLight, Fog, Group, HemisphereLight, Mesh, MeshPhongMaterial, PerspectiveCamera, PlaneGeometry, } from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { ThreeDocument } from '@io-gui/three';
+import { Document } from '@io-gui/three';
 import { ioObject, ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { ioButton } from '@io-gui/inputs';
@@ -19,7 +19,7 @@ const loadGltf = (url) => new Promise((resolve, reject) => {
  * The Soldier model crossfading between idle, walk and run. The Document tab has the crossfade buttons,
  * action weights, pause and single step. Plays when opened.
  */
-let AnimationSkinningBlendingExample = class AnimationSkinningBlendingExample extends ThreeDocument {
+let AnimationSkinningBlendingExample = class AnimationSkinningBlendingExample extends Document {
     camera;
     mixer = new AnimationMixer(new Group());
     actions = {};

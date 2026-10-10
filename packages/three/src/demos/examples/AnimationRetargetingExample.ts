@@ -38,7 +38,7 @@ import {
 } from 'three/tsl'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
+import { Document, DocumentProps } from '@io-gui/three'
 
 type GltfModel = {
   scene: Group
@@ -78,13 +78,13 @@ const lightSpeed = /*#__PURE__*/ Fn<[Node]>(([suv_immutable]) => {
  * Plays when opened.
  */
 @Register
-export class AnimationRetargetingExample extends ThreeDocument {
+export class AnimationRetargetingExample extends Document {
   public sourceMixer?: AnimationMixer
   public targetMixer?: AnimationMixer
   public camera: PerspectiveCamera
   public group: Group = new Group()
 
-  constructor(args?: ThreeDocumentProps) {
+  constructor(args?: DocumentProps) {
     super({autoplay: true, ...args})
 
     // Background

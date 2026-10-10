@@ -8,13 +8,13 @@ import { PerspectiveCamera, OrthographicCamera, Group, BufferGeometry, Float32Bu
 import { Register } from '@io-gui/core';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { registerEditorConfig, registerEditorGroups, ioObject } from '@io-gui/editors';
-import { ThreeDocument } from '@io-gui/three';
+import { Document } from '@io-gui/three';
 const frustumSize = 600;
 /**
  * A perspective and an orthographic scene camera on one rig, following an orbiting sphere while their
  * frustums change. Look through them in a camera view; the Document tab shows their projections. Plays when opened.
  */
-let CameraExample = class CameraExample extends ThreeDocument {
+let CameraExample = class CameraExample extends Document {
     perspectiveCamera;
     orthographicCamera;
     cameraRig;

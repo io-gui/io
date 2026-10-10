@@ -200,7 +200,7 @@ flowchart TD
 
 **Current state:** `type: Object` props use window `io-mutation` bus (one listener per node, improved). Io values listen directly; `NodeArray` uses proxy + self-listener. `Color` in-place mutation still invisible ([packages/core/src/core/Color.ts](packages/core/src/core/Color.ts)).
 
-**Production `type: Object` usage:** layout (`IoSplit`, `IoPanel`, `IoDrawer`), editors (`IoInspector`, `IoObject`, `IoPropertyEditor`), three (`IoVectorBase`, `IoBuildGeometry`).
+**Production `type: Object` usage:** layout (`IoSplit`, `IoPanel`, `IoDrawer`), editors (`IoInspector`, `IoObject`, `IoPropertyEditor`), three (`ThreeVectorBase`, `ThreeBuildGeometry`).
 
 **Evaluation tasks:**
 - For each production `type: Object` prop: is value mutated in place, replaced, or wrapped in Node/NodeArray?

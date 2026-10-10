@@ -10,7 +10,7 @@ import {
   Vector4
 } from 'three/webgpu'
 import { Register } from '@io-gui/core'
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
+import { Document, DocumentProps } from '@io-gui/three'
 
 const AMOUNT = 6
 
@@ -20,12 +20,12 @@ const AMOUNT = 6
  * camera, not the grid. Plays when opened.
  */
 @Register
-export class CameraArrayExample extends ThreeDocument {
+export class CameraArrayExample extends Document {
 
   public arrayCamera: ArrayCamera
   public mesh: Mesh
 
-  constructor(args?: ThreeDocumentProps) {
+  constructor(args?: DocumentProps) {
     super({autoplay: true, ...args})
 
     const subCameras: PerspectiveCamera[] = []

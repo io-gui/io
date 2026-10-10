@@ -10,18 +10,18 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
 import { Register } from '@io-gui/core'
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
+import { Document, DocumentProps } from '@io-gui/three'
 
 /**
  * The animated Littlest Tokyo model, lit by a PMREM room environment, with a scene camera riding the train.
  * Plays when opened.
  */
 @Register
-export class AnimationKeyframesExample extends ThreeDocument {
+export class AnimationKeyframesExample extends Document {
 
   public mixer: AnimationMixer = new AnimationMixer(new Object3D())
 
-  constructor(args?: ThreeDocumentProps) {
+  constructor(args?: DocumentProps) {
     super({autoplay: true, ...args})
     this.scene.background = new Color( 0xbfe3dd )
     void this.loadModel()

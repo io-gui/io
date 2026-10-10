@@ -11,13 +11,13 @@ import {
   SRGBColorSpace
 } from 'three/webgpu'
 import { Register } from '@io-gui/core'
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
+import { Document, DocumentProps } from '@io-gui/three'
 
 /** Three flat shaded icosahedra with vertex colors and wireframes, over fake shadows that cannot be selected. */
 @Register
-export class GeometryColorsExample extends ThreeDocument {
+export class GeometryColorsExample extends Document {
 
-  constructor(args?: ThreeDocumentProps) {
+  constructor(args?: DocumentProps) {
     super(args)
 
     this.scene.background = new Color( 0xffffff )

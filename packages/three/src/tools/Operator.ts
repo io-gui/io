@@ -1,5 +1,5 @@
-import type { ThreeEditor } from '../editor/ThreeEditor.js'
-import type { ThreeDocument } from '../editor/ThreeDocument.js'
+import type { Editor } from '../editor/Editor.js'
+import type { Document } from '../editor/Document.js'
 import type { Transaction } from '../editor/Transaction.js'
 import type { ThreeView } from '../view/ThreeView.js'
 import type { InputRouter } from '../input/InputRouter.js'
@@ -14,8 +14,8 @@ export type OperatorProps = Record<string, unknown>
 export type OperatorHost = InputHost & {readonly inputRouter: InputRouter}
 
 export interface OperatorContext {
-  readonly editor: ThreeEditor
-  readonly document: ThreeDocument
+  readonly editor: Editor
+  readonly document: Document
   /** Open transaction for this run; committed on `finished`, rolled back on `cancelled`. */
   readonly transaction: Transaction
   readonly host: OperatorHost | null
@@ -84,7 +84,7 @@ export class OperatorRegistry extends Registry<OperatorType> {
   private _running: RunningOperator | null = null
   private _lastCommand: Command | null = null
 
-  constructor(private readonly editor: ThreeEditor) {
+  constructor(private readonly editor: Editor) {
     super()
   }
 

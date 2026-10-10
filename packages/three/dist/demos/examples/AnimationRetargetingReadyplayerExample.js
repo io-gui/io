@@ -10,7 +10,7 @@ import { color, screenUV, vec2, vec4, reflector, positionWorld, } from 'three/ts
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
-import { ThreeDocument } from '@io-gui/three';
+import { Document } from '@io-gui/three';
 const gltfLoader = new GLTFLoader();
 const fbxLoader = new FBXLoader();
 const loadFbx = (url) => new Promise((resolve, reject) => {
@@ -20,7 +20,7 @@ const loadGltf = (url) => new Promise((resolve, reject) => {
     gltfLoader.load(url, resolve, undefined, reject);
 });
 /** A Mixamo FBX animation retargeted onto a Ready Player Me avatar, over a masked reflective floor. Plays when opened. */
-let AnimationRetargetingReadyplayerExample = class AnimationRetargetingReadyplayerExample extends ThreeDocument {
+let AnimationRetargetingReadyplayerExample = class AnimationRetargetingReadyplayerExample extends Document {
     sourceMixer;
     targetMixer;
     constructor(args) {

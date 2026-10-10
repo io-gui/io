@@ -4,7 +4,7 @@ status: accepted
 
 # Input is arbitrated by a per-viewport InputRouter with priority capture
 
-Each `IoThreeViewport` owns one `InputRouter`. The router is the only code that adds DOM input listeners to the viewport or takes pointer capture. Everything that wants input registers as a `Behavior` with a priority: modal operators (1000), gizmos (800), the active tool (500), navigation (300), fallback selection (100), context menu (50).
+Each `ThreeViewport` owns one `InputRouter`. The router is the only code that adds DOM input listeners to the viewport or takes pointer capture. Everything that wants input registers as a `Behavior` with a priority: modal operators (1000), gizmos (800), the active tool (500), navigation (300), fallback selection (100), context menu (50).
 
 On press, wheel or key, the router asks behaviors in priority order `wantsCapture(event)`. The first one that says yes owns the stream until it ends. Hover is a separate pass that runs only when nothing has captured. While a behavior with `allowsStealing` has captured, a new pointer is first offered to the other behaviors; one that wants it cancels the capturing behavior and takes over all captured pointers, for example when a second touch turns a tool drag into a pan. Without `allowsStealing`, extra pointers go to the capturing behavior (multi-touch navigation). The router calls `preventDefault()` / `stopPropagation()` only for captured events. Unclaimed events reach the rest of the page.
 

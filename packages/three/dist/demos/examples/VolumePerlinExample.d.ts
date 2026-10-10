@@ -1,10 +1,10 @@
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three';
-export declare class VolumePerlinExample extends ThreeDocument {
+import { Document, DocumentProps } from '@io-gui/three';
+export declare class VolumePerlinExample extends Document {
     private thresholdUniform;
     private stepsUniform;
     threshold: number;
     steps: number;
-    constructor(args?: ThreeDocumentProps);
+    constructor(args?: DocumentProps);
     thresholdChanged(): void;
     stepsChanged(): void;
 }

@@ -1,7 +1,7 @@
 ---
 name: io-gui-three
 description: >-
-  Build Three.js WebGPU apps with ThreeEditor and IoThreeViewport, including
+  Build Three.js WebGPU apps with Editor and ThreeViewport, including
   shared renderer lifecycle and editor config side-effects. Use when working with
   @io-gui/three, viewports, ThreeView, view navigation, pipelines, overlays,
   gizmos, the UV view, edit mode / component selection, or tools.
@@ -12,16 +12,16 @@ description: >-
 ## Defaults
 
 - Import from `@io-gui/three` (pulls peer `three` / webgpu).
-- New apps: one **`ThreeEditor`** (the host: playing state, selection, tools, operators) showing a **`ThreeDocument`** (the content); mount views with **`ioThreeViewport({ editor, view })`**. Switch content with `editor.document = doc`: every viewport, the selection and each view's navigation follow.
-- **Put content in a `ThreeDocument` subclass**, self-contained so it opens in any editor: scene in the constructor, GPU setup (compute, PMREM) in `onRendererInitialized(renderer)`, animation in `onAnimate(delta, time)` (runs while `editor.isPlaying`), controls as `@Property`s with groups registered next to the class. Don't touch the editor, views or DOM from a document. `autoplay: true` is a hint: whoever opens it sets `editor.isPlaying = doc.autoplay`.
-- **Register editor configs next to your class** (`registerEditorConfig` / `registerEditorGroups` right after its definition), on the narrowest class; never on `Object` or another broad base. `ThreeDocument` shows only tone mapping in Main and sends everything else to Advanced, so list your document's controls in `Main` (explicit names beat that regex).
+- New apps: one **`Editor`** (the host: playing state, selection, tools, operators) showing a **`Document`** (the content); mount views with **`threeViewport({ editor, view })`**. Switch content with `editor.document = doc`: every viewport, the selection and each view's navigation follow.
+- **Put content in a `Document` subclass**, self-contained so it opens in any editor: scene in the constructor, GPU setup (compute, PMREM) in `onRendererInitialized(renderer)`, animation in `onAnimate(delta, time)` (runs while `editor.isPlaying`), controls as `@Property`s with groups registered next to the class. Don't touch the editor, views or DOM from a document. `autoplay: true` is a hint: whoever opens it sets `editor.isPlaying = doc.autoplay`.
+- **Register editor configs next to your class** (`registerEditorConfig` / `registerEditorGroups` right after its definition), on the narrowest class; never on `Object` or another broad base. `Document` shows only tone mapping in Main and sends everything else to Advanced, so list your document's controls in `Main` (explicit names beat that regex).
 - **Edit the document through transactions** (`document.transact(tx => tx.copy(obj, 'position', v))`; `tx.set` assigns and throws on read-only properties such as `position`, `copy` copies into the held object), or operators (`editor.operators.run(id, props)`), not by writing Three.js objects directly: that is what keeps undo, redraw and future sync working. Interactive edits are modal operators (`invoke` returns `'running'`, `modal` gets events, Escape rolls back).
 - **Selection** is `editor.selection` (per document): change it with `selection.set(uuids)` / `selection.edit()...commit()`, read `getObjects()` / `getActiveObject()`, bind UI to `selection.version` / `selection.active` / `selection.activeObject` (the active Object3D, e.g. for an inspector). Picking goes through a `Picker` (`defaultPicker`, async). Set `userData.selectable = false` on helpers (grids, gizmo meshes) so they cannot be picked.
 - Tools are `ToolDefinition`s on `editor.tools`, activated per view kind + mode (`editor.setActiveTool('3d', 'object', id)`); `view.profile` (`full | select | navigate | none`) filters what a viewport installs. Built in: the Move tool `transform.translate` (gizmo + modal operator of the same id).
 - **Never add helpers (grids, outlines, handles) to `document.scene`.** Draw them as overlays (`overlayTypes.register`, `view.setOverlay(id, on)`) or gizmo groups (`ToolDefinition.createGizmoGroups`). Different rendering per view = a registered `ViewPipeline` named by `view.pipeline` (e.g. a `PostProcessingPipeline`), not renderer tweaks in `onAnimate`.
 - UV view: `new ThreeView({kind: 'uv', profile: 'select'})` shows the selected meshes' UV layouts.
 - **Components** (edit mode, `editor.operators.run('object.editmode_toggle')` / Tab; `mesh.select_mode` / 1 2 3): stored as `ComponentSet` bitsets in `editor.selection` (`edit().components(uuid, domain, size)`, `getComponents(uuid, domain)`). Get sizes and indices from `getTopology(geometry, 'mesh')` or `getGeometryAdapter(object)`; `point` is a welded position, not a buffer vertex. The UV view stores `corner` selection unless `selection.uvSync`.
-- Prefer package math editors (`IoVector3`, …) for Three math types in inspectors.
+- Prefer package math editors (`ThreeVector3`, …) for Three math types in inspectors.
 
 ## Gotchas
 

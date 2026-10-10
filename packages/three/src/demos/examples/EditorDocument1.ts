@@ -1,6 +1,6 @@
 import { Register } from '@io-gui/core'
 import { AmbientLight, BoxGeometry, ConeGeometry, DirectionalLight, Mesh, MeshStandardMaterial, SphereGeometry, TorusKnotGeometry } from 'three/webgpu'
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
+import { Document, DocumentProps } from '@io-gui/three'
 import { CanvasTexture, SRGBColorSpace } from 'three/webgpu'
 
 /** 8×8 checker of `color` and light gray, so the UV view shows whose texture it lays out. */
@@ -22,8 +22,8 @@ export function checkerTexture(color: string) {
 
 /** Four checker-textured primitives in a row, lit by an ambient and a directional light. */
 @Register
-export class EditorDocument1 extends ThreeDocument {
-  constructor(args?: ThreeDocumentProps) {
+export class EditorDocument1 extends Document {
+  constructor(args?: DocumentProps) {
     super(args)
     const ambient = new AmbientLight(0xffffff, 0.6)
     ambient.name = 'Ambient'

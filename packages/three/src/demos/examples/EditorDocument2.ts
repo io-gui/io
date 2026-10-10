@@ -1,6 +1,6 @@
 import { Register } from '@io-gui/core'
 import { ACESFilmicToneMapping, BoxGeometry, BufferGeometry, CapsuleGeometry, CylinderGeometry, DirectionalLight, Group, HemisphereLight, IcosahedronGeometry, Mesh, MeshStandardMaterial, PlaneGeometry, TorusGeometry } from 'three/webgpu'
-import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
+import { Document, DocumentProps } from '@io-gui/three'
 import { CanvasTexture, SRGBColorSpace } from 'three/webgpu'
 
 /** 8×8 checker of `color` and light gray, so the UV view shows whose texture it lays out. */
@@ -30,8 +30,8 @@ function shape(name: string, geometry: BufferGeometry, color: string, x: number,
  * Primitives on a floor that cannot be selected, and a `Stack` group of two meshes; ACES tone mapping by default.
  */
 @Register
-export class EditorDocument2 extends ThreeDocument {
-  constructor(args?: ThreeDocumentProps) {
+export class EditorDocument2 extends Document {
+  constructor(args?: DocumentProps) {
     super({toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1.2, ...args})
     const sky = new HemisphereLight(0xddeeff, 0x332211, 1.2)
     sky.name = 'Sky'

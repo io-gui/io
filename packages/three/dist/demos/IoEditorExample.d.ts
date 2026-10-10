@@ -1,12 +1,12 @@
 import { ReactiveElement, ReactiveElementProps } from '@io-gui/core';
 import { Object3D } from 'three/webgpu';
-import { SelectionModel, ThreeEditor, ThreeView } from '@io-gui/three';
+import { SelectionModel, Editor, ThreeView } from '@io-gui/three';
 /**
- * One ThreeEditor in tabbed views, each with its own pipeline (ADR-0006) and interaction profile: a forward
+ * One Editor in tabbed views, each with its own pipeline (ADR-0006) and interaction profile: a forward
  * perspective view with the grid overlay and the Move tool, select-only axis views post-processed with TRAA, and a
  * select-only UV view of the selection, and a select-only Camera view through the document's first scene camera.
  * The inspector follows the active object; the Document tab shows the document's own properties.
- * The heading buttons load a ThreeDocument subclass and make it the editor's document. Each loaded document keeps
+ * The heading buttons load a Document subclass and make it the editor's document. Each loaded document keeps
  * its edits, selection and view navigation when switching back (ADR-0002). Play ticks the document's `onAnimate`; opening a document plays or pauses it by its `autoplay`.
  * Click selects (Shift toggles, Ctrl removes), Alt+drag box-selects, Ctrl+A selects all, Escape clears, F frames the
  * selection. Drag a gizmo arrow to move along an axis, the center to move in the view plane; X / Y / Z switch the
@@ -15,7 +15,7 @@ import { SelectionModel, ThreeEditor, ThreeView } from '@io-gui/three';
  */
 export declare class IoEditorExample extends ReactiveElement {
     static get Style(): string;
-    editor: ThreeEditor;
+    editor: Editor;
     views: Record<'top' | 'bottom' | 'left' | 'right' | 'front' | 'back' | 'perspective' | 'uv' | 'camera', ThreeView>;
     /** Selection of the editor's current document; each document has its own. */
     selection: SelectionModel;

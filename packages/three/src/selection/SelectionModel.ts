@@ -1,6 +1,6 @@
 import { Register, ReactiveObject, ReactiveObjectProps, Property } from '@io-gui/core'
 import { Object3D } from 'three/webgpu'
-import type { ThreeDocument } from '../editor/ThreeDocument.js'
+import type { Document } from '../editor/Document.js'
 import type { Transaction } from '../editor/Transaction.js'
 import { ComponentSet } from './ComponentSet.js'
 
@@ -14,7 +14,7 @@ export type SelectionDomain = 'object' | 'point' | 'edge' | 'primitive' | 'corne
 export type ComponentSets = ReadonlyMap<SelectionDomain, ComponentSet>
 
 export type SelectionModelProps = ReactiveObjectProps & {
-  document: ThreeDocument
+  document: Document
 }
 
 /**
@@ -46,7 +46,7 @@ export class SelectionModel extends ReactiveObject {
   declare uvSync: boolean
 
   // Assigned from the constructor args by ReactiveObject; `declare` keeps a class field from resetting it.
-  declare readonly document: ThreeDocument
+  declare readonly document: Document
 
   /** The component domain edit mode returns to (`domain` is `'object'` outside edit mode). */
   componentDomain: SelectionDomain = 'point'

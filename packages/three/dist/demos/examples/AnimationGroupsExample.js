@@ -6,9 +6,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { AnimationClip, AnimationMixer, AnimationObjectGroup, BoxGeometry, ColorKeyframeTrack, InterpolateDiscrete, Mesh, MeshBasicMaterial, NumberKeyframeTrack, Quaternion, QuaternionKeyframeTrack, Vector3 } from 'three/webgpu';
 import { Register } from '@io-gui/core';
-import { ThreeDocument } from '@io-gui/three';
+import { Document } from '@io-gui/three';
 /** A 5×5 grid of boxes in one AnimationObjectGroup, sharing one animation state. Plays when opened. */
-let AnimationGroupsExample = class AnimationGroupsExample extends ThreeDocument {
+let AnimationGroupsExample = class AnimationGroupsExample extends Document {
     mixer;
     constructor(args) {
         super({ autoplay: true, ...args });

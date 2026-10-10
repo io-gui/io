@@ -6,7 +6,7 @@ todos:
     content: "Docs: Write ADR-0001..0007 in packages/three/docs/adr"
     status: completed
   - id: decide-open-questions
-    content: "Decide: naming (ThreeEditor vs ThreeApplet), one vs many documents, undo strategy, BVH dependency"
+    content: "Decide: naming (Editor vs ThreeApplet), one vs many documents, undo strategy, BVH dependency"
     status: completed
   - id: adr-0008-review
     content: "Docs: Review ADR-0008 (commands, transactions, patches) and flip proposed to accepted"
@@ -21,7 +21,7 @@ todos:
     content: "P1: RenderScheduler singleton: renderer init, rAF after core, typed dirty tags, phases, budget"
     status: completed
   - id: viewport-on-scheduler
-    content: "P1: IoThreeViewport registers with scheduler; remove debounce draws and three-applet-needs-render"
+    content: "P1: ThreeViewport registers with scheduler; remove debounce draws and three-applet-needs-render"
     status: completed
   - id: applet-shim-p1
     content: "P1: ThreeApplet loses rAF loop, Timer, _width/_height; onAnimate via scheduler tick; fix demos"
@@ -33,7 +33,7 @@ todos:
     content: "P2: ViewNavigation + buildViewCamera(); replace ViewCameras and overscan mutation"
     status: completed
   - id: viewport-takes-view
-    content: "P2: IoThreeViewport({view}); cameraSelect compat mapping; views survive layout tab moves"
+    content: "P2: ThreeViewport({view}); cameraSelect compat mapping; views survive layout tab moves"
     status: completed
   - id: input-router
     content: "P3: InputRouter + Behavior: capture by priority, hover pass, stealing, keyboard routing"
@@ -48,10 +48,10 @@ todos:
     content: "P3: Tool.createBehaviors(view); ToolBase becomes adapter; registerViewport deprecated"
     status: completed
   - id: editor-document
-    content: "P4: ThreeEditor + ThreeDocument; ThreeApplet becomes shim over them; clock on editor"
+    content: "P4: Editor + Document; ThreeApplet becomes shim over them; clock on editor"
     status: completed
   - id: document-transactions
-    content: "P4: ThreeDocument mutation API: patches, transactions, coalescing, rollback; commits feed change bus"
+    content: "P4: Document mutation API: patches, transactions, coalescing, rollback; commits feed change bus"
     status: completed
   - id: document-switching
     content: "P4: editor.document switchable at runtime; per-document session maps (selection, nav, undo)"
@@ -124,7 +124,7 @@ Full analysis and prior art (Blender, Maya, Houdini, Unreal ITF): the design doc
 
 Seven phases. Future work (undo, commands, collaboration) moved to [three_future_work.plan.md](./three_future_work.plan.md). Each phase ships on its own, keeps the 16 demos in `src/demos/examples` working, and ends with a docs sync. Order follows dependencies: frame layer, then view state, then input, then app concepts, then selection, then rendering variety, then components.
 
-Compatibility rule for every phase: `ThreeApplet`, `ioThreeViewport({applet, cameraSelect, tool})` and `ToolBase` subclasses keep working until the final cleanup, with `debug:` deprecation warnings. External apps subclass `ToolBase` (for example a globe tool with drag orbit and wheel zoom), so the adapter matters.
+Compatibility rule for every phase: `ThreeApplet`, `threeViewport({applet, cameraSelect, tool})` and `ToolBase` subclasses keep working until the final cleanup, with `debug:` deprecation warnings. External apps subclass `ToolBase` (for example a globe tool with drag orbit and wheel zoom), so the adapter matters.
 
 Verification for every phase: `pnpm lint:check`, `tsc -b`, `npx vitest run packages/three`, and a manual run of the multi-viewport `IoCameraExample` plus one animated demo.
 
@@ -132,13 +132,13 @@ Verification for every phase: `pnpm lint:check`, `tsc -b`, `npx vitest run packa
 
 ```
 packages/three/src/
-  editor/     ThreeEditor.ts, ThreeDocument.ts, ChangeBus.ts
+  editor/     Editor.ts, Document.ts, ChangeBus.ts
   view/       ThreeView.ts, ViewNavigation.ts, buildViewCamera.ts
   render/     RenderScheduler.ts, ViewPipeline.ts, pipelines/*, overlays/*
   input/      InputRouter.ts, Behavior.ts, ViewInputEvent.ts, Keymap.ts, behaviors/*
   tools/      Tool.ts, ToolBase.ts (adapter), Operator.ts, UndoStack.ts, gizmos/*
   selection/  SelectionModel.ts, ComponentSet.ts, Picker.ts, GeometryAdapter.ts, topology/*
-  elements/   IoThreeViewport.ts (DOM only), math/*, ...
+  elements/   ThreeViewport.ts (DOM only), math/*, ...
   nodes/      ThreeApplet.ts (shim)
 ```
 
@@ -151,8 +151,8 @@ packages/three/src/
 **Todo:** `decide-open-questions`
 **Status:** completed
 
-- **Naming.** `ThreeEditor` is the app object. `ThreeApplet` remains only as a compatibility shim.
-- **Documents.** One active `ThreeDocument` per editor, switchable at runtime via `editor.document`. Per-document session state (selection, navigation per view, undo) lives in editor maps keyed by document id. Recorded in ADR-0002.
+- **Naming.** `Editor` is the app object. `ThreeApplet` remains only as a compatibility shim.
+- **Documents.** One active `Document` per editor, switchable at runtime via `editor.document`. Per-document session state (selection, navigation per view, undo) lives in editor maps keyed by document id. Recorded in ADR-0002.
 - **Undo.** Commands run transactions of invertible patches; undo replays inverse patches; commands are Maya-style intents for repeat, journal, actions and macros; the patch stream is the future multi-user sync unit. Recorded in ADR-0008 (proposed). Only the mutation API (`document-transactions`) is built now, because undo is robust only if every edit goes through it from the start. The undo stack and commands are future work ([three_future_work.plan.md](./three_future_work.plan.md)).
 - **Picking.** Async `Picker` interface, plain `Raycaster` first. `three-mesh-bvh` (optional peer) and rasterised ID buffers come later behind the same interface. Recorded in ADR-0007.
 
@@ -173,7 +173,7 @@ Read ADR-0008 and either accept it or change it before `document-transactions` s
 
 ### `webgpu-only`
 
-**Files:** `elements/IoThreeViewport.ts`, `IoThreeViewport.test.ts`, README, skill
+**Files:** `elements/ThreeViewport.ts`, `ThreeViewport.test.ts`, README, skill
 
 Remove the WebGL branch of `attachSurface()` and `isWebGPUBackend()`. If `WebGPU.isAvailable()` is false, the scheduler throws one clear error and viewports render a static message.
 
@@ -186,7 +186,7 @@ type ChangeKind = 'transform' | 'geometry' | 'material' | 'structure' | 'selecti
 interface Change { kind: ChangeKind; source: object /* document */; ids?: string[] }
 ```
 
-`bus.notify(change)` queues; the scheduler drains it once per frame. No reactive events per change. In P1 the bus lives on the applet; it moves to `ThreeEditor` in P4.
+`bus.notify(change)` queues; the scheduler drains it once per frame. No reactive events per change. In P1 the bus lives on the applet; it moves to `Editor` in P4.
 
 ### `render-scheduler`
 
@@ -202,7 +202,7 @@ interface Change { kind: ChangeKind; source: object /* document */; ids?: string
 
 ### `viewport-on-scheduler`
 
-**Files:** `elements/IoThreeViewport.ts`, tests
+**Files:** `elements/ThreeViewport.ts`, tests
 
 Viewport registers on connect and unregisters on disconnect. Resize tags `resize`, IntersectionObserver sets visibility on the scheduler entry. Remove `renderViewportDebounced`, the `mutated()`/`appletMutated()`/`viewCamerasMutated()` draw triggers and the `three-applet-needs-render` / `three-applet-frame-object-all` listeners.
 
@@ -222,7 +222,7 @@ Remove the module `rAFLoop`, per-applet `Timer`, `_renderer`, `_width`, `_height
 - Navigation frames a square; the camera builder fits it into any aspect ("contain"), so framing does not depend on viewport size. Orthographic size = `distance * tan(fov/2)`; orthographic clip is symmetric around the eye.
 - ~~`cameraSelect` stays as a non-deprecated shorthand; default `''` leaves a passed-in view untouched. Scene cameras resolve to uuid; a camera added later (async load) is picked up on `frame-object`, applet mutation or draw.~~ Removed 2026-10-08: the camera is chosen on `ThreeView` (`setAxisView('free' | axis)`, `setCameraView(id?)`: `'uuid:…'`, `'name:…'`, or none for the first scene camera).
 - `frame-object` is handled by the viewport; framing keeps the view direction (old code reset every camera to its default direction first).
-- Breaking: `IoThreeViewport.overscan/clearColor/clearAlpha/viewCameras` removed (moved to `view`); `ViewCameras` export removed. External code using `viewport.viewCameras.camera` should use `viewport.getViewCamera()`.
+- Breaking: `ThreeViewport.overscan/clearColor/clearAlpha/viewCameras` removed (moved to `view`); `ViewCameras` export removed. External code using `viewport.viewCameras.camera` should use `viewport.getViewCamera()`.
 - Gotcha: construct `OrbitControls` without the element and call `connect()`; passing it to the constructor makes `connect()` disconnect first and io-gui logs "Listener not found".
 
 ### `three-view-model`
@@ -241,9 +241,9 @@ State: `target`, `rotation`, `distance`, `projection`, `fov`, `axisView`, `camer
 
 ### `viewport-takes-view`
 
-**Files:** `elements/IoThreeViewport.ts`, `IoCameraExample.ts`
+**Files:** `elements/ThreeViewport.ts`, `IoCameraExample.ts`
 
-`ioThreeViewport({view, applet})`. Without `view`, the viewport creates one (compat). `cameraSelect: 'top'` maps to `axisView`; `'scene:<name>'` resolves once to a uuid with a deprecation warning. Navigation changes tag only that view (`view` reason).
+`threeViewport({view, applet})`. Without `view`, the viewport creates one (compat). `cameraSelect: 'top'` maps to `axisView`; `'scene:<name>'` resolves once to a uuid with a deprecation warning. Navigation changes tag only that view (`view` reason).
 
 **Test:** move a viewport between layout tabs; navigation state is unchanged after remount.
 
@@ -292,7 +292,7 @@ Orbit, pan, dolly, zoom to cursor, wheel, two-finger pan and pinch, frame select
 ## Phase 4: App layer (ADR-0002, ADR-0004)
 
 **Done 2026-10-07.** Notes from implementation:
-- Files: `editor/ThreeEditor.ts`, `editor/ThreeDocument.ts`, `editor/Transaction.ts`, `editor/Patch.ts`, `tools/Operator.ts` (+ `OperatorRegistry`, modal behavior, `Command`), `tools/Tool.ts` (`ToolDefinition`, `ToolRegistry`, `InteractionProfile`).
+- Files: `editor/Editor.ts`, `editor/Document.ts`, `editor/Transaction.ts`, `editor/Patch.ts`, `tools/Operator.ts` (+ `OperatorRegistry`, modal behavior, `Command`), `tools/Tool.ts` (`ToolDefinition`, `ToolRegistry`, `InteractionProfile`).
 - The change bus lives on the document; change `source` is always the document. `editor.notify()` overrides any source. Document render-setting changes notify `'settings'`.
 - `setAttribute` patches are deferred to geometry editing (P7) with blob storage (future work); `set` / `insert` / `remove` exist. `set` copies math objects in place and clones values for the record.
 - `document.history` keeps the last 100 committed transactions; `revert()` / `reapply()` / commit listeners are the hooks for the future undo stack. Empty transactions are not recorded.
@@ -304,13 +304,13 @@ Orbit, pan, dolly, zoom to cursor, wheel, two-finger pan and pinch, frame select
 
 ### `editor-document`
 
-**Files:** `editor/ThreeEditor.ts`, `editor/ThreeDocument.ts`, `nodes/ThreeApplet.ts`
+**Files:** `editor/Editor.ts`, `editor/Document.ts`, `nodes/ThreeApplet.ts`
 
-`ThreeDocument`: content `scene`, scene settings (environment, tone mapping, exposure), `notify()`. `ThreeEditor`: document, change bus, clock and playback, mode, later selection and tools. `ThreeApplet` becomes an editor with one document; `applet.scene`, `isPlaying`, `toneMapping` forward to it.
+`Document`: content `scene`, scene settings (environment, tone mapping, exposure), `notify()`. `Editor`: document, change bus, clock and playback, mode, later selection and tools. `ThreeApplet` becomes an editor with one document; `applet.scene`, `isPlaying`, `toneMapping` forward to it.
 
 ### `document-transactions` (ADR-0008)
 
-**Files:** `editor/ThreeDocument.ts`, `editor/Transaction.ts`, `editor/Patch.ts` (+ tests)
+**Files:** `editor/Document.ts`, `editor/Transaction.ts`, `editor/Patch.ts` (+ tests)
 
 `document.transact(tx => ...)` and `document.begin(): Transaction` for long-running edits. Patch ops: `set(id, path, value)`, `insert(parentId, index, object)`, `remove(id)`, `setAttribute(geometryId, name, range | data)`. Each op records the old value when applied. Same-path patches coalesce. `commit()` publishes the transaction to listeners and turns its paths into change-bus entries; `rollback()` applies inverses. Object lookup by `uuid` through a document index kept in sync by `insert`/`remove`.
 
@@ -320,7 +320,7 @@ No undo stack yet, but committed transactions are kept in a bounded in-memory lo
 
 ### `document-switching` (ADR-0002)
 
-**Files:** `editor/ThreeEditor.ts` (+ test)
+**Files:** `editor/Editor.ts` (+ test)
 
 Assigning `editor.document` cancels a running modal operator, swaps the per-document session state (selection, view navigation, later undo) from maps keyed by document id, and tags all views `content`. Switching back restores each view's camera.
 
@@ -439,4 +439,4 @@ ID pass into an `R32Uint` target per view, async pixel / rectangle readback in t
 
 ### `docs-sync`
 
-At the end of each phase: update `packages/three/CONTEXT.md` (new terms: ThreeEditor, ThreeDocument, ThreeView, RenderScheduler, ViewPipeline, Overlay, InputRouter, Behavior, Tool, Operator, SelectionModel, attribute domain; retire ViewCameras), `README.md`, `skills/io-gui-three/SKILL.md`, and root `CONTEXT.md` relationships if they change. Flip ADR status to `completed` when its phase lands.
+At the end of each phase: update `packages/three/CONTEXT.md` (new terms: Editor, Document, ThreeView, RenderScheduler, ViewPipeline, Overlay, InputRouter, Behavior, Tool, Operator, SelectionModel, attribute domain; retire ViewCameras), `README.md`, `skills/io-gui-three/SKILL.md`, and root `CONTEXT.md` relationships if they change. Flip ADR status to `completed` when its phase lands.

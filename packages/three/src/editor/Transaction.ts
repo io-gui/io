@@ -1,5 +1,5 @@
 import type { Object3D } from 'three/webgpu'
-import type { ThreeDocument } from './ThreeDocument.js'
+import type { Document } from './Document.js'
 import { Patch, ValuePatch, patchValue, resolvePath, writeValue } from './Patch.js'
 
 export type TransactionState = 'open' | 'committed' | 'rolledBack'
@@ -12,14 +12,14 @@ export type TransactionState = 'open' | 'committed' | 'rolledBack'
  */
 export class Transaction {
 
-  readonly document: ThreeDocument
+  readonly document: Document
   readonly label: string
   readonly patches: Patch[] = []
   state: TransactionState = 'open'
 
   private readonly _valuePatches = new Map<string, ValuePatch>()
 
-  constructor(document: ThreeDocument, label = '') {
+  constructor(document: Document, label = '') {
     this.document = document
     this.label = label
   }

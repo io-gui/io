@@ -4,7 +4,7 @@ status: accepted
 
 # Document edits are commands that run transactions of invertible patches
 
-Every change to a `ThreeDocument` goes through three levels:
+Every change to a `Document` goes through three levels:
 
 - **Command**: a named, serialisable intent with explicit arguments, for example `{name: 'transform.translate', args: {ids, delta, space}}`. Commands are what get repeated ("repeat last"), journaled, scripted, bound to menus and keymaps as actions, and grouped into macros. This is Maya's model: tools are interactive drivers that end by issuing a command.
 - **Transaction**: one atomic group of patches produced by running a command. It is the unit of undo, of change notification and of network sync.

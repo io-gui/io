@@ -6,9 +6,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { BufferAttribute, CanvasTexture, Color, DirectionalLight, IcosahedronGeometry, Mesh, MeshBasicMaterial, MeshPhongMaterial, PlaneGeometry, SRGBColorSpace } from 'three/webgpu';
 import { Register } from '@io-gui/core';
-import { ThreeDocument } from '@io-gui/three';
+import { Document } from '@io-gui/three';
 /** Three flat shaded icosahedra with vertex colors and wireframes, over fake shadows that cannot be selected. */
-let GeometryColorsExample = class GeometryColorsExample extends ThreeDocument {
+let GeometryColorsExample = class GeometryColorsExample extends Document {
     constructor(args) {
         super(args);
         this.scene.background = new Color(0xffffff);

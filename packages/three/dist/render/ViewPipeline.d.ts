@@ -1,8 +1,8 @@
 import type { OrthographicCamera, PerspectiveCamera, Scene, Texture, ToneMapping, WebGPURenderer } from 'three/webgpu';
 import type { DirtyReason, FrameInfo, ViewRenderResult } from './RenderScheduler.js';
 import type { DocumentChange } from '../editor/ChangeBus.js';
-import type { ThreeDocument } from '../editor/ThreeDocument.js';
-import type { ThreeEditor } from '../editor/ThreeEditor.js';
+import type { Document } from '../editor/Document.js';
+import type { Editor } from '../editor/Editor.js';
 import type { ThreeView, ViewKind } from '../view/ThreeView.js';
 import type { SelectionModel } from '../selection/SelectionModel.js';
 import type { Picker } from '../selection/Picker.js';
@@ -11,8 +11,8 @@ import { Registry } from '../utils/Registry.js';
 /** Everything a pipeline or overlay needs for one draw of one view. */
 export interface PipelineContext {
     readonly renderer: WebGPURenderer;
-    readonly editor: ThreeEditor;
-    readonly document: ThreeDocument;
+    readonly editor: Editor;
+    readonly document: Document;
     /** The document's content scene. */
     readonly scene: Scene;
     readonly view: ThreeView;

@@ -1,14 +1,14 @@
 # Three
 
-The `@io-gui/three` context: WebGPU Three.js viewports wired into Io-Gui's reactive graph. A ThreeEditor owns the document and lifecycle; IoThreeViewport shows it through a per-viewport canvas target, a pipeline and overlays; the RenderScheduler is the only thing that renders. WebGPU only. Architecture decisions: `docs/adr/`. Math editor elements and side-effect EditorConfigs integrate Three types with `@io-gui/editors`.
+The `@io-gui/three` context: WebGPU Three.js viewports wired into Io-Gui's reactive graph. An Editor owns the document and lifecycle; ThreeViewport shows it through a per-viewport canvas target, a pipeline and overlays; the RenderScheduler is the only thing that renders. WebGPU only. Architecture decisions: `docs/adr/`. Math editor elements and side-effect EditorConfigs integrate Three types with `@io-gui/editors`.
 
 ## Language
 
-**ThreeEditor**:
-The app object: one active ThreeDocument (switchable at runtime), editor mode, playback, operators and tools. Viewports read `editor.document`.
+**Editor**:
+The app object: one active Document (switchable at runtime), editor mode, playback, operators and tools. Viewports read `editor.document`.
 _Avoid_: app, scene controller, applet (removed `ThreeApplet`)
 
-**ThreeDocument**:
+**Document**:
 The content of an editor: the scene of authored objects plus scene render settings. Edited through transactions.
 _Avoid_: model, project, file
 
@@ -77,7 +77,7 @@ _Avoid_: tap, tweak
 _Avoid_: view mode, read-only
 
 **CanvasTarget**:
-Per-viewport render surface the shared renderer draws into. Each `IoThreeViewport` has its own; viewports do not share canvases.
+Per-viewport render surface the shared renderer draws into. Each `ThreeViewport` has its own; viewports do not share canvases.
 _Avoid_: canvas, framebuffer (as the Io-Gui term)
 
 **Shared renderer**:
@@ -97,11 +97,11 @@ Per-document queue of typed `DocumentChange`s, drained by the scheduler each fra
 _Avoid_: notifier, event bus
 
 **Playing**:
-`ThreeEditor.isPlaying`: whether the scheduler ticks the editor and its active document (`onAnimate(delta, time)`) each frame. Independently, non-visible viewports skip draws via IntersectionObserver.
+`Editor.isPlaying`: whether the scheduler ticks the editor and its active document (`onAnimate(delta, time)`) each frame. Independently, non-visible viewports skip draws via IntersectionObserver.
 _Avoid_: animating, running, live
 
 **ThreeView**:
-Serializable ReactiveObject holding one view's state: kind, pipeline, overlay flags, profile, navigation, overscan, clear color and tone-mapping overrides. Shown by an IoThreeViewport and outlives it.
+Serializable ReactiveObject holding one view's state: kind, pipeline, overlay flags, profile, navigation, overscan, clear color and tone-mapping overrides. Shown by a ThreeViewport and outlives it.
 _Avoid_: viewport state, ViewCameras (removed)
 
 **View kind**:
