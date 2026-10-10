@@ -1,5 +1,7 @@
 # Three.js Example Conversion Plan
 
+> **Superseded (2026-10-10):** converted examples are now `ThreeDocument` subclasses in `src/demos/examples/<Name>.ts` (scene in the constructor, `onAnimate`, `onRendererInitialized`, `autoplay`, document properties for UI), loaded by `src/demos/IoEditorExample.ts` (index.html: Demos > Three). The applet + element pattern below is historical.
+
 ## Summary of Observations
 
 ### Source Examples Structure ([`src_examples/*.html`](packages/three/src_examples))

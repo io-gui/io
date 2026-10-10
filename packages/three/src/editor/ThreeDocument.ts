@@ -1,14 +1,18 @@
 import { Register, ReactiveObject, ReactiveObjectProps, Property, Field } from '@io-gui/core'
-import { MathUtils, NoToneMapping, Object3D, Scene, ToneMapping } from 'three/webgpu'
+import { MathUtils, NoToneMapping, Object3D, Scene, ToneMapping, WebGPURenderer, ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, LinearToneMapping, NeutralToneMapping, ReinhardToneMapping } from 'three/webgpu'
 import { ChangeBus, DocumentChange } from './ChangeBus.js'
 import { Patch, changeKindForPatch, insertChild, invertPatch, resolvePath, writeValue } from './Patch.js'
 import { Transaction } from './Transaction.js'
 import { isDescendant } from '../utils/sceneGraph.js'
+import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioNumberSlider } from '@io-gui/sliders'
+import { ioOptionSelect, Menu } from '@io-gui/menus'
 
 export type ThreeDocumentProps = ReactiveObjectProps & {
   scene?: Scene
   toneMapping?: ToneMapping
   toneMappingExposure?: number
+  autoplay?: boolean
 }
 
 const HISTORY_LIMIT = 100
@@ -31,6 +35,13 @@ export class ThreeDocument extends ReactiveObject {
   @Property({type: Number, value: 1})
   declare toneMappingExposure: number
 
+  /**
+   * Whether the document plays (`editor.isPlaying`) when opened. The editor does not read it; whatever opens
+   * the document sets `isPlaying` from it.
+   */
+  @Property({type: Boolean, value: false})
+  declare autoplay: boolean
+
   /** Stable id of this document, used to key per-document session state (selection, view navigation). */
   readonly uuid: string = MathUtils.generateUUID()
 
@@ -43,6 +54,8 @@ export class ThreeDocument extends ReactiveObject {
   private readonly _misses = new Set<string>()
   private _active: Transaction | null = null
   private readonly _history: Transaction[] = []
+  /** Renderers `onRendererInitialized` has run for. */
+  private readonly _renderers = new WeakSet<WebGPURenderer>()
 
   constructor(args?: ThreeDocumentProps) {
     super(args)
@@ -117,8 +130,29 @@ export class ThreeDocument extends ReactiveObject {
     for (const patch of transaction.patches) this._applyPatch(patch)
   }
 
+  /**
+   * Called once per renderer, when it is ready and about to draw this document for the first time
+   * (a document opened later still gets it). Do GPU setup here: compute passes, PMREM environments.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onRendererInitialized(renderer: WebGPURenderer) {}
+
+  /**
+   * Called each frame while the editor showing this document plays (`isPlaying`), after the editor's `onAnimate`.
+   * Views redraw after it; scene writes here bypass transactions.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onAnimate(delta: number, time: number) {}
+
   override mutated() {
     this.notify({kind: 'settings'})
+  }
+
+  /** @internal Called by viewports before each draw; runs `onRendererInitialized` once per renderer. */
+  _prepareRenderer(renderer: WebGPURenderer) {
+    if (this._renderers.has(renderer)) return
+    this._renderers.add(renderer)
+    void this.onRendererInitialized(renderer)
   }
 
   /** @internal Applies a patch and reports it. */
@@ -170,3 +204,21 @@ export class ThreeDocument extends ReactiveObject {
     this.scene?.traverse(object => { this._index.set(object.uuid, object) })
   }
 }
+
+registerEditorConfig(ThreeDocument, [
+  ['toneMappingExposure', ioNumberSlider({min: 0, max: 3, step: 0.01, exponent: 2})],
+  ['toneMapping', ioOptionSelect({model: new Menu({options: [
+    {value: NoToneMapping, id: 'NoToneMapping'},
+    {value: LinearToneMapping, id: 'LinearToneMapping'},
+    {value: ReinhardToneMapping, id: 'ReinhardToneMapping'},
+    {value: CineonToneMapping, id: 'CineonToneMapping'},
+    {value: ACESFilmicToneMapping, id: 'ACESFilmicToneMapping'},
+    {value: AgXToneMapping, id: 'AgXToneMapping'},
+    {value: NeutralToneMapping, id: 'NeutralToneMapping'},
+  ]})})],
+])
+
+registerEditorGroups(ThreeDocument, {
+  Main: ['toneMapping', 'toneMappingExposure'],
+  Advanced: [new RegExp(/^[\s\S]*$/)]
+})

@@ -97,7 +97,7 @@ Per-document queue of typed `DocumentChange`s, drained by the scheduler each fra
 _Avoid_: notifier, event bus
 
 **Playing**:
-`ThreeEditor.isPlaying`: whether the scheduler ticks the editor (`onAnimate(delta, time)`) each frame. Independently, non-visible viewports skip draws via IntersectionObserver.
+`ThreeEditor.isPlaying`: whether the scheduler ticks the editor and its active document (`onAnimate(delta, time)`) each frame. Independently, non-visible viewports skip draws via IntersectionObserver.
 _Avoid_: animating, running, live
 
 **ThreeView**:
@@ -129,7 +129,7 @@ A gizmo is an on-screen handle with a screen-space hit test that starts an opera
 _Avoid_: manipulator, TransformControls, handle (alone)
 
 **ViewNavigation**:
-A view's navigation as numbers: target, rotation, distance, projection, fov, clip range, axis view (`free` or an axis) and an optional scene camera (`cameraSource`, by uuid; `ThreeView.setCameraView()` resolves the first scene camera, or a `name:`, to it once the camera is in the scene). The draw camera is built from it per frame.
+A view's navigation as numbers: target, rotation, distance, projection, fov, clip range, axis view (`free` or an axis) and an optional scene camera (`cameraSource`, by uuid; `ThreeView.setCameraView()` resolves the first scene camera, or a `name:`, to it once the camera is in the scene, and again in each newly shown document). The draw camera is built from it per frame.
 _Avoid_: camera rig, camera controller, orbit state
 
 **Axis view**:

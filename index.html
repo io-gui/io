@@ -269,48 +269,7 @@
               { id: "Menus" },
               { id: "Navigation" },
               { id: "Layout" },
-              {
-                id: "Three",
-                options: [
-                  {
-                    id: "Editor",
-                    options: [
-                      { id: "Selection" },
-                      { id: "Views" },
-                    ],
-                  },
-                  {
-                    id: "Camera Examples",
-                    options: [
-                      { id: "Camera" },
-                      { id: "CameraArray" },
-                    ],
-                  },
-                  {
-                    id: "Geometries",
-                    options: [
-                      { id: "GeometryPrimitives" },
-                      { id: "GeometryColors" },
-                      { id: "GeometryConvex" },
-                    ],
-                  },
-                  {
-                    id: "Animations",
-                    options: [
-                      { id: "AnimationGroups" },
-                      { id: "AnimationKeyframes" },
-                      { id: "AnimationRetargeting" },
-                      { id: "AnimationRetargetingReadyplayer" },
-                      { id: "AnimationSkinningBlending" },
-                      { id: "AnimationSkinningAdditiveBlending" },
-                    ],
-                  },
-                  { id: "Backdrop" },
-                  { id: "BackdropArea" },
-                  { id: "ComputeTexture" },
-                  { id: "VolumePerlin" },
-                ],
-              },
+              { id: "Three" },
               { id: "Theme Editor" },
               { id: "Benchmarks" },
               { id: "TODO MVC App" },
@@ -496,101 +455,11 @@
                 props: { id: "Layout" },
                 import: "./packages/layout/dist/demos/IoLayoutDemo.js",
               },
-              ioNavigator({
-                id: "Three",
-                class: "navigator",
-                widget: h4({ class: "heading" }, "Three.js Examples"),
-                model: MENU.findOptionById("Demos").findOptionById("Three"),
-                select: "deep",
-                caching: "reactive",
-                elements: [
-                  {
-                    tag: "io-selection-example",
-                    props: { id: "Selection" },
-                    import: "./packages/three/dist/demos/examples/IoSelectionExample.js",
-                  },
-                  {
-                    tag: "io-editor-views-example",
-                    props: { id: "Views" },
-                    import: "./packages/three/dist/demos/examples/IoEditorViewsExample.js",
-                  },
-                  {
-                    tag: "io-camera-example",
-                    props: { id: "Camera" },
-                    import: "./packages/three/dist/demos/examples/IoCameraExample.js",
-                  },
-                  {
-                    tag: "io-camera-array-example",
-                    props: { id: "CameraArray", cameraSelect: "scene" },
-                    import: "./packages/three/dist/demos/examples/IoCameraArrayExample.js",
-                  },
-                  {
-                    tag: "io-geometries-example",
-                    props: { id: "GeometryPrimitives" },
-                    import: "./packages/three/dist/demos/examples/IoGeometriesExample.js",
-                  },
-                  {
-                    tag: "io-geometry-colors-example",
-                    props: { id: "GeometryColors" },
-                    import: "./packages/three/dist/demos/examples/IoGeometryColorsExample.js",
-                  },
-                  {
-                    tag: "io-geometry-convex-example",
-                    props: { id: "GeometryConvex" },
-                    import: "./packages/three/dist/demos/examples/IoGeometryConvexExample.js",
-                  },
-                  {
-                    tag: "io-animation-groups-example",
-                    props: { id: "AnimationGroups" },
-                    import: "./packages/three/dist/demos/examples/IoAnimationGroupsExample.js",
-                  },
-                  {
-                    tag: "io-animation-keyframes-example",
-                    props: { id: "AnimationKeyframes" },
-                    import: "./packages/three/dist/demos/examples/IoAnimationKeyframesExample.js",
-                  },
-                  {
-                    tag: "io-animation-retargeting-example",
-                    props: { id: "AnimationRetargeting" },
-                    import: "./packages/three/dist/demos/examples/IoAnimationRetargetingExample.js",
-                  },
-                  {
-                    tag: "io-animation-retargeting-readyplayer-example",
-                    props: { id: "AnimationRetargetingReadyplayer" },
-                    import: "./packages/three/dist/demos/examples/IoAnimationRetargetingReadyplayerExample.js",
-                  },
-                  {
-                    tag: "io-animation-skinning-blending-example",
-                    props: { id: "AnimationSkinningBlending" },
-                    import: "./packages/three/dist/demos/examples/IoAnimationSkinningBlendingExample.js",
-                  },
-                  {
-                    tag: "io-animation-skinning-additive-blending-example",
-                    props: { id: "AnimationSkinningAdditiveBlending" },
-                    import: "./packages/three/dist/demos/examples/IoAnimationSkinningAdditiveBlendingExample.js",
-                  },
-                  {
-                    tag: "io-backdrop-example",
-                    props: { id: "Backdrop" },
-                    import: "./packages/three/dist/demos/examples/IoBackdropExample.js",
-                  },
-                  {
-                    tag: "io-backdrop-area-example",
-                    props: { id: "BackdropArea" },
-                    import: "./packages/three/dist/demos/examples/IoBackdropAreaExample.js",
-                  },
-                  {
-                    tag: "io-compute-texture-example",
-                    props: { id: "ComputeTexture" },
-                    import: "./packages/three/dist/demos/examples/IoComputeTextureExample.js",
-                  },
-                  {
-                    tag: "io-volume-perlin-example",
-                    props: { id: "VolumePerlin" },
-                    import: "./packages/three/dist/demos/examples/IoVolumePerlinExample.js",
-                  },
-                ],
-              }),
+              {
+                tag: "io-editor-example",
+                props: { id: "Three" },
+                import: "./packages/three/dist/demos/IoEditorExample.js",
+              },
               {
                 tag: "io-theme-editor",
                 props: { id: "Theme Editor" },

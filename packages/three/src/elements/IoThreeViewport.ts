@@ -355,6 +355,7 @@ export class IoThreeViewport extends ReactiveElement implements ScheduledView {
     if (editor.isRendererInitialized() === false) {
       void editor.onRendererInitialized(this.renderer)
     }
+    document._prepareRenderer(this.renderer)
     const renderer = this.renderer
     renderer.setCanvasTarget(this.renderTarget)
     renderer.setSize(this.width, this.height)

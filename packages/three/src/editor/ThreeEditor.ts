@@ -11,6 +11,7 @@ import { translateOperatorType } from '../tools/operators/TranslateOperator.js'
 import { translateTool } from '../tools/TranslateTool.js'
 import { editModeToggleOperatorType, selectModeOperatorType } from '../tools/operators/EditModeOperators.js'
 import type { ViewKind } from '../view/ThreeView.js'
+import { registerEditorGroups } from '@io-gui/editors'
 
 export type ThreeEditorProps = ReactiveObjectProps & {
   document?: ThreeDocument
@@ -109,6 +110,7 @@ export class ThreeEditor extends ReactiveObject implements ScheduledTicker {
   tick(frame: FrameInfo) {
     if (!this.isPlaying) return
     this.onAnimate(frame.delta, frame.time)
+    this.document.onAnimate(frame.delta, frame.time)
     this.document.notify({kind: 'time'})
   }
 
@@ -141,3 +143,8 @@ export class ThreeEditor extends ReactiveObject implements ScheduledTicker {
     super.dispose()
   }
 }
+
+// Session and runtime state of the editor stay out of property editors that show an editor subclass.
+registerEditorGroups(ThreeEditor, {
+  Hidden: [new RegExp(/^_/), 'isPlaying', 'changeBus', 'document', 'selection', 'mode', 'activeTools', 'operators', 'tools'],
+})

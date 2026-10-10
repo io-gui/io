@@ -79,6 +79,9 @@ It can be used to create reactive custom elements that can be bound to object pr
 - Reactive properties defined in static `static get Properties()` object or `@Property` decorators
 - Non-reactive fields defined in static `static get Fields()` object or `@Field` decorators
 
+### Editor Configs
+A class carries its own inspector UI: `registerEditorConfig` and `registerEditorGroups` go in the class's module, right after the class definition, so the config loads wherever the class does. Model modules importing UI packages (`@io-gui/editors`, widget factories) for this is intended. A package's `configs/` directory is only for external classes we can't edit (three.js). Register on the narrowest class that needs it, never on `Object` or another broad base: registrations aggregate along `instanceof`, so a broad one steps over every derived class in every package. Explicit property names beat regexes in every group, so a class can whitelist its inspector (curated names in `Main`, a catch-all regex in `Advanced`) and subclasses surface their own properties by naming them.
+
 ### Singleton Pattern
 When using singletons that hold shared state:
 - The singleton should own both state AND behavior operating on that state
@@ -106,6 +109,12 @@ When using singletons that hold shared state:
 - DOM mutations should be articulated by custom elements
 - Reactive elements render and manage their own children
 - Elements render content using virtual DOM for efficient updates
+
+### io-three: Document, Editor, View
+- **Document = content.** A `ThreeDocument` subclass is self-contained and portable: its scene, its content behavior (`onRendererInitialized(renderer)` once per renderer for GPU setup, `onAnimate(delta, time)` while the editor plays) and its controls as reactive properties with registered groups. It does not reach for the editor, views or DOM, so any document opens in any editor.
+- **Editor = host.** `ThreeEditor` owns session state: playing, per-document selection, tools, operators. It runs whatever document is assigned and reads nothing document-specific; `autoplay` is a hint the opener applies, not editor policy.
+- **View = intent, resolved per document.** `ThreeView` keeps what was asked for (axis view, first or named scene camera) apart from what it resolved to (camera uuid, orbit). Resolved navigation is saved per document and restored on switch; intent carries into documents seen for the first time. Session state (navigation, selection) is keyed by document uuid and never stored in the document.
+- **Apps = one host + documents.** Examples are `ThreeDocument` subclasses that `demos/IoEditorExample.ts` loads by dynamic import, not elements wiring their own editor and viewports. The host owns layout, views, Play and loading; a document's custom UI is its own properties in the generic property editor. A new example is a new document class.
 
 ## Development
 The framework has no runtime dependencies - only development dependencies. It uses `pnpm` as the package manager.

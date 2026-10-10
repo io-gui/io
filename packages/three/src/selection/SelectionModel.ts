@@ -1,5 +1,5 @@
 import { Register, ReactiveObject, ReactiveObjectProps, Property } from '@io-gui/core'
-import type { Object3D } from 'three/webgpu'
+import { Object3D } from 'three/webgpu'
 import type { ThreeDocument } from '../editor/ThreeDocument.js'
 import type { Transaction } from '../editor/Transaction.js'
 import { ComponentSet } from './ComponentSet.js'
@@ -38,6 +38,9 @@ export class SelectionModel extends ReactiveObject {
   /** uuid of the active object, or `''`. */
   @Property({type: String, value: ''})
   declare active: string
+
+  @Property({type: Object3D, value: undefined})
+  declare activeObject: Object3D | undefined
 
   @Property({type: Boolean, value: false})
   declare uvSync: boolean
@@ -143,7 +146,10 @@ export class SelectionModel extends ReactiveObject {
     if (!changed.size && active === this.active && domain === this.domain) return false
     this._objects.clear()
     for (const uuid of objects) this._objects.add(uuid)
-    this.setProperties({active, domain, version: this.version + 1})
+    this.setProperties({
+      active, domain, version: this.version + 1,
+      activeObject: this.document.getObject(active),
+    })
     this.document.notify({kind: 'selection', ids: changed.size ? [...changed] : [active]})
     return true
   }

@@ -63,7 +63,7 @@ type IoThreeViewportProps = {
 - Drawn by the RenderScheduler only when tagged dirty
 - `getViewCamera()` returns the camera it draws and picks with
 - Frames an object when its editor dispatches `frame-object` with `{object, overscan?}`
-- The camera comes from the view: `view: new ThreeView().setAxisView('top')` for an axis view (`'free'` is the default perspective view), or `.setCameraView()` to look through the first scene camera. Pick one of several with `.setCameraView('name:shot')` or `.setCameraView('uuid:<uuid>')`. A scene camera added later (async asset load) is picked up when it appears, then tracked by uuid; until then the view shows its `free` view
+- The camera comes from the view: `view: new ThreeView().setAxisView('top')` for an axis view (`'free'` is the default perspective view), or `.setCameraView()` to look through the first scene camera. Pick one of several with `.setCameraView('name:shot')` or `.setCameraView('uuid:<uuid>')`. A scene camera added later (async asset load) is picked up when it appears, then tracked by uuid; until then the view shows its `free` view. Without a uuid, the view looks for the camera again in each document the editor switches to
 - All input goes through `viewport.inputRouter` (see Input below)
 - Draws through `viewport.compositor`: the view's pipeline, then overlays and `viewport.gizmoLayer` (see Pipelines and Overlays)
 
@@ -96,7 +96,7 @@ const viewport = new IoThreeViewport({
 
 ### ThreeEditor and ThreeDocument
 
-The app object and its content ([ADR-0002](./docs/adr/0002-app-view-frame-layers.md)). Viewports show `editor.document`; assigning a new document switches every viewport, and each view remembers its camera per document.
+The app object and its content ([ADR-0002](./docs/adr/0002-app-view-frame-layers.md)). Viewports show `editor.document`; assigning a new document switches every viewport, and each view remembers its camera per document. A view seeing a document for the first time keeps its axis view (top, front, ...) and frames the new scene.
 
 ```typescript
 const editor = new ThreeEditor({ isPlaying: false });
@@ -112,6 +112,8 @@ editor.document = new ThreeDocument(); // switch; switching back restores each v
 | --------------------------------- | ------------------------------------ |
 | `onRendererInitialized(renderer)` | Called when WebGPU renderer is ready |
 | `onAnimate(delta, time)`          | Called each frame while `isPlaying`  |
+
+A `ThreeDocument` subclass has its own `onRendererInitialized(renderer)`. It runs once per renderer, before that renderer first draws the document, including for a document opened after the renderer was ready. GPU setup that belongs to the content, such as a compute pass that fills a texture, goes there, so the document works in any editor. Its `onAnimate(delta, time)` runs each frame while the editor showing it plays, after the editor's own. A document with `autoplay: true` asks to play when opened; the editor does not apply it, so whatever opens the document sets `editor.isPlaying = document.autoplay`.
 
 **Edits go through transactions** of invertible patches ([ADR-0008](./docs/adr/0008-commands-transactions-and-patches.md)). Edits apply immediately and redraw the views; the old values are recorded, so a transaction can be rolled back, reverted or re-applied. Writes to the same path coalesce. `set` assigns a property (assigning a read-only one such as `position` throws); `copy` copies into the object a property holds, keeping its identity.
 
@@ -324,7 +326,7 @@ editor.notify({kind: 'transform', ids: [mesh.uuid]}); // same, with a typed chan
 
 **Each frame:**
 
-1. Tick playing editors: `onAnimate(delta, time)` (one shared three.js `Timer`).
+1. Tick playing editors: the editor's `onAnimate(delta, time)`, then its document's (one shared three.js `Timer`).
 2. Drain change buses; tag viewports whose `listens(change)` is true.
 3. Update each scene's world matrices once, then draw tagged, visible viewports in priority order (focused, hovered, other) within a frame budget (`renderScheduler.frameBudget`, 12 ms). Views not reached draw next frame. A view tagged only `overlay` presents its cached pipeline output with fresh overlays.
 
@@ -346,7 +348,7 @@ Viewports not intersecting the viewport (scrolled out of view) skip rendering en
 
 ### Renderer Initialization
 
-The renderer initializes asynchronously. The scheduler initializes each renderer once and draws its viewports when it is ready. Editors get `onRendererInitialized(renderer)` before their first draw and do renderer-dependent setup there.
+The renderer initializes asynchronously. The scheduler initializes each renderer once and draws its viewports when it is ready. Editors get `onRendererInitialized(renderer)` before their first draw, and documents get it once per renderer before it first draws them. Renderer-dependent setup goes there.
 
 ### Dispose Cleanup
 

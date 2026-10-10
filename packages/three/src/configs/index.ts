@@ -1,5 +1,3 @@
-import { registerEditorGroups } from '@io-gui/editors'
-
 /**
  * This is a root ui config file for three.js EditorConfig's and EditorGroup's
  * It imports all the configs for all of three.js classes.
@@ -226,14 +224,3 @@ import './lights/webgpu/ProjectorLight.js'
 // import './objects/ClippingGroup.js';
 // import './nodes/Nodes.js';
 // import './nodes/TSL.js';
-
-/**
- * By default, we hide all properties that start with 'is' followed by an uppercase letter.
- * This is to avoid cluttering the inspector with "isObject3D", "isMesh", "isMaterial", etc.
- */
-
-registerEditorGroups(Object, {
-  Advanced: ['id', 'uuid', 'type', 'userData'],
-  Hidden: [new RegExp(/^is[A-Z0-9]/), '_listeners']
-})
-import './editor/ThreeEditor.js'

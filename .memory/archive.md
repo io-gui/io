@@ -633,3 +633,72 @@
 ### [inputs] 2026-10-08
 - IoNumberLadder.expandedChanged caret restore: setTimeout(fn, 0) -> queueMicrotask. Deferral only needs to outrun the collapse turn, not a later task. Other setTimeout(0) sites left (focus races in IoNumber.onBlur and IoOverlay window blur; selection test flushes are macrotask barriers).
 - Follow-up (user): `Transaction.set` always assigns (no copy; refs stored, undo restores identity; read-only props like position throw TypeError). New `Transaction.copy` copies into held object (values cloned as snapshots). Patch `ValuePatch` op 'set' | 'copy'; `writeValue(op, ...)`, `patchValue(op, v)` replace cloneValue. Coalesce per path only when op repeats (mixing keeps order; test proves). TranslateOperator uses copy. README/CONTEXT/SKILL/ADR-0008 updated. User fixed demo listener to `() => this.changed()`. 140 tests.
+
+### [three][demos] 2026-10-09
+- Merged IoSelectionExample + IoEditorViewsExample -> `demos/examples/IoEditorExample.ts` (`io-editor-example`, index.html Three > Editor leaf; old src+dist removed; plan refs annotated). Views: perspective (forward, grid overlay, Move tool), top (traa pipeline, select profile, grid, setAxisView('top')), uv (select). Inspector column (ioPropertyEditor of active object) + status bar. Shapes Box/Sphere/Cone/Knot with per-shape colored checker map (UV view shows active map). GridHelper dropped for grid overlay. Knot preselected.
+- Found: inspector vector editors stay stale after a Move commit (object vectors mutated in place, no io-mutation). Fix in demo onCommit: dispatchMutation(active.position/rotation/scale). Verified by toggling it off in browser (stale 3 vs 1.669).
+- Playwright headless chromium with `--enable-unsafe-webgpu --use-angle=metal` renders WebGPU demos; vite dev on alt port; hash `#path=Demos,Three,Editor`.
+
+### [three][demos] 2026-10-09 inspector binding
+- `SelectionModel.active` is uuid string. `ioPropertyEditor` `configureDebounced` renders `[]` when value is not an object, so `selection.bind('active')` updates the property and the panel stays empty.
+- `IoPanel` selector `caching: 'reactive'`: `IoSelector.renderDebounced` reuses cached element and skips new props. Passing `getActiveObject()` from `changed()` sticks on first object. Live binding of a reactive object property is what gets through the cache.
+- `group` is on the layout element (`SelectorElement & { group?: string }`), not `IoThreeViewportProps`. Demo spreads the vnode: `{...ioThreeViewport(...), group: 'view'}`. tsc -b packages/three ok.
+- IoLayout add menu: elements sharing `group` nest under one option (first-seen order); ungrouped stay top-level. Test in IoLayout.test.ts.
+
+### [layout][css] 2026-10-09 auto splits unequal
+- User: two `size: "auto"` sibling splits should be equal; deeper nested panel count makes the top splits unequal.
+- Cause: `sizeToFlex('auto')` → `flex: 1 1 auto`. `flex-basis: auto` resolves to max-content. Equal `flex-grow` only splits leftover space, so the content-size gap remains. A deeper horizontal split's max-content width is the sum of its panels; that width bubbles up as the ancestor's flex base. `overflow: hidden` zeros the automatic minimum (scroll container) so they can shrink, but shrink is also proportional to that base, so they still don't meet. Equal share would be `flex: 1 1 0%`. Not changed (identify only).
+
+### [three][demo] 2026-10-09 VolumePerlin Hidden regex
+- `Hidden: [new RegExp(/^$/)]` matches only `""`. Property names never hit it, so inherited fields stayed in Main. Changed to `/^[\s\S]*$/`, which `.test()`s true for every string. Explicit `Main: ['threshold', 'steps']` is still assigned before regex, so those two stay visible.
+
+### [three][demos] 2026-10-09 (2)
+- ThreeDocument file = `document.toJSON()` (core default toJSON: three Scene.toJSON + toneMapping/exposure), typed `ThreeDocumentData` (scene: JsonObject; SceneJSON is an interface -> not assignable to core Json). `static async fromJSON` via ObjectLoader.parseAsync. toJSON calls scene.updateMatrixWorld() first: Object3D.toJSON writes local matrix, stale until a draw (round-trip test caught it).
+- ThreeView.switchDocument: unseen document keeps axisView (was reset to free) -> axis views stay top/front/... across loads. Test added.
+- IoEditorExample (user's ioLayout WIP) loads src/demos/examples/EditorDocument1.json / 2.json via fetch; heading ioButtons; per-file promise cache (switch back keeps edits/selection/navigation). URLs: one `new URL('../../../src/demos/examples/X.json', import.meta.url)` literal per file. Vite dev rewrites `new URL('<dir>/', import.meta.url)` dropping trailing slash -> wrong dir; per-file literal fine. Works from dist too (path via ../../../src).
+- Gotchas: ReactiveElement.ready() runs in base ctor -> class field initializers not yet run; use @Field(Map). `changed()` is NOT auto-called on property change (generic is `mutated()`); add `fileChanged()`. IoSelector caching 'reactive' (IoPanel) reuses cached element -> new vElement props (e.g. new binding) ignored; Inspector binds to example's own `activeObject` (synced from current selection) instead of `editor.selection.bind('activeObject')`.
+- ThreeEditorStatus (user WIP) listened to initial doc's commit only -> follows editor.document in editorMutated now.
+- Docs generated in browser (temp module + playwright) from same scenes; doc2: hemisphere+sun, Floor (selectable false, 8x6), Icosahedron/Cylinder/Capsule, Group Stack(Base, Ring), ACES 1.2.
+- Editors nested Advanced: `IoObject.properties` `{type: Array, init: null}` is `[]`. Forwarded into nested `IoPropertyEditor`, whose group loop required `properties === undefined`, so Advanced never rendered. Gate is now `!this.properties?.length`. IoObject passes `undefined` when the list is empty. Explicit non-empty filters still hide groups. Test in IoObject.test.ts.
+- Unit suite: 3 failures in layout/layoutSize.test.ts from user's uncommitted sizeToFlex '1 1 0%' change. Lint errors in user's WIP (double quotes in editorLayout, trailing spaces).
+- Inspector stale after move again (user removed onCommit dispatchMutation in their rewrite) - reported, not changed.
+
+### [three][demos] 2026-10-09 (3)
+- User correction: documents are TS classes extending ThreeDocument, not JSON. EditorDocument1.ts / EditorDocument2.ts (@Register, build scene in constructor after super; doc2 passes ACES/1.2 defaults to super), shared checkerTexture.ts. IoEditorExample DOCUMENTS = name -> () => import('./EditorDocumentN.js').then(m => new m.EditorDocumentN()); promise cache per name; property `documentName`.
+- Reverted ThreeDocument toJSON/fromJSON/ThreeDocumentData + round-trip test + README/CONTEXT/SKILL notes; JSON files deleted. Kept ThreeView.switchDocument axis-view fix (+README line), inspector activeObject binding, ThreeEditorStatus document following.
+- Browser verified (vite dev): both docs import once, switch both ways, axis views kept, inspector + status follow. three tests 141 pass.
+
+### [three][document] 2026-10-09 (4)
+- ThreeDocument.onRendererInitialized(renderer): runs once per renderer (WeakSet `_renderers`), via `_prepareRenderer` called by IoThreeViewport.renderView before each draw (after editor hook). Covers docs opened after renderer ready. ComputeTextureExample (user's doc conversion) runs `renderer.compute(computeNode)` there. Editor-level hook kept (IoAnimationKeyframesExample uses it).
+- Test in ThreeDocument.test.ts; README lifecycle + Renderer Initialization, SKILL gotcha updated. Browser verified: compute pattern on plane in Editor example. three tests 142 pass.
+
+### [three][demos] 2026-10-10
+- GeometriesExample.ts + GeometryColorsExample.ts: ThreeDocument subclasses replacing IoGeometriesExample / IoGeometryColorsExample (Io* src + dist deleted; index.html menu entries GeometryPrimitives/GeometryColors + navigator elements removed, GeometryConvex stays). Added to IoEditorExample DOCUMENTS.
+- Geometries: spin (editor onAnimate) dropped - documents have no animate hook, IoEditorExample never plays, and it would overwrite edits. Wireframe is a document `@Property` (Main group, Document tab); meshes named. TextureLoader onLoad -> `this.notify({kind: 'material'})`: forward views draw only on changes, so an async texture otherwise stays black until the next edit.
+- Colors: wireframe children + fake shadow planes `userData.selectable = false` (click selects the colored mesh). Original scale kept (views frame on open, grid scales with distance).
+- Browser verified: both load, textured, wireframe toggle, pick selects 'Gradient'. tsc + eslint clean.
+
+### [three][document] 2026-10-10 (2)
+- ThreeDocument.onAnimate(delta, time): empty hook; ThreeEditor.tick calls editor onAnimate, then document.onAnimate, then notify 'time'. Only while editor.isPlaying.
+- GeometriesExample spin restored in document onAnimate (rotation from scheduler `time`, elapsed since app start: jumps on first play / resume, same as old editor hook).
+- IoEditorExample heading: ioBoolean Play/Pause bound to editor.isPlaying (default off).
+- Test 'ticks the document onAnimate after the editor, only while playing'. README (lifecycle para + Each frame step 1), CONTEXT Playing, SKILL lines updated. three tests 143 pass; browser verified spin + pause.
+
+### [three][document] 2026-10-10 (3)
+- ThreeDocument `autoplay` @Property (Boolean, false; in ThreeDocumentProps). Hint only: ThreeEditor ignores it (applying it in documentChanged would clobber `init: {isPlaying: true}` editors, since document is set after args). IoEditorExample.open sets `editor.isPlaying = document.autoplay` on every open (switch away pauses). GeometriesExample `super({autoplay: true, ...args})`.
+- README lifecycle para + SKILL line updated. tsc/eslint clean, three tests 143. Browser: Geometries plays (label Pause), EditorDocument1/2 pause.
+- Vite dev gotcha: first dynamic import of a doc pulling new deps (ParametricGeometry) -> "optimized dependencies changed. reloading" -> page reloads, first click looks lost. Not a code bug.
+
+### [three][demos] 2026-10-10 (4)
+- All remaining Io*Example converted to ThreeDocument subclasses in src/demos/examples/<Name>.ts (AnimationGroups/Keyframes/Retargeting/RetargetingReadyplayer/SkinningBlending/SkinningAdditiveBlending, Backdrop/BackdropArea, Camera/CameraArray, GeometryConvex). Io* src + dist deleted. Animated ones autoplay. Async loads: notify 'structure' + document.dispatch('frame-object', {object}, true) (bubbles doc -> editor -> viewports; native per-viewport stopPropagation so all frame). Keyframes PMREM in document onRendererInitialized, model load moved to constructor. SkinningBlending's own `isPlaying` -> `paused` (single step pauses). Side panels -> registerEditorConfig/Groups on the document class (Document tab). Type-keyed configs don't reach nested editors (actions show collapsed). Floors/backgrounds selectable=false.
+- CameraArray: views copy scene cameras (ADR-0005) so the ArrayCamera grid never renders; laid out for 1x1, camera view looks through main camera.
+- IoEditorExample moved to src/demos/IoEditorExample.ts; DOCUMENTS lists 17 docs; heading flex-wrap; new select-only Camera view (setCameraView(), tab next to UV).
+- ThreeView: `_cameraRequest` (name or '' from setCameraView) re-armed in switchDocument when the shown doc has no cameraSource; setAxisView/uuid clear it. Test added (ThreeView.test). README/SKILL/CONTEXT notes.
+- index.html: Demos > Three is the editor directly (no nested navigator); user asked. Demos navigator caching is proactive -> editor preached in background.
+- Known: TRAA axis views draw black where scene uses TSL backgroundNode (Backdrop, Retargeting); plain background color fine. Not fixed.
+- Plans: example_conversion marked superseded; core plan path updated. three tests 144, tsc clean, eslint 0 errors. Browser: all 17 load, no console errors; Camera view follows docs; blending crossfade + single step work.
+
+### [editors][three][rules] 2026-10-10 (5)
+- User correction: configs/index.ts is only for external three.js classes. Editor configs + groups live next to class definitions. Global `registerEditorGroups(Object, {is*, _listeners, id/uuid/type/userData})` removed on purpose (stepped over every Object-derived class); granular per-class configs to come. I had flagged its removal as a regression - wrong.
+- ThreeDocument/ThreeEditor configs moved (by user) from configs/editor/ThreeEditor.ts into the class modules. ThreeDocument groups: Main tone mapping + `Advanced: [/^[\s\S]*$/]` catch-all (explicit names beat regexes, so subclasses list Main props).
+- Distilled into rules: io-gui.mdc "Editor Configs" + "io-three: Document, Editor, View" (document = portable content, editor = host/session, view = intent resolved per document, apps = host + documents). Consumer versions in three SKILL (new-app + document + config bullets, selection.activeObject, view intent) and editors SKILL (colocate, narrowest class, whitelist pattern).

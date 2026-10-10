@@ -18,6 +18,9 @@
 - Apps are embedded in the root `index.html` via `iframe()` helper + nav entry
 - Workspace deps use `"workspace:*"` in `package.json`
 
+- **Editor configs colocated w/ class** (user rule 2026-10-10): `registerEditorConfig`/`registerEditorGroups` right after class def, narrowest class. `configs/` dir = external (three.js) only. No global `Object` config - removed on purpose (steps over all derived classes). Not a regression; don't flag. Whitelist = Main names + Advanced catch-all regex (explicit names beat regex).
+- **io-three essence:** document = portable content (scene, onRendererInitialized, onAnimate, props+groups; no editor/view/DOM access). Editor = host/session (playing, selection, tools, ops). View = intent (axis, first/named cam) carried across docs; resolved nav per doc. Apps = one host + documents (demos/IoEditorExample). Rules in io-gui.mdc.
+
 ### Code Patterns That Worked
 
 - **Io events: use bubbling + static Listeners, not listener wrangling.** Source node calls `this.dispatch("event-name", detail, true)` so the event bubbles. Consumers declare `static get Listeners()` mapping event names to handler method names (e.g. `"game-save": "onGameSave"`). No manual `addEventListener` in `ready()`, no storing previous refs or add/remove when dependencies change. Parents that have the dispatching node in their tree receive the event via bubbling.

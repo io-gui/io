@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { ChangeBus, ThreeDocument, ThreeEditor, Transaction } from '@io-gui/three'
-import { Color, Group, Mesh, MeshBasicMaterial, Object3D, Vector3 } from 'three/webgpu'
+import { Color, Group, Mesh, MeshBasicMaterial, Object3D, Vector3, WebGPURenderer } from 'three/webgpu'
 
 function snapshot(document: ThreeDocument) {
   return JSON.stringify(document.scene.toJSON().object)
@@ -179,6 +179,19 @@ describe('ThreeDocument transactions', () => {
     expect(committed.length).toBe(1)
   })
 
+  it('runs onRendererInitialized once per renderer', () => {
+    const calls: WebGPURenderer[] = []
+    document.onRendererInitialized = renderer => { calls.push(renderer) }
+    const first = {} as WebGPURenderer
+    const second = {} as WebGPURenderer
+    document._prepareRenderer(first)
+    document._prepareRenderer(first)
+    document._prepareRenderer(second)
+    expect(calls.length).toBe(2)
+    expect(calls[0]).toBe(first)
+    expect(calls[1]).toBe(second)
+  })
+
   it('reports render setting changes', () => {
     document.toneMappingExposure = 2
     expect(document.changeBus.drain().map(change => change.kind)).toEqual(['settings'])
@@ -217,6 +230,19 @@ describe('ThreeEditor', () => {
     editor.tick({frame: 2, delta: 0.016, time: 0.032})
     expect(calls).toEqual([0.016])
     expect(editor.changeBus.drain()).toEqual([{kind: 'time', source: editor.document}])
+    editor.dispose()
+  })
+
+  it('ticks the document onAnimate after the editor, only while playing', () => {
+    const editor = new ThreeEditor()
+    const calls: string[] = []
+    editor.onAnimate = (delta: number, time: number) => { calls.push(`editor ${delta} ${time}`) }
+    editor.document.onAnimate = (delta: number, time: number) => { calls.push(`document ${delta} ${time}`) }
+    editor.tick({frame: 1, delta: 0.016, time: 0.016})
+    expect(calls).toEqual([])
+    editor.isPlaying = true
+    editor.tick({frame: 2, delta: 0.016, time: 0.032})
+    expect(calls).toEqual(['editor 0.016 0.032', 'document 0.016 0.032'])
     editor.dispose()
   })
 
