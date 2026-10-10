@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import { IconsetSingleton } from '@io-gui/icons'
 import { IoBoolean } from '@io-gui/inputs'
 
 const element = new IoBoolean()
@@ -69,6 +70,18 @@ describe('IoBoolean.test', () => {
     element.toggle()
     element.true = 'true'
     element.false = 'false'
+  })
+  it('shows a string naming a registered icon of any namespace as that icon, other strings as text', () => {
+    IconsetSingleton.registerIcons('booleantest', '<svg><g id="on"><path d="M0 0h1v1z"/></g></svg>')
+    element.value = true
+    element.true = 'booleantest:on'
+    expect(element.querySelector('io-icon')?.getAttribute('value')).toBe('booleantest:on')
+    element.true = 'io:check'
+    expect(element.querySelector('io-icon')?.getAttribute('value')).toBe('io:check')
+    element.true = 'Ratio: 16:9'
+    expect(element.innerHTML).toBe('<span>Ratio: 16:9</span>')
+    element.true = 'true'
+    element.value = false
   })
   it('has reactive attributes', () => {
     element.value = false

@@ -9,8 +9,16 @@ The app object: one active Document (switchable at runtime), editor mode, playba
 _Avoid_: app, scene controller, applet (removed `ThreeApplet`)
 
 **Document**:
-The content of an editor: the scene of authored objects plus scene render settings. Edited through transactions.
+The content of an editor: the scene of authored objects plus scene render settings and its timeline. Edited through transactions.
 _Avoid_: model, project, file
+
+**Timeline**:
+A document's clock (`document.timeline`): `currentTime` within `[0, duration]` seconds, the `frameRate` of stepping and scrubbing, `loop` and `autoplay`. Every change of `currentTime` runs the document's `onAnimate(delta, time)`, with `delta` the change (negative going back). `timeNode` mirrors `currentTime` as a TSL uniform.
+_Avoid_: clock (as a type name), document time, playhead (that is its UI), time (alone, for the property)
+
+**Timeline range**:
+`ThreeTimelineRange`: the scrubbable `IoGl` strip of one timeline, with the playhead and frame-aligned dividers at any zoom. `ThreeTimeline` adds transport buttons and time fields for the editor's document.
+_Avoid_: scrubber, time slider, ruler (alone)
 
 **Transaction**:
 One atomic group of patches: the unit of undo, change notification and sync. Applies edits immediately and records old values.
@@ -92,12 +100,12 @@ _Avoid_: render loop (as a class name), animation loop
 A typed reason (`content`, `view`, `overlay`, `resize`, `continuous`) that marks a viewport for redraw on the next frame. Tagging never draws.
 _Avoid_: needs-render, invalidate
 
-**ChangeBus**:
-Per-document queue of typed `DocumentChange`s, drained by the scheduler each frame to tag the viewports that listen to them.
-_Avoid_: notifier, event bus
+**DocumentChange**:
+A typed record (`kind`, `source` document, optional `ids`) of something that changed in a document. `document.notify()` queues it on the document; the scheduler drains each shown document's queue once per frame and tags the viewports that listen to it.
+_Avoid_: change bus, notifier, event bus
 
 **Playing**:
-`Editor.isPlaying`: whether the scheduler ticks the editor and its active document (`onAnimate(delta, time)`) each frame. Independently, non-visible viewports skip draws via IntersectionObserver.
+`Editor.isPlaying`: whether the scheduler ticks the editor each frame, advancing the active document's timeline by the frame delta (which runs the document's `onAnimate`). A timeline that stops at its end pauses the editor. Independently, non-visible viewports skip draws via IntersectionObserver.
 _Avoid_: animating, running, live
 
 **View**:

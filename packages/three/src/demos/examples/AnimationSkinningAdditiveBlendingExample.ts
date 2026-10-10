@@ -14,7 +14,7 @@ import {
   PlaneGeometry,
 } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Document, DocumentProps, Timeline } from '@io-gui/three'
 import { ioObject, ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 
 type GltfModel = {
@@ -62,7 +62,7 @@ export class AnimationSkinningAdditiveBlendingExample extends Document {
   }
 
   constructor(args?: DocumentProps) {
-    super({autoplay: true, ...args})
+    super({timeline: new Timeline({autoplay: true}), ...args})
 
     // Scene setup
     this.scene.background = new Color(0xa0a0a0)

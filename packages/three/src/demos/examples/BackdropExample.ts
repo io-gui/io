@@ -1,5 +1,5 @@
 import { Property, Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Document, DocumentProps, Timeline } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
 import {
   AnimationMixer,
@@ -26,7 +26,6 @@ import {
   screenUV,
   checker,
   uv,
-  time,
   oscSine,
   output,
 } from 'three/tsl'
@@ -45,7 +44,7 @@ export class BackdropExample extends Document {
   public portals: Group
 
   constructor(args?: DocumentProps) {
-    super({toneMapping: NeutralToneMapping, toneMappingExposure: 0.3, autoplay: true, ...args})
+    super({toneMapping: NeutralToneMapping, toneMappingExposure: 0.3, timeline: new Timeline({autoplay: true}), ...args})
 
     // Background
     this.scene.backgroundNode = screenUV.y.mix(color(0x66bbff), color(0x4466ff))
@@ -88,10 +87,10 @@ export class BackdropExample extends Document {
       this.portals.add(mesh)
     }
 
-    addBackdropSphere('Hue', hue(viewportSharedTexture().bgr, oscSine().mul(Math.PI)))
+    addBackdropSphere('Hue', hue(viewportSharedTexture().bgr, oscSine(this.timeline.timeNode).mul(Math.PI)))
     addBackdropSphere('Invert', viewportSharedTexture().rgb.oneMinus())
     addBackdropSphere('Grayscale', grayscale(viewportSharedTexture().rgb))
-    addBackdropSphere('Saturation', saturation(viewportSharedTexture().rgb, 10), oscSine())
+    addBackdropSphere('Saturation', saturation(viewportSharedTexture().rgb, 10), oscSine(this.timeline.timeNode))
     addBackdropSphere('Overlay', blendOverlay(viewportSharedTexture().rgb, checker(uv().mul(10))))
     addBackdropSphere('Pixelate', viewportSharedTexture(viewportSafeUV(screenUV.mul(40).floor().div(40))))
     addBackdropSphere('PixelateBlue', viewportSharedTexture(viewportSafeUV(screenUV.mul(80).floor().div(80))).add(color(0x0033ff)))
@@ -111,7 +110,7 @@ export class BackdropExample extends Document {
       const material = mesh.material as MeshStandardNodeMaterial
 
       // TODO: Time is respecting the animation mixer timeScale
-      material.outputNode = oscSine(time.mul(.1)).mix(output, posterize(output.add(.1), 4).mul(2))
+      material.outputNode = oscSine(this.timeline.timeNode.mul(.1)).mix(output, posterize(output.add(.1), 4).mul(2))
 
       const action = this.mixer.clipAction(gltf.animations[0])
       action.play()

@@ -1,5 +1,5 @@
 import { Register, Property, span, WithBinding, Field } from '@io-gui/core'
-import { ioIcon } from '@io-gui/icons'
+import { ioIcon, IconsetSingleton } from '@io-gui/icons'
 import { IoField, IoFieldProps } from './IoField.js'
 
 export type IoBooleanProps = IoFieldProps & {
@@ -10,7 +10,8 @@ export type IoBooleanProps = IoFieldProps & {
 
 /**
  * Input element for `Boolean` data type displayed as text.
- * It can be configured to display custom `true` or `false` strings.
+ * It can be configured to display custom `true` or `false` strings; a string naming a registered icon
+ * (`namespace:id`, e.g. `io:check`) displays that icon.
  **/
 @Register
 export class IoBoolean extends IoField {
@@ -53,11 +54,10 @@ export class IoBoolean extends IoField {
     this.setAttribute('aria-checked', String(!!this.value))
   }
   override mutated() {
-    const value = this.value ? this.true : this.false
+    const content = this.value ? this.true : this.false
     this.render([
       this.icon ? ioIcon({value: this.icon}) : null,
-      // TODO: Make more robust, it should work with any iconset and show text if no icon is found
-      value ? value.startsWith('io:') ? ioIcon({value: value}) : span(value) : null
+      content ? IconsetSingleton.hasIcon(content) ? ioIcon({value: content}) : span(content) : null
     ])
   }
 }

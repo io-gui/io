@@ -121,7 +121,7 @@ target.prop = binding  // Target syncs to source
 ## Object Mutation Observation
 
 ### ReactiveNode-Typed Properties
-Automatically observed. Mutations trigger `[propName]Mutated()` handlers.
+Automatically observed. Mutations trigger `[propName]Mutated()` handlers. Only that handler runs: the holder's own `mutated()` is not called and it dispatches no `io-mutation`. A child node therefore keeps a frequently changing value (a playhead time) out of its parent's change handling.
 
 ```typescript
 @Property({type: MyReactiveNode, init: null})
@@ -277,11 +277,39 @@ element.prop = myValue // Binding syncs to storage
 | Method | When Called |
 |--------|-------------|
 | `init()` | Before property initialization |
-| `ready()` | After construction, before first dispatch |
+| `ready()` | Inside the base constructor, after properties and args are set, before their change handlers |
 | `mutated()` | After any reactive property change |
 | `connectedCallback()` | ReactiveElement attached to DOM |
 | `disconnectedCallback()` | ReactiveElement removed from DOM |
 | `dispose()` | Manual cleanup (removes listeners, bindings) |
+
+### Construction Order
+
+`new MyNode(args)` does all of this inside the base constructor (`super()`):
+
+1. `init()`
+2. Reactive properties and `@Field`s get their initial values
+3. `args` are assigned and their changes queued
+4. `ready()`
+5. The queue dispatches: `[prop]Changed()`, `[prop]-changed`, `mutated()`, `io-mutation`
+
+Only then do the subclass's class fields initialize and its constructor body run, so `ready()` and handlers see a partly built object:
+
+- State they read or write must be a `@Field` (initialized in step 2) or a `declare`d field created lazily. A plain class field is not there yet, and one without `declare` is re-initialized after `super()`, discarding what a handler stored.
+- Callbacks passed while rendering from `ready()` must be auto-bound `on*` methods; arrow-function fields are still `undefined`.
+- Properties set in the subclass constructor body dispatch their handlers again, after construction.
+
+```typescript
+@Register
+class MyNode extends ReactiveObject {
+  @Property({type: Number, value: 0}) declare count: number
+  @Field(Array) declare private _log: number[]  // ready during handlers
+  declare private _cache: Map<string, number> | undefined  // `declare`: no re-initialization after super()
+  countChanged() {
+    this._log.push(this.count)
+  }
+}
+```
 
 ---
 
@@ -313,6 +341,26 @@ class MyShader extends IoGl {
 ```
 
 Theme variables available as `io_*` uniforms. Shared WebGL context across all instances.
+
+- Number, Boolean, Array and `Color` properties become uniforms (`u` + capitalized name); object-typed properties are skipped.
+- Every property change renders once on the next frame. To redraw when a model node held in a property mutates, call `this.debounce(this.onRender)` from its `[prop]Mutated()`.
+- One shader program per class, shared by its instances: an instance sets all its uniforms on every render.
+- Uniforms are 32-bit floats. For values with a large range (times, world coordinates), compute positions in JS and pass pixel offsets; `gl_FragCoord.xy` is in device pixels (`uSize` is CSS pixels, `uPxRatio` the ratio).
+
+Values the properties don't cover: declare them in `Frag` and set them before drawing. `ctx` is the 2D context the shader output is copied into, for text on top:
+
+```typescript
+static get Frag() {
+  return `uniform float uMarkerX;
+  void main() { gl_FragColor = vec4(step(abs(gl_FragCoord.x - uMarkerX), 1.0)); }`
+}
+override onRender() {
+  this.setShaderProgram()
+  this.setUniform('uMarkerX', markerX)
+  super.onRender()
+  this.ctx.fillText(label, markerX, 2)
+}
+```
 
 ---
 

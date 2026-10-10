@@ -10,7 +10,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
 import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Document, DocumentProps, Timeline } from '@io-gui/three'
 
 /**
  * The animated Littlest Tokyo model, lit by a PMREM room environment, with a scene camera riding the train.
@@ -22,7 +22,7 @@ export class AnimationKeyframesExample extends Document {
   public mixer: AnimationMixer = new AnimationMixer(new Object3D())
 
   constructor(args?: DocumentProps) {
-    super({autoplay: true, ...args})
+    super({timeline: new Timeline({autoplay: true}), ...args})
     this.scene.background = new Color( 0xbfe3dd )
     void this.loadModel()
   }
@@ -47,8 +47,10 @@ export class AnimationKeyframesExample extends Document {
       model.scale.set( 0.01, 0.01, 0.01 )
       this.scene.add( model )
 
+      this.timeline.duration = gltf.animations[ 0 ].duration
       this.mixer = new AnimationMixer( model )
       this.mixer.clipAction( gltf.animations[ 0 ] ).play()
+      this.mixer.setTime( this.timeline.currentTime )
 
       const train = gltf.scene.getObjectByName('Object675')!
       const perspectiveCamera = new PerspectiveCamera( 125, 1, 0.1, 1000 )

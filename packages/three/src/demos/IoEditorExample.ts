@@ -1,11 +1,11 @@
 import { Register, ReactiveElement, ReactiveElementProps, Property, div, Field } from '@io-gui/core'
-import { ioBoolean, ioField } from '@io-gui/inputs'
+import { ioField } from '@io-gui/inputs'
 import { ioPropertyEditor } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 import { Object3D } from 'three/webgpu'
 import { mrt, output, velocity } from 'three/tsl'
 import { traa } from 'three/addons/tsl/display/TRAANode.js'
-import { PostProcessingPipeline, SelectionModel, Document, Editor, View, threeViewport, pipelineTypes } from '@io-gui/three'
+import { PostProcessingPipeline, SelectionModel, Document, Editor, View, threeViewport, threeTimeline, pipelineTypes } from '@io-gui/three'
 import { ioLayout, Layout } from '@io-gui/layout'
 import { threeEditorStatus } from '../elements/ThreeEditorStatus.js'
 
@@ -112,7 +112,9 @@ const DOCUMENTS: Record<string, () => Promise<Document>> = {
  * select-only UV view of the selection, and a select-only Camera view through the document's first scene camera.
  * The inspector follows the active object; the Document tab shows the document's own properties.
  * The heading buttons load a Document subclass and make it the editor's document. Each loaded document keeps
- * its edits, selection and view navigation when switching back (ADR-0002). Play ticks the document's `onAnimate`; opening a document plays or pauses it by its `autoplay`.
+ * its edits, selection and view navigation when switching back (ADR-0002). The timeline above the status bar plays, steps
+ * and scrubs the document's timeline, whose current time drives its `onAnimate`; opening a document plays or pauses it
+ * by its timeline's `autoplay`.
  * Click selects (Shift toggles, Ctrl removes), Alt+drag box-selects, Ctrl+A selects all, Escape clears, F frames the
  * selection. Drag a gizmo arrow to move along an axis, the center to move in the view plane; X / Y / Z switch the
  * axis while dragging, Escape or right click cancels. Tab enters edit mode on the selection; 1 / 2 / 3 pick points,
@@ -186,7 +188,7 @@ export class IoEditorExample extends ReactiveElement {
 
     this.editor.setActiveTool('3d', 'object', 'transform.translate')
     this.selection = this.editor.selection
-    
+
     this.render([
       div({class: 'heading'}, [
         ioField({value: this.bind('documentName')}),
@@ -198,7 +200,6 @@ export class IoEditorExample extends ReactiveElement {
           }),
           value: this.bind('documentName'),
         }),
-        ioBoolean({value: this.editor.bind('isPlaying'), true: 'Pause', false: 'Play'}),
       ]),
       ioLayout({class: 'content',
         model: editorLayout,
@@ -216,6 +217,7 @@ export class IoEditorExample extends ReactiveElement {
           ioPropertyEditor({id: 'Document', value: this.editor.bind('document')}),
         ]
       }),
+      threeTimeline({editor: this.editor}),
       threeEditorStatus({editor: this.editor}),
     ])
 
@@ -249,7 +251,7 @@ export class IoEditorExample extends ReactiveElement {
     // Another document may have been asked for while this one loaded.
     if (this.documentName !== name) return
     this.editor.document = document
-    this.editor.isPlaying = document.autoplay
+    this.editor.isPlaying = document.timeline.autoplay
   }
 
   override dispose() {

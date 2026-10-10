@@ -4,7 +4,8 @@ description: >-
   Build Three.js WebGPU apps with Editor and ThreeViewport, including
   shared renderer lifecycle and editor config side-effects. Use when working with
   @io-gui/three, viewports, View, view navigation, pipelines, overlays,
-  gizmos, the UV view, edit mode / component selection, or tools.
+  gizmos, the UV view, edit mode / component selection, tools, or the
+  document timeline and playback.
 ---
 
 # @io-gui/three
@@ -13,7 +14,9 @@ description: >-
 
 - Import from `@io-gui/three` (pulls peer `three` / webgpu).
 - New apps: one **`Editor`** (the host: playing state, selection, tools, operators) showing a **`Document`** (the content); mount views with **`threeViewport({ editor, view })`**. Switch content with `editor.document = doc`: every viewport, the selection and each view's navigation follow.
-- **Put content in a `Document` subclass**, self-contained so it opens in any editor: scene in the constructor, GPU setup (compute, PMREM) in `onRendererInitialized(renderer)`, animation in `onAnimate(delta, time)` (runs while `editor.isPlaying`), controls as `@Property`s with groups registered next to the class. Don't touch the editor, views or DOM from a document. `autoplay: true` is a hint: whoever opens it sets `editor.isPlaying = doc.autoplay`.
+- **Put content in a `Document` subclass**, self-contained so it opens in any editor: scene in the constructor, GPU setup (compute, PMREM) in `onRendererInitialized(renderer)`, animation in `onAnimate(delta, time)`, controls as `@Property`s with groups registered next to the class. Don't touch the editor, views or DOM from a document.
+- **Animate from the document's `timeline`** (`currentTime`, `duration`, `frameRate`, `loop`, `autoplay`). `onAnimate(delta, time)` runs on every change of `timeline.currentTime`: playback, scrubbing, stepping. Derive state from `time` where you can (it then scrubs and loops); advance mixers and other integrators by `delta` (negative going back). Set defaults with `super({timeline: new Timeline({autoplay: true, duration: 20}), ...args})`. Shader animation uses `this.timeline.timeNode`, not TSL's global `time`. `autoplay` is a hint: whoever opens the document sets `editor.isPlaying = doc.timeline.autoplay`.
+- Playback UI: `threeTimeline({ editor })` (transport buttons with `three:` icons, scrubbable range, time fields; follows `editor.document`). `threeTimelineRange({ timeline })` is the range alone.
 - **Register editor configs next to your class** (`registerEditorConfig` / `registerEditorGroups` right after its definition), on the narrowest class; never on `Object` or another broad base. `Document` shows only tone mapping in Main and sends everything else to Advanced, so list your document's controls in `Main` (explicit names beat that regex).
 - **Edit the document through transactions** (`document.transact(tx => tx.copy(obj, 'position', v))`; `tx.set` assigns and throws on read-only properties such as `position`, `copy` copies into the held object), or operators (`editor.operators.run(id, props)`), not by writing Three.js objects directly: that is what keeps undo, redraw and future sync working. Interactive edits are modal operators (`invoke` returns `'running'`, `modal` gets events, Escape rolls back).
 - **Selection** is `editor.selection` (per document): change it with `selection.set(uuids)` / `selection.edit()...commit()`, read `getObjects()` / `getActiveObject()`, bind UI to `selection.version` / `selection.active` / `selection.activeObject` (the active Object3D, e.g. for an inspector). Picking goes through a `Picker` (`defaultPicker`, async). Set `userData.selectable = false` on helpers (grids, gizmo meshes) so they cannot be picked.
@@ -30,11 +33,12 @@ description: >-
 - Pipelines output **linear** color; the viewport tone-maps when presenting. A `PostProcessingPipeline` keeps `outputColorTransform = false`; don't add `renderOutput()` to its graph.
 - **Only `renderScheduler` renders.** Viewports are tagged dirty and drawn next frame. After editing the scene outside `onAnimate`, call `editor.requestRender()` (or `editor.notify({kind})`) or nothing redraws. Never call render methods on viewports.
 - Renderer init is **async** — do GPU setup in `onRendererInitialized(renderer)`. A document's runs once per renderer, before that renderer first draws it, also when the document is opened later.
-- `isPlaying: false` on the editor ⇒ no `onAnimate` (editor or document); non-visible viewport ⇒ no draw.
+- `isPlaying: false` on the editor ⇒ the timeline does not advance and the editor's `onAnimate` does not run; a document's `onAnimate` still runs when its timeline is scrubbed, stepped or set. Non-visible viewport ⇒ no draw.
+- `timeline.frameRate` does not change playback (continuous, paced by the display); it sets frame stepping, scrub snapping and divider steps.
 - Size belongs to each viewport (`viewport.width/height`); the editor has no resize hook. Scene cameras are fitted to the viewport aspect at draw time.
 - **View state lives on `View`**, not the viewport or the document. A view holds intent (axis view, first or named scene camera) that carries across documents, and remembers its resolved navigation per document: `viewport.view.navigation` (target, rotation, distance, axis view, scene camera by uuid), `overscan`, `clearColor`. Pass a `view` to keep navigation across remounts. Choose the camera on the view: `new View().setAxisView('top')` (`'free'` = default perspective; also leaves a scene camera), or `.setCameraView()` to look through the first scene camera (falls back to the `free` view until one is in the scene; looked for again in each document switched to). With several scene cameras use `.setCameraView('name:<name>')` or `'uuid:<uuid>'`; an id without a prefix warns and uses the `free` view. Use `viewport.getViewCamera()` for picking; never mutate scene cameras to fit a viewport. After editing `view.navigation` directly, call `view.markNavigationChanged()`. Camera moves are not reactive mutations (they run per pointer move); follow them with the view's `navigation-changed` event.
 - Component indices are valid for one topology: after changing a geometry's positions or index, old sets are ignored (size mismatch). Component picking uses the rest shape (no skinning / morphs) and triangles (quad diagonals are edges).
-- **Not core `IoGl`.** IoGl is 2D shader quads for sliders/colors; this package is full Three WebGPU.
+- **Viewports are not core `IoGl`.** IoGl is 2D shader quads (sliders, colors, `ThreeTimelineRange`); viewports are full Three WebGPU.
 - **All viewport input goes through `viewport.inputRouter`** (priority capture). Never add pointer/wheel listeners to a viewport directly, and never use `OrbitControls` on it: navigation is `NavigationBehavior` + a `Keymap` (`navigationKeymaps.default | blender | maya`, or pass `keymap`).
 - Pointer tools are `ToolDefinition.createBehaviors(ctx)` behaviors at tool priority; use `ctx.host.getViewCamera()` for rays. Return false from `wantsCapture` for input that navigation should get.
 

@@ -5,6 +5,9 @@ export declare const IconsetDB: Record<string, Record<string, string>>;
  **/
 declare class Iconset extends ReactiveObject {
     registerIcons(name: string, svg: string): void;
+    /** Whether `icon` (`namespace:id`) is registered. */
+    hasIcon(icon: string): boolean;
+    /** SVG markup of `icon` (`namespace:id`); an empty icon when it is not registered. */
     getIcon(icon: string): string;
 }
 export declare const IconsetSingleton: Iconset;

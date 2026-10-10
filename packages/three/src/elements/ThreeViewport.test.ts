@@ -185,7 +185,7 @@ describe('ThreeViewport', () => {
     const other = new Editor()
     const viewport = new ThreeViewport({ editor })
     expect(viewport.editor).toBe(editor)
-    expect(viewport.changeBus).toBe(editor.document.changeBus)
+    expect(viewport.document).toBe(editor.document)
     expect(viewport.scene).toBe(editor.document.scene)
     expect(viewport.listens({kind: 'transform', source: editor.document})).toBe('content')
     expect(viewport.listens({kind: 'selection', source: editor.document})).toBe('overlay')

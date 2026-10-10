@@ -97,9 +97,29 @@ IconsetSingleton.registerIcons('custom', customIcons)
 ### SVG Format Requirements
 
 - Wrap icons in a parent `<svg>` element
-- Each icon must be a `<g>` element with a unique `id` attribute
-- Icons should be designed for 24x24 viewBox
-- Fill color should be omitted or set to `currentColor` for theme compatibility
+- Each icon is a `<g>` element with an `id`, unique in its namespace. Every element with an `id` is registered, nested ones too, so put ids on the groups only
+- Registering an existing `namespace:id` again (in the same markup or a later call) replaces it; an id defined twice in one markup warns in debug builds
+- Icons render in a fixed `0 0 24 24` viewBox. Artwork drawn in another coordinate system needs a `transform` on its group
+- Omit `fill` so the icon takes `--io_color` and follows field states; also drop `width`, `height` and `xmlns`
+
+### Icons from Material Symbols
+
+[Material Symbols](https://fonts.google.com/icons) (Apache-2.0) use a `0 -960 960 960` viewBox. Keep the `<path d>` of the 24px SVG and wrap it in a group that maps it onto the 24×24 box (translate by 960, then scale 960 to 24):
+
+```typescript
+IconsetSingleton.registerIcons('app', /* html */`
+<svg>
+  <g id="play" transform="scale(0.025) translate(0 960)">
+    <path d="M320-200v-560l440 280-440 280Z"/>
+  </g>
+</svg>`)
+```
+
+Each icon's SVG is at `https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined/<name>/default/24px.svg`; use `fill1` instead of `default` for the filled variant, or the `materialsymbolsrounded` / `materialsymbolssharp` families. Name ids by what they do in your UI (`skip_start`) rather than by the glyph (`skip_previous`).
+
+### A Package's Own Namespace
+
+A package registers its namespace in a side-effect module, imported by the elements that use the icons and by the package index, and listed in the package's `sideEffects` so bundlers keep it. `@io-gui/three` registers `three:` icons for its timeline this way (`src/icons/threeIcons.ts`).
 
 ### Retrieving Icons
 
@@ -108,27 +128,37 @@ const svg = IconsetSingleton.getIcon('io:gear')
 // Returns: '<svg viewBox="0 0 24 24" ...><g class="icon-id-gear">...</g></svg>'
 ```
 
+An unknown reference returns an empty `<svg>`, without a warning. `hasIcon` tells whether a reference is registered:
+
+```typescript
+IconsetSingleton.hasIcon('io:gear') // true
+IconsetSingleton.hasIcon('Mode: on') // false
+```
+
 ## Built-in Icons
 
 The `io` namespace includes a comprehensive icon set:
 
 **Navigation:**
-`chevron_left`, `chevron_right`, `chevron_up`, `chevron_down`, `arrow_left`, `arrow_right`, `arrow_up`, `arrow_down`, `arrow_home`, `arrow_end`
+`chevron_left`, `chevron_right`, `chevron_up`, `chevron_down`, `chevron_home`, `chevron_end`, `arrow_left`, `arrow_right`, `arrow_up`, `arrow_down`, `arrow_home`, `arrow_end`, `less`, `more`
 
 **Actions:**
-`check`, `close`, `search`, `gear`, `tune`, `trash`, `undo`, `redo`, `reload`, `link`, `unlink`
+`check`, `close`, `close_small`, `search`, `zoom_in`, `zoom_out`, `gear`, `trash`, `trash_empty`, `undo`, `redo`, `reload`, `link`, `unlink`, `backspace`, `code`, `color_picker`
 
 **UI:**
-`hamburger`, `more_horizontal`, `more_vertical`, `fullscreen`, `fullscreen_off`, `visibility`, `visibility_off`
+`hamburger`, `more_horizontal`, `more_vertical`, `fullscreen`, `fullscreen_off`, `visibility`, `visibility_off`, `lock`, `unlock`, `rows`, `columns`, `dashboard`, `grid`, `grid_fill`, `layers`, `layers_off`, `layer_add`, `layer_remove`, `layer_to_back`, `layer_to_front`, `layer_image`, `image`, `label`, `label_fill`, `toggle_on`, `slider`, `sliders`, `dark_mode`, `light_mode`, `theme`
 
 **Shapes:**
-`circle`, `circle_fill`, `box`, `box_fill`, `triangle_up`, `triangle_down`, `triangle_left`, `triangle_right`
+`circle`, `circle_fill`, `circle_fill_red`, `circle_fill_green`, `circle_fill_blue`, `box`, `box_fill`, `box_focus`, `triangle_up`, `triangle_down`, `triangle_left`, `triangle_right`, `circle_triangle_up`, `circle_triangle_down`, `circle_triangle_left`, `circle_triangle_right`, `diagonal_line`
 
 **Status:**
-`circle_info`, `circle_warning`, `circle_help`, `circle_checked`, `lock`, `unlock`
+`circle_info`, `circle_warning`, `circle_help`, `circle_checked`, `circle_minus`, `circle_plus`, `circle_close`, `circle_pause`, `circle_location`, `circle_location_checked`, and filled variants: `circle_fill_info`, `circle_fill_warning`, `circle_fill_help`, `circle_fill_checked`, `circle_fill_minus`, `circle_fill_plus`, `circle_fill_pause`, `circle_fill_group`, `circle_fill_arrow_up`, `circle_fill_arrow_down`, `circle_fill_arrow_left`, `circle_fill_arrow_right`, `box_fill_checked`, `box_fill_minus`, `box_fill_plus`, `box_fill_gear`
 
-**Numeric:**
-`numeric-0` through `numeric-9`, `numeric-0-box` through `numeric-9-box`
+**Media and topics:**
+`camera`, `camera_alt`, `film`, `color_palette`, `hub`, `editors`, `calendar_check`, `school`, `package`, `ads_click`, `translate`, `routine`, `kid_star`, `swipe`, `hint`, `book`
+
+**Brand and demo navigation:**
+`io`, `io_logo`, `inputs`, `icons`, `colors`, `menus`, `navigation`
 
 ## Styling
 

@@ -19,7 +19,8 @@
 - Workspace deps use `"workspace:*"` in `package.json`
 
 - **Editor configs colocated w/ class** (user rule 2026-10-10): `registerEditorConfig`/`registerEditorGroups` right after class def, narrowest class. `configs/` dir = external (three.js) only. No global `Object` config - removed on purpose (steps over all derived classes). Not a regression; don't flag. Whitelist = Main names + Advanced catch-all regex (explicit names beat regex).
-- **io-three essence:** document = portable content (scene, onRendererInitialized, onAnimate, props+groups; no editor/view/DOM access). Editor = host/session (playing, selection, tools, ops). View = intent (axis, first/named cam) carried across docs; resolved nav per doc. Apps = one host + documents (demos/IoEditorExample). Rules in io-gui.mdc.
+- **io-three essence:** document = portable content (scene, timeline, onRendererInitialized, onAnimate, props+groups; no editor/view/DOM access). Editor = host/session (playing, selection, tools, ops). View = intent (axis, first/named cam) carried across docs; resolved nav per doc. Apps = one host + documents (demos/IoEditorExample). Rules in io-gui.mdc.
+- **Timeline (2026-10-10):** `document.timeline` node = clock (currentTime, duration, frameRate, loop, autoplay, lazy `timeNode` TSL uniform). onAnimate(delta, time) on every currentTime change (play/scrub/step); delta = change in timeline time, negative on wrap/scrub back (why: same time -> same state as far as integrators allow). Derive from time where possible; mixers integrate delta. Editor.tick -> timeline.advance(frame.delta). frameRate = stepping/snap/dividers only, no playback effect; user: fps matters only for video export, revisit then. UI: ThreeTimeline + ThreeTimelineRange (IoGl).
 
 ### Code Patterns That Worked
 
@@ -33,11 +34,16 @@
 
 - **three `Float32BufferAttribute(array)` copies the array.** Keep `attribute.array`, not the array passed in, when writing per-vertex data later. `InstancedBufferAttribute`/`BufferAttribute` do not copy.
 - **Vitest browser hang** ("no tests", ~10 min): stale Chrome for Testing processes. Kill them; run `npx vitest run --project unit <path> --browser.headless`.
+- `source .env` before `pnpm test`: PLAYWRIGHT_BROWSERS_PATH=repo `.playwright-browsers`; after Playwright upgrade run `source .env && pnpm exec playwright install chromium` (1248 installed 2026-10-10). Synthetic PointerEvent tests: stub `setPointerCapture`. Screenshots: `page.viewport()` + `page.screenshot({path: 'relative.png'})` (Vite fs.strict blocks paths outside repo).
 
 - **NodeArray assignment copy path** when source is already a `NodeArray`: copying via push inside `withInternalOperation` duplicates mutation listeners on kept items. Assign by reference or use explicit `splice`.
 - **NodeArray in-place filter via `length = 0` + `push`**: same duplicate-listener issue; use `splice(0, length, ...items)`.
 
 ## Open Design Questions
+
+### @io-gui/core construction order (raised 2026-10-10)
+- Reactions (ready, *Changed, mutated, io-mutation) run inside base ctor, before subclass fields/ctor body. Costs: silent wipe of non-`declare` fields written by handlers, guards in handlers (ThreeViewport), @Field workarounds everywhere. Plan + draft ADR (proposed core 0005): `.cursor/plans/core_construction_order.plan.md` (@Register wrapper, `new.target` finish, queue while constructing). Not started.
+- Timeline delta negative on wrap/scrub back: accepted for now; see three_future_work plan `timeline-negative-delta`.
 
 ### @io-gui/layout target architecture (ADRs in packages/layout/docs/adr)
 - **Seam = DOM-dependency** (ADR-0001): pure structural ops → Split/Panel models; only geometry/hit-test/focus stay on IoSplit/IoPanel elements. Currently violated — elements are fat. Migration incremental.
@@ -59,6 +65,9 @@
 - Generic `vConstructor` doesn't type subclass props; in tests, wrap it: `type XProps = ReactiveElementProps & {...}; const x = (props: XProps) => X.vConstructor(props)`
 - ProtoChain init: avoid runtime imports from ReactiveObject into Property (TDZ/circular init).
 - Vitest does not typecheck — run `pnpm build` after typed test changes.
+- **Change handlers run inside base ctor** (applyProperties -> ready -> dispatchQueue) before subclass field initializers. State they touch: `@Field` or `declare private x` + lazy getter; actions passed in first render: `on*` methods (auto-bound), not arrow fields.
+- **Child node instead of parent props** to keep change typing clean: `@Property({type: Child, init: null})` + `childMutated()`; child prop changes don't call parent `mutated()` (no cascade). Used for Document.timeline (time changes no longer emit 'settings').
+- **IoGl derived uniforms:** declare extra `uniform float` in Frag, set with `setShaderProgram()` + `setUniform()` before `super.onRender()`; 2D text via `this.ctx` after it. Compute positions in JS (double) and shade in device px (`gl_FragCoord`) when float32 would drift (long timelines).
 - `IoSyntheticEvent.path` is mutated during bubble; copy if retained beyond handler.
 
 #### ReactiveObject (de)serialization — generic `toJSON` / `applyJSON`
@@ -122,7 +131,7 @@ Renamed instance `fromJSON` → `applyJSON` to distinguish apply-to-existing fro
 
 ### io-three
 
-- **Arch (2026-10-07, ADR 0001-0007):** WebGPU only, no WebGL fallback. Layers: app (Editor: doc, selection, tools, ops, undo, clock, change bus) / view (View data outlives ThreeViewport element) / frame (RenderScheduler only renderer, typed dirty tags, phases, budget). Reactive mutation never triggers draws.
+- **Arch (2026-10-07, ADR 0001-0007):** WebGPU only, no WebGL fallback. Layers: app (Editor: doc, selection, tools, ops, undo, clock; document queues its own DocumentChanges, no ChangeBus since 2026-10-10) / view (View data outlives ThreeViewport element) / frame (RenderScheduler only renderer, typed dirty tags, phases, budget). Reactive mutation never triggers draws.
 - **Input:** InputRouter per viewport owns DOM listeners + capture. Priority bands modal 1000, gizmo 800, tool 500, nav 300, fallback select 100. Tools = ToolDefinition only (shared), behaviors per view. ThreeApplet/ToolBase/viewport `applet`+`tool` props/editor onResized removed 2026-10-07 (no back-compat going forward; external GlobeTool must port to ToolDefinition).
 - **Selection:** by Object3D.uuid + attribute domain (object/point/edge/primitive/corner), bitsets, transactions. UV sel = corner domain; uvSync = mapping.
 - RenderScheduler rAF must run after core FrameScheduler rAF in same frame (import order).
@@ -143,6 +152,11 @@ Renamed instance `fromJSON` → `applyJSON` to distinguish apply-to-existing fro
 - **Option empty-id selection:** `getSelectedIDImmediate`, `optionsMutated` must not treat `''` as falsy. Menu `updatePaths` sets `selectedID` directly (path `''` can't round-trip via `pathChanged`).
 - **Open: root Menu identity.** Menu defaults `id: 'root'` when omitted. Child option with `id: ''` (e.g. filter "all" with `value: ''` for string-input sync) can still collide with an empty-id Option. Valid use case; root identity model needs improvement (distinct internal id vs leaf ids, or exclude root from duplicate-id check).
 - **findOptionById/findOptionByValue:** search descendants before self so empty-id child wins over empty-id root (fixes selectedID `''` binding → menu highlight).
+
+### io-icons
+
+- Material Symbols: viewBox `0 -960 960 960` -> `<g id transform="scale(0.025) translate(0 960)">`, path d only. Package namespace = side-effect module in `src/icons/` + `sideEffects` `**/icons/**` + icons dev/peer dep + tsconfig ref. Rule: `.cursor/rules/io-icons.mdc`.
+- `IconsetSingleton.hasIcon(ref)`; IoBoolean labels -> icon iff registered (any ns), else text. `io:slider` (single) vs `io:sliders` (tune).
 
 ### Other Packages
 

@@ -1,8 +1,8 @@
 import { Register, ReactiveObject, ReactiveObjectProps, Property, Field } from '@io-gui/core'
 import { MathUtils, NoToneMapping, Object3D, Scene, ToneMapping, WebGPURenderer, ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, LinearToneMapping, NeutralToneMapping, ReinhardToneMapping } from 'three/webgpu'
-import { ChangeBus, DocumentChange } from './ChangeBus.js'
 import { Patch, changeKindForPatch, insertChild, invertPatch, resolvePath, writeValue } from './Patch.js'
 import { Transaction } from './Transaction.js'
+import { Timeline } from './Timeline.js'
 import { isDescendant } from '../utils/sceneGraph.js'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
@@ -12,15 +12,29 @@ export type DocumentProps = ReactiveObjectProps & {
   scene?: Scene
   toneMapping?: ToneMapping
   toneMappingExposure?: number
-  autoplay?: boolean
+  timeline?: Timeline
+}
+
+export type ChangeKind = 'transform' | 'geometry' | 'material' | 'structure' | 'selection' | 'settings' | 'time' | 'other'
+
+/**
+ * A typed record of something that changed in a document.
+ * Views decide whether a change concerns them (`listens(change)`) and get tagged for redraw.
+ */
+export interface DocumentChange {
+  kind: ChangeKind
+  /** The document the change belongs to. */
+  source: Document
+  /** Stable ids (`Object3D.uuid`) of the objects that changed, when known. */
+  ids?: readonly string[]
 }
 
 const HISTORY_LIMIT = 100
 
 /**
  * The content of an Editor (ADR-0002): the scene of authored objects plus scene render settings.
- * Edits go through transactions of invertible patches (ADR-0008); every applied patch is reported on
- * the change bus, so views redraw without extra calls. Each committed transaction is dispatched as a
+ * Edits go through transactions of invertible patches (ADR-0008); every applied patch is queued as a
+ * change, so views redraw without extra calls. Each committed transaction is dispatched as a
  * `commit` event with the transaction as `detail` (future undo stack and sync).
  */
 @Register
@@ -36,18 +50,21 @@ export class Document extends ReactiveObject {
   declare toneMappingExposure: number
 
   /**
-   * Whether the document plays (`editor.isPlaying`) when opened. The editor does not read it; whatever opens
-   * the document sets `isPlaying` from it.
+   * The document's own clock. Every change of its `currentTime` runs `onAnimate`, whether it comes from playback,
+   * scrubbing, stepping or a plain assignment.
    */
-  @Property({type: Boolean, value: false})
-  declare autoplay: boolean
+  @Property({type: Timeline, init: null})
+  declare timeline: Timeline
 
   /** Stable id of this document, used to key per-document session state (selection, view navigation). */
   readonly uuid: string = MathUtils.generateUUID()
 
-  /** A Field: `mutated()` reports settings changes from inside the base constructor. */
-  @Field(ChangeBus)
-  declare readonly changeBus: ChangeBus
+  /** Past this many undrained changes (nothing draws the document), the queue collapses to one `other` change. */
+  static readonly CHANGE_LIMIT = 10000
+
+  /** Changes not yet drained by the RenderScheduler. A Field: `mutated()` reports settings from inside the base constructor. */
+  @Field(Array)
+  declare private _changes: DocumentChange[]
 
   private readonly _index = new Map<string, Object3D>()
   /** Ids not found since the last index rebuild; cleared when the current task ends. */
@@ -57,8 +74,20 @@ export class Document extends ReactiveObject {
   /** Renderers `onRendererInitialized` has run for. */
   private readonly _renderers = new WeakSet<WebGPURenderer>()
 
+  /** The timeline time `onAnimate` last ran for. A Field: `timelineChanged` can run inside the base constructor. */
+  @Field(0)
+  declare private _animatedTime: number
+
   constructor(args?: DocumentProps) {
     super(args)
+  }
+
+  timelineChanged() {
+    this._animate()
+  }
+
+  timelineMutated() {
+    this._animate()
   }
 
   /** Committed transactions, oldest first, up to the last 100. Not an undo stack (plan Phase 8). */
@@ -70,8 +99,29 @@ export class Document extends ReactiveObject {
     return this._active
   }
 
+  /** Queues a change; the RenderScheduler drains it next frame. Cheap, and dispatches nothing. */
   notify(change: Omit<DocumentChange, 'source'>) {
-    this.changeBus.notify({...change, source: this})
+    if (this._changes.length >= Document.CHANGE_LIMIT) {
+      this._changes = [{kind: 'other', source: this}]
+      return
+    }
+    this._changes.push({...change, source: this})
+  }
+
+  get hasPendingChanges() {
+    return this._changes.length > 0
+  }
+
+  /** Returns and empties the queued changes. Called by the RenderScheduler once per frame. */
+  drainChanges(): DocumentChange[] {
+    const changes = this._changes
+    this._changes = []
+    return changes
+  }
+
+  /** Drops undrained changes (the document is no longer shown). */
+  clearChanges() {
+    this._changes = []
   }
 
   /**
@@ -138,14 +188,26 @@ export class Document extends ReactiveObject {
   onRendererInitialized(renderer: WebGPURenderer) {}
 
   /**
-   * Called each frame while the editor showing this document plays (`isPlaying`), after the editor's `onAnimate`.
-   * Views redraw after it; scene writes here bypass transactions.
+   * Called on every change of `timeline.currentTime`: each frame while the editor plays, and whenever the timeline is
+   * scrubbed, stepped or set. `delta` is the change in seconds, negative when time goes back (scrubbing back, a loop
+   * wrap); `time` is the new current time. Time-driven content derives its state from `time`; content that can only
+   * integrate (mixers) advances by `delta`. Views redraw after it; scene writes here bypass transactions.
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onAnimate(delta: number, time: number) {}
 
   override mutated() {
     this.notify({kind: 'settings'})
+  }
+
+  /** Runs `onAnimate` with the timeline time elapsed since it last ran, and reports a `time` change. */
+  private _animate() {
+    const time = this.timeline.currentTime
+    const delta = time - this._animatedTime
+    if (delta === 0) return
+    this._animatedTime = time
+    this.onAnimate(delta, time)
+    this.notify({kind: 'time'})
   }
 
   /** @internal Called by viewports before each draw; runs `onRendererInitialized` once per renderer. */
@@ -219,6 +281,6 @@ registerEditorConfig(Document, [
 ])
 
 registerEditorGroups(Document, {
-  Main: ['toneMapping', 'toneMappingExposure'],
+  Main: ['toneMapping', 'toneMappingExposure', 'timeline'],
   Advanced: [new RegExp(/^[\s\S]*$/)]
 })

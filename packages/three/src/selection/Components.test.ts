@@ -61,7 +61,7 @@ describe('SelectionModel components', () => {
     mesh = new Mesh(new BoxGeometry(1, 1, 1))
     document.scene.add(mesh)
     selection = new SelectionModel({document})
-    document.changeBus.drain()
+    document.drainChanges()
   })
 
   afterEach(() => {
@@ -78,7 +78,7 @@ describe('SelectionModel components', () => {
     expect(selection.version).toBe(1)
     expect(selection.domain).toBe('point')
     expect(selection.getComponents(mesh.uuid)!.toArray()).toEqual([1, 2])
-    expect(document.changeBus.drain().map(change => change.ids)).toEqual([[mesh.uuid]])
+    expect(document.drainChanges().map(change => change.ids)).toEqual([[mesh.uuid]])
 
     const before = selection.getComponents(mesh.uuid)!
     const second = selection.edit()

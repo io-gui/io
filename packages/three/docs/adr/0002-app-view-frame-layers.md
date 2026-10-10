@@ -6,7 +6,7 @@ status: accepted
 
 io-three is split into three layers with one job each:
 
-- **App layer.** One `Editor` per app. It owns the `Document` (the content scene), the `SelectionModel`, the current mode, tools and operators, undo, the clock and the change bus.
+- **App layer.** One `Editor` per app. It owns the `Document` (the content scene), the `SelectionModel`, the current mode, tools and operators, undo and playback. The document owns its clock (a `Timeline`, advanced by the editor while playing) and queues its own changes for the scheduler.
 - **View layer.** Any number of `View` models. Each holds the view kind (`3d` and `uv` today; `image` and `preview` are planned), navigation state, shading / pipeline choice, overlay flags and the interaction profile. It is shown by a `ThreeViewport` element that owns only DOM concerns: `CanvasTarget`, CSS size, pixel ratio, visibility, focus and its `InputRouter`.
 - **Frame layer.** One `RenderScheduler` (ADR-0003).
 

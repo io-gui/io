@@ -1,7 +1,6 @@
 import { Register, ReactiveObject, ReactiveObjectProps, Property, Field, Change } from '@io-gui/core'
 import { WebGPURenderer } from 'three/webgpu'
-import { ChangeBus, DocumentChange } from './ChangeBus.js'
-import { Document } from './Document.js'
+import { Document, DocumentChange } from './Document.js'
 import { renderScheduler, FrameInfo, ScheduledTicker } from '../render/RenderScheduler.js'
 import { OperatorRegistry } from '../tools/Operator.js'
 import type { ToolDefinition } from '../tools/Tool.js'
@@ -64,11 +63,6 @@ export class Editor extends ReactiveObject implements ScheduledTicker {
     this.isPlayingChanged()
   }
 
-  /** The active document's change bus; the scheduler drains it each frame. */
-  get changeBus(): ChangeBus {
-    return this.document.changeBus
-  }
-
   setActiveTool(viewKind: ViewKind, mode: string, toolId: string | null) {
     const activeTools = {...this.activeTools}
     if (toolId) activeTools[`${viewKind}:${mode}`] = toolId
@@ -85,7 +79,7 @@ export class Editor extends ReactiveObject implements ScheduledTicker {
     if (change.oldValue) {
       this.operators.cancelRunning()
       // Views tag themselves for the new document; changes left for the old one would never be drained.
-      change.oldValue.changeBus.clear()
+      change.oldValue.clearChanges()
     }
     if (change.value) this.selection = this._selectionFor(change.value)
   }
@@ -101,17 +95,20 @@ export class Editor extends ReactiveObject implements ScheduledTicker {
 
   isPlayingChanged() {
     if (this.isPlaying) {
+      const timeline = this.document.timeline
+      // Playing a timeline that stopped at its end starts it over.
+      if (!timeline.loop && timeline.currentTime >= timeline.duration) timeline.currentTime = 0
       renderScheduler.addTicker(this)
     } else {
       renderScheduler.removeTicker(this)
     }
   }
 
+  /** Advances the active document's timeline by the frame delta; a timeline that stops at its end pauses the editor. */
   tick(frame: FrameInfo) {
     if (!this.isPlaying) return
     this.onAnimate(frame.delta, frame.time)
-    this.document.onAnimate(frame.delta, frame.time)
-    this.document.notify({kind: 'time'})
+    if (!this.document.timeline.advance(frame.delta)) this.isPlaying = false
   }
 
   /** Reports a change in the active document (the source is always the document). */
@@ -132,6 +129,7 @@ export class Editor extends ReactiveObject implements ScheduledTicker {
     this._renderer = renderer
   }
 
+  /** Called each frame while playing, before the document advances. `time` is the scheduler clock, not document time. */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onAnimate(delta: number, time: number) {}
 
@@ -146,5 +144,5 @@ export class Editor extends ReactiveObject implements ScheduledTicker {
 
 // Session and runtime state of the editor stay out of property editors that show an editor subclass.
 registerEditorGroups(Editor, {
-  Hidden: [new RegExp(/^_/), 'isPlaying', 'changeBus', 'document', 'selection', 'mode', 'activeTools', 'operators', 'tools'],
+  Hidden: [new RegExp(/^_/), 'isPlaying', 'document', 'selection', 'mode', 'activeTools', 'operators', 'tools'],
 })

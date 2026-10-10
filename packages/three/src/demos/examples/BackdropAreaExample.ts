@@ -17,14 +17,13 @@ import {
   viewportSharedTexture,
   screenUV,
   hue,
-  time,
   checker,
   uv,
   modelScale,
 } from 'three/tsl'
 import { hashBlur } from 'three/addons/tsl/display/hashBlur.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Document, DocumentProps, threeVector3 } from '@io-gui/three'
+import { Document, DocumentProps, threeVector3, Timeline } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 
@@ -51,10 +50,10 @@ export class BackdropAreaExample extends Document {
   declare material: string
 
   constructor(args?: DocumentProps) {
-    super({toneMappingExposure: 0.9, autoplay: true, ...args})
+    super({toneMappingExposure: 0.9, timeline: new Timeline({autoplay: true}), ...args})
 
     // Background
-    this.scene.backgroundNode = hue(screenUV.y.mix(color(0x66bbff), color(0x4466ff)), time.mul(0.1))
+    this.scene.backgroundNode = hue(screenUV.y.mix(color(0x66bbff), color(0x4466ff)), this.timeline.timeNode.mul(0.1))
 
     // Lighting
     const ambient = new AmbientLight(0xffffff, 2.5)
@@ -142,10 +141,12 @@ export class BackdropAreaExample extends Document {
     const loader = new GLTFLoader()
     loader.load('https://threejs.org/examples/models/gltf/Michelle.glb', (gltf) => {
       const object = gltf.scene
+      this.timeline.duration = gltf.animations[0].duration
       this.mixer = new AnimationMixer(object)
 
       const action = this.mixer.clipAction(gltf.animations[0])
       action.play()
+      this.mixer.setTime(this.timeline.currentTime)
 
       this.scene.add(object)
 

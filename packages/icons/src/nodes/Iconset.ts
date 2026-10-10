@@ -10,21 +10,29 @@ class Iconset extends ReactiveObject {
   registerIcons(name: string, svg: string) {
     const stagingElement = document.createElement('div')
     stagingElement.innerHTML = svg
+    debug: {
+      const ids = new Set<string>()
+      stagingElement.querySelectorAll('[id]').forEach(icon => {
+        if (ids.has(icon.id)) console.warn(`Iconset: "${name}:${icon.id}" is defined twice; the last one wins`)
+        ids.add(icon.id)
+      })
+    }
     stagingElement.querySelectorAll('[id]').forEach(icon => {
       IconsetDB[name] = IconsetDB[name] || {}
       IconsetDB[name][icon.id] = icon.outerHTML
     })
   }
+  /** Whether `icon` (`namespace:id`) is registered. */
+  hasIcon(icon: string): boolean {
+    const [namespace, id] = icon.split(':')
+    return id !== undefined && Object.hasOwn(IconsetDB, namespace) && Object.hasOwn(IconsetDB[namespace], id)
+  }
+  /** SVG markup of `icon` (`namespace:id`); an empty icon when it is not registered. */
   getIcon(icon: string) {
-    const iconset = IconsetDB[icon.split(':')[0]]
-    if (iconset) {
-      const id = icon.split(':')[1]
-      if (iconset[id]) {
-        const group = iconset[id].replace(' id="', ' class="icon-id-')
-        return `<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet">${group}</svg>`
-      }
-    }
-    return '<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet"></g>'
+    if (!this.hasIcon(icon)) return '<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet"></svg>'
+    const [namespace, id] = icon.split(':')
+    const group = IconsetDB[namespace][id].replace(' id="', ' class="icon-id-')
+    return `<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet">${group}</svg>`
   }
 }
 
@@ -478,7 +486,7 @@ const icons = /* html */`
       M20.9,16.5H3.2c-0.6,0-1.1,0.3-1.1,0.7v4.2c0,0.4,0.5,0.7,1.1,0.7h17.9c0.6,0,1.1-0.3,1.1-0.7v-4.2C22,16.8,21.5,16.5,20.9,16.5z"
       />
   </g>
-  <g id="sliders" transform="translate(0 14)">
+  <g id="slider" transform="translate(0 14)">
     <path d="M5 1.5q-1.25 0-2.125-0.875T2 -1.5q0-1.25 0.875-2.125T5 -4.5h14q1.25 0 2.125 0.875T22 -1.5q0 1.25-0.875 2.125T19 1.5H5Zm9-2h5q0.425 0 0.713-0.288T20 -1.5q0-0.425-0.288-0.713T19 -2.5h-5v2Z"/>
   </g>
   <g id="toggle_on">

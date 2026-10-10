@@ -1,5 +1,5 @@
 import type { Object3D } from 'three/webgpu'
-import type { ChangeKind } from './ChangeBus.js'
+import type { ChangeKind } from './Document.js'
 
 /**
  * An edit of one property path of a document object (dot-separated: `'visible'`, `'position.x'`, `'material.color'`).

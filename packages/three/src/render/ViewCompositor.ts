@@ -1,6 +1,6 @@
 import { Mesh, MeshBasicNodeMaterial, NoBlending, Scene, TextureNode, WebGPURenderer } from 'three/webgpu'
 import { screenUV, texture } from 'three/tsl'
-import type { DocumentChange } from '../editor/ChangeBus.js'
+import type { DocumentChange } from '../editor/Document.js'
 import type { View } from '../view/View.js'
 import type { DirtyReason, ViewRenderResult } from './RenderScheduler.js'
 import { DEFAULT_PIPELINES, PipelineContext, PipelineOutput, ViewPipeline, pipelineTypes } from './ViewPipeline.js'

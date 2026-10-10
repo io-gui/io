@@ -17,6 +17,7 @@
   ],
   "references": [
     { "path": "../core" },
+    { "path": "../icons" },
     { "path": "../inputs" },
     { "path": "../layout" },
     { "path": "../menus" },

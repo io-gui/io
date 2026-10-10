@@ -1,5 +1,5 @@
 import { NeutralToneMapping, Scene, Timer, WebGPURenderer } from 'three/webgpu'
-import { DocumentChange, ChangeBus } from '../editor/ChangeBus.js'
+import type { Document, DocumentChange } from '../editor/Document.js'
 
 export type DirtyReason = 'content' | 'view' | 'overlay' | 'resize' | 'continuous'
 
@@ -21,7 +21,8 @@ export interface ScheduledView {
   readonly renderer: WebGPURenderer
   /** Scene evaluated once per frame before any view draws it. */
   readonly scene: Scene | null
-  readonly changeBus: ChangeBus | null
+  /** The document whose changes the scheduler drains for this view. */
+  readonly document: Document | null
   isRenderable(): boolean
   /** Higher draws first: focused 2, hovered 1, other 0. Each frame a view waits past the budget adds 1. */
   getPriority(): number
@@ -35,7 +36,8 @@ export interface ScheduledView {
  * Anything advanced by the scheduler clock while playing, such as a playing Editor.
  */
 export interface ScheduledTicker {
-  readonly changeBus: ChangeBus
+  /** The document whose changes the scheduler drains after the tick. */
+  readonly document: Document
   tick(frame: FrameInfo): void
 }
 
@@ -178,14 +180,14 @@ export class RenderScheduler {
   }
 
   private _collect() {
-    const buses = new Set<ChangeBus>()
-    for (const ticker of this._tickers) buses.add(ticker.changeBus)
+    const documents = new Set<Document>()
+    for (const ticker of this._tickers) documents.add(ticker.document)
     for (const view of this._views.keys()) {
-      if (view.changeBus) buses.add(view.changeBus)
+      if (view.document) documents.add(view.document)
     }
-    for (const bus of buses) {
-      if (!bus.pending) continue
-      for (const change of bus.drain()) {
+    for (const document of documents) {
+      if (!document.hasPendingChanges) continue
+      for (const change of document.drainChanges()) {
         for (const [view, tags] of this._views) {
           const reason = view.listens(change)
           if (reason) tags.add(reason === true ? 'content' : reason)

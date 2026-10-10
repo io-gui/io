@@ -13,7 +13,7 @@ import {
   Vector3
 } from 'three/webgpu'
 import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Document, DocumentProps, Timeline } from '@io-gui/three'
 
 /** A 5×5 grid of boxes in one AnimationObjectGroup, sharing one animation state. Plays when opened. */
 @Register
@@ -22,7 +22,7 @@ export class AnimationGroupsExample extends Document {
   public mixer: AnimationMixer
 
   constructor(args?: DocumentProps) {
-    super({autoplay: true, ...args})
+    super({timeline: new Timeline({autoplay: true}), ...args})
 
     // all objects of this animation group share a common animation state
     const animationGroup = new AnimationObjectGroup()
@@ -63,6 +63,7 @@ export class AnimationGroupsExample extends Document {
 
     const clipAction = this.mixer.clipAction( clip )
     clipAction.play()
+    this.timeline.duration = clip.duration
   }
 
   override onAnimate(delta: number) {

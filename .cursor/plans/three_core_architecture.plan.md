@@ -165,7 +165,7 @@ Read ADR-0008 and either accept it or change it before `document-transactions` s
 ## Phase 1: Frame layer (ADR-0001, ADR-0003)
 
 **Done 2026-10-07.** Notes from implementation:
-- `ChangeBus` lives at `editor/ChangeBus.ts`; its record type is `DocumentChange` (core already exports `Change`). Kinds add `'other'` for `requestRender()`.
+- (2026-10-10: folded into `Document` — `notify`, `drainChanges`, `clearChanges`, `hasPendingChanges`; `ChangeBus.ts` removed.) `ChangeBus` lives at `editor/ChangeBus.ts`; its record type is `DocumentChange` (core already exports `Change`). Kinds add `'other'` for `requestRender()`.
 - The scheduler is generic over `ScheduledView` / `ScheduledTicker` interfaces and testable with `autoStart: false` + `step()`. The loop starts from a microtask so it runs after core's `FrameScheduler` in each frame (tested).
 - Custom per-viewport renderers stay supported (log-depth demo needs one); see ADR-0001 consequences.
 - `ThreeApplet` keeps `_renderer` / `onRendererInitialized` (demos do PMREM and compute setup there). `onResized(w, h, viewport)` now fires on viewport resize only, not every draw.

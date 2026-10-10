@@ -24,10 +24,16 @@ ThreeViewport (element)
     ├── kind ('3d' | 'uv'), pipeline, overlays, profile, xray
     └── overscan, clearColor, clearAlpha, toneMapping / toneMappingExposure overrides
 
+ThreeTimeline (element)
+├── transport io-buttons (three: icons): start, frame back, play / pause, frame forward, end, loop
+└── ThreeTimelineRange (IoGl element): playhead and frame-aligned dividers at any zoom; scrub, zoom, pan
+
 Editor (object, one per app)
 ├── document: Document (switchable at runtime)
 │   ├── scene, toneMapping, toneMappingExposure
-│   ├── changeBus: ChangeBus
+│   ├── timeline: Timeline (currentTime, duration, frameRate, loop, autoplay, timeNode)
+│   ├── onAnimate(delta, time): runs on every change of timeline.currentTime
+│   ├── notify(change): queues a typed DocumentChange, drained by renderScheduler each frame
 │   └── transact() / begin(): Transaction of invertible patches
 ├── mode, isPlaying, onAnimate(delta, time), requestRender()
 ├── selection: SelectionModel (of the active document; objects + component bitsets per domain)
@@ -92,6 +98,31 @@ const viewport = new ThreeViewport({
 });
 ```
 
+### ThreeTimeline
+
+Playback controls for the timeline of the editor's document: transport buttons (jump to start, previous frame, play / pause, next frame, jump to end, loop), a `ThreeTimelineRange`, and the current time and duration in seconds. It follows `editor.document`, so switching documents shows the new document's timeline. Scrubbing pauses playback until the pointer is released.
+
+```typescript
+threeTimeline({ editor });
+```
+
+`ThreeTimelineRange` is the scrubbable range on its own, an `IoGl` element showing one `Timeline`:
+
+```typescript
+type ThreeTimelineRangeProps = {
+  timeline?: Timeline; // the timeline it shows and edits (default: its own)
+  viewStart?: number; // time at the left edge, in seconds
+  viewEnd?: number; // time at the right edge
+};
+```
+
+- One shader draws the range, the playhead and three levels of dividers; positions are computed in double precision on the CPU, so long timelines stay exact
+- Divider steps are frame counts that divide a second, then 1, 2, 5, 10, 15 and 30 seconds, minutes and hours; each level lands on the finer one. Labels on major dividers: `1.5`, `2+05` (seconds and frames), `1:30`
+- Drag scrubs, snapped to frames (`scrubbing` is true meanwhile); the wheel zooms around the pointer; horizontal wheel or Shift+wheel pans; arrow keys step frames (Shift: ten), Home and End jump
+- The view refits when the timeline or its duration changes
+
+The transport icons are registered in the `three` icon namespace (`three:play`, `three:pause`, `three:skip_start`, `three:skip_end`, `three:frame_back`, `three:frame_forward`, `three:loop`) when the package loads.
+
 ## Objects
 
 ### Editor and Document
@@ -111,9 +142,38 @@ editor.document = new Document(); // switch; switching back restores each view's
 | Method                            | Description                          |
 | --------------------------------- | ------------------------------------ |
 | `onRendererInitialized(renderer)` | Called when WebGPU renderer is ready |
-| `onAnimate(delta, time)`          | Called each frame while `isPlaying`  |
+| `onAnimate(delta, time)`          | Called each frame while `isPlaying`, on the scheduler clock |
 
-A `Document` subclass has its own `onRendererInitialized(renderer)`. It runs once per renderer, before that renderer first draws the document, including for a document opened after the renderer was ready. GPU setup that belongs to the content, such as a compute pass that fills a texture, goes there, so the document works in any editor. Its `onAnimate(delta, time)` runs each frame while the editor showing it plays, after the editor's own. A document with `autoplay: true` asks to play when opened; the editor does not apply it, so whatever opens the document sets `editor.isPlaying = document.autoplay`.
+A `Document` subclass has its own `onRendererInitialized(renderer)`. It runs once per renderer, before that renderer first draws the document, including for a document opened after the renderer was ready. GPU setup that belongs to the content, such as a compute pass that fills a texture, goes there, so the document works in any editor.
+
+Its `onAnimate(delta, time)` runs on every change of `document.timeline.currentTime`: each frame while the editor plays (after the editor's own `onAnimate`), and whenever the timeline is scrubbed, stepped or set. `time` is the timeline's current time and `delta` the change, negative when time goes back (scrubbing back, a loop wrap). Derive time-driven state from `time`; advance what can only integrate, such as an `AnimationMixer`, by `delta`.
+
+### Timeline
+
+A document's clock, `document.timeline`: `currentTime` within `[0, duration]` seconds, the `frameRate` of frame stepping and scrubbing (playback itself is continuous, paced by the display), `loop` (wrap at the end or stop there), and `autoplay`. The editor does not read `autoplay`; whatever opens the document sets `editor.isPlaying = document.timeline.autoplay`. While playing, the editor advances the timeline by each frame's delta; a timeline that stops at its end pauses the editor, and playing it again starts from the beginning.
+
+```typescript
+class SpinDocument extends Document {
+  mesh = new Mesh(new BoxGeometry(), new MeshNormalMaterial());
+  constructor(args?: DocumentProps) {
+    super({ timeline: new Timeline({ autoplay: true, duration: 20 }), ...args });
+    this.scene.add(this.mesh);
+  }
+  override onAnimate(delta: number, time: number) {
+    this.mesh.rotation.y = (time / 20) * Math.PI * 2; // time-driven: scrubs and loops seamlessly
+    // A mixer can only integrate: this.mixer.update(delta)
+  }
+}
+
+document.timeline.stepFrames(1); // next frame
+document.timeline.currentTime = 0; // runs onAnimate(-previousTime, 0)
+```
+
+`timeline.timeNode` is `currentTime` as a TSL uniform. Shader animation built on it pauses and scrubs with the timeline; TSL's global `time` keeps running while paused:
+
+```typescript
+this.scene.backgroundNode = hue(color(0x66bbff), this.timeline.timeNode.mul(0.1));
+```
 
 **Edits go through transactions** of invertible patches ([ADR-0008](./docs/adr/0008-commands-transactions-and-patches.md)). Edits apply immediately and redraw the views; the old values are recorded, so a transaction can be rolled back, reverted or re-applied. Writes to the same path coalesce. `set` assigns a property (assigning a read-only one such as `position` throws); `copy` copies into the object a property holds, keeping its identity.
 
@@ -317,7 +377,7 @@ registerEditorGroups(MyCustomObject, {
 `renderScheduler` runs one `requestAnimationFrame` loop and is the only code that renders ([ADR-0003](./docs/adr/0003-redraw-is-a-dirty-tag-consumed-by-one-scheduler.md)). Viewports never draw on their own; they are tagged dirty and drawn on the next frame.
 
 ```typescript
-editor.isPlaying = true; // ticks onAnimate every frame, redraws its viewports
+editor.isPlaying = true; // advances the document timeline every frame, redraws its viewports
 editor.isPlaying = false;
 
 editor.requestRender(); // redraw viewports showing the active document once
@@ -326,8 +386,8 @@ editor.notify({kind: 'transform', ids: [mesh.uuid]}); // same, with a typed chan
 
 **Each frame:**
 
-1. Tick playing editors: the editor's `onAnimate(delta, time)`, then its document's (one shared three.js `Timer`).
-2. Drain change buses; tag viewports whose `listens(change)` is true.
+1. Tick playing editors (one shared three.js `Timer`): the editor's `onAnimate(delta, time)`, then advance its document's timeline by `delta`, which runs the document's `onAnimate`.
+2. Drain the changes queued on each shown document; tag viewports whose `listens(change)` is true.
 3. Update each scene's world matrices once, then draw tagged, visible viewports in priority order (focused, hovered, other) within a frame budget (`renderScheduler.frameBudget`, 12 ms). Views not reached draw next frame. A view tagged only `overlay` presents its cached pipeline output with fresh overlays.
 
 Plain Three.js edits made outside `onAnimate` must call `editor.requestRender()` (or `viewport.tag('content')`), or nothing redraws.

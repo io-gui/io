@@ -7,7 +7,8 @@ export type IoBooleanProps = IoFieldProps & {
 };
 /**
  * Input element for `Boolean` data type displayed as text.
- * It can be configured to display custom `true` or `false` strings.
+ * It can be configured to display custom `true` or `false` strings; a string naming a registered icon
+ * (`namespace:id`, e.g. `io:check`) displays that icon.
  **/
 export declare class IoBoolean extends IoField {
     static get Style(): string;

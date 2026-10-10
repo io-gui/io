@@ -14,7 +14,7 @@ Undo applies a transaction's inverse patches; redo re-applies its forward patche
 
 Interactive operators (ADR-0004) open a transaction when a drag starts. Moves write into it, and patches to the same path coalesce (first old value, last new value). Release commits one transaction and emits the equivalent command to the journal; cancel rolls back. Blender's "Adjust Last Operation" falls out of this: undo the last transaction, then re-run its command with changed arguments.
 
-The change bus (ADR-0003) is fed by committed patches. A patch's `path` determines its change kind (`transform`, `geometry`, `material`, `structure`, `settings`), so views are tagged without extra `notify()` calls.
+Document changes (ADR-0003) are queued by committed patches. A patch's `path` determines its change kind (`transform`, `geometry`, `material`, `structure`, `settings`), so views are tagged without extra `notify()` calls.
 
 ## Considered Options
 

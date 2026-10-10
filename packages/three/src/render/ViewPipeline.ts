@@ -1,6 +1,6 @@
 import type { OrthographicCamera, PerspectiveCamera, Scene, Texture, ToneMapping, WebGPURenderer } from 'three/webgpu'
 import type { DirtyReason, FrameInfo, ViewRenderResult } from './RenderScheduler.js'
-import type { DocumentChange } from '../editor/ChangeBus.js'
+import type { DocumentChange } from '../editor/Document.js'
 import type { Document } from '../editor/Document.js'
 import type { Editor } from '../editor/Editor.js'
 import type { View, ViewKind } from '../view/View.js'

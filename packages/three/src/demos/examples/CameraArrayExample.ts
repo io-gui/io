@@ -10,9 +10,11 @@ import {
   Vector4
 } from 'three/webgpu'
 import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Document, DocumentProps, Timeline } from '@io-gui/three'
 
 const AMOUNT = 6
+/** Seconds in which the spin repeats: the timeline length, so looping is seamless. */
+const SPIN_PERIOD = 20
 
 /**
  * A spinning cylinder in front of an ArrayCamera of 6×6 sub-cameras, laid out for a square canvas.
@@ -26,7 +28,7 @@ export class CameraArrayExample extends Document {
   public mesh: Mesh
 
   constructor(args?: DocumentProps) {
-    super({autoplay: true, ...args})
+    super({timeline: new Timeline({autoplay: true, duration: SPIN_PERIOD}), ...args})
 
     const subCameras: PerspectiveCamera[] = []
 
@@ -113,8 +115,9 @@ export class CameraArrayExample extends Document {
     }
   }
 
-  override onAnimate() {
-    this.mesh.rotation.x += 0.005
-    this.mesh.rotation.z += 0.01
+  override onAnimate(delta: number, time: number) {
+    const angle = time / SPIN_PERIOD * Math.PI * 2
+    this.mesh.rotation.x = angle
+    this.mesh.rotation.z = angle * 2
   }
 }

@@ -18,16 +18,19 @@ import { instancedBufferAttribute, texture, float, color } from 'three/tsl'
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js'
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
 import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Document, DocumentProps, Timeline } from '@io-gui/three'
 
-/** The convex hull of a dodecahedron's vertices, drawn as points and a translucent mesh. Spins while playing; plays when opened. */
+/** Seconds in which the spin repeats: the timeline length, so looping is seamless. */
+const SPIN_PERIOD = 20
+
+/** The convex hull of a dodecahedron's vertices, drawn as points and a translucent mesh. Spins with document time; plays when opened. */
 @Register
 export class GeometryConvexExample extends Document {
 
   public group: Group
 
   constructor(args?: DocumentProps) {
-    super({autoplay: true, ...args})
+    super({timeline: new Timeline({autoplay: true, duration: SPIN_PERIOD}), ...args})
 
     // ambient light
 
@@ -115,7 +118,7 @@ export class GeometryConvexExample extends Document {
     this.group.add( mesh )
   }
 
-  override onAnimate() {
-    this.group.rotation.y += 0.005
+  override onAnimate(delta: number, time: number) {
+    this.group.rotation.y = time / SPIN_PERIOD * Math.PI * 2
   }
 }

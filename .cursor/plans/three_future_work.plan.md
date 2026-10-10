@@ -1,6 +1,6 @@
 ---
 name: io-three Future Work
-overview: Undo, commands and collaboration for packages/three (ADR-0008), plus related infrastructure. Split out of three_core_architecture.plan.md (formerly Phase 8) after Phases 1-7 shipped. Not scheduled.
+overview: Undo, commands and collaboration for packages/three (ADR-0008), plus related infrastructure and timeline follow-ups. Split out of three_core_architecture.plan.md (formerly Phase 8) after Phases 1-7 shipped. Not scheduled.
 todos:
   - id: document-schema
     content: "Per-class schema of document fields, seeded from src/configs"
@@ -22,6 +22,12 @@ todos:
     status: pending
   - id: collaboration
     content: "Multi-user sync of transactions (server order, LWW, fractional index, per-user undo)"
+    status: pending
+  - id: timeline-negative-delta
+    content: "Revisit negative onAnimate delta on loop wraps and backward scrubs"
+    status: pending
+  - id: timeline-frame-rate
+    content: "Decide whether timeline.frameRate drives playback (video export)"
     status: pending
 isProject: false
 ---
@@ -59,3 +65,11 @@ Immutable, content-addressed blobs for geometry and texture data, so patches swa
 ### `collaboration`
 
 Transactions over the network: server ordering, last-writer-wins per path, fractional indices for child order, per-user undo that skips paths changed by others since. Selection, hover and navigation stay local.
+
+### `timeline-negative-delta`
+
+`Document.onAnimate(delta, time)` gets `delta` = the change of `timeline.currentTime`, so scrubbing back and loop wraps give negative deltas (accepted for now, 2026-10-10). Time-driven content is exact. Integrators (`mixer.update(delta)`, `rotation += delta * k`) jump back a whole duration at a wrap and only approximate earlier states when scrubbed back (mixer fades and `loop` events do not reverse). If this bites: a forward delta at wraps (continuous, but state stops following the timeline position), re-simulating from 0 on backward jumps, or `mixer.setTime(time)` where clips allow it.
+
+### `timeline-frame-rate`
+
+`timeline.frameRate` only sets frame stepping, scrub snapping and divider steps; playback is continuous, paced by the display. Revisit with video export: fixed-step playback at `frameRate` with deterministic frame times.

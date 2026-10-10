@@ -2,9 +2,11 @@ import { PerspectiveCamera, OrthographicCamera, Group, BufferGeometry, Float32Bu
 import { Register } from '@io-gui/core'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { registerEditorConfig, registerEditorGroups, ioObject } from '@io-gui/editors'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Document, DocumentProps, Timeline } from '@io-gui/three'
 
 const frustumSize = 600
+/** Seconds in which the orbit and the frustum changes repeat: the timeline length, so looping is seamless. */
+const ORBIT_PERIOD = 25
 
 /**
  * A perspective and an orthographic scene camera on one rig, following an orbiting sphere while their
@@ -19,7 +21,7 @@ export class CameraExample extends Document {
   public mesh: Mesh
 
   constructor(args?: DocumentProps) {
-    super({autoplay: true, ...args})
+    super({timeline: new Timeline({autoplay: true, duration: ORBIT_PERIOD}), ...args})
 
     this.perspectiveCamera = new PerspectiveCamera( 50, 0.5, 150, 1000 )
     this.perspectiveCamera.name = 'perspective'
@@ -81,8 +83,8 @@ export class CameraExample extends Document {
     this.scene.add( particles )
   }
 
-  override onAnimate() {
-    const r = Date.now() * 0.0005
+  override onAnimate(delta: number, time: number) {
+    const r = time / ORBIT_PERIOD * Math.PI * 4
 
     this.mesh.position.x = 700 * Math.cos( r )
     this.mesh.position.z = 700 * Math.sin( r )

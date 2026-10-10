@@ -21,7 +21,6 @@ import {
   screenUV,
   hue,
   reflector,
-  time,
   Fn,
   vec2,
   length,
@@ -38,7 +37,7 @@ import {
 } from 'three/tsl'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Document, DocumentProps, Timeline } from '@io-gui/three'
 
 type GltfModel = {
   scene: Group
@@ -55,7 +54,7 @@ const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
   new GLTFLoader().load(url, resolve, undefined, reject)
 })
 
-const lightSpeed = /*#__PURE__*/ Fn<[Node]>(([suv_immutable]) => {
+const lightSpeed = /*#__PURE__*/ Fn<[Node, Node]>(([suv_immutable, time]) => {
   // forked from https://www.shadertoy.com/view/7ly3D1
   const suv = vec2(suv_immutable)
   const uv = vec2(length(suv), atan(suv.y, suv.x))
@@ -69,7 +68,8 @@ const lightSpeed = /*#__PURE__*/ Fn<[Node]>(([suv_immutable]) => {
   name: 'lightSpeed',
   type: 'vec3',
   inputs: [
-    { name: 'suv', type: 'vec2' }
+    { name: 'suv', type: 'vec2' },
+    { name: 'time', type: 'float' }
   ]
 })
 
@@ -85,11 +85,11 @@ export class AnimationRetargetingExample extends Document {
   public group: Group = new Group()
 
   constructor(args?: DocumentProps) {
-    super({autoplay: true, ...args})
+    super({timeline: new Timeline({autoplay: true}), ...args})
 
     // Background
-    const coloredVignette = screenUV.distance(.5).mix(hue(color(0x0175ad), time.mul(.1)), hue(color(0x02274f), time.mul(.5)))
-    const lightSpeedEffect = lightSpeed(normalWorldGeometry).clamp()
+    const coloredVignette = screenUV.distance(.5).mix(hue(color(0x0175ad), this.timeline.timeNode.mul(.1)), hue(color(0x02274f), this.timeline.timeNode.mul(.5)))
+    const lightSpeedEffect = lightSpeed(normalWorldGeometry, this.timeline.timeNode).clamp()
     const lightSpeedSky = normalWorldGeometry.y.remapClamp(-.1, 1).mix(0, lightSpeedEffect)
     const composedBackground = blendDodge(coloredVignette, lightSpeedSky)
     this.scene.backgroundNode = composedBackground
@@ -157,8 +157,9 @@ export class AnimationRetargetingExample extends Document {
 
     // Retarget
     const source = this.getSource(sourceModel)
-    this.sourceMixer = source.mixer
-    this.targetMixer = this.retargetModel(source, targetModel)
+    this.timeline.duration = source.clip.duration
+    this.sourceMixer = source.mixer.setTime(this.timeline.currentTime)
+    this.targetMixer = this.retargetModel(source, targetModel).setTime(this.timeline.currentTime)
 
     this.notify({kind: 'structure'})
     this.dispatch('frame-object', {object: this.group}, true)

@@ -31,7 +31,7 @@ describe('SelectionModel', () => {
     b = box(2, 'b')
     document.scene.add(a, b)
     selection = new SelectionModel({document})
-    document.changeBus.drain()
+    document.drainChanges()
   })
 
   afterEach(() => {
@@ -45,11 +45,11 @@ describe('SelectionModel', () => {
     expect(selection.ids()).toEqual([a.uuid, b.uuid])
     expect(selection.active).toBe(b.uuid)
     expect(selection.getActiveObject()).toBe(b)
-    expect(document.changeBus.drain().map(change => change.kind)).toEqual(['selection'])
+    expect(document.drainChanges().map(change => change.kind)).toEqual(['selection'])
 
     expect(selection.edit().add(a.uuid).commit()).toBe(false)
     expect(selection.version).toBe(1)
-    expect(document.changeBus.pending).toBe(false)
+    expect(document.hasPendingChanges).toBe(false)
   })
 
   it('toggles, removes and clears, keeping active consistent', () => {

@@ -1,7 +1,7 @@
 import { Register, ReactiveElement, ReactiveElementProps, Property, Change, Field, WithBinding } from '@io-gui/core'
 import { WebGPURenderer, CanvasTarget, Scene, Object3D, OrthographicCamera, PerspectiveCamera } from 'three/webgpu'
 import { Editor } from '../editor/Editor.js'
-import type { Document } from '../editor/Document.js'
+import type { Document, DocumentChange } from '../editor/Document.js'
 import type { Behavior } from '../input/Behavior.js'
 import { toolAllowsProfile } from '../tools/Tool.js'
 import { View } from '../view/View.js'
@@ -10,7 +10,6 @@ import { Keymap, keymaps } from '../input/Keymap.js'
 import { NavigationBehavior } from '../input/behaviors/NavigationBehavior.js'
 import { SelectBehavior } from '../input/behaviors/SelectBehavior.js'
 import type { SelectionModel } from '../selection/SelectionModel.js'
-import { DocumentChange, ChangeBus } from '../editor/ChangeBus.js'
 import { renderScheduler, getDefaultRenderer, ScheduledView, DirtyReason, FrameInfo, ViewRenderResult } from '../render/RenderScheduler.js'
 import { ViewCompositor } from '../render/ViewCompositor.js'
 import { GizmoLayer } from '../tools/Gizmo.js'
@@ -171,8 +170,9 @@ export class ThreeViewport extends ReactiveElement implements ScheduledView {
     return this.editor?.document?.scene ?? null
   }
 
-  get changeBus(): ChangeBus | null {
-    return this.editor?.document?.changeBus ?? null
+  /** The document this viewport shows: its editor's active one. */
+  get document(): Document | null {
+    return this.editor?.document ?? null
   }
 
   get mode(): string | undefined {

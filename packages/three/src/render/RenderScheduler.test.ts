@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { debounce } from '@io-gui/core'
-import { ChangeBus, DirtyReason, DocumentChange, RenderScheduler, ScheduledView, ScheduledTicker, FrameInfo } from '@io-gui/three'
+import { DirtyReason, Document, DocumentChange, RenderScheduler, ScheduledView, ScheduledTicker, FrameInfo } from '@io-gui/three'
 import { Object3D, Scene, WebGPURenderer } from 'three/webgpu'
 
 function fakeRenderer(webgpu = true) {
@@ -20,11 +20,11 @@ type FakeView = ScheduledView & {
   errors: Error[]
 }
 
-function fakeView(options: {renderer?: WebGPURenderer; scene?: Scene | null; bus?: ChangeBus | null; source?: object; onDraw?: () => void} = {}): FakeView {
+function fakeView(options: {renderer?: WebGPURenderer; scene?: Scene | null; document?: Document | null; source?: object; onDraw?: () => void} = {}): FakeView {
   const view: FakeView = {
     renderer: options.renderer ?? fakeRenderer(),
     scene: options.scene ?? null,
-    changeBus: options.bus ?? null,
+    document: options.document ?? null,
     source: options.source ?? {},
     draws: [],
     renderable: true,
@@ -43,20 +43,6 @@ function fakeView(options: {renderer?: WebGPURenderer; scene?: Scene | null; bus
   }
   return view
 }
-
-describe('ChangeBus', () => {
-  it('queues changes until drained', () => {
-    const bus = new ChangeBus()
-    const source = {}
-    expect(bus.pending).toBe(false)
-    bus.notify({kind: 'transform', source})
-    bus.notify({kind: 'time', source})
-    expect(bus.pending).toBe(true)
-    expect(bus.drain().map(change => change.kind)).toEqual(['transform', 'time'])
-    expect(bus.pending).toBe(false)
-    expect(bus.drain()).toEqual([])
-  })
-})
 
 describe('RenderScheduler', () => {
   it('draws a newly registered view once, then only when tagged', () => {
@@ -106,47 +92,48 @@ describe('RenderScheduler', () => {
     expect(view.draws.length).toBe(1)
   })
 
-  it('tags views that listen to a change on the bus', () => {
+  it('tags views that listen to a change of their document', () => {
     const scheduler = new RenderScheduler({autoStart: false})
-    const bus = new ChangeBus()
-    const sourceA = {}
-    const a = fakeView({bus, source: sourceA})
-    const b = fakeView({bus, source: {}})
+    const document = new Document()
+    const a = fakeView({document, source: document})
+    const b = fakeView({document, source: {}})
     scheduler.register(a)
     scheduler.register(b)
     scheduler.step()
 
-    bus.notify({kind: 'transform', source: sourceA})
+    document.notify({kind: 'transform'})
     scheduler.step()
     expect(a.draws.length).toBe(2)
     expect(b.draws.length).toBe(1)
-    expect(bus.pending).toBe(false)
+    expect(document.hasPendingChanges).toBe(false)
+    document.dispose()
   })
 
   it('tags the reason a view returns from listens', () => {
     const scheduler = new RenderScheduler({autoStart: false})
-    const bus = new ChangeBus()
-    const view = fakeView({bus})
+    const document = new Document()
+    const view = fakeView({document})
     view.listens = (change: DocumentChange) => change.kind === 'selection' ? 'overlay' : 'content'
     scheduler.register(view)
     scheduler.step()
-    bus.notify({kind: 'selection', source: {}})
+    document.notify({kind: 'selection'})
     scheduler.step()
     expect([...view.draws[1]]).toEqual(['overlay'])
+    document.dispose()
   })
 
   it('ticks tickers before collecting their changes, in the same frame', () => {
     const scheduler = new RenderScheduler({autoStart: false})
-    const source = {}
+    const document = new Document()
     const frames: FrameInfo[] = []
     const ticker: ScheduledTicker = {
-      changeBus: new ChangeBus(),
+      document,
       tick(frame) {
         frames.push(frame)
-        this.changeBus.notify({kind: 'time', source})
+        this.document.notify({kind: 'time'})
       },
     }
-    const view = fakeView({source})
+    const view = fakeView({source: document})
     scheduler.addTicker(ticker)
     scheduler.register(view)
     scheduler.step()
@@ -281,7 +268,7 @@ describe('RenderScheduler', () => {
     const scheduler = new RenderScheduler()
     const order: string[] = []
     const ticker: ScheduledTicker = {
-      changeBus: new ChangeBus(),
+      document: new Document(),
       tick: () => { order.push(`tick@${document.timeline.currentTime}`) },
     }
     // Start the loop from inside a core callback, the worst case for ordering.

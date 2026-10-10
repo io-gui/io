@@ -14,7 +14,7 @@ import {
   PlaneGeometry,
 } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Document, DocumentProps, Timeline } from '@io-gui/three'
 import { ioObject, ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioButton } from '@io-gui/inputs'
@@ -63,7 +63,7 @@ export class AnimationSkinningBlendingExample extends Document {
   public customDuration: number = 3.5
 
   constructor(args?: DocumentProps) {
-    super({autoplay: true, ...args})
+    super({timeline: new Timeline({autoplay: true}), ...args})
 
     // Camera
     this.camera = new PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 100 )

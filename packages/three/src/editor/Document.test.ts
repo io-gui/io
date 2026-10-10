@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { ChangeBus, Document, Editor, Transaction } from '@io-gui/three'
+import { Document, Editor, Timeline, Transaction } from '@io-gui/three'
 import { Color, Group, Mesh, MeshBasicMaterial, Object3D, Vector3, WebGPURenderer } from 'three/webgpu'
 
 function snapshot(document: Document) {
@@ -15,11 +15,21 @@ describe('Document transactions', () => {
     mesh = new Mesh(undefined, new MeshBasicMaterial({color: 0xff0000}))
     mesh.name = 'mesh'
     document.scene.add(mesh)
-    document.changeBus.drain()
+    document.drainChanges()
   })
 
   afterEach(() => {
     document.dispose()
+  })
+
+  it('queues changes until drained', () => {
+    expect(document.hasPendingChanges).toBe(false)
+    document.notify({kind: 'transform'})
+    document.notify({kind: 'time'})
+    expect(document.hasPendingChanges).toBe(true)
+    expect(document.drainChanges().map(change => change.kind)).toEqual(['transform', 'time'])
+    expect(document.hasPendingChanges).toBe(false)
+    expect(document.drainChanges()).toEqual([])
   })
 
   it('applies edits immediately and reports typed changes', () => {
@@ -31,7 +41,7 @@ describe('Document transactions', () => {
     expect(mesh.position.toArray()).toEqual([1, 2, 3])
     expect(mesh.material.color.getHex()).toBe(0x00ff00)
     expect(mesh.name).toBe('renamed')
-    expect(document.changeBus.drain().map(change => [change.kind, change.ids, change.source === document]))
+    expect(document.drainChanges().map(change => [change.kind, change.ids, change.source === document]))
       .toEqual([['transform', [mesh.uuid], true], ['material', [mesh.uuid], true], ['other', [mesh.uuid], true]])
   })
 
@@ -158,12 +168,12 @@ describe('Document transactions', () => {
   })
 
   it('bounds undrained changes, and drops them when the document is switched away', () => {
-    for (let i = 0; i < ChangeBus.LIMIT + 5; i++) document.notify({kind: 'transform'})
-    expect(document.changeBus.drain().length).toBeLessThan(10)
+    for (let i = 0; i < Document.CHANGE_LIMIT + 5; i++) document.notify({kind: 'transform'})
+    expect(document.drainChanges().length).toBeLessThan(10)
     const editor = new Editor({document})
     document.notify({kind: 'transform'})
     editor.document = new Document()
-    expect(document.changeBus.pending).toBe(false)
+    expect(document.hasPendingChanges).toBe(false)
     editor.document.dispose()
     editor.dispose()
   })
@@ -194,7 +204,49 @@ describe('Document transactions', () => {
 
   it('reports render setting changes', () => {
     document.toneMappingExposure = 2
-    expect(document.changeBus.drain().map(change => change.kind)).toEqual(['settings'])
+    expect(document.drainChanges().map(change => change.kind)).toEqual(['settings'])
+  })
+})
+
+describe('Document timeline', () => {
+  let document: Document
+  let calls: Array<[number, number]>
+
+  beforeEach(() => {
+    document = new Document()
+    calls = []
+    document.onAnimate = (delta: number, time: number) => { calls.push([delta, time]) }
+  })
+
+  afterEach(() => {
+    document.dispose()
+  })
+
+  it('animates by the change of current time and reports only time', () => {
+    document.timeline.currentTime = 2
+    document.timeline.currentTime = 0.5
+    expect(calls).toEqual([[2, 2], [-1.5, 0.5]])
+    expect(document.drainChanges().map(change => change.kind)).toEqual(['time', 'time'])
+  })
+
+  it('does not animate for timeline settings', () => {
+    document.timeline.setProperties({duration: 4, frameRate: 24, loop: false, autoplay: true})
+    expect(calls).toEqual([])
+    expect(document.hasPendingChanges).toBe(false)
+  })
+
+  it('animates when a shorter duration moves the playhead', () => {
+    document.timeline.currentTime = 8
+    document.timeline.duration = 5
+    expect(calls).toEqual([[8, 8], [-3, 5]])
+  })
+
+  it('animates to the current time of a replacing timeline', () => {
+    document.timeline.currentTime = 1
+    document.timeline = new Timeline({currentTime: 3})
+    expect(calls).toEqual([[1, 1], [2, 3]])
+    document.timeline.currentTime = 4
+    expect(calls[2]).toEqual([1, 4])
   })
 })
 
@@ -202,8 +254,7 @@ describe('Editor', () => {
   it('reports changes with the active document as source', () => {
     const editor = new Editor()
     editor.notify({kind: 'transform', ids: ['x']})
-    expect(editor.changeBus).toBe(editor.document.changeBus)
-    expect(editor.changeBus.drain()).toEqual([{kind: 'transform', ids: ['x'], source: editor.document}])
+    expect(editor.document.drainChanges()).toEqual([{kind: 'transform', ids: ['x'], source: editor.document}])
     editor.dispose()
   })
 
@@ -219,37 +270,49 @@ describe('Editor', () => {
     editor.dispose()
   })
 
-  it('ticks onAnimate and reports time only while playing', () => {
+  it('advances the document timeline and reports time only while playing', () => {
     const editor = new Editor()
-    const calls: number[] = []
-    editor.onAnimate = (delta: number) => { calls.push(delta) }
-    editor.tick({frame: 1, delta: 0.016, time: 0.016})
-    expect(calls).toEqual([])
-    expect(editor.changeBus.pending).toBe(false)
+    editor.tick({frame: 1, delta: 0.25, time: 0.25})
+    expect(editor.document.timeline.currentTime).toBe(0)
+    expect(editor.document.hasPendingChanges).toBe(false)
     editor.isPlaying = true
-    editor.tick({frame: 2, delta: 0.016, time: 0.032})
-    expect(calls).toEqual([0.016])
-    expect(editor.changeBus.drain()).toEqual([{kind: 'time', source: editor.document}])
+    editor.tick({frame: 2, delta: 0.25, time: 0.5})
+    expect(editor.document.timeline.currentTime).toBe(0.25)
+    expect(editor.document.drainChanges()).toEqual([{kind: 'time', source: editor.document}])
     editor.dispose()
   })
 
-  it('ticks the document onAnimate after the editor, only while playing', () => {
+  it('ticks its own onAnimate on the scheduler clock, then the document on its timeline', () => {
     const editor = new Editor()
     const calls: string[] = []
     editor.onAnimate = (delta: number, time: number) => { calls.push(`editor ${delta} ${time}`) }
     editor.document.onAnimate = (delta: number, time: number) => { calls.push(`document ${delta} ${time}`) }
-    editor.tick({frame: 1, delta: 0.016, time: 0.016})
+    editor.tick({frame: 1, delta: 0.25, time: 0.25})
     expect(calls).toEqual([])
     editor.isPlaying = true
-    editor.tick({frame: 2, delta: 0.016, time: 0.032})
-    expect(calls).toEqual(['editor 0.016 0.032', 'document 0.016 0.032'])
+    editor.tick({frame: 2, delta: 0.25, time: 5})
+    expect(calls).toEqual(['editor 0.25 5', 'document 0.25 0.25'])
     editor.dispose()
+  })
+
+  it('pauses at the end of a timeline that does not loop, and plays it again from the start', () => {
+    const document = new Document({timeline: new Timeline({duration: 1, loop: false})})
+    const editor = new Editor({document})
+    editor.isPlaying = true
+    editor.tick({frame: 1, delta: 0.75, time: 0.75})
+    editor.tick({frame: 2, delta: 0.5, time: 1.25})
+    expect(document.timeline.currentTime).toBe(1)
+    expect(editor.isPlaying).toBe(false)
+    editor.isPlaying = true
+    expect(document.timeline.currentTime).toBe(0)
+    editor.dispose()
+    document.dispose()
   })
 
   it('requestRender reports an other change', () => {
     const editor = new Editor()
     editor.requestRender()
-    expect(editor.changeBus.drain()).toEqual([{kind: 'other', source: editor.document}])
+    expect(editor.document.drainChanges()).toEqual([{kind: 'other', source: editor.document}])
     editor.dispose()
   })
 })
