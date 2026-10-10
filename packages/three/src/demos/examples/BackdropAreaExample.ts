@@ -24,13 +24,16 @@ import {
 } from 'three/tsl'
 import { hashBlur } from 'three/addons/tsl/display/hashBlur.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { ThreeEditor, ThreeView, IoThreeExample, ThreeEditorProps, ioThreeViewport, ioVector3 } from '@io-gui/three'
-import { ioLayout, Layout } from '@io-gui/layout'
-import { ioPropertyEditor } from '@io-gui/editors'
+import { ThreeDocument, ThreeDocumentProps, ioVector3 } from '@io-gui/three'
+import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 
+/**
+ * A box whose backdrop material (blurred, depth, checker or pixel; Document tab) filters the dancing Michelle
+ * model behind it. Plays when opened.
+ */
 @Register
-export class BackdropAreaExample extends ThreeEditor {
+export class BackdropAreaExample extends ThreeDocument {
   public mixer?: AnimationMixer
   public box: Mesh
 
@@ -45,19 +48,18 @@ export class BackdropAreaExample extends ThreeEditor {
   public boxScale: Vector3
 
   @Property({type: String, value: 'blurred'})
-  declare public material: string
+  declare material: string
 
-  constructor(args: ThreeEditorProps) {
-    super(args)
-
-    this.document.toneMappingExposure = 0.9
+  constructor(args?: ThreeDocumentProps) {
+    super({toneMappingExposure: 0.9, autoplay: true, ...args})
 
     // Background
-    this.document.scene.backgroundNode = hue(screenUV.y.mix(color(0x66bbff), color(0x4466ff)), time.mul(0.1))
+    this.scene.backgroundNode = hue(screenUV.y.mix(color(0x66bbff), color(0x4466ff)), time.mul(0.1))
 
     // Lighting
     const ambient = new AmbientLight(0xffffff, 2.5)
-    this.document.scene.add(ambient)
+    ambient.name = 'Ambient'
+    this.scene.add(ambient)
 
     // Create materials
     // Compare depth from viewportLinearDepth with linearDepth() to create a distance field
@@ -101,16 +103,18 @@ export class BackdropAreaExample extends ThreeEditor {
 
     // Camera
     const camera = new PerspectiveCamera(50, 1, 0.1, 100)
+    camera.name = 'Camera'
     camera.position.set(3, 2, 3)
     camera.lookAt(0, 1, 0)
-    this.document.scene.add(camera)
+    this.scene.add(camera)
 
     // Box
     this.box = new Mesh(new BoxGeometry(2, 2, 2), this.blurredBlurMaterial)
+    this.box.name = 'Box'
     this.box.position.set(0, 1, 0)
     this.boxScale = this.box.scale
     this.box.renderOrder = 1
-    this.document.scene.add(this.box)
+    this.scene.add(this.box)
 
     // Floor
     const floor = new Mesh(new BoxGeometry(3, .01, 3), new MeshBasicNodeMaterial({
@@ -119,10 +123,12 @@ export class BackdropAreaExample extends ThreeEditor {
       transparent: true,
       depthWrite: false
     }))
-    this.document.scene.add(floor)
+    floor.name = 'Floor'
+    floor.userData.selectable = false
+    this.scene.add(floor)
 
     // Load model
-    void this.loadModel()
+    this.loadModel()
     this.materialChanged()
   }
 
@@ -132,7 +138,7 @@ export class BackdropAreaExample extends ThreeEditor {
     }
   }
 
-  private async loadModel() {
+  private loadModel() {
     const loader = new GLTFLoader()
     loader.load('https://threejs.org/examples/models/gltf/Michelle.glb', (gltf) => {
       const object = gltf.scene
@@ -141,97 +147,27 @@ export class BackdropAreaExample extends ThreeEditor {
       const action = this.mixer.clipAction(gltf.animations[0])
       action.play()
 
-      this.document.scene.add(object)
+      this.scene.add(object)
 
-      this.dispatchMutation()
+      this.notify({kind: 'structure'})
       this.dispatch('frame-object', {object: this.box}, true)
     })
   }
 
   override onAnimate(delta: number) {
-    if (this.mixer) {
-      this.mixer.update(delta)
-    }
+    this.mixer?.update(delta)
   }
 }
 
-@Register
-export class IoBackdropAreaExample extends IoThreeExample {
+registerEditorConfig(BackdropAreaExample, [
+  ['material', ioOptionSelect({
+    model: new Menu({
+      options: ['blurred', 'depth', 'checker', 'pixel']
+    }),
+  })],
+  [Vector3, ioVector3({linkable: true})],
+])
 
-  @Property({type: BackdropAreaExample, init: {isPlaying: true}})
-  declare editor: BackdropAreaExample
-
-  override ready() {
-    this.render([
-      ioLayout({
-        elements: [
-          ioThreeViewport({id: 'Top', editor: this.editor, view: new ThreeView().setAxisView('top')}),
-          ioThreeViewport({id: 'Left', editor: this.editor, view: new ThreeView().setAxisView('left')}),
-          ioThreeViewport({id: 'Back', editor: this.editor, view: new ThreeView().setAxisView('back')}),
-          ioThreeViewport({id: 'SceneCamera', editor: this.editor, view: new ThreeView().setCameraView()}),
-          ioPropertyEditor({id: 'PropertyEditor', value: this.editor,
-            properties: ['material', 'boxScale'],
-            config: [
-              ['material', ioOptionSelect({
-                model: new Menu({
-                  options: ['blurred', 'depth', 'checker', 'pixel']
-                }),
-              })],
-              [Vector3, ioVector3({linkable: true})]
-            ]
-          })
-        ],
-        model: new Layout({
-          child: {
-            type: 'split',
-            orientation: 'horizontal',
-            children: [
-              {
-                type: 'split',
-                orientation: 'vertical',
-                children: [
-                  {
-                    type: 'split',
-                    size: '50%',
-                    orientation: 'horizontal',
-                    children: [
-                      {type: 'panel',size: '50%',tabs: [{id: 'Top'}]},
-                      {type: 'panel',size: '50%',tabs: [{id: 'Left'}]}
-                    ]
-                  },
-                  {
-                    type: 'split',
-                    size: '50%',
-                    orientation: 'horizontal',
-                    children: [
-                      {type: 'panel',size: '50%',tabs: [{id: 'Back'}]},
-                      {type: 'panel',size: '50%',tabs: [{id: 'SceneCamera'}]},
-                    ]
-                  }
-                ]
-              },
-              {
-                type: 'panel',
-                size: '280px',
-                tabs: [{id: 'PropertyEditor'}]
-              }
-            ]
-          }
-        })
-      })
-    ])
-  }
-
-  // init() {
-  //   this.uiConfig = [
-  //     ['material', ioOptionSelect({
-  //       model: new Menu({
-  //         options: ['blurred', 'depth', 'checker', 'pixel']
-  //       }),
-  //     })],
-  //     [Vector3, ioVector3({linkable: true})]
-  //   ]
-  // }
-}
-
-export const ioBackdropAreaExample = (arg0: any) => IoBackdropAreaExample.vConstructor(arg0)
+registerEditorGroups(BackdropAreaExample, {
+  Main: ['material', 'boxScale'],
+})

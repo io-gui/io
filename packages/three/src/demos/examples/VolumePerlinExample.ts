@@ -3,13 +3,12 @@ import { Break, If, vec3, vec4, texture3D, uniform, Fn} from 'three/tsl'
 import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js'
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js'
 import { Register, Property } from '@io-gui/core'
-import { ThreeEditor, IoThreeExample, ThreeEditorProps, ioThreeViewport } from '@io-gui/three'
-import { ioPropertyEditor } from '@io-gui/editors'
-import { ioLayout, Layout } from '@io-gui/layout'
+import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
 import { ioNumberSlider } from '@io-gui/sliders'
+import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 
 @Register
-export class VolumePerlinExample extends ThreeEditor {
+export class VolumePerlinExample extends ThreeDocument {
   private thresholdUniform: UniformNode<number>
   private stepsUniform: UniformNode<number>
 
@@ -19,7 +18,7 @@ export class VolumePerlinExample extends ThreeEditor {
   @Property({type: Number, value: 200})
   declare steps: number
 
-  constructor(args: ThreeEditorProps) {
+  constructor(args?: ThreeDocumentProps) {
     super(args)
 
     const size = 128
@@ -73,7 +72,7 @@ export class VolumePerlinExample extends ThreeEditor {
     material.transparent = true
 
     const mesh = new Mesh( new BoxGeometry( 1, 1, 1 ), material )
-    this.document.scene.add( mesh )
+    this.scene.add( mesh )
   }
 
   thresholdChanged() {
@@ -85,51 +84,13 @@ export class VolumePerlinExample extends ThreeEditor {
   }
 }
 
-@Register
-export class IoVolumePerlinExample extends IoThreeExample {
+registerEditorConfig(VolumePerlinExample, [
+  ['threshold', ioNumberSlider({min: 0, max: 1, step: 0.01})],
+  ['steps', ioNumberSlider({min: 0, max: 300, step: 1})]
+])
 
-  @Property({type: VolumePerlinExample, init: null})
-  declare editor: VolumePerlinExample
-
-  override ready() {
-
-    this.render([
-      ioLayout({
-        elements: [
-          ioThreeViewport({id: 'Perspective', editor: this.editor}),
-          ioPropertyEditor({id: 'PropertyEditor', value: this.editor,
-            properties: ['threshold', 'steps'],
-            config: [
-              ['threshold', ioNumberSlider({min: 0, max: 1, step: 0.01})],
-              ['steps', ioNumberSlider({min: 0, max: 300, step: 1})]
-            ]
-          })
-        ],
-        model: new Layout({
-          child: {
-            type: 'split',
-            orientation: 'horizontal',
-            children: [
-              {
-                type: 'split',
-                orientation: 'vertical',
-                children: [
-                  {type: 'panel',size: '100%',tabs: [{id: 'Perspective'}]},
-                ]
-              },
-              {
-                type: 'panel',
-                size: '320px',
-                tabs: [{id: 'PropertyEditor'}]
-              }
-            ]
-          }
-        })
-      })
-    ])
-
-  }
-
-}
-
-export const ioVolumePerlinExample = (arg0: any) => IoVolumePerlinExample.vConstructor(arg0)
+registerEditorGroups(VolumePerlinExample, {
+  Main: ['threshold', 'steps'],
+  // Hide all
+  Hidden: [new RegExp(/^[\s\S]*$/)]
+})

@@ -10,20 +10,22 @@ import {
   PlaneGeometry,
   SRGBColorSpace
 } from 'three/webgpu'
-import { Register, Property } from '@io-gui/core'
-import { ThreeEditor, IoThreeViewport, ThreeEditorProps } from '@io-gui/three'
+import { Register } from '@io-gui/core'
+import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
 
+/** Three flat shaded icosahedra with vertex colors and wireframes, over fake shadows that cannot be selected. */
 @Register
-export class GeometryColorsExample extends ThreeEditor {
+export class GeometryColorsExample extends ThreeDocument {
 
-  constructor(args: ThreeEditorProps) {
+  constructor(args?: ThreeDocumentProps) {
     super(args)
 
-    this.document.scene.background = new Color( 0xffffff )
+    this.scene.background = new Color( 0xffffff )
 
     const light = new DirectionalLight( 0xffffff, 3 )
+    light.name = 'Light'
     light.position.set( 0, 0, 1 )
-    this.document.scene.add( light )
+    this.scene.add( light )
 
     // shadow
 
@@ -44,24 +46,14 @@ export class GeometryColorsExample extends ThreeEditor {
     const shadowMaterial = new MeshBasicMaterial( { map: shadowTexture } )
     const shadowGeo = new PlaneGeometry( 300, 300, 1, 1 )
 
-    let shadowMesh
-
-    shadowMesh = new Mesh( shadowGeo, shadowMaterial )
-    shadowMesh.position.y = -250
-    shadowMesh.rotation.x = -Math.PI / 2
-    this.document.scene.add( shadowMesh )
-
-    shadowMesh = new Mesh( shadowGeo, shadowMaterial )
-    shadowMesh.position.y = -250
-    shadowMesh.position.x = -400
-    shadowMesh.rotation.x = -Math.PI / 2
-    this.document.scene.add( shadowMesh )
-
-    shadowMesh = new Mesh( shadowGeo, shadowMaterial )
-    shadowMesh.position.y = -250
-    shadowMesh.position.x = 400
-    shadowMesh.rotation.x = -Math.PI / 2
-    this.document.scene.add( shadowMesh )
+    for ( const x of [ 0, -400, 400 ] ) {
+      const shadowMesh = new Mesh( shadowGeo, shadowMaterial )
+      shadowMesh.name = 'Shadow'
+      shadowMesh.position.set( x, -250, 0 )
+      shadowMesh.rotation.x = -Math.PI / 2
+      shadowMesh.userData.selectable = false
+      this.scene.add( shadowMesh )
+    }
 
     const radius = 200
 
@@ -105,32 +97,21 @@ export class GeometryColorsExample extends ThreeEditor {
 
     const wireframeMaterial = new MeshBasicMaterial( { color: 0x000000, wireframe: true, transparent: true } )
 
-    let mesh = new Mesh( geometry1, material )
-    let wireframe = new Mesh( geometry1, wireframeMaterial )
-    mesh.add( wireframe )
-    mesh.position.x = -400
-    mesh.rotation.x = -1.87
-    this.document.scene.add( mesh )
+    // The wireframe is part of its mesh: clicking it selects the mesh.
+    const add = (name: string, geometry: IcosahedronGeometry, x: number) => {
+      const mesh = new Mesh( geometry, material )
+      mesh.name = name
+      const wireframe = new Mesh( geometry, wireframeMaterial )
+      wireframe.name = 'Wireframe'
+      wireframe.userData.selectable = false
+      mesh.add( wireframe )
+      mesh.position.x = x
+      this.scene.add( mesh )
+      return mesh
+    }
 
-    mesh = new Mesh( geometry2, material )
-    wireframe = new Mesh( geometry2, wireframeMaterial )
-    mesh.add( wireframe )
-    mesh.position.x = 400
-    this.document.scene.add( mesh )
-
-    mesh = new Mesh( geometry3, material )
-    wireframe = new Mesh( geometry3, wireframeMaterial )
-    mesh.add( wireframe )
-    this.document.scene.add( mesh )
+    add( 'Hue', geometry1, -400 ).rotation.x = -1.87
+    add( 'Saturation', geometry2, 400 )
+    add( 'Gradient', geometry3, 0 )
   }
 }
-
-@Register
-export class IoGeometryColorsExample extends IoThreeViewport {
-
-  @Property({type: GeometryColorsExample, init: null})
-  declare editor: GeometryColorsExample
-
-}
-
-export const ioGeometryColorsExample = (arg0: any) => IoGeometryColorsExample.vConstructor(arg0)

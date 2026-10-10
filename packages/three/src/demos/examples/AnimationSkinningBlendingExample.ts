@@ -14,9 +14,8 @@ import {
   PlaneGeometry,
 } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { ThreeEditor, ThreeView, IoThreeExample, ThreeEditorProps, ioThreeViewport } from '@io-gui/three'
-import { ioLayout, Layout } from '@io-gui/layout'
-import { ioObject, ioPropertyEditor } from '@io-gui/editors'
+import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
+import { ioObject, ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioButton } from '@io-gui/inputs'
 
@@ -37,14 +36,19 @@ const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
   loader.load(url, resolve, undefined, reject)
 })
 
+/**
+ * The Soldier model crossfading between idle, walk and run. The Document tab has the crossfade buttons,
+ * action weights, pause and single step. Plays when opened.
+ */
 @Register
-export class AnimationSkinningBlendingExample extends ThreeEditor {
+export class AnimationSkinningBlendingExample extends ThreeDocument {
 
   @Property({type: Boolean, value: false})
   declare isActive: boolean
 
+  /** Stops the mixer while the editor keeps playing (single steps set it). */
   @Property({type: Boolean, value: false})
-  declare isPlaying: boolean
+  declare paused: boolean
 
   @Property({type: Boolean, value: false})
   declare isCrossfading: boolean
@@ -58,25 +62,28 @@ export class AnimationSkinningBlendingExample extends ThreeEditor {
   public useDefaultDuration: boolean = true
   public customDuration: number = 3.5
 
-  constructor(args: ThreeEditorProps) {
-    super(args)
+  constructor(args?: ThreeDocumentProps) {
+    super({autoplay: true, ...args})
 
     // Camera
     this.camera = new PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 100 )
+    this.camera.name = 'Camera'
     this.camera.position.set( 1, 2, - 3 )
     this.camera.lookAt( 0, 1, 0 )
-    this.document.scene.add(this.camera)
+    this.scene.add(this.camera)
 
     // Scene setup
-    this.document.scene.background = new Color(0xa0a0a0)
-    this.document.scene.fog = new Fog(0xa0a0a0, 10, 50)
+    this.scene.background = new Color(0xa0a0a0)
+    this.scene.fog = new Fog(0xa0a0a0, 10, 50)
 
     // Lights
     const hemiLight = new HemisphereLight(0xffffff, 0x8d8d8d, 3)
+    hemiLight.name = 'Hemisphere'
     hemiLight.position.set(0, 20, 0)
-    this.document.scene.add(hemiLight)
+    this.scene.add(hemiLight)
 
     const dirLight = new DirectionalLight(0xffffff, 3)
+    dirLight.name = 'Sun'
     dirLight.position.set(-3, 10, -10)
     dirLight.castShadow = true
     dirLight.shadow.camera.top = 2
@@ -85,15 +92,17 @@ export class AnimationSkinningBlendingExample extends ThreeEditor {
     dirLight.shadow.camera.right = 2
     dirLight.shadow.camera.near = 0.1
     dirLight.shadow.camera.far = 40
-    this.document.scene.add(dirLight)
+    this.scene.add(dirLight)
 
     const ground = new Mesh(
       new PlaneGeometry(10, 10),
       new MeshPhongMaterial({color: 0xcbcbcb, depthWrite: false})
     )
+    ground.name = 'Ground'
     ground.rotation.x = -Math.PI / 2
     ground.receiveShadow = true
-    this.document.scene.add(ground)
+    ground.userData.selectable = false
+    this.scene.add(ground)
 
     void this.loadModel()
   }
@@ -101,7 +110,7 @@ export class AnimationSkinningBlendingExample extends ThreeEditor {
   private async loadModel() {
     const gltf = await loadGltf('https://threejs.org/examples/models/gltf/Soldier.glb')
     const model = gltf.scene
-    this.document.scene.add(model)
+    this.scene.add(model)
 
     model.traverse((object) => {
       if ((object as Mesh).isMesh) {
@@ -123,13 +132,15 @@ export class AnimationSkinningBlendingExample extends ThreeEditor {
 
     this.setProperties({
       isActive: true,
-      isPlaying: true,
+      paused: false,
     })
 
+    this.notify({kind: 'structure'})
     this.dispatch('frame-object', {object: model}, true)
   }
 
   isActiveChanged() {
+    if (!this.actions.idle) return
     if (this.isActive) {
       Object.values(this.actions).forEach((action: AnimationAction) => action.play())
       this.setWeight(this.actions.idle, 0)
@@ -145,11 +156,9 @@ export class AnimationSkinningBlendingExample extends ThreeEditor {
   run = () => { this.crossfadeTo('run', 2.5) }
 
   public makeSingleStep = () => {
-    this.isPlaying = false
-    if (this.mixer) {
-      this.mixer.update(this.stepSize)
-    }
-    this.requestRender()
+    this.paused = true
+    this.mixer.update(this.stepSize)
+    this.notify({kind: 'other'})
   }
 
   private getCurrentAction(): AnimationAction | null {
@@ -173,7 +182,7 @@ export class AnimationSkinningBlendingExample extends ThreeEditor {
     const duration = this.useDefaultDuration ? defaultDuration : this.customDuration
 
     this.isCrossfading = true
-    this.isPlaying = true
+    this.paused = false
 
     if (startAction === this.actions.idle) {
       this.executeCrossFade(startAction, targetAction, duration)
@@ -183,8 +192,6 @@ export class AnimationSkinningBlendingExample extends ThreeEditor {
   }
 
   private synchronizeCrossFade(startAction: AnimationAction, endAction: AnimationAction, duration: number) {
-    if (!this.mixer) return
-
     const onLoopFinished = (event: AnimationLoopEvent) => {
       if (event.action === startAction) {
         this.mixer.removeEventListener('loop', onLoopFinished)
@@ -216,108 +223,41 @@ export class AnimationSkinningBlendingExample extends ThreeEditor {
   }
 
   override onAnimate(delta: number) {
-    if (!this.mixer) return
-
     debug: {
-      this.dispatchMutation(this.actions.idle)
-      this.dispatchMutation(this.actions.walk)
-      this.dispatchMutation(this.actions.run)
+      for (const action of Object.values(this.actions)) this.dispatchMutation(action)
       this.dispatchMutation(this.mixer)
     }
 
-    if (this.isPlaying) {
+    if (!this.paused) {
       this.mixer.update(delta)
     }
   }
 }
 
-@Register
-export class IoAnimationSkinningBlendingExample extends IoThreeExample {
+registerEditorConfig(AnimationSkinningBlendingExample, [
+  [AnimationMixer, ioObject({expanded: true, properties: ['timeScale']})],
+  [AnimationAction, ioObject({expanded: true, properties: ['weight']})],
+  ['makeSingleStep', ioButton({label: 'Make Single Step'})],
+  ['stepSize', ioNumberSlider({min: 0, max: 1, step: 0.01})],
+  ['actions', ioPropertyEditor({label: '_hidden_'})],
+])
 
-  @Property({type: AnimationSkinningBlendingExample, init: {isPlaying: true}})
-  declare editor: AnimationSkinningBlendingExample
-
-  override ready() {
-
-    this.render([
-      ioLayout({
-        elements: [
-          ioThreeViewport({id: 'Top', editor: this.editor, view: new ThreeView().setAxisView('top')}),
-          ioThreeViewport({id: 'Left', editor: this.editor, view: new ThreeView().setAxisView('left')}),
-          ioThreeViewport({id: 'Back', editor: this.editor, view: new ThreeView().setAxisView('back')}),
-          ioThreeViewport({id: 'SceneCamera', editor: this.editor, view: new ThreeView().setCameraView()}),
-          ioPropertyEditor({id: 'PropertyEditor', value: this.editor,
-            config: [
-              [AnimationMixer, ioObject({expanded: true, properties: ['timeScale']})],
-              [AnimationAction, ioObject({expanded: true, properties: ['weight']})],
-              ['makeSingleStep', ioButton({label: 'Make Single Step'})],
-              ['stepSize', ioNumberSlider({min: 0, max: 1, step: 0.01})],
-              ['actions', ioPropertyEditor({label: '_hidden_'})],
-              [Function, ioButton({disabled: this.editor.bind('isCrossfading')})],
-            ],
-            groups: {
-              Main: [
-                'isActive',
-                'isPlaying',
-                'mixer',
-                'actions',
-                'idle',
-                'walk',
-                'run',
-                'useDefaultDuration',
-                'customDuration',
-                'stepSize',
-                'makeSingleStep',
-              ],
-              Hidden: [
-                'scene',
-                'camera',
-              ],
-            }
-          })
-        ],
-        model: new Layout({
-          child: {
-            type: 'split',
-            orientation: 'horizontal',
-            children: [
-              {
-                type: 'split',
-                orientation: 'vertical',
-                children: [
-                  {
-                    type: 'split',
-                    size: '50%',
-                    orientation: 'horizontal',
-                    children: [
-                      {type: 'panel',size: '50%',tabs: [{id: 'Top'}]},
-                      {type: 'panel',size: '50%',tabs: [{id: 'Left'}]}
-                    ]
-                  },
-                  {
-                    type: 'split',
-                    size: '50%',
-                    orientation: 'horizontal',
-                    children: [
-                      {type: 'panel',size: '50%',tabs: [{id: 'Back'}]},
-                      {type: 'panel',size: '50%',tabs: [{id: 'SceneCamera'}]},
-                    ]
-                  }
-                ]
-              },
-              {
-                type: 'panel',
-                size: '280px',
-                tabs: [{id: 'PropertyEditor'}]
-              }
-            ]
-          }
-        })
-      })
-    ])
-
-  }
-
-}
-
-export const ioAnimationSkinningBlendingExample = (arg0: any) => IoAnimationSkinningBlendingExample.vConstructor(arg0)
+registerEditorGroups(AnimationSkinningBlendingExample, {
+  Main: [
+    'isActive',
+    'paused',
+    'mixer',
+    'actions',
+    'idle',
+    'walk',
+    'run',
+    'useDefaultDuration',
+    'customDuration',
+    'stepSize',
+    'makeSingleStep',
+  ],
+  Hidden: [
+    'camera',
+    'isCrossfading',
+  ],
+})

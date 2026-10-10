@@ -1,22 +1,25 @@
 import { PerspectiveCamera, OrthographicCamera, Group, BufferGeometry, Float32BufferAttribute, MathUtils, Mesh, MeshBasicMaterial, Points, PointsMaterial, SphereGeometry } from 'three/webgpu'
-import { Register, Property } from '@io-gui/core'
-import { Layout, ioLayout } from '@io-gui/layout'
+import { Register } from '@io-gui/core'
 import { ioNumberSlider } from '@io-gui/sliders'
-import { ioPropertyEditor, registerEditorConfig, ioObject } from '@io-gui/editors'
-import { ThreeEditor, ThreeView, IoThreeExample, ioThreeViewport, ThreeEditorProps } from '@io-gui/three'
+import { registerEditorConfig, registerEditorGroups, ioObject } from '@io-gui/editors'
+import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
 
 const frustumSize = 600
 
+/**
+ * A perspective and an orthographic scene camera on one rig, following an orbiting sphere while their
+ * frustums change. Look through them in a camera view; the Document tab shows their projections. Plays when opened.
+ */
 @Register
-export class CameraExample extends ThreeEditor {
+export class CameraExample extends ThreeDocument {
 
   public perspectiveCamera: PerspectiveCamera
   public orthographicCamera: OrthographicCamera
   public cameraRig: Group
   public mesh: Mesh
 
-  constructor(args: ThreeEditorProps) {
-    super(args)
+  constructor(args?: ThreeDocumentProps) {
+    super({autoplay: true, ...args})
 
     this.perspectiveCamera = new PerspectiveCamera( 50, 0.5, 150, 1000 )
     this.perspectiveCamera.name = 'perspective'
@@ -28,11 +31,12 @@ export class CameraExample extends ThreeEditor {
     this.perspectiveCamera.rotation.y = Math.PI
 
     this.cameraRig = new Group()
+    this.cameraRig.name = 'CameraRig'
 
     this.cameraRig.add( this.perspectiveCamera )
     this.cameraRig.add( this.orthographicCamera )
 
-    this.document.scene.add( this.cameraRig )
+    this.scene.add( this.cameraRig )
 
     //
 
@@ -40,12 +44,14 @@ export class CameraExample extends ThreeEditor {
       new SphereGeometry( 100, 16, 8 ),
       new MeshBasicMaterial( { color: 0xffffff, wireframe: true } )
     )
-    this.document.scene.add( this.mesh )
+    this.mesh.name = 'Sphere'
+    this.scene.add( this.mesh )
 
     const mesh2 = new Mesh(
       new SphereGeometry( 50, 16, 8 ),
       new MeshBasicMaterial( { color: 0x00ff00, wireframe: true } )
     )
+    mesh2.name = 'Moon'
     mesh2.position.y = 150
     this.mesh.add( mesh2 )
 
@@ -53,6 +59,7 @@ export class CameraExample extends ThreeEditor {
       new SphereGeometry( 5, 16, 8 ),
       new MeshBasicMaterial( { color: 0x0000ff, wireframe: true } )
     )
+    mesh3.name = 'RigMarker'
     mesh3.position.z = 150
     this.cameraRig.add( mesh3 )
 
@@ -70,7 +77,8 @@ export class CameraExample extends ThreeEditor {
     geometry.setAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) )
 
     const particles = new Points( geometry, new PointsMaterial( { color: 0xffffff } ) )
-    this.document.scene.add( particles )
+    particles.name = 'Stars'
+    this.scene.add( particles )
   }
 
   override onAnimate() {
@@ -132,52 +140,6 @@ registerEditorConfig(CameraExample, [
   ['orthographicCamera', cameraObject],
 ])
 
-@Register
-export class IoCameraExample extends IoThreeExample {
-
-  @Property({type: CameraExample, init: {isPlaying: true}})
-  declare editor: CameraExample
-
-  override ready() {
-
-    this.render([
-      ioLayout({
-        elements: [
-          ioThreeViewport({id: 'Perspective', editor: this.editor}),
-          ioThreeViewport({id: 'ScenePerspective', editor: this.editor, view: new ThreeView().setCameraView('name:perspective')}),
-          ioThreeViewport({id: 'SceneOrthographic', editor: this.editor, view: new ThreeView().setCameraView('name:orthographic')}),
-          ioPropertyEditor({id: 'PropertyEditor', value: this.editor, properties: ['perspectiveCamera','orthographicCamera']})
-        ],
-        model: new Layout({
-          child: {
-            type: 'split',
-            orientation: 'horizontal',
-            children: [
-              {
-                type: 'panel',size: '33.33%',tabs: [{id: 'Perspective'}]
-              },
-              {
-                type: 'split',
-                size: '33.33%',
-                orientation: 'vertical',
-                children: [
-                  {type: 'panel',size: '33.33%',tabs: [{id: 'ScenePerspective'}]},
-                  {type: 'panel',size: '33.33%',tabs: [{id: 'SceneOrthographic'}]},
-                ]
-              },
-              {
-                type: 'panel',
-                size: '280px',
-                tabs: [{id: 'PropertyEditor'}]
-              }
-            ]
-          }
-        })
-      })
-    ])
-
-  }
-
-}
-
-export const ioCameraExample = (arg0: any) => IoCameraExample.vConstructor(arg0)
+registerEditorGroups(CameraExample, {
+  Main: ['perspectiveCamera', 'orthographicCamera'],
+})

@@ -1,4 +1,4 @@
-import { Property, Register } from '@io-gui/core'
+import { Register } from '@io-gui/core'
 import {
   AnimationClip,
   AnimationMixer,
@@ -23,7 +23,7 @@ import {
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
-import { ThreeEditor, IoThreeExample, ThreeEditorProps } from '@io-gui/three'
+import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
 
 type FbxModel = Group & {
   animations: AnimationClip[]
@@ -51,36 +51,37 @@ const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
   gltfLoader.load(url, resolve, undefined, reject)
 })
 
+/** A Mixamo FBX animation retargeted onto a Ready Player Me avatar, over a masked reflective floor. Plays when opened. */
 @Register
-export class AnimationRetargetingReadyplayerExample extends ThreeEditor {
+export class AnimationRetargetingReadyplayerExample extends ThreeDocument {
 
-  @Property({type: AnimationMixer, init: new Group()})
-  declare public sourceMixer: AnimationMixer
+  public sourceMixer?: AnimationMixer
+  public targetMixer?: AnimationMixer
 
-  @Property({type: AnimationMixer, init: new Group()})
-  declare public targetMixer: AnimationMixer
-
-  constructor(args: ThreeEditorProps) {
-    super(args)
+  constructor(args?: ThreeDocumentProps) {
+    super({autoplay: true, ...args})
 
     const horizontalEffect = screenUV.x.mix(color(0x13172b), color(0x311649))
     const lightEffect = screenUV.distance(vec2(0.5, 1.0)).oneMinus().mul(color(0x0c5d68))
-    this.document.scene.backgroundNode = horizontalEffect.add(lightEffect)
+    this.scene.backgroundNode = horizontalEffect.add(lightEffect)
 
     const light = new HemisphereLight(0x311649, 0x0c5d68, 10)
-    this.document.scene.add(light)
+    light.name = 'Hemisphere'
+    this.scene.add(light)
 
     const backLight = new DirectionalLight(0xffffff, 10)
+    backLight.name = 'Back'
     backLight.position.set(0, 5, -5)
-    this.document.scene.add(backLight)
+    this.scene.add(backLight)
 
     const keyLight = new DirectionalLight(0xfff9ea, 4)
+    keyLight.name = 'Key'
     keyLight.position.set(3, 5, 3)
-    this.document.scene.add(keyLight)
+    this.scene.add(keyLight)
 
     const reflection = reflector()
     reflection.target.rotateX(-Math.PI / 2)
-    this.document.scene.add(reflection.target)
+    this.scene.add(reflection.target)
 
     const reflectionMask = positionWorld.xz.distance(0).mul(.1).clamp().oneMinus()
 
@@ -90,9 +91,11 @@ export class AnimationRetargetingReadyplayerExample extends ThreeEditor {
     floorMaterial.transparent = true
 
     const floor = new Mesh(new BoxGeometry(50, .001, 50), floorMaterial)
+    floor.name = 'Floor'
     floor.receiveShadow = true
     floor.position.set(0, 0, 0)
-    this.document.scene.add(floor)
+    floor.userData.selectable = false
+    this.scene.add(floor)
 
     void this.loadModels()
   }
@@ -104,9 +107,10 @@ export class AnimationRetargetingReadyplayerExample extends ThreeEditor {
     ])
 
     const models = new Group()
+    models.name = 'Models'
     models.add(sourceModel)
     models.add(targetModel.scene)
-    this.document.scene.add(models)
+    this.scene.add(models)
 
     sourceModel.position.x -= .9
     targetModel.scene.position.x += .9
@@ -117,6 +121,7 @@ export class AnimationRetargetingReadyplayerExample extends ThreeEditor {
     this.sourceMixer = source.mixer
     this.targetMixer = this.retargetModel(source, targetModel)
 
+    this.notify({kind: 'structure'})
     this.dispatch('frame-object', {object: models, overscan: 1.5}, true)
   }
 
@@ -155,28 +160,7 @@ export class AnimationRetargetingReadyplayerExample extends ThreeEditor {
   }
 
   override onAnimate(delta: number) {
-
-    if (this.sourceMixer) {
-      this.sourceMixer.update(delta)
-    }
-
-    if (this.targetMixer) {
-      this.targetMixer.update(delta)
-    }
-
-    debug: {
-      this.dispatchMutation(this.sourceMixer)
-      this.dispatchMutation(this.targetMixer)
-    }
+    this.sourceMixer?.update(delta)
+    this.targetMixer?.update(delta)
   }
 }
-
-@Register
-export class IoAnimationRetargetingReadyplayerExample extends IoThreeExample {
-
-  @Property({type: AnimationRetargetingReadyplayerExample, init: {isPlaying: true}})
-  declare editor: AnimationRetargetingReadyplayerExample
-
-}
-
-export const ioAnimationRetargetingReadyplayerExample = (arg0: any) => IoAnimationRetargetingReadyplayerExample.vConstructor(arg0)

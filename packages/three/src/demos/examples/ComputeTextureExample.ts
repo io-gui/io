@@ -1,13 +1,13 @@
-import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture, WebGPURenderer, ComputeNode } from 'three/webgpu'
+import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture, ComputeNode, WebGPURenderer } from 'three/webgpu'
 import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl'
-import { Register, Property } from '@io-gui/core'
-import { ThreeEditor, ThreeView, IoThreeExample, ioThreeViewport, ThreeEditorProps } from '@io-gui/three'
+import { Register } from '@io-gui/core'
+import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
 
 @Register
-export class ComputeTextureExample extends ThreeEditor {
+export class ComputeTextureExample extends ThreeDocument {
   public storageTexture: StorageTexture
   public computeNode: ComputeNode
-  constructor(args: ThreeEditorProps) {
+  constructor(args?: ThreeDocumentProps) {
     super(args)
     const width = 512, height = 512
     this.storageTexture = new StorageTexture(width, height)
@@ -39,28 +39,11 @@ export class ComputeTextureExample extends ThreeEditor {
     material.colorNode = texture(this.storageTexture)
 
     const plane = new Mesh(new PlaneGeometry(1, 1), material)
-    this.document.scene.add(plane)
+    this.scene.add(plane)
   }
-  override async onRendererInitialized(renderer: WebGPURenderer) {
+
+  override onRendererInitialized(renderer: WebGPURenderer) {
     super.onRendererInitialized(renderer)
     void renderer.compute(this.computeNode)
   }
 }
-
-@Register
-export class IoComputeTextureExample extends IoThreeExample {
-
-  @Property({type: ComputeTextureExample, init: null})
-  declare editor: ComputeTextureExample
-
-  override ready() {
-
-    this.render([
-      ioThreeViewport({id: 'Front', editor: this.editor, view: new ThreeView().setAxisView('front')}),
-    ])
-
-  }
-
-}
-
-export const ioComputeTextureExample = (arg0: any) => IoComputeTextureExample.vConstructor(arg0)

@@ -1,4 +1,4 @@
-import { Register, Property } from '@io-gui/core'
+import { Register } from '@io-gui/core'
 import {
   AnimationClip,
   AnimationMixer,
@@ -38,8 +38,7 @@ import {
 } from 'three/tsl'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
-import { ThreeEditor, ThreeView, IoThreeExample, ThreeEditorProps, ioThreeViewport } from '@io-gui/three'
-import { ioLayout, Layout } from '@io-gui/layout'
+import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
 
 type GltfModel = {
   scene: Group
@@ -74,37 +73,41 @@ const lightSpeed = /*#__PURE__*/ Fn<[Node]>(([suv_immutable]) => {
   ]
 })
 
+/**
+ * Michelle's animation retargeted onto the Soldier, over a reflective floor with a TSL light-speed background.
+ * Plays when opened.
+ */
 @Register
-export class AnimationRetargetingExample extends ThreeEditor {
+export class AnimationRetargetingExample extends ThreeDocument {
   public sourceMixer?: AnimationMixer
   public targetMixer?: AnimationMixer
   public camera: PerspectiveCamera
   public group: Group = new Group()
 
-  constructor(args: ThreeEditorProps) {
-    super(args)
-
-    // this.document.toneMapping = NeutralToneMapping;
+  constructor(args?: ThreeDocumentProps) {
+    super({autoplay: true, ...args})
 
     // Background
     const coloredVignette = screenUV.distance(.5).mix(hue(color(0x0175ad), time.mul(.1)), hue(color(0x02274f), time.mul(.5)))
     const lightSpeedEffect = lightSpeed(normalWorldGeometry).clamp()
     const lightSpeedSky = normalWorldGeometry.y.remapClamp(-.1, 1).mix(0, lightSpeedEffect)
     const composedBackground = blendDodge(coloredVignette, lightSpeedSky)
-    this.document.scene.backgroundNode = composedBackground
+    this.scene.backgroundNode = composedBackground
 
     // Lights
     const light = new HemisphereLight(0xe9c0a5, 0x0175ad, 5)
-    this.document.scene.add(light)
+    light.name = 'Hemisphere'
+    this.scene.add(light)
 
     const dirLight = new DirectionalLight(0xfff9ea, 4)
+    dirLight.name = 'Key'
     dirLight.position.set(2, 5, 2)
-    this.document.scene.add(dirLight)
+    this.scene.add(dirLight)
 
     // Floor with reflection
     const reflection = reflector()
     reflection.target.rotateX(-Math.PI / 2)
-    this.document.scene.add(reflection.target)
+    this.scene.add(reflection.target)
 
     const floorMaterial = new NodeMaterial()
     floorMaterial.colorNode = reflection
@@ -112,16 +115,19 @@ export class AnimationRetargetingExample extends ThreeEditor {
     floorMaterial.transparent = true
 
     const floor = new Mesh(new BoxGeometry(50, .001, 50), floorMaterial)
+    floor.name = 'Floor'
     floor.receiveShadow = true
+    floor.userData.selectable = false
     floor.position.set(0, 0, 0)
-    this.document.scene.add(floor)
+    this.scene.add(floor)
 
     this.camera = new PerspectiveCamera(40, 1, .25, 50)
     this.camera.position.set(0, 1, 4)
     this.camera.name = 'camera'
-    this.document.scene.add(this.camera)
+    this.scene.add(this.camera)
 
-    this.document.scene.add(this.group)
+    this.group.name = 'Models'
+    this.scene.add(this.group)
 
     // Load and setup models
     void this.loadModels()
@@ -154,8 +160,8 @@ export class AnimationRetargetingExample extends ThreeEditor {
     this.sourceMixer = source.mixer
     this.targetMixer = this.retargetModel(source, targetModel)
 
+    this.notify({kind: 'structure'})
     this.dispatch('frame-object', {object: this.group}, true)
-
   }
 
   private getSource(sourceModel: GltfModel): AnimationSource {
@@ -241,54 +247,3 @@ export class AnimationRetargetingExample extends ThreeEditor {
     }
   }
 }
-
-@Register
-export class IoAnimationRetargetingExample extends IoThreeExample {
-
-  @Property({type: AnimationRetargetingExample, init: {isPlaying: true}})
-  declare editor: AnimationRetargetingExample
-
-  override ready() {
-
-    this.render([
-      ioLayout({
-        elements: [
-          ioThreeViewport({id: 'Top', editor: this.editor, view: new ThreeView().setAxisView('top')}),
-          ioThreeViewport({id: 'Left', editor: this.editor, view: new ThreeView().setAxisView('left')}),
-          ioThreeViewport({id: 'Back', editor: this.editor, view: new ThreeView().setAxisView('back')}),
-          ioThreeViewport({id: 'SceneCamera', editor: this.editor, view: new ThreeView().setCameraView()}),
-        ],
-        model: new Layout({
-          child: {
-            type: 'split',
-            orientation: 'vertical',
-            children: [
-              {
-                type: 'split',
-                size: '60px auto',
-                orientation: 'horizontal',
-                children: [
-                  {type: 'panel',size: '60px auto',tabs: [{id: 'Top'}]},
-                  {type: 'panel',size: '60px auto',tabs: [{id: 'Left'}]}
-                ]
-              },
-              {
-                type: 'split',
-                size: '60px auto',
-                orientation: 'horizontal',
-                children: [
-                  {type: 'panel',size: '60px auto',tabs: [{id: 'Back'}]},
-                  {type: 'panel',size: '60px auto',tabs: [{id: 'SceneCamera'}]},
-                ]
-              }
-            ]
-          }
-        })
-      })
-    ])
-
-  }
-
-}
-
-export const ioAnimationRetargetingExample = (arg0: any) => IoAnimationRetargetingExample.vConstructor(arg0)

@@ -14,9 +14,8 @@ import {
   PlaneGeometry,
 } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { ThreeEditor, ThreeView, IoThreeExample, ThreeEditorProps, ioThreeViewport } from '@io-gui/three'
-import { ioLayout, Layout } from '@io-gui/layout'
-import { ioObject, ioPropertyEditor } from '@io-gui/editors'
+import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
+import { ioObject, ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 
 type GltfModel = {
   scene: Group
@@ -35,8 +34,12 @@ const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
   loader.load(url, resolve, undefined, reject)
 })
 
+/**
+ * The Xbot model with base actions (crossfaded with the Document tab buttons) and additive poses
+ * (weighted there). Plays when opened.
+ */
 @Register
-export class AnimationSkinningAdditiveBlendingExample extends ThreeEditor {
+export class AnimationSkinningAdditiveBlendingExample extends ThreeDocument {
 
   @Property({type: Boolean, value: false})
   declare isLoaded: boolean
@@ -58,19 +61,21 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeEditor {
     headShake: null,
   }
 
-  constructor(args: ThreeEditorProps) {
-    super(args)
+  constructor(args?: ThreeDocumentProps) {
+    super({autoplay: true, ...args})
 
     // Scene setup
-    this.document.scene.background = new Color(0xa0a0a0)
-    this.document.scene.fog = new Fog(0xa0a0a0, 10, 50)
+    this.scene.background = new Color(0xa0a0a0)
+    this.scene.fog = new Fog(0xa0a0a0, 10, 50)
 
     // Lights
     const hemiLight = new HemisphereLight(0xffffff, 0x8d8d8d, 3)
+    hemiLight.name = 'Hemisphere'
     hemiLight.position.set(0, 20, 0)
-    this.document.scene.add(hemiLight)
+    this.scene.add(hemiLight)
 
     const dirLight = new DirectionalLight(0xffffff, 3)
+    dirLight.name = 'Sun'
     dirLight.position.set(3, 10, 10)
     dirLight.castShadow = true
     dirLight.shadow.camera.top = 2
@@ -79,15 +84,17 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeEditor {
     dirLight.shadow.camera.right = 2
     dirLight.shadow.camera.near = 0.1
     dirLight.shadow.camera.far = 40
-    this.document.scene.add(dirLight)
+    this.scene.add(dirLight)
 
     const ground = new Mesh(
       new PlaneGeometry(100, 100),
       new MeshPhongMaterial({color: 0xcbcbcb, depthWrite: false})
     )
+    ground.name = 'Ground'
     ground.rotation.x = -Math.PI / 2
     ground.receiveShadow = true
-    this.document.scene.add(ground)
+    ground.userData.selectable = false
+    this.scene.add(ground)
 
     void this.loadModel()
   }
@@ -95,7 +102,7 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeEditor {
   private async loadModel() {
     const gltf = await loadGltf('https://threejs.org/examples/models/gltf/Xbot.glb')
     const model = gltf.scene
-    this.document.scene.add(model)
+    this.scene.add(model)
 
     model.traverse((object) => {
       if ((object as Mesh).isMesh) {
@@ -136,6 +143,7 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeEditor {
       isLoaded: true,
     })
 
+    this.notify({kind: 'structure'})
     this.dispatch('frame-object', {object: model}, true)
   }
 
@@ -195,7 +203,7 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeEditor {
   }
 
   override onAnimate(delta: number) {
-    if (!this.isLoaded || !this.mixer) return
+    if (!this.isLoaded) return
 
     debug: {
       // Dispatch mutations for UI reactivity
@@ -212,88 +220,24 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeEditor {
   }
 }
 
-@Register
-export class IoAnimationSkinningAdditiveBlendingExample extends IoThreeExample {
+registerEditorConfig(AnimationSkinningAdditiveBlendingExample, [
+  [AnimationMixer, ioObject({expanded: true, properties: ['timeScale']})],
+  [AnimationAction, ioObject({expanded: true, properties: ['weight']})],
+  ['additiveActions', ioPropertyEditor({label: '_hidden_'})],
+])
 
-  @Property({type: AnimationSkinningAdditiveBlendingExample, init: {isPlaying: true}})
-  declare editor: AnimationSkinningAdditiveBlendingExample
-
-  override ready() {
-
-    this.render([
-      ioLayout({
-        elements: [
-          ioThreeViewport({id: 'Top', editor: this.editor, view: new ThreeView().setAxisView('top')}),
-          ioThreeViewport({id: 'Left', editor: this.editor, view: new ThreeView().setAxisView('left')}),
-          ioThreeViewport({id: 'Back', editor: this.editor, view: new ThreeView().setAxisView('back')}),
-          ioThreeViewport({id: 'Perspective', editor: this.editor}),
-          ioPropertyEditor({id: 'PropertyEditor', value: this.editor,
-            config: [
-              [AnimationMixer, ioObject({expanded: true, properties: ['timeScale']})],
-              [AnimationAction, ioObject({expanded: true, properties: ['weight']})],
-              ['additiveActions', ioPropertyEditor({label: '_hidden_'})],
-            ],
-            groups: {
-              'Main': [
-                'none',
-                'idle',
-                'walk',
-                'run',
-                'additiveActions',
-                'mixer',
-              ],
-              Hidden: [
-                'isLoaded',
-                'scene',
-                'camera',
-                'baseActions',
-                'currentBaseAction',
-              ],
-            }
-          })
-        ],
-        model: new Layout({
-          child: {
-            type: 'split',
-            orientation: 'horizontal',
-            children: [
-              {
-                type: 'split',
-                orientation: 'vertical',
-                children: [
-                  {
-                    type: 'split',
-                    size: '50%',
-                    orientation: 'horizontal',
-                    children: [
-                      {type: 'panel',size: '50%',tabs: [{id: 'Top'}]},
-                      {type: 'panel',size: '50%',tabs: [{id: 'Left'}]}
-                    ]
-                  },
-                  {
-                    type: 'split',
-                    size: '50%',
-                    orientation: 'horizontal',
-                    children: [
-                      {type: 'panel',size: '50%',tabs: [{id: 'Back'}]},
-                      {type: 'panel',size: '50%',tabs: [{id: 'Perspective'}]},
-                    ]
-                  }
-                ]
-              },
-              {
-                type: 'panel',
-                size: '280px',
-                tabs: [{id: 'PropertyEditor'}]
-              }
-            ]
-          }
-        })
-      })
-    ])
-
-  }
-
-}
-
-export const ioAnimationSkinningAdditiveBlendingExample = (arg0: any) => IoAnimationSkinningAdditiveBlendingExample.vConstructor(arg0)
+registerEditorGroups(AnimationSkinningAdditiveBlendingExample, {
+  Main: [
+    'none',
+    'idle',
+    'walk',
+    'run',
+    'additiveActions',
+    'mixer',
+  ],
+  Hidden: [
+    'isLoaded',
+    'baseActions',
+    'currentBaseAction',
+  ],
+})

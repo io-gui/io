@@ -12,16 +12,17 @@ import {
   QuaternionKeyframeTrack,
   Vector3
 } from 'three/webgpu'
-import { Register, Property } from '@io-gui/core'
-import { ThreeEditor, IoThreeExample, ThreeEditorProps } from '@io-gui/three'
+import { Register } from '@io-gui/core'
+import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
 
+/** A 5×5 grid of boxes in one AnimationObjectGroup, sharing one animation state. Plays when opened. */
 @Register
-export class AnimationGroupsExample extends ThreeEditor {
+export class AnimationGroupsExample extends ThreeDocument {
 
   public mixer: AnimationMixer
 
-  constructor(args: ThreeEditorProps) {
-    super(args)
+  constructor(args?: ThreeDocumentProps) {
+    super({autoplay: true, ...args})
 
     // all objects of this animation group share a common animation state
     const animationGroup = new AnimationObjectGroup()
@@ -32,10 +33,11 @@ export class AnimationGroupsExample extends ThreeEditor {
     for ( let i = 0; i < 5; i ++ ) {
       for ( let j = 0; j < 5; j ++ ) {
         const mesh = new Mesh( geometry, material )
+        mesh.name = `Box ${i}-${j}`
         mesh.position.x = 32 - ( 16 * i )
         mesh.position.y = 0
         mesh.position.z = 32 - ( 16 * j )
-        this.document.scene.add( mesh )
+        this.scene.add( mesh )
         animationGroup.add( mesh )
       }
     }
@@ -67,13 +69,3 @@ export class AnimationGroupsExample extends ThreeEditor {
     this.mixer.update(delta)
   }
 }
-
-@Register
-export class IoAnimationGroupsExample extends IoThreeExample {
-
-  @Property({type: AnimationGroupsExample, init: {isPlaying: true}})
-  declare editor: AnimationGroupsExample
-
-}
-
-export const ioAnimationGroupsExample = (arg0: any) => IoAnimationGroupsExample.vConstructor(arg0)

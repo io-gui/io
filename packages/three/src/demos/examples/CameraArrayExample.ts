@@ -9,19 +9,24 @@ import {
   PlaneGeometry,
   Vector4
 } from 'three/webgpu'
-import { Register, Property } from '@io-gui/core'
-import { ThreeEditor, IoThreeViewport, ThreeEditorProps } from '@io-gui/three'
+import { Register } from '@io-gui/core'
+import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
 
 const AMOUNT = 6
 
+/**
+ * A spinning cylinder in front of an ArrayCamera of 6×6 sub-cameras, laid out for a square canvas.
+ * Views copy scene cameras into a plain camera (ADR-0005), so a camera view looks through the array's main
+ * camera, not the grid. Plays when opened.
+ */
 @Register
-export class CameraArrayExample extends ThreeEditor {
+export class CameraArrayExample extends ThreeDocument {
 
   public arrayCamera: ArrayCamera
   public mesh: Mesh
 
-  constructor(args: ThreeEditorProps) {
-    super(args)
+  constructor(args?: ThreeDocumentProps) {
+    super({autoplay: true, ...args})
 
     const subCameras: PerspectiveCamera[] = []
 
@@ -34,18 +39,22 @@ export class CameraArrayExample extends ThreeEditor {
     this.arrayCamera = new ArrayCamera( subCameras )
     this.arrayCamera.name = 'arrayCamera'
     this.arrayCamera.position.z = 3
-    this.document.scene.add( this.arrayCamera )
+    this.scene.add( this.arrayCamera )
+    this.updateCameras( 1, 1 )
 
     // Lighting
 
-    this.document.scene.add( new AmbientLight( 0x999999 ) )
+    const ambientLight = new AmbientLight( 0x999999 )
+    ambientLight.name = 'Ambient'
+    this.scene.add( ambientLight )
 
     const light = new DirectionalLight( 0xffffff, 3 )
+    light.name = 'Light'
     light.position.set( 0.5, 0.5, 1 )
     light.castShadow = true
     light.shadow.bias = - 0.001
     light.shadow.camera.zoom = 4
-    this.document.scene.add( light )
+    this.scene.add( light )
 
     // Background plane
 
@@ -53,9 +62,11 @@ export class CameraArrayExample extends ThreeEditor {
     const materialBackground = new MeshPhongMaterial( { color: 0x000066 } )
 
     const background = new Mesh( geometryBackground, materialBackground )
+    background.name = 'Background'
     background.receiveShadow = true
     background.position.set( 0, 0, - 1 )
-    this.document.scene.add( background )
+    background.userData.selectable = false
+    this.scene.add( background )
 
     // Cylinder
 
@@ -63,11 +74,13 @@ export class CameraArrayExample extends ThreeEditor {
     const materialCylinder = new MeshPhongMaterial( { color: 0xff0000 } )
 
     this.mesh = new Mesh( geometryCylinder, materialCylinder )
+    this.mesh.name = 'Cylinder'
     this.mesh.castShadow = true
     this.mesh.receiveShadow = true
-    this.document.scene.add( this.mesh )
+    this.scene.add( this.mesh )
   }
 
+  /** Lays the sub-cameras out in a grid over a `width` × `height` canvas. */
   updateCameras(width: number, height: number) {
     const aspectRatio = width / height
     const cellWidth = width / AMOUNT
@@ -105,18 +118,3 @@ export class CameraArrayExample extends ThreeEditor {
     this.mesh.rotation.z += 0.01
   }
 }
-
-@Register
-export class IoCameraArrayExample extends IoThreeViewport {
-
-  @Property({type: CameraArrayExample, init: {isPlaying: true}})
-  declare editor: CameraArrayExample
-
-  override onResized() {
-    super.onResized()
-    if (this.width && this.height) this.editor.updateCameras(this.width, this.height)
-  }
-
-}
-
-export const ioCameraArrayExample = (arg0: any) => IoCameraArrayExample.vConstructor(arg0)

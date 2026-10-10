@@ -17,37 +17,41 @@ import {
 import { instancedBufferAttribute, texture, float, color } from 'three/tsl'
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js'
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
-import { Register, Property } from '@io-gui/core'
-import { ThreeEditor, ThreeView, IoThreeExample, ThreeEditorProps } from '@io-gui/three'
-import { ioLayout, Layout } from '@io-gui/layout'
-import { ioThreeViewport } from '@io-gui/three'
+import { Register } from '@io-gui/core'
+import { ThreeDocument, ThreeDocumentProps } from '@io-gui/three'
 
+/** The convex hull of a dodecahedron's vertices, drawn as points and a translucent mesh. Spins while playing; plays when opened. */
 @Register
-export class GeometryConvexExample extends ThreeEditor {
+export class GeometryConvexExample extends ThreeDocument {
 
   public group: Group
 
-  constructor(args: ThreeEditorProps) {
-    super(args)
+  constructor(args?: ThreeDocumentProps) {
+    super({autoplay: true, ...args})
 
     // ambient light
 
-    this.document.scene.add( new AmbientLight( 0x666666 ) )
+    const ambientLight = new AmbientLight( 0x666666 )
+    ambientLight.name = 'Ambient'
+    this.scene.add( ambientLight )
 
     // point light
 
     const light = new PointLight( 0xffffff, 3, 0, 0 )
+    light.name = 'Point'
     light.position.set( 15, 20, 30 )
-    this.document.scene.add( light )
+    this.scene.add( light )
 
     // textures
 
     const loader = new TextureLoader()
-    const spriteTexture = loader.load( 'https://threejs.org/examples/textures/sprites/disc.png' )
+    // Views draw on document changes only, so report the texture when it arrives.
+    const spriteTexture = loader.load( 'https://threejs.org/examples/textures/sprites/disc.png', () => this.notify({kind: 'material'}) )
     spriteTexture.colorSpace = SRGBColorSpace
 
     this.group = new Group()
-    this.document.scene.add( this.group )
+    this.group.name = 'Convex'
+    this.scene.add( this.group )
 
     // points
 
@@ -91,6 +95,7 @@ export class GeometryConvexExample extends ThreeEditor {
     } )
 
     const instancedPoints = new Sprite( pointsMaterial )
+    instancedPoints.name = 'Points'
     instancedPoints.count = vertices.length
     this.group.add( instancedPoints )
 
@@ -106,6 +111,7 @@ export class GeometryConvexExample extends ThreeEditor {
     const meshGeometry = new ConvexGeometry( vertices )
 
     const mesh = new Mesh( meshGeometry, meshMaterial )
+    mesh.name = 'Hull'
     this.group.add( mesh )
   }
 
@@ -113,54 +119,3 @@ export class GeometryConvexExample extends ThreeEditor {
     this.group.rotation.y += 0.005
   }
 }
-
-@Register
-export class IoGeometryConvexExample extends IoThreeExample {
-
-  @Property({type: GeometryConvexExample, init: {isPlaying: true}})
-  declare editor: GeometryConvexExample
-
-  override ready() {
-
-    this.render([
-      ioLayout({
-        elements: [
-          ioThreeViewport({id: 'Top', editor: this.editor, view: new ThreeView().setAxisView('top')}),
-          ioThreeViewport({id: 'Left', editor: this.editor, view: new ThreeView().setAxisView('left')}),
-          ioThreeViewport({id: 'Front', editor: this.editor, view: new ThreeView().setAxisView('front')}),
-          ioThreeViewport({id: 'Perspective', editor: this.editor}),
-        ],
-        model: new Layout({
-          child: {
-            type: 'split',
-            orientation: 'vertical',
-            children: [
-              {
-                type: 'split',
-                size: '60px auto',
-                orientation: 'horizontal',
-                children: [
-                  {type: 'panel',size: '60px auto',tabs: [{id: 'Top'}]},
-                  {type: 'panel',size: '60px auto',tabs: [{id: 'Left'}]}
-                ]
-              },
-              {
-                type: 'split',
-                size: '60px auto',
-                orientation: 'horizontal',
-                children: [
-                  {type: 'panel',size: '60px auto',tabs: [{id: 'Front'}]},
-                  {type: 'panel',size: '60px auto',tabs: [{id: 'Perspective'}]},
-                ]
-              }
-            ]
-          }
-        })
-      })
-    ])
-
-  }
-
-}
-
-export const ioGeometryConvexExample = (arg0: any) => IoGeometryConvexExample.vConstructor(arg0)
