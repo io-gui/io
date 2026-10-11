@@ -1,6 +1,6 @@
 ---
 name: three.js Example Conversion
-overview: Port three.js examples to Document subclasses in packages/three/src/demos/examples, opened by demos/IoEditorExample.ts (index.html Demos > Three). Conversion rules, an audit of the 15 converted examples against their sources, the candidate list for the rest of src_examples with its blockers, and open follow-ups.
+overview: Port three.js examples to Document subclasses in packages/three/src/demos/examples, opened by demos/IoEditorExample.ts (index.html Demos > Three). Conversion rules, an audit of the converted examples against their sources, the candidate list for the rest of src_examples with its blockers, and open follow-ups.
 todos:
   - id: audit-2026-10-11
     content: "Audit all converted examples against src_examples; fix deviations (tone mapping, helpers, wall-clock crossfade, DOM reads, upstream syncs)"
@@ -47,6 +47,15 @@ todos:
   - id: blocker-renderer-option
     content: "Unblock: stencil on the shared renderer; renderer.lighting, VSM, shadowMap.transmitted per document?"
     status: pending
+  - id: blocker-transmission-views
+    content: "Unblock: transmission materials log 'Destroyed texture ... used in a submit' while several views redraw (framebuffer copy per view target). See Blockers"
+    status: pending
+  - id: framing-motion
+    content: "First-show framing uses the bounds at rest; content that moves beyond them (AnimationKeys) leaves the frame"
+    status: pending
+  - id: low-hanging-2026-10-11
+    content: "Convert the unblocked candidates that need nothing from the editor (Candidates table, Audit rows)"
+    status: in_progress
 isProject: false
 ---
 
@@ -192,6 +201,7 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 ### Scene graph and picking
 
 - Name what the scene graph should show: the scene graph and inspector label rows by `name`, or by `<ClassName>` when there is none. Name lights by role (`Key`, `Ambient`).
+- Do not rename loaded nodes that animation tracks address by name: the clip's tracks stop binding (`PropertyBinding: No target node found`). The horse's morph track targets `mesh_0`.
 - `userData.selectable = false` on floors, backdrops and helpers. It applies to descendants too.
 - Helpers (`CameraHelper`, `SkeletonHelper`) go in one `Helpers` group: unselectable, toggled by a `showHelpers` property. Add the group after the objects the helpers follow, so they read the same frame's world matrices. This is temporary: helpers will come from a per-view overlay for any document (`scene-helpers` in [three_future_work.plan.md](./three_future_work.plan.md), ADR-0006), and the authored ones go then.
 
@@ -221,11 +231,11 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 4. Run `pnpm lint:check` and `tsc -b`, then check in `pnpm dev` (Demos > Three > Load Example): it renders and matches the source's look (tone mapping, background, lighting); scene graph names; Document tab controls; play, pause, scrub and loop; switching to another document and back.
 5. Add a row to the audit table.
 
-Headless Chromium has a WebGPU adapter (SwiftShader), but viewport screenshots come out blank. To check that a document compiles and draws, use the page's own three: import the `three.webgpu` URL listed in `performance.getEntriesByType('resource')` (a fresh `import('three/webgpu')` loads a second instance, and TSL then fails with "No stack defined"). Create a `WebGPURenderer` that draws into a `RenderTarget` (the headless canvas texture is invalid), then call `onRendererInitialized`, `compileAsync` and `render` inside `device.pushErrorScope('validation')`, and read the pixels back. Backdrop materials report a format mismatch in an `rgba8` target; that comes from the harness, not the document.
+Headless Chromium has a WebGPU adapter (SwiftShader), but viewport screenshots come out blank. To check that a document compiles and draws, use the page's own three: import the `three.webgpu` URL listed in `performance.getEntriesByType('resource')` (a fresh `import('three/webgpu')` loads a second instance, and TSL then fails with "No stack defined"). Draw with the page's shared renderer (`threeViewport.renderer`) into a half-float `RenderTarget` (the headless canvas texture is invalid) inside `device.pushErrorScope('validation')`, apply the document's tone mapping with a `renderOutput` quad into an `rgba8` target, read the pixels back and save a PNG to compare with `examples/screenshots/<source>.jpg`. Pause and set the time first so the frame is reproducible. A second `WebGPURenderer` gives false results: lights' shadow nodes and the equirect-to-cube cache are shared across renderers (destroyed shadow maps, black equirect backgrounds). The hidden Scene Camera tab never switches document, so clone the document's scene camera instead of asking that view. New addon imports make Vite re-optimize and reload the page once. Backdrop materials report a format mismatch in an `rgba8` target; that comes from the harness, not the document.
 
 ## Audit (2026-10-11, r186)
 
-Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 compile and render on r186 without WebGPU validation errors (headless compile check).
+Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 compile and render on r186 without WebGPU validation errors (headless compile check). Later conversions are listed below them with their deviations.
 
 | Example | Source | Intentional deviations | Fixed / open |
 |---|---|---|---|
@@ -244,6 +254,34 @@ Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 co
 | GeometryColors | `webgl_geometry_colors` | `Float32` colors; mouse-follow camera dropped; shadows and wireframes unselectable | OK |
 | GeometryConvex | `webgl_geometry_convex` | `Sprite` points; light fixed; no `AxesHelper` | OK (point color typed as `color(c).rgb × texture.rgb` for r186) |
 | VolumePerlin | `webgpu_volume_perlin` | none | Fixed: `refine` bisection, named mesh |
+| **Converted 2026-10-11** | | | Checked headlessly: renders through the page's shared renderer at a fixed time, compared with `examples/screenshots` |
+| AnimationKeys | `misc_animation_keys` | duration = clip (3 s); source camera kept as `Camera` (the box travels 30 units, out of the at-rest framing); `AxesHelper` dropped | Open: `framing-motion` |
+| GeometryCube | `webgl_geometry_cube` | spin from time, 20 s (source 0.005 / 0.01 rad per frame) | OK |
+| Sprites | `webgpu_sprites` | 8π s loop (group turns 0.5 / 0.75 / 1 rad/s); per-sprite spin rounded to whole turns per loop; sprites resized when the texture arrives | OK |
+| InstanceUniform | `webgpu_instance_uniform` | `color` on a `Mesh` subclass, editable in the Inspector; spin from time (20 s); `GridHelper` dropped; `emissiveNode` typed through a cast (@types 0.186 declares it only on lit materials) | OK |
+| MaterialsToon | `webgpu_materials_toon` | toon outline post dropped (cosmetic, `document-pipeline`); spheres and labels grouped; labels added when the font arrives | OK |
+| Clearcoat | `webgpu_clearcoat` | 8π s loop; spheres turn once per loop (0.25 rad/s, source 0.3); materials built at once, environment set on load | OK |
+| LightsPhong | `webgpu_lights_phong` | 40π s loop (light frequencies are multiples of 0.05 rad/s); no background (source: black clear) | OK |
+| LightsRectarealight | `webgpu_lights_rectarealight` | 4π s loop; light panels (`RectAreaLightHelper`) in `Helpers`, `showHelpers` on by default; source camera kept as `Camera` | Open: `framing-scenery` (2000-unit floor) |
+| Shadowmap | `webgpu_shadowmap` | 40π s loop (knot 0.25 / 0.5 / 1, light group 0.7 rad/s); source camera kept as `Camera` | Open: `framing-scenery` (600-unit ground; with the 50–100 fog the perspective view opens on fog color) |
+| Skinning | `webgpu_skinning` | point light at the source camera's position instead of on the camera; frames the model | OK |
+| LoaderGltfIridescence | `webgpu_loader_gltf_iridescence` | camera auto-rotation dropped; frames the model | Open: `transmission-views` |
+| LoaderGltfAnisotropy | `webgpu_loader_gltf_anisotropy` | frames the model | OK |
+| LoaderGltfDispersion | `webgpu_loader_gltf_dispersion` | frames the model | Open: `transmission-views` |
+| LoaderGltfTransmission | `webgpu_loader_gltf_transmission` | duration = clip; camera auto-rotation dropped; frames the model | Open: `transmission-views` |
+| PmremCubemap | `webgpu_pmrem_cubemap` | spheres grouped, framed on load | OK |
+| PmremEquirectangular | `webgpu_pmrem_equirectangular` | spheres grouped, framed on load | OK |
+| CubemapMix | `webgpu_cubemap_mix` | TSL `time` -> `timeline.timeNode`; 10 s loop (one cross-fade cycle) | OK |
+| MorphtargetsHorse | `webgl_morphtargets_horse` | 1 s timeline (the clip's `setDuration( 1 )`); orbiting camera dropped | OK |
+| TslVfxFlames | `webgpu_tsl_vfx_flames` | TSL `time` -> `timeline.timeNode`; 20 s loop (noise scrolls repeat, the 10 rad/s flicker jumps once); canvas gradient -> `DataTexture` built in JS | OK |
+| LightsPointlights | `webgpu_lights_pointlights` | 16π s loop; TSL `time` -> `timeline.timeNode`; frames the head on load | OK |
+| Buffergeometry | `webgl_buffergeometry` | 8π s spin loop; attribute arrays kept (the source frees them on upload; framing and picking read them) | OK |
+| BuffergeometryIndexed | `webgl_buffergeometry_indexed` | 8π s spin loop; `wireframe` property | OK |
+| BuffergeometryLines | `webgl_buffergeometry_lines` | 8π s loop; morph influence `abs(sin(0.5 t))` from time | OK |
+| BuffergeometryLinesIndexed | `webgl_buffergeometry_lines_indexed` | 4π s turn; pivot is a `Group` named `Pivot` | OK |
+| LinesDashed | `webgl_lines_dashed` | 8π s turn | OK |
+| GeometryExtrudeShapes | `webgl_geometry_extrude_shapes` | point light at the source camera's position; `TrackballControls` dropped | OK |
+| GeometryTeapot | `webgl_geometry_teapot` | GUI -> `tessellation` / `lid` / `body` / `bottom` / `fitLid` / `nonBlinn` / `shading` properties; geometry swapped on the same mesh instead of a new mesh | OK |
 
 Removed: CameraLogarithmicDepthBuffer (renderer-level option, see What fits).
 
@@ -275,41 +313,41 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | GeometryConvex | `webgl_geometry_convex` | completed | — | see Audit |
 | VolumePerlin | `webgpu_volume_perlin` | completed | — | see Audit |
 | **Animation and morphs** | | | | |
-| AnimationKeys | `misc_animation_keys` | TODO | — | keyframe tracks on a box; duration = clip |
+| AnimationKeys | `misc_animation_keys` | completed | — | see Audit; source camera kept as scene camera (`framing-motion`) |
 | AnimationMultiple | `webgl_animation_multiple` | TODO | — | `SkeletonUtils.clone` soldiers, one mixer each |
 | AnimationSkinningMorph | `webgl_animation_skinning_morph` | TODO | — | robot states / emotes / expressions; emote buttons make it a live document (ADR-0009), like skinning blending |
-| Skinning | `webgpu_skinning` | TODO | — | |
+| Skinning | `webgpu_skinning` | completed | — | see Audit |
 | SkinningInstancing | `webgpu_skinning_instancing` | TODO | — | blur post dropped |
 | SkinningPoints | `webgpu_skinning_points` | TODO | — | compute runs through the material's `positionNode` (`onInit`), no per-frame `renderer.compute` |
 | SkinningInstancingIndividual | `webgpu_skinning_instancing_individual` | TODO | `per-frame-gpu` | `renderer.compute(computeSkinning)` each frame |
 | InstancingMorph | `webgpu_instancing_morph` | TODO | — | |
 | Morphtargets | `webgpu_morphtargets` | TODO | — | morph weights as properties |
 | MorphtargetsFace | `webgpu_morphtargets_face` | TODO | — | |
-| MorphtargetsHorse | `webgl_morphtargets_horse` | TODO | — | |
-| MorphtargetsSphere | `webgl_morphtargets_sphere` | TODO | — | |
+| MorphtargetsHorse | `webgl_morphtargets_horse` | completed | — | see Audit |
+| MorphtargetsSphere | `webgl_morphtargets_sphere` | TODO | — | points on the morphing vertices: WebGPU points are 1 px, and `Sprite` points from an instanced attribute do not follow morph targets |
 | LoaderBvh | `webgl_loader_bvh` | TODO | — | the skeleton is the content: a `SkeletonHelper` outside the `Helpers` rule, made selectable or left as is |
 | LoaderMd2 | `webgl_loader_md2` | TODO | — | `MD2Character`: skin, weapon and animation as dropdowns |
 | LoaderMdd | `webgl_loader_mdd` | TODO | — | |
 | LoaderGltfAnimationPointer | `webgl_loader_gltf_animation_pointer` | TODO | — | `KHR_animation_pointer` |
 | Watch | `webgl_watch` | TODO | — | hands follow the wall clock with tweens: derive them from timeline time; TAA and bloom dropped |
 | **Geometry and objects** | | | | |
-| Buffergeometry | `webgl_buffergeometry` | TODO | — | |
-| BuffergeometryIndexed | `webgl_buffergeometry_indexed` | TODO | — | |
+| Buffergeometry | `webgl_buffergeometry` | completed | — | see Audit |
+| BuffergeometryIndexed | `webgl_buffergeometry_indexed` | completed | — | see Audit |
 | BuffergeometryDrawrange | `webgl_buffergeometry_drawrange` | TODO | — | integrated particle motion (advance by `delta`); 1 px points -> `Sprite` |
 | BuffergeometryInstancingInterleaved | `webgl_buffergeometry_instancing_interleaved` | TODO | — | |
-| BuffergeometryLines | `webgl_buffergeometry_lines` | TODO | — | |
-| BuffergeometryLinesIndexed | `webgl_buffergeometry_lines_indexed` | TODO | — | |
+| BuffergeometryLines | `webgl_buffergeometry_lines` | completed | — | see Audit |
+| BuffergeometryLinesIndexed | `webgl_buffergeometry_lines_indexed` | completed | — | see Audit |
 | BuffergeometryPoints | `webgl_buffergeometry_points` | TODO | — | 1 px points -> `Sprite` |
 | BuffergeometryPointsInterleaved | `webgl_buffergeometry_points_interleaved` | TODO | — | 1 px points -> `Sprite` |
 | GeometryColorsLookuptable | `webgl_geometry_colors_lookuptable` | TODO | — | the legend is a second ortho scene drawn over the view: drop it, or a sprite in the scene |
-| GeometryCube | `webgl_geometry_cube` | TODO | — | |
-| GeometryExtrudeShapes | `webgl_geometry_extrude_shapes` | TODO | — | |
+| GeometryCube | `webgl_geometry_cube` | completed | — | see Audit |
+| GeometryExtrudeShapes | `webgl_geometry_extrude_shapes` | completed | — | see Audit |
 | GeometryExtrudeSplines | `webgl_geometry_extrude_splines` | TODO | — | spline camera as a named scene camera (like `TrainCamera`) |
 | GeometryLoft | `webgpu_geometry_loft` | TODO | — | |
 | GeometryMinecraft | `webgl_geometry_minecraft` | TODO | — | `FirstPersonControls` dropped |
 | GeometryNurbs | `webgl_geometry_nurbs` | TODO | — | pointer rotation dropped |
 | GeometryShapes | `webgl_geometry_shapes` | TODO | — | pointer rotation dropped |
-| GeometryTeapot | `webgl_geometry_teapot` | TODO | — | |
+| GeometryTeapot | `webgl_geometry_teapot` | completed | — | see Audit |
 | GeometryTerrain | `webgl_geometry_terrain` | TODO | — | `FirstPersonControls` dropped |
 | GeometryText | `webgl_geometry_text` | TODO | — | typing -> a `text` property |
 | GeometryTextShapes | `webgl_geometry_text_shapes` | TODO | — | |
@@ -320,7 +358,7 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | InstanceMesh | `webgpu_instance_mesh` | TODO | — | |
 | InstancePath | `webgpu_instance_path` | TODO | — | |
 | InstanceSprites | `webgpu_instance_sprites` | TODO | — | pointer-driven camera dropped |
-| InstanceUniform | `webgpu_instance_uniform` | TODO | — | |
+| InstanceUniform | `webgpu_instance_uniform` | completed | — | see Audit |
 | InstancePoints | `webgpu_instance_points` | TODO | `per-frame-gpu` | `renderer.compute(computeSize)` each frame; inset view -> scene camera |
 | InstancingDynamic | `webgl_instancing_dynamic` | TODO | — | |
 | InstancingPerformance | `webgl_instancing_performance` | TODO | — | method (instanced / merged / naive) as a dropdown |
@@ -335,10 +373,10 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | MathOrientationTransform | `webgl_math_orientation_transform` | TODO | — | `setTimeout` target picks -> timeline schedule |
 | Helpers | `webgl_helpers` | TODO | — | normal / tangent / box helpers are the subject; `Helpers` rule until `scene-helpers` |
 | LinesColors | `webgl_lines_colors` | TODO | — | pointer-driven camera dropped |
-| LinesDashed | `webgl_lines_dashed` | TODO | — | |
+| LinesDashed | `webgl_lines_dashed` | completed | — | see Audit |
 | LinesFat | `webgpu_lines_fat` | TODO | — | inset view -> scene camera |
 | LinesFatWireframe | `webgpu_lines_fat_wireframe` | TODO | — | inset view -> scene camera |
-| Sprites | `webgpu_sprites` | TODO | — | |
+| Sprites | `webgpu_sprites` | completed | — | see Audit |
 | PointsBillboards | `webgl_points_billboards` | TODO | — | 1 px points -> `Sprite` |
 | PointsSprites | `webgl_points_sprites` | TODO | — | 1 px points -> `Sprite` |
 | PointsWaves | `webgl_points_waves` | TODO | — | `ShaderMaterial` -> TSL sprite material |
@@ -363,13 +401,13 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | MaterialsMatcap | `webgpu_materials_matcap` | TODO | — | |
 | MaterialsRetroreflection | `webgpu_materials_retroreflection` | TODO | — | bloom dropped |
 | MaterialsSss | `webgpu_materials_sss` | TODO | — | |
-| MaterialsToon | `webgpu_materials_toon` | TODO | — | |
+| MaterialsToon | `webgpu_materials_toon` | completed | — | see Audit; toon outline post dropped |
 | MaterialsTransmission | `webgpu_materials_transmission` | TODO | — | |
 | MaterialxNoise | `webgpu_materialx_noise` | TODO | — | |
 | LoaderMaterialx | `webgpu_loader_materialx` | TODO | — | |
-| Clearcoat | `webgpu_clearcoat` | TODO | — | |
+| Clearcoat | `webgpu_clearcoat` | completed | — | see Audit |
 | CubemapAdjustments | `webgpu_cubemap_adjustments` | TODO | — | |
-| CubemapMix | `webgpu_cubemap_mix` | TODO | — | |
+| CubemapMix | `webgpu_cubemap_mix` | completed | — | see Audit |
 | CubemapDynamic | `webgpu_cubemap_dynamic` | TODO | `per-frame-gpu` | `CubeCamera.update` each frame |
 | ParallaxUv | `webgpu_parallax_uv` | TODO | — | |
 | ProceduralTexture | `webgpu_procedural_texture` | TODO | — | a plane; the ortho camera is not needed |
@@ -409,7 +447,7 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | TslHalftone | `webgpu_tsl_halftone` | TODO | — | |
 | TslProceduralTerrain | `webgpu_tsl_procedural_terrain` | TODO | — | pointer drag dropped |
 | TslRagingSea | `webgpu_tsl_raging_sea` | TODO | — | |
-| TslVfxFlames | `webgpu_tsl_vfx_flames` | TODO | — | |
+| TslVfxFlames | `webgpu_tsl_vfx_flames` | completed | — | see Audit |
 | TslVfxTornado | `webgpu_tsl_vfx_tornado` | TODO | — | bloom dropped (it carries much of the look) |
 | TslWood | `webgpu_tsl_wood` | TODO | — | |
 | TslVfxLinkedparticles | `webgpu_tsl_vfx_linkedparticles` | TODO | `per-frame-gpu`, `document-pipeline` | |
@@ -439,11 +477,11 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | LightprobesSponza | `webgpu_lightprobes_sponza` | TODO | `renderer-on-change` | as Lightprobes |
 | LightsCustom | `webgpu_lights_custom` | TODO | — | |
 | LightsIesSpotlight | `webgpu_lights_ies_spotlight` | TODO | — | |
-| LightsPhong | `webgpu_lights_phong` | TODO | — | |
+| LightsPhong | `webgpu_lights_phong` | completed | — | see Audit |
 | LightsPhysical | `webgpu_lights_physical` | TODO | — | |
-| LightsPointlights | `webgpu_lights_pointlights` | TODO | — | |
+| LightsPointlights | `webgpu_lights_pointlights` | completed | — | see Audit |
 | LightsProjector | `webgpu_lights_projector` | TODO | — | video map option dropped |
-| LightsRectarealight | `webgpu_lights_rectarealight` | TODO | — | |
+| LightsRectarealight | `webgpu_lights_rectarealight` | completed | — | see Audit; source camera kept as scene camera (`framing-scenery`) |
 | LightsSelective | `webgpu_lights_selective` | TODO | — | |
 | LightsSpotlight | `webgpu_lights_spotlight` | TODO | — | |
 | LightsSunlight | `webgpu_lights_sunlight` | TODO | — | |
@@ -451,7 +489,7 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | LightsSpotlights | `webgl_lights_spotlights` | TODO | — | tween.js (wall clock) -> derive from time |
 | LightsDynamic | `webgpu_lights_dynamic` | TODO | `renderer-option` | `renderer.lighting = new DynamicLighting()` |
 | LightsClustered | `webgpu_lights_clustered` | TODO | `renderer-option` | `renderer.lighting` (clustered); FXAA dropped |
-| Shadowmap | `webgpu_shadowmap` | TODO | — | |
+| Shadowmap | `webgpu_shadowmap` | completed | — | see Audit; source camera kept as scene camera (`framing-scenery`) |
 | ShadowmapArray | `webgpu_shadowmap_array` | TODO | — | `BasicShadowMap` is renderer-level: per-light `shadow.filterNode` (three API) or accept PCF |
 | ShadowmapPointlight | `webgpu_shadowmap_pointlight` | TODO | — | as ShadowmapArray |
 | ShadowmapPerformance | `webgl_shadowmap_performance` | TODO | — | |
@@ -473,8 +511,8 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | ReflectionRoughness | `webgpu_reflection_roughness` | TODO | — | verify per view |
 | Refraction | `webgpu_refraction` | TODO | — | verify per view |
 | Portal | `webgpu_portal` | TODO | `view-camera` | the portal material is `pass(scenePortal, camera)` with the main camera |
-| PmremCubemap | `webgpu_pmrem_cubemap` | TODO | — | |
-| PmremEquirectangular | `webgpu_pmrem_equirectangular` | TODO | — | |
+| PmremCubemap | `webgpu_pmrem_cubemap` | completed | — | see Audit |
+| PmremEquirectangular | `webgpu_pmrem_equirectangular` | completed | — | see Audit |
 | PmremScene | `webgpu_pmrem_scene` | TODO | — | PMREM in `onRendererInitialized` |
 | Particles | `webgpu_particles` | TODO | — | TSL `time` -> `timeline.timeNode` |
 | ParticlesSoft | `webgpu_particles_soft` | TODO | — | |
@@ -505,12 +543,12 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | VxgiSponza | `webgpu_vxgi_sponza` | TODO | `document-pipeline` | |
 | **Loaders** | | | | |
 | LoaderGltf | `webgpu_loader_gltf` | TODO | — | |
-| LoaderGltfAnisotropy | `webgpu_loader_gltf_anisotropy` | TODO | — | |
+| LoaderGltfAnisotropy | `webgpu_loader_gltf_anisotropy` | completed | — | see Audit |
 | LoaderGltfCompressed | `webgpu_loader_gltf_compressed` | TODO | — | KTX2 `detectSupport` in `onRendererInitialized` |
-| LoaderGltfDispersion | `webgpu_loader_gltf_dispersion` | TODO | — | |
-| LoaderGltfIridescence | `webgpu_loader_gltf_iridescence` | TODO | — | |
+| LoaderGltfDispersion | `webgpu_loader_gltf_dispersion` | in progress | `transmission-views` | converted, see Audit; WebGPU errors while playing |
+| LoaderGltfIridescence | `webgpu_loader_gltf_iridescence` | in progress | `transmission-views` | converted, see Audit; WebGPU errors while playing |
 | LoaderGltfSheen | `webgpu_loader_gltf_sheen` | TODO | — | |
-| LoaderGltfTransmission | `webgpu_loader_gltf_transmission` | TODO | — | |
+| LoaderGltfTransmission | `webgpu_loader_gltf_transmission` | in progress | `transmission-views` | converted, see Audit; WebGPU errors while playing |
 | LoaderGltfDiffuseRoughness | `webgpu_loader_gltf_diffuse_roughness` | TODO | `three-upgrade` | not in r186 |
 | LoaderGltfAvif | `webgl_loader_gltf_avif` | TODO | — | |
 | LoaderGltfInstancing | `webgl_loader_gltf_instancing` | TODO | — | |
@@ -568,9 +606,11 @@ Features or fixes outside the examples. Each one unblocks the rows tagged with i
 - **`renderer-option`**: the shared renderer (`RenderScheduler.ts`: `{antialias: false, alpha: true}`) has no stencil buffer (three defaults `stencil` to `false`), and `renderer.lighting`, `shadowMap.type = VSMShadowMap` and `shadowMap.transmitted` are renderer-wide (ADR-0001). Needed: enable stencil on the shared renderer, or a renderer a document can ask for.
 - **`three-upgrade`**: the source exists only after r186 (HEAD).
 - **`dependency`**: needs an npm package the workspace does not have (`three-bvh-csg`, `web-ifc`).
+- **`transmission-views`**: transmission materials (`MeshPhysicalMaterial.transmission`, glTF `KHR_materials_transmission`) sample module-level viewport mip textures that three copies from each render target. In the editor, with several views drawing per frame, WebGPU reports `Destroyed texture [RGBA16Float, the forward view's target size] used in a submit` on every redraw (seen headless; static documents only while playing). One render target alone is clean. Check three after r186 first (#34582 skips mipmaps for a copy without a mip chain, #34826 fixes a color buffer cache check); otherwise the fix is in the render scheduler or pipelines.
 
 ## Open questions
 
 - **`interactive-timeline`** (decided 2026-10-11, ADR-0009): live documents treat the timeline as a clock and ignore time going back. Considered: recording button presses on the timeline and replaying them, which is exact under scrubbing but makes the demo authored content. Follow-up: pass the cause of a time change to `onAnimate` (`timeline-negative-delta` in the future-work plan).
 - **`inspector-refresh`**: Camera, Backdrop and the skinning examples call `dispatchMutation(...)` in `onAnimate` inside `debug:` blocks so the inspector follows per-frame values. Bundles strip debug blocks, so bundled builds stop refreshing. Alternative: the host refreshes the Document tab on `time` changes.
+- **`framing-motion`**: First-show framing uses the scene's bounds at rest. AnimationKeys' box travels 30 units from a 5-unit start, so the perspective view loses it; the conversion keeps the source camera as a scene camera. Option: a document-declared framing box, or `frame-object` with several objects / a box.
 - **`framing-scenery`**: First-show framing and frame-all use the whole scene's bounds, so a sky dome or a large floor dwarfs the subject. Documents work around it with `frame-object` on their model (Keyframes, the skinning and retargeting examples). CameraArray builds its scene synchronously, so it has no load to hook `frame-object` to: its perspective view opens framed on the 100 × 100 backdrop (near 42, far 429 around a 1-unit cylinder). Option: framing skips `userData.selectable === false` scenery.
