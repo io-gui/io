@@ -1,4 +1,5 @@
-import { defineConfig } from 'vite'
+import { realpathSync } from 'node:fs'
+import { defineConfig, searchForWorkspaceRoot } from 'vite'
 
 function packageAlias(packageName: string) {
   return [
@@ -68,6 +69,10 @@ export default defineConfig({
     allowedHosts: [DEV_HOST],
     watch: {
       ignored: ['**/packages/three/src_examples/**'],
+    },
+    fs: {
+      // `three` may be a `link:` to a three.js checkout outside the workspace; addons fetch assets (Draco wasm) from it.
+      allow: [searchForWorkspaceRoot(process.cwd()), realpathSync('packages/three/node_modules/three')],
     },
   },
   build: {

@@ -10,7 +10,6 @@ import {
   CubeRefractionMapping,
   EquirectangularReflectionMapping,
   EquirectangularRefractionMapping,
-  CubeUVReflectionMapping,
   // Wrapping
   RepeatWrapping,
   ClampToEdgeWrapping,
@@ -52,7 +51,6 @@ registerEditorConfig(Texture, [
     {value: CubeRefractionMapping, id: 'Cube Refraction'},
     {value: EquirectangularReflectionMapping, id: 'Equirect Reflection'},
     {value: EquirectangularRefractionMapping, id: 'Equirect Refraction'},
-    {value: CubeUVReflectionMapping, id: 'CubeUV Reflection'},
   ]})})],
   ['channel', ioNumber({min: 0, max: 3, step: 1})],
   ['wrapS', ioOptionSelect({model: new Menu({options: [
