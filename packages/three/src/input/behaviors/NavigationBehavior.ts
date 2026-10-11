@@ -90,7 +90,7 @@ export class NavigationBehavior implements Behavior {
     const entry = this.keymap.match(event, action => action === 'view.frameAll' || action === 'view.frameSelected' || action === 'view.axis')
     if (!entry) return false
     const view = event.view
-    // 2D views have no axis views; framing there shows the UV square (`ThreeView.frame`).
+    // 2D views have no axis views; framing there shows the UV square (`View.frame`).
     if (view.kind === 'uv' && entry.action === 'view.axis') return false
     if (entry.action === 'view.frameSelected') {
       const selected = this._host.selection?.getObjects() ?? []

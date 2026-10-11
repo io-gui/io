@@ -1,0 +1,122 @@
+import {
+  AmbientLight,
+  ArrayCamera,
+  CylinderGeometry,
+  DirectionalLight,
+  Mesh,
+  MeshPhongMaterial,
+  PerspectiveCamera,
+  PlaneGeometry,
+  Vector4
+} from 'three/webgpu'
+import { Register } from '@io-gui/core'
+import { Document, DocumentProps, Timeline } from '@io-gui/three'
+
+const AMOUNT = 6
+/** Seconds in which the spin repeats: the timeline length, so looping is seamless. */
+const SPIN_PERIOD = 20
+
+/**
+ * A spinning cylinder in front of an ArrayCamera of 6×6 sub-cameras, laid out for a square canvas.
+ * Views copy scene cameras into a plain camera (ADR-0005), so a camera view looks through the array's main
+ * camera, not the grid. Plays when opened.
+ */
+@Register
+export class CameraArrayExample extends Document {
+
+  public arrayCamera: ArrayCamera
+  public mesh: Mesh
+
+  constructor(args?: DocumentProps) {
+    super({timeline: new Timeline({autoplay: true, duration: SPIN_PERIOD}), ...args})
+
+    const subCameras: PerspectiveCamera[] = []
+
+    for ( let i = 0; i < AMOUNT * AMOUNT; i ++ ) {
+      const subCamera = new PerspectiveCamera( 40, 1, 0.1, 10 )
+      subCamera.viewport = new Vector4()
+      subCameras.push( subCamera )
+    }
+
+    this.arrayCamera = new ArrayCamera( subCameras )
+    this.arrayCamera.name = 'arrayCamera'
+    this.arrayCamera.position.z = 3
+    this.scene.add( this.arrayCamera )
+    this.updateCameras( 1, 1 )
+
+    // Lighting
+
+    const ambientLight = new AmbientLight( 0x999999 )
+    ambientLight.name = 'Ambient'
+    this.scene.add( ambientLight )
+
+    const light = new DirectionalLight( 0xffffff, 3 )
+    light.name = 'Light'
+    light.position.set( 0.5, 0.5, 1 )
+    light.castShadow = true
+    light.shadow.camera.zoom = 4
+    this.scene.add( light )
+
+    // Background plane
+
+    const geometryBackground = new PlaneGeometry( 100, 100 )
+    const materialBackground = new MeshPhongMaterial( { color: 0x000066 } )
+
+    const background = new Mesh( geometryBackground, materialBackground )
+    background.name = 'Background'
+    background.receiveShadow = true
+    background.position.set( 0, 0, - 1 )
+    background.userData.selectable = false
+    this.scene.add( background )
+
+    // Cylinder
+
+    const geometryCylinder = new CylinderGeometry( 0.5, 0.5, 1, 32 )
+    const materialCylinder = new MeshPhongMaterial( { color: 0xff0000 } )
+
+    this.mesh = new Mesh( geometryCylinder, materialCylinder )
+    this.mesh.name = 'Cylinder'
+    this.mesh.castShadow = true
+    this.mesh.receiveShadow = true
+    this.scene.add( this.mesh )
+  }
+
+  /** Lays the sub-cameras out in a grid over a `width` × `height` canvas. */
+  updateCameras(width: number, height: number) {
+    const aspectRatio = width / height
+    const cellWidth = width / AMOUNT
+    const cellHeight = height / AMOUNT
+
+    this.arrayCamera.aspect = aspectRatio
+    this.arrayCamera.updateProjectionMatrix()
+
+    for ( let y = 0; y < AMOUNT; y ++ ) {
+      for ( let x = 0; x < AMOUNT; x ++ ) {
+        const subcamera = this.arrayCamera.cameras[ AMOUNT * y + x ]
+        subcamera.copy( this.arrayCamera )
+
+        subcamera.viewport?.set(
+          Math.floor( x * cellWidth ),
+          Math.floor( y * cellHeight ),
+          Math.ceil( cellWidth ),
+          Math.ceil( cellHeight )
+        )
+        subcamera.updateProjectionMatrix()
+
+        subcamera.position.x = ( x / AMOUNT ) - 0.5
+        subcamera.position.y = 0.5 - ( y / AMOUNT )
+        subcamera.position.z = 1.5 + ( ( x + y ) * 0.5 )
+        subcamera.position.multiplyScalar( 2 )
+
+        subcamera.lookAt( 0, 0, 0 )
+        subcamera.updateMatrixWorld()
+      }
+    }
+  }
+
+  override onAnimate(delta: number, time: number) {
+    const angle = time / SPIN_PERIOD * Math.PI * 2
+    this.mesh.rotation.x = angle
+    this.mesh.rotation.z = angle * 2
+  }
+}

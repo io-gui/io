@@ -227,7 +227,7 @@ export class IoPropertyEditor extends ReactiveElement {
         }
       }
 
-      if (this.properties === undefined) {
+      if (!this.properties?.length) {
         for (const group in groups) {
           if (group !== 'Main' && group !== 'Hidden' && groups[group].length) {
             vChildren.push(

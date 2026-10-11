@@ -1,9 +1,9 @@
 import type { OrthographicCamera, PerspectiveCamera, Scene, Texture, ToneMapping, WebGPURenderer } from 'three/webgpu'
 import type { DirtyReason, FrameInfo, ViewRenderResult } from './RenderScheduler.js'
-import type { DocumentChange } from '../editor/ChangeBus.js'
-import type { ThreeDocument } from '../editor/ThreeDocument.js'
-import type { ThreeEditor } from '../editor/ThreeEditor.js'
-import type { ThreeView, ViewKind } from '../view/ThreeView.js'
+import type { DocumentChange } from '../editor/Document.js'
+import type { Document } from '../editor/Document.js'
+import type { Editor } from '../editor/Editor.js'
+import type { View, ViewKind } from '../view/View.js'
 import type { SelectionModel } from '../selection/SelectionModel.js'
 import type { Picker } from '../selection/Picker.js'
 import type { ComponentPicker } from '../selection/ComponentPicker.js'
@@ -12,11 +12,11 @@ import { Registry } from '../utils/Registry.js'
 /** Everything a pipeline or overlay needs for one draw of one view. */
 export interface PipelineContext {
   readonly renderer: WebGPURenderer
-  readonly editor: ThreeEditor
-  readonly document: ThreeDocument
+  readonly editor: Editor
+  readonly document: Document
   /** The document's content scene. */
   readonly scene: Scene
-  readonly view: ThreeView
+  readonly view: View
   /** The view's draw camera at this size (ADR-0005). */
   readonly camera: PerspectiveCamera | OrthographicCamera
   readonly selection: SelectionModel | null
@@ -68,10 +68,10 @@ export interface ViewPipelineType {
   create(renderer: WebGPURenderer): ViewPipeline
 }
 
-/** Pipelines `ThreeView.pipeline` can name. */
+/** Pipelines `View.pipeline` can name. */
 export const pipelineTypes = new Registry<ViewPipelineType>()
 
-/** The pipeline a view kind uses when `ThreeView.pipeline` is empty. */
+/** The pipeline a view kind uses when `View.pipeline` is empty. */
 export const DEFAULT_PIPELINES: Record<ViewKind, string> = {
   '3d': 'forward',
   'uv': 'uv',

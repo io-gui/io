@@ -1,6 +1,6 @@
-import type { ThreeEditor } from '../editor/ThreeEditor.js'
+import type { Editor } from '../editor/Editor.js'
 import type { Behavior } from '../input/Behavior.js'
-import type { ThreeView, ViewKind } from '../view/ThreeView.js'
+import type { View, ViewKind } from '../view/View.js'
 import type { OperatorHost } from './Operator.js'
 import type { GizmoGroup } from './Gizmo.js'
 
@@ -8,9 +8,9 @@ import type { GizmoGroup } from './Gizmo.js'
 export type InteractionProfile = 'full' | 'select' | 'navigate' | 'none'
 
 export interface ToolContext {
-  readonly editor: ThreeEditor
+  readonly editor: Editor
   readonly host: OperatorHost
-  readonly view: ThreeView
+  readonly view: View
 }
 
 /**

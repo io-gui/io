@@ -1,9 +1,9 @@
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups, registerEditorWidget } from '@io-gui/editors'
 import { BoxGeometry } from 'three/webgpu'
 import { ioNumberSlider } from '@io-gui/sliders'
-import { ioBuildGeometry } from '../../elements/IoBuildGeometry.js'
+import { threeBuildGeometry } from '../../elements/ThreeBuildGeometry.js'
 
-registerEditorWidget(BoxGeometry, ioBuildGeometry())
+registerEditorWidget(BoxGeometry, threeBuildGeometry())
 
 registerEditorConfig(BoxGeometry, [
   ['parameters', ioPropertyEditor({config: [

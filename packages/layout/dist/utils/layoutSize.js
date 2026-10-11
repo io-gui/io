@@ -10,7 +10,7 @@ export function sizeToPx(size) {
 }
 export function sizeToFlex(size) {
     if (isAutoSize(size))
-        return '1 1 auto';
+        return '1 1 0%';
     return `0 0 ${size}`;
 }
 export function isAutoSize(size) {

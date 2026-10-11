@@ -140,7 +140,7 @@ export class IoObject extends ReactiveElement {
     if (this.expanded && propCount > 0) {
       vChildren.push(ioPropertyEditor({
         value: this.value,
-        properties: this.properties,
+        properties: this.properties?.length ? this.properties : undefined,
         config: this.config,
         groups: this.groups,
         widget: this.widget,

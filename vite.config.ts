@@ -43,6 +43,12 @@ export const resolveConfig = {
         import.meta.url,
       ).pathname,
     },
+    // WebGPU only: addons that import bare 'three' share the three/webgpu build (as in index.html's import map)
+    // instead of pulling in the WebGL build next to it.
+    {
+      find: /^three$/,
+      replacement: 'three/webgpu',
+    },
   ],
 }
 
@@ -68,6 +74,10 @@ export default defineConfig({
     target: 'esnext',
   },
   optimizeDeps: {
+    // Scan the demos up front: index.html loads them by path, which the scanner can't follow, and the default scan
+    // also crawls src_examples/*.html, whose missing packages abort it. Deps found later re-bundle three into new
+    // chunks; a page that misses the reload then runs two copies of three.
+    entries: ['index.html', 'packages/*/src/demos/**/*.ts'],
     esbuildOptions: {
       target: 'esnext',
     },

@@ -118,7 +118,7 @@ type IoBooleanProps = IoFieldProps & {
 
 **Key behaviors:**
 - Toggles on click, Enter, or Space
-- Custom labels can be text or icon references (e.g., `'io:check'`)
+- A label naming a registered icon (`namespace:id` in any namespace, e.g. `'io:check'`, `'three:play'`) shows that icon; other strings show as text
 - Dispatches `io-boolean-clicked` event
 
 ### IoSwitch

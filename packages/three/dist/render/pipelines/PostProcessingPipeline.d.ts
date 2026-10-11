@@ -1,4 +1,4 @@
-import { Camera, Node, PassNode, PostProcessing, WebGPURenderer } from 'three/webgpu';
+import { Camera, Node, PassNode, RenderPipeline, WebGPURenderer } from 'three/webgpu';
 import type { PipelineContext } from '../ViewPipeline.js';
 import type { ViewRenderResult } from '../RenderScheduler.js';
 import { RenderTargetPipeline } from './RenderTargetPipeline.js';
@@ -15,7 +15,7 @@ export type PostProcessingPipelineOptions = {
     convergeFrames?: number;
 };
 /**
- * A pipeline around three's `PostProcessing` and a `pass(scene, camera)` (ADR-0006). Its output stays linear;
+ * A pipeline around three's `RenderPipeline` (formerly `PostProcessing`) and a `pass(scene, camera)` (ADR-0006). Its output stays linear;
  * the viewport tone-maps when presenting. The scene pass depth is exposed so overlays depth-test against it.
  *
  * ```ts
@@ -24,7 +24,7 @@ export type PostProcessingPipelineOptions = {
  * ```
  */
 export declare class PostProcessingPipeline extends RenderTargetPipeline {
-    readonly postProcessing: PostProcessing;
+    readonly postProcessing: RenderPipeline;
     readonly scenePass: PassNode;
     convergeFrames: number;
     private readonly _build;

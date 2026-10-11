@@ -1,14 +1,14 @@
-import type { ThreeEditor } from '../editor/ThreeEditor.js';
+import type { Editor } from '../editor/Editor.js';
 import type { Behavior } from '../input/Behavior.js';
-import type { ThreeView, ViewKind } from '../view/ThreeView.js';
+import type { View, ViewKind } from '../view/View.js';
 import type { OperatorHost } from './Operator.js';
 import type { GizmoGroup } from './Gizmo.js';
 /** What a view's router installs (ADR-0004). */
 export type InteractionProfile = 'full' | 'select' | 'navigate' | 'none';
 export interface ToolContext {
-    readonly editor: ThreeEditor;
+    readonly editor: Editor;
     readonly host: OperatorHost;
-    readonly view: ThreeView;
+    readonly view: View;
 }
 /**
  * A persistent mode of interaction, defined once and active per view kind + editor mode.

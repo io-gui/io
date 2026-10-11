@@ -1,8 +1,8 @@
-import { PerspectiveCamera, PostProcessing, Scene } from 'three/webgpu';
+import { PerspectiveCamera, RenderPipeline, Scene } from 'three/webgpu';
 import { pass } from 'three/tsl';
 import { RenderTargetPipeline } from './RenderTargetPipeline.js';
 /**
- * A pipeline around three's `PostProcessing` and a `pass(scene, camera)` (ADR-0006). Its output stays linear;
+ * A pipeline around three's `RenderPipeline` (formerly `PostProcessing`) and a `pass(scene, camera)` (ADR-0006). Its output stays linear;
  * the viewport tone-maps when presenting. The scene pass depth is exposed so overlays depth-test against it.
  *
  * ```ts
@@ -22,7 +22,7 @@ export class PostProcessingPipeline extends RenderTargetPipeline {
         this._build = build;
         this.convergeFrames = options.convergeFrames ?? 0;
         this.scenePass = pass(new Scene(), new PerspectiveCamera());
-        this.postProcessing = new PostProcessing(renderer);
+        this.postProcessing = new RenderPipeline(renderer);
         this.postProcessing.outputColorTransform = false;
         this.output = { color: this.target.texture, depth: this.scenePass.getTexture('depth') };
     }

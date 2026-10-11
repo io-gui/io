@@ -1,0 +1,265 @@
+import { Property, Register } from '@io-gui/core'
+import {
+  AnimationClip,
+  AnimationMixer,
+  BoxGeometry,
+  DirectionalLight,
+  Euler,
+  PerspectiveCamera,
+  HemisphereLight,
+  Matrix4,
+  Mesh,
+  NodeMaterial,
+  Skeleton,
+  SkeletonHelper,
+  MathUtils,
+  Node,
+  Group,
+  NeutralToneMapping,
+} from 'three/webgpu'
+import {
+  color,
+  screenUV,
+  hue,
+  reflector,
+  Fn,
+  vec2,
+  length,
+  atan,
+  float,
+  sin,
+  cos,
+  vec3,
+  sub,
+  mul,
+  pow,
+  blendDodge,
+  normalWorldGeometry,
+} from 'three/tsl'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
+import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { registerEditorGroups } from '@io-gui/editors'
+
+type GltfModel = {
+  scene: Group
+  animations: AnimationClip[]
+}
+
+type AnimationSource = {
+  clip: AnimationClip
+  skeleton: Skeleton
+  mixer: AnimationMixer
+}
+
+const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
+  new GLTFLoader().load(url, resolve, undefined, reject)
+})
+
+const lightSpeed = /*#__PURE__*/ Fn(([suv_immutable, time]: [Node<'vec2'>, Node<'float'>]) => {
+  // forked from https://www.shadertoy.com/view/7ly3D1
+  const suv = vec2(suv_immutable)
+  const uv = vec2(length(suv), atan(suv.y, suv.x))
+  const offset = float(float(.1).mul(sin(uv.y.mul(10.).sub(time.mul(.6)))).mul(cos(uv.y.mul(48.).add(time.mul(.3))))
+    .mul(cos(uv.y.mul(3.7).add(time))))
+  const rays = vec3(vec3(sin(uv.y.mul(150.).add(time)).mul(.5).add(.5)).mul(vec3(sin(uv.y.mul(80.).sub(time.mul(0.6)))
+    .mul(.5).add(.5))).mul(vec3(sin(uv.y.mul(45.).add(time.mul(0.8))).mul(.5).add(.5)))
+    .mul(vec3(sub(1., cos(uv.y.add(mul(22., time).sub(pow(uv.x.add(offset), .3).mul(60.))))))).mul(vec3(uv.x.mul(2.))))
+  return rays
+}, { suv: 'vec2', time: 'float', return: 'vec3' })
+
+/**
+ * Michelle's animation retargeted onto the Soldier, over a reflective floor with a TSL light-speed background.
+ * `showHelpers` (Document tab) draws both skeletons. Plays when opened.
+ */
+@Register
+export class AnimationRetargetingExample extends Document {
+  public sourceMixer?: AnimationMixer
+  public targetMixer?: AnimationMixer
+  public camera: PerspectiveCamera
+  public group: Group = new Group()
+  public helpers: Group = new Group()
+
+  @Property({type: Boolean, value: false})
+  declare showHelpers: boolean
+
+  constructor(args?: DocumentProps) {
+    super({toneMapping: NeutralToneMapping, timeline: new Timeline({autoplay: true}), ...args})
+
+    // Background
+    const coloredVignette = screenUV.distance(.5).mix(hue(color(0x0175ad), this.timeline.timeNode.mul(.1)), hue(color(0x02274f), this.timeline.timeNode.mul(.5)))
+    const lightSpeedEffect = lightSpeed(normalWorldGeometry.xy, this.timeline.timeNode).clamp()
+    const lightSpeedSky = normalWorldGeometry.y.remapClamp(-.1, 1).mix(0, lightSpeedEffect)
+    const composedBackground = blendDodge(coloredVignette, lightSpeedSky)
+    this.scene.backgroundNode = composedBackground
+
+    // Lights
+    const light = new HemisphereLight(0xe9c0a5, 0x0175ad, 5)
+    light.name = 'Hemisphere'
+    this.scene.add(light)
+
+    const dirLight = new DirectionalLight(0xfff9ea, 4)
+    dirLight.name = 'Key'
+    dirLight.position.set(2, 5, 2)
+    this.scene.add(dirLight)
+
+    // Floor with reflection
+    const reflection = reflector()
+    reflection.target.rotateX(-Math.PI / 2)
+    this.scene.add(reflection.target)
+
+    const floorMaterial = new NodeMaterial()
+    floorMaterial.colorNode = reflection
+    floorMaterial.opacity = .2
+    floorMaterial.transparent = true
+
+    const floor = new Mesh(new BoxGeometry(50, .001, 50), floorMaterial)
+    floor.name = 'Floor'
+    floor.receiveShadow = true
+    floor.userData.selectable = false
+    floor.position.set(0, 0, 0)
+    this.scene.add(floor)
+
+    this.camera = new PerspectiveCamera(40, 1, .25, 50)
+    this.camera.position.set(0, 1, 4)
+    this.camera.name = 'camera'
+    this.scene.add(this.camera)
+
+    this.group.name = 'Models'
+    this.scene.add(this.group)
+
+    this.helpers.name = 'Helpers'
+    this.helpers.visible = this.showHelpers
+    this.helpers.userData.selectable = false
+    this.scene.add(this.helpers)
+
+    // Load and setup models
+    void this.loadModels()
+  }
+
+  private async loadModels() {
+    const [sourceModel, targetModel] = await Promise.all([
+      loadGltf('https://threejs.org/examples/models/gltf/Michelle.glb'),
+      loadGltf('https://threejs.org/examples/models/gltf/Soldier.glb'),
+    ])
+
+    // Add models to group
+    this.group.add(sourceModel.scene)
+    this.group.add(targetModel.scene)
+
+    // Reposition models
+    sourceModel.scene.position.x -= .8
+    targetModel.scene.position.x += .7
+    targetModel.scene.position.z -= .1
+
+    // Readjust model
+    targetModel.scene.scale.setScalar(.01)
+
+    // Flip models
+    sourceModel.scene.rotation.y = Math.PI / 2
+    targetModel.scene.rotation.y = -Math.PI / 2
+
+    // Retarget
+    const source = this.getSource(sourceModel)
+    this.timeline.duration = source.clip.duration
+    this.sourceMixer = source.mixer.setTime(this.timeline.currentTime)
+    this.targetMixer = this.retargetModel(source, targetModel).setTime(this.timeline.currentTime)
+
+    this.notify({kind: 'structure'})
+    this.dispatch('frame-object', {object: this.group}, true)
+  }
+
+  private getSource(sourceModel: GltfModel): AnimationSource {
+    const clip = sourceModel.animations[0]
+    const helper = new SkeletonHelper(sourceModel.scene)
+    this.helpers.add(helper)
+    const skeleton = new Skeleton(helper.bones)
+    const mixer = new AnimationMixer(sourceModel.scene)
+    mixer.clipAction(sourceModel.animations[0]).play()
+
+    return { clip, skeleton, mixer }
+  }
+
+  private retargetModel(sourceModel: AnimationSource, targetModel: GltfModel) {
+    const targetSkin = targetModel.scene.children[0]!.children[0]!
+    this.helpers.add(new SkeletonHelper(targetModel.scene))
+
+    const rotateCW45 = new Matrix4().makeRotationY(MathUtils.degToRad(45))
+    const rotateCCW180 = new Matrix4().makeRotationY(MathUtils.degToRad(-180))
+    const rotateCW180 = new Matrix4().makeRotationY(MathUtils.degToRad(180))
+    const rotateFoot = new Matrix4().makeRotationFromEuler(new Euler(MathUtils.degToRad(45), MathUtils.degToRad(180), MathUtils.degToRad(0)))
+
+    const retargetOptions = {
+      hip: 'mixamorigHips',
+      scale: 1 / targetModel.scene.scale.y,
+      localOffsets: {
+        mixamorigLeftShoulder: rotateCW45,
+        mixamorigRightShoulder: rotateCCW180,
+        mixamorigLeftArm: rotateCW45,
+        mixamorigRightArm: rotateCCW180,
+        mixamorigLeftForeArm: rotateCW45,
+        mixamorigRightForeArm: rotateCCW180,
+        mixamorigLeftHand: rotateCW45,
+        mixamorigRightHand: rotateCCW180,
+
+        mixamorigLeftUpLeg: rotateCW180,
+        mixamorigRightUpLeg: rotateCW180,
+        mixamorigLeftLeg: rotateCW180,
+        mixamorigRightLeg: rotateCW180,
+        mixamorigLeftFoot: rotateFoot,
+        mixamorigRightFoot: rotateFoot,
+        mixamorigLeftToeBase: rotateCW180,
+        mixamorigRightToeBase: rotateCW180
+      },
+      names: {
+        mixamorigHips: 'mixamorigHips',
+        mixamorigSpine: 'mixamorigSpine',
+        mixamorigSpine2: 'mixamorigSpine2',
+        mixamorigHead: 'mixamorigHead',
+
+        mixamorigLeftShoulder: 'mixamorigLeftShoulder',
+        mixamorigRightShoulder: 'mixamorigRightShoulder',
+        mixamorigLeftArm: 'mixamorigLeftArm',
+        mixamorigRightArm: 'mixamorigRightArm',
+        mixamorigLeftForeArm: 'mixamorigLeftForeArm',
+        mixamorigRightForeArm: 'mixamorigRightForeArm',
+        mixamorigLeftHand: 'mixamorigLeftHand',
+        mixamorigRightHand: 'mixamorigRightHand',
+
+        mixamorigLeftUpLeg: 'mixamorigLeftUpLeg',
+        mixamorigRightUpLeg: 'mixamorigRightUpLeg',
+        mixamorigLeftLeg: 'mixamorigLeftLeg',
+        mixamorigRightLeg: 'mixamorigRightLeg',
+        mixamorigLeftFoot: 'mixamorigLeftFoot',
+        mixamorigRightFoot: 'mixamorigRightFoot',
+        mixamorigLeftToeBase: 'mixamorigLeftToeBase',
+        mixamorigRightToeBase: 'mixamorigRightToeBase'
+      }
+    }
+
+    const retargetedClip = SkeletonUtils.retargetClip(targetSkin, sourceModel.skeleton, sourceModel.clip, retargetOptions)
+
+    const mixer = new AnimationMixer(targetSkin)
+    mixer.clipAction(retargetedClip).play()
+
+    return mixer
+  }
+
+  showHelpersChanged() {
+    this.helpers.visible = this.showHelpers
+  }
+
+  override onAnimate(delta: number) {
+    if (this.sourceMixer) {
+      this.sourceMixer.update(delta)
+    }
+
+    if (this.targetMixer) {
+      this.targetMixer.update(delta)
+    }
+  }
+}
+
+registerEditorGroups(AnimationRetargetingExample, {
+  Main: ['showHelpers'],
+})

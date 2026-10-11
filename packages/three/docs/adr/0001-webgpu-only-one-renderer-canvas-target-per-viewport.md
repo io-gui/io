@@ -4,7 +4,7 @@ status: accepted
 
 # WebGPU only: one renderer, one CanvasTarget per viewport
 
-`@io-gui/three` targets WebGPU only. There is one shared `WebGPURenderer` per GPU device, owned by the `RenderScheduler` (ADR-0003). Each `IoThreeViewport` owns its own `CanvasTarget`, and the scheduler binds it with `renderer.setCanvasTarget()` before drawing that view. This is the WebGPU model: one device and many configured canvas contexts, so any number of viewports can sit anywhere in the DOM.
+`@io-gui/three` targets WebGPU only. There is one shared `WebGPURenderer` per GPU device, owned by the `RenderScheduler` (ADR-0003). Each `ThreeViewport` owns its own `CanvasTarget`, and the scheduler binds it with `renderer.setCanvasTarget()` before drawing that view. This is the WebGPU model: one device and many configured canvas contexts, so any number of viewports can sit anywhere in the DOM.
 
 We dropped the WebGL fallback. It has a single canvas, so multiple viewports would need a different presentation strategy: scissoring a page-sized canvas, or copying each frame into 2D canvases. Supporting both paths would split every pipeline and overlay decision in two.
 

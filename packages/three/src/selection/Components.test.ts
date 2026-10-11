@@ -1,13 +1,13 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { ComponentPicker, IdBufferSource, IdComponentPicker, InputHost, InputRouter, SelectBehavior, SelectionModel, ThreeDocument, ThreeEditor, ThreeView, UVComponentPicker, getTopology, keymaps } from '@io-gui/three'
+import { ComponentPicker, IdBufferSource, IdComponentPicker, InputHost, InputRouter, SelectBehavior, SelectionModel, Document, Editor, View, UVComponentPicker, getTopology, keymaps } from '@io-gui/three'
 import { BoxGeometry, Mesh, Object3D, PlaneGeometry, Raycaster, Vector2, Vector3 } from 'three/webgpu'
 
 const WIDTH = 200
 const HEIGHT = 100
 
-type Host = InputHost & {selection: SelectionModel; editor: ThreeEditor; mode: string; componentPicker: ComponentPicker}
+type Host = InputHost & {selection: SelectionModel; editor: Editor; mode: string; componentPicker: ComponentPicker}
 
-function createHost(editor: ThreeEditor, view: ThreeView, componentPicker: ComponentPicker): Host {
+function createHost(editor: Editor, view: View, componentPicker: ComponentPicker): Host {
   const element = window.document.createElement('div') as unknown as Host
   Object.defineProperties(element, {
     view: {value: view},
@@ -52,16 +52,16 @@ const raycastSource: IdBufferSource = (host, camera, objects, width, height) => 
 const flush = () => new Promise(resolve => setTimeout(resolve, 0))
 
 describe('SelectionModel components', () => {
-  let document: ThreeDocument
+  let document: Document
   let selection: SelectionModel
   let mesh: Mesh
 
   beforeEach(() => {
-    document = new ThreeDocument()
+    document = new Document()
     mesh = new Mesh(new BoxGeometry(1, 1, 1))
     document.scene.add(mesh)
     selection = new SelectionModel({document})
-    document.changeBus.drain()
+    document.drainChanges()
   })
 
   afterEach(() => {
@@ -78,7 +78,7 @@ describe('SelectionModel components', () => {
     expect(selection.version).toBe(1)
     expect(selection.domain).toBe('point')
     expect(selection.getComponents(mesh.uuid)!.toArray()).toEqual([1, 2])
-    expect(document.changeBus.drain().map(change => change.ids)).toEqual([[mesh.uuid]])
+    expect(document.drainChanges().map(change => change.ids)).toEqual([[mesh.uuid]])
 
     const before = selection.getComponents(mesh.uuid)!
     const second = selection.edit()
@@ -112,19 +112,19 @@ describe('SelectionModel components', () => {
 })
 
 describe('Component picking and edit mode', () => {
-  let editor: ThreeEditor
-  let view: ThreeView
+  let editor: Editor
+  let view: View
   let host: Host
   let router: InputRouter
   let mesh: Mesh
   let picker: IdComponentPicker
 
   beforeEach(() => {
-    editor = new ThreeEditor()
+    editor = new Editor()
     mesh = new Mesh(new BoxGeometry(1, 1, 1))
     editor.document.scene.add(mesh)
     editor.document.scene.updateMatrixWorld(true)
-    view = new ThreeView({overscan: 1})
+    view = new View({overscan: 1})
     view.navigation.setDirection(new Vector3(1, 0.6, 0.8))
     view.frame(mesh, 1.5)
     picker = new IdComponentPicker({source: raycastSource})
@@ -289,18 +289,18 @@ describe('Component picking and edit mode', () => {
 })
 
 describe('UV component picking', () => {
-  let editor: ThreeEditor
-  let view: ThreeView
+  let editor: Editor
+  let view: View
   let host: Host
   let mesh: Mesh
   const picker = new UVComponentPicker()
 
   beforeEach(() => {
-    editor = new ThreeEditor()
+    editor = new Editor()
     // 2x1 segments: 6 points, 4 triangles, UVs spanning 0..1.
     mesh = new Mesh(new PlaneGeometry(2, 1, 2, 1))
     editor.document.scene.add(mesh)
-    view = new ThreeView({kind: 'uv'})
+    view = new View({kind: 'uv'})
     host = createHost(editor, view, picker)
     view.frameUV(1)
     editor.selection.set([mesh.uuid])

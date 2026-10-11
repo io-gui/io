@@ -27,6 +27,9 @@ description: >-
 - `ThemeSingleton` properties become `--io_*` CSS variables; theme colors use core **`Color`**, not colors-package ColorValue.
 - `Storage({key, value, storage: 'local' | 'hash' | 'none'})` returns a **Binding** to a singleton `StorageNode` — assign it onto properties for hash/local persistence.
 - Arrow-function methods are not auto-bound as listeners.
+- **Construction runs reactions inside `super()`:** `init()` → properties, `@Field`s → args → `ready()` → `*Changed()`, `mutated()`, `io-mutation`, all before the subclass's class fields and constructor body. State that `ready()` or handlers touch must be a `@Field` or a `declare`d field created lazily; a plain field is missing then, and without `declare` it is re-initialized after `super()`. Pass `on*` methods (not arrow fields) as callbacks rendered from `ready()`.
+- A node held in a property reports mutations to `[prop]Mutated()` only; the holder's `mutated()` does not run. Use a child node to keep a per-frame value out of the parent's change handling.
+- `IoGl`: properties map to uniforms. For extra uniforms, declare them in `Frag` and `setShaderProgram()` + `setUniform()` before `super.onRender()`; draw text on `this.ctx` after it. Uniforms are float32: pass pixel positions, not large values.
 
 ## Read next
 

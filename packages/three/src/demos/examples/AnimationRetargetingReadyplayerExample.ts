@@ -1,0 +1,168 @@
+import { Register } from '@io-gui/core'
+import {
+  AnimationClip,
+  AnimationMixer,
+  Bone,
+  BoxGeometry,
+  DirectionalLight,
+  Group,
+  HemisphereLight,
+  Mesh,
+  NeutralToneMapping,
+  NodeMaterial,
+  Skeleton,
+  SkeletonHelper,
+} from 'three/webgpu'
+import {
+  color,
+  screenUV,
+  vec2,
+  vec4,
+  reflector,
+  positionWorld,
+} from 'three/tsl'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
+import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
+import { Document, DocumentProps, Timeline } from '@io-gui/three'
+
+type FbxModel = Group & {
+  animations: AnimationClip[]
+}
+
+type GltfModel = {
+  scene: Group
+  animations: AnimationClip[]
+}
+
+type AnimationSource = {
+  clip: AnimationClip
+  skeleton: Skeleton
+  mixer: AnimationMixer
+}
+
+const gltfLoader = new GLTFLoader()
+const fbxLoader = new FBXLoader()
+
+const loadFbx = (url: string) => new Promise<FbxModel>((resolve, reject) => {
+  fbxLoader.load(url, resolve, undefined, reject)
+})
+
+const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
+  gltfLoader.load(url, resolve, undefined, reject)
+})
+
+/** A Mixamo FBX animation retargeted onto a Ready Player Me avatar, over a masked reflective floor. Plays when opened. */
+@Register
+export class AnimationRetargetingReadyplayerExample extends Document {
+
+  public sourceMixer?: AnimationMixer
+  public targetMixer?: AnimationMixer
+
+  constructor(args?: DocumentProps) {
+    super({toneMapping: NeutralToneMapping, timeline: new Timeline({autoplay: true}), ...args})
+
+    const horizontalEffect = screenUV.x.mix(color(0x13172b), color(0x311649))
+    const lightEffect = screenUV.distance(vec2(0.5, 1.0)).oneMinus().mul(color(0x0c5d68))
+    this.scene.backgroundNode = horizontalEffect.add(lightEffect)
+
+    const light = new HemisphereLight(0x311649, 0x0c5d68, 10)
+    light.name = 'Hemisphere'
+    this.scene.add(light)
+
+    const backLight = new DirectionalLight(0xffffff, 10)
+    backLight.name = 'Back'
+    backLight.position.set(0, 5, -5)
+    this.scene.add(backLight)
+
+    const keyLight = new DirectionalLight(0xfff9ea, 4)
+    keyLight.name = 'Key'
+    keyLight.position.set(3, 5, 3)
+    this.scene.add(keyLight)
+
+    const reflection = reflector()
+    reflection.target.rotateX(-Math.PI / 2)
+    this.scene.add(reflection.target)
+
+    const reflectionMask = positionWorld.xz.distance(0).mul(.1).clamp().oneMinus()
+
+    const floorMaterial = new NodeMaterial()
+    floorMaterial.colorNode = vec4(reflection.rgb, reflectionMask)
+    floorMaterial.opacity = .2
+    floorMaterial.transparent = true
+
+    const floor = new Mesh(new BoxGeometry(50, .001, 50), floorMaterial)
+    floor.name = 'Floor'
+    floor.receiveShadow = true
+    floor.position.set(0, 0, 0)
+    floor.userData.selectable = false
+    this.scene.add(floor)
+
+    void this.loadModels()
+  }
+
+  private async loadModels() {
+    const [sourceModel, targetModel] = await Promise.all([
+      loadFbx('https://threejs.org/examples/models/fbx/mixamo.fbx'),
+      loadGltf('https://threejs.org/examples/models/gltf/readyplayer.me.glb'),
+    ])
+
+    const models = new Group()
+    models.name = 'Models'
+    models.add(sourceModel)
+    models.add(targetModel.scene)
+    this.scene.add(models)
+
+    sourceModel.position.x -= .9
+    targetModel.scene.position.x += .9
+
+    sourceModel.scale.setScalar(.01)
+
+    const source = this.getSource(sourceModel)
+    this.timeline.duration = source.clip.duration
+    this.sourceMixer = source.mixer.setTime(this.timeline.currentTime)
+    this.targetMixer = this.retargetModel(source, targetModel).setTime(this.timeline.currentTime)
+
+    this.notify({kind: 'structure'})
+    this.dispatch('frame-object', {object: models, overscan: 1.5}, true)
+  }
+
+  private getSource(sourceModel: FbxModel): AnimationSource {
+    const clip = sourceModel.animations[0]
+    const helper = new SkeletonHelper(sourceModel)
+    const skeleton = new Skeleton(helper.bones)
+    const mixer = new AnimationMixer(sourceModel)
+    mixer.clipAction(sourceModel.animations[0]).play()
+
+    return { clip, skeleton, mixer }
+  }
+
+  private retargetModel(sourceModel: AnimationSource, targetModel: GltfModel) {
+    const targetSkin = targetModel.scene.children[0]!.children[1]!
+
+    const retargetOptions = {
+      // specify the name of the source's hip bone
+      hip: 'mixamorigHips',
+
+      // preserve the scale of the target model
+      scale: .01,
+
+      // Map of target's bone names to source's bone names
+      getBoneName: function (bone: Bone) {
+        return 'mixamorig' + bone.name
+      }
+    }
+
+    const retargetedClip = SkeletonUtils.retargetClip(targetSkin, sourceModel.skeleton, sourceModel.clip, retargetOptions)
+
+    const mixer = new AnimationMixer(targetSkin)
+    mixer.clipAction(retargetedClip).play()
+
+    return mixer
+  }
+
+  override onAnimate(delta: number) {
+    this.sourceMixer?.update(delta)
+    this.targetMixer?.update(delta)
+  }
+}

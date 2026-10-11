@@ -22,19 +22,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-export * from './elements/math/IoEuler.js';
-export * from './elements/math/IoMatrix2.js';
-export * from './elements/math/IoMatrix3.js';
-export * from './elements/math/IoMatrix4.js';
-export * from './elements/math/IoQuaternion.js';
-export * from './elements/math/IoVector2.js';
-export * from './elements/math/IoVector3.js';
-export * from './elements/math/IoVector4.js';
+export * from './elements/math/ThreeEuler.js';
+export * from './elements/math/ThreeMatrix2.js';
+export * from './elements/math/ThreeMatrix3.js';
+export * from './elements/math/ThreeMatrix4.js';
+export * from './elements/math/ThreeQuaternion.js';
+export * from './elements/math/ThreeVector2.js';
+export * from './elements/math/ThreeVector3.js';
+export * from './elements/math/ThreeVector4.js';
 export * from './editor/ChangeBus.js';
 export * from './editor/Patch.js';
 export * from './editor/Transaction.js';
-export * from './editor/ThreeDocument.js';
-export * from './editor/ThreeEditor.js';
+export * from './editor/Document.js';
+export * from './editor/Editor.js';
 export * from './tools/Operator.js';
 export * from './tools/Tool.js';
 export * from './render/RenderScheduler.js';
@@ -58,10 +58,9 @@ export * from './tools/gizmos/TranslateGizmoGroup.js';
 export * from './tools/operators/TranslateOperator.js';
 export * from './tools/operators/EditModeOperators.js';
 export * from './tools/TranslateTool.js';
-export * from './elements/IoBuildGeometry.js';
-export * from './elements/IoThreeExample.js';
-export * from './elements/IoThreeViewport.js';
-export * from './view/ThreeView.js';
+export * from './elements/ThreeBuildGeometry.js';
+export * from './elements/ThreeViewport.js';
+export * from './view/View.js';
 export * from './view/ViewNavigation.js';
 export * from './input/Behavior.js';
 export * from './input/ViewInputEvent.js';

@@ -1,5 +1,5 @@
 import { NeutralToneMapping, Scene, Timer, WebGPURenderer } from 'three/webgpu'
-import { DocumentChange, ChangeBus } from '../editor/ChangeBus.js'
+import type { Document, DocumentChange } from '../editor/Document.js'
 
 export type DirtyReason = 'content' | 'view' | 'overlay' | 'resize' | 'continuous'
 
@@ -15,13 +15,14 @@ export interface ViewRenderResult {
 }
 
 /**
- * What the scheduler needs from a view. Implemented by `IoThreeViewport`.
+ * What the scheduler needs from a view. Implemented by `ThreeViewport`.
  */
 export interface ScheduledView {
   readonly renderer: WebGPURenderer
   /** Scene evaluated once per frame before any view draws it. */
   readonly scene: Scene | null
-  readonly changeBus: ChangeBus | null
+  /** The document whose changes the scheduler drains for this view. */
+  readonly document: Document | null
   isRenderable(): boolean
   /** Higher draws first: focused 2, hovered 1, other 0. Each frame a view waits past the budget adds 1. */
   getPriority(): number
@@ -32,11 +33,22 @@ export interface ScheduledView {
 }
 
 /**
- * Anything advanced by the scheduler clock while playing, such as a playing ThreeEditor.
+ * Anything advanced by the scheduler clock while playing, such as a playing Editor.
  */
 export interface ScheduledTicker {
-  readonly changeBus: ChangeBus
+  /** The document whose changes the scheduler drains after the tick. */
+  readonly document: Document
   tick(frame: FrameInfo): void
+}
+
+/**
+ * Anything besides views that follows a document's changes, such as the scene graph. Each frame the scheduler hands it
+ * the changes it drained from that document.
+ */
+export interface ChangeListener {
+  /** The document whose changes it gets. The scheduler drains it even when no view shows it. */
+  readonly document: Document | null
+  onDocumentChanges(changes: readonly DocumentChange[]): void
 }
 
 export type RenderSchedulerOptions = {
@@ -48,8 +60,8 @@ export type RenderSchedulerOptions = {
 }
 
 /**
- * The only thing that renders (ADR-0003). Each frame it collects changes into typed dirty tags,
- * ticks playing editors, evaluates each scene once and draws tagged views within a frame budget.
+ * The only thing that renders (ADR-0003). Each frame it collects changes into typed dirty tags (and hands them to
+ * change listeners), ticks playing editors, evaluates each scene once and draws tagged views within a frame budget.
  */
 export class RenderScheduler {
 
@@ -59,6 +71,7 @@ export class RenderScheduler {
   /** Frames each tagged view has waited past the budget. Added to its priority so no view starves. */
   private readonly _waits = new Map<ScheduledView, number>()
   private readonly _tickers = new Set<ScheduledTicker>()
+  private readonly _listeners = new Set<ChangeListener>()
   private readonly _rendererStates = new Map<WebGPURenderer, 'pending' | 'ready' | 'failed'>()
   private readonly _timer = new Timer()
   private readonly _autoStart: boolean
@@ -107,6 +120,15 @@ export class RenderScheduler {
 
   removeTicker(ticker: ScheduledTicker) {
     this._tickers.delete(ticker)
+  }
+
+  addListener(listener: ChangeListener) {
+    this._listeners.add(listener)
+    this._start()
+  }
+
+  removeListener(listener: ChangeListener) {
+    this._listeners.delete(listener)
   }
 
   getRendererState(renderer: WebGPURenderer) {
@@ -178,17 +200,29 @@ export class RenderScheduler {
   }
 
   private _collect() {
-    const buses = new Set<ChangeBus>()
-    for (const ticker of this._tickers) buses.add(ticker.changeBus)
+    const documents = new Set<Document>()
+    for (const ticker of this._tickers) documents.add(ticker.document)
     for (const view of this._views.keys()) {
-      if (view.changeBus) buses.add(view.changeBus)
+      if (view.document) documents.add(view.document)
     }
-    for (const bus of buses) {
-      if (!bus.pending) continue
-      for (const change of bus.drain()) {
+    for (const listener of this._listeners) {
+      if (listener.document) documents.add(listener.document)
+    }
+    for (const document of documents) {
+      if (!document.hasPendingChanges) continue
+      const changes = document.drainChanges()
+      for (const change of changes) {
         for (const [view, tags] of this._views) {
           const reason = view.listens(change)
           if (reason) tags.add(reason === true ? 'content' : reason)
+        }
+      }
+      for (const listener of this._listeners) {
+        if (listener.document !== document) continue
+        try {
+          listener.onDocumentChanges(changes)
+        } catch (e) {
+          console.error(e)
         }
       }
     }
@@ -236,7 +270,7 @@ export class RenderScheduler {
   }
 
   private _onFrame = (timestamp: number) => {
-    if (this._views.size === 0 && this._tickers.size === 0) {
+    if (this._views.size === 0 && this._tickers.size === 0 && this._listeners.size === 0) {
       this._running = false
       return
     }

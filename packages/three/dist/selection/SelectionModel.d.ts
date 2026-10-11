@@ -1,6 +1,6 @@
 import { ReactiveObject, ReactiveObjectProps } from '@io-gui/core';
-import type { Object3D } from 'three/webgpu';
-import type { ThreeDocument } from '../editor/ThreeDocument.js';
+import { Object3D } from 'three/webgpu';
+import type { Document } from '../editor/Document.js';
 import { ComponentSet } from './ComponentSet.js';
 /**
  * Selection levels (ADR-0007): `object`, then the attribute domains of geometry adapters. `corner` is the
@@ -10,7 +10,7 @@ export type SelectionDomain = 'object' | 'point' | 'edge' | 'primitive' | 'corne
 /** Component sets of one object, by domain. */
 export type ComponentSets = ReadonlyMap<SelectionDomain, ComponentSet>;
 export type SelectionModelProps = ReactiveObjectProps & {
-    document: ThreeDocument;
+    document: Document;
 };
 /**
  * Session selection of one document (ADR-0007): object uuids, the active object, and component bitsets per
@@ -26,8 +26,9 @@ export declare class SelectionModel extends ReactiveObject {
     version: number;
     /** uuid of the active object, or `''`. */
     active: string;
+    activeObject: Object3D | undefined;
     uvSync: boolean;
-    readonly document: ThreeDocument;
+    readonly document: Document;
     /** The component domain edit mode returns to (`domain` is `'object'` outside edit mode). */
     componentDomain: SelectionDomain;
     private readonly _objects;

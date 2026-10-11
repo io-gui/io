@@ -1,5 +1,5 @@
 import { BufferGeometry, Float32BufferAttribute, Group, LineBasicNodeMaterial, LineSegments, Material, Mesh, MeshBasicNodeMaterial, NoToneMapping, Object3D, PlaneGeometry, Scene, Texture } from 'three/webgpu'
-import type { DocumentChange } from '../../editor/ChangeBus.js'
+import type { DocumentChange } from '../../editor/Document.js'
 import type { DirtyReason } from '../RenderScheduler.js'
 import type { PipelineContext } from '../ViewPipeline.js'
 import { RaycastPicker } from '../../selection/Picker.js'

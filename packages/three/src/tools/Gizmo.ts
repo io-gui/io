@@ -1,6 +1,6 @@
 import { Group, Object3D } from 'three/webgpu'
-import type { ThreeEditor } from '../editor/ThreeEditor.js'
-import type { ThreeView } from '../view/ThreeView.js'
+import type { Editor } from '../editor/Editor.js'
+import type { View } from '../view/View.js'
 import type { DirtyReason } from '../render/RenderScheduler.js'
 import type { Overlay, OverlayContext } from '../render/Overlay.js'
 import { Behavior, BehaviorPriority } from '../input/Behavior.js'
@@ -12,9 +12,9 @@ import type { ViewCamera } from '../utils/camera.js'
 export const GIZMO_HIT_RADIUS = 8
 
 export interface GizmoContext {
-  readonly editor: ThreeEditor
+  readonly editor: Editor
   readonly host: OperatorHost
-  readonly view: ThreeView
+  readonly view: View
   readonly camera: ViewCamera
   /** CSS pixels. */
   readonly width: number
@@ -49,7 +49,7 @@ export interface GizmoGroup {
 
 /** What a GizmoLayer needs from its viewport. */
 export type GizmoHost = OperatorHost & {
-  readonly editor: ThreeEditor | null
+  readonly editor: Editor | null
   tag(reason: DirtyReason): void
 }
 

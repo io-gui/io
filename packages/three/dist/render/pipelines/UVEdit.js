@@ -72,10 +72,10 @@ export function getUVLayoutState(mesh, isActive) {
     }
     return { topology, shown: new ComponentSet(topology.primitiveCount).fill(), corners: new ComponentSet(topology.cornerCount), faces, edges };
 }
-const SELECTED = new Color(0xffaa33);
+const SELECTED = new Color(0xffaa55);
 const WIRE = new Color(0xb0b0b0);
 const COLORS = {
-    faces: { normal: WIRE, normalAlpha: 0.08, selected: SELECTED, selectedAlpha: 0.3 },
+    faces: { normal: WIRE, normalAlpha: 0.08, selected: SELECTED, selectedAlpha: 0.05 },
     edges: { normal: WIRE, normalAlpha: 0.9, selected: SELECTED, selectedAlpha: 1 },
     points: { normal: new Color(0x202020), normalAlpha: 1, selected: SELECTED, selectedAlpha: 1 },
 };

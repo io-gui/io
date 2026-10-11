@@ -1,16 +1,32 @@
 # Three
 
-The `@io-gui/three` context: WebGPU Three.js viewports wired into Io-Gui's reactive graph. A ThreeEditor owns the document and lifecycle; IoThreeViewport shows it through a per-viewport canvas target, a pipeline and overlays; the RenderScheduler is the only thing that renders. WebGPU only. Architecture decisions: `docs/adr/`. Math editor elements and side-effect EditorConfigs integrate Three types with `@io-gui/editors`.
+The `@io-gui/three` context: WebGPU Three.js viewports wired into Io-Gui's reactive graph. An Editor owns the document and lifecycle; ThreeViewport shows it through a per-viewport canvas target, a pipeline and overlays; the RenderScheduler is the only thing that renders. WebGPU only. Architecture decisions: `docs/adr/`. Math editor elements and side-effect EditorConfigs integrate Three types with `@io-gui/editors`.
 
 ## Language
 
-**ThreeEditor**:
-The app object: one active ThreeDocument (switchable at runtime), editor mode, playback, operators and tools. Viewports read `editor.document`.
+**Editor**:
+The app object: one active Document (switchable at runtime), editor mode, playback, operators and tools. Viewports read `editor.document`.
 _Avoid_: app, scene controller, applet (removed `ThreeApplet`)
 
-**ThreeDocument**:
-The content of an editor: the scene of authored objects plus scene render settings. Edited through transactions.
+**Document**:
+The content of an editor: the scene of authored objects plus scene render settings and its timeline. Edited through transactions.
 _Avoid_: model, project, file
+
+**Timeline**:
+A document's clock (`document.timeline`): `currentTime` within `[0, duration]` seconds, the `frameRate` of stepping and scrubbing, `loop` and `autoplay`. Every change of `currentTime` runs the document's `onAnimate(delta, time)`, with `delta` the change (negative going back). `timeNode` mirrors `currentTime` as a TSL uniform.
+_Avoid_: clock (as a type name), document time, playhead (that is its UI), time (alone, for the property)
+
+**Live document**:
+A document whose state builds up from interaction while it plays, like a game, rather than following `time` (the skinning blending demos). It uses the timeline only as a clock: it integrates positive `delta` and ignores time going back (ADR-0009).
+_Avoid_: interactive document, realtime document
+
+**Timeline range**:
+`ThreeTimelineRange`: the scrubbable `IoGl` strip of one timeline, with the playhead and frame-aligned dividers at any zoom. `ThreeTimeline` adds transport buttons and time fields for the editor's document.
+_Avoid_: scrubber, time slider, ruler (alone)
+
+**Scene graph**:
+`ThreeScenegraph`: the collapsible tree of the editor document's scene, one row per shown object with its type icon (`getObjectIcon`) and its name, or `<ClassName>`. Shows the selection, selects like a viewport click, reveals a new active object (expands its ancestors, scrolls to it) and renames through `object.rename`. Its **disclosure** (the objects collapsed, by uuid; everything else shows expanded) persists through a host-bound `Storage`.
+_Avoid_: outliner (as the type name), hierarchy, tree view
 
 **Transaction**:
 One atomic group of patches: the unit of undo, change notification and sync. Applies edits immediately and records old values.
@@ -73,11 +89,11 @@ A press and release that moved less than `CLICK_TOLERANCE`; synthesized by the I
 _Avoid_: tap, tweak
 
 **Interaction profile**:
-`ThreeView.profile`: what a viewport's router installs — `full`, `select`, `navigate`, `none`.
+`View.profile`: what a viewport's router installs — `full`, `select`, `navigate`, `none`.
 _Avoid_: view mode, read-only
 
 **CanvasTarget**:
-Per-viewport render surface the shared renderer draws into. Each `IoThreeViewport` has its own; viewports do not share canvases.
+Per-viewport render surface the shared renderer draws into. Each `ThreeViewport` has its own; viewports do not share canvases.
 _Avoid_: canvas, framebuffer (as the Io-Gui term)
 
 **Shared renderer**:
@@ -92,20 +108,20 @@ _Avoid_: render loop (as a class name), animation loop
 A typed reason (`content`, `view`, `overlay`, `resize`, `continuous`) that marks a viewport for redraw on the next frame. Tagging never draws.
 _Avoid_: needs-render, invalidate
 
-**ChangeBus**:
-Per-document queue of typed `DocumentChange`s, drained by the scheduler each frame to tag the viewports that listen to them.
-_Avoid_: notifier, event bus
+**DocumentChange**:
+A typed record (`kind`, `source` document, optional `ids`) of something that changed in a document. `document.notify()` queues it on the document; the scheduler drains each shown document's queue once per frame, tags the viewports that listen to it and hands the drained changes to the document's **change listeners** (UI that follows a document without drawing it, such as the scene graph; `renderScheduler.addListener`).
+_Avoid_: change bus, notifier, event bus
 
 **Playing**:
-`ThreeEditor.isPlaying`: whether the scheduler ticks the editor (`onAnimate(delta, time)`) each frame. Independently, non-visible viewports skip draws via IntersectionObserver.
+`Editor.isPlaying`: whether the scheduler ticks the editor each frame, advancing the active document's timeline by the frame delta (which runs the document's `onAnimate`). A timeline that stops at its end pauses the editor. Independently, non-visible viewports skip draws via IntersectionObserver.
 _Avoid_: animating, running, live
 
-**ThreeView**:
-Serializable ReactiveObject holding one view's state: kind, pipeline, overlay flags, profile, navigation, overscan, clear color and tone-mapping overrides. Shown by an IoThreeViewport and outlives it.
+**View**:
+Serializable ReactiveObject holding one view's state: kind, pipeline, overlay flags, profile, navigation, overscan, clear color and tone-mapping overrides. Shown by a ThreeViewport and outlives it.
 _Avoid_: viewport state, ViewCameras (removed)
 
 **View kind**:
-`ThreeView.kind`: `3d` (shows the content scene) or `uv` (shows the UV layout of the edit set in 2D). Picks the default pipeline, overlays, gizmos and tools.
+`View.kind`: `3d` (shows the content scene) or `uv` (shows the UV layout of the edit set in 2D). Picks the default pipeline, overlays, gizmos and tools.
 _Avoid_: view type, editor type
 
 **ViewPipeline**:
@@ -117,7 +133,7 @@ Per-viewport owner of the pipeline and overlays. Presents the pipeline output to
 _Avoid_: post-processing (that is a pipeline), output pass
 
 **Overlay**:
-Something a view draws on top of its pipeline output from its own small scene, never the content scene: grid, selection outline, camera frame (passepartout), gizmos. Switched per view in `ThreeView.overlays`.
+Something a view draws on top of its pipeline output from its own small scene, never the content scene: grid, selection outline, camera frame (passepartout), gizmos. Switched per view in `View.overlays`.
 _Avoid_: helper (three.js objects added to the scene), decoration
 
 **Edit set**:
@@ -129,7 +145,7 @@ A gizmo is an on-screen handle with a screen-space hit test that starts an opera
 _Avoid_: manipulator, TransformControls, handle (alone)
 
 **ViewNavigation**:
-A view's navigation as numbers: target, rotation, distance, projection, fov, clip range, axis view (`free` or an axis) and an optional scene camera (`cameraSource`, by uuid; `ThreeView.setCameraView()` resolves the first scene camera, or a `name:`, to it once the camera is in the scene). The draw camera is built from it per frame.
+A view's navigation as numbers: target, rotation, distance, projection, fov, clip range, axis view (`free` or an axis) and an optional scene camera (`cameraSource`, by uuid; `View.setCameraView()` resolves the first scene camera, or a `name:`, to it once the camera is in the scene, and again in each newly shown document). The draw camera is built from it per frame.
 _Avoid_: camera rig, camera controller, orbit state
 
 **Axis view**:

@@ -26,11 +26,12 @@ When starting a task, list `.cursor/rules/` and check frontmatter for any rule n
 Other rules (read on demand):
 
 - `caveman.mdc` — compressed writing style; used when writing `.memory/working.md`.
+- `io-icons.mdc` — authoring iconsets (`io` built-ins, package namespaces such as `three`) and sourcing icons from Material Symbols; globs `packages/icons/**`, `packages/*/src/icons/**`.
 - `grilling.md`, `grill-with-docs.md`, `domain-modeling/` — skill-style workflows (not `.mdc`). Use when the user asks to "grill" a plan or to model a domain; `domain-modeling/` defines the CONTEXT.md and ADR formats.
 
 ## Cursor plans (`.cursor/plans/*.plan.md`)
 
-Design plans for past/ongoing work (frontmatter has `name`, `overview`, and a `todos` list with statuses). Check them for context before working on related features (layout package improvements, principles evaluation, three.js example conversion, three.js UI configs).
+Design plans for past/ongoing work (frontmatter has `name`, `overview`, and a `todos` list with statuses). Check them for context before working on related features (layout package improvements, principles evaluation, three.js example conversion, three.js UI configs, core construction order).
 
 ## CI
 

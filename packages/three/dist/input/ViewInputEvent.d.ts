@@ -1,12 +1,12 @@
 import { OrthographicCamera, PerspectiveCamera, Ray, Scene, Vector2 } from 'three/webgpu';
-import type { ThreeView } from '../view/ThreeView.js';
+import type { View } from '../view/View.js';
 import type { SelectionModel } from '../selection/SelectionModel.js';
 import type { Picker } from '../selection/Picker.js';
 import type { ComponentPicker } from '../selection/ComponentPicker.js';
-import type { ThreeEditor } from '../editor/ThreeEditor.js';
-/** What an InputRouter needs from the element it routes for. Implemented by IoThreeViewport. */
+import type { Editor } from '../editor/Editor.js';
+/** What an InputRouter needs from the element it routes for. Implemented by ThreeViewport. */
 export interface InputHost extends HTMLElement {
-    readonly view: ThreeView;
+    readonly view: View;
     readonly scene: Scene | null;
     /** Current editor mode (`'object'`, `'edit'`, ...), for keymap `when.mode`. */
     readonly mode?: string;
@@ -17,7 +17,7 @@ export interface InputHost extends HTMLElement {
     /** How this view picks components in edit mode (ADR-0007). */
     readonly componentPicker?: ComponentPicker | null;
     /** The editor shown, for running operators from key bindings. */
-    readonly editor?: ThreeEditor | null;
+    readonly editor?: Editor | null;
     getViewCamera(): PerspectiveCamera | OrthographicCamera;
 }
 /** `click` is synthesized by the router: a press and release on one pointer that moved less than a few pixels. */
@@ -60,7 +60,7 @@ export declare class ViewInputEvent {
         x: number;
         y: number;
     });
-    get view(): ThreeView;
+    get view(): View;
     /** World-space ray under the pointer, from the view's draw camera. */
     getRay(): Ray;
 }

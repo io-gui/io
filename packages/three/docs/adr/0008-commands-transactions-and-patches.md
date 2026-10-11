@@ -4,7 +4,7 @@ status: accepted
 
 # Document edits are commands that run transactions of invertible patches
 
-Every change to a `ThreeDocument` goes through three levels:
+Every change to a `Document` goes through three levels:
 
 - **Command**: a named, serialisable intent with explicit arguments, for example `{name: 'transform.translate', args: {ids, delta, space}}`. Commands are what get repeated ("repeat last"), journaled, scripted, bound to menus and keymaps as actions, and grouped into macros. This is Maya's model: tools are interactive drivers that end by issuing a command.
 - **Transaction**: one atomic group of patches produced by running a command. It is the unit of undo, of change notification and of network sync.
@@ -14,7 +14,7 @@ Undo applies a transaction's inverse patches; redo re-applies its forward patche
 
 Interactive operators (ADR-0004) open a transaction when a drag starts. Moves write into it, and patches to the same path coalesce (first old value, last new value). Release commits one transaction and emits the equivalent command to the journal; cancel rolls back. Blender's "Adjust Last Operation" falls out of this: undo the last transaction, then re-run its command with changed arguments.
 
-The change bus (ADR-0003) is fed by committed patches. A patch's `path` determines its change kind (`transform`, `geometry`, `material`, `structure`, `settings`), so views are tagged without extra `notify()` calls.
+Document changes (ADR-0003) are queued by committed patches. A patch's `path` determines its change kind (`transform`, `geometry`, `material`, `structure`, `settings`), so views are tagged without extra `notify()` calls.
 
 ## Considered Options
 

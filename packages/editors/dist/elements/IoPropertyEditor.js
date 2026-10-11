@@ -182,7 +182,7 @@ let IoPropertyEditor = class IoPropertyEditor extends ReactiveElement {
                     debug: console.warn(`IoPropertyEditor: property "${properties[i]}" not found in value`);
                 }
             }
-            if (this.properties === undefined) {
+            if (!this.properties?.length) {
                 for (const group in groups) {
                     if (group !== 'Main' && group !== 'Hidden' && groups[group].length) {
                         vChildren.push(ioObject({

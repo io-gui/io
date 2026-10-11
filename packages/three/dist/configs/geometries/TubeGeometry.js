@@ -2,8 +2,8 @@ import { ioPropertyEditor, registerEditorConfig, registerEditorGroups, registerE
 import { ioSwitch } from '@io-gui/inputs';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { TubeGeometry } from 'three/webgpu';
-import { ioBuildGeometry } from '../../elements/IoBuildGeometry.js';
-registerEditorWidget(TubeGeometry, ioBuildGeometry());
+import { threeBuildGeometry } from '../../elements/ThreeBuildGeometry.js';
+registerEditorWidget(TubeGeometry, threeBuildGeometry());
 registerEditorConfig(TubeGeometry, [
     ['parameters', ioPropertyEditor({ config: [
                 // path is a Curve - not easily editable

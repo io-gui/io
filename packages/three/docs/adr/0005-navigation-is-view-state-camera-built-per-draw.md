@@ -4,7 +4,7 @@ status: accepted
 
 # Navigation is view state; the draw camera is built per frame
 
-Each `ThreeView` stores navigation as numbers, modelled on Blender's `RegionView3D`: `target` (orbit pivot), `rotation`, `distance`, `projection`, `fov`, `axisView`, `cameraSource` (a scene camera by object id) and, planned, `lockCameraToView`. At draw and pick time the view builds a private camera from this state, the viewport size and the overscan. Scene cameras are never mutated to fit a viewport.
+Each `View` stores navigation as numbers, modelled on Blender's `RegionView3D`: `target` (orbit pivot), `rotation`, `distance`, `projection`, `fov`, `axisView`, `cameraSource` (a scene camera by object id) and, planned, `lockCameraToView`. At draw and pick time the view builds a private camera from this state, the viewport size and the overscan. Scene cameras are never mutated to fit a viewport.
 
 Before this, `ViewCameras` kept seven `Camera` objects plus `OrbitControls`. Overscan changed the active camera's projection during draw and raycast and then restored it, so a scene camera shown in a viewport was briefly mutated where inspectors and other viewports could see it. Scene cameras were picked by name (`cameraSelect = 'scene:<name>'`), which breaks on duplicates and renames.
 

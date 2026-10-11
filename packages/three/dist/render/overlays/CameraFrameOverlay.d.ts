@@ -7,7 +7,7 @@ import type { Overlay, OverlayContext, OverlayType } from '../Overlay.js';
 export declare class CameraFrameOverlay implements Overlay {
     readonly root: Group<import("three").Object3DEventMap>;
     /** Opacity of the area outside the frame. */
-    readonly opacity: import("three/webgpu").UniformNode<number>;
+    readonly opacity: import("three/webgpu").UniformNode<"float", number>;
     /** Half size of the frame in normalized device coordinates. */
     private readonly _half;
     private readonly _quad;

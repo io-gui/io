@@ -130,15 +130,29 @@ let IoLayout = class IoLayout extends ReactiveElement {
     }
     elementsMutated() {
         // TODO: Improve once Menu models have better (de)serialization
-        this.$addMenu.model = new Menu({
-            id: 'root',
-            options: this.elements.map(element => ({
+        const options = [];
+        const groups = new Map();
+        for (const element of this.elements) {
+            const option = {
                 id: element.props?.id,
                 label: element.props?.label || element.props?.id,
                 icon: element.props?.icon || '',
                 action: this.addTab.bind(this, element),
-            })),
-        });
+            };
+            if (element.group) {
+                let group = groups.get(element.group);
+                if (!group) {
+                    group = { id: element.group, label: element.group, options: [] };
+                    groups.set(element.group, group);
+                    options.push(group);
+                }
+                group.options.push(option);
+            }
+            else {
+                options.push(option);
+            }
+        }
+        this.$addMenu.model = new Menu({ id: 'root', options });
     }
     mutated() {
         const child = this.model.child;

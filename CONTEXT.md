@@ -21,7 +21,7 @@ Io-Gui has one foundational context (the reactive core) plus application-domain 
 - **Core → all**: Packages build on ReactiveObject / ReactiveElement, bindings, Theme, Storage, and overlay primitives. Core `Color` is the theme token class — not colors-package ColorValue.
 - **Core → Colors**: Colors edits plain ColorValue objects (0–1 RGBA). Theme and CSS variables use core `Color`.
 - **Core → Sliders**: Sliders extend `IoGl` (2D shader quads). Unrelated to Three's WebGPU renderer.
-- **Icons → Inputs / Menus / Layout**: Icon references (`io:…`) appear as labels/icons on fields, options, and tabs.
+- **Icons → Inputs / Menus / Layout / Three**: Icon references (`io:…`) appear as labels/icons on fields, options, and tabs. Three registers its own `three` namespace for its timeline transport buttons and the Object3D type icons of its scene graph.
 - **Inputs → Sliders**: Composite sliders bind IoNumber beside slider tracks.
 - **Sliders → Colors**: Color channel sliders build on sliders WebGL controls.
 - **Menus → Navigation**: Navigator presents one Menu and mirrors selection (`selectedID` deep, `getSelectedIDImmediate()` shallow). Element ids must match Option ids.
@@ -29,5 +29,5 @@ Io-Gui has one foundational context (the reactive core) plus application-domain 
 - **Menus → Editors**: Default editor widgets include `ioOptionSelect` with Menu models for enum-like properties.
 - **Layout Drawer ≠ Navigation IoNavigatorDrawer**: Same everyday word, different packages and jobs (collapsed Split child vs navigator chrome host).
 - **Editors → inspected objects**: Inspects arbitrary objects; ReactiveNodes get live `io-mutation` updates. Non-nodes need `dispatchMutation()` after in-place edits.
-- **Three → Editors**: Importing `@io-gui/three` registers PropertyConfigs / EditorGroups for Three.js classes (plus ThreeEditor and ThreeDocument).
+- **Three → Editors**: Importing `@io-gui/three` registers PropertyConfigs / EditorGroups for Three.js classes (plus Editor and Document).
 - **Markdown → Navigation**: Rendered headings expose `data-heading` for selector Anchor sync.

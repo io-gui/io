@@ -4,14 +4,17 @@ import { Layout } from '../models/Layout.js';
 import { IoMenu } from '@io-gui/menus';
 import { IoTabDragGhost } from './IoTabDragGhost.js';
 import { DropTarget } from './IoTabDragGhost.js';
+export type LayoutElement = SelectorElement & {
+    group?: string;
+};
 export type IoLayoutData = ReactiveElementProps & {
     model: WithBinding<Layout>;
-    elements: SelectorElement[];
+    elements: LayoutElement[];
 };
 export declare class IoLayout extends ReactiveElement {
     static get Style(): string;
     model: Layout;
-    elements: SelectorElement[];
+    elements: LayoutElement[];
     $addMenu: IoMenu;
     $tabDragGhost: IoTabDragGhost;
     private _targetPanelModel;

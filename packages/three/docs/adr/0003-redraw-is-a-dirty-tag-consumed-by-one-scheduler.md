@@ -8,8 +8,8 @@ Only the `RenderScheduler` renders. It owns the shared `WebGPURenderer` (ADR-000
 
 Each frame the scheduler runs fixed phases:
 
-1. **Tick.** If playback is on, advance the clock once and run animation hooks.
-2. **Collect.** Drain the editor's change bus and tag every view whose `listens(change)` is true. Ticking first lets this frame draw what the tick changed. `listens()` only answers; it does not change view setup.
+1. **Tick.** If playback is on, advance the active document's timeline once; the document runs its animation hook on the change.
+2. **Collect.** Drain the changes queued on each shown document and tag every view whose `listens(change)` is true. Ticking first lets this frame draw what the tick changed. `listens()` only answers; it does not change view setup. Then hand the drained changes to the document's change listeners: UI that follows a document without drawing it, such as the scene graph.
 3. **Evaluate.** Once per document, call `scene.updateMatrixWorld()` and later any derived-data step. Then turn off `matrixWorldAutoUpdate` while views draw.
 4. **Draw.** Draw tagged, visible, non-empty views in priority order (focused, hovered, then the rest) within a frame budget. Views not reached stay tagged for the next frame, and each frame they wait raises their priority by one, so a slow focused view cannot starve the rest.
 5. **Settle.** Keep `continuous` pipelines tagged until they report `converged`.
@@ -27,6 +27,6 @@ Before this, each viewport redrew on its own through io-gui `debounce` on any mu
 
 ## Consequences
 
-- Two-way bindings and inspectors still use reactivity. Rendering only listens to the change bus.
-- Once document transactions exist (ADR-0008), committed patches feed the change bus directly and `notify()` is only for edits outside the document.
+- Two-way bindings and inspectors still use reactivity. Rendering only listens to document changes.
+- Once document transactions exist (ADR-0008), committed patches queue document changes directly and `notify()` is only for edits outside the document.
 - Plain Three.js edits made outside operators must call `notify()` or `tag()`, or nothing redraws. That is deliberate. Only the scheduler calls `renderView`, and only for tagged views.

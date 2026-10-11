@@ -46,7 +46,7 @@ const _spherical = new Spherical()
 
 /**
  * Navigation state of one view, stored as numbers (ADR-0005), modelled on Blender's RegionView3D.
- * The camera used for drawing and picking is built from this state per frame by `ThreeView.getCamera()`.
+ * The camera used for drawing and picking is built from this state per frame by `View.getCamera()`.
  */
 export class ViewNavigation {
   /** Orbit pivot. */

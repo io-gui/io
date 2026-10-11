@@ -20,7 +20,8 @@ description: >-
 - `conversion` is display multiplier only; stored value stays in model units.
 - String/number: arrow keys move focus at text boundaries (Ctrl overrides).
 - `IoNumber`: comma→period; Home/End → min/max.
-- Boolean labels may be icon refs (`io:check`).
+- Boolean `true` / `false` labels that name a registered icon (`namespace:id`, any namespace) show as icons; other strings, including unregistered references, show as text.
+- `IoButton` keeps a right margin on its icon even without a label. Icon-only buttons: `io-button > io-icon { margin-right: 0 }` in the host's style.
 - Events: `value-input` on fields; `io-button-clicked` on buttons.
 
 ## Read next

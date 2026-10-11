@@ -1,16 +1,16 @@
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { Object3D } from 'three/webgpu';
-import { ioVector3 } from '../../elements/math/IoVector3.js';
-import { ioEuler } from '../../elements/math/IoEuler.js';
-import { ioQuaternion } from '../../elements/math/IoQuaternion.js';
+import { threeVector3 } from '../../elements/math/ThreeVector3.js';
+import { threeEuler } from '../../elements/math/ThreeEuler.js';
+import { threeQuaternion } from '../../elements/math/ThreeQuaternion.js';
 registerEditorConfig(Object3D, [
     ['renderOrder', ioNumberSlider({ min: 0, max: 100, step: 1 })],
-    ['up', ioVector3({ min: -1, max: 1, step: 0.01 })],
-    ['position', ioVector3({ step: 0.001 })],
-    ['quaternion', ioQuaternion({ step: 0.001 })],
-    ['scale', ioVector3({ step: 0.001, linkable: true })],
-    ['rotation', ioEuler({ min: -2 * Math.PI, max: 2 * Math.PI, step: Math.PI / 180 * 0.1, conversion: 1 / Math.PI * 180 })],
+    ['up', threeVector3({ min: -1, max: 1, step: 0.01 })],
+    ['position', threeVector3({ step: 0.001 })],
+    ['quaternion', threeQuaternion({ step: 0.001 })],
+    ['scale', threeVector3({ step: 0.001, linkable: true })],
+    ['rotation', threeEuler({ min: -2 * Math.PI, max: 2 * Math.PI, step: Math.PI / 180 * 0.1, conversion: 1 / Math.PI * 180 })],
 ]);
 registerEditorGroups(Object3D, {
     Main: [
@@ -29,9 +29,7 @@ registerEditorGroups(Object3D, {
     Advanced: [
         'quaternion', 'up',
         'matrix', 'matrixWorld', 'normalMatrix', 'matrixWorldInverse', 'modelViewMatrix',
-        'matrixAutoUpdate', 'matrixWorldAutoUpdate', 'matrixWorldNeedsUpdate'
+        'matrixAutoUpdate', 'matrixWorldAutoUpdate', 'matrixWorldNeedsUpdate', 'static', 'parent', 'children'
     ],
-    Hidden: [
-        'static', 'parent', 'children'
-    ],
+    Hidden: [],
 });

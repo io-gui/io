@@ -120,6 +120,22 @@ describe('IoObject', () => {
     expect(properties.children[2]).toBe(undefined)
     reset()
   })
+  it('shows Advanced inside a nested object', async () => {
+    element.value = {child: {name: 'nested', _extra: 1}}
+    element.expanded = true
+    await nextFrame()
+    await nextFrame()
+    await nextFrame()
+    const nested = element.children[1].querySelector('io-object') as IoObject
+    nested.expanded = true
+    await nextFrame()
+    await nextFrame()
+    await nextFrame()
+    const nestedEditor = nested.querySelector('io-property-editor')!
+    const advanced = [...nestedEditor.children].find(child => child.localName === 'io-object')
+    expect(advanced?.textContent).toBe('Advanced')
+    reset()
+  })
   it('matches value with custom config', async () => {
     element.value = testValue
     element.config = [

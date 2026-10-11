@@ -13,16 +13,16 @@ import {
 
 describe('layoutSize', () => {
   describe('sizeToFlex', () => {
-    it('should map auto to flex grow', () => {
-      expect(sizeToFlex('auto')).toBe('1 1 auto')
+    it('should map auto to flex grow from a zero basis, so auto siblings share space equally', () => {
+      expect(sizeToFlex('auto')).toBe('1 1 0%')
     })
 
-    it('should map px auto to flex grow', () => {
-      expect(sizeToFlex('100px auto')).toBe('1 1 auto')
+    it('should map px auto to flex grow from a zero basis', () => {
+      expect(sizeToFlex('100px auto')).toBe('1 1 0%')
     })
 
-    it('should map percent auto to flex grow', () => {
-      expect(sizeToFlex('20% auto')).toBe('1 1 auto')
+    it('should map percent auto to flex grow from a zero basis', () => {
+      expect(sizeToFlex('20% auto')).toBe('1 1 0%')
     })
 
     it('should map px size to fixed flex basis', () => {

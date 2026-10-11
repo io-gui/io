@@ -18,7 +18,7 @@ export function biasedDepthNode(bias = 0.002): Node {
 /** Colors by state: 0 = hidden, 1 = normal, 2 = selected. Alpha 0 for hidden. */
 export type StateColors = {normal: Color; normalAlpha: number; selected: Color; selectedAlpha: number}
 
-function stateColor(state: Node, colors: StateColors) {
+function stateColor(state: Node<'float'>, colors: StateColors) {
   const normal = vec4(uniform(colors.normal), colors.normalAlpha)
   const selected = vec4(uniform(colors.selected), colors.selectedAlpha)
   const s = float(state)
@@ -52,7 +52,7 @@ export function statePointMaterial(positions: InstancedBufferAttribute, states: 
   const material = new PointsNodeMaterial({sizeAttenuation: false})
   material.positionNode = instancedBufferAttribute(positions)
   material.sizeNode = float(size)
-  material.colorNode = stateColor(instancedBufferAttribute(states) as unknown as Node, colors)
+  material.colorNode = stateColor(instancedBufferAttribute(states) as unknown as Node<'float'>, colors)
   return overlayDefaults(material, depthTest)
 }
 

@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { InputRouter, Operator, OperatorContext, OperatorHost, ThreeDocument, ThreeEditor, ThreeView, ViewInputEvent } from '@io-gui/three'
+import { InputRouter, Operator, OperatorContext, OperatorHost, Document, Editor, View, ViewInputEvent } from '@io-gui/three'
 import { Mesh } from 'three/webgpu'
 
 function createHost(): OperatorHost {
   const element = document.createElement('div') as unknown as OperatorHost
-  const view = new ThreeView()
+  const view = new View()
   Object.assign(element, {view, scene: null, getViewCamera: () => view.getCamera(200, 100, null)})
   Object.defineProperty(element, 'inputRouter', {value: new InputRouter(element)})
   element.style.cssText = 'position:fixed;left:0;top:0;width:200px;height:100px'
@@ -26,11 +26,11 @@ class DragOperator implements Operator {
 }
 
 describe('OperatorRegistry', () => {
-  let editor: ThreeEditor
+  let editor: Editor
   let mesh: Mesh
 
   beforeEach(() => {
-    editor = new ThreeEditor()
+    editor = new Editor()
     mesh = new Mesh()
     editor.document.scene.add(mesh)
     editor.operators.register({id: 'object.rename', label: 'Rename', create: props => ({
@@ -108,8 +108,24 @@ describe('OperatorRegistry', () => {
 
     editor.operators.run('object.drag')
     const previous = editor.document
-    editor.document = new ThreeDocument()
+    editor.document = new Document()
     expect(editor.operators.running).toBe(null)
     expect(previous.activeTransaction).toBe(null)
+  })
+})
+
+describe('object.rename', () => {
+  it('renames an object in one transaction; keeping its name or a missing object records nothing', () => {
+    const editor = new Editor()
+    const mesh = new Mesh()
+    editor.document.scene.add(mesh)
+    expect(editor.operators.run('object.rename', {id: mesh.uuid, name: 'Crate'})).toBe('finished')
+    expect(mesh.name).toBe('Crate')
+    expect(editor.document.history.at(-1)!.patches).toEqual([{op: 'set', id: mesh.uuid, path: 'name', value: 'Crate', oldValue: ''}])
+    expect(editor.operators.lastCommand).toEqual({name: 'object.rename', args: {id: mesh.uuid, name: 'Crate'}})
+    expect(editor.operators.run('object.rename', {id: mesh.uuid, name: 'Crate'})).toBe('cancelled')
+    expect(editor.operators.run('object.rename', {id: 'missing', name: 'x'})).toBe('cancelled')
+    expect(editor.document.history.length).toBe(1)
+    editor.dispose()
   })
 })

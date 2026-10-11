@@ -1,8 +1,8 @@
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups, registerEditorWidget } from '@io-gui/editors';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { RingGeometry } from 'three/webgpu';
-import { ioBuildGeometry } from '../../elements/IoBuildGeometry.js';
-registerEditorWidget(RingGeometry, ioBuildGeometry());
+import { threeBuildGeometry } from '../../elements/ThreeBuildGeometry.js';
+registerEditorWidget(RingGeometry, threeBuildGeometry());
 registerEditorConfig(RingGeometry, [
     ['parameters', ioPropertyEditor({ config: [
                 ['innerRadius', ioNumberSlider({ min: 0, max: 1000, step: 0.1 })],

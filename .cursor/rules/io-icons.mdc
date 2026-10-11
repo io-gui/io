@@ -1,0 +1,36 @@
+---
+description: Authoring SVG iconsets for @io-gui/icons, the built-in io set and package namespaces such as three, sourced from Material Symbols
+globs: packages/icons/**,packages/*/src/icons/**
+alwaysApply: false
+metadata:
+  internal: "true"
+---
+
+# Iconsets
+
+## Registration
+
+- `IconsetSingleton.registerIcons(namespace, svg)` registers every element with an `id` in `svg`, nested ones too (`querySelectorAll('[id]')`). Put ids on the top-level `<g>` groups only.
+- An id registered again, in the same markup or a later call, replaces the earlier icon. Keep ids unique per namespace; an id defined twice in one markup warns in debug builds.
+- `getIcon` wraps the group in a fixed `<svg viewBox="0 0 24 24">`. Artwork outside 0–24 needs a `transform` on its group.
+- A miss renders an empty icon without a warning. Cover new references in a test: `IconsetSingleton.hasIcon('ns:id')`.
+- Name ids by their role, snake_case (`skip_start`, `frame_back`), not by the source glyph (`skip_previous`), so the glyph can change without touching references.
+
+## A package namespace
+
+Built-ins (`io`) live in `packages/icons/src/nodes/Iconset.ts`. Another package registers its own namespace in a side-effect module, e.g. `packages/three/src/icons/threeIcons.ts` (`three:`: transport glyphs, and one per Object3D type, mapped to classes in `objectIcons.ts`):
+
+- List `**/icons/**` in the package's `sideEffects`, or bundlers drop the bare import.
+- Import the module from each element that uses the icons and from the package index.
+- Add `@io-gui/icons` to `devDependencies` (`workspace:*`) and `peerDependencies`, add `{ "path": "../icons" }` to the tsconfig `references`, then run `pnpm install --offline` to link it; commit the `pnpm-lock.yaml` change.
+
+## Material Symbols (fonts.google.com/icons)
+
+- Find names and tags in `https://fonts.google.com/metadata/icons?incomplete=1&key=material_symbols` (JSON after a `)]}'` prefix; skip icons whose `unsupported_families` lists the family you use).
+- Download `https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined/<name>/default/24px.svg` (weight 400, optical size 24). Use `fill1` instead of `default` for the filled variant (solid transport and status glyphs); `materialsymbolsrounded` / `materialsymbolssharp` for the other styles.
+- The viewBox is `0 -960 960 960`. Wrap the path in `<g id="<id>" transform="scale(0.025) translate(0 960)">`: translate the -960…0 range to 0…960, then scale 960 to 24.
+- Keep only `<path d="…">`. Drop `xmlns`, `width`, `height` and `fill`, so the icon fills with `--io_color` and follows field states (selected, red, green).
+- Wrap a `d` longer than ~300 characters onto indented lines before command letters (`M`, `q`, `Z`, ...): whitespace before a command is valid path syntax, and lines over 360 characters warn in lint.
+- Downloads are untrusted: extract the `d` values, check they hold only path commands and numbers, and never paste a whole file.
+- Look at the result before committing: render the groups at 24×24 (a contact sheet), or open Demos > Icons, which lists every registered namespace.
+- Material Symbols are licensed Apache-2.0.

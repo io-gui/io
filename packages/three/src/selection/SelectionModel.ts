@@ -1,6 +1,6 @@
 import { Register, ReactiveObject, ReactiveObjectProps, Property } from '@io-gui/core'
-import type { Object3D } from 'three/webgpu'
-import type { ThreeDocument } from '../editor/ThreeDocument.js'
+import { Object3D } from 'three/webgpu'
+import type { Document } from '../editor/Document.js'
 import type { Transaction } from '../editor/Transaction.js'
 import { ComponentSet } from './ComponentSet.js'
 
@@ -14,7 +14,7 @@ export type SelectionDomain = 'object' | 'point' | 'edge' | 'primitive' | 'corne
 export type ComponentSets = ReadonlyMap<SelectionDomain, ComponentSet>
 
 export type SelectionModelProps = ReactiveObjectProps & {
-  document: ThreeDocument
+  document: Document
 }
 
 /**
@@ -39,11 +39,14 @@ export class SelectionModel extends ReactiveObject {
   @Property({type: String, value: ''})
   declare active: string
 
+  @Property({type: Object3D, value: undefined})
+  declare activeObject: Object3D | undefined
+
   @Property({type: Boolean, value: false})
   declare uvSync: boolean
 
   // Assigned from the constructor args by ReactiveObject; `declare` keeps a class field from resetting it.
-  declare readonly document: ThreeDocument
+  declare readonly document: Document
 
   /** The component domain edit mode returns to (`domain` is `'object'` outside edit mode). */
   componentDomain: SelectionDomain = 'point'
@@ -143,7 +146,10 @@ export class SelectionModel extends ReactiveObject {
     if (!changed.size && active === this.active && domain === this.domain) return false
     this._objects.clear()
     for (const uuid of objects) this._objects.add(uuid)
-    this.setProperties({active, domain, version: this.version + 1})
+    this.setProperties({
+      active, domain, version: this.version + 1,
+      activeObject: this.document.getObject(active),
+    })
     this.document.notify({kind: 'selection', ids: changed.size ? [...changed] : [active]})
     return true
   }

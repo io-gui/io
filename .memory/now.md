@@ -1,10 +1,8 @@
 # Current Focus
 
-io-three core re-architecture. ADRs `packages/three/docs/adr/0001-0007` (accepted). Plan `.cursor/plans/three_core_architecture.plan.md` (7 phases).
-- Decided: ThreeEditor; one active doc switchable at runtime; undo = commands -> transactions of invertible patches (ADR-0008 proposed, awaiting user review); plain Raycaster behind async Picker.
-- ADR-0008 accepted. P1-P7 committed. Core plan complete. Future work (undo/commands/collab/BVH/blobs, ex-P8) lives in `.cursor/plans/three_future_work.plan.md`; start only when asked.
-- 2026-10-07: removed back-compat (ThreeApplet, ToolBase, viewport applet/tool props, editor onResized) committed. 2026-10-08: viewport `cameraSelect` removed -> `ThreeView.setAxisView('free'|axis)` (clears scene camera) / `setCameraView(id?)` (`uuid:`/`name:`, none = first scene camera; lazy -> uuid, free view meanwhile; no prefix warns). AxisView gained `'free'` (was null). Committed (8f89549b).
-- 2026-10-08: review fixes (scheduler starvation aging, outline proxy resync, getObject miss cache + selection prune) uncommitted. transact() join left as design choice.
-- ADR drift + minor review fixes committed. Open: LMB orbit vs tool LMB (ADR-0004), later.
-- 2026-10-08: PR #111 cleanup uncommitted (core events/Field, Registry, KeyedPool, StateCage, UV cage path, utils/camera + sceneGraph). See archive. Transaction.set assigns / Transaction.copy copies (uncommitted).
-- Design doc (Claude Docs): https://claude.ai/code/artifact/cb23d4fe-d4ad-406c-9d62-919db30887dd — still mentions WebGL fallback options; ADR-0001 supersedes.
+2026-10-11: ThreeScenegraph round 2 done (uncommitted): expanded by default (disclosure = collapsed uuids), reveal on active change (expand ancestors + scroll), rename via double-click/F2 -> built-in `object.rename` operator, horizontal scroll for deep rows (grid `minmax(max-content, auto)`). See archive (17).
+- align-self baseline removed (user OK). User has other uncommitted edits (layout, deleted EditorDocument1/2, examples, half indent) — do not touch.
+- 2026-10-11 examples: audit + r186 port + ADR-0009 live documents (SkinningBlending option A) done, uncommitted. Follow-up deferred: onAnimate time-change cause (future plan timeline-negative-delta). See archive (18 examples, 19-21).
+- Design doc (Claude Docs) for io-three: https://claude.ai/code/artifact/cb23d4fe-d4ad-406c-9d62-919db30887dd (mentions WebGL fallback; ADR-0001 supersedes).
+- 2026-10-11 conversion plan: Candidates table added (274 rows, blocker tags + non-candidate lists). See archive (22).
+- 2026-10-11 low-hanging conversions: 27 docs (24 completed, 3 transmission in progress), uncommitted. Next candidates: more unblocked TODO rows. Harness: scratchpad snap.mjs (shared renderer). See archive (23).

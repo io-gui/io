@@ -1,8 +1,8 @@
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups, registerEditorWidget } from '@io-gui/editors';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { LatheGeometry } from 'three/webgpu';
-import { ioBuildGeometry } from '../../elements/IoBuildGeometry.js';
-registerEditorWidget(LatheGeometry, ioBuildGeometry());
+import { threeBuildGeometry } from '../../elements/ThreeBuildGeometry.js';
+registerEditorWidget(LatheGeometry, threeBuildGeometry());
 registerEditorConfig(LatheGeometry, [
     ['parameters', ioPropertyEditor({ config: [
                 // points is an array of Vector2 - not easily editable

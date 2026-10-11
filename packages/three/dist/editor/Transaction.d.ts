@@ -1,5 +1,5 @@
 import type { Object3D } from 'three/webgpu';
-import type { ThreeDocument } from './ThreeDocument.js';
+import type { Document } from './Document.js';
 import { Patch } from './Patch.js';
 export type TransactionState = 'open' | 'committed' | 'rolledBack';
 /**
@@ -9,12 +9,12 @@ export type TransactionState = 'open' | 'committed' | 'rolledBack';
  * patch that keeps the first old value and the last new value.
  */
 export declare class Transaction {
-    readonly document: ThreeDocument;
+    readonly document: Document;
     readonly label: string;
     readonly patches: Patch[];
     state: TransactionState;
     private readonly _valuePatches;
-    constructor(document: ThreeDocument, label?: string);
+    constructor(document: Document, label?: string);
     /**
      * Assigns `value` to a property path of a document object (by object or uuid). Read-only properties
      * (`position`, `rotation`, `quaternion`, `scale`) throw: write them with `copy`, or set their components.

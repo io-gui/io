@@ -57,10 +57,10 @@ Read-only (getter-only or non-writable) prototype properties of configured const
 ```typescript
 import { registerEditorConfig } from '@io-gui/editors'
 import { ioColorRgba } from '@io-gui/colors'
-import { ioVector3 } from '@io-gui/three'
+import { threeVector3 } from '@io-gui/three'
 
 registerEditorConfig(MyClass, [
-  ['position', ioVector3()],
+  ['position', threeVector3()],
   [/Color$/, ioColorRgba()],
 ])
 ```

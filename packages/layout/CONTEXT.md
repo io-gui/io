@@ -27,7 +27,7 @@ The axis a `Split` lays its children along — `horizontal` (a row) or `vertical
 _Avoid_: axis, layout, flow
 
 **Size**:
-A child's size within its parent `Split`. Stored as `size` (`"auto"`, a pixel length, or a percentage). `"auto"` grows to fill remaining space (`flex: 1 1 auto`); fixed values hold a basis (`flex: 0 1 <size>`). Each `Split` keeps at least one child with `size: "auto"` in the model. When a drawer hides children, the view separately tracks whether any **visible** child has auto size — a presentation concern, not a model invariant.
+A child's size within its parent `Split`. Stored as `size` (`"auto"`, a pixel length, or a percentage). `"auto"` grows to fill remaining space from a zero basis (`flex: 1 1 0%`), so auto siblings share it equally whatever their content; fixed values hold their size (`flex: 0 0 <size>`). Each `Split` keeps at least one child with `size: "auto"` in the model. When a drawer hides children, the view separately tracks whether any **visible** child has auto size — a presentation concern, not a model invariant.
 _Avoid_: flex, weight, ratio, span
 
 **Size budget**:

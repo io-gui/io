@@ -1,8 +1,8 @@
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups, registerEditorWidget } from '@io-gui/editors';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { PolyhedronGeometry } from 'three/webgpu';
-import { ioBuildGeometry } from '../../elements/IoBuildGeometry.js';
-registerEditorWidget(PolyhedronGeometry, ioBuildGeometry());
+import { threeBuildGeometry } from '../../elements/ThreeBuildGeometry.js';
+registerEditorWidget(PolyhedronGeometry, threeBuildGeometry());
 registerEditorConfig(PolyhedronGeometry, [
     ['parameters', ioPropertyEditor({ config: [
                 // vertices and indices are arrays - not easily editable

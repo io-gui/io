@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { Behavior, InputHost, InputRouter, Keymap, ThreeView, ViewInputEvent, navigationKeymaps, parseInput } from '@io-gui/three'
+import { Behavior, InputHost, InputRouter, Keymap, View, ViewInputEvent, navigationKeymaps, parseInput } from '@io-gui/three'
 import { Scene } from 'three/webgpu'
 
 type Recorder = Behavior & {log: string[]; wants: (event: ViewInputEvent) => boolean; claimsHover: boolean; handlesKeys: boolean}
@@ -26,7 +26,7 @@ function recorder(name: string, priority: number, options: {wants?: (event: View
 
 function createHost(): InputHost {
   const element = document.createElement('div') as unknown as InputHost
-  const view = new ThreeView()
+  const view = new View()
   const scene = new Scene()
   Object.assign(element, {view, scene, getViewCamera: () => view.getCamera(200, 100, scene)})
   element.style.cssText = 'position:fixed;left:0;top:0;width:200px;height:100px'
