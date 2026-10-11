@@ -1,20 +1,39 @@
 import {
+  ACESFilmicToneMapping,
   AnimationMixer,
-  Color,
   Object3D,
   PerspectiveCamera,
   PMREMGenerator,
+  Scene,
   WebGPURenderer
 } from 'three/webgpu'
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
+import { SkyMesh } from 'three/addons/objects/SkyMesh.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
+import { DRACOLoader, DRACO_GLTF_CONFIG } from 'three/addons/loaders/DRACOLoader.js'
 import { Register } from '@io-gui/core'
 import { Document, DocumentProps, Timeline } from '@io-gui/three'
 
 /**
- * The animated Littlest Tokyo model, lit by a PMREM room environment, with a scene camera riding the train.
- * Plays when opened.
+ * The source's sky: sun at elevation 11°, azimuth -55°. Its clouds hold still: the source never advances the sky's
+ * `time`, and SkyMesh would drift them on TSL's global time, not the timeline.
+ */
+function createSky() {
+  const sky = new SkyMesh()
+  sky.name = 'Sky'
+  sky.scale.setScalar( 10000 )
+  sky.turbidity.value = 0
+  sky.rayleigh.value = 3
+  sky.mieDirectionalG.value = 0.7
+  sky.cloudElevation.value = 1
+  sky.cloudSpeed.value = 0
+  sky.sunPosition.value.set( - 0.8, 0.19, 0.56 )
+  sky.userData.selectable = false
+  return sky
+}
+
+/**
+ * The animated Littlest Tokyo model under a Preetham sky that also lights it as a PMREM environment, with a scene
+ * camera riding the train. Plays when opened.
  */
 @Register
 export class AnimationKeyframesExample extends Document {
@@ -22,20 +41,22 @@ export class AnimationKeyframesExample extends Document {
   public mixer: AnimationMixer = new AnimationMixer(new Object3D())
 
   constructor(args?: DocumentProps) {
-    super({timeline: new Timeline({autoplay: true}), ...args})
-    this.scene.background = new Color( 0xbfe3dd )
+    super({toneMapping: ACESFilmicToneMapping, timeline: new Timeline({autoplay: true}), ...args})
+    this.scene.add( createSky() )
     void this.loadModel()
   }
 
   override onRendererInitialized(renderer: WebGPURenderer) {
     super.onRendererInitialized(renderer)
-    const pmremGenerator = new PMREMGenerator( renderer )
-    this.scene.environment = pmremGenerator.fromScene( new RoomEnvironment(), 0.04 ).texture
+    // A sky in a scene of its own, so the environment holds only the sky.
+    const environment = new Scene()
+    environment.add( createSky() )
+    this.scene.environment = new PMREMGenerator( renderer ).fromScene( environment ).texture
   }
 
   private async loadModel() {
     const dracoLoader = new DRACOLoader()
-    dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/versioned/decoders/1.5.7/' )
+    dracoLoader.setDecoderPath( DRACO_GLTF_CONFIG )
 
     const loader = new GLTFLoader()
     loader.setDRACOLoader( dracoLoader )
@@ -60,7 +81,8 @@ export class AnimationKeyframesExample extends Document {
       train.add(perspectiveCamera)
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: this.scene}, true)
+      // The model, not the scene: the sky spans 10000 units.
+      this.dispatch('frame-object', {object: model}, true)
     } catch ( e ) {
       console.error( e )
     }

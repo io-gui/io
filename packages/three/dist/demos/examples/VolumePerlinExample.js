@@ -5,16 +5,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Mesh, NodeMaterial, Data3DTexture, RedFormat, LinearFilter, Vector3, BackSide, BoxGeometry } from 'three/webgpu';
-import { Break, If, vec3, vec4, texture3D, uniform, Fn } from 'three/tsl';
+import { Break, If, Loop, select, bool, vec3, vec4, texture3D, uniform, Fn } from 'three/tsl';
 import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js';
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 import { Register, Property } from '@io-gui/core';
 import { Document } from '@io-gui/three';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
+const REFINEMENT_STEPS = 4;
+/** A Perlin noise volume raymarched in a box, with threshold, step count and surface refinement in the Document tab. */
 let VolumePerlinExample = class VolumePerlinExample extends Document {
     thresholdUniform;
     stepsUniform;
+    refineUniform;
     constructor(args) {
         super(args);
         const size = 128;
@@ -37,30 +40,51 @@ let VolumePerlinExample = class VolumePerlinExample extends Document {
         texture.magFilter = LinearFilter;
         texture.unpackAlignment = 1;
         texture.needsUpdate = true;
-        const opaqueRaymarchingTexture = Fn(({ texture, steps, threshold }) => {
+        const opaqueRaymarchingTexture = Fn(({ texture, steps, threshold, refine }) => {
             const finalColor = vec4(0).toVar();
+            const positionPrev = vec3(0).toVar();
+            const hasPrev = bool(false).toVar();
             RaymarchingBox(steps, ({ positionRay }) => {
                 const mapValue = texture.sample(positionRay.add(0.5)).r.toVar();
                 If(mapValue.greaterThan(threshold), () => {
-                    const p = vec3(positionRay).add(0.5);
-                    finalColor.rgb.assign(texture.normal(p).mul(0.5).add(positionRay.mul(1.5).add(0.25)));
+                    const surfacePos = positionRay.toVar();
+                    If(refine.and(hasPrev), () => {
+                        // The surface lies between the previous sample (below the threshold) and this one (above it).
+                        const p0 = positionPrev.toVar();
+                        const p1 = positionRay.toVar();
+                        Loop(REFINEMENT_STEPS, () => {
+                            const pm = p0.add(p1).mul(0.5).toConst();
+                            const dm = texture.sample(pm.add(0.5)).r.toConst();
+                            const isGreater = dm.greaterThan(threshold);
+                            p1.assign(select(isGreater, pm, p1).uniformFlow());
+                            p0.assign(select(isGreater, p0, pm).uniformFlow());
+                        });
+                        surfacePos.assign(p1);
+                    });
+                    const p = vec3(surfacePos).add(0.5);
+                    finalColor.rgb.assign(texture.normal(p).mul(0.5).add(surfacePos.mul(1.5).add(0.25)));
                     finalColor.a.assign(1);
                     Break();
                 });
+                positionPrev.assign(positionRay);
+                hasPrev.assign(bool(true));
             });
             return finalColor;
         });
         this.thresholdUniform = uniform(this.threshold);
         this.stepsUniform = uniform(this.steps);
+        this.refineUniform = uniform(this.refine);
         const material = new NodeMaterial();
         material.colorNode = opaqueRaymarchingTexture({
             texture: texture3D(texture, null, 0),
             steps: this.stepsUniform,
-            threshold: this.thresholdUniform
+            threshold: this.thresholdUniform,
+            refine: this.refineUniform,
         });
         material.side = BackSide;
         material.transparent = true;
         const mesh = new Mesh(new BoxGeometry(1, 1, 1), material);
+        mesh.name = 'Volume';
         this.scene.add(mesh);
     }
     thresholdChanged() {
@@ -69,6 +93,9 @@ let VolumePerlinExample = class VolumePerlinExample extends Document {
     stepsChanged() {
         this.stepsUniform.value = this.steps;
     }
+    refineChanged() {
+        this.refineUniform.value = this.refine;
+    }
 };
 __decorate([
     Property({ type: Number, value: 0.6 })
@@ -76,6 +103,9 @@ __decorate([
 __decorate([
     Property({ type: Number, value: 200 })
 ], VolumePerlinExample.prototype, "steps", void 0);
+__decorate([
+    Property({ type: Boolean, value: true })
+], VolumePerlinExample.prototype, "refine", void 0);
 VolumePerlinExample = __decorate([
     Register
 ], VolumePerlinExample);
@@ -85,7 +115,7 @@ registerEditorConfig(VolumePerlinExample, [
     ['steps', ioNumberSlider({ min: 0, max: 300, step: 1 })]
 ]);
 registerEditorGroups(VolumePerlinExample, {
-    Main: ['threshold', 'steps'],
+    Main: ['threshold', 'steps', 'refine'],
     // Hide all
     Hidden: [new RegExp(/^[\s\S]*$/)]
 });

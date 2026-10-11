@@ -5,11 +5,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Property, Register } from '@io-gui/core';
-import { AmbientLight, AnimationMixer, BoxGeometry, DoubleSide, Mesh, MeshBasicNodeMaterial, PerspectiveCamera, Vector3, } from 'three/webgpu';
-import { color, positionWorld, linearDepth, viewportLinearDepth, viewportSharedTexture, screenUV, hue, time, checker, uv, modelScale, } from 'three/tsl';
+import { AmbientLight, AnimationMixer, BoxGeometry, DoubleSide, Mesh, MeshBasicNodeMaterial, NeutralToneMapping, PerspectiveCamera, Vector3, } from 'three/webgpu';
+import { color, positionWorld, linearDepth, viewportLinearDepth, viewportSharedTexture, screenUV, hue, checker, uv, modelScale, } from 'three/tsl';
 import { hashBlur } from 'three/addons/tsl/display/hashBlur.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { Document, threeVector3 } from '@io-gui/three';
+import { Document, threeVector3, Timeline } from '@io-gui/three';
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
 import { ioOptionSelect, Menu } from '@io-gui/menus';
 /**
@@ -27,9 +27,9 @@ let BackdropAreaExample = class BackdropAreaExample extends Document {
     materials;
     boxScale;
     constructor(args) {
-        super({ toneMappingExposure: 0.9, autoplay: true, ...args });
+        super({ toneMapping: NeutralToneMapping, toneMappingExposure: 0.9, timeline: new Timeline({ autoplay: true }), ...args });
         // Background
-        this.scene.backgroundNode = hue(screenUV.y.mix(color(0x66bbff), color(0x4466ff)), time.mul(0.1));
+        this.scene.backgroundNode = hue(screenUV.y.mix(color(0x66bbff), color(0x4466ff)), this.timeline.timeNode.mul(0.1));
         // Lighting
         const ambient = new AmbientLight(0xffffff, 2.5);
         ambient.name = 'Ambient';
@@ -68,7 +68,7 @@ let BackdropAreaExample = class BackdropAreaExample extends Document {
             'pixel': this.pixelMaterial
         };
         // Camera
-        const camera = new PerspectiveCamera(50, 1, 0.1, 100);
+        const camera = new PerspectiveCamera(50, 1, 0.25, 25);
         camera.name = 'Camera';
         camera.position.set(3, 2, 3);
         camera.lookAt(0, 1, 0);
@@ -81,7 +81,7 @@ let BackdropAreaExample = class BackdropAreaExample extends Document {
         this.box.renderOrder = 1;
         this.scene.add(this.box);
         // Floor
-        const floor = new Mesh(new BoxGeometry(3, .01, 3), new MeshBasicNodeMaterial({
+        const floor = new Mesh(new BoxGeometry(5, .01, 5), new MeshBasicNodeMaterial({
             color: 0xff6600,
             opacityNode: positionWorld.xz.distance(0).oneMinus().clamp(),
             transparent: true,
@@ -103,9 +103,11 @@ let BackdropAreaExample = class BackdropAreaExample extends Document {
         const loader = new GLTFLoader();
         loader.load('https://threejs.org/examples/models/gltf/Michelle.glb', (gltf) => {
             const object = gltf.scene;
+            this.timeline.duration = gltf.animations[0].duration;
             this.mixer = new AnimationMixer(object);
             const action = this.mixer.clipAction(gltf.animations[0]);
             action.play();
+            this.mixer.setTime(this.timeline.currentTime);
             this.scene.add(object);
             this.notify({ kind: 'structure' });
             this.dispatch('frame-object', { object: this.box }, true);
@@ -116,7 +118,7 @@ let BackdropAreaExample = class BackdropAreaExample extends Document {
     }
 };
 __decorate([
-    Property({ type: String, value: 'blurred' })
+    Property({ type: String, value: 'checker' })
 ], BackdropAreaExample.prototype, "material", void 0);
 BackdropAreaExample = __decorate([
     Register

@@ -1,4 +1,4 @@
-import { Register } from '@io-gui/core'
+import { Property, Register } from '@io-gui/core'
 import {
   AnimationClip,
   AnimationMixer,
@@ -15,6 +15,7 @@ import {
   MathUtils,
   Node,
   Group,
+  NeutralToneMapping,
 } from 'three/webgpu'
 import {
   color,
@@ -38,6 +39,7 @@ import {
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
 import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { registerEditorGroups } from '@io-gui/editors'
 
 type GltfModel = {
   scene: Group
@@ -54,7 +56,7 @@ const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
   new GLTFLoader().load(url, resolve, undefined, reject)
 })
 
-const lightSpeed = /*#__PURE__*/ Fn<[Node, Node]>(([suv_immutable, time]) => {
+const lightSpeed = /*#__PURE__*/ Fn(([suv_immutable, time]: [Node<'vec2'>, Node<'float'>]) => {
   // forked from https://www.shadertoy.com/view/7ly3D1
   const suv = vec2(suv_immutable)
   const uv = vec2(length(suv), atan(suv.y, suv.x))
@@ -64,18 +66,11 @@ const lightSpeed = /*#__PURE__*/ Fn<[Node, Node]>(([suv_immutable, time]) => {
     .mul(.5).add(.5))).mul(vec3(sin(uv.y.mul(45.).add(time.mul(0.8))).mul(.5).add(.5)))
     .mul(vec3(sub(1., cos(uv.y.add(mul(22., time).sub(pow(uv.x.add(offset), .3).mul(60.))))))).mul(vec3(uv.x.mul(2.))))
   return rays
-}).setLayout({
-  name: 'lightSpeed',
-  type: 'vec3',
-  inputs: [
-    { name: 'suv', type: 'vec2' },
-    { name: 'time', type: 'float' }
-  ]
-})
+}, { suv: 'vec2', time: 'float', return: 'vec3' })
 
 /**
  * Michelle's animation retargeted onto the Soldier, over a reflective floor with a TSL light-speed background.
- * Plays when opened.
+ * `showHelpers` (Document tab) draws both skeletons. Plays when opened.
  */
 @Register
 export class AnimationRetargetingExample extends Document {
@@ -83,13 +78,17 @@ export class AnimationRetargetingExample extends Document {
   public targetMixer?: AnimationMixer
   public camera: PerspectiveCamera
   public group: Group = new Group()
+  public helpers: Group = new Group()
+
+  @Property({type: Boolean, value: false})
+  declare showHelpers: boolean
 
   constructor(args?: DocumentProps) {
-    super({timeline: new Timeline({autoplay: true}), ...args})
+    super({toneMapping: NeutralToneMapping, timeline: new Timeline({autoplay: true}), ...args})
 
     // Background
     const coloredVignette = screenUV.distance(.5).mix(hue(color(0x0175ad), this.timeline.timeNode.mul(.1)), hue(color(0x02274f), this.timeline.timeNode.mul(.5)))
-    const lightSpeedEffect = lightSpeed(normalWorldGeometry, this.timeline.timeNode).clamp()
+    const lightSpeedEffect = lightSpeed(normalWorldGeometry.xy, this.timeline.timeNode).clamp()
     const lightSpeedSky = normalWorldGeometry.y.remapClamp(-.1, 1).mix(0, lightSpeedEffect)
     const composedBackground = blendDodge(coloredVignette, lightSpeedSky)
     this.scene.backgroundNode = composedBackground
@@ -129,6 +128,11 @@ export class AnimationRetargetingExample extends Document {
     this.group.name = 'Models'
     this.scene.add(this.group)
 
+    this.helpers.name = 'Helpers'
+    this.helpers.visible = this.showHelpers
+    this.helpers.userData.selectable = false
+    this.scene.add(this.helpers)
+
     // Load and setup models
     void this.loadModels()
   }
@@ -167,7 +171,9 @@ export class AnimationRetargetingExample extends Document {
 
   private getSource(sourceModel: GltfModel): AnimationSource {
     const clip = sourceModel.animations[0]
-    const skeleton = new Skeleton(new SkeletonHelper(sourceModel.scene).bones)
+    const helper = new SkeletonHelper(sourceModel.scene)
+    this.helpers.add(helper)
+    const skeleton = new Skeleton(helper.bones)
     const mixer = new AnimationMixer(sourceModel.scene)
     mixer.clipAction(sourceModel.animations[0]).play()
 
@@ -176,6 +182,7 @@ export class AnimationRetargetingExample extends Document {
 
   private retargetModel(sourceModel: AnimationSource, targetModel: GltfModel) {
     const targetSkin = targetModel.scene.children[0]!.children[0]!
+    this.helpers.add(new SkeletonHelper(targetModel.scene))
 
     const rotateCW45 = new Matrix4().makeRotationY(MathUtils.degToRad(45))
     const rotateCCW180 = new Matrix4().makeRotationY(MathUtils.degToRad(-180))
@@ -238,6 +245,10 @@ export class AnimationRetargetingExample extends Document {
     return mixer
   }
 
+  showHelpersChanged() {
+    this.helpers.visible = this.showHelpers
+  }
+
   override onAnimate(delta: number) {
     if (this.sourceMixer) {
       this.sourceMixer.update(delta)
@@ -248,3 +259,7 @@ export class AnimationRetargetingExample extends Document {
     }
   }
 }
+
+registerEditorGroups(AnimationRetargetingExample, {
+  Main: ['showHelpers'],
+})

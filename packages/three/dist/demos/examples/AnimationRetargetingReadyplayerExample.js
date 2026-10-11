@@ -5,12 +5,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register } from '@io-gui/core';
-import { AnimationMixer, BoxGeometry, DirectionalLight, Group, HemisphereLight, Mesh, NodeMaterial, Skeleton, SkeletonHelper, } from 'three/webgpu';
+import { AnimationMixer, BoxGeometry, DirectionalLight, Group, HemisphereLight, Mesh, NeutralToneMapping, NodeMaterial, Skeleton, SkeletonHelper, } from 'three/webgpu';
 import { color, screenUV, vec2, vec4, reflector, positionWorld, } from 'three/tsl';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
-import { Document } from '@io-gui/three';
+import { Document, Timeline } from '@io-gui/three';
 const gltfLoader = new GLTFLoader();
 const fbxLoader = new FBXLoader();
 const loadFbx = (url) => new Promise((resolve, reject) => {
@@ -24,7 +24,7 @@ let AnimationRetargetingReadyplayerExample = class AnimationRetargetingReadyplay
     sourceMixer;
     targetMixer;
     constructor(args) {
-        super({ autoplay: true, ...args });
+        super({ toneMapping: NeutralToneMapping, timeline: new Timeline({ autoplay: true }), ...args });
         const horizontalEffect = screenUV.x.mix(color(0x13172b), color(0x311649));
         const lightEffect = screenUV.distance(vec2(0.5, 1.0)).oneMinus().mul(color(0x0c5d68));
         this.scene.backgroundNode = horizontalEffect.add(lightEffect);
@@ -69,8 +69,9 @@ let AnimationRetargetingReadyplayerExample = class AnimationRetargetingReadyplay
         targetModel.scene.position.x += .9;
         sourceModel.scale.setScalar(.01);
         const source = this.getSource(sourceModel);
-        this.sourceMixer = source.mixer;
-        this.targetMixer = this.retargetModel(source, targetModel);
+        this.timeline.duration = source.clip.duration;
+        this.sourceMixer = source.mixer.setTime(this.timeline.currentTime);
+        this.targetMixer = this.retargetModel(source, targetModel).setTime(this.timeline.currentTime);
         this.notify({ kind: 'structure' });
         this.dispatch('frame-object', { object: models, overscan: 1.5 }, true);
     }

@@ -207,7 +207,7 @@ import './renderers/common/BundleGroup.js'
 import './renderers/common/CanvasTarget.js'
 import './renderers/common/QuadMesh.js'
 // import './renderers/common/extras/PMREMGenerator.js';
-import './renderers/common/PostProcessing.js'
+import './renderers/common/RenderPipeline.js'
 import './renderers/common/InspectorBase.js'
 // import './renderers/common/RendererUtils.js';
 import './renderers/common/StorageTexture.js'

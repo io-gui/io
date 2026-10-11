@@ -1,7 +1,7 @@
 import { NeutralToneMapping, Timer, WebGPURenderer } from 'three/webgpu';
 /**
- * The only thing that renders (ADR-0003). Each frame it collects changes into typed dirty tags,
- * ticks playing editors, evaluates each scene once and draws tagged views within a frame budget.
+ * The only thing that renders (ADR-0003). Each frame it collects changes into typed dirty tags (and hands them to
+ * change listeners), ticks playing editors, evaluates each scene once and draws tagged views within a frame budget.
  */
 export class RenderScheduler {
     frameBudget;
@@ -9,6 +9,7 @@ export class RenderScheduler {
     /** Frames each tagged view has waited past the budget. Added to its priority so no view starves. */
     _waits = new Map();
     _tickers = new Set();
+    _listeners = new Set();
     _rendererStates = new Map();
     _timer = new Timer();
     _autoStart;
@@ -50,6 +51,13 @@ export class RenderScheduler {
     }
     removeTicker(ticker) {
         this._tickers.delete(ticker);
+    }
+    addListener(listener) {
+        this._listeners.add(listener);
+        this._start();
+    }
+    removeListener(listener) {
+        this._listeners.delete(listener);
     }
     getRendererState(renderer) {
         return this._rendererStates.get(renderer);
@@ -119,21 +127,36 @@ export class RenderScheduler {
         }
     }
     _collect() {
-        const buses = new Set();
+        const documents = new Set();
         for (const ticker of this._tickers)
-            buses.add(ticker.changeBus);
+            documents.add(ticker.document);
         for (const view of this._views.keys()) {
-            if (view.changeBus)
-                buses.add(view.changeBus);
+            if (view.document)
+                documents.add(view.document);
         }
-        for (const bus of buses) {
-            if (!bus.pending)
+        for (const listener of this._listeners) {
+            if (listener.document)
+                documents.add(listener.document);
+        }
+        for (const document of documents) {
+            if (!document.hasPendingChanges)
                 continue;
-            for (const change of bus.drain()) {
+            const changes = document.drainChanges();
+            for (const change of changes) {
                 for (const [view, tags] of this._views) {
                     const reason = view.listens(change);
                     if (reason)
                         tags.add(reason === true ? 'content' : reason);
+                }
+            }
+            for (const listener of this._listeners) {
+                if (listener.document !== document)
+                    continue;
+                try {
+                    listener.onDocumentChanges(changes);
+                }
+                catch (e) {
+                    console.error(e);
                 }
             }
         }
@@ -180,7 +203,7 @@ export class RenderScheduler {
         queueMicrotask(() => requestAnimationFrame(this._onFrame));
     }
     _onFrame = (timestamp) => {
-        if (this._views.size === 0 && this._tickers.size === 0) {
+        if (this._views.size === 0 && this._tickers.size === 0 && this._listeners.size === 0) {
             this._running = false;
             return;
         }

@@ -6,12 +6,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { AnimationClip, AnimationMixer, AnimationObjectGroup, BoxGeometry, ColorKeyframeTrack, InterpolateDiscrete, Mesh, MeshBasicMaterial, NumberKeyframeTrack, Quaternion, QuaternionKeyframeTrack, Vector3 } from 'three/webgpu';
 import { Register } from '@io-gui/core';
-import { Document } from '@io-gui/three';
+import { Document, Timeline } from '@io-gui/three';
 /** A 5×5 grid of boxes in one AnimationObjectGroup, sharing one animation state. Plays when opened. */
 let AnimationGroupsExample = class AnimationGroupsExample extends Document {
     mixer;
     constructor(args) {
-        super({ autoplay: true, ...args });
+        super({ timeline: new Timeline({ autoplay: true }), ...args });
         // all objects of this animation group share a common animation state
         const animationGroup = new AnimationObjectGroup();
         const geometry = new BoxGeometry(5, 5, 5);
@@ -40,6 +40,7 @@ let AnimationGroupsExample = class AnimationGroupsExample extends Document {
         this.mixer = new AnimationMixer(animationGroup);
         const clipAction = this.mixer.clipAction(clip);
         clipAction.play();
+        this.timeline.duration = clip.duration;
     }
     onAnimate(delta) {
         this.mixer.update(delta);

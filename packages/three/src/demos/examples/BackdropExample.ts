@@ -112,8 +112,10 @@ export class BackdropExample extends Document {
       // TODO: Time is respecting the animation mixer timeScale
       material.outputNode = oscSine(this.timeline.timeNode.mul(.1)).mix(output, posterize(output.add(.1), 4).mul(2))
 
+      this.timeline.duration = gltf.animations[0].duration
       const action = this.mixer.clipAction(gltf.animations[0])
       action.play()
+      this.mixer.setTime(this.timeline.currentTime)
 
       this.scene.add(object)
       this.notify({kind: 'structure'})

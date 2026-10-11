@@ -2,7 +2,7 @@ import { AnimationAction, AnimationMixer } from 'three/webgpu';
 import { Document, DocumentProps } from '@io-gui/three';
 /**
  * The Xbot model with base actions (crossfaded with the Document tab buttons) and additive poses
- * (weighted there). Plays when opened.
+ * (weighted there). A live demo (ADR-0009): the timeline is only its clock. Plays when opened.
  */
 export declare class AnimationSkinningAdditiveBlendingExample extends Document {
     isLoaded: boolean;

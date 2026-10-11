@@ -144,7 +144,7 @@ export class SelectBehavior implements Behavior {
       })
     } else {
       void pickObjects(this._picker).then(hits => {
-        if (this._selection === selection) apply(selection, mode, hits.map(hit => hit.uuid), setsActive ? hits[0]?.uuid ?? '' : '')
+        if (this._selection === selection) selectObjects(selection, mode, hits.map(hit => hit.uuid), setsActive ? hits[0]?.uuid ?? '' : '')
       })
     }
   }
@@ -196,7 +196,11 @@ function applyComponents(selection: SelectionModel, mode: SelectMode, hits: Comp
   edit.commit()
 }
 
-function apply(selection: SelectionModel, mode: SelectMode, uuids: string[], active: string) {
+/**
+ * Applies an object selection the way viewport picks do: `set` replaces it, `extend` adds, `toggle` flips each id,
+ * `subtract` removes. `active` (one of `uuids`, or `''`) becomes the active object if it ends up selected.
+ */
+export function selectObjects(selection: SelectionModel, mode: SelectMode, uuids: string[], active: string) {
   const edit = selection.edit()
   switch (mode) {
     case 'set': edit.set(uuids, active || undefined); break

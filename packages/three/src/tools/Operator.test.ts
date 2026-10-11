@@ -113,3 +113,19 @@ describe('OperatorRegistry', () => {
     expect(previous.activeTransaction).toBe(null)
   })
 })
+
+describe('object.rename', () => {
+  it('renames an object in one transaction; keeping its name or a missing object records nothing', () => {
+    const editor = new Editor()
+    const mesh = new Mesh()
+    editor.document.scene.add(mesh)
+    expect(editor.operators.run('object.rename', {id: mesh.uuid, name: 'Crate'})).toBe('finished')
+    expect(mesh.name).toBe('Crate')
+    expect(editor.document.history.at(-1)!.patches).toEqual([{op: 'set', id: mesh.uuid, path: 'name', value: 'Crate', oldValue: ''}])
+    expect(editor.operators.lastCommand).toEqual({name: 'object.rename', args: {id: mesh.uuid, name: 'Crate'}})
+    expect(editor.operators.run('object.rename', {id: mesh.uuid, name: 'Crate'})).toBe('cancelled')
+    expect(editor.operators.run('object.rename', {id: 'missing', name: 'x'})).toBe('cancelled')
+    expect(editor.document.history.length).toBe(1)
+    editor.dispose()
+  })
+})

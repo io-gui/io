@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Property, Register } from '@io-gui/core';
 import { AnimationAction, AnimationMixer, AnimationUtils, Color, DirectionalLight, Fog, Group, HemisphereLight, Mesh, MeshPhongMaterial, PlaneGeometry, } from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { Document } from '@io-gui/three';
+import { Document, Timeline } from '@io-gui/three';
 import { ioObject, ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
 const loader = new GLTFLoader();
 const loadGltf = (url) => new Promise((resolve, reject) => {
@@ -15,7 +15,7 @@ const loadGltf = (url) => new Promise((resolve, reject) => {
 });
 /**
  * The Xbot model with base actions (crossfaded with the Document tab buttons) and additive poses
- * (weighted there). Plays when opened.
+ * (weighted there). A live demo (ADR-0009): the timeline is only its clock. Plays when opened.
  */
 let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBlendingExample extends Document {
     mixer = new AnimationMixer(new Group());
@@ -32,7 +32,7 @@ let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBl
         headShake: null,
     };
     constructor(args) {
-        super({ autoplay: true, ...args });
+        super({ timeline: new Timeline({ autoplay: true }), ...args });
         // Scene setup
         this.scene.background = new Color(0xa0a0a0);
         this.scene.fog = new Fog(0xa0a0a0, 10, 50);
@@ -163,7 +163,9 @@ let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBl
             });
             this.dispatchMutation(this.mixer);
         }
-        this.mixer.update(delta);
+        // Crossfade state only moves forward: time going back (a loop wrap, scrubbing or stepping back) is ignored.
+        if (delta > 0)
+            this.mixer.update(delta);
     }
 };
 __decorate([

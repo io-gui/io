@@ -54,7 +54,6 @@ export class CameraArrayExample extends Document {
     light.name = 'Light'
     light.position.set( 0.5, 0.5, 1 )
     light.castShadow = true
-    light.shadow.bias = - 0.001
     light.shadow.camera.zoom = 4
     this.scene.add( light )
 

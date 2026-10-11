@@ -1,11 +1,11 @@
-import { Register, ReactiveElement, ReactiveElementProps, Property, div, Field } from '@io-gui/core'
+import { Register, ReactiveElement, ReactiveElementProps, Property, div, Field, Storage as $ } from '@io-gui/core'
 import { ioField } from '@io-gui/inputs'
 import { ioPropertyEditor } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 import { Object3D } from 'three/webgpu'
 import { mrt, output, velocity } from 'three/tsl'
 import { traa } from 'three/addons/tsl/display/TRAANode.js'
-import { PostProcessingPipeline, SelectionModel, Document, Editor, View, threeViewport, threeTimeline, pipelineTypes } from '@io-gui/three'
+import { PostProcessingPipeline, SelectionModel, Document, Editor, View, threeViewport, threeTimeline, threeScenegraph, pipelineTypes } from '@io-gui/three'
 import { ioLayout, Layout } from '@io-gui/layout'
 import { threeEditorStatus } from '../elements/ThreeEditorStatus.js'
 
@@ -22,73 +22,78 @@ const editorLayout = new Layout({
   child: {
       type: 'split',
       children: [
-          {
-              type: 'split',
+        {
+          type: 'panel',
+          // size: '320px',
+          size: 'auto',
+          tabs: [
+            { id: 'Scene' }
+          ]
+        }, {
+          type: 'split',
+          size: 'auto',
+          children: [
+            {
+              type: 'panel',
+              tabs: [
+                { id: 'Front', selected: true },
+                { id: 'Back' }
+              ]
+            }, {
+              type: 'panel',
+              tabs: [
+                { id: 'Right', selected: true },
+                { id: 'Left' }
+              ]
+            }
+          ],
+          orientation: 'vertical'
+      }, {
+          type: 'split',
+          size: 'auto',
+          children: [
+            {
+              type: 'panel',
+              tabs: [
+                { id: 'Perspective', selected: true },
+                { id: 'Top' },
+                { id: 'Bottom' }
+              ]
+            }, {
+              type: 'panel',
+              tabs: [
+                { id: 'UV' },
+                { id: 'Scene Camera' },
+              ]
+            }
+          ],
+          orientation: 'vertical'
+      }, {
+          type: 'split',
+          orientation: 'vertical',
+          children: [
+            {
+              type: 'panel',
+              size: '320px',
+              tabs: [
+                { id: 'Document' }
+              ]
+            }, {
+              type: 'panel',
               size: 'auto',
-              children: [
-                  {
-                      type: 'panel',
-                      tabs: [
-                          { id: 'Front', selected: true },
-                          { id: 'Back' }
-                      ]
-                  }, {
-                      type: 'panel',
-                      tabs: [
-                          { id: 'Right', selected: true },
-                          { id: 'Left' }
-                      ]
-                  }
-              ],
-              orientation: 'vertical'
-          }, {
-              type: 'split',
-              size: 'auto',
-              children: [
-                  {
-                      type: 'panel',
-                      tabs: [
-                          { id: 'Perspective', selected: true },
-                          { id: 'Top' },
-                          { id: 'Bottom' }
-                      ]
-                  }, {
-                      type: 'panel',
-                      tabs: [
-                          { id: 'UV' },
-                          { id: 'Scene Camera' },
-                      ]
-                  }
-              ],
-              orientation: 'vertical'
-          }, {
-              type: 'split',
-              orientation: 'vertical',
-              children: [
-                {
-                  type: 'panel',
-                  size: '320px',
-                  tabs: [
-                    { id: 'Document' }
-                  ]
-                }, {
-                  type: 'panel',
-                  size: 'auto',
-                  tabs: [
-                    { id: 'Inspector' },
-                  ]
-                }
-              ],
-              size: '253.0390625px'
-          }
-      ]
+              tabs: [
+                { id: 'Inspector' },
+              ]
+            }
+          ],
+          size: '253.0390625px'
+      }
+    ]
   }
 })
 
 // Document subclasses, imported when first opened.
 const DOCUMENTS: Record<string, () => Promise<Document>> = {
-  EditorDocument1: () => import('./examples/EditorDocument1.js').then(module => new module.EditorDocument1()),
-  EditorDocument2: () => import('./examples/EditorDocument2.js').then(module => new module.EditorDocument2()),
   GeometriesExample: () => import('./examples/GeometriesExample.js').then(module => new module.GeometriesExample()),
   GeometryColorsExample: () => import('./examples/GeometryColorsExample.js').then(module => new module.GeometryColorsExample()),
   GeometryConvexExample: () => import('./examples/GeometryConvexExample.js').then(module => new module.GeometryConvexExample()),
@@ -110,7 +115,9 @@ const DOCUMENTS: Record<string, () => Promise<Document>> = {
  * One Editor in tabbed views, each with its own pipeline (ADR-0006) and interaction profile: a forward
  * perspective view with the grid overlay and the Move tool, select-only axis views post-processed with TRAA, and a
  * select-only UV view of the selection, and a select-only Camera view through the document's first scene camera.
- * The inspector follows the active object; the Document tab shows the document's own properties.
+ * The inspector follows the active object; the Document tab shows the document's own properties. The Scene tab is
+ * the document's scene graph: click a row to select its object, its triangle to collapse it, double-click or F2 to
+ * rename it; what is collapsed is kept in localStorage by object uuid. Selecting in a view reveals the object there.
  * The heading buttons load a Document subclass and make it the editor's document. Each loaded document keeps
  * its edits, selection and view navigation when switching back (ADR-0002). The timeline above the status bar plays, steps
  * and scrubs the document's timeline, whose current time drives its `onAnimate`; opening a document plays or pauses it
@@ -213,6 +220,11 @@ export class IoEditorExample extends ReactiveElement {
           {group: 'view', ...threeViewport({id: 'Perspective', editor: this.editor, view: this.views.perspective})},
           {group: 'view', ...threeViewport({id: 'UV', editor: this.editor, view: this.views.uv})},
           {group: 'view', ...threeViewport({id: 'Scene Camera', editor: this.editor, view: this.views.camera})},
+          threeScenegraph({
+            id: 'Scene',
+            editor: this.editor,
+            disclosure: $<Record<string, boolean>>({key: 'three-scenegraph-disclosure', storage: 'local', value: {}}),
+          }),
           ioPropertyEditor({id: 'Inspector', value: this.bind('activeObject')}),
           ioPropertyEditor({id: 'Document', value: this.editor.bind('document')}),
         ]
@@ -221,7 +233,7 @@ export class IoEditorExample extends ReactiveElement {
       threeEditorStatus({editor: this.editor}),
     ])
 
-    this.documentName = 'EditorDocument1'
+    this.documentName = 'AnimationKeyframesExample'
   }
 
   editorMutated() {

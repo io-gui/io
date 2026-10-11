@@ -1,13 +1,13 @@
 import { ReactiveElement, ReactiveElementProps, Change, WithBinding } from '@io-gui/core';
 import { WebGPURenderer, CanvasTarget, Scene, Object3D, OrthographicCamera, PerspectiveCamera } from 'three/webgpu';
 import { Editor } from '../editor/Editor.js';
+import type { Document, DocumentChange } from '../editor/Document.js';
 import { View } from '../view/View.js';
 import { InputRouter } from '../input/InputRouter.js';
 import { Keymap } from '../input/Keymap.js';
 import { NavigationBehavior } from '../input/behaviors/NavigationBehavior.js';
 import { SelectBehavior } from '../input/behaviors/SelectBehavior.js';
 import type { SelectionModel } from '../selection/SelectionModel.js';
-import { DocumentChange, ChangeBus } from '../editor/ChangeBus.js';
 import { ScheduledView, DirtyReason, FrameInfo, ViewRenderResult } from '../render/RenderScheduler.js';
 import { ViewCompositor } from '../render/ViewCompositor.js';
 import { GizmoLayer } from '../tools/Gizmo.js';
@@ -34,7 +34,7 @@ export declare class ThreeViewport extends ReactiveElement implements ScheduledV
     renderer: WebGPURenderer;
     keymap: Keymap;
     tabIndex: number;
-    readonly renderTarget: CanvasTarget;
+    readonly renderTarget: CanvasTarget<import("three/src/renderers/common/CanvasTarget.js").CanvasTargetEventMap>;
     /**
      * Routes this viewport's input to navigation, selection, gizmos and the active tool (ADR-0004).
      * Class fields exist only after the base constructor, where change handlers already run; those skip routing.
@@ -68,13 +68,14 @@ export declare class ThreeViewport extends ReactiveElement implements ScheduledV
     connectedCallback(): void;
     disconnectedCallback(): void;
     get scene(): Scene | null;
-    get changeBus(): ChangeBus | null;
+    /** The document this viewport shows: its editor's active one. */
+    get document(): Document | null;
     get mode(): string | undefined;
     get selection(): SelectionModel | null;
     /** Marks this viewport for redraw on the next frame. */
     tag(reason: DirtyReason): void;
     isRenderable(): boolean;
-    getPriority(): 1 | 0 | 2;
+    getPriority(): 0 | 1 | 2;
     listens(change: DocumentChange): DirtyReason | false;
     onRendererError(error: Error): void;
     /** The camera this viewport draws and picks with, built from its view at the current size. */

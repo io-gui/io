@@ -115,8 +115,9 @@ let ThreeViewport = class ThreeViewport extends ReactiveElement {
     connectedCallback() {
         super.connectedCallback();
         observer.observe(this);
-        if (this.renderTarget.domElement.parentElement !== this)
-            this.appendChild(this.renderTarget.domElement);
+        const canvas = this.renderTarget.domElement;
+        if (canvas.parentElement !== this)
+            this.appendChild(canvas);
         renderScheduler.register(this);
         this.onResized();
     }
@@ -129,8 +130,9 @@ let ThreeViewport = class ThreeViewport extends ReactiveElement {
     get scene() {
         return this.editor?.document?.scene ?? null;
     }
-    get changeBus() {
-        return this.editor?.document?.changeBus ?? null;
+    /** The document this viewport shows: its editor's active one. */
+    get document() {
+        return this.editor?.document ?? null;
     }
     get mode() {
         return this.editor?.mode;

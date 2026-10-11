@@ -9,6 +9,7 @@ import { SelectionModel } from '../selection/SelectionModel.js'
 import { translateOperatorType } from '../tools/operators/TranslateOperator.js'
 import { translateTool } from '../tools/TranslateTool.js'
 import { editModeToggleOperatorType, selectModeOperatorType } from '../tools/operators/EditModeOperators.js'
+import { renameOperatorType } from '../tools/operators/RenameOperator.js'
 import type { ViewKind } from '../view/View.js'
 import { registerEditorGroups } from '@io-gui/editors'
 
@@ -45,11 +46,15 @@ export class Editor extends ReactiveObject implements ScheduledTicker {
 
   public _renderer: WebGPURenderer | null = null
 
-  /** Operators of this editor; built-ins (`transform.translate`, `object.editmode_toggle`, `mesh.select_mode`) are registered. */
+  /**
+   * Operators of this editor; built-ins (`transform.translate`, `object.editmode_toggle`, `mesh.select_mode`,
+   * `object.rename`) are registered.
+   */
   readonly operators = new OperatorRegistry(this)
     .register(translateOperatorType)
     .register(editModeToggleOperatorType)
     .register(selectModeOperatorType)
+    .register(renameOperatorType)
 
   /** Tools of this editor; built-ins (`transform.translate`) are registered but not active. */
   readonly tools = new Registry<ToolDefinition>().register(translateTool)

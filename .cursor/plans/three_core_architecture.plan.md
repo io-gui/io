@@ -346,7 +346,7 @@ Operator contract (`poll`, `invoke`, `modal`, `exec`, `cancel`), registry by id,
 - Router clicks: presses that moved < 4 px, single pointer, not modal, offered after any capture ends via `Behavior.click`. Keymap grammar gained `LMB click`. This lets the default (OrbitControls-like) keymap orbit on LMB drag and select on LMB click.
 - `keymaps.default | blender | maya` combine navigation and selection presets; viewport default is `keymaps.default`. `view.frameSelected` added (F / Numpad . / F).
 - Picking: Line/Points thresholds are `PICK_RADIUS` (4 px) in world units at the target distance; `userData.selectable = false` opts out (helpers). Box select tests projected bounds (approximate) until the ID-buffer picker.
-- Not done: outliner adapter (io-menus), selection highlight (P6 overlay), lasso, select-through.
+- Not done: selection highlight (P6 overlay), lasso, select-through. The outliner became `ThreeScenegraph` (2026-10-10), reading `SelectionModel` directly instead of an io-menus adapter (ADR-0007).
 
 ### `selection-model`
 
@@ -364,7 +364,7 @@ Object domain only in P5: `objects: Set<uuid>`, `active`, `domain`, `version`, `
 
 **Files:** `input/behaviors/select.ts`, demo
 
-Click and box select in the fallback band (shift extends, ctrl toggles). Property editor in a demo binds to `selection.active`. Optional: outliner adapter to io-menus.
+Click and box select in the fallback band (shift extends, ctrl toggles). Property editor in a demo binds to `selection.active`. Optional: outliner adapter to io-menus (superseded: `ThreeScenegraph`).
 
 ---
 

@@ -8,6 +8,7 @@ import {
   Group,
   HemisphereLight,
   Mesh,
+  NeutralToneMapping,
   NodeMaterial,
   Skeleton,
   SkeletonHelper,
@@ -59,7 +60,7 @@ export class AnimationRetargetingReadyplayerExample extends Document {
   public targetMixer?: AnimationMixer
 
   constructor(args?: DocumentProps) {
-    super({timeline: new Timeline({autoplay: true}), ...args})
+    super({toneMapping: NeutralToneMapping, timeline: new Timeline({autoplay: true}), ...args})
 
     const horizontalEffect = screenUV.x.mix(color(0x13172b), color(0x311649))
     const lightEffect = screenUV.distance(vec2(0.5, 1.0)).oneMinus().mul(color(0x0c5d68))

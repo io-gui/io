@@ -1,5 +1,5 @@
-import { PerspectiveCamera, OrthographicCamera, Group, BufferGeometry, Float32BufferAttribute, MathUtils, Mesh, MeshBasicMaterial, Points, PointsMaterial, SphereGeometry } from 'three/webgpu'
-import { Register } from '@io-gui/core'
+import { PerspectiveCamera, OrthographicCamera, Group, BufferGeometry, CameraHelper, Float32BufferAttribute, MathUtils, Mesh, MeshBasicMaterial, Points, PointsMaterial, SphereGeometry } from 'three/webgpu'
+import { Property, Register } from '@io-gui/core'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { registerEditorConfig, registerEditorGroups, ioObject } from '@io-gui/editors'
 import { Document, DocumentProps, Timeline } from '@io-gui/three'
@@ -10,7 +10,8 @@ const ORBIT_PERIOD = 25
 
 /**
  * A perspective and an orthographic scene camera on one rig, following an orbiting sphere while their
- * frustums change. Look through them in a camera view; the Document tab shows their projections. Plays when opened.
+ * frustums change, with a helper drawing each frustum. Look through them in a camera view (hide the helpers with
+ * `showHelpers`); the Document tab shows their projections. Plays when opened.
  */
 @Register
 export class CameraExample extends Document {
@@ -19,6 +20,12 @@ export class CameraExample extends Document {
   public orthographicCamera: OrthographicCamera
   public cameraRig: Group
   public mesh: Mesh
+  public helpers: Group = new Group()
+  public perspectiveHelper: CameraHelper
+  public orthographicHelper: CameraHelper
+
+  @Property({type: Boolean, value: true})
+  declare showHelpers: boolean
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: ORBIT_PERIOD}), ...args})
@@ -28,6 +35,16 @@ export class CameraExample extends Document {
 
     this.orthographicCamera = new OrthographicCamera( -1, 1, 1, -1, 150, 1000 )
     this.orthographicCamera.name = 'orthographic'
+
+    this.perspectiveHelper = new CameraHelper( this.perspectiveCamera )
+    this.perspectiveHelper.name = 'PerspectiveHelper'
+    this.orthographicHelper = new CameraHelper( this.orthographicCamera )
+    this.orthographicHelper.name = 'OrthographicHelper'
+
+    this.helpers.name = 'Helpers'
+    this.helpers.visible = this.showHelpers
+    this.helpers.userData.selectable = false
+    this.helpers.add( this.perspectiveHelper, this.orthographicHelper )
 
     this.orthographicCamera.rotation.y = Math.PI
     this.perspectiveCamera.rotation.y = Math.PI
@@ -39,6 +56,8 @@ export class CameraExample extends Document {
     this.cameraRig.add( this.orthographicCamera )
 
     this.scene.add( this.cameraRig )
+    // After the rig, so the helpers follow the cameras' world matrices of the same frame.
+    this.scene.add( this.helpers )
 
     //
 
@@ -83,6 +102,10 @@ export class CameraExample extends Document {
     this.scene.add( particles )
   }
 
+  showHelpersChanged() {
+    this.helpers.visible = this.showHelpers
+  }
+
   override onAnimate(delta: number, time: number) {
     const r = time / ORBIT_PERIOD * Math.PI * 4
 
@@ -107,6 +130,9 @@ export class CameraExample extends Document {
     this.orthographicCamera.updateProjectionMatrix()
 
     this.cameraRig.lookAt(this.mesh.position)
+
+    this.perspectiveHelper.update()
+    this.orthographicHelper.update()
 
     debug: {
       this.dispatchMutation(this.perspectiveCamera)
@@ -143,5 +169,6 @@ registerEditorConfig(CameraExample, [
 ])
 
 registerEditorGroups(CameraExample, {
-  Main: ['perspectiveCamera', 'orthographicCamera'],
+  Main: ['showHelpers', 'perspectiveCamera', 'orthographicCamera'],
+  Hidden: ['helpers', 'perspectiveHelper', 'orthographicHelper'],
 })

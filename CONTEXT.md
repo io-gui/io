@@ -21,7 +21,7 @@ Io-Gui has one foundational context (the reactive core) plus application-domain 
 - **Core → all**: Packages build on ReactiveObject / ReactiveElement, bindings, Theme, Storage, and overlay primitives. Core `Color` is the theme token class — not colors-package ColorValue.
 - **Core → Colors**: Colors edits plain ColorValue objects (0–1 RGBA). Theme and CSS variables use core `Color`.
 - **Core → Sliders**: Sliders extend `IoGl` (2D shader quads). Unrelated to Three's WebGPU renderer.
-- **Icons → Inputs / Menus / Layout / Three**: Icon references (`io:…`) appear as labels/icons on fields, options, and tabs. Three registers its own `three` namespace for its timeline transport buttons.
+- **Icons → Inputs / Menus / Layout / Three**: Icon references (`io:…`) appear as labels/icons on fields, options, and tabs. Three registers its own `three` namespace for its timeline transport buttons and the Object3D type icons of its scene graph.
 - **Inputs → Sliders**: Composite sliders bind IoNumber beside slider tracks.
 - **Sliders → Colors**: Color channel sliders build on sliders WebGL controls.
 - **Menus → Navigation**: Navigator presents one Menu and mirrors selection (`selectedID` deep, `getSelectedIDImmediate()` shallow). Element ids must match Option ids.

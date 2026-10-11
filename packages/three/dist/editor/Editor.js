@@ -13,6 +13,7 @@ import { SelectionModel } from '../selection/SelectionModel.js';
 import { translateOperatorType } from '../tools/operators/TranslateOperator.js';
 import { translateTool } from '../tools/TranslateTool.js';
 import { editModeToggleOperatorType, selectModeOperatorType } from '../tools/operators/EditModeOperators.js';
+import { renameOperatorType } from '../tools/operators/RenameOperator.js';
 import { registerEditorGroups } from '@io-gui/editors';
 /**
  * The app object (ADR-0002): one active Document (switchable at runtime), the editor mode,
@@ -20,20 +21,20 @@ import { registerEditorGroups } from '@io-gui/editors';
  */
 let Editor = class Editor extends ReactiveObject {
     _renderer = null;
-    /** Operators of this editor; built-ins (`transform.translate`, `object.editmode_toggle`, `mesh.select_mode`) are registered. */
+    /**
+     * Operators of this editor; built-ins (`transform.translate`, `object.editmode_toggle`, `mesh.select_mode`,
+     * `object.rename`) are registered.
+     */
     operators = new OperatorRegistry(this)
         .register(translateOperatorType)
         .register(editModeToggleOperatorType)
-        .register(selectModeOperatorType);
+        .register(selectModeOperatorType)
+        .register(renameOperatorType);
     /** Tools of this editor; built-ins (`transform.translate`) are registered but not active. */
     tools = new Registry().register(translateTool);
     constructor(args) {
         super({ ...args, document: args?.document ?? new Document() });
         this.isPlayingChanged();
-    }
-    /** The active document's change bus; the scheduler drains it each frame. */
-    get changeBus() {
-        return this.document.changeBus;
     }
     setActiveTool(viewKind, mode, toolId) {
         const activeTools = { ...this.activeTools };
@@ -51,7 +52,7 @@ let Editor = class Editor extends ReactiveObject {
         if (change.oldValue) {
             this.operators.cancelRunning();
             // Views tag themselves for the new document; changes left for the old one would never be drained.
-            change.oldValue.changeBus.clear();
+            change.oldValue.clearChanges();
         }
         if (change.value)
             this.selection = this._selectionFor(change.value);
@@ -66,18 +67,23 @@ let Editor = class Editor extends ReactiveObject {
     }
     isPlayingChanged() {
         if (this.isPlaying) {
+            const timeline = this.document.timeline;
+            // Playing a timeline that stopped at its end starts it over.
+            if (!timeline.loop && timeline.currentTime >= timeline.duration)
+                timeline.currentTime = 0;
             renderScheduler.addTicker(this);
         }
         else {
             renderScheduler.removeTicker(this);
         }
     }
+    /** Advances the active document's timeline by the frame delta; a timeline that stops at its end pauses the editor. */
     tick(frame) {
         if (!this.isPlaying)
             return;
         this.onAnimate(frame.delta, frame.time);
-        this.document.onAnimate(frame.delta, frame.time);
-        this.document.notify({ kind: 'time' });
+        if (!this.document.timeline.advance(frame.delta))
+            this.isPlaying = false;
     }
     /** Reports a change in the active document (the source is always the document). */
     notify(change) {
@@ -93,6 +99,7 @@ let Editor = class Editor extends ReactiveObject {
     onRendererInitialized(renderer) {
         this._renderer = renderer;
     }
+    /** Called each frame while playing, before the document advances. `time` is the scheduler clock, not document time. */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onAnimate(delta, time) { }
     dispose() {
@@ -128,5 +135,5 @@ Editor = __decorate([
 export { Editor };
 // Session and runtime state of the editor stay out of property editors that show an editor subclass.
 registerEditorGroups(Editor, {
-    Hidden: [new RegExp(/^_/), 'isPlaying', 'changeBus', 'document', 'selection', 'mode', 'activeTools', 'operators', 'tools'],
+    Hidden: [new RegExp(/^_/), 'isPlaying', 'document', 'selection', 'mode', 'activeTools', 'operators', 'tools'],
 });

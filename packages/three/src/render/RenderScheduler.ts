@@ -41,6 +41,16 @@ export interface ScheduledTicker {
   tick(frame: FrameInfo): void
 }
 
+/**
+ * Anything besides views that follows a document's changes, such as the scene graph. Each frame the scheduler hands it
+ * the changes it drained from that document.
+ */
+export interface ChangeListener {
+  /** The document whose changes it gets. The scheduler drains it even when no view shows it. */
+  readonly document: Document | null
+  onDocumentChanges(changes: readonly DocumentChange[]): void
+}
+
 export type RenderSchedulerOptions = {
   /** Start a requestAnimationFrame loop when the first view or ticker is added. Default true. */
   autoStart?: boolean
@@ -50,8 +60,8 @@ export type RenderSchedulerOptions = {
 }
 
 /**
- * The only thing that renders (ADR-0003). Each frame it collects changes into typed dirty tags,
- * ticks playing editors, evaluates each scene once and draws tagged views within a frame budget.
+ * The only thing that renders (ADR-0003). Each frame it collects changes into typed dirty tags (and hands them to
+ * change listeners), ticks playing editors, evaluates each scene once and draws tagged views within a frame budget.
  */
 export class RenderScheduler {
 
@@ -61,6 +71,7 @@ export class RenderScheduler {
   /** Frames each tagged view has waited past the budget. Added to its priority so no view starves. */
   private readonly _waits = new Map<ScheduledView, number>()
   private readonly _tickers = new Set<ScheduledTicker>()
+  private readonly _listeners = new Set<ChangeListener>()
   private readonly _rendererStates = new Map<WebGPURenderer, 'pending' | 'ready' | 'failed'>()
   private readonly _timer = new Timer()
   private readonly _autoStart: boolean
@@ -109,6 +120,15 @@ export class RenderScheduler {
 
   removeTicker(ticker: ScheduledTicker) {
     this._tickers.delete(ticker)
+  }
+
+  addListener(listener: ChangeListener) {
+    this._listeners.add(listener)
+    this._start()
+  }
+
+  removeListener(listener: ChangeListener) {
+    this._listeners.delete(listener)
   }
 
   getRendererState(renderer: WebGPURenderer) {
@@ -185,12 +205,24 @@ export class RenderScheduler {
     for (const view of this._views.keys()) {
       if (view.document) documents.add(view.document)
     }
+    for (const listener of this._listeners) {
+      if (listener.document) documents.add(listener.document)
+    }
     for (const document of documents) {
       if (!document.hasPendingChanges) continue
-      for (const change of document.drainChanges()) {
+      const changes = document.drainChanges()
+      for (const change of changes) {
         for (const [view, tags] of this._views) {
           const reason = view.listens(change)
           if (reason) tags.add(reason === true ? 'content' : reason)
+        }
+      }
+      for (const listener of this._listeners) {
+        if (listener.document !== document) continue
+        try {
+          listener.onDocumentChanges(changes)
+        } catch (e) {
+          console.error(e)
         }
       }
     }
@@ -238,7 +270,7 @@ export class RenderScheduler {
   }
 
   private _onFrame = (timestamp: number) => {
-    if (this._views.size === 0 && this._tickers.size === 0) {
+    if (this._views.size === 0 && this._tickers.size === 0 && this._listeners.size === 0) {
       this._running = false
       return
     }

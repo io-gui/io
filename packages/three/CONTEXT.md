@@ -16,9 +16,17 @@ _Avoid_: model, project, file
 A document's clock (`document.timeline`): `currentTime` within `[0, duration]` seconds, the `frameRate` of stepping and scrubbing, `loop` and `autoplay`. Every change of `currentTime` runs the document's `onAnimate(delta, time)`, with `delta` the change (negative going back). `timeNode` mirrors `currentTime` as a TSL uniform.
 _Avoid_: clock (as a type name), document time, playhead (that is its UI), time (alone, for the property)
 
+**Live document**:
+A document whose state builds up from interaction while it plays, like a game, rather than following `time` (the skinning blending demos). It uses the timeline only as a clock: it integrates positive `delta` and ignores time going back (ADR-0009).
+_Avoid_: interactive document, realtime document
+
 **Timeline range**:
 `ThreeTimelineRange`: the scrubbable `IoGl` strip of one timeline, with the playhead and frame-aligned dividers at any zoom. `ThreeTimeline` adds transport buttons and time fields for the editor's document.
 _Avoid_: scrubber, time slider, ruler (alone)
+
+**Scene graph**:
+`ThreeScenegraph`: the collapsible tree of the editor document's scene, one row per shown object with its type icon (`getObjectIcon`) and its name, or `<ClassName>`. Shows the selection, selects like a viewport click, reveals a new active object (expands its ancestors, scrolls to it) and renames through `object.rename`. Its **disclosure** (the objects collapsed, by uuid; everything else shows expanded) persists through a host-bound `Storage`.
+_Avoid_: outliner (as the type name), hierarchy, tree view
 
 **Transaction**:
 One atomic group of patches: the unit of undo, change notification and sync. Applies edits immediately and records old values.
@@ -101,7 +109,7 @@ A typed reason (`content`, `view`, `overlay`, `resize`, `continuous`) that marks
 _Avoid_: needs-render, invalidate
 
 **DocumentChange**:
-A typed record (`kind`, `source` document, optional `ids`) of something that changed in a document. `document.notify()` queues it on the document; the scheduler drains each shown document's queue once per frame and tags the viewports that listen to it.
+A typed record (`kind`, `source` document, optional `ids`) of something that changed in a document. `document.notify()` queues it on the document; the scheduler drains each shown document's queue once per frame, tags the viewports that listen to it and hands the drained changes to the document's **change listeners** (UI that follows a document without drawing it, such as the scene graph; `renderScheduler.addListener`).
 _Avoid_: change bus, notifier, event bus
 
 **Playing**:

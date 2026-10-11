@@ -4,31 +4,50 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { AnimationMixer, Color, Object3D, PerspectiveCamera, PMREMGenerator } from 'three/webgpu';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { ACESFilmicToneMapping, AnimationMixer, Object3D, PerspectiveCamera, PMREMGenerator, Scene } from 'three/webgpu';
+import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { DRACOLoader, DRACO_GLTF_CONFIG } from 'three/addons/loaders/DRACOLoader.js';
 import { Register } from '@io-gui/core';
-import { Document } from '@io-gui/three';
+import { Document, Timeline } from '@io-gui/three';
 /**
- * The animated Littlest Tokyo model, lit by a PMREM room environment, with a scene camera riding the train.
- * Plays when opened.
+ * The source's sky: sun at elevation 11°, azimuth -55°. Its clouds hold still: the source never advances the sky's
+ * `time`, and SkyMesh would drift them on TSL's global time, not the timeline.
+ */
+function createSky() {
+    const sky = new SkyMesh();
+    sky.name = 'Sky';
+    sky.scale.setScalar(10000);
+    sky.turbidity.value = 0;
+    sky.rayleigh.value = 3;
+    sky.mieDirectionalG.value = 0.7;
+    sky.cloudElevation.value = 1;
+    sky.cloudSpeed.value = 0;
+    sky.sunPosition.value.set(-0.8, 0.19, 0.56);
+    sky.userData.selectable = false;
+    return sky;
+}
+/**
+ * The animated Littlest Tokyo model under a Preetham sky that also lights it as a PMREM environment, with a scene
+ * camera riding the train. Plays when opened.
  */
 let AnimationKeyframesExample = class AnimationKeyframesExample extends Document {
     mixer = new AnimationMixer(new Object3D());
     constructor(args) {
-        super({ autoplay: true, ...args });
-        this.scene.background = new Color(0xbfe3dd);
+        super({ toneMapping: ACESFilmicToneMapping, timeline: new Timeline({ autoplay: true }), ...args });
+        this.scene.add(createSky());
         void this.loadModel();
     }
     onRendererInitialized(renderer) {
         super.onRendererInitialized(renderer);
-        const pmremGenerator = new PMREMGenerator(renderer);
-        this.scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
+        // A sky in a scene of its own, so the environment holds only the sky.
+        const environment = new Scene();
+        environment.add(createSky());
+        this.scene.environment = new PMREMGenerator(renderer).fromScene(environment).texture;
     }
     async loadModel() {
         const dracoLoader = new DRACOLoader();
-        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+        dracoLoader.setDecoderPath(DRACO_GLTF_CONFIG);
         const loader = new GLTFLoader();
         loader.setDRACOLoader(dracoLoader);
         try {
@@ -37,8 +56,10 @@ let AnimationKeyframesExample = class AnimationKeyframesExample extends Document
             model.position.set(1, 1, 0);
             model.scale.set(0.01, 0.01, 0.01);
             this.scene.add(model);
+            this.timeline.duration = gltf.animations[0].duration;
             this.mixer = new AnimationMixer(model);
             this.mixer.clipAction(gltf.animations[0]).play();
+            this.mixer.setTime(this.timeline.currentTime);
             const train = gltf.scene.getObjectByName('Object675');
             const perspectiveCamera = new PerspectiveCamera(125, 1, 0.1, 1000);
             perspectiveCamera.name = 'TrainCamera';
@@ -46,7 +67,8 @@ let AnimationKeyframesExample = class AnimationKeyframesExample extends Document
             perspectiveCamera.rotation.set(Math.PI / 2, -Math.PI / 2, 0);
             train.add(perspectiveCamera);
             this.notify({ kind: 'structure' });
-            this.dispatch('frame-object', { object: this.scene }, true);
+            // The model, not the scene: the sky spans 10000 units.
+            this.dispatch('frame-object', { object: model }, true);
         }
         catch (e) {
             console.error(e);

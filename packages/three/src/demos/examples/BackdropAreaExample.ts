@@ -6,6 +6,7 @@ import {
   DoubleSide,
   Mesh,
   MeshBasicNodeMaterial,
+  NeutralToneMapping,
   PerspectiveCamera,
   Vector3,
 } from 'three/webgpu'
@@ -46,11 +47,11 @@ export class BackdropAreaExample extends Document {
 
   public boxScale: Vector3
 
-  @Property({type: String, value: 'blurred'})
+  @Property({type: String, value: 'checker'})
   declare material: string
 
   constructor(args?: DocumentProps) {
-    super({toneMappingExposure: 0.9, timeline: new Timeline({autoplay: true}), ...args})
+    super({toneMapping: NeutralToneMapping, toneMappingExposure: 0.9, timeline: new Timeline({autoplay: true}), ...args})
 
     // Background
     this.scene.backgroundNode = hue(screenUV.y.mix(color(0x66bbff), color(0x4466ff)), this.timeline.timeNode.mul(0.1))
@@ -101,7 +102,7 @@ export class BackdropAreaExample extends Document {
     }
 
     // Camera
-    const camera = new PerspectiveCamera(50, 1, 0.1, 100)
+    const camera = new PerspectiveCamera(50, 1, 0.25, 25)
     camera.name = 'Camera'
     camera.position.set(3, 2, 3)
     camera.lookAt(0, 1, 0)
@@ -116,7 +117,7 @@ export class BackdropAreaExample extends Document {
     this.scene.add(this.box)
 
     // Floor
-    const floor = new Mesh(new BoxGeometry(3, .01, 3), new MeshBasicNodeMaterial({
+    const floor = new Mesh(new BoxGeometry(5, .01, 5), new MeshBasicNodeMaterial({
       color: 0xff6600,
       opacityNode: positionWorld.xz.distance(0).oneMinus().clamp(),
       transparent: true,

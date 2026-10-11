@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { debounce } from '@io-gui/core'
-import { DirtyReason, Document, DocumentChange, RenderScheduler, ScheduledView, ScheduledTicker, FrameInfo } from '@io-gui/three'
+import { ChangeListener, DirtyReason, Document, DocumentChange, RenderScheduler, ScheduledView, ScheduledTicker, FrameInfo } from '@io-gui/three'
 import { Object3D, Scene, WebGPURenderer } from 'three/webgpu'
 
 function fakeRenderer(webgpu = true) {
@@ -145,6 +145,53 @@ describe('RenderScheduler', () => {
     scheduler.step()
     expect(frames.length).toBe(2)
     expect(view.draws.length).toBe(2)
+  })
+
+  it('hands each listener the changes of its document, once per frame', () => {
+    const scheduler = new RenderScheduler({autoStart: false})
+    const document = new Document()
+    const other = new Document()
+    const view = fakeView({document, source: document})
+    const received: Array<readonly DocumentChange[]> = []
+    const listener: ChangeListener = {document, onDocumentChanges: changes => { received.push(changes) }}
+    const otherListener: ChangeListener = {document: other, onDocumentChanges: changes => { received.push(changes) }}
+    scheduler.register(view)
+    scheduler.addListener(listener)
+    scheduler.addListener(otherListener)
+    scheduler.step()
+    expect(received.length).toBe(0)
+
+    document.notify({kind: 'structure'})
+    document.notify({kind: 'transform', ids: ['a']})
+    scheduler.step()
+    expect(received.length).toBe(1)
+    expect(received[0].map(change => change.kind)).toEqual(['structure', 'transform'])
+    expect(view.draws.length).toBe(2)
+
+    scheduler.removeListener(listener)
+    document.notify({kind: 'structure'})
+    scheduler.step()
+    expect(received.length).toBe(1)
+    scheduler.removeListener(otherListener)
+    document.dispose()
+    other.dispose()
+  })
+
+  it('drains documents that only listeners follow, and keeps going when one throws', () => {
+    const scheduler = new RenderScheduler({autoStart: false})
+    const document = new Document()
+    const received: DocumentChange[] = []
+    const errors: unknown[] = []
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(error => { errors.push(error) })
+    scheduler.addListener({document, onDocumentChanges: () => { throw new Error('listener') }})
+    scheduler.addListener({document, onDocumentChanges: changes => { received.push(...changes) }})
+    document.notify({kind: 'other'})
+    scheduler.step()
+    expect(document.hasPendingChanges).toBe(false)
+    expect(received.map(change => change.kind)).toEqual(['other'])
+    expect(errors.length).toBe(1)
+    consoleError.mockRestore()
+    document.dispose()
   })
 
   it('draws higher priority views first', () => {

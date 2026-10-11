@@ -1,229 +1,576 @@
-# Three.js Example Conversion Plan
+---
+name: three.js Example Conversion
+overview: Port three.js examples to Document subclasses in packages/three/src/demos/examples, opened by demos/IoEditorExample.ts (index.html Demos > Three). Conversion rules, an audit of the 15 converted examples against their sources, the candidate list for the rest of src_examples with its blockers, and open follow-ups.
+todos:
+  - id: audit-2026-10-11
+    content: "Audit all converted examples against src_examples; fix deviations (tone mapping, helpers, wall-clock crossfade, DOM reads, upstream syncs)"
+    status: completed
+  - id: r186-update
+    content: "Re-audit against r186 (three 0.186.1): r186 typings, CameraArray shadow bias, PostProcessing -> RenderPipeline"
+    status: completed
+  - id: keyframes-sky
+    content: "AnimationKeyframes: port to the r186 look (SkyMesh sky that also lights the model as a PMREM environment, ACESFilmic, DRACO_GLTF_CONFIG)"
+    status: completed
+  - id: interactive-timeline
+    content: "Timeline policy for interaction-driven examples: live documents use the timeline as a clock and ignore time going back (ADR-0009)"
+    status: completed
+  - id: skinning-transport
+    content: "AnimationSkinningBlending: dropped paused / makeSingleStep / stepSize in favor of the timeline transport"
+    status: completed
+  - id: crossfade-state
+    content: "Skinning blending examples: show which crossfade or base action applies (upstream disables or dims buttons)"
+    status: pending
+  - id: inspector-refresh
+    content: "Replace debug-only dispatchMutation in onAnimate (inspector stops following in bundled builds)"
+    status: pending
+  - id: camera-helper-view
+    content: "CameraExample: the helper of the camera a view looks through draws in that view. Moved to three_future_work.plan.md scene-helpers"
+    status: cancelled
+  - id: framing-scenery
+    content: "Whole-scene framing (first show, frame all) includes skies and large floors; examples frame their model instead. Skip unselectable scenery in the framework?"
+    status: pending
+  - id: candidates-2026-10-11
+    content: "Sort all src_examples into candidates (Candidates table: status + blockers) and non-candidates"
+    status: completed
+  - id: blocker-document-pipeline
+    content: "Unblock: a document brings its own post-processing graph and scene inputs (MRT). See Blockers"
+    status: pending
+  - id: blocker-per-frame-gpu
+    content: "Unblock: once-per-frame renderer hook for compute / CubeCamera / render targets; scrub and wrap policy for GPU simulations"
+    status: pending
+  - id: blocker-renderer-on-change
+    content: "Unblock: queue GPU work from a property handler (rebake probes, regenerate sky environment)"
+    status: pending
+  - id: blocker-view-camera
+    content: "Unblock: content bound to the drawing camera (CSM, pass() in a material, camera layers)"
+    status: pending
+  - id: blocker-renderer-option
+    content: "Unblock: stencil on the shared renderer; renderer.lighting, VSM, shadowMap.transmitted per document?"
+    status: pending
+isProject: false
+---
 
-> **Superseded (2026-10-10):** converted examples are now `ThreeDocument` subclasses in `src/demos/examples/<Name>.ts` (scene in the constructor, `onAnimate`, `onRendererInitialized`, `autoplay`, document properties for UI), loaded by `src/demos/IoEditorExample.ts` (index.html: Demos > Three). The applet + element pattern below is historical.
+# three.js Example Conversion
 
-## Summary of Observations
+Each converted example is a `Document` subclass in `packages/three/src/demos/examples/<Name>Example.ts`: scene built in the constructor, animation in `onAnimate`, GPU setup in `onRendererInitialized`, GUI as reactive properties with registered editor groups. `src/demos/IoEditorExample.ts` loads it by dynamic import into one shared editor (views, scene graph, inspector, timeline). Background: `io-gui.mdc` (io-three: Document, Editor, View), [ADR-0002](../../packages/three/docs/adr/0002-app-view-frame-layers.md), the three SKILL.
 
-### Source Examples Structure ([`src_examples/*.html`](packages/three/src_examples))
+The earlier `ThreeApplet` + `IoThreeExample` element pattern was replaced on 2026-10-10 (commit `289e7bf9`); the old version of this plan is in git history before `0e72af13`.
 
-Self-contained HTML files with these characteristics:
+## Sources
 
-- Import THREE namespace or individual modules from `three/webgpu`, `three/tsl`, `three/addons/*`
-- Create their own `WebGPURenderer`, `Scene`, `Camera`
-- Handle window resize, animation loop, DOM container
-- Often include `OrbitControls`, `Inspector`/GUI, raycasters, event listeners
+- `packages/three/src_examples` is a tracked symlink to `../../../three.js/examples`, a local three.js **dev checkout** that runs ahead of the release (2026-10-11: 275 commits past r186). The package builds against the installed `three` **0.186.1** / `@types/three` **0.186.0**.
+- Convert from the r186 version. The checkout has no r183–r186 tags; the r186 release commit is `148ef33ecb` (`git -C ../three.js fetch --tags` would add `r186`):
+  - `git -C ../three.js show 148ef33ecb:examples/<file>.html` (r186 version)
+  - `git -C ../three.js log --oneline 148ef33ecb..HEAD -- examples/<file>.html` (later changes)
+- Port changes made after r186 only when 0.186 has the APIs. Upstream also reverts: the skinning sources used `SunLight` at r186 and went back to `DirectionalLight` after it, as ours do.
+- After upgrading `three`, restart `pnpm dev`. Vite checks the lockfile only at startup and serves the old pre-bundled three until then.
+- `webgl_*` and `misc_*` sources convert too: classic materials run on `WebGPURenderer` through the node library. See the WebGPU notes below for the cases that do not.
 
-### Converted Examples Structure ([`src/demos/examples/Io*Example.ts`](packages/three/src/demos/examples))
+### What fits
 
-Each file contains two classes:
+A source fits when it has one scene that any view can show. These do not fit:
 
-1. **ThreeApplet** - The 3D scene logic
-2. **ReactiveElement** - The UI wrapper extending `IoThreeExample`
+- Renderer-level options (`logarithmicDepthBuffer`, `reversedDepthBuffer`, MSAA samples) are fixed per renderer ([ADR-0001](../../packages/three/docs/adr/0001-webgpu-only-one-renderer-canvas-target-per-viewport.md)). `CameraLogarithmicDepthBufferExample`, which compares renderers with and without `logarithmicDepthBuffer`, was removed (`bcadcea1`).
+- A custom render loop (scissor split screens, several passes per frame, `renderer.setRenderTarget` chains) belongs in a pipeline (ADR-0006), not in a document.
+- Pointer or keyboard interaction (raycast drags, key handlers) belongs to tools and operators. A document only gets property controls.
 
-```typescript
+## Target shape
+
+```ts
+import { Mesh, NeutralToneMapping, WebGPURenderer } from 'three/webgpu'
+import { uniform } from 'three/tsl'
 import { Register, Property } from '@io-gui/core'
-import { ThreeApplet, IoThreeExample } from '@io-gui/three'
-import { PropertyConfig, PropertyGroups } from '@io-gui/editors'
+import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioNumberSlider } from '@io-gui/sliders'
 
+/** Seconds in which the animation repeats: the timeline length, so looping is seamless. */
+const PERIOD = 20
+
+/** What the scene shows, where its controls are. Plays when opened. */
 @Register
-export class XxxExample extends ThreeApplet {
-  constructor() {
-    super()
-    // Scene content setup (this.scene is provided by ThreeApplet)
+export class XxxExample extends Document {
+  private amountUniform = uniform(0.5)
+  public mesh: Mesh
+
+  @Property({type: Number, value: 0.5})
+  declare amount: number
+
+  constructor(args?: DocumentProps) {
+    super({toneMapping: NeutralToneMapping, timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+    // scene content: named objects added to this.scene
   }
-  onResized(width: number, height: number) { /* aspect-dependent updates */ }
-  onAnimate(delta: number) { /* per-frame updates */ }
-  onRendererInitialized(renderer: WebGPURenderer) { /* async/compute operations */ }
-}
 
-export class IoXxxExample extends IoThreeExample {
+  amountChanged() {
+    this.amountUniform.value = this.amount
+  }
 
-  @Property({type: XxxExample, init: null})
-  declare applet: XxxExample
+  override onRendererInitialized(renderer: WebGPURenderer) {
+    super.onRendererInitialized(renderer)
+    // compute passes, PMREM environments
+  }
 
-  // Optional: Override uiConfig/uiGroups for custom UI
-  @Property({type: Array})
-  declare uiConfig: PropertyConfig[]
-
-  @Property({type: Object})
-  declare uiGroups: PropertyGroups
-
-  init() {
-    // Set uiConfig and uiGroups here if needed
-    this.uiConfig = [...]
-    this.uiGroups = {...}
+  override onAnimate(delta: number, time: number) {
+    this.mesh.rotation.y = time / PERIOD * Math.PI * 2
   }
 }
 
-Register(IoXxxExample)
-export const ioXxxExample = IoXxxExample.vConstructor
+registerEditorConfig(XxxExample, [
+  ['amount', ioNumberSlider({min: 0, max: 1, step: 0.01})],
+])
+
+registerEditorGroups(XxxExample, {
+  Main: ['amount'],
+})
 ```
 
----
+Register it in `DOCUMENTS` in `IoEditorExample.ts`:
 
-## Conversion Rules
-
-### 1. File and Class Naming
-
-| Source | Converted |
-|--------|-----------|
-| `webgpu_camera.html` | `IoCameraExample.ts` |
-| Applet class: | `CameraExample extends ThreeApplet` |
-| Element class: | `IoCameraExample extends IoThreeExample` |
-
-Pattern: 
-- File: `Io{PascalCaseName}Example.ts`
-- Applet: `{PascalCaseName}Example`
-- Element: `Io{PascalCaseName}Example`
-
-### 2. Remove/Delegate (handled by IoThreeViewport)
-
-- HTML boilerplate, CSS, info divs
-- `WebGPURenderer` creation and configuration
-- `renderer.setAnimationLoop()` / DOM canvas appending
-- `OrbitControls` (provided by `ViewCameras`)
-- `window.addEventListener('resize', ...)` handlers
-- WebGPU availability checks
-- GUI/Inspector creation → convert to `uiConfig` on ReactiveElement
-
-### 3. Transform
-
-| Source Pattern | Converted Pattern |
-|----------------|-------------------|
-| `import * as THREE from 'three/webgpu'` | Named imports: `import { Mesh, ... } from 'three/webgpu'` |
-| `THREE.SomeThing` | Direct: `SomeThing` |
-| Global `let scene, camera, mesh` | Class properties: `public mesh: Mesh` |
-| `function init() {}` | `constructor() { super(); ... }` |
-| `function animate() {}` | `onAnimate(delta: number) {}` |
-| `function onWindowResize() {}` | `onResized(width, height) {}` |
-| `await renderer.init(); renderer.compute(...)` | `async onRendererInitialized(renderer) { await super...; renderer.compute(...) }` |
-| GUI folder/controls | `uiConfig` and `uiGroups` on ReactiveElement |
-
-### 4. Preserve
-
-- Core scene content (meshes, materials, lights, geometries)
-- TSL shader nodes and materials
-- Textures and procedural data generation
-- Animation logic (move to `onAnimate()`)
-- Scene-specific camera handling (helpers, rigs)
-
-### 5. Custom Cameras
-
-If the example requires custom cameras (not just default perspective/ortho views):
-
-- Create cameras and add to `this.scene` with unique `.name` property
-- They can be selected via `cameraSelect: 'scene:cameraName'` in IoThreeViewport
-
-### 6. UI Configuration (uiConfig and uiGroups)
-
-UI configuration is defined on the **ReactiveElement**, not the applet:
-
-```typescript
-export class IoAnimationExample extends IoThreeExample {
-  @Property({type: AnimationExample, init: null})
-  declare applet: AnimationExample
-
-  @Property({type: Array})
-  declare uiConfig: PropertyConfig[]
-
-  @Property({type: Object})
-  declare uiGroups: PropertyGroups
-
-  init() {
-    this.uiConfig = [
-      ['showSkeleton', ioBoolean({label: 'Show Skeleton'})],
-      ['timeScale', ioNumberSlider({min: 0, max: 1.5, step: 0.01})],
-    ]
-
-    this.uiGroups = {
-      Main: ['showSkeleton', 'timeScale'],
-      Hidden: ['scene', 'camera', 'mixer'],
-    }
-  }
-}
+```ts
+XxxExample: () => import('./examples/XxxExample.js').then(module => new module.XxxExample()),
 ```
 
----
+Naming: drop the `webgl_` / `webgpu_` / `misc_` prefix and PascalCase the rest (`webgpu_backdrop_area.html` -> `BackdropAreaExample.ts`, class `BackdropAreaExample`).
 
-## Conversion Workflow (Per Example)
+## Conversion rules
 
-1. **Analyze** - Read source HTML, identify:
+### Drop (the host provides it)
 
-- Three.js imports needed
-- Scene objects created
-- Animation logic
-- Resize-dependent logic
-- Async/compute operations
-- Custom cameras or interaction patterns
-- GUI parameters to convert
+- HTML, CSS, info text, WebGPU availability checks, `Stats`.
+- Renderer creation and setup: `antialias`, pixel ratio, size, `setAnimationLoop`, `await renderer.init()`, `renderer.shadowMap.enabled` (the shared renderer has shadows on, `RenderScheduler.ts`).
+- Resize handlers and anything that reads `window` or the DOM (a document opens in any editor). Views own camera aspect.
+- `OrbitControls` and other camera controls: views navigate and frame the scene.
+- The source's main camera. Keep it as a **named scene camera** only when its framing is part of the example; camera views can look through it.
+- `Timer` / `Clock`: the timeline is the clock.
+- `AxesHelper` / grids: the grid overlay.
 
-2. **Create TypeScript file** - `packages/three/src/demos/examples/Io{PascalName}Example.ts`
+### Map
 
-3. **Convert imports** - Replace `THREE.*` with named imports, add io-gui imports
+| Source | Document |
+|---|---|
+| `renderer.toneMapping`, `renderer.toneMappingExposure` | `super({toneMapping, toneMappingExposure})`. Easy to miss: views present with the document's tone mapping, and exposure does nothing under `NoToneMapping`. |
+| `scene.background`, `backgroundNode`, `fog`, `environment` | the same on `this.scene` |
+| `init()` | constructor body after `super()` |
+| module globals | public fields (internal state) or `@Property` (user-facing controls) |
+| `renderer.compute(...)`, `new PMREMGenerator(renderer)` | `onRendererInitialized(renderer)`: runs once per renderer before its first draw of the document |
+| `animate()` with `Date.now()` or elapsed time | `onAnimate(delta, time)` deriving state from `time` |
+| `mixer.update(timer.getDelta())` | `mixer.update(delta)` in `onAnimate` |
+| TSL `time`, `oscSine()` (implicit `time`) | `this.timeline.timeNode`, for example `oscSine(this.timeline.timeNode)` |
+| Light attached to the camera (`camera.add(light)`) | a light placed in the scene |
+| Relative asset path `models/gltf/X.glb` | `https://threejs.org/examples/models/gltf/X.glb` |
+| `dracoLoader.setDecoderPath(DRACO_GLTF_CONFIG)` | the same: the decoder resolves next to three's `DRACOLoader.js` (Vite rewrites the URL when pre-bundling; the bundle keeps three external) |
+| `Sky` + `pmremGenerator.fromScene(sky)` | an unselectable `SkyMesh` in the scene, plus a second one in a `Scene` of its own for `fromScene` in `onRendererInitialized` (AnimationKeyframes). `SkyMesh` drifts its clouds on TSL's global `time`, so set `cloudSpeed` to 0 unless they should move. A 10000-unit sky dominates whole-scene bounds: frame the model with `frame-object` |
+| Several viewports or scissor halves | scene cameras, seen through camera view tabs |
+| Keyboard switches (`O` / `P` keys) | properties |
 
-4. **Define ThreeApplet class** - Extend `ThreeApplet`, add `@Register` decorator
+GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 
-5. **Move initialization** - Scene content from `init()` to `constructor()`
+| GUI control | Document |
+|---|---|
+| slider or checkbox on a uniform | `@Property` + `xChanged()` writing `uniform.value` |
+| slider on an object field (`gui.add(box.scale, 'x')`) | expose the object as a public field with a config (`boxScale` + `threeVector3`) |
+| dropdown | `String` `@Property` + `ioOptionSelect(new Menu({options}))` config + `xChanged()` |
+| button | arrow-function field (`run = () => {...}`), shown as a button (`ioButton` config for a label) |
+| visibility checkbox (`show model`, `show helpers`) | `Boolean` `@Property` setting `.visible` |
+| `.listen()` display of values that change per frame | expose the object; see the `inspector-refresh` todo |
 
-6. **Implement lifecycle methods**:
-- `onAnimate(delta)` for frame updates
-- `onResized()` for aspect-ratio dependent updates
-- `onRendererInitialized()` for compute/async operations
+### Time
 
-7. **Define ReactiveElement class** - Extend `IoThreeExample`, declare typed applet property
+- Time drives animation (`io-gui.mdc`). Derive state from `time` with a period equal to (or dividing) `timeline.duration`, so loops are seamless (`SPIN_PERIOD` in Geometries, CameraArray, GeometryConvex; `ORBIT_PERIOD` in Camera).
+- Integrators (animation mixers) advance by `delta`. For a single clip, set `timeline.duration = clip.duration` and `mixer.setTime(timeline.currentTime)` when the clip arrives.
+- No wall-clock timing in a document: no `setTimeout`, `Date.now()`, `performance.now()` or `Timer`. Schedule in timeline or mixer time; mixer fades already run on `mixer.time`.
+- Animated examples pass `new Timeline({autoplay: true})`; static ones keep the default (paused).
+- `delta` is negative when the timeline wraps or is scrubbed back (accepted, see `timeline-negative-delta` in [three_future_work.plan.md](./three_future_work.plan.md)).
+- Live documents ([ADR-0009](../../packages/three/docs/adr/0009-live-documents-use-the-timeline-as-a-clock.md)): game-like content whose state builds up from interaction (the skinning blending demos) uses the timeline only as a clock. It integrates only positive `delta` (`if (delta > 0) mixer.update(delta)`), so wraps and scrubbing back neither rewind nor reset it. Pause and frame step come from the editor's transport; no per-document pause or step properties.
 
-8. **Convert GUI to uiConfig** - If source has GUI, convert to `uiConfig`/`uiGroups` in `init()`
+### Async content
 
-9. **Register and export** - `Register(IoXxxExample)` and `export const ioXxxExample`
+- Content added outside a transaction (loaded models) needs `this.notify({kind: 'structure'})`, or views and the scene graph miss it. A texture loaded in the background needs `this.notify({kind: 'material'})` in its load callback, because views draw only on changes.
+- Optional framing hint after loading: `this.dispatch('frame-object', {object, overscan?}, true)`. It bubbles through the editor to the viewports showing the document.
+- Fields used by `onAnimate` before the load finishes: a placeholder (`new AnimationMixer(new Group())`) or optional chaining (`this.mixer?.update(delta)`). Change handlers guard content that may not be loaded yet (`if (this.model)`).
 
----
+### Scene graph and picking
 
-## Complexity Categories
+- Name what the scene graph should show: the scene graph and inspector label rows by `name`, or by `<ClassName>` when there is none. Name lights by role (`Key`, `Ambient`).
+- `userData.selectable = false` on floors, backdrops and helpers. It applies to descendants too.
+- Helpers (`CameraHelper`, `SkeletonHelper`) go in one `Helpers` group: unselectable, toggled by a `showHelpers` property. Add the group after the objects the helpers follow, so they read the same frame's world matrices. This is temporary: helpers will come from a per-view overlay for any document (`scene-helpers` in [three_future_work.plan.md](./three_future_work.plan.md), ADR-0006), and the authored ones go then.
 
-### Simple (straightforward conversion)
+### Properties and groups
 
-- Static scenes with no animation
-- Basic materials and geometries
-- No custom controls or interaction
-- No GUI parameters
+- `registerEditorConfig` / `registerEditorGroups` go right after the class (`io-gui.mdc`, Editor Configs). `Main` lists the curated controls. `Hidden` lists public fields that are internal. The document's own groups (tone mapping, exposure, timeline, plus an `Advanced` catch-all) aggregate with the subclass's groups.
+- Change handlers do not run for default values. They do run inside the base constructor for values passed in `args`, before subclass fields exist. Call `xChanged()` at the end of the constructor to apply the default, and keep the state that handlers touch in `declare`d or lazily created fields if args must work.
 
-### Medium (some adaptation needed)
+### WebGPU notes
 
-- Animation in `onAnimate()`
-- Resize-dependent camera adjustments
-- Compute shaders via `onRendererInitialized()`
-- Custom cameras added to scene
-- Simple GUI → uiConfig conversion
+- WebGPU points are 1 px. Use a `Sprite` with `PointsNodeMaterial({positionNode: instancedBufferAttribute(attribute)})` and `sprite.count` (GeometryConvex).
+- Vertex attribute strides must be multiples of 4 bytes, so 3 × `Float16` is invalid; use `Float32Array` (GeometryColors).
+- Addons built on `ShaderMaterial` (`Sky`, `Water`, `Reflector`) need their node versions (`SkyMesh`, `WaterMesh`, TSL `reflector()`).
+- `ArrayCamera`: views copy a scene camera into a plain camera ([ADR-0005](../../packages/three/docs/adr/0005-navigation-is-view-state-camera-built-per-draw.md)), so a camera view looks through the main camera, not the grid.
+- Imports are named, from `three/webgpu` and `three/tsl`, with addons from `three/addons/...`. Bare `three` is aliased to `three/webgpu` (`vite.config.ts`).
+- `@types/three` 0.186 is stricter than the JS sources:
+  - `UniformNode<'float', number>` (node type and value type), `Node<'vec3'>` for typed nodes. Untyped `Node` has no math methods.
+  - `Fn` infers its arguments from the annotated parameter: `Fn(([a, b]: [Node<'vec2'>, Node<'float'>]) => ..., {a: 'vec2', b: 'float', return: 'vec3'})`, with the layout as the second argument (the old `Fn<[Node, Node]>(...).setLayout(...)` no longer types).
+  - Arguments are not converted implicitly: pass `normalWorldGeometry.xy` to a `vec2` input, and `color(c).rgb` to multiply with a `vec3`.
+  - `bool(true)` instead of `true` in `assign()`.
 
-### Complex (may need design decisions)
+## Workflow
 
-- Custom controls/interaction patterns (raycasting, drag)
-- Complex GUI parameters with interdependencies
-- Multiple viewports/scissor tests (example-specific logic)
-- Keyboard event handlers (may need external handling)
-- External asset loading (GLTFLoader, etc. - should work but verify paths)
+1. Read the source at r186 and at HEAD (see Sources). List the scene content, animation, async loads, GUI, cameras and helpers, and the renderer settings (tone mapping, shadows).
+2. Write `src/demos/examples/<Name>Example.ts` following the rules above.
+3. Add it to `DOCUMENTS` in `IoEditorExample.ts`.
+4. Run `pnpm lint:check` and `tsc -b`, then check in `pnpm dev` (Demos > Three > Load Example): it renders and matches the source's look (tone mapping, background, lighting); scene graph names; Document tab controls; play, pause, scrub and loop; switching to another document and back.
+5. Add a row to the audit table.
 
----
+Headless Chromium has a WebGPU adapter (SwiftShader), but viewport screenshots come out blank. To check that a document compiles and draws, use the page's own three: import the `three.webgpu` URL listed in `performance.getEntriesByType('resource')` (a fresh `import('three/webgpu')` loads a second instance, and TSL then fails with "No stack defined"). Create a `WebGPURenderer` that draws into a `RenderTarget` (the headless canvas texture is invalid), then call `onRendererInitialized`, `compileAsync` and `render` inside `device.pushErrorScope('validation')`, and read the pixels back. Backdrop materials report a format mismatch in an `rgba8` target; that comes from the harness, not the document.
 
-## Converted Examples
+## Audit (2026-10-11, r186)
 
-| File | uiConfig | Notes |
-|------|----------|-------|
-| `IoAnimationBackdropExample.ts` | - | TSL backdrop effects |
-| `IoAnimationGroupsExample.ts` | - | Animation object groups |
-| `IoAnimationKeyframesExample.ts` | - | GLTF keyframe animation |
-| `IoAnimationRetargetingExample.ts` | - | Skeleton retargeting |
-| `IoAnimationRetargetingReadyplayerExample.ts` | Yes | Hidden mixer properties |
-| `IoAnimationSkinningAdditiveBlendingExample.ts` | Yes | Skeleton, weight sliders |
-| `IoAnimationSkinningBlendingExample.ts` | Yes | Crossfade buttons, sliders |
-| `IoCameraArrayExample.ts` | - | ArrayCamera grid |
-| `IoCameraExample.ts` | - | Perspective/Ortho comparison |
-| `IoCameraLogarithmicDepthBufferExample.ts` | - | Extreme depth range |
-| `IoComputeTextureExample.ts` | - | Compute shader texture |
-| `IoGeometriesExample.ts` | - | Built-in geometries |
-| `IoGeometryColorsExample.ts` | - | Vertex colors |
-| `IoGeometryConvexExample.ts` | - | Convex hull generation |
-| `IoVolumePerlinExample.ts` | - | 3D texture raymarching |
-| `IoWebGPUBackdropAreaExample.ts` | Yes | Material selector |
+Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 compile and render on r186 without WebGPU validation errors (headless compile check).
 
----
+| Example | Source | Intentional deviations | Fixed / open |
+|---|---|---|---|
+| AnimationGroups | `misc_animation_groups` | duration = clip (3 s) | OK |
+| AnimationKeyframes | `webgl_animation_keyframes` | `TrainCamera` riding the train for a camera view; frames the model on load; clouds held still (the source never advances its sky's `time`) | Fixed: ported to the r186 look (`SkyMesh` sky + PMREM environment from it, `ACESFilmicToneMapping`, `DRACO_GLTF_CONFIG`), replacing RoomEnvironment and the flat `0xbfe3dd` background |
+| AnimationRetargeting | `webgpu_animation_retargeting` | named scene camera; `lightSpeed` takes time as input | Fixed: `NeutralToneMapping`, `showHelpers` (both skeletons), `lightSpeed` layout in the HEAD form (r186 typings) |
+| AnimationRetargetingReadyplayer | `webgpu_animation_retargeting_readyplayer` | frames the models | Fixed: `NeutralToneMapping` |
+| AnimationSkinningAdditiveBlending | `webgl_animation_skinning_additive_blending` | `none / idle / walk / run` buttons; weights in the action inspector; time scale in the mixer inspector; `DirectionalLight` as at HEAD (r186 had `SunLight`); live document (ADR-0009) | Fixed: time going back ignored. Open: `crossfade-state` |
+| AnimationSkinningBlending | `webgl_animation_skinning_blending` | three target buttons instead of four from→to buttons, so idle ↔ run is added (5 s / 2.5 s); effective weights read-only (the source's sliders also set weights); time scale in the mixer inspector; pause and single step are the timeline transport (a step is one frame, not 0.05 s); `DirectionalLight` as at HEAD; live document (ADR-0009) | Fixed: crossfade end in mixer time instead of `setTimeout`, camera aspect no longer read from `window`, `showModel` / `showSkeleton`, per-transition durations (run → walk 5 s), time going back ignored. Open: `crossfade-state` |
+| BackdropArea | `webgpu_backdrop_area` | box scale as a linkable `Vector3`; named scene camera | Fixed: `NeutralToneMapping` (exposure 0.9 had no effect), floor 5 × 5, camera near/far 0.25/25, default preset `checker` |
+| Backdrop | `webgpu_backdrop` | spot light at (1, 2, 3) instead of on the camera; portals turn by `delta × mixer.timeScale`; the portals keep turning while you orbit | Fixed: duration = clip, `mixer.setTime`. The portals still jump at the loop wrap (integrated) |
+| CameraArray | `webgpu_camera_array` | grid laid out for a square canvas; camera view through the main camera | Fixed: shadow bias removed (r186) |
+| Camera | `webgpu_camera` | both cameras update every frame (no `O` / `P` switch); camera projections in the Document tab | Fixed: a `CameraHelper` per camera + `showHelpers`, kept until `scene-helpers` (future work) |
+| ComputeTexture | `webgpu_compute_texture` | none | OK (the plane is unnamed) |
+| Geometries | `webgl_geometries` | point light fixed above instead of on the orbiting camera; 20 s spin; `wireframe` toggle (io addition) | OK |
+| GeometryColors | `webgl_geometry_colors` | `Float32` colors; mouse-follow camera dropped; shadows and wireframes unselectable | OK |
+| GeometryConvex | `webgl_geometry_convex` | `Sprite` points; light fixed; no `AxesHelper` | OK (point color typed as `color(c).rgb × texture.rgb` for r186) |
+| VolumePerlin | `webgpu_volume_perlin` | none | Fixed: `refine` bisection, named mesh |
+
+Removed: CameraLogarithmicDepthBuffer (renderer-level option, see What fits).
+
+## Candidates (2026-10-11)
+
+Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at r186). Selection rules:
+
+- An example with both a `webgl_*` and a `webgpu_*` version converts from the `webgpu_*` one. Renamed twins count too: `webgl_gpgpu_birds` -> `webgpu_compute_birds`, `gpgpu_water` -> `compute_water`, `materials_physical_clearcoat` -> `clearcoat`, `materials_physical_transmission` -> `materials_transmission`, `materials_subsurface_scattering` -> `materials_sss`, `shaders_ocean` -> `ocean`, `shaders_sky` -> `sky`, `materials_cubemap_dynamic` -> `cubemap_dynamic`, `texture2darray(_compressed)` -> `textures_2d-array(_compressed)`, `materials_texture_partialupdate` -> `textures_partialupdate`, `materials_texture_anisotropy` -> `textures_anisotropy`, `rendertarget_texture2darray` -> `rendertarget_2d-array_3d`, `panorama_equirectangular` -> `equirectangular`, `video_panorama_equirectangular` -> `video_panorama`, `postprocessing_unreal_bloom(_selective)` -> `postprocessing_bloom(_selective)`, `postprocessing_sao / ssao / gtao` -> `postprocessing_ao`, `postprocessing_taa` -> `postprocessing_traa`.
+- `webgl_*` / `misc_*` only: kept when the scene stands on its own once the host-provided parts are dropped. GLSL (`ShaderMaterial`, `onBeforeCompile`) is rewritten in TSL only when the shader is small and not the subject.
+- **The conversion does not change `@io-gui/three`** (or the demo host beyond its `DOCUMENTS` entry). An example that needs a framework feature or fix stays TODO with its tag in **Blocked by** (see Blockers below) until that work is done. Cosmetic post-processing (bloom, vignette, blur, FXAA) is dropped and noted, so the scene converts now; the full look waits for `document-pipeline`.
+- "Verify per view" marks content that updates itself for the drawing camera (`onBeforeRender`, LOD, reflectors, splat sorting, occlusion queries): it should work through any view, but check it with two views open before calling the example done.
+
+| Example | Source | Status | Blocked by | Notes |
+|---|---|---|---|---|
+| **Completed** | | | | |
+| AnimationGroups | `misc_animation_groups` | completed | — | see Audit |
+| AnimationKeyframes | `webgl_animation_keyframes` | completed | — | see Audit |
+| AnimationRetargeting | `webgpu_animation_retargeting` | completed | — | see Audit |
+| AnimationRetargetingReadyplayer | `webgpu_animation_retargeting_readyplayer` | completed | — | see Audit |
+| AnimationSkinningAdditiveBlending | `webgl_animation_skinning_additive_blending` | completed | — | see Audit; open: `crossfade-state` |
+| AnimationSkinningBlending | `webgl_animation_skinning_blending` | completed | — | see Audit; live document (ADR-0009); open: `crossfade-state` |
+| Backdrop | `webgpu_backdrop` | completed | — | see Audit |
+| BackdropArea | `webgpu_backdrop_area` | completed | — | see Audit |
+| Camera | `webgpu_camera` | completed | — | see Audit |
+| CameraArray | `webgpu_camera_array` | completed | — | see Audit |
+| ComputeTexture | `webgpu_compute_texture` | completed | — | see Audit |
+| Geometries | `webgl_geometries` | completed | — | see Audit |
+| GeometryColors | `webgl_geometry_colors` | completed | — | see Audit |
+| GeometryConvex | `webgl_geometry_convex` | completed | — | see Audit |
+| VolumePerlin | `webgpu_volume_perlin` | completed | — | see Audit |
+| **Animation and morphs** | | | | |
+| AnimationKeys | `misc_animation_keys` | TODO | — | keyframe tracks on a box; duration = clip |
+| AnimationMultiple | `webgl_animation_multiple` | TODO | — | `SkeletonUtils.clone` soldiers, one mixer each |
+| AnimationSkinningMorph | `webgl_animation_skinning_morph` | TODO | — | robot states / emotes / expressions; emote buttons make it a live document (ADR-0009), like skinning blending |
+| Skinning | `webgpu_skinning` | TODO | — | |
+| SkinningInstancing | `webgpu_skinning_instancing` | TODO | — | blur post dropped |
+| SkinningPoints | `webgpu_skinning_points` | TODO | — | compute runs through the material's `positionNode` (`onInit`), no per-frame `renderer.compute` |
+| SkinningInstancingIndividual | `webgpu_skinning_instancing_individual` | TODO | `per-frame-gpu` | `renderer.compute(computeSkinning)` each frame |
+| InstancingMorph | `webgpu_instancing_morph` | TODO | — | |
+| Morphtargets | `webgpu_morphtargets` | TODO | — | morph weights as properties |
+| MorphtargetsFace | `webgpu_morphtargets_face` | TODO | — | |
+| MorphtargetsHorse | `webgl_morphtargets_horse` | TODO | — | |
+| MorphtargetsSphere | `webgl_morphtargets_sphere` | TODO | — | |
+| LoaderBvh | `webgl_loader_bvh` | TODO | — | the skeleton is the content: a `SkeletonHelper` outside the `Helpers` rule, made selectable or left as is |
+| LoaderMd2 | `webgl_loader_md2` | TODO | — | `MD2Character`: skin, weapon and animation as dropdowns |
+| LoaderMdd | `webgl_loader_mdd` | TODO | — | |
+| LoaderGltfAnimationPointer | `webgl_loader_gltf_animation_pointer` | TODO | — | `KHR_animation_pointer` |
+| Watch | `webgl_watch` | TODO | — | hands follow the wall clock with tweens: derive them from timeline time; TAA and bloom dropped |
+| **Geometry and objects** | | | | |
+| Buffergeometry | `webgl_buffergeometry` | TODO | — | |
+| BuffergeometryIndexed | `webgl_buffergeometry_indexed` | TODO | — | |
+| BuffergeometryDrawrange | `webgl_buffergeometry_drawrange` | TODO | — | integrated particle motion (advance by `delta`); 1 px points -> `Sprite` |
+| BuffergeometryInstancingInterleaved | `webgl_buffergeometry_instancing_interleaved` | TODO | — | |
+| BuffergeometryLines | `webgl_buffergeometry_lines` | TODO | — | |
+| BuffergeometryLinesIndexed | `webgl_buffergeometry_lines_indexed` | TODO | — | |
+| BuffergeometryPoints | `webgl_buffergeometry_points` | TODO | — | 1 px points -> `Sprite` |
+| BuffergeometryPointsInterleaved | `webgl_buffergeometry_points_interleaved` | TODO | — | 1 px points -> `Sprite` |
+| GeometryColorsLookuptable | `webgl_geometry_colors_lookuptable` | TODO | — | the legend is a second ortho scene drawn over the view: drop it, or a sprite in the scene |
+| GeometryCube | `webgl_geometry_cube` | TODO | — | |
+| GeometryExtrudeShapes | `webgl_geometry_extrude_shapes` | TODO | — | |
+| GeometryExtrudeSplines | `webgl_geometry_extrude_splines` | TODO | — | spline camera as a named scene camera (like `TrainCamera`) |
+| GeometryLoft | `webgpu_geometry_loft` | TODO | — | |
+| GeometryMinecraft | `webgl_geometry_minecraft` | TODO | — | `FirstPersonControls` dropped |
+| GeometryNurbs | `webgl_geometry_nurbs` | TODO | — | pointer rotation dropped |
+| GeometryShapes | `webgl_geometry_shapes` | TODO | — | pointer rotation dropped |
+| GeometryTeapot | `webgl_geometry_teapot` | TODO | — | |
+| GeometryTerrain | `webgl_geometry_terrain` | TODO | — | `FirstPersonControls` dropped |
+| GeometryText | `webgl_geometry_text` | TODO | — | typing -> a `text` property |
+| GeometryTextShapes | `webgl_geometry_text_shapes` | TODO | — | |
+| GeometryTextStroke | `webgl_geometry_text_stroke` | TODO | — | |
+| GeometryCsg | `webgl_geometry_csg` | TODO | `dependency` | `three-bvh-csg` |
+| GeneratorBuilding | `webgpu_generator_building` | TODO | — | |
+| GeneratorCity | `webgpu_generator_city` | TODO | — | bloom dropped |
+| InstanceMesh | `webgpu_instance_mesh` | TODO | — | |
+| InstancePath | `webgpu_instance_path` | TODO | — | |
+| InstanceSprites | `webgpu_instance_sprites` | TODO | — | pointer-driven camera dropped |
+| InstanceUniform | `webgpu_instance_uniform` | TODO | — | |
+| InstancePoints | `webgpu_instance_points` | TODO | `per-frame-gpu` | `renderer.compute(computeSize)` each frame; inset view -> scene camera |
+| InstancingDynamic | `webgl_instancing_dynamic` | TODO | — | |
+| InstancingPerformance | `webgl_instancing_performance` | TODO | — | method (instanced / merged / naive) as a dropdown |
+| InstancingScatter | `webgl_instancing_scatter` | TODO | — | `MeshSurfaceSampler`; resample button |
+| MeshBatch | `webgpu_mesh_batch` | TODO | — | |
+| Lod | `webgl_lod` | TODO | — | verify per view (`LOD.autoUpdate` uses the drawing camera) |
+| Marchingcubes | `webgl_marchingcubes` | TODO | — | `ToonShader` material options dropped or ported to TSL |
+| ModifierCurve | `webgpu_modifier_curve` | TODO | — | `TransformControls` on the curve points dropped; editing the points needs the curve rebuilt on the document's `commit` event (check before relying on it) |
+| ModifierEdgesplit | `webgl_modifier_edgesplit` | TODO | — | |
+| ModifierSimplifier | `webgl_modifier_simplifier` | TODO | — | |
+| ModifierSubdivision | `webgl_modifier_subdivision` | TODO | — | |
+| MathOrientationTransform | `webgl_math_orientation_transform` | TODO | — | `setTimeout` target picks -> timeline schedule |
+| Helpers | `webgl_helpers` | TODO | — | normal / tangent / box helpers are the subject; `Helpers` rule until `scene-helpers` |
+| LinesColors | `webgl_lines_colors` | TODO | — | pointer-driven camera dropped |
+| LinesDashed | `webgl_lines_dashed` | TODO | — | |
+| LinesFat | `webgpu_lines_fat` | TODO | — | inset view -> scene camera |
+| LinesFatWireframe | `webgpu_lines_fat_wireframe` | TODO | — | inset view -> scene camera |
+| Sprites | `webgpu_sprites` | TODO | — | |
+| PointsBillboards | `webgl_points_billboards` | TODO | — | 1 px points -> `Sprite` |
+| PointsSprites | `webgl_points_sprites` | TODO | — | 1 px points -> `Sprite` |
+| PointsWaves | `webgl_points_waves` | TODO | — | `ShaderMaterial` -> TSL sprite material |
+| PointsDynamic | `webgl_points_dynamic` | TODO | `document-pipeline` | the post chain is part of the subject |
+| GaussianSplat | `webgpu_gaussian_splat` | TODO | — | raycast hit marker dropped; splat source dropdown; verify per view (sorting by camera) |
+| **Clipping** | | | | |
+| Clipping | `webgpu_clipping` | TODO | — | |
+| ClippingAdvanced | `webgl_clipping_advanced` | TODO | — | `ClippingGroup` |
+| ClippingIntersection | `webgl_clipping_intersection` | TODO | — | `ClippingGroup.clipIntersection` |
+| ClippingStencil | `webgpu_clipping_stencil` | TODO | `renderer-option` | needs `stencil: true` |
+| **Materials and textures** | | | | |
+| Materials | `webgpu_materials` | TODO | — | |
+| MaterialsAlphahash | `webgpu_materials_alphahash` | TODO | — | noisy without TAA; the `traa` views converge it |
+| MaterialsArrays | `webgpu_materials_arrays` | TODO | — | |
+| MaterialsBasic | `webgpu_materials_basic` | TODO | — | |
+| MaterialsCubemapMipmaps | `webgpu_materials_cubemap_mipmaps` | TODO | — | |
+| MaterialsDisplacementmap | `webgpu_materials_displacementmap` | TODO | — | |
+| MaterialsEnvmaps | `webgpu_materials_envmaps` | TODO | — | |
+| MaterialsEnvmapsGroundprojected | `webgpu_materials_envmaps_groundprojected` | TODO | — | `GroundedSkybox` dominates bounds (`framing-scenery`) |
+| MaterialsEnvmapsBpcem | `webgpu_materials_envmaps_bpcem` | TODO | `per-frame-gpu` | `CubeCamera.update` each frame |
+| MaterialsLightmap | `webgpu_materials_lightmap` | TODO | — | |
+| MaterialsMatcap | `webgpu_materials_matcap` | TODO | — | |
+| MaterialsRetroreflection | `webgpu_materials_retroreflection` | TODO | — | bloom dropped |
+| MaterialsSss | `webgpu_materials_sss` | TODO | — | |
+| MaterialsToon | `webgpu_materials_toon` | TODO | — | |
+| MaterialsTransmission | `webgpu_materials_transmission` | TODO | — | |
+| MaterialxNoise | `webgpu_materialx_noise` | TODO | — | |
+| LoaderMaterialx | `webgpu_loader_materialx` | TODO | — | |
+| Clearcoat | `webgpu_clearcoat` | TODO | — | |
+| CubemapAdjustments | `webgpu_cubemap_adjustments` | TODO | — | |
+| CubemapMix | `webgpu_cubemap_mix` | TODO | — | |
+| CubemapDynamic | `webgpu_cubemap_dynamic` | TODO | `per-frame-gpu` | `CubeCamera.update` each frame |
+| ParallaxUv | `webgpu_parallax_uv` | TODO | — | |
+| ProceduralTexture | `webgpu_procedural_texture` | TODO | — | a plane; the ortho camera is not needed |
+| MaterialsBlending | `webgl_materials_blending` | TODO | — | |
+| MaterialsBlendingCustom | `webgl_materials_blending_custom` | TODO | — | |
+| MaterialsBumpmap | `webgl_materials_bumpmap` | TODO | — | |
+| MaterialsCar | `webgl_materials_car` | TODO | — | wheel spin and grid scroll from time; body / detail / glass colors |
+| MaterialsCubemap | `webgl_materials_cubemap` | TODO | — | |
+| MaterialsCubemapRefraction | `webgl_materials_cubemap_refraction` | TODO | — | |
+| MaterialsEnvmapsExr | `webgl_materials_envmaps_exr` | TODO | — | |
+| MaterialsEnvmapsFasthdr | `webgl_materials_envmaps_fasthdr` | TODO | — | |
+| MaterialsEnvmapsHdr | `webgl_materials_envmaps_hdr` | TODO | — | |
+| MaterialsModified | `webgl_materials_modified` | TODO | — | `onBeforeCompile` twist -> TSL `positionNode` |
+| MaterialsNormalmap | `webgl_materials_normalmap` | TODO | — | bleach-bypass / color-correction post dropped |
+| MaterialsNormalmapObjectSpace | `webgl_materials_normalmap_object_space` | TODO | — | |
+| MaterialsPhysicalTransmissionAlpha | `webgl_materials_physical_transmission_alpha` | TODO | — | |
+| MaterialsTextureRotation | `webgl_materials_texture_rotation` | TODO | — | |
+| Equirectangular | `webgpu_equirectangular` | TODO | — | background only, nothing to select |
+| PanoramaCube | `webgl_panorama_cube` | TODO | — | background only, nothing to select |
+| Textures2dArray | `webgpu_textures_2d-array` | TODO | — | layer index from time |
+| Textures2dArrayCompressed | `webgpu_textures_2d-array_compressed` | TODO | — | `KTX2Loader.detectSupport` and the load in `onRendererInitialized` |
+| TexturesPartialupdate | `webgpu_textures_partialupdate` | TODO | `per-frame-gpu` | `copyTextureToTexture` on a timer |
+| LoaderTextureKtx2 | `webgpu_loader_texture_ktx2` | TODO | — | scissor grid -> planes laid out in one scene; loads in `onRendererInitialized` (`detectSupport`) |
+| LoaderTextureDds | `webgl_loader_texture_dds` | TODO | — | BC formats: desktop GPUs only |
+| LoaderTextureExr | `webgl_loader_texture_exr` | TODO | — | |
+| LoaderTextureHdr | `webgl_loader_texture_hdr` | TODO | — | |
+| LoaderTextureTga | `webgl_loader_texture_tga` | TODO | — | |
+| LoaderTextureTiff | `webgl_loader_texture_tiff` | TODO | — | |
+| LoaderTextureUltrahdr | `webgl_loader_texture_ultrahdr` | TODO | — | |
+| Tonemapping | `webgpu_tonemapping` | TODO | — | GUI maps onto the document's `toneMapping` / `toneMappingExposure` |
+| VolumeCloud | `webgpu_volume_cloud` | TODO | — | |
+| MaterialsNodeProxy | `webgpu_materials_node_proxy` | TODO | `three-upgrade` | not in r186 |
+| **TSL and procedural** | | | | |
+| TslAngularSlicing | `webgpu_tsl_angular_slicing` | TODO | — | |
+| TslEarth | `webgpu_tsl_earth` | TODO | — | |
+| TslGalaxy | `webgpu_tsl_galaxy` | TODO | — | |
+| TslHalftone | `webgpu_tsl_halftone` | TODO | — | |
+| TslProceduralTerrain | `webgpu_tsl_procedural_terrain` | TODO | — | pointer drag dropped |
+| TslRagingSea | `webgpu_tsl_raging_sea` | TODO | — | |
+| TslVfxFlames | `webgpu_tsl_vfx_flames` | TODO | — | |
+| TslVfxTornado | `webgpu_tsl_vfx_tornado` | TODO | — | bloom dropped (it carries much of the look) |
+| TslWood | `webgpu_tsl_wood` | TODO | — | |
+| TslVfxLinkedparticles | `webgpu_tsl_vfx_linkedparticles` | TODO | `per-frame-gpu`, `document-pipeline` | |
+| TslComputeAttractorsParticles | `webgpu_tsl_compute_attractors_particles` | TODO | `per-frame-gpu` | attractor `TransformControls` dropped |
+| TslOcclusionDither | `webgpu_tsl_occlusion_dither` | TODO | `three-upgrade` | not in r186 |
+| **Compute simulations** | | | | |
+| ComputeBirds | `webgpu_compute_birds` | TODO | `per-frame-gpu` | pointer predator dropped |
+| ComputeCloth | `webgpu_compute_cloth` | TODO | `per-frame-gpu` | |
+| ComputeParticles | `webgpu_compute_particles` | TODO | `per-frame-gpu` | pointer hit dropped |
+| ComputeParticlesFluid | `webgpu_compute_particles_fluid` | TODO | `per-frame-gpu` | pointer force dropped |
+| ComputeParticlesRain | `webgpu_compute_particles_rain` | TODO | `per-frame-gpu` | also renders a collision depth target each frame |
+| ComputeParticlesSnow | `webgpu_compute_particles_snow` | TODO | `per-frame-gpu`, `document-pipeline` | collision target as in Rain |
+| ComputePoints | `webgpu_compute_points` | TODO | `per-frame-gpu` | pointer dropped |
+| ComputeTexture3d | `webgpu_compute_texture_3d` | TODO | `per-frame-gpu` | |
+| ComputeWater | `webgpu_compute_water` | TODO | `per-frame-gpu` | pointer ripples dropped (ducks and waves remain) |
+| VolumeFire | `webgpu_volume_fire` | TODO | `per-frame-gpu`, `document-pipeline` | |
+| **Lights, shadows, environment** | | | | |
+| CustomFog | `webgpu_custom_fog` | TODO | — | |
+| FogHeight | `webgpu_fog_height` | TODO | — | |
+| CustomFogBackground | `webgpu_custom_fog_background` | TODO | `document-pipeline` | fog composed in post |
+| CustomFogScattering | `webgpu_custom_fog_scattering` | TODO | `document-pipeline` | |
+| Lensflares | `webgpu_lensflares` | TODO | — | `LensflareMesh`; verify per view (occlusion) |
+| Lightprobe | `webgpu_lightprobe` | TODO | — | |
+| LightprobeCubecamera | `webgpu_lightprobe_cubecamera` | TODO | — | one `CubeCamera.update` in `onRendererInitialized` |
+| Lightprobes | `webgpu_lightprobes` | TODO | `renderer-on-change` | bake in `onRendererInitialized`; the resolution control rebakes |
+| LightprobesComplex | `webgpu_lightprobes_complex` | TODO | `renderer-on-change` | as Lightprobes |
+| LightprobesSponza | `webgpu_lightprobes_sponza` | TODO | `renderer-on-change` | as Lightprobes |
+| LightsCustom | `webgpu_lights_custom` | TODO | — | |
+| LightsIesSpotlight | `webgpu_lights_ies_spotlight` | TODO | — | |
+| LightsPhong | `webgpu_lights_phong` | TODO | — | |
+| LightsPhysical | `webgpu_lights_physical` | TODO | — | |
+| LightsPointlights | `webgpu_lights_pointlights` | TODO | — | |
+| LightsProjector | `webgpu_lights_projector` | TODO | — | video map option dropped |
+| LightsRectarealight | `webgpu_lights_rectarealight` | TODO | — | |
+| LightsSelective | `webgpu_lights_selective` | TODO | — | |
+| LightsSpotlight | `webgpu_lights_spotlight` | TODO | — | |
+| LightsSunlight | `webgpu_lights_sunlight` | TODO | — | |
+| LightsHemisphere | `webgl_lights_hemisphere` | TODO | — | sky dome `ShaderMaterial` -> TSL gradient |
+| LightsSpotlights | `webgl_lights_spotlights` | TODO | — | tween.js (wall clock) -> derive from time |
+| LightsDynamic | `webgpu_lights_dynamic` | TODO | `renderer-option` | `renderer.lighting = new DynamicLighting()` |
+| LightsClustered | `webgpu_lights_clustered` | TODO | `renderer-option` | `renderer.lighting` (clustered); FXAA dropped |
+| Shadowmap | `webgpu_shadowmap` | TODO | — | |
+| ShadowmapArray | `webgpu_shadowmap_array` | TODO | — | `BasicShadowMap` is renderer-level: per-light `shadow.filterNode` (three API) or accept PCF |
+| ShadowmapPointlight | `webgpu_shadowmap_pointlight` | TODO | — | as ShadowmapArray |
+| ShadowmapPerformance | `webgl_shadowmap_performance` | TODO | — | |
+| ShadowmapOpacity | `webgpu_shadowmap_opacity` | TODO | `renderer-option` | `shadowMap.transmitted` |
+| ShadowmapVsm | `webgpu_shadowmap_vsm` | TODO | `renderer-option` | `shadowMap.type = VSMShadowMap` |
+| ShadowmapCsm | `webgpu_shadowmap_csm` | TODO | `view-camera` | `CSMShadowNode` splits one camera's frustum |
+| ShadowmapProgressive | `webgpu_shadowmap_progressive` | TODO | `per-frame-gpu` | `ProgressiveLightMap.update(camera)` each frame; `TransformControls` dropped |
+| ShadowContact | `webgpu_shadow_contact` | TODO | `per-frame-gpu` | renders a depth target from below each frame |
+| Shadowmesh | `webgl_shadowmesh` | TODO | `renderer-option` | `ShadowMesh` writes stencil |
+| Caustics | `webgpu_caustics` | TODO | `renderer-option` | `shadowMap.transmitted` |
+| Occlusion | `webgpu_occlusion` | TODO | — | verify per view (occlusion queries) |
+| Sky | `webgpu_sky` | TODO | `renderer-on-change` | sky controls regenerate the environment (`CubeCamera`); the AnimationKeyframes `SkyMesh` pattern covers the first bake |
+| Ocean | `webgpu_ocean` | TODO | — | bloom dropped; sky / water dominate bounds (`framing-scenery`) |
+| Water | `webgpu_water` | TODO | — | bloom and FXAA dropped |
+| BackdropWater | `webgpu_backdrop_water` | TODO | `document-pipeline` | the underwater mask is post |
+| Mirror | `webgpu_mirror` | TODO | — | verify per view (reflector) |
+| Reflection | `webgpu_reflection` | TODO | — | blur and vignette post dropped; verify per view |
+| ReflectionBlurred | `webgpu_reflection_blurred` | TODO | — | verify per view |
+| ReflectionRoughness | `webgpu_reflection_roughness` | TODO | — | verify per view |
+| Refraction | `webgpu_refraction` | TODO | — | verify per view |
+| Portal | `webgpu_portal` | TODO | `view-camera` | the portal material is `pass(scenePortal, camera)` with the main camera |
+| PmremCubemap | `webgpu_pmrem_cubemap` | TODO | — | |
+| PmremEquirectangular | `webgpu_pmrem_equirectangular` | TODO | — | |
+| PmremScene | `webgpu_pmrem_scene` | TODO | — | PMREM in `onRendererInitialized` |
+| Particles | `webgpu_particles` | TODO | — | TSL `time` -> `timeline.timeNode` |
+| ParticlesSoft | `webgpu_particles_soft` | TODO | — | |
+| Layers | `webgpu_layers` | TODO | `view-camera` | toggles the camera's layers |
+| Sandbox | `webgpu_sandbox` | TODO | — | |
+| **Post-processing with scene-dependent effects** | | | | |
+| PostprocessingAo | `webgpu_postprocessing_ao` | TODO | `document-pipeline` | |
+| PostprocessingBloom | `webgpu_postprocessing_bloom` | TODO | `document-pipeline` | |
+| PostprocessingBloomEmissive | `webgpu_postprocessing_bloom_emissive` | TODO | `document-pipeline` | needs an emissive MRT output |
+| PostprocessingBloomSelective | `webgpu_postprocessing_bloom_selective` | TODO | `document-pipeline` | per-object bloom flag via MRT; click toggling dropped |
+| PostprocessingDof | `webgpu_postprocessing_dof` | TODO | `document-pipeline` | |
+| PostprocessingDofBasic | `webgpu_postprocessing_dof_basic` | TODO | `document-pipeline` | click-to-focus dropped |
+| PostprocessingFog | `webgpu_postprocessing_fog` | TODO | `document-pipeline` | |
+| PostprocessingGodrays | `webgpu_postprocessing_godrays` | TODO | `document-pipeline` | needs the light from the scene |
+| PostprocessingLensflare | `webgpu_postprocessing_lensflare` | TODO | `document-pipeline` | |
+| PostprocessingOutline | `webgpu_postprocessing_outline` | TODO | `document-pipeline` | overlaps the selection outline overlay |
+| PostprocessingSsgi | `webgpu_postprocessing_ssgi` | TODO | `document-pipeline` | |
+| PostprocessingSsgiBallpool | `webgpu_postprocessing_ssgi_ballpool` | TODO | `document-pipeline` | pointer pushing dropped |
+| PostprocessingSsr | `webgpu_postprocessing_ssr` | TODO | `document-pipeline` | |
+| PostprocessingSsrDenoise | `webgpu_postprocessing_ssr_denoise` | TODO | `document-pipeline` | |
+| PostprocessingSss | `webgpu_postprocessing_sss` | TODO | `document-pipeline` | |
+| Oit | `webgpu_oit` | TODO | `document-pipeline` | |
+| VolumeLighting | `webgpu_volume_lighting` | TODO | `document-pipeline` | |
+| VolumeLightingRectarea | `webgpu_volume_lighting_rectarea` | TODO | `document-pipeline` | |
+| VolumeLightingTraa | `webgpu_volume_lighting_traa` | TODO | `document-pipeline` | |
+| VolumeCaustics | `webgpu_volume_caustics` | TODO | `document-pipeline`, `renderer-option` | `shadowMap.transmitted` |
+| Vxgi | `webgpu_vxgi` | TODO | `document-pipeline` | |
+| VxgiSponza | `webgpu_vxgi_sponza` | TODO | `document-pipeline` | |
+| **Loaders** | | | | |
+| LoaderGltf | `webgpu_loader_gltf` | TODO | — | |
+| LoaderGltfAnisotropy | `webgpu_loader_gltf_anisotropy` | TODO | — | |
+| LoaderGltfCompressed | `webgpu_loader_gltf_compressed` | TODO | — | KTX2 `detectSupport` in `onRendererInitialized` |
+| LoaderGltfDispersion | `webgpu_loader_gltf_dispersion` | TODO | — | |
+| LoaderGltfIridescence | `webgpu_loader_gltf_iridescence` | TODO | — | |
+| LoaderGltfSheen | `webgpu_loader_gltf_sheen` | TODO | — | |
+| LoaderGltfTransmission | `webgpu_loader_gltf_transmission` | TODO | — | |
+| LoaderGltfDiffuseRoughness | `webgpu_loader_gltf_diffuse_roughness` | TODO | `three-upgrade` | not in r186 |
+| LoaderGltfAvif | `webgl_loader_gltf_avif` | TODO | — | |
+| LoaderGltfInstancing | `webgl_loader_gltf_instancing` | TODO | — | |
+| LoaderGltfVariants | `webgl_loader_gltf_variants` | TODO | — | variant dropdown |
+| Loader3dm | `webgl_loader_3dm` | TODO | — | rhino3dm wasm from the CDN |
+| Loader3ds | `webgl_loader_3ds` | TODO | — | |
+| Loader3mf | `webgl_loader_3mf` | TODO | — | |
+| Loader3mfMaterials | `webgl_loader_3mf_materials` | TODO | — | |
+| LoaderAmf | `webgl_loader_amf` | TODO | — | |
+| LoaderCollada | `webgl_loader_collada` | TODO | — | |
+| LoaderColladaKinematics | `webgl_loader_collada_kinematics` | TODO | — | tween + `setTimeout` -> joint values from time |
+| LoaderColladaSkinning | `webgl_loader_collada_skinning` | TODO | — | |
+| LoaderDraco | `webgl_loader_draco` | TODO | — | |
+| LoaderFbx | `webgl_loader_fbx` | TODO | — | |
+| LoaderFbxNurbs | `webgl_loader_fbx_nurbs` | TODO | — | |
+| LoaderGcode | `webgl_loader_gcode` | TODO | — | |
+| LoaderKmz | `webgl_loader_kmz` | TODO | — | |
+| LoaderLdraw | `webgl_loader_ldraw` | TODO | — | model dropdown |
+| LoaderNrrd | `webgl_loader_nrrd` | TODO | — | `VolumeSlice` canvas textures |
+| LoaderObj | `webgl_loader_obj` | TODO | — | |
+| LoaderPcd | `webgl_loader_pcd` | TODO | — | 1 px points; a point size control needs sprites |
+| LoaderPdb | `webgl_loader_pdb` | TODO | — | `CSS2DRenderer` atom labels dropped |
+| LoaderPly | `webgl_loader_ply` | TODO | — | |
+| LoaderStl | `webgl_loader_stl` | TODO | — | |
+| LoaderSvg | `webgl_loader_svg` | TODO | — | |
+| LoaderTtf | `webgl_loader_ttf` | TODO | — | typing -> a `text` property |
+| LoaderUsdz | `webgl_loader_usdz` | TODO | — | |
+| LoaderVox | `webgl_loader_vox` | TODO | — | |
+| LoaderVrml | `webgl_loader_vrml` | TODO | — | file dropdown |
+| LoaderXyz | `webgl_loader_xyz` | TODO | — | |
+| LoaderIfc | `webgl_loader_ifc` | TODO | `dependency` | `web-ifc` |
+
+Not candidates:
+
+- **Out of scope** (as asked): `webxr_*`, `webgpu_xr_*`, `css2d_*`, `css3d_*`, `svg_*`, plus `physics_*` (external engines stepping in wall-clock time), `webaudio_*`, `games_fps`, `index`.
+- **WebGL twins** of the webgpu examples above (81 by name, plus the renamed ones under the selection rules).
+- **Renderer-level or renderer tests**: `camera_logarithmicdepthbuffer`, `reversed_depth_buffer`, `centroid_sampling`, `multisampled_renderbuffers`, `hdr`, `compile_async`, `furnace_test`, `pmrem_test`, `test_memory`, `webgl_test_memory2`, `webgl_test_wide_gamut`, `performance`, `performance_renderbundle`, `multiple_canvas`, `display_stereo`, `webgl_effects_*`, `webgl_worker_offscreencanvas`, `webgl_buffergeometry_glbufferattribute`, `webgl_clipculldistance`, `webgl_ubo`, `webgl_ubo_arrays`, `webgl_read_float_buffer`, `webgpu_renderer_pathtracer` (post-r186).
+- **Custom render loops, render targets, split screens**: `depth_texture`, `rtt`, `multiple_elements`, `webgl_multiple_elements_text`, `multiple_rendertargets(_readback)`, `webgl_multiple_scenes_comparison`, `webgl_multiple_views`, `rendertarget_2d-array_3d`, `webgl_framebuffer_texture`, `mrt`, `mrt_mask`, `deferred`, `webgl_simple_gi`, `texturegather`, `texturegrad`, `materials_texture_manualmipmap`, `textures_anisotropy`, `webgl_materials_texture_filters`, `webgl_shadowmap_viewer`, `storage_buffer`, `struct_drawindirect`, `compute_reduce`, `compute_sort_bitonic`, `compute_rasterizer(_ibl)`, `compute_texture_pingpong`, `shadertoy`, `tsl_interoperability`.
+- **Screen-space filters**: these are view pipelines (`pipelineTypes.register` in the host), not documents: `postprocessing`, `postprocessing_3dlut`, `_afterimage`, `_anamorphic`, `_ca`, `_difference`, `_direct`, `_fxaa`, `_masking`, `_motion_blur`, `_pixel`, `_radial_blur`, `_retro`, `_smaa`, `_sobel`, `_ssaa`, `_transition`, `_traa`, `upscaling_fsr1`, `upscaling_taau`; webgl only: `postprocessing_advanced`, `_backgrounds`, `_glitch`, `_procedural`, `_rgb_halftone`, `_dof2`.
+- **Interaction is the subject** (tools and operators): `misc_boxselection`, `misc_controls_*`, `misc_raycaster_helper`, `webgl_animation_skinning_ik`, `webgl_animation_walk`, `webgl_decals`, `webgl_geometry_spline_editor`, `webgl_geometry_terrain_raycast`, `webgl_interactive_*`, `webgl_instancing_raycast`, `lines_fat_raycasting`, `webgl_math_obb`, `webgl_modifier_curve_instanced`, `webgl_raycaster_*`, `sculpt`, `webgl_materials_texture_canvas`, `webgl_loader_md2_control`, `compute_geometry`, `webgl_buffergeometry_selective_draw`, `webgl_batch_lod_bvh`.
+- **DOM, media, editors**: `materials_texture_html`, `materials_video`, `webgl_materials_video_webcam`, `webgl_morphtargets_webcam`, `video_frame`, `video_panorama`, `webgl_video_kinect`, `compute_audio`, `webgl_loader_texture_lottie`, `webgl_loader_imagebitmap`, `misc_uv_tests`, `tsl_editor`, `tsl_transpiler`, `tsl_graph`.
+- **GLSL is the subject** (TSL counterparts exist among the webgpu examples): `webgl_buffergeometry_attributes_integer`, `_attributes_none`, `_custom_attributes_particles`, `_instancing`, `_instancing_billboards`, `_rawshader`, `webgl_custom_attributes*`, `webgl_materials_channels`, `webgl_materials_cubemap_render_to_mipmaps`, `webgl_materials_wireframe`, `webgl_modifier_tessellation`, `webgl_random_uv`, `webgl_shader`, `webgl_shader_lava`, `webgl_texture2darray_layerupdate`, `webgl_texture3d`, `webgl_texture3d_partialupdate`, `webgl_volume_instancing`, `webgl_gpgpu_birds_gltf`, `webgl_gpgpu_protoplanet`, `webgl_shadowmap_pcss` (patches `ShaderChunk`).
+- **Exporters** (`misc_exporter_*`): export buttons over a sample scene; export is editor I/O, not document content.
+- **Camera-driven streaming** (external libraries): `webgl_loader_3dtiles`, `webgl_loader_gltf_progressive_lod`.
+- **Duplicates**: `webgl_tsl_clearcoat`, `webgl_tsl_shadowmap`, `webgl_tsl_skinning`, `webgl_tsl_instancing` (TSL on `WebGLRenderer` through `WebGLNodesHandler`; same content as `clearcoat`, `shadowmap`, `skinning`, `instancing_performance`), `webgl_buffergeometry_uint` (as `buffergeometry`), `webgl_loader_texture_ktx` and `_pvrtc` (legacy formats; `loader_texture_ktx2` covers them).
+
+### Blockers
+
+Features or fixes outside the examples. Each one unblocks the rows tagged with it; until then those stay TODO.
+
+- **`document-pipeline`**: a document cannot bring a post-processing graph. Pipelines are registered by the host (`pipelineTypes.register` in `IoEditorExample.ts`) and picked per `View.pipeline` (ADR-0006). Needed: a document-declared builder (`PostProcessingBuilder`) that views use, plus scene inputs it can read (MRT outputs such as emissive or a per-object bloom flag, the scene's lights). Also unblocks the full look of rows that drop cosmetic post.
+- **`per-frame-gpu`**: GPU work every tick (`renderer.compute`, `CubeCamera.update`, a render into a target). `onAnimate` gets no renderer, and `onRendererInitialized` runs once. Needed: a once-per-frame hook with the renderer, not per view draw. The simulations themselves are live documents (ADR-0009): they integrate only forward `delta` and ignore scrubbing back and wraps.
+- **`renderer-on-change`**: GPU work in a property handler (rebake light probes, regenerate a sky environment). Lighter form of `per-frame-gpu`: a way to queue a task for the renderers that draw the document.
+- **`view-camera`**: content bound to the camera that draws it: `CSMShadowNode` (one camera's frustum), `pass(scene, camera)` inside a material (Portal), camera layers (Layers). Views build their camera per draw (ADR-0005), so the document has no camera to bind. Needed: a per-view hook, or nodes that read the drawing camera.
+- **`renderer-option`**: the shared renderer (`RenderScheduler.ts`: `{antialias: false, alpha: true}`) has no stencil buffer (three defaults `stencil` to `false`), and `renderer.lighting`, `shadowMap.type = VSMShadowMap` and `shadowMap.transmitted` are renderer-wide (ADR-0001). Needed: enable stencil on the shared renderer, or a renderer a document can ask for.
+- **`three-upgrade`**: the source exists only after r186 (HEAD).
+- **`dependency`**: needs an npm package the workspace does not have (`three-bvh-csg`, `web-ifc`).
+
+## Open questions
+
+- **`interactive-timeline`** (decided 2026-10-11, ADR-0009): live documents treat the timeline as a clock and ignore time going back. Considered: recording button presses on the timeline and replaying them, which is exact under scrubbing but makes the demo authored content. Follow-up: pass the cause of a time change to `onAnimate` (`timeline-negative-delta` in the future-work plan).
+- **`inspector-refresh`**: Camera, Backdrop and the skinning examples call `dispatchMutation(...)` in `onAnimate` inside `debug:` blocks so the inspector follows per-frame values. Bundles strip debug blocks, so bundled builds stop refreshing. Alternative: the host refreshes the Document tab on `time` changes.
+- **`framing-scenery`**: First-show framing and frame-all use the whole scene's bounds, so a sky dome or a large floor dwarfs the subject. Documents work around it with `frame-object` on their model (Keyframes, the skinning and retargeting examples). CameraArray builds its scene synchronously, so it has no load to hook `frame-object` to: its perspective view opens framed on the 100 × 100 backdrop (near 42, far 429 around a 1-unit cylinder). Option: framing skips `userData.selectable === false` scenery.

@@ -28,6 +28,11 @@ ThreeTimeline (element)
 ├── transport io-buttons (three: icons): start, frame back, play / pause, frame forward, end, loop
 └── ThreeTimelineRange (IoGl element): playhead and frame-aligned dividers at any zoom; scrub, zoom, pan
 
+ThreeScenegraph (element, a renderScheduler change listener)
+├── ThreeScenegraphItem rows: disclosure triangle, type icon (getObjectIcon), name or <ClassName>, name field
+├── disclosure: collapsed objects by uuid (bind to Storage to persist)
+└── reveal(object), startRename(object) / endRename(name) (runs object.rename)
+
 Editor (object, one per app)
 ├── document: Document (switchable at runtime)
 │   ├── scene, toneMapping, toneMappingExposure
@@ -38,7 +43,7 @@ Editor (object, one per app)
 ├── mode, isPlaying, onAnimate(delta, time), requestRender()
 ├── selection: SelectionModel (of the active document; objects + component bitsets per domain)
 ├── operators: OperatorRegistry (run, modal operators, lastCommand; built-ins transform.translate,
-│   object.editmode_toggle, mesh.select_mode)
+│   object.editmode_toggle, mesh.select_mode, object.rename)
 └── tools: Registry of ToolDefinitions + activeTools per '<viewKind>:<mode>' (built-in Move tool, not active)
 
 EditorConfigs (configs/*)
@@ -123,6 +128,35 @@ type ThreeTimelineRangeProps = {
 
 The transport icons are registered in the `three` icon namespace (`three:play`, `three:pause`, `three:skip_start`, `three:skip_end`, `three:frame_back`, `three:frame_forward`, `three:loop`) when the package loads.
 
+### ThreeScenegraph
+
+A collapsible tree of the scene of the editor's document. Each row shows the object's type icon and its name, or `<ClassName>` when it has none. The whole tree starts expanded.
+
+```typescript
+import { Storage } from '@io-gui/core';
+
+threeScenegraph({
+  editor,
+  // Optional: keep what is collapsed across reloads, by object uuid.
+  disclosure: Storage<Record<string, boolean>>({ key: 'three-scenegraph-disclosure', storage: 'local', value: {} }),
+});
+```
+
+- Rows highlight the editor's selection, the active object strongest. Clicking a row selects its object the way a viewport click does (Shift toggles, Ctrl removes); clicking its triangle collapses or expands it
+- A new active object, selected anywhere (a viewport click, box select, another document), is revealed: its collapsed ancestors expand and its row scrolls into view. `reveal(object)` does the same on request
+- Double-click a row, or press F2, to rename its object: Enter or leaving the field applies the name through the `object.rename` operator (one transaction, recorded as the last command), Escape cancels. `startRename(object)` / `endRename(name | null)` do the same from code
+- Keys: Up / Down / Home / End move between rows; Right expands, then moves to the first child; Left collapses, then moves to the parent; Enter or Space selects; F2 renames
+- Deep or long rows make the tree scroll horizontally rather than cut their names
+- `disclosure` holds only collapsed objects, `{[uuid]: false}`, and keeps the 1000 most recent entries (`DISCLOSURE_LIMIT`). Objects that get new uuids on every load (most examples) start expanded again after a reload
+- It follows `editor.document` and refreshes on the document's `structure` changes and renames. Content added outside transactions, such as a model loaded asynchronously, must be reported with `notify({kind: 'structure'})`, as for viewports
+- `isExpanded(object)` / `setExpanded(object, expanded)` read and change disclosure
+
+Icons come from `getObjectIcon(object)`: the icon of the nearest class in the object's prototype chain with one registered. Every `Object3D` class in three.js has one in the `three` namespace (`three:mesh`, `three:skinned_mesh`, `three:spot_light`, `three:grid_helper`, ...). Register icons for your own classes:
+
+```typescript
+registerObjectIcon(Character, 'app:character'); // Character and its subclasses
+```
+
 ## Objects
 
 ### Editor and Document
@@ -194,18 +228,24 @@ The undo stack and multi-user sync are planned on top of `document.history`, `re
 One action, one transaction. `exec` for instant actions; `invoke` returning `'running'` plus `modal` for interactive ones, which then receive every event in the viewport (Escape cancels and rolls back).
 
 ```typescript
-editor.operators.register({ id: "object.rename", label: "Rename", create: (props) => ({
-  exec: (ctx) => { ctx.transaction.set(props.id as string, "name", props.name); return "finished"; },
+editor.operators.register({ id: "object.hide", label: "Hide", create: (props) => ({
+  exec: (ctx) => { ctx.transaction.set(props.id as string, "visible", false); return "finished"; },
 }) });
-editor.operators.run("object.rename", { id: mesh.uuid, name: "Box" });
+editor.operators.run("object.hide", { id: mesh.uuid });
 editor.operators.run("object.slide", {}, { host: viewport, event }); // modal in that viewport
-editor.operators.lastCommand; // { name: "object.rename", args: {...} }
+editor.operators.lastCommand; // { name: "object.hide", args: {...} }
 ```
 
 Built in: `transform.translate` moves the selected objects (objects with a selected ancestor move with it, once). Interactive runs are modal: drag along an axis or in the view plane, X / Y / Z switch the axis constraint (again to release it), release or Enter confirms, Escape or right click cancels. A finished run records `{axis, delta}` as its command, and `exec` applies a `delta` directly:
 
 ```typescript
 editor.operators.run("transform.translate", { delta: [1, 0, 0] }); // repeat without a viewport
+```
+
+`object.rename` sets an object's name, `{id, name}`; a run that keeps the name is cancelled and records nothing. The scene graph renames through it.
+
+```typescript
+editor.operators.run("object.rename", { id: mesh.uuid, name: "Crate" });
 ```
 
 ### Tools
@@ -387,7 +427,7 @@ editor.notify({kind: 'transform', ids: [mesh.uuid]}); // same, with a typed chan
 **Each frame:**
 
 1. Tick playing editors (one shared three.js `Timer`): the editor's `onAnimate(delta, time)`, then advance its document's timeline by `delta`, which runs the document's `onAnimate`.
-2. Drain the changes queued on each shown document; tag viewports whose `listens(change)` is true.
+2. Drain the changes queued on each shown document; tag viewports whose `listens(change)` is true, then hand the drained changes to the document's change listeners (`renderScheduler.addListener({document, onDocumentChanges})`), UI that follows a document without drawing it, such as `ThreeScenegraph`.
 3. Update each scene's world matrices once, then draw tagged, visible viewports in priority order (focused, hovered, other) within a frame budget (`renderScheduler.frameBudget`, 12 ms). Views not reached draw next frame. A view tagged only `overlay` presents its cached pipeline output with fresh overlays.
 
 Plain Three.js edits made outside `onAnimate` must call `editor.requestRender()` (or `viewport.tag('content')`), or nothing redraws.

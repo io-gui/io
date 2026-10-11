@@ -88,7 +88,7 @@ export class GeometryConvexExample extends Document {
     const positionInstancedAttribute = new InstancedBufferAttribute( new Float32Array( positions ), 3 )
 
     const pointsMaterial = new PointsNodeMaterial( {
-      colorNode: color( 0x0080ff ).mul( texture( spriteTexture ) ),
+      colorNode: color( 0x0080ff ).rgb.mul( texture( spriteTexture ).rgb ),
       opacityNode: texture(spriteTexture).a,
       positionNode: instancedBufferAttribute( positionInstancedAttribute ),
       sizeNode: float( 10 ),

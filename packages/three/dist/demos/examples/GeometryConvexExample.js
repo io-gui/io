@@ -9,12 +9,14 @@ import { instancedBufferAttribute, texture, float, color } from 'three/tsl';
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 import { Register } from '@io-gui/core';
-import { Document } from '@io-gui/three';
-/** The convex hull of a dodecahedron's vertices, drawn as points and a translucent mesh. Spins while playing; plays when opened. */
+import { Document, Timeline } from '@io-gui/three';
+/** Seconds in which the spin repeats: the timeline length, so looping is seamless. */
+const SPIN_PERIOD = 20;
+/** The convex hull of a dodecahedron's vertices, drawn as points and a translucent mesh. Spins with document time; plays when opened. */
 let GeometryConvexExample = class GeometryConvexExample extends Document {
     group;
     constructor(args) {
-        super({ autoplay: true, ...args });
+        super({ timeline: new Timeline({ autoplay: true, duration: SPIN_PERIOD }), ...args });
         // ambient light
         const ambientLight = new AmbientLight(0x666666);
         ambientLight.name = 'Ambient';
@@ -52,7 +54,7 @@ let GeometryConvexExample = class GeometryConvexExample extends Document {
         }
         const positionInstancedAttribute = new InstancedBufferAttribute(new Float32Array(positions), 3);
         const pointsMaterial = new PointsNodeMaterial({
-            colorNode: color(0x0080ff).mul(texture(spriteTexture)),
+            colorNode: color(0x0080ff).rgb.mul(texture(spriteTexture).rgb),
             opacityNode: texture(spriteTexture).a,
             positionNode: instancedBufferAttribute(positionInstancedAttribute),
             sizeNode: float(10),
@@ -76,8 +78,8 @@ let GeometryConvexExample = class GeometryConvexExample extends Document {
         mesh.name = 'Hull';
         this.group.add(mesh);
     }
-    onAnimate() {
-        this.group.rotation.y += 0.005;
+    onAnimate(delta, time) {
+        this.group.rotation.y = time / SPIN_PERIOD * Math.PI * 2;
     }
 };
 GeometryConvexExample = __decorate([

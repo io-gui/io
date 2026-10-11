@@ -1,4 +1,4 @@
-import { Camera, Node, PassNode, PerspectiveCamera, PostProcessing, Scene, WebGPURenderer } from 'three/webgpu'
+import { Camera, Node, PassNode, PerspectiveCamera, RenderPipeline, Scene, WebGPURenderer } from 'three/webgpu'
 import { pass } from 'three/tsl'
 import type { PipelineContext } from '../ViewPipeline.js'
 import type { ViewRenderResult } from '../RenderScheduler.js'
@@ -19,7 +19,7 @@ export type PostProcessingPipelineOptions = {
 }
 
 /**
- * A pipeline around three's `PostProcessing` and a `pass(scene, camera)` (ADR-0006). Its output stays linear;
+ * A pipeline around three's `RenderPipeline` (formerly `PostProcessing`) and a `pass(scene, camera)` (ADR-0006). Its output stays linear;
  * the viewport tone-maps when presenting. The scene pass depth is exposed so overlays depth-test against it.
  *
  * ```ts
@@ -29,7 +29,7 @@ export type PostProcessingPipelineOptions = {
  */
 export class PostProcessingPipeline extends RenderTargetPipeline {
 
-  readonly postProcessing: PostProcessing
+  readonly postProcessing: RenderPipeline
   readonly scenePass: PassNode
   convergeFrames: number
 
@@ -42,7 +42,7 @@ export class PostProcessingPipeline extends RenderTargetPipeline {
     this._build = build
     this.convergeFrames = options.convergeFrames ?? 0
     this.scenePass = pass(new Scene(), new PerspectiveCamera())
-    this.postProcessing = new PostProcessing(renderer)
+    this.postProcessing = new RenderPipeline(renderer)
     this.postProcessing.outputColorTransform = false
     this.output = {color: this.target.texture, depth: this.scenePass.getTexture('depth')}
   }

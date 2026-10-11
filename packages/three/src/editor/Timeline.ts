@@ -44,7 +44,7 @@ export class Timeline extends ReactiveObject {
   declare autoplay: boolean
 
   /** Created on first use. Declared: `currentTimeChanged` can run inside the base constructor. */
-  declare private _timeNode: UniformNode<number> | undefined
+  declare private _timeNode: UniformNode<'float', number> | undefined
 
   constructor(args?: TimelineProps) {
     super(args)
@@ -54,7 +54,7 @@ export class Timeline extends ReactiveObject {
    * `currentTime` as a TSL uniform. Shader animation built on it follows the timeline; TSL's global `time` keeps
    * running while paused and ignores scrubbing.
    */
-  get timeNode(): UniformNode<number> {
+  get timeNode(): UniformNode<'float', number> {
     if (!this._timeNode) this._timeNode = uniform(this.currentTime)
     return this._timeNode
   }

@@ -6,8 +6,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { AmbientLight, ArrayCamera, CylinderGeometry, DirectionalLight, Mesh, MeshPhongMaterial, PerspectiveCamera, PlaneGeometry, Vector4 } from 'three/webgpu';
 import { Register } from '@io-gui/core';
-import { Document } from '@io-gui/three';
+import { Document, Timeline } from '@io-gui/three';
 const AMOUNT = 6;
+/** Seconds in which the spin repeats: the timeline length, so looping is seamless. */
+const SPIN_PERIOD = 20;
 /**
  * A spinning cylinder in front of an ArrayCamera of 6×6 sub-cameras, laid out for a square canvas.
  * Views copy scene cameras into a plain camera (ADR-0005), so a camera view looks through the array's main
@@ -17,7 +19,7 @@ let CameraArrayExample = class CameraArrayExample extends Document {
     arrayCamera;
     mesh;
     constructor(args) {
-        super({ autoplay: true, ...args });
+        super({ timeline: new Timeline({ autoplay: true, duration: SPIN_PERIOD }), ...args });
         const subCameras = [];
         for (let i = 0; i < AMOUNT * AMOUNT; i++) {
             const subCamera = new PerspectiveCamera(40, 1, 0.1, 10);
@@ -37,7 +39,6 @@ let CameraArrayExample = class CameraArrayExample extends Document {
         light.name = 'Light';
         light.position.set(0.5, 0.5, 1);
         light.castShadow = true;
-        light.shadow.bias = -0.001;
         light.shadow.camera.zoom = 4;
         this.scene.add(light);
         // Background plane
@@ -80,9 +81,10 @@ let CameraArrayExample = class CameraArrayExample extends Document {
             }
         }
     }
-    onAnimate() {
-        this.mesh.rotation.x += 0.005;
-        this.mesh.rotation.z += 0.01;
+    onAnimate(delta, time) {
+        const angle = time / SPIN_PERIOD * Math.PI * 2;
+        this.mesh.rotation.x = angle;
+        this.mesh.rotation.z = angle * 2;
     }
 };
 CameraArrayExample = __decorate([

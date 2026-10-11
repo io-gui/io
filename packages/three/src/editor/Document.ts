@@ -191,7 +191,8 @@ export class Document extends ReactiveObject {
    * Called on every change of `timeline.currentTime`: each frame while the editor plays, and whenever the timeline is
    * scrubbed, stepped or set. `delta` is the change in seconds, negative when time goes back (scrubbing back, a loop
    * wrap); `time` is the new current time. Time-driven content derives its state from `time`; content that can only
-   * integrate (mixers) advances by `delta`. Views redraw after it; scene writes here bypass transactions.
+   * integrate (mixers) advances by `delta`. Live content, whose state builds up from interaction, advances only on
+   * positive `delta` (ADR-0009). Views redraw after it; scene writes here bypass transactions.
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onAnimate(delta: number, time: number) {}

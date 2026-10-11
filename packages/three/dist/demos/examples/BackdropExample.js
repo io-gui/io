@@ -5,10 +5,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Property, Register } from '@io-gui/core';
-import { Document } from '@io-gui/three';
+import { Document, Timeline } from '@io-gui/three';
 import { registerEditorGroups } from '@io-gui/editors';
 import { AnimationMixer, Group, Mesh, MeshStandardNodeMaterial, SphereGeometry, SpotLight, MathUtils, NeutralToneMapping, } from 'three/webgpu';
-import { float, vec3, color, viewportSharedTexture, hue, blendOverlay, posterize, grayscale, saturation, viewportSafeUV, screenUV, checker, uv, time, oscSine, output, } from 'three/tsl';
+import { float, vec3, color, viewportSharedTexture, hue, blendOverlay, posterize, grayscale, saturation, viewportSafeUV, screenUV, checker, uv, oscSine, output, } from 'three/tsl';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 /**
  * Eight spheres whose backdrop nodes filter what is behind them, circling the dancing Michelle model.
@@ -17,7 +17,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 let BackdropExample = class BackdropExample extends Document {
     portals;
     constructor(args) {
-        super({ toneMapping: NeutralToneMapping, toneMappingExposure: 0.3, autoplay: true, ...args });
+        super({ toneMapping: NeutralToneMapping, toneMappingExposure: 0.3, timeline: new Timeline({ autoplay: true }), ...args });
         // Background
         this.scene.backgroundNode = screenUV.y.mix(color(0x66bbff), color(0x4466ff));
         // Light
@@ -47,10 +47,10 @@ let BackdropExample = class BackdropExample extends Document {
             mesh.position.set(Math.cos(rotation) * distance, 1, Math.sin(rotation) * distance);
             this.portals.add(mesh);
         };
-        addBackdropSphere('Hue', hue(viewportSharedTexture().bgr, oscSine().mul(Math.PI)));
+        addBackdropSphere('Hue', hue(viewportSharedTexture().bgr, oscSine(this.timeline.timeNode).mul(Math.PI)));
         addBackdropSphere('Invert', viewportSharedTexture().rgb.oneMinus());
         addBackdropSphere('Grayscale', grayscale(viewportSharedTexture().rgb));
-        addBackdropSphere('Saturation', saturation(viewportSharedTexture().rgb, 10), oscSine());
+        addBackdropSphere('Saturation', saturation(viewportSharedTexture().rgb, 10), oscSine(this.timeline.timeNode));
         addBackdropSphere('Overlay', blendOverlay(viewportSharedTexture().rgb, checker(uv().mul(10))));
         addBackdropSphere('Pixelate', viewportSharedTexture(viewportSafeUV(screenUV.mul(40).floor().div(40))));
         addBackdropSphere('PixelateBlue', viewportSharedTexture(viewportSafeUV(screenUV.mul(80).floor().div(80))).add(color(0x0033ff)));
@@ -66,9 +66,11 @@ let BackdropExample = class BackdropExample extends Document {
             const mesh = object.children[0].children[0];
             const material = mesh.material;
             // TODO: Time is respecting the animation mixer timeScale
-            material.outputNode = oscSine(time.mul(.1)).mix(output, posterize(output.add(.1), 4).mul(2));
+            material.outputNode = oscSine(this.timeline.timeNode.mul(.1)).mix(output, posterize(output.add(.1), 4).mul(2));
+            this.timeline.duration = gltf.animations[0].duration;
             const action = this.mixer.clipAction(gltf.animations[0]);
             action.play();
+            this.mixer.setTime(this.timeline.currentTime);
             this.scene.add(object);
             this.notify({ kind: 'structure' });
         });

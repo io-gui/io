@@ -8,13 +8,15 @@ import { AmbientLight, BoxGeometry, CapsuleGeometry, CircleGeometry, CylinderGeo
 import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
 import { plane, klein, mobius } from 'three/addons/geometries/ParametricFunctions.js';
 import { Register, Property } from '@io-gui/core';
-import { Document } from '@io-gui/three';
+import { Document, Timeline } from '@io-gui/three';
 import { registerEditorGroups } from '@io-gui/editors';
-/** The built-in geometries in a 4×4 grid, sharing one UV grid textured material. Spins while playing; plays when opened. */
+/** Seconds in which the spin repeats: the timeline length, so looping is seamless. */
+const SPIN_PERIOD = 20;
+/** The built-in geometries in a 4×4 grid, sharing one UV grid textured material. Spins with document time; plays when opened. */
 let GeometriesExample = class GeometriesExample extends Document {
     material;
     constructor(args) {
-        super({ autoplay: true, ...args });
+        super({ timeline: new Timeline({ autoplay: true, duration: SPIN_PERIOD }), ...args });
         const ambientLight = new AmbientLight(0xcccccc, 1.5);
         ambientLight.name = 'Ambient';
         this.scene.add(ambientLight);
@@ -69,10 +71,11 @@ let GeometriesExample = class GeometriesExample extends Document {
         this.material.emissive.set(this.wireframe ? 0xffffff : 0x000000);
     }
     onAnimate(delta, time) {
+        const angle = time / SPIN_PERIOD * Math.PI * 2;
         this.scene.traverse((object) => {
             if (object.isMesh === true) {
-                object.rotation.x = time * 0.5;
-                object.rotation.y = time * 0.25;
+                object.rotation.x = angle * 2;
+                object.rotation.y = angle;
             }
         });
     }

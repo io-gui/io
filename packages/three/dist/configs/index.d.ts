@@ -149,7 +149,7 @@ import './renderers/common/Lighting.js';
 import './renderers/common/BundleGroup.js';
 import './renderers/common/CanvasTarget.js';
 import './renderers/common/QuadMesh.js';
-import './renderers/common/PostProcessing.js';
+import './renderers/common/RenderPipeline.js';
 import './renderers/common/InspectorBase.js';
 import './renderers/common/StorageTexture.js';
 import './renderers/common/Storage3DTexture.js';

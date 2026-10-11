@@ -58,8 +58,8 @@
     "@io-gui/inputs": "workspace:*",
     "@io-gui/sliders": "workspace:*",
     "@io-gui/colors": "workspace:*",
-    "@types/three": "^0.182.0",
-    "three": "^0.182.0"
+    "@types/three": "^0.186.0",
+    "three": "^0.186.0"
   },
   "peerDependencies": {
     "@io-gui/core": "^2.0.0-alpha.5",
@@ -70,6 +70,6 @@
     "@io-gui/inputs": "^2.0.0-alpha.5",
     "@io-gui/sliders": "^2.0.0-alpha.5",
     "@io-gui/colors": "^2.0.0-alpha.5",
-    "three": ">=0.182.0"
+    "three": ">=0.186.0"
   }
 }

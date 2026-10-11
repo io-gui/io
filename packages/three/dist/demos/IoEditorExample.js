@@ -4,13 +4,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveElement, Property, div, Field } from '@io-gui/core';
-import { ioBoolean, ioButton } from '@io-gui/inputs';
+import { Register, ReactiveElement, Property, div, Field, Storage as $ } from '@io-gui/core';
+import { ioField } from '@io-gui/inputs';
 import { ioPropertyEditor } from '@io-gui/editors';
+import { ioOptionSelect, Menu } from '@io-gui/menus';
 import { Object3D } from 'three/webgpu';
 import { mrt, output, velocity } from 'three/tsl';
 import { traa } from 'three/addons/tsl/display/TRAANode.js';
-import { PostProcessingPipeline, SelectionModel, Editor, View, threeViewport, pipelineTypes } from '@io-gui/three';
+import { PostProcessingPipeline, SelectionModel, Editor, View, threeViewport, threeTimeline, threeScenegraph, pipelineTypes } from '@io-gui/three';
 import { ioLayout, Layout } from '@io-gui/layout';
 import { threeEditorStatus } from '../elements/ThreeEditorStatus.js';
 pipelineTypes.register({
@@ -26,6 +27,13 @@ const editorLayout = new Layout({
         type: 'split',
         children: [
             {
+                type: 'panel',
+                // size: '320px',
+                size: 'auto',
+                tabs: [
+                    { id: 'Scene' }
+                ]
+            }, {
                 type: 'split',
                 size: 'auto',
                 children: [
@@ -35,8 +43,7 @@ const editorLayout = new Layout({
                             { id: 'Front', selected: true },
                             { id: 'Back' }
                         ]
-                    },
-                    {
+                    }, {
                         type: 'panel',
                         tabs: [
                             { id: 'Right', selected: true },
@@ -45,8 +52,7 @@ const editorLayout = new Layout({
                     }
                 ],
                 orientation: 'vertical'
-            },
-            {
+            }, {
                 type: 'split',
                 size: 'auto',
                 children: [
@@ -57,8 +63,7 @@ const editorLayout = new Layout({
                             { id: 'Top' },
                             { id: 'Bottom' }
                         ]
-                    },
-                    {
+                    }, {
                         type: 'panel',
                         tabs: [
                             { id: 'UV' },
@@ -67,12 +72,23 @@ const editorLayout = new Layout({
                     }
                 ],
                 orientation: 'vertical'
-            },
-            {
-                type: 'panel',
-                tabs: [
-                    { id: 'Inspector' },
-                    { id: 'Document' }
+            }, {
+                type: 'split',
+                orientation: 'vertical',
+                children: [
+                    {
+                        type: 'panel',
+                        size: '320px',
+                        tabs: [
+                            { id: 'Document' }
+                        ]
+                    }, {
+                        type: 'panel',
+                        size: 'auto',
+                        tabs: [
+                            { id: 'Inspector' },
+                        ]
+                    }
                 ],
                 size: '253.0390625px'
             }
@@ -81,8 +97,6 @@ const editorLayout = new Layout({
 });
 // Document subclasses, imported when first opened.
 const DOCUMENTS = {
-    EditorDocument1: () => import('./examples/EditorDocument1.js').then(module => new module.EditorDocument1()),
-    EditorDocument2: () => import('./examples/EditorDocument2.js').then(module => new module.EditorDocument2()),
     GeometriesExample: () => import('./examples/GeometriesExample.js').then(module => new module.GeometriesExample()),
     GeometryColorsExample: () => import('./examples/GeometryColorsExample.js').then(module => new module.GeometryColorsExample()),
     GeometryConvexExample: () => import('./examples/GeometryConvexExample.js').then(module => new module.GeometryConvexExample()),
@@ -103,9 +117,13 @@ const DOCUMENTS = {
  * One Editor in tabbed views, each with its own pipeline (ADR-0006) and interaction profile: a forward
  * perspective view with the grid overlay and the Move tool, select-only axis views post-processed with TRAA, and a
  * select-only UV view of the selection, and a select-only Camera view through the document's first scene camera.
- * The inspector follows the active object; the Document tab shows the document's own properties.
+ * The inspector follows the active object; the Document tab shows the document's own properties. The Scene tab is
+ * the document's scene graph: click a row to select its object, its triangle to collapse it, double-click or F2 to
+ * rename it; what is collapsed is kept in localStorage by object uuid. Selecting in a view reveals the object there.
  * The heading buttons load a Document subclass and make it the editor's document. Each loaded document keeps
- * its edits, selection and view navigation when switching back (ADR-0002). Play ticks the document's `onAnimate`; opening a document plays or pauses it by its `autoplay`.
+ * its edits, selection and view navigation when switching back (ADR-0002). The timeline above the status bar plays, steps
+ * and scrubs the document's timeline, whose current time drives its `onAnimate`; opening a document plays or pauses it
+ * by its timeline's `autoplay`.
  * Click selects (Shift toggles, Ctrl removes), Alt+drag box-selects, Ctrl+A selects all, Escape clears, F frames the
  * selection. Drag a gizmo arrow to move along an axis, the center to move in the view plane; X / Y / Z switch the
  * axis while dragging, Escape or right click cancels. Tab enters edit mode on the selection; 1 / 2 / 3 pick points,
@@ -140,40 +158,17 @@ let IoEditorExample = class IoEditorExample extends ReactiveElement {
         this.views.camera.setCameraView();
         this.editor.setActiveTool('3d', 'object', 'transform.translate');
         this.selection = this.editor.selection;
-        void this.open('EditorDocument1');
-        this.changed();
-    }
-    editorMutated() {
-        this.selection = this.editor.selection;
-    }
-    selectionChanged() {
-        this.activeObject = this.selection.activeObject;
-    }
-    selectionMutated() {
-        this.activeObject = this.selection.activeObject;
-    }
-    documentNameChanged() {
-        this.changed();
-    }
-    async open(name) {
-        this.documentName = name;
-        let loading = this._documents.get(name);
-        if (!loading) {
-            loading = DOCUMENTS[name]();
-            this._documents.set(name, loading);
-        }
-        const document = await loading;
-        // Another document may have been asked for while this one loaded.
-        if (this.documentName !== name)
-            return;
-        this.editor.document = document;
-        this.editor.isPlaying = document.autoplay;
-    }
-    changed() {
         this.render([
             div({ class: 'heading' }, [
-                ...Object.keys(DOCUMENTS).map(name => ioButton({ label: name, selected: name === this.documentName, action: () => this.open(name) })),
-                ioBoolean({ value: this.editor.bind('isPlaying'), true: 'Pause', false: 'Play' }),
+                ioField({ value: this.bind('documentName') }),
+                ioOptionSelect({
+                    label: 'Load Example',
+                    model: new Menu({
+                        id: 'example-menu',
+                        options: Object.keys(DOCUMENTS).map(name => ({ id: name })),
+                    }),
+                    value: this.bind('documentName'),
+                }),
             ]),
             ioLayout({ class: 'content',
                 model: editorLayout,
@@ -187,12 +182,45 @@ let IoEditorExample = class IoEditorExample extends ReactiveElement {
                     { group: 'view', ...threeViewport({ id: 'Perspective', editor: this.editor, view: this.views.perspective }) },
                     { group: 'view', ...threeViewport({ id: 'UV', editor: this.editor, view: this.views.uv }) },
                     { group: 'view', ...threeViewport({ id: 'Scene Camera', editor: this.editor, view: this.views.camera }) },
+                    threeScenegraph({
+                        id: 'Scene',
+                        editor: this.editor,
+                        disclosure: $({ key: 'three-scenegraph-disclosure', storage: 'local', value: {} }),
+                    }),
                     ioPropertyEditor({ id: 'Inspector', value: this.bind('activeObject') }),
                     ioPropertyEditor({ id: 'Document', value: this.editor.bind('document') }),
                 ]
             }),
+            threeTimeline({ editor: this.editor }),
             threeEditorStatus({ editor: this.editor }),
         ]);
+        this.documentName = 'AnimationKeyframesExample';
+    }
+    editorMutated() {
+        this.selection = this.editor.selection;
+    }
+    selectionChanged() {
+        this.activeObject = this.selection.activeObject;
+    }
+    selectionMutated() {
+        this.activeObject = this.selection.activeObject;
+    }
+    documentNameChanged() {
+        void this.open(this.documentName);
+    }
+    async open(name) {
+        this.documentName = name;
+        let loading = this._documents.get(name);
+        if (!loading) {
+            loading = DOCUMENTS[name]();
+            this._documents.set(name, loading);
+        }
+        const document = await loading;
+        // Another document may have been asked for while this one loaded.
+        if (this.documentName !== name)
+            return;
+        this.editor.document = document;
+        this.editor.isPlaying = document.timeline.autoplay;
     }
     dispose() {
         this.editor.dispose();

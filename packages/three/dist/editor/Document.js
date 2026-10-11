@@ -4,11 +4,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var Document_1;
 import { Register, ReactiveObject, Property, Field } from '@io-gui/core';
 import { MathUtils, NoToneMapping, Scene, ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, LinearToneMapping, NeutralToneMapping, ReinhardToneMapping } from 'three/webgpu';
-import { ChangeBus } from './ChangeBus.js';
 import { changeKindForPatch, insertChild, invertPatch, resolvePath, writeValue } from './Patch.js';
 import { Transaction } from './Transaction.js';
+import { Timeline } from './Timeline.js';
 import { isDescendant } from '../utils/sceneGraph.js';
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
 import { ioNumberSlider } from '@io-gui/sliders';
@@ -16,13 +17,16 @@ import { ioOptionSelect, Menu } from '@io-gui/menus';
 const HISTORY_LIMIT = 100;
 /**
  * The content of an Editor (ADR-0002): the scene of authored objects plus scene render settings.
- * Edits go through transactions of invertible patches (ADR-0008); every applied patch is reported on
- * the change bus, so views redraw without extra calls. Each committed transaction is dispatched as a
+ * Edits go through transactions of invertible patches (ADR-0008); every applied patch is queued as a
+ * change, so views redraw without extra calls. Each committed transaction is dispatched as a
  * `commit` event with the transaction as `detail` (future undo stack and sync).
  */
 let Document = class Document extends ReactiveObject {
+    static { Document_1 = this; }
     /** Stable id of this document, used to key per-document session state (selection, view navigation). */
     uuid = MathUtils.generateUUID();
+    /** Past this many undrained changes (nothing draws the document), the queue collapses to one `other` change. */
+    static CHANGE_LIMIT = 10000;
     _index = new Map();
     /** Ids not found since the last index rebuild; cleared when the current task ends. */
     _misses = new Set();
@@ -33,6 +37,12 @@ let Document = class Document extends ReactiveObject {
     constructor(args) {
         super(args);
     }
+    timelineChanged() {
+        this._animate();
+    }
+    timelineMutated() {
+        this._animate();
+    }
     /** Committed transactions, oldest first, up to the last 100. Not an undo stack (plan Phase 8). */
     get history() {
         return this._history;
@@ -40,8 +50,26 @@ let Document = class Document extends ReactiveObject {
     get activeTransaction() {
         return this._active;
     }
+    /** Queues a change; the RenderScheduler drains it next frame. Cheap, and dispatches nothing. */
     notify(change) {
-        this.changeBus.notify({ ...change, source: this });
+        if (this._changes.length >= Document_1.CHANGE_LIMIT) {
+            this._changes = [{ kind: 'other', source: this }];
+            return;
+        }
+        this._changes.push({ ...change, source: this });
+    }
+    get hasPendingChanges() {
+        return this._changes.length > 0;
+    }
+    /** Returns and empties the queued changes. Called by the RenderScheduler once per frame. */
+    drainChanges() {
+        const changes = this._changes;
+        this._changes = [];
+        return changes;
+    }
+    /** Drops undrained changes (the document is no longer shown). */
+    clearChanges() {
+        this._changes = [];
     }
     /**
      * Finds a scene object by uuid. Objects added outside transactions are found too: a miss rebuilds the
@@ -112,13 +140,26 @@ let Document = class Document extends ReactiveObject {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onRendererInitialized(renderer) { }
     /**
-     * Called each frame while the editor showing this document plays (`isPlaying`), after the editor's `onAnimate`.
-     * Views redraw after it; scene writes here bypass transactions.
+     * Called on every change of `timeline.currentTime`: each frame while the editor plays, and whenever the timeline is
+     * scrubbed, stepped or set. `delta` is the change in seconds, negative when time goes back (scrubbing back, a loop
+     * wrap); `time` is the new current time. Time-driven content derives its state from `time`; content that can only
+     * integrate (mixers) advances by `delta`. Live content, whose state builds up from interaction, advances only on
+     * positive `delta` (ADR-0009). Views redraw after it; scene writes here bypass transactions.
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onAnimate(delta, time) { }
     mutated() {
         this.notify({ kind: 'settings' });
+    }
+    /** Runs `onAnimate` with the timeline time elapsed since it last ran, and reports a `time` change. */
+    _animate() {
+        const time = this.timeline.currentTime;
+        const delta = time - this._animatedTime;
+        if (delta === 0)
+            return;
+        this._animatedTime = time;
+        this.onAnimate(delta, time);
+        this.notify({ kind: 'time' });
     }
     /** @internal Called by viewports before each draw; runs `onRendererInitialized` once per renderer. */
     _prepareRenderer(renderer) {
@@ -190,12 +231,15 @@ __decorate([
     Property({ type: Number, value: 1 })
 ], Document.prototype, "toneMappingExposure", void 0);
 __decorate([
-    Property({ type: Boolean, value: false })
-], Document.prototype, "autoplay", void 0);
+    Property({ type: Timeline, init: null })
+], Document.prototype, "timeline", void 0);
 __decorate([
-    Field(ChangeBus)
-], Document.prototype, "changeBus", void 0);
-Document = __decorate([
+    Field(Array)
+], Document.prototype, "_changes", void 0);
+__decorate([
+    Field(0)
+], Document.prototype, "_animatedTime", void 0);
+Document = Document_1 = __decorate([
     Register
 ], Document);
 export { Document };
@@ -212,6 +256,6 @@ registerEditorConfig(Document, [
                 ] }) })],
 ]);
 registerEditorGroups(Document, {
-    Main: ['toneMapping', 'toneMappingExposure'],
+    Main: ['toneMapping', 'toneMappingExposure', 'timeline'],
     Advanced: [new RegExp(/^[\s\S]*$/)]
 });

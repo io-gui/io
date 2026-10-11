@@ -155,7 +155,8 @@ export class ThreeViewport extends ReactiveElement implements ScheduledView {
   override connectedCallback() {
     super.connectedCallback()
     observer.observe(this)
-    if (this.renderTarget.domElement.parentElement !== this) this.appendChild(this.renderTarget.domElement)
+    const canvas = this.renderTarget.domElement as HTMLCanvasElement
+    if (canvas.parentElement !== this) this.appendChild(canvas)
     renderScheduler.register(this)
     this.onResized()
   }

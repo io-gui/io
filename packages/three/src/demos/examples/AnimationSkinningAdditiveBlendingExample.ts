@@ -36,7 +36,7 @@ const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
 
 /**
  * The Xbot model with base actions (crossfaded with the Document tab buttons) and additive poses
- * (weighted there). Plays when opened.
+ * (weighted there). A live demo (ADR-0009): the timeline is only its clock. Plays when opened.
  */
 @Register
 export class AnimationSkinningAdditiveBlendingExample extends Document {
@@ -216,7 +216,8 @@ export class AnimationSkinningAdditiveBlendingExample extends Document {
       this.dispatchMutation(this.mixer)
     }
 
-    this.mixer.update(delta)
+    // Crossfade state only moves forward: time going back (a loop wrap, scrubbing or stepping back) is ignored.
+    if (delta > 0) this.mixer.update(delta)
   }
 }
 
