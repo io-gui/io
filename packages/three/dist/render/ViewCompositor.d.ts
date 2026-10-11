@@ -1,10 +1,11 @@
 import { Scene, WebGPURenderer } from 'three/webgpu';
-import type { DocumentChange } from '../editor/ChangeBus.js';
+import type { DocumentChange } from '../editor/Document.js';
 import type { View } from '../view/View.js';
 import type { DirtyReason, ViewRenderResult } from './RenderScheduler.js';
 import { PipelineContext, ViewPipeline } from './ViewPipeline.js';
 import { Overlay } from './Overlay.js';
 import './builtins.js';
+import './threePatches.js';
 /**
  * Draws one view (ADR-0006): runs the view's pipeline when content, navigation or size changed, then presents
  * the pipeline output to the canvas together with the overlays in a single pass of a small overlay scene.

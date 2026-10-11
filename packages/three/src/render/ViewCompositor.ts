@@ -8,6 +8,7 @@ import { Overlay, OverlayContext, OverlayType, overlayTypes } from './Overlay.js
 import { createScreenQuad } from './screenQuad.js'
 import { ForwardPipeline } from './pipelines/ForwardPipeline.js'
 import './builtins.js'
+import './threePatches.js'
 
 const PIPELINE_REASONS: readonly DirtyReason[] = ['content', 'view', 'resize', 'continuous']
 

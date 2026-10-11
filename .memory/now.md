@@ -6,3 +6,4 @@
 - Design doc (Claude Docs) for io-three: https://claude.ai/code/artifact/cb23d4fe-d4ad-406c-9d62-919db30887dd (mentions WebGL fallback; ADR-0001 supersedes).
 - 2026-10-11 conversion plan: Candidates table added (274 rows, blocker tags + non-candidate lists). See archive (22).
 - 2026-10-11 low-hanging conversions: 27 docs (24 completed, 3 transmission in progress), uncommitted. Next candidates: more unblocked TODO rows. Harness: scratchpad snap.mjs (shared renderer). See archive (23).
+- 2026-10-11 transmission-views resolved: RenderTargetPipeline.scope (per-view MRT) + render/threePatches.ts (viewport-texture-source, canary test) + ADR-0006 bullet + CONTEXT "Three patch". 3 transmission docs completed. Uncommitted. Pre-existing: IoObject.mutated TypeError on Backdrop -> BackdropArea switch (editors). See archive (25).

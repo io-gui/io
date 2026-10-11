@@ -39,6 +39,7 @@ export interface PipelineOutput {
  * A pipeline draws into its own targets in linear color without tone mapping; the viewport then presents
  * the output to its canvas (tone mapping and color space conversion happen there) and draws overlays on top.
  * Created per view, because targets are sized per view; the renderer and its shader caches are shared.
+ * Draw with an MRT of the pipeline's own (`RenderTargetPipeline.scope`), so three keeps per-draw state per view.
  */
 export interface ViewPipeline {
   readonly output: PipelineOutput | null

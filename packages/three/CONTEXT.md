@@ -171,3 +171,7 @@ _Avoid_: OrbitControls (removed), camera controls
 **Editor configs (side-effect)**:
 Importing `@io-gui/three` runs config registration so Three.js classes get PropertyConfigs/EditorGroups for inspectors. Opting into the package opts into those registrations.
 _Avoid_: three editor plugin, manual register list (as the default path)
+
+**Three patch**:
+A runtime fix in `render/threePatches.ts` for a three.js defect that upstream has not fixed, applied when the module loads. Each states the defect and symptom, and `hasDefect()` probes unpatched three: `threePatches.test.ts` fails once three no longer has it, which is the signal to delete the patch. Current: `viewport-texture-source` (per-target viewport texture copies share one size).
+_Avoid_: hack, monkey patch (as the term), polyfill

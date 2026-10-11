@@ -22,6 +22,9 @@ export class PostProcessingPipeline extends RenderTargetPipeline {
         this._build = build;
         this.convergeFrames = options.convergeFrames ?? 0;
         this.scenePass = pass(new Scene(), new PerspectiveCamera());
+        // The pass binds its own MRT while drawing the scene. A builder that sets another (`mrt({output, velocity})`)
+        // keeps views apart as long as it creates one per call.
+        this.scenePass.setMRT(this.scope);
         this.postProcessing = new RenderPipeline(renderer);
         this.postProcessing.outputColorTransform = false;
         this.output = { color: this.target.texture, depth: this.scenePass.getTexture('depth') };

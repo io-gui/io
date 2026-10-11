@@ -16,3 +16,4 @@ Pipelines are created per view because render targets and post-processing graphs
 - Solid, wireframe and matcap shading are pipeline concerns. Content materials are never swapped.
 - The `uv` pipeline does not render the content scene at all. It draws UV-space meshes built from the edit set's `uv` attribute.
 - Overlays that depth-test against content need the pipeline to expose its depth texture.
+- Each pipeline draws with an MRT of its own (`RenderTargetPipeline.scope`). Three keys render objects and their bind groups by render context, which it derives from the target format and the MRT, not from the target. Views with same-format targets would otherwise share that state, and one view would sample another's viewport texture (transmission). The cost is one node build per material per view; compiled shaders and GPU resources stay shared.

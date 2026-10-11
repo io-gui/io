@@ -28,7 +28,7 @@ let MorphtargetsHorseExample = class MorphtargetsHorseExample extends Document {
         try {
             const gltf = await new GLTFLoader().loadAsync('https://threejs.org/examples/models/gltf/Horse.glb');
             const mesh = gltf.scene.children[0];
-            mesh.name = 'Horse';
+            // Keeps its glTF name, `mesh_0`: the clip's morph track targets it by name.
             mesh.scale.set(1.5, 1.5, 1.5);
             this.scene.add(mesh);
             this.mixer = new AnimationMixer(mesh);

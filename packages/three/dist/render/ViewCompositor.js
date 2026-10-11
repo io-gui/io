@@ -5,6 +5,7 @@ import { overlayTypes } from './Overlay.js';
 import { createScreenQuad } from './screenQuad.js';
 import { ForwardPipeline } from './pipelines/ForwardPipeline.js';
 import './builtins.js';
+import './threePatches.js';
 const PIPELINE_REASONS = ['content', 'view', 'resize', 'continuous'];
 /**
  * Draws one view (ADR-0006): runs the view's pipeline when content, navigation or size changed, then presents

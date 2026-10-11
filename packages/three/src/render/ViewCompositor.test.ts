@@ -10,6 +10,7 @@ function fakeRenderer(): FakeRenderer {
     toneMapping: NoToneMapping,
     toneMappingExposure: 1,
     setRenderTarget() {},
+    setMRT() {},
     setClearColor() {},
     clear() {},
     render(scene: unknown) { renderer.renders.push(scene) },

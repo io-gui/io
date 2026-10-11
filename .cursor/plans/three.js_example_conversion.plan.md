@@ -48,8 +48,8 @@ todos:
     content: "Unblock: stencil on the shared renderer; renderer.lighting, VSM, shadowMap.transmitted per document?"
     status: pending
   - id: blocker-transmission-views
-    content: "Unblock: transmission materials log 'Destroyed texture ... used in a submit' while several views redraw (framebuffer copy per view target). See Blockers"
-    status: pending
+    content: "Unblock: transmission sampled another view's backdrop and logged 'Destroyed texture ... used in a submit' with several views. Fixed by a render context per view (RenderTargetPipeline.scope) and the viewport-texture-source three patch. See Blockers"
+    status: completed
   - id: framing-motion
     content: "First-show framing uses the bounds at rest; content that moves beyond them (AnimationKeys) leaves the frame"
     status: pending
@@ -265,10 +265,10 @@ Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 co
 | LightsRectarealight | `webgpu_lights_rectarealight` | 4π s loop; light panels (`RectAreaLightHelper`) in `Helpers`, `showHelpers` on by default; source camera kept as `Camera` | Open: `framing-scenery` (2000-unit floor) |
 | Shadowmap | `webgpu_shadowmap` | 40π s loop (knot 0.25 / 0.5 / 1, light group 0.7 rad/s); source camera kept as `Camera` | Open: `framing-scenery` (600-unit ground; with the 50–100 fog the perspective view opens on fog color) |
 | Skinning | `webgpu_skinning` | point light at the source camera's position instead of on the camera; frames the model | OK |
-| LoaderGltfIridescence | `webgpu_loader_gltf_iridescence` | camera auto-rotation dropped; frames the model | Open: `transmission-views` |
+| LoaderGltfIridescence | `webgpu_loader_gltf_iridescence` | camera auto-rotation dropped; frames the model | `transmission-views` resolved |
 | LoaderGltfAnisotropy | `webgpu_loader_gltf_anisotropy` | frames the model | OK |
-| LoaderGltfDispersion | `webgpu_loader_gltf_dispersion` | frames the model | Open: `transmission-views` |
-| LoaderGltfTransmission | `webgpu_loader_gltf_transmission` | duration = clip; camera auto-rotation dropped; frames the model | Open: `transmission-views` |
+| LoaderGltfDispersion | `webgpu_loader_gltf_dispersion` | frames the model | `transmission-views` resolved |
+| LoaderGltfTransmission | `webgpu_loader_gltf_transmission` | duration = clip; camera auto-rotation dropped; frames the model | `transmission-views` resolved |
 | PmremCubemap | `webgpu_pmrem_cubemap` | spheres grouped, framed on load | OK |
 | PmremEquirectangular | `webgpu_pmrem_equirectangular` | spheres grouped, framed on load | OK |
 | CubemapMix | `webgpu_cubemap_mix` | TSL `time` -> `timeline.timeNode`; 10 s loop (one cross-fade cycle) | OK |
@@ -545,10 +545,10 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | LoaderGltf | `webgpu_loader_gltf` | TODO | — | |
 | LoaderGltfAnisotropy | `webgpu_loader_gltf_anisotropy` | completed | — | see Audit |
 | LoaderGltfCompressed | `webgpu_loader_gltf_compressed` | TODO | — | KTX2 `detectSupport` in `onRendererInitialized` |
-| LoaderGltfDispersion | `webgpu_loader_gltf_dispersion` | in progress | `transmission-views` | converted, see Audit; WebGPU errors while playing |
-| LoaderGltfIridescence | `webgpu_loader_gltf_iridescence` | in progress | `transmission-views` | converted, see Audit; WebGPU errors while playing |
+| LoaderGltfDispersion | `webgpu_loader_gltf_dispersion` | completed | — | see Audit |
+| LoaderGltfIridescence | `webgpu_loader_gltf_iridescence` | completed | — | see Audit |
 | LoaderGltfSheen | `webgpu_loader_gltf_sheen` | TODO | — | |
-| LoaderGltfTransmission | `webgpu_loader_gltf_transmission` | in progress | `transmission-views` | converted, see Audit; WebGPU errors while playing |
+| LoaderGltfTransmission | `webgpu_loader_gltf_transmission` | completed | — | see Audit |
 | LoaderGltfDiffuseRoughness | `webgpu_loader_gltf_diffuse_roughness` | TODO | `three-upgrade` | not in r186 |
 | LoaderGltfAvif | `webgl_loader_gltf_avif` | TODO | — | |
 | LoaderGltfInstancing | `webgl_loader_gltf_instancing` | TODO | — | |
@@ -606,7 +606,13 @@ Features or fixes outside the examples. Each one unblocks the rows tagged with i
 - **`renderer-option`**: the shared renderer (`RenderScheduler.ts`: `{antialias: false, alpha: true}`) has no stencil buffer (three defaults `stencil` to `false`), and `renderer.lighting`, `shadowMap.type = VSMShadowMap` and `shadowMap.transmitted` are renderer-wide (ADR-0001). Needed: enable stencil on the shared renderer, or a renderer a document can ask for.
 - **`three-upgrade`**: the source exists only after r186 (HEAD).
 - **`dependency`**: needs an npm package the workspace does not have (`three-bvh-csg`, `web-ifc`).
-- **`transmission-views`**: transmission materials (`MeshPhysicalMaterial.transmission`, glTF `KHR_materials_transmission`) sample module-level viewport mip textures that three copies from each render target. In the editor, with several views drawing per frame, WebGPU reports `Destroyed texture [RGBA16Float, the forward view's target size] used in a submit` on every redraw (seen headless; static documents only while playing). One render target alone is clean. Check three after r186 first (#34582 skips mipmaps for a copy without a mip chain, #34826 fixes a color buffer cache check); otherwise the fix is in the render scheduler or pipelines.
+- **`transmission-views`**: transmission materials (`MeshPhysicalMaterial.transmission`, glTF `KHR_materials_transmission`) sample a viewport copy that `ViewportTextureNode` keeps per render target (#32689). Two three defects, both still in three dev on 2026-10-10:
+  - **Views show each other's backdrop.** Render contexts are keyed by attachment format, not by target, so views with the same pipeline format share render objects and bind groups. Since #34162 (refresh types, after r182), the first draw of a render is a `SHARED` refresh, which skips per-object bind groups. Transmission forces a `FULL` refresh only when the context size changes. So two views of equal size (Perspective and Scene Camera) both sample the backdrop of whichever view last refreshed fully.
+  - **`Destroyed texture … used in a submit`.** The per-target copies are `defaultFramebuffer.clone()`, which shares one `Source`, so views of different sizes resize each other's copies. Each draw then reallocates the copy, and a `SHARED` refresh leaves the bind group on the destroyed texture; that submit is dropped.
+  - **Resolved 2026-10-11.** Live checks found 0 wrong-view samples, 0 destroyed binds and no console errors, in the Perspective + Scene Camera layout and while playing all three transmission documents.
+    - Per view: `RenderTargetPipeline.scope`. Each pipeline draws with its own `mrt({output})`, which `PostProcessingPipeline` also sets on its scene pass, and names its target texture `output`. Without the name, the background material compiles an empty `OutputType`. This costs one node build per material per view (ADR-0006).
+    - Until three is fixed: the three patch `viewport-texture-source` (`render/threePatches.ts`) gives each per-target copy its own `TextureSource`. `threePatches.test.ts` fails once three no longer has the defect; then delete the patch.
+    - Upstream, not filed: give the per-target clone its own source, and refresh fully when a render object's output target changes. #34582 and #34826 are unrelated.
 
 ## Open questions
 
