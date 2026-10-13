@@ -63,7 +63,7 @@ const editorLayout = new Layout({
               type: 'panel',
               tabs: [
                 { id: 'UV' },
-                { id: 'Scene Camera' },
+                { id: 'Scene Camera', selected: true },
               ]
             }
           ],
@@ -98,7 +98,6 @@ const DOCUMENTS: Record<string, () => Promise<Document>> = {
   GeometryColorsExample: () => import('./examples/GeometryColorsExample.js').then(module => new module.GeometryColorsExample()),
   GeometryConvexExample: () => import('./examples/GeometryConvexExample.js').then(module => new module.GeometryConvexExample()),
   CameraExample: () => import('./examples/CameraExample.js').then(module => new module.CameraExample()),
-  CameraArrayExample: () => import('./examples/CameraArrayExample.js').then(module => new module.CameraArrayExample()),
   AnimationGroupsExample: () => import('./examples/AnimationGroupsExample.js').then(module => new module.AnimationGroupsExample()),
   AnimationKeyframesExample: () => import('./examples/AnimationKeyframesExample.js').then(module => new module.AnimationKeyframesExample()),
   AnimationRetargetingExample: () => import('./examples/AnimationRetargetingExample.js').then(module => new module.AnimationRetargetingExample()),

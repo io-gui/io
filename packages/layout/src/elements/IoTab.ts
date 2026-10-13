@@ -35,7 +35,6 @@ export class IoTab extends IoField {
         position: relative;
         height: inherit;
         min-height: inherit;
-        /* TODO: use vars for this */
         min-width: calc(var(--io_fieldHeight) * 1.25);
         margin: 0;
         margin-right: var(--io_spacing);
@@ -43,7 +42,8 @@ export class IoTab extends IoField {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
         border-color: var(--io_borderColorLight);
-        padding: var(--io_spacing2);
+        border-radius: var(--io_borderRadius) var(--io_borderRadius) 0 0;
+        padding: var(--io_spacing) var(--io_lineHeight) var(--io_spacing) var(--io_spacing3);
         border-bottom-color: transparent !important;
       }
       :host:focus {
@@ -78,10 +78,11 @@ export class IoTab extends IoField {
         margin: 0 var(--io_spacing) 0 var(--io_spacing) !important;
       }
       :host > .io-tab-close {
+        position: absolute;
+        right: 0;
         pointer-events: auto;
         opacity: 0;
-        margin: 0 var(--io_spacing) 0 0 !important;
-        transform: scale(0.6);
+        transform: scale(0.5);
       }
       :host:hover > .io-tab-close {
         opacity: 1;

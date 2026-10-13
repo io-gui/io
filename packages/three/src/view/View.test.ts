@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { View, ViewNavigation } from '@io-gui/three'
-import { Box3, BoxGeometry, BufferAttribute, Mesh, OrthographicCamera, PerspectiveCamera, Scene, Vector3 } from 'three/webgpu'
+import { Box3, BoxGeometry, BufferAttribute, Mesh, OrthographicCamera, PerspectiveCamera, PlaneGeometry, Scene, Vector3 } from 'three/webgpu'
 
 function forwardOf(camera: PerspectiveCamera | OrthographicCamera) {
   return new Vector3(0, 0, -1).applyQuaternion(camera.quaternion)
@@ -98,6 +98,26 @@ describe('View', () => {
     }
     expect(camera.near).toBeLessThan(minDepth)
     expect(maxDepth).toBeLessThan(camera.far)
+    view.dispose()
+  })
+
+  it('keeps flat content inside the clip range, and inside the orthographic range when zooming out', () => {
+    const quad = new Mesh(new PlaneGeometry(2, 1))
+    quad.updateMatrixWorld(true)
+    const view = new View({overscan: 1})
+    view.setAxisView('front')
+    view.frame(quad)
+    // The quad faces the view: it has no depth span, but content may turn out of its plane (billboards).
+    let camera = view.getCamera(400, 400, null)
+    const depth = view.navigation.distance
+    expect(camera.near).toBeLessThan(depth - 0.5)
+    expect(camera.far).toBeGreaterThan(depth + 0.5)
+
+    view.navigation.dolly(4)
+    camera = view.getCamera(400, 400, null)
+    const zoomedDepth = view.navigation.distance
+    expect(camera.near).toBeLessThan(zoomedDepth - 0.5)
+    expect(camera.far).toBeGreaterThan(zoomedDepth + 0.5)
     view.dispose()
   })
 

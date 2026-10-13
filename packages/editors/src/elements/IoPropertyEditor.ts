@@ -134,6 +134,8 @@ export class IoPropertyEditor extends ReactiveElement {
         console.warn('IoPropertyEditor: value is not an object or array', this, this.value)
       }
     }
+    // The editors were built for the previous value; `changedThrottled` must not sync into them until they are rebuilt.
+    this._propertyEditors = {}
     this.debounce(this.configureDebounced)
   }
   configureDebounced() {

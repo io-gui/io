@@ -81,6 +81,7 @@ A source fits when it has one scene that any view can show. These do not fit:
 
 - Renderer-level options (`logarithmicDepthBuffer`, `reversedDepthBuffer`, MSAA samples) are fixed per renderer ([ADR-0001](../../packages/three/docs/adr/0001-webgpu-only-one-renderer-canvas-target-per-viewport.md)). `CameraLogarithmicDepthBufferExample`, which compares renderers with and without `logarithmicDepthBuffer`, was removed (`bcadcea1`).
 - A custom render loop (scissor split screens, several passes per frame, `renderer.setRenderTarget` chains) belongs in a pipeline (ADR-0006), not in a document.
+- Runtime multi-view rendering (`ArrayCamera` grids, as in WebXR stereo or quilt displays) has no authoring workflow, and a view looking through a scene camera draws one camera ([ADR-0005](../../packages/three/docs/adr/0005-navigation-is-view-state-camera-built-per-draw.md)). `CameraArrayExample` was removed (2026-10-13). A view-owned `ArrayCamera` that scaled the grid onto the camera frame was built and reverted: it added a second camera (`contentCamera`) to the pipeline context that every pipeline and overlay had to choose between, for one example. The two cameras are the same object in every other document, so wrong choices would go unnoticed, and three's TRAA and velocity use only the main camera, so the cells smeared in TRAA views. Revisit only if a real document needs an ArrayCamera preview; a contained version would lay out the cells inside the forward pipeline.
 - Pointer or keyboard interaction (raycast drags, key handlers) belongs to tools and operators. A document only gets property controls.
 
 ## Target shape
@@ -185,7 +186,7 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 
 ### Time
 
-- Time drives animation (`io-gui.mdc`). Derive state from `time` with a period equal to (or dividing) `timeline.duration`, so loops are seamless (`SPIN_PERIOD` in Geometries, CameraArray, GeometryConvex; `ORBIT_PERIOD` in Camera).
+- Time drives animation (`io-gui.mdc`). Derive state from `time` with a period equal to (or dividing) `timeline.duration`, so loops are seamless (`SPIN_PERIOD` in Geometries, GeometryConvex; `ORBIT_PERIOD` in Camera).
 - Integrators (animation mixers) advance by `delta`. For a single clip, set `timeline.duration = clip.duration` and `mixer.setTime(timeline.currentTime)` when the clip arrives.
 - No wall-clock timing in a document: no `setTimeout`, `Date.now()`, `performance.now()` or `Timer`. Schedule in timeline or mixer time; mixer fades already run on `mixer.time`.
 - Animated examples pass `new Timeline({autoplay: true})`; static ones keep the default (paused).
@@ -215,7 +216,6 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 - WebGPU points are 1 px. Use a `Sprite` with `PointsNodeMaterial({positionNode: instancedBufferAttribute(attribute)})` and `sprite.count` (GeometryConvex).
 - Vertex attribute strides must be multiples of 4 bytes, so 3 × `Float16` is invalid; use `Float32Array` (GeometryColors).
 - Addons built on `ShaderMaterial` (`Sky`, `Water`, `Reflector`) need their node versions (`SkyMesh`, `WaterMesh`, TSL `reflector()`).
-- `ArrayCamera`: views copy a scene camera into a plain camera ([ADR-0005](../../packages/three/docs/adr/0005-navigation-is-view-state-camera-built-per-draw.md)), so a camera view looks through the main camera, not the grid.
 - Imports are named, from `three/webgpu` and `three/tsl`, with addons from `three/addons/...`. Bare `three` is aliased to `three/webgpu` (`vite.config.ts`).
 - `@types/three` 0.186 is stricter than the JS sources:
   - `UniformNode<'float', number>` (node type and value type), `Node<'vec3'>` for typed nodes. Untyped `Node` has no math methods.
@@ -247,7 +247,6 @@ Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 co
 | AnimationSkinningBlending | `webgl_animation_skinning_blending` | three target buttons instead of four from→to buttons, so idle ↔ run is added (5 s / 2.5 s); effective weights read-only (the source's sliders also set weights); time scale in the mixer inspector; pause and single step are the timeline transport (a step is one frame, not 0.05 s); `DirectionalLight` as at HEAD; live document (ADR-0009) | Fixed: crossfade end in mixer time instead of `setTimeout`, camera aspect no longer read from `window`, `showModel` / `showSkeleton`, per-transition durations (run → walk 5 s), time going back ignored. Open: `crossfade-state` |
 | BackdropArea | `webgpu_backdrop_area` | box scale as a linkable `Vector3`; named scene camera | Fixed: `NeutralToneMapping` (exposure 0.9 had no effect), floor 5 × 5, camera near/far 0.25/25, default preset `checker` |
 | Backdrop | `webgpu_backdrop` | spot light at (1, 2, 3) instead of on the camera; portals turn by `delta × mixer.timeScale`; the portals keep turning while you orbit | Fixed: duration = clip, `mixer.setTime`. The portals still jump at the loop wrap (integrated) |
-| CameraArray | `webgpu_camera_array` | grid laid out for a square canvas; camera view through the main camera | Fixed: shadow bias removed (r186) |
 | Camera | `webgpu_camera` | both cameras update every frame (no `O` / `P` switch); camera projections in the Document tab | Fixed: a `CameraHelper` per camera + `showHelpers`, kept until `scene-helpers` (future work) |
 | ComputeTexture | `webgpu_compute_texture` | none | OK (the plane is unnamed) |
 | Geometries | `webgl_geometries` | point light fixed above instead of on the orbiting camera; 20 s spin; `wireframe` toggle (io addition) | OK |
@@ -273,7 +272,7 @@ Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 co
 | PmremEquirectangular | `webgpu_pmrem_equirectangular` | spheres grouped, framed on load | OK |
 | CubemapMix | `webgpu_cubemap_mix` | TSL `time` -> `timeline.timeNode`; 10 s loop (one cross-fade cycle) | OK |
 | MorphtargetsHorse | `webgl_morphtargets_horse` | 1 s timeline (the clip's `setDuration( 1 )`); orbiting camera dropped | OK |
-| TslVfxFlames | `webgpu_tsl_vfx_flames` | TSL `time` -> `timeline.timeNode`; 20 s loop (noise scrolls repeat, the 10 rad/s flicker jumps once); canvas gradient -> `DataTexture` built in JS | OK |
+| TslVfxFlames | `webgpu_tsl_vfx_flames` | TSL `time` -> `timeline.timeNode`; 20 s loop (noise scrolls repeat, the 10 rad/s flicker jumps once); canvas gradient -> `DataTexture` built in JS; flames do not write depth (their transparent quads hid the grid) | Fixed 2026-10-13: half of each flame clipped in ortho front/back views (degenerate clip range, `clipPlanesFromBox`) |
 | LightsPointlights | `webgpu_lights_pointlights` | 16π s loop; TSL `time` -> `timeline.timeNode`; frames the head on load | OK |
 | Buffergeometry | `webgl_buffergeometry` | 8π s spin loop; attribute arrays kept (the source frees them on upload; framing and picking read them) | OK |
 | BuffergeometryIndexed | `webgl_buffergeometry_indexed` | 8π s spin loop; `wireframe` property | OK |
@@ -283,7 +282,7 @@ Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 co
 | GeometryExtrudeShapes | `webgl_geometry_extrude_shapes` | point light at the source camera's position; `TrackballControls` dropped | OK |
 | GeometryTeapot | `webgl_geometry_teapot` | GUI -> `tessellation` / `lid` / `body` / `bottom` / `fitLid` / `nonBlinn` / `shading` properties; geometry swapped on the same mesh instead of a new mesh | OK |
 
-Removed: CameraLogarithmicDepthBuffer (renderer-level option, see What fits).
+Removed: CameraLogarithmicDepthBuffer (renderer-level option, see What fits); CameraArray (runtime multi-view, see What fits; 2026-10-13).
 
 ## Candidates (2026-10-11)
 
@@ -306,7 +305,6 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | Backdrop | `webgpu_backdrop` | completed | — | see Audit |
 | BackdropArea | `webgpu_backdrop_area` | completed | — | see Audit |
 | Camera | `webgpu_camera` | completed | — | see Audit |
-| CameraArray | `webgpu_camera_array` | completed | — | see Audit |
 | ComputeTexture | `webgpu_compute_texture` | completed | — | see Audit |
 | Geometries | `webgl_geometries` | completed | — | see Audit |
 | GeometryColors | `webgl_geometry_colors` | completed | — | see Audit |
@@ -613,4 +611,4 @@ Features or fixes outside the examples. Each one unblocks the rows tagged with i
 - **`interactive-timeline`** (decided 2026-10-11, ADR-0009): live documents treat the timeline as a clock and ignore time going back. Considered: recording button presses on the timeline and replaying them, which is exact under scrubbing but makes the demo authored content. Follow-up: pass the cause of a time change to `onAnimate` (`timeline-negative-delta` in the future-work plan).
 - **`inspector-refresh`**: Camera, Backdrop and the skinning examples call `dispatchMutation(...)` in `onAnimate` inside `debug:` blocks so the inspector follows per-frame values. Bundles strip debug blocks, so bundled builds stop refreshing. Alternative: the host refreshes the Document tab on `time` changes.
 - **`framing-motion`**: First-show framing uses the scene's bounds at rest. AnimationKeys' box travels 30 units from a 5-unit start, so the perspective view loses it; the conversion keeps the source camera as a scene camera. Option: a document-declared framing box, or `frame-object` with several objects / a box.
-- **`framing-scenery`**: First-show framing and frame-all use the whole scene's bounds, so a sky dome or a large floor dwarfs the subject. Documents work around it with `frame-object` on their model (Keyframes, the skinning and retargeting examples). CameraArray builds its scene synchronously, so it has no load to hook `frame-object` to: its perspective view opens framed on the 100 × 100 backdrop (near 42, far 429 around a 1-unit cylinder). Option: framing skips `userData.selectable === false` scenery.
+- **`framing-scenery`**: First-show framing and frame-all use the whole scene's bounds, so a sky dome or a large floor dwarfs the subject. Documents work around it with `frame-object` on their model (Keyframes, the skinning and retargeting examples). Option: framing skips `userData.selectable === false` scenery.

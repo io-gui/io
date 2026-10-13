@@ -140,6 +140,11 @@ export class TslVfxFlamesExample extends Document {
       return vec4( vec3( 1 ), shape )
     } )()
 
+    // Transparent everywhere outside the flame shape: without depth writes the quads do not hide the editor grid.
+
+    flame1Material.depthWrite = false
+    flame2Material.depthWrite = false
+
     // billboarding - follow the camera rotation only horizontally
 
     flame1Material.vertexNode = billboarding( { horizontalRotation: true } )

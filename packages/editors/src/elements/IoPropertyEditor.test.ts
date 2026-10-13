@@ -1,5 +1,6 @@
 //@ts-nocheck
 import { describe, it, expect } from 'vitest'
+import { nextFrame } from '@io-gui/core'
 import { IoPropertyEditor } from '@io-gui/editors'
 
 const element = new IoPropertyEditor()
@@ -26,5 +27,17 @@ describe('io-property-editor.test', () => {
   })
   it('matches values', async () => {
     reset()
+  })
+  it('does not sync a new value into editors built for the previous value', async () => {
+    reset()
+    const previous = {object: {a: 1}}
+    element.value = previous
+    await nextFrame()
+    const field = element.querySelector('io-object')
+    expect(field.value).toBe(previous.object)
+    // A mutation right after the switch syncs before the editors are rebuilt for the new value.
+    element.value = {object: undefined}
+    element.changedThrottled()
+    expect(field.value).toBe(previous.object)
   })
 })

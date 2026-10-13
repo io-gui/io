@@ -1,7 +1,6 @@
 import { PerspectiveCamera, OrthographicCamera, Group, BufferGeometry, CameraHelper, Float32BufferAttribute, MathUtils, Mesh, MeshBasicMaterial, Points, PointsMaterial, SphereGeometry } from 'three/webgpu'
 import { Property, Register } from '@io-gui/core'
-import { ioNumberSlider } from '@io-gui/sliders'
-import { registerEditorConfig, registerEditorGroups, ioObject } from '@io-gui/editors'
+import { registerEditorGroups } from '@io-gui/editors'
 import { Document, DocumentProps, Timeline } from '@io-gui/three'
 
 const frustumSize = 600
@@ -146,27 +145,6 @@ export class CameraExample extends Document {
     }
   }
 }
-
-const cameraObject = ioObject({expanded: true, widget: null,
-  properties: ['fov','far','aspect','left','right','top','bottom','matrixWorld','projectionMatrix'],
-  config: [
-    ['far', ioNumberSlider({min: 700, max: 1000, step: 1})],
-    ['left', ioNumberSlider({min: -500, max: 0, step: 0.1})],
-    ['right', ioNumberSlider({min: 0, max: 500, step: 0.1})],
-    ['top', ioNumberSlider({min: 0, max: 500, step: 0.1})],
-    ['bottom', ioNumberSlider({min: -500, max: 0, step: 0.1})],
-    ['matrixWorld', ioObject({expanded: true, label: 'matrixWorld', labeled: false, properties: ['elements']})],
-    ['projectionMatrix', ioObject({expanded: true, label: 'projectionMatrix', labeled: false, properties: ['elements']})],
-  ],
-  groups: {
-    Main: ['fov','far','aspect','left','right','top','bottom','matrixWorld'],
-  },
-})
-
-registerEditorConfig(CameraExample, [
-  ['perspectiveCamera', cameraObject],
-  ['orthographicCamera', cameraObject],
-])
 
 registerEditorGroups(CameraExample, {
   Main: ['showHelpers', 'perspectiveCamera', 'orthographicCamera'],

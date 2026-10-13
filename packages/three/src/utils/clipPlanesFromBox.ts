@@ -2,6 +2,7 @@ import { Box3, Camera, Vector3 } from 'three/webgpu'
 
 const cameraForward = new Vector3()
 const corner = new Vector3()
+const size = new Vector3()
 
 export function clipPlanesFromBox(box: Box3, cameraPosition: Vector3, camera: Camera, overfit: number = 0.1) {
   cameraForward.set(0, 0, -1).applyQuaternion(camera.quaternion)
@@ -18,7 +19,9 @@ export function clipPlanesFromBox(box: Box3, cameraPosition: Vector3, camera: Ca
     minDepth = Math.min(minDepth, depth)
     maxDepth = Math.max(maxDepth, depth)
   }
-  const span = Math.max(maxDepth - minDepth, 1e-3)
+  // Margins scale with the box's radius at least: flat content seen face-on has no depth span, and content can draw
+  // outside its bounds (sprites billboarded toward the eye turn out of the plane their box lies in).
+  const span = Math.max(maxDepth - minDepth, box.getSize(size).length() / 2, 1e-3)
   return {
     // 0.2 near clipping plane overfit bias - smelly hack but works
     // TODO: Reconsider this

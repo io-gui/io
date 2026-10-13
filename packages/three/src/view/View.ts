@@ -249,9 +249,10 @@ export class View extends ReactiveObject {
       orthographic.right = halfWidth
       orthographic.top = halfHeight
       orthographic.bottom = -halfHeight
-      // Orthographic depth does not shrink with distance; clip symmetrically around the eye.
-      orthographic.near = -nav.far
-      orthographic.far = nav.far
+      // Orthographic depth does not shrink with distance; clip symmetrically around the target, so zooming (which
+      // changes the distance) never moves content out of the range.
+      orthographic.near = nav.distance - nav.far
+      orthographic.far = nav.distance + nav.far
       orthographic.zoom = 1
       camera = orthographic
     }
