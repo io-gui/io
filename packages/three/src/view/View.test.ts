@@ -294,7 +294,7 @@ describe('View', () => {
     expect(copy.pipeline).toBe('probe')
     expect(copy.toneMapping).toBe(4)
     expect(copy.toneMappingExposure).toBe(0.5)
-    expect(copy.isOverlayEnabled('grid', false)).toBe(true)
+    expect(copy.isOverlayEnabled('grid')).toBe(true)
     view.dispose()
     copy.dispose()
   })

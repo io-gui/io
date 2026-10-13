@@ -8,15 +8,40 @@ import type { InteractionProfile } from '../tools/Tool.js'
 /** `3d` shows the content scene; `uv` shows the UV layout of the edit set in a 2D view of the 0–1 square. */
 export type ViewKind = '3d' | 'uv'
 
-/** Overlay ids switched on or off for one view; ids it does not name use the overlay's default. */
-export type ViewOverlays = Record<string, boolean>
+/**
+ * Overlays switched on in one view, by overlay id. Every overlay is off unless its flag is true, so a view lists what it
+ * draws. An overlay registered outside this package adds its id by declaration merging:
+ * `declare module '@io-gui/three' { interface ViewOverlays { heatmap?: boolean } }`.
+ */
+export interface ViewOverlays {
+  /** Floor grid with axes. */
+  grid?: boolean
+  /** Edit mode: wire, points and selected faces of the edit set. */
+  components?: boolean
+  /** Outline of selected meshes and lines. */
+  selection?: boolean
+  /** Darkens what lies outside a scene camera's frame when looking through it. */
+  cameraFrame?: boolean
+  /** Frustums of scene cameras, except the one the view looks through. */
+  cameraHelpers?: boolean
+  /** Light icons, spot cones and rect area panels. */
+  lightHelpers?: boolean
+  /** Bones of skeletons. */
+  skeletonHelpers?: boolean
+  /** The active tool's gizmos, in `full` profile views. */
+  gizmos?: boolean
+}
+
+/** The id of an overlay a view switches: a key of `ViewOverlays`. */
+export type OverlayId = keyof ViewOverlays
 
 const UV_BOX = new Box3(new Vector3(0, 0, 0), new Vector3(1, 1, 0))
 
 type ViewSettings = {
   kind?: ViewKind
   pipeline?: string
-  overlays?: ViewOverlays
+  // Mapped, unlike the interface itself, so view data stays assignable to core's `Json` (an index signature).
+  overlays?: Readonly<ViewOverlays>
   xray?: boolean
   toneMapping?: ToneMapping | null
   toneMappingExposure?: number | null
@@ -47,9 +72,9 @@ export class View extends ReactiveObject {
   @Property({type: String, value: ''})
   declare pipeline: string
 
-  /** Overlays switched on or off (`grid`, `selection`, `cameraFrame`, `gizmos`, ...). Replace the object, or use `setOverlay`. */
+  /** Overlays switched on (all off by default). Replace the object, or use `setOverlay`: a flag changed in place does not redraw. */
   @Property({type: Object, init: null})
-  declare overlays: ViewOverlays
+  declare overlays: Readonly<ViewOverlays>
 
   /** Component picking sees through surfaces: hidden points, edges and faces can be picked too. */
   @Property({type: Boolean, value: false})
@@ -155,11 +180,11 @@ export class View extends ReactiveObject {
     this.markNavigationChanged()
   }
 
-  isOverlayEnabled(id: string, enabledByDefault = true) {
-    return this.overlays[id] ?? enabledByDefault
+  isOverlayEnabled(id: OverlayId) {
+    return this.overlays[id] === true
   }
 
-  setOverlay(id: string, enabled: boolean) {
+  setOverlay(id: OverlayId, enabled: boolean) {
     this.overlays = {...this.overlays, [id]: enabled}
   }
 

@@ -12,7 +12,6 @@ import {
   MeshPhongMaterial,
   PerspectiveCamera,
   PlaneGeometry,
-  SkeletonHelper,
 } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { Document, DocumentProps, Timeline } from '@io-gui/three'
@@ -47,8 +46,8 @@ const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
 })
 
 /**
- * The Soldier model crossfading between idle, walk and run. The Document tab has model and skeleton visibility,
- * the crossfade buttons and the actions' effective weights. A live demo (ADR-0009): the timeline is only its clock,
+ * The Soldier model crossfading between idle, walk and run. The Document tab has model visibility, the crossfade
+ * buttons and the actions' effective weights; views with the skeleton helpers overlay draw the skeleton. A live demo (ADR-0009): the timeline is only its clock,
  * so it pauses and steps forward with the timeline, and ignores time going back. Plays when opened.
  */
 @Register
@@ -56,9 +55,6 @@ export class AnimationSkinningBlendingExample extends Document {
 
   @Property({type: Boolean, value: true})
   declare showModel: boolean
-
-  @Property({type: Boolean, value: false})
-  declare showSkeleton: boolean
 
   @Property({type: Boolean, value: false})
   declare isActive: boolean
@@ -78,7 +74,6 @@ export class AnimationSkinningBlendingExample extends Document {
 
   public camera: PerspectiveCamera
   public model?: Group
-  public skeleton?: SkeletonHelper
   public mixer: AnimationMixer = new AnimationMixer(new Group())
   public actions: Record<string, AnimationAction> = {}
 
@@ -136,8 +131,8 @@ export class AnimationSkinningBlendingExample extends Document {
   private async loadModel() {
     const gltf = await loadGltf('https://threejs.org/examples/models/gltf/Soldier.glb')
     const model = gltf.scene
-    model.visible = this.showModel
     this.model = model
+    this.showModelChanged()
     this.scene.add(model)
 
     model.traverse((object) => {
@@ -145,11 +140,6 @@ export class AnimationSkinningBlendingExample extends Document {
         object.castShadow = true
       }
     })
-
-    this.skeleton = new SkeletonHelper(model)
-    this.skeleton.visible = this.showSkeleton
-    this.skeleton.userData.selectable = false
-    this.scene.add(this.skeleton)
 
     this.mixer = new AnimationMixer(model)
 
@@ -171,11 +161,10 @@ export class AnimationSkinningBlendingExample extends Document {
   }
 
   showModelChanged() {
-    if (this.model) this.model.visible = this.showModel
-  }
-
-  showSkeletonChanged() {
-    if (this.skeleton) this.skeleton.visible = this.showSkeleton
+    // Only the meshes: the bones stay shown, so views with the skeleton helpers overlay still draw the skeleton.
+    this.model?.traverse(object => {
+      if ((object as Mesh).isMesh) object.visible = this.showModel
+    })
   }
 
   isActiveChanged() {
@@ -290,7 +279,6 @@ registerEditorConfig(AnimationSkinningBlendingExample, [
 registerEditorGroups(AnimationSkinningBlendingExample, {
   Main: [
     'showModel',
-    'showSkeleton',
     'isActive',
     'mixer',
     'idle',
@@ -306,7 +294,6 @@ registerEditorGroups(AnimationSkinningBlendingExample, {
     'camera',
     'actions',
     'model',
-    'skeleton',
     'isCrossfading',
   ],
 })

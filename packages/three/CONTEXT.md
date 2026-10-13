@@ -121,7 +121,7 @@ Serializable ReactiveObject holding one view's state: kind, pipeline, overlay fl
 _Avoid_: viewport state, ViewCameras (removed)
 
 **View kind**:
-`View.kind`: `3d` (shows the content scene) or `uv` (shows the UV layout of the edit set in 2D). Picks the default pipeline, overlays, gizmos and tools.
+`View.kind`: `3d` (shows the content scene) or `uv` (shows the UV layout of the edit set in 2D). Picks the default pipeline, gizmos and tools; overlays are only the view's flags.
 _Avoid_: view type, editor type
 
 **ViewPipeline**:
@@ -134,7 +134,11 @@ _Avoid_: post-processing (that is a pipeline), output pass
 
 **Overlay**:
 Something a view draws on top of its pipeline output from its own small scene, never the content scene: grid, selection outline, camera frame (passepartout), gizmos. Switched per view in `View.overlays`.
-_Avoid_: helper (three.js objects added to the scene), decoration
+_Avoid_: helper (alone: a three.js helper object), decoration
+
+**Helper overlay**:
+An overlay that draws three.js helpers (frustums, light icons, bones) for one kind of content object: cameras, lights or skeletons. The helpers mirror the content scene but are never part of it, so they are not exported, framed or picked.
+_Avoid_: scene helpers (authored into the content scene), extras
 
 **Edit set**:
 The objects edit mode and the UV view work on: selected objects and their descendants that have a geometry adapter.

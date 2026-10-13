@@ -19,9 +19,11 @@ describe('ThreeViewport', () => {
     editor.dispose()
   })
 
-  it('routes input through its router: gizmos, navigation, then selection', () => {
+  it('routes input through its router: gizmos (when on), navigation, then selection', () => {
     const viewport = new ThreeViewport({ editor })
     expect(viewport.navigationBehavior).toBeInstanceOf(NavigationBehavior)
+    expect(viewport.inputRouter.behaviors).toEqual([viewport.navigationBehavior, viewport.selectBehavior])
+    viewport.view.setOverlay('gizmos', true)
     expect(viewport.inputRouter.behaviors).toEqual([viewport.gizmoLayer, viewport.navigationBehavior, viewport.selectBehavior])
     viewport.keymap = navigationKeymaps.blender
     expect(viewport.navigationBehavior.keymap).toBe(navigationKeymaps.blender)
@@ -213,7 +215,7 @@ describe('ThreeViewport', () => {
     const behavior = {priority: 500, wantsCapture: () => false, begin() {}, update() {}, end() {}, cancel() {}}
     let created = 0
     editor.tools.register({id: 'probe', label: 'Probe', viewKinds: ['3d'], modes: ['object'], createBehaviors: () => { created++; return [behavior] }})
-    const viewport = new ThreeViewport({ editor })
+    const viewport = new ThreeViewport({ editor, view: new View({overlays: {gizmos: true}}) })
     expect(viewport.inputRouter.behaviors).not.toContain(behavior)
 
     editor.setActiveTool('3d', 'object', 'probe')

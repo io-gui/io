@@ -7,6 +7,9 @@ import { KeyedPool } from '../../utils/KeyedPool.js'
 /** Outline width in CSS pixels. */
 export const OUTLINE_WIDTH = 2
 
+/** Default outline colors, also used for selected helpers. */
+export const OUTLINE_COLORS = {active: 0xffaa33, selected: 0xe8590c}
+
 const ACTIVE = 1
 const SELECTED = 0.5
 
@@ -21,8 +24,8 @@ export class SelectionOutlineOverlay implements Overlay {
 
   readonly root = new Group()
 
-  readonly activeColor = new Color(0xffaa33)
-  readonly selectedColor = new Color(0xe8590c)
+  readonly activeColor = new Color(OUTLINE_COLORS.active)
+  readonly selectedColor = new Color(OUTLINE_COLORS.selected)
 
   private readonly _mask = new RenderTarget(1, 1, {type: UnsignedByteType, depthBuffer: false})
   private readonly _maskScene = new Scene()
@@ -141,7 +144,6 @@ export const selectionOutlineOverlayType: OverlayType = {
   id: 'selection',
   label: 'Selection outline',
   viewKinds: ['3d'],
-  enabledByDefault: true,
   order: 100,
   create: () => new SelectionOutlineOverlay(),
 }

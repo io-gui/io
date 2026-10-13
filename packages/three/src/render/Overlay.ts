@@ -1,5 +1,5 @@
 import type { Object3D } from 'three/webgpu'
-import type { ViewKind } from '../view/View.js'
+import type { OverlayId, ViewKind } from '../view/View.js'
 import type { PipelineContext, PipelineOutput, ViewPipeline } from './ViewPipeline.js'
 import { Registry } from '../utils/Registry.js'
 
@@ -22,16 +22,18 @@ export interface Overlay {
 }
 
 export interface OverlayType {
-  /** Key in `View.overlays`. */
-  readonly id: string
+  /** Key in `View.overlays`; an overlay registered outside this package declares it in `ViewOverlays`. */
+  readonly id: OverlayId
   readonly label?: string
+  /**
+   * View kinds it is made for. It does not choose where the overlay is created, the view's flags do; turning it on in
+   * another kind warns in debug builds.
+   */
   readonly viewKinds: readonly ViewKind[]
-  /** On when the view's `overlays` does not name it. */
-  readonly enabledByDefault: boolean
   /** Lower draws first. */
   readonly order?: number
   create(): Overlay
 }
 
-/** Overlays views create by kind and `View.overlays` flags. */
+/** Overlays views create by kind and `View.overlays` flags; every overlay is off until a view turns it on. */
 export const overlayTypes = new Registry<OverlayType>()

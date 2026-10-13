@@ -331,7 +331,7 @@ threeViewport({ editor, view }); // the view survives the element being remounte
 
 ### Pipelines and Overlays
 
-Each view draws through a `ViewPipeline` and then `Overlay`s ([ADR-0006](./docs/adr/0006-content-scene-holds-only-content.md)). The content scene holds only content: grids, outlines, camera frames and gizmos live in a per-viewport overlay scene.
+Each view draws through a `ViewPipeline` and then `Overlay`s ([ADR-0006](./docs/adr/0006-content-scene-holds-only-content.md)). The content scene holds only content: grids, outlines, camera frames, helpers and gizmos live in a per-viewport overlay scene.
 
 - A **pipeline** draws the content into its own target in linear color (`output.color`, plus `output.depth` when it has one). It runs only when content, navigation or size changed, or while it reports `{converged: false}`.
 - The viewport then **presents** that output to its canvas in one pass with the overlays, writing the pipeline's depth so overlays can be hidden behind content. Tone mapping is applied here: `view.toneMapping` if set, else the pipeline's, else the document's.
@@ -339,7 +339,7 @@ Each view draws through a `ViewPipeline` and then `Overlay`s ([ADR-0006](./docs/
 
 ```typescript
 new View({ pipeline: "traa" }); // a registered pipeline; '' uses the kind's default ('forward' / 'uv')
-view.setOverlay("grid", true); // grid (off by default), selection, cameraFrame, gizmos (on)
+view.setOverlay("grid", true); // every overlay is off until the view turns it on
 view.toneMapping = NoToneMapping; // per-view override; null uses the document's
 
 pipelineTypes.register({ id: "traa", create: (renderer) => new PostProcessingPipeline(renderer, (scenePass, camera) => {
@@ -348,15 +348,22 @@ pipelineTypes.register({ id: "traa", create: (renderer) => new PostProcessingPip
 }, { convergeFrames: 32 }) }); // accumulates for 32 frames after each change, then stops drawing
 ```
 
-Custom pipelines implement `ViewPipeline` (`output`, `setSize`, `render(ctx)`, optional `toneMapping`, `picker`, `listens`) or extend `RenderTargetPipeline`. Custom overlays implement `Overlay` (`root`, `prepare(ctx)`, `dispose`) and are registered with `overlayTypes.register({id, viewKinds, enabledByDefault, create})`. Full-screen overlays use `createScreenQuad(material)`.
+Custom pipelines implement `ViewPipeline` (`output`, `setSize`, `render(ctx)`, optional `toneMapping`, `picker`, `listens`) or extend `RenderTargetPipeline`. Custom overlays implement `Overlay` (`root`, `prepare(ctx)`, `dispose`) and are registered with `overlayTypes.register({id, viewKinds, create})`. Overlay ids are typed (`OverlayId`, the keys of `ViewOverlays`), so a custom overlay declares its flag first: `declare module '@io-gui/three' { interface ViewOverlays { heatmap?: boolean } }`. Full-screen overlays use `createScreenQuad(material)`.
 
-| Overlay | Default | |
-| --- | --- | --- |
-| `grid` | off | Floor grid with axes; on the plane facing axis views; spacing follows zoom |
-| `components` | on | Edit mode: wire, points and selected faces of the edit set |
-| `selection` | on | Outline of selected meshes and lines (mask of proxies sharing their geometry) |
-| `cameraFrame` | on | Darkens what lies outside a scene camera's frame when looking through it |
-| `gizmos` | on | The active tool's gizmos (`full` profile only) |
+All overlays are off by default; a view lists the ones it draws (`new View({overlays: {grid: true, selection: true, gizmos: true}})`), whatever its kind. An overlay's `viewKinds` only says which kinds it is made for: turning it on in another kind still creates it, and warns in debug builds.
+
+| Overlay | |
+| --- | --- |
+| `grid` | Floor grid with axes; on the plane facing axis views; spacing follows zoom |
+| `components` | Edit mode: wire, points and selected faces of the edit set |
+| `selection` | Outline of selected meshes and lines (mask of proxies sharing their geometry) |
+| `cameraFrame` | Darkens what lies outside a scene camera's frame when looking through it |
+| `cameraHelpers` | Frustum of each shown scene camera, except the one the view looks through |
+| `lightHelpers` | Point, directional and hemisphere light icons at a constant screen size; spot cones and rect area panels at their real size |
+| `skeletonHelpers` | Bones of each shown skeleton, also while its meshes are hidden |
+| `gizmos` | The active tool's gizmos (`full` profile only) |
+
+Helper overlays (`HelperOverlay` with a `HelperKind`) draw three.js helpers for content objects without adding them to the scene, so they are not exported, framed or picked. Helpers of selected objects take the outline colors.
 
 ### UV View
 

@@ -31,6 +31,8 @@ export class ViewCompositor {
   private _width = 0
   private _height = 0
   private _hasOutput = false
+  /** `id:kind` pairs warned about, so a flag in a view of the wrong kind warns once. */
+  private readonly _kindWarnings = new Set<string>()
 
   private readonly _present: Mesh
   private readonly _presentMaterial = new MeshBasicNodeMaterial()
@@ -72,9 +74,15 @@ export class ViewCompositor {
     this._hasOutput = false
   }
 
-  /** Creates and disposes registered overlays to match the view's kind and `overlays` flags. */
+  /** Creates and disposes registered overlays to match the view's `overlays` flags (off unless set), whatever its kind. */
   syncOverlays(view: View) {
-    const wanted = overlayTypes.list(type => type.viewKinds.includes(view.kind) && view.isOverlayEnabled(type.id, type.enabledByDefault))
+    const wanted = overlayTypes.list(type => view.isOverlayEnabled(type.id))
+    debug: for (const type of wanted) {
+      const key = `${type.id}:${view.kind}`
+      if (type.viewKinds.includes(view.kind) || this._kindWarnings.has(key)) continue
+      this._kindWarnings.add(key)
+      console.warn(`ViewCompositor: overlay "${type.id}" is made for ${type.viewKinds.join(', ')} views, but this view is ${view.kind}`)
+    }
     for (const entry of [...this._overlays]) {
       if (entry.type && !wanted.includes(entry.type)) this.removeOverlay(entry.overlay)
     }

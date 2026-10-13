@@ -1,10 +1,8 @@
-import { BoxGeometry, Group, Mesh, MeshStandardMaterial, PerspectiveCamera, RectAreaLight, RectAreaLightNode, TorusKnotGeometry } from 'three/webgpu'
+import { BoxGeometry, Mesh, MeshStandardMaterial, PerspectiveCamera, RectAreaLight, RectAreaLightNode, TorusKnotGeometry } from 'three/webgpu'
 import { checker, uv } from 'three/tsl'
-import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js'
 import { RectAreaLightTexturesLib } from 'three/addons/lights/RectAreaLightTexturesLib.js'
-import { Register, Property } from '@io-gui/core'
+import { Register } from '@io-gui/core'
 import { Document, DocumentProps, Timeline } from '@io-gui/three'
-import { registerEditorGroups } from '@io-gui/editors'
 
 RectAreaLightNode.setLTC( RectAreaLightTexturesLib.init() )
 
@@ -14,7 +12,7 @@ const PERIOD = 4 * Math.PI
 /**
  * A glossy torus knot lit by three turning rect area lights (red, green, blue) over a checker-rough floor. The
  * source's camera is a scene camera: the 2000-unit floor dwarfs the knot in the views' first-show framing.
- * Plays when opened.
+ * The light panels are the light helpers overlay. Plays when opened.
  */
 @Register
 export class LightsRectarealightExample extends Document {
@@ -22,10 +20,6 @@ export class LightsRectarealightExample extends Document {
   public rectLight1: RectAreaLight
   public rectLight2: RectAreaLight
   public rectLight3: RectAreaLight
-  public helpers: Group
-
-  @Property({type: Boolean, value: true})
-  declare showHelpers: boolean
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
@@ -65,21 +59,6 @@ export class LightsRectarealightExample extends Document {
     meshKnot.name = 'TorusKnot'
     meshKnot.position.set( 0, 5.5, 0 )
     this.scene.add( meshKnot )
-
-    // The light panels, after the lights they follow.
-    this.helpers = new Group()
-    this.helpers.name = 'Helpers'
-    this.helpers.userData.selectable = false
-    this.helpers.add( new RectAreaLightHelper( this.rectLight1 ) )
-    this.helpers.add( new RectAreaLightHelper( this.rectLight2 ) )
-    this.helpers.add( new RectAreaLightHelper( this.rectLight3 ) )
-    this.scene.add( this.helpers )
-
-    this.showHelpersChanged()
-  }
-
-  showHelpersChanged() {
-    if (this.helpers) this.helpers.visible = this.showHelpers
   }
 
   override onAnimate(delta: number, time: number) {
@@ -88,7 +67,3 @@ export class LightsRectarealightExample extends Document {
     this.rectLight3.rotation.y = time
   }
 }
-
-registerEditorGroups(LightsRectarealightExample, {
-  Main: ['showHelpers'],
-})

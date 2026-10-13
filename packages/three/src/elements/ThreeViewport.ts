@@ -203,7 +203,7 @@ export class ThreeViewport extends ReactiveElement implements ScheduledView {
   listens(change: DocumentChange): DirtyReason | false {
     if (!this.editor || change.source !== this.editor.document) return false
     // Pipeline and overlays are synced on view changes and before each draw, not here.
-    const reason = this._compositor?.listens(change) ?? 'content'
+    const reason = this.compositor.listens(change)
     if (reason === 'content') this._idPicker?.invalidate()
     return reason
   }

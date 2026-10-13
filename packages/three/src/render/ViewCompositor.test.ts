@@ -74,18 +74,27 @@ describe('ViewCompositor', () => {
     warn.mockRestore()
   })
 
-  it('creates overlays from the registry by view kind and flags', () => {
+  it('creates overlays from the registry by flags, warning once about one made for another view kind', () => {
     const ids = () => compositor.overlays.map(overlay => overlay.root.name)
     compositor.syncOverlays(view)
-    expect(ids()).toEqual(['ComponentOverlay', 'SelectionOutlineOverlay', 'CameraFrameOverlay'])
-    view.setOverlay('grid', true)
-    view.setOverlay('components', false)
-    view.setOverlay('cameraFrame', false)
+    expect(ids()).toEqual([])
+    view.overlays = {grid: true, selection: true, cameraHelpers: true, skeletonHelpers: true, lightHelpers: false}
     compositor.syncOverlays(view)
-    expect(ids()).toEqual(['GridOverlay', 'SelectionOutlineOverlay'])
+    expect(ids()).toEqual(['GridOverlay', 'CameraHelperOverlay', 'SkeletonHelperOverlay', 'SelectionOutlineOverlay'])
+    view.setOverlay('selection', false)
+    compositor.syncOverlays(view)
+    expect(ids()).toEqual(['GridOverlay', 'CameraHelperOverlay', 'SkeletonHelperOverlay'])
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     view.kind = 'uv'
     compositor.syncOverlays(view)
-    expect(ids()).toEqual([])
+    compositor.syncOverlays(view)
+    expect(ids()).toEqual(['GridOverlay', 'CameraHelperOverlay', 'SkeletonHelperOverlay'])
+    expect(warn.mock.calls.map(call => call[0])).toEqual([
+      'ViewCompositor: overlay "grid" is made for 3d views, but this view is uv',
+      'ViewCompositor: overlay "cameraHelpers" is made for 3d views, but this view is uv',
+      'ViewCompositor: overlay "skeletonHelpers" is made for 3d views, but this view is uv',
+    ])
+    warn.mockRestore()
   })
 
   it('runs the pipeline only for content, view, resize and continuous; overlays alone reuse its output', () => {

@@ -24,8 +24,8 @@ todos:
     content: "Replace debug-only dispatchMutation in onAnimate (inspector stops following in bundled builds)"
     status: pending
   - id: camera-helper-view
-    content: "CameraExample: the helper of the camera a view looks through draws in that view. Moved to three_future_work.plan.md scene-helpers"
-    status: cancelled
+    content: "CameraExample: the helper of the camera a view looks through draws in that view. Resolved by the helper overlays (three_future_work.plan.md scene-helpers, 2026-10-13)"
+    status: completed
   - id: framing-scenery
     content: "Whole-scene framing (first show, frame all) includes skies and large floors; examples frame their model instead. Skip unselectable scenery in the framework?"
     status: pending
@@ -203,8 +203,8 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 
 - Name what the scene graph should show: the scene graph and inspector label rows by `name`, or by `<ClassName>` when there is none. Name lights by role (`Key`, `Ambient`).
 - Do not rename loaded nodes that animation tracks address by name: the clip's tracks stop binding (`PropertyBinding: No target node found`). The horse's morph track targets `mesh_0`.
-- `userData.selectable = false` on floors, backdrops and helpers. It applies to descendants too.
-- Helpers (`CameraHelper`, `SkeletonHelper`) go in one `Helpers` group: unselectable, toggled by a `showHelpers` property. Add the group after the objects the helpers follow, so they read the same frame's world matrices. This is temporary: helpers will come from a per-view overlay for any document (`scene-helpers` in [three_future_work.plan.md](./three_future_work.plan.md), ADR-0006), and the authored ones go then.
+- `userData.selectable = false` on floors, backdrops and other scenery. It applies to descendants too.
+- Do not author camera, light or skeleton helpers (`CameraHelper`, `PointLightHelper`, `RectAreaLightHelper`, `SkeletonHelper`, ...): the helper overlays draw them in every view for any document (`cameraHelpers` and `lightHelpers` on, `skeletonHelpers` off by default; `scene-helpers` in [three_future_work.plan.md](./three_future_work.plan.md), ADR-0006). Drop the source's helpers and its `show helpers` / `show skeleton` toggles. A `SkeletonHelper` built only to collect bones (retargeting) stays, out of the scene. A model toggle hides the meshes, not the model root, so its skeleton still shows. Helpers that are the subject (normal, tangent and box helpers) are content: a `Helpers` group, unselectable, toggled by `showHelpers`, added after the objects they follow.
 
 ### Properties and groups
 
@@ -241,13 +241,13 @@ Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 co
 |---|---|---|---|
 | AnimationGroups | `misc_animation_groups` | duration = clip (3 s) | OK |
 | AnimationKeyframes | `webgl_animation_keyframes` | `TrainCamera` riding the train for a camera view; frames the model on load; clouds held still (the source never advances its sky's `time`) | Fixed: ported to the r186 look (`SkyMesh` sky + PMREM environment from it, `ACESFilmicToneMapping`, `DRACO_GLTF_CONFIG`), replacing RoomEnvironment and the flat `0xbfe3dd` background |
-| AnimationRetargeting | `webgpu_animation_retargeting` | named scene camera; `lightSpeed` takes time as input | Fixed: `NeutralToneMapping`, `showHelpers` (both skeletons), `lightSpeed` layout in the HEAD form (r186 typings) |
+| AnimationRetargeting | `webgpu_animation_retargeting` | named scene camera; `lightSpeed` takes time as input | Fixed: `NeutralToneMapping`, `lightSpeed` layout in the HEAD form (r186 typings); skeletons from the skeleton helpers overlay (2026-10-13) |
 | AnimationRetargetingReadyplayer | `webgpu_animation_retargeting_readyplayer` | frames the models | Fixed: `NeutralToneMapping` |
 | AnimationSkinningAdditiveBlending | `webgl_animation_skinning_additive_blending` | `none / idle / walk / run` buttons; weights in the action inspector; time scale in the mixer inspector; `DirectionalLight` as at HEAD (r186 had `SunLight`); live document (ADR-0009) | Fixed: time going back ignored. Open: `crossfade-state` |
-| AnimationSkinningBlending | `webgl_animation_skinning_blending` | three target buttons instead of four from→to buttons, so idle ↔ run is added (5 s / 2.5 s); effective weights read-only (the source's sliders also set weights); time scale in the mixer inspector; pause and single step are the timeline transport (a step is one frame, not 0.05 s); `DirectionalLight` as at HEAD; live document (ADR-0009) | Fixed: crossfade end in mixer time instead of `setTimeout`, camera aspect no longer read from `window`, `showModel` / `showSkeleton`, per-transition durations (run → walk 5 s), time going back ignored. Open: `crossfade-state` |
+| AnimationSkinningBlending | `webgl_animation_skinning_blending` | three target buttons instead of four from→to buttons, so idle ↔ run is added (5 s / 2.5 s); effective weights read-only (the source's sliders also set weights); time scale in the mixer inspector; pause and single step are the timeline transport (a step is one frame, not 0.05 s); `DirectionalLight` as at HEAD; live document (ADR-0009) | Fixed: crossfade end in mixer time instead of `setTimeout`, camera aspect no longer read from `window`, `showModel` (hides the meshes; the skeleton is the skeleton helpers overlay, 2026-10-13), per-transition durations (run → walk 5 s), time going back ignored. Open: `crossfade-state` |
 | BackdropArea | `webgpu_backdrop_area` | box scale as a linkable `Vector3`; named scene camera | Fixed: `NeutralToneMapping` (exposure 0.9 had no effect), floor 5 × 5, camera near/far 0.25/25, default preset `checker` |
 | Backdrop | `webgpu_backdrop` | spot light at (1, 2, 3) instead of on the camera; portals turn by `delta × mixer.timeScale`; the portals keep turning while you orbit | Fixed: duration = clip, `mixer.setTime`. The portals still jump at the loop wrap (integrated) |
-| Camera | `webgpu_camera` | both cameras update every frame (no `O` / `P` switch); camera projections in the Document tab | Fixed: a `CameraHelper` per camera + `showHelpers`, kept until `scene-helpers` (future work) |
+| Camera | `webgpu_camera` | both cameras update every frame (no `O` / `P` switch); camera projections in the Document tab | Fixed: frustums from the camera helpers overlay, which skips the camera a view looks through (2026-10-13) |
 | ComputeTexture | `webgpu_compute_texture` | none | OK (the plane is unnamed) |
 | Geometries | `webgl_geometries` | point light fixed above instead of on the orbiting camera; 20 s spin; `wireframe` toggle (io addition) | OK |
 | GeometryColors | `webgl_geometry_colors` | `Float32` colors; mouse-follow camera dropped; shadows and wireframes unselectable | OK |
@@ -261,7 +261,7 @@ Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 co
 | MaterialsToon | `webgpu_materials_toon` | toon outline post dropped (cosmetic, `document-pipeline`); spheres and labels grouped; labels added when the font arrives | OK |
 | Clearcoat | `webgpu_clearcoat` | 8π s loop; spheres turn once per loop (0.25 rad/s, source 0.3); materials built at once, environment set on load | OK |
 | LightsPhong | `webgpu_lights_phong` | 40π s loop (light frequencies are multiples of 0.05 rad/s); no background (source: black clear) | OK |
-| LightsRectarealight | `webgpu_lights_rectarealight` | 4π s loop; light panels (`RectAreaLightHelper`) in `Helpers`, `showHelpers` on by default; source camera kept as `Camera` | Open: `framing-scenery` (2000-unit floor) |
+| LightsRectarealight | `webgpu_lights_rectarealight` | 4π s loop; light panels from the light helpers overlay (2026-10-13); source camera kept as `Camera` | Open: `framing-scenery` (2000-unit floor) |
 | Shadowmap | `webgpu_shadowmap` | 40π s loop (knot 0.25 / 0.5 / 1, light group 0.7 rad/s); source camera kept as `Camera` | Open: `framing-scenery` (600-unit ground; with the 50–100 fog the perspective view opens on fog color) |
 | Skinning | `webgpu_skinning` | point light at the source camera's position instead of on the camera; frames the model | OK |
 | LoaderGltfIridescence | `webgpu_loader_gltf_iridescence` | camera auto-rotation dropped; frames the model | Open: `transmission-views` |
@@ -323,7 +323,7 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | MorphtargetsFace | `webgpu_morphtargets_face` | TODO | — | |
 | MorphtargetsHorse | `webgl_morphtargets_horse` | completed | — | see Audit |
 | MorphtargetsSphere | `webgl_morphtargets_sphere` | TODO | — | points on the morphing vertices: WebGPU points are 1 px, and `Sprite` points from an instanced attribute do not follow morph targets |
-| LoaderBvh | `webgl_loader_bvh` | TODO | — | the skeleton is the content: a `SkeletonHelper` outside the `Helpers` rule, made selectable or left as is |
+| LoaderBvh | `webgl_loader_bvh` | TODO | — | the skeleton is the content: drawn by the skeleton helpers overlay (bones without a skinned mesh draw too), which is off by default |
 | LoaderMd2 | `webgl_loader_md2` | TODO | — | `MD2Character`: skin, weapon and animation as dropdowns |
 | LoaderMdd | `webgl_loader_mdd` | TODO | — | |
 | LoaderGltfAnimationPointer | `webgl_loader_gltf_animation_pointer` | TODO | — | `KHR_animation_pointer` |
@@ -369,7 +369,7 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | ModifierSimplifier | `webgl_modifier_simplifier` | TODO | — | |
 | ModifierSubdivision | `webgl_modifier_subdivision` | TODO | — | |
 | MathOrientationTransform | `webgl_math_orientation_transform` | TODO | — | `setTimeout` target picks -> timeline schedule |
-| Helpers | `webgl_helpers` | TODO | — | normal / tangent / box helpers are the subject; `Helpers` rule until `scene-helpers` |
+| Helpers | `webgl_helpers` | TODO | — | normal / tangent / box helpers are the subject: content in a `Helpers` group (Scene graph and picking); the light helpers come from the overlay |
 | LinesColors | `webgl_lines_colors` | TODO | — | pointer-driven camera dropped |
 | LinesDashed | `webgl_lines_dashed` | completed | — | see Audit |
 | LinesFat | `webgpu_lines_fat` | TODO | — | inset view -> scene camera |

@@ -57,7 +57,6 @@ export const cameraFrameOverlayType: OverlayType = {
   id: 'cameraFrame',
   label: 'Camera frame',
   viewKinds: ['3d'],
-  enabledByDefault: true,
   order: 200,
   create: () => new CameraFrameOverlay(),
 }

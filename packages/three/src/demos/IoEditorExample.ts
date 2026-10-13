@@ -5,7 +5,7 @@ import { ioOptionSelect, Menu } from '@io-gui/menus'
 import { Object3D } from 'three/webgpu'
 import { mrt, output, velocity } from 'three/tsl'
 import { traa } from 'three/addons/tsl/display/TRAANode.js'
-import { PostProcessingPipeline, SelectionModel, Document, Editor, View, threeViewport, threeTimeline, threeScenegraph, pipelineTypes } from '@io-gui/three'
+import { PostProcessingPipeline, SelectionModel, Document, Editor, View, ViewOverlays, threeViewport, threeTimeline, threeScenegraph, pipelineTypes } from '@io-gui/three'
 import { ioLayout, Layout } from '@io-gui/layout'
 import { threeEditorStatus } from '../elements/ThreeEditorStatus.js'
 
@@ -137,10 +137,23 @@ const DOCUMENTS: Record<string, () => Promise<Document>> = {
   GeometryTeapotExample: () => import('./examples/GeometryTeapotExample.js').then(module => new module.GeometryTeapotExample()),
 }
 
+/** What the 3D views draw over the content: overlays are off unless a view turns them on. */
+const VIEW_OVERLAYS: ViewOverlays = {
+  grid: true,
+  components: true,
+  selection: true,
+  cameraFrame: true,
+  cameraHelpers: true,
+  lightHelpers: true,
+  skeletonHelpers: true,
+  gizmos: true,
+}
+
 /**
  * One Editor in tabbed views, each with its own pipeline (ADR-0006) and interaction profile: a forward
- * perspective view with the grid overlay and the Move tool, select-only axis views post-processed with TRAA, and a
+ * perspective view with the Move tool, select-only axis views post-processed with TRAA, and a
  * select-only UV view of the selection, and a select-only Camera view through the document's first scene camera.
+ * The 3D views turn on every overlay (`VIEW_OVERLAYS`; the Camera view without the grid).
  * The inspector follows the active object; the Document tab shows the document's own properties. The Scene tab is
  * the document's scene graph: click a row to select its object, its triangle to collapse it, double-click or F2 to
  * rename it; what is collapsed is kept in localStorage by object uuid. Selecting in a view reveals the object there.
@@ -178,15 +191,15 @@ export class IoEditorExample extends ReactiveElement {
   declare editor: Editor
 
   @Field({
-    top: new View({pipeline: 'traa', overlays: {grid: true}}),
-    bottom: new View({pipeline: 'traa', overlays: {grid: true}}),
-    left: new View({pipeline: 'traa', overlays: {grid: true}}),
-    right: new View({pipeline: 'traa', overlays: {grid: true}}),
-    front: new View({pipeline: 'traa', overlays: {grid: true}}),
-    back: new View({pipeline: 'traa', overlays: {grid: true}}),
-    perspective: new View({overlays: {grid: true}}),
-    uv: new View({kind: 'uv', profile: 'select'}),
-    camera: new View({profile: 'select'}),
+    top: new View({pipeline: 'traa', overlays: VIEW_OVERLAYS}),
+    bottom: new View({pipeline: 'traa', overlays: VIEW_OVERLAYS}),
+    left: new View({pipeline: 'traa', overlays: VIEW_OVERLAYS}),
+    right: new View({pipeline: 'traa', overlays: VIEW_OVERLAYS}),
+    front: new View({pipeline: 'traa', overlays: VIEW_OVERLAYS}),
+    back: new View({pipeline: 'traa', overlays: VIEW_OVERLAYS}),
+    perspective: new View({overlays: VIEW_OVERLAYS}),
+    uv: new View({kind: 'uv', profile: 'select' }),
+    camera: new View({profile: 'select', overlays: { cameraFrame: true }}),
   })
   declare views: Record<'top' | 'bottom' | 'left' | 'right' | 'front' | 'back' | 'perspective' | 'uv' | 'camera', View>
 

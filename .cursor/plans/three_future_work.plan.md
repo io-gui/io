@@ -31,7 +31,7 @@ todos:
     status: pending
   - id: scene-helpers
     content: "Helpers (cameras, lights, skeletons) drawn automatically for any document as a per-view overlay"
-    status: pending
+    status: completed
 isProject: false
 ---
 
@@ -83,8 +83,15 @@ Live documents ([ADR-0009](../../packages/three/docs/adr/0009-live-documents-use
 
 Helpers should appear automatically for any document when enabled, instead of being authored into each example's scene. Per [ADR-0006](../../packages/three/docs/adr/0006-content-scene-holds-only-content.md) they belong in an overlay, not in `Document.scene`: helpers in the content scene leak into export, framing bounds, picking and every other view.
 
-- A helpers overlay, toggled per view (`view.overlays`), builds `CameraHelper`, light helpers (directional, spot, point, hemisphere, rect area) and `SkeletonHelper`s for the document's scene in the view's overlay scene.
-- It rebuilds on `structure` changes and updates helpers on `time` and `transform` changes, with the scene graph's `ChangeListener` pattern.
-- A view looking through a scene camera skips that camera's helper. This resolves `camera-helper-view` in the conversion plan.
-- Optional filters: helper kinds, selected objects only.
-- When it lands, remove the authored helpers from the examples: the `Helpers` groups and `showHelpers` in CameraExample and AnimationRetargeting, and the skeleton helper behind `showSkeleton` in AnimationSkinningBlending. Until then the examples keep them ([three.js_example_conversion.plan.md](./three.js_example_conversion.plan.md), Scene graph and picking).
+Done 2026-10-13 (`render/overlays/HelperOverlay.ts`). Decided in a grilling session:
+
+- **One helper overlay per kind**, each a flag in `View.overlays`: `cameraHelpers`, `lightHelpers`, `skeletonHelpers`. Filtering by kind is these flags; View gets no new setting. Like every overlay they are off until a view turns them on (2026-10-13: per-overlay defaults removed for consistency; the demo lists its overlays in `OVERLAYS_3D`).
+- **Built per draw, not from change listeners.** Like the component and outline overlays, `prepare()` walks the content scene and keeps one helper per object in a `KeyedPool`. Every structure, time and transform change already redraws overlays, so the helpers follow without a listener.
+- **What is drawn.** Shown objects only (hidden ancestors hide helpers). A view looking through a scene camera skips that camera's helper (resolves `camera-helper-view` in the conversion plan).
+  - Cameras: `CameraHelper`, always the full frustum to `far`, neutral gray.
+  - Lights: point, directional and hemisphere icons at a constant screen size (each view sizes its own); spot cones (distance, angle) and rect area panels (`RectAreaLightHelper`, outline and panel) at their real size. Ambient lights and light probes have none.
+  - Skeletons: a `SkeletonHelper` per root bone (a bone whose parent is not a bone), so skeletons show while their meshes are hidden, and bone hierarchies without a skinned mesh (BVH) draw too.
+- **Selection.** Helpers of selected objects and their descendants draw in the outline colors (active brighter); a skeleton also highlights when one of its skinned meshes is selected. Not in edit mode, like the outline. No "selected only" filter until someone needs it.
+- **Not pickable.** Helpers live in the overlay scene, so clicking a light's icon does not select the light. Selecting lights and cameras in the viewport needs the `Picker` to consult overlays; later.
+- **Examples.** The authored helpers are gone: the `Helpers` groups and `showHelpers` in CameraExample, AnimationRetargeting and LightsRectarealight (the overlay draws its light panels), and the skeleton helper behind `showSkeleton` in AnimationSkinningBlending, whose `showModel` now hides only the meshes ([three.js_example_conversion.plan.md](./three.js_example_conversion.plan.md), Scene graph and picking).
+- **No overlay UI yet.** Views switch overlays only in code (`View.overlays`), so the demo turns them on in code. A viewport overlays menu (registered overlays for the view kind, by label, as checkboxes) would let users switch any of them; not built.

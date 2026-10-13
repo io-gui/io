@@ -76,7 +76,6 @@ export const gridOverlayType: OverlayType = {
   id: 'grid',
   label: 'Grid',
   viewKinds: ['3d'],
-  enabledByDefault: false,
   order: 0,
   create: () => new GridOverlay(),
 }

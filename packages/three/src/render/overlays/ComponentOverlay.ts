@@ -105,7 +105,6 @@ export const componentOverlayType: OverlayType = {
   id: 'components',
   label: 'Edit mode components',
   viewKinds: ['3d'],
-  enabledByDefault: true,
   order: 90,
   create: () => new ComponentOverlay(),
 }
