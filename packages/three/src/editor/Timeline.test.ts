@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
+import { renderGroup } from 'three/tsl'
 import { Timeline } from '@io-gui/three'
 
 describe('Timeline', () => {
@@ -61,5 +62,10 @@ describe('Timeline', () => {
     const started = new Timeline({currentTime: 2, duration: 3})
     expect(started.timeNode.value).toBe(2)
     started.dispose()
+  })
+
+  it('shares its TSL uniform per render, like TSL time', () => {
+    // A per-object uniform is not uploaded for objects whose materials have no node properties.
+    expect(timeline.timeNode.groupNode).toBe(renderGroup)
   })
 })

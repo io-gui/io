@@ -282,6 +282,7 @@ registerEditorConfig(Document, [
 ])
 
 registerEditorGroups(Document, {
-  Main: ['toneMapping', 'toneMappingExposure', 'timeline'],
+  Animation: ['timeline'],
+  Rendering: ['toneMapping', 'toneMappingExposure'],
   Advanced: [new RegExp(/^[\s\S]*$/)]
 })

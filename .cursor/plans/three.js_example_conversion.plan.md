@@ -56,6 +56,15 @@ todos:
   - id: low-hanging-2026-10-11
     content: "Convert the unblocked candidates that need nothing from the editor (Candidates table, Audit rows)"
     status: in_progress
+  - id: batch-2026-10-13
+    content: "Convert 25 more unblocked candidates: morphs, materials, procedural/TSL, nine loaders, FogHeight, InstanceMesh, InstancePath, TslRagingSea (Audit: Converted 2026-10-13)"
+    status: completed
+  - id: dolly-far
+    content: "Zooming in pulled the perspective far plane in with the distance (ViewNavigation.dolly scaled far), cutting off skies beyond the framed box. Far now moves with the eye. Fixed 2026-10-13"
+    status: completed
+  - id: shared-uniforms
+    content: "Per-object uniforms in scene nodes (fogNode, environmentNode) stay stale in forward views (three #34162 SHARED refresh). Timeline.timeNode moved to renderGroup; FogHeight uniforms too. Upstream report not filed (see Blockers: shared-refresh)"
+    status: completed
 isProject: false
 ---
 
@@ -166,6 +175,7 @@ Naming: drop the `webgl_` / `webgpu_` / `misc_` prefix and PascalCase the rest (
 | `animate()` with `Date.now()` or elapsed time | `onAnimate(delta, time)` deriving state from `time` |
 | `mixer.update(timer.getDelta())` | `mixer.update(delta)` in `onAnimate` |
 | TSL `time`, `oscSine()` (implicit `time`) | `this.timeline.timeNode`, for example `oscSine(this.timeline.timeNode)` |
+| `uniform()` read by a scene node (`fogNode`, `environmentNode`) | `uniform().setGroup(renderGroup)`. A per-object uniform reaches the GPU only on a full refresh of its object; objects whose materials have no node properties get shared refreshes only, so the change never shows in forward views (TRAA views refresh fully for velocity). `timeline.timeNode` is shared already (see `shared-refresh` under Blockers) |
 | Light attached to the camera (`camera.add(light)`) | a light placed in the scene |
 | Relative asset path `models/gltf/X.glb` | `https://threejs.org/examples/models/gltf/X.glb` |
 | `dracoLoader.setDecoderPath(DRACO_GLTF_CONFIG)` | the same: the decoder resolves next to three's `DRACOLoader.js` (Vite rewrites the URL when pre-bundling; the bundle keeps three external) |
@@ -196,7 +206,8 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 ### Async content
 
 - Content added outside a transaction (loaded models) needs `this.notify({kind: 'structure'})`, or views and the scene graph miss it. A texture loaded in the background needs `this.notify({kind: 'material'})` in its load callback, because views draw only on changes.
-- Optional framing hint after loading: `this.dispatch('frame-object', {object, overscan?}, true)`. It bubbles through the editor to the viewports showing the document.
+- Optional framing hint after loading: `this.dispatch('frame-object', {object, overscan?}, true)`. It bubbles through the editor to the viewports showing the document. Skinned bounds read the bones' world matrices, which nothing has drawn yet for a fresh `SkeletonUtils.clone`: call `updateMatrixWorld(true)` on what you frame first (AnimationMultiple). An `overscan` below 1 frames closer, for content larger than its fog range (InstancingMorph).
+- Instances placed on the GPU (`positionNode`, identity instance matrices) have the bounds of one instance: set the `InstancedMesh`'s `boundingBox` and `boundingSphere` to the content's extent, for framing and culling (TslGalaxy, InstancePath).
 - Fields used by `onAnimate` before the load finishes: a placeholder (`new AnimationMixer(new Group())`) or optional chaining (`this.mixer?.update(delta)`). Change handlers guard content that may not be loaded yet (`if (this.model)`).
 
 ### Scene graph and picking
@@ -209,6 +220,8 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 ### Properties and groups
 
 - `registerEditorConfig` / `registerEditorGroups` go right after the class (`io-gui.mdc`, Editor Configs). `Main` lists the curated controls. `Hidden` lists public fields that are internal. The document's own groups (tone mapping, exposure, timeline, plus an `Advanced` catch-all) aggregate with the subclass's groups.
+- The Document tab shows about ten characters of a property name: keep names short and distinct within that (MaterialsEnvmaps `rotateX` instead of `backgroundRotationX`; TslRagingSea keeps the source's `largeSpeed`, `smallFrequency`). A nested `ioObject` takes `labelWidth` (MorphtargetsFace blend shapes).
+- Colors and vectors edited in place: a `@Property({type: Color, init: null})` (or `Vector2`) with an `xMutated()` that copies it into the material or uniform and calls `notify`. Plain public fields do not observe in-place edits, so a paused view would not redraw.
 - Change handlers do not run for default values. They do run inside the base constructor for values passed in `args`, before subclass fields exist. Call `xChanged()` at the end of the constructor to apply the default, and keep the state that handlers touch in `declare`d or lazily created fields if args must work.
 
 ### WebGPU notes
@@ -231,7 +244,7 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 4. Run `pnpm lint:check` and `tsc -b`, then check in `pnpm dev` (Demos > Three > Load Example): it renders and matches the source's look (tone mapping, background, lighting); scene graph names; Document tab controls; play, pause, scrub and loop; switching to another document and back.
 5. Add a row to the audit table.
 
-Headless Chromium has a WebGPU adapter (SwiftShader), but viewport screenshots come out blank. To check that a document compiles and draws, use the page's own three: import the `three.webgpu` URL listed in `performance.getEntriesByType('resource')` (a fresh `import('three/webgpu')` loads a second instance, and TSL then fails with "No stack defined"). Draw with the page's shared renderer (`threeViewport.renderer`) into a half-float `RenderTarget` (the headless canvas texture is invalid) inside `device.pushErrorScope('validation')`, apply the document's tone mapping with a `renderOutput` quad into an `rgba8` target, read the pixels back and save a PNG to compare with `examples/screenshots/<source>.jpg`. Pause and set the time first so the frame is reproducible. A second `WebGPURenderer` gives false results: lights' shadow nodes and the equirect-to-cube cache are shared across renderers (destroyed shadow maps, black equirect backgrounds). The hidden Scene Camera tab never switches document, so clone the document's scene camera instead of asking that view. New addon imports make Vite re-optimize and reload the page once. Backdrop materials report a format mismatch in an `rgba8` target; that comes from the harness, not the document.
+Headless Chromium with `--enable-unsafe-webgpu --enable-features=Vulkan,WebGPU --use-angle=metal` draws on the GPU, and `page.locator('three-viewport#Perspective').screenshot()` captures a view of the running editor (open a document by setting `documentName` on `io-editor-example`, pause with `editor.isPlaying = false`, change properties on `editor.document`). Without those flags it has a SwiftShader adapter and viewport screenshots come out blank. To check that a document compiles and draws, use the page's own three: import the `three.webgpu` URL listed in `performance.getEntriesByType('resource')` (a fresh `import('three/webgpu')` loads a second instance, and TSL then fails with "No stack defined"). Draw with the page's shared renderer (`threeViewport.renderer`) into a half-float `RenderTarget` (the headless canvas texture is invalid) inside `device.pushErrorScope('validation')`, apply the document's tone mapping with a `renderOutput` quad into an `rgba8` target, read the pixels back and save a PNG to compare with `examples/screenshots/<source>.jpg`. Pause and set the time first so the frame is reproducible. A second `WebGPURenderer` gives false results: lights' shadow nodes and the equirect-to-cube cache are shared across renderers (destroyed shadow maps, black equirect backgrounds). The hidden Scene Camera tab never switches document, so clone the document's scene camera instead of asking that view. New addon imports make Vite re-optimize and reload the page once. Backdrop materials report a format mismatch in an `rgba8` target; that comes from the harness, not the document.
 
 ## Audit (2026-10-11, r186)
 
@@ -281,6 +294,32 @@ Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 co
 | LinesDashed | `webgl_lines_dashed` | 8π s turn | OK |
 | GeometryExtrudeShapes | `webgl_geometry_extrude_shapes` | point light at the source camera's position; `TrackballControls` dropped | OK |
 | GeometryTeapot | `webgl_geometry_teapot` | GUI -> `tessellation` / `lid` / `body` / `bottom` / `fitLid` / `nonBlinn` / `shading` properties; geometry swapped on the same mesh instead of a new mesh | OK |
+| **Converted 2026-10-13** | | | Checked in the editor (headless Chromium on the GPU against `pnpm dev`): renders, scene graph names, Document tab controls with playback paused, no console errors |
+| Morphtargets | `webgpu_morphtargets` | `spherify` / `twist` properties; point light at the source camera's position | OK |
+| MorphtargetsFace | `webgpu_morphtargets_face` | KTX2 + RoomEnvironment PMREM in `onRendererInitialized` (loads once); 52 blend shape sliders as `expressions` (accessors over the head's influences, 120 px labels); duration = clip | Open: `inspector-refresh` (the sliders follow the clip through a debug-only `dispatchMutation`) |
+| InstancingMorph | `webgpu_instancing_morph` | `SunLight` registered with `renderer.library.addLight` in `onRendererInitialized` (r186 API; the dev build warns it is deprecated for `SunLight.registerNode`); 63 s loop (42 gallops, one camera loop); source camera kept as `Camera`; framed at overscan 0.5 (the 10000-unit herd lies mostly in fog) | Open: `framing-scenery` (million-unit ground) |
+| AnimationMultiple | `webgl_animation_multiple` | `DirectionalLight` as at HEAD (r186 had `SunLight`); 7 s loop (ten run cycles; idle and walk jump at the wrap); shared skeleton bones keep the glTF transform in a `Skeleton` group instead of the meshes, so the skeleton overlay draws them at size | OK |
+| Materials | `webgpu_materials` | 17 teapots named after their materials; 20 s spin; orbiting camera and grid dropped; casts for @types 0.186 (wgslFn includes, Loop result) | OK |
+| MaterialsBasic | `webgpu_materials_basic` | spheres move with time (20π s loop); mouse camera dropped; `color` / `mapping` / `refractionRatio` / `transparent` / `opacity` properties | OK |
+| MaterialsLightmap | `webgpu_materials_lightmap` | `lightMapIntensity` property; frames the model (the sky dome spans 8000 units) | Fixed: zooming in cut off the sky (`dolly-far`) |
+| MaterialsEnvmaps | `webgpu_materials_envmaps` | background turns with time (one turn per 100 s loop) while `rotateX` / `rotateY` / `rotateZ` is on, and snaps back when off (the source accumulates) | OK |
+| MaterialsSss | `webgpu_materials_sss` | bunny turns with time (10π s loop); thickness uniforms as properties | OK |
+| ProceduralTexture | `webgpu_procedural_texture` | ortho camera dropped; `uvScale` / `blurAmount` / `autoUpdate` properties | OK |
+| Textures2dArray | `webgpu_textures_2d-array` | TSL `time` -> `timeline.timeNode`; 2 s loop (one layer sweep) | OK |
+| TslGalaxy | `webgpu_tsl_galaxy` | TSL `time` -> `timeline.timeNode`; 60 s loop (each particle turns at its own rate: the swirl jumps at the wrap); explicit galaxy bounds on the `InstancedMesh` | OK |
+| LoaderObj | `webgl_loader_obj` | camera light at the source camera's position; MTL textures reported through a `LoadingManager` | OK |
+| LoaderStl | `webgl_loader_stl` | files loaded together; models grouped and framed (40-unit floor); orbiting camera dropped | OK |
+| LoaderPly | `webgl_loader_ply` | as LoaderStl | OK |
+| Loader3ds | `webgl_loader_3ds` | `TrackballControls` dropped; textures through a `LoadingManager` | OK |
+| LoaderDraco | `webgl_loader_draco` | orbiting camera dropped; frames the bunny (8-unit floor) | OK |
+| LoaderKmz | `webgl_loader_kmz` | grid dropped | OK |
+| LoaderAmf | `webgl_loader_amf` | Z-up rook turned upright (-90° about x) for the Y-up views; camera light at the converted position | OK |
+| LoaderUsdz | `webgl_loader_usdz` | frames the model | OK |
+| LoaderVox | `webgl_loader_vox` | none | OK |
+| FogHeight | `webgpu_fog_height` | fog uniforms in `renderGroup` (see Map); source camera kept as `Camera` (the fog depends on distance) | Fixed: fog controls did not reach forward views (`shared-uniforms`) |
+| InstanceMesh | `webgpu_instance_mesh` | `instanceCount` property; 8π s loop (the 10 s color mix jumps at the wrap); `?amount` query dropped (10) | OK |
+| InstancePath | `webgpu_instance_path` | `InstancedMesh` (identity matrices) with the heart's bounds instead of `Mesh.count`; 20 s loop (8 pulses; the bobbing jumps at the wrap) | OK |
+| TslRagingSea | `webgpu_tsl_raging_sea` | TSL `time` -> `timeline.timeNode`; 20 s loop; source GUI names (`largeSpeed`, `smallIterations`, ...) in Main / Emissive / Waves groups | OK |
 
 Removed: CameraLogarithmicDepthBuffer (renderer-level option, see What fits); CameraArray (runtime multi-view, see What fits; 2026-10-13).
 
@@ -312,18 +351,18 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | VolumePerlin | `webgpu_volume_perlin` | completed | — | see Audit |
 | **Animation and morphs** | | | | |
 | AnimationKeys | `misc_animation_keys` | completed | — | see Audit; source camera kept as scene camera (`framing-motion`) |
-| AnimationMultiple | `webgl_animation_multiple` | TODO | — | `SkeletonUtils.clone` soldiers, one mixer each |
+| AnimationMultiple | `webgl_animation_multiple` | completed | — | see Audit |
 | AnimationSkinningMorph | `webgl_animation_skinning_morph` | TODO | — | robot states / emotes / expressions; emote buttons make it a live document (ADR-0009), like skinning blending |
 | Skinning | `webgpu_skinning` | completed | — | see Audit |
 | SkinningInstancing | `webgpu_skinning_instancing` | TODO | — | blur post dropped |
 | SkinningPoints | `webgpu_skinning_points` | TODO | — | compute runs through the material's `positionNode` (`onInit`), no per-frame `renderer.compute` |
 | SkinningInstancingIndividual | `webgpu_skinning_instancing_individual` | TODO | `per-frame-gpu` | `renderer.compute(computeSkinning)` each frame |
-| InstancingMorph | `webgpu_instancing_morph` | TODO | — | |
-| Morphtargets | `webgpu_morphtargets` | TODO | — | morph weights as properties |
-| MorphtargetsFace | `webgpu_morphtargets_face` | TODO | — | |
+| InstancingMorph | `webgpu_instancing_morph` | completed | — | see Audit |
+| Morphtargets | `webgpu_morphtargets` | completed | — | see Audit |
+| MorphtargetsFace | `webgpu_morphtargets_face` | completed | — | see Audit |
 | MorphtargetsHorse | `webgl_morphtargets_horse` | completed | — | see Audit |
 | MorphtargetsSphere | `webgl_morphtargets_sphere` | TODO | — | points on the morphing vertices: WebGPU points are 1 px, and `Sprite` points from an instanced attribute do not follow morph targets |
-| LoaderBvh | `webgl_loader_bvh` | TODO | — | the skeleton is the content: drawn by the skeleton helpers overlay (bones without a skinned mesh draw too), which is off by default |
+| LoaderBvh | `webgl_loader_bvh` | TODO | — | the skeleton is the content: drawn by the skeleton helpers overlay (bones without a skinned mesh draw too; on in the demo host). Bones have no geometry, so framing falls back to a 0.2 box at the origin: keep the source camera, or wait for a framing box (`framing-motion`) |
 | LoaderMd2 | `webgl_loader_md2` | TODO | — | `MD2Character`: skin, weapon and animation as dropdowns |
 | LoaderMdd | `webgl_loader_mdd` | TODO | — | |
 | LoaderGltfAnimationPointer | `webgl_loader_gltf_animation_pointer` | TODO | — | `KHR_animation_pointer` |
@@ -353,8 +392,8 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | GeometryCsg | `webgl_geometry_csg` | TODO | `dependency` | `three-bvh-csg` |
 | GeneratorBuilding | `webgpu_generator_building` | TODO | — | |
 | GeneratorCity | `webgpu_generator_city` | TODO | — | bloom dropped |
-| InstanceMesh | `webgpu_instance_mesh` | TODO | — | |
-| InstancePath | `webgpu_instance_path` | TODO | — | |
+| InstanceMesh | `webgpu_instance_mesh` | completed | — | see Audit |
+| InstancePath | `webgpu_instance_path` | completed | — | see Audit |
 | InstanceSprites | `webgpu_instance_sprites` | TODO | — | pointer-driven camera dropped |
 | InstanceUniform | `webgpu_instance_uniform` | completed | — | see Audit |
 | InstancePoints | `webgpu_instance_points` | TODO | `per-frame-gpu` | `renderer.compute(computeSize)` each frame; inset view -> scene camera |
@@ -386,46 +425,46 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | ClippingIntersection | `webgl_clipping_intersection` | TODO | — | `ClippingGroup.clipIntersection` |
 | ClippingStencil | `webgpu_clipping_stencil` | TODO | `renderer-option` | needs `stencil: true` |
 | **Materials and textures** | | | | |
-| Materials | `webgpu_materials` | TODO | — | |
+| Materials | `webgpu_materials` | completed | — | see Audit |
 | MaterialsAlphahash | `webgpu_materials_alphahash` | TODO | — | noisy without TAA; the `traa` views converge it |
 | MaterialsArrays | `webgpu_materials_arrays` | TODO | — | |
-| MaterialsBasic | `webgpu_materials_basic` | TODO | — | |
+| MaterialsBasic | `webgpu_materials_basic` | completed | — | see Audit |
 | MaterialsCubemapMipmaps | `webgpu_materials_cubemap_mipmaps` | TODO | — | |
 | MaterialsDisplacementmap | `webgpu_materials_displacementmap` | TODO | — | |
-| MaterialsEnvmaps | `webgpu_materials_envmaps` | TODO | — | |
-| MaterialsEnvmapsGroundprojected | `webgpu_materials_envmaps_groundprojected` | TODO | — | `GroundedSkybox` dominates bounds (`framing-scenery`) |
+| MaterialsEnvmaps | `webgpu_materials_envmaps` | completed | — | see Audit |
+| MaterialsEnvmapsGroundprojected | `webgpu_materials_envmaps_groundprojected` | TODO | `transmission-views` | `GroundedSkybox` dominates bounds (`framing-scenery`); glass is `transmission: 1` |
 | MaterialsEnvmapsBpcem | `webgpu_materials_envmaps_bpcem` | TODO | `per-frame-gpu` | `CubeCamera.update` each frame |
-| MaterialsLightmap | `webgpu_materials_lightmap` | TODO | — | |
+| MaterialsLightmap | `webgpu_materials_lightmap` | completed | — | see Audit |
 | MaterialsMatcap | `webgpu_materials_matcap` | TODO | — | |
 | MaterialsRetroreflection | `webgpu_materials_retroreflection` | TODO | — | bloom dropped |
-| MaterialsSss | `webgpu_materials_sss` | TODO | — | |
+| MaterialsSss | `webgpu_materials_sss` | completed | — | see Audit |
 | MaterialsToon | `webgpu_materials_toon` | completed | — | see Audit; toon outline post dropped |
-| MaterialsTransmission | `webgpu_materials_transmission` | TODO | — | |
+| MaterialsTransmission | `webgpu_materials_transmission` | TODO | `transmission-views` |  |
 | MaterialxNoise | `webgpu_materialx_noise` | TODO | — | |
-| LoaderMaterialx | `webgpu_loader_materialx` | TODO | — | |
+| LoaderMaterialx | `webgpu_loader_materialx` | TODO | `transmission-views` | the transmission test files |
 | Clearcoat | `webgpu_clearcoat` | completed | — | see Audit |
 | CubemapAdjustments | `webgpu_cubemap_adjustments` | TODO | — | |
 | CubemapMix | `webgpu_cubemap_mix` | completed | — | see Audit |
 | CubemapDynamic | `webgpu_cubemap_dynamic` | TODO | `per-frame-gpu` | `CubeCamera.update` each frame |
 | ParallaxUv | `webgpu_parallax_uv` | TODO | — | |
-| ProceduralTexture | `webgpu_procedural_texture` | TODO | — | a plane; the ortho camera is not needed |
+| ProceduralTexture | `webgpu_procedural_texture` | completed | — | see Audit |
 | MaterialsBlending | `webgl_materials_blending` | TODO | — | |
 | MaterialsBlendingCustom | `webgl_materials_blending_custom` | TODO | — | |
 | MaterialsBumpmap | `webgl_materials_bumpmap` | TODO | — | |
-| MaterialsCar | `webgl_materials_car` | TODO | — | wheel spin and grid scroll from time; body / detail / glass colors |
+| MaterialsCar | `webgl_materials_car` | TODO | `transmission-views` | wheel spin and grid scroll from time; body / detail / glass colors; glass is `transmission: 1` |
 | MaterialsCubemap | `webgl_materials_cubemap` | TODO | — | |
 | MaterialsCubemapRefraction | `webgl_materials_cubemap_refraction` | TODO | — | |
 | MaterialsEnvmapsExr | `webgl_materials_envmaps_exr` | TODO | — | |
-| MaterialsEnvmapsFasthdr | `webgl_materials_envmaps_fasthdr` | TODO | — | |
+| MaterialsEnvmapsFasthdr | `webgl_materials_envmaps_fasthdr` | TODO | `transmission-views` | `transmission: 1` material |
 | MaterialsEnvmapsHdr | `webgl_materials_envmaps_hdr` | TODO | — | |
 | MaterialsModified | `webgl_materials_modified` | TODO | — | `onBeforeCompile` twist -> TSL `positionNode` |
 | MaterialsNormalmap | `webgl_materials_normalmap` | TODO | — | bleach-bypass / color-correction post dropped |
 | MaterialsNormalmapObjectSpace | `webgl_materials_normalmap_object_space` | TODO | — | |
-| MaterialsPhysicalTransmissionAlpha | `webgl_materials_physical_transmission_alpha` | TODO | — | |
+| MaterialsPhysicalTransmissionAlpha | `webgl_materials_physical_transmission_alpha` | TODO | `transmission-views` |  |
 | MaterialsTextureRotation | `webgl_materials_texture_rotation` | TODO | — | |
 | Equirectangular | `webgpu_equirectangular` | TODO | — | background only, nothing to select |
 | PanoramaCube | `webgl_panorama_cube` | TODO | — | background only, nothing to select |
-| Textures2dArray | `webgpu_textures_2d-array` | TODO | — | layer index from time |
+| Textures2dArray | `webgpu_textures_2d-array` | completed | — | see Audit |
 | Textures2dArrayCompressed | `webgpu_textures_2d-array_compressed` | TODO | — | `KTX2Loader.detectSupport` and the load in `onRendererInitialized` |
 | TexturesPartialupdate | `webgpu_textures_partialupdate` | TODO | `per-frame-gpu` | `copyTextureToTexture` on a timer |
 | LoaderTextureKtx2 | `webgpu_loader_texture_ktx2` | TODO | — | scissor grid -> planes laid out in one scene; loads in `onRendererInitialized` (`detectSupport`) |
@@ -441,10 +480,10 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | **TSL and procedural** | | | | |
 | TslAngularSlicing | `webgpu_tsl_angular_slicing` | TODO | — | |
 | TslEarth | `webgpu_tsl_earth` | TODO | — | |
-| TslGalaxy | `webgpu_tsl_galaxy` | TODO | — | |
+| TslGalaxy | `webgpu_tsl_galaxy` | completed | — | see Audit |
 | TslHalftone | `webgpu_tsl_halftone` | TODO | — | |
-| TslProceduralTerrain | `webgpu_tsl_procedural_terrain` | TODO | — | pointer drag dropped |
-| TslRagingSea | `webgpu_tsl_raging_sea` | TODO | — | |
+| TslProceduralTerrain | `webgpu_tsl_procedural_terrain` | TODO | `transmission-views` | pointer drag dropped; the water is `transmission: 1` |
+| TslRagingSea | `webgpu_tsl_raging_sea` | completed | — | see Audit |
 | TslVfxFlames | `webgpu_tsl_vfx_flames` | completed | — | see Audit |
 | TslVfxTornado | `webgpu_tsl_vfx_tornado` | TODO | — | bloom dropped (it carries much of the look) |
 | TslWood | `webgpu_tsl_wood` | TODO | — | |
@@ -464,7 +503,7 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | VolumeFire | `webgpu_volume_fire` | TODO | `per-frame-gpu`, `document-pipeline` | |
 | **Lights, shadows, environment** | | | | |
 | CustomFog | `webgpu_custom_fog` | TODO | — | |
-| FogHeight | `webgpu_fog_height` | TODO | — | |
+| FogHeight | `webgpu_fog_height` | completed | — | see Audit |
 | CustomFogBackground | `webgpu_custom_fog_background` | TODO | `document-pipeline` | fog composed in post |
 | CustomFogScattering | `webgpu_custom_fog_scattering` | TODO | `document-pipeline` | |
 | Lensflares | `webgpu_lensflares` | TODO | — | `LensflareMesh`; verify per view (occlusion) |
@@ -552,29 +591,29 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | LoaderGltfInstancing | `webgl_loader_gltf_instancing` | TODO | — | |
 | LoaderGltfVariants | `webgl_loader_gltf_variants` | TODO | — | variant dropdown |
 | Loader3dm | `webgl_loader_3dm` | TODO | — | rhino3dm wasm from the CDN |
-| Loader3ds | `webgl_loader_3ds` | TODO | — | |
+| Loader3ds | `webgl_loader_3ds` | completed | — | see Audit |
 | Loader3mf | `webgl_loader_3mf` | TODO | — | |
 | Loader3mfMaterials | `webgl_loader_3mf_materials` | TODO | — | |
-| LoaderAmf | `webgl_loader_amf` | TODO | — | |
+| LoaderAmf | `webgl_loader_amf` | completed | — | see Audit |
 | LoaderCollada | `webgl_loader_collada` | TODO | — | |
 | LoaderColladaKinematics | `webgl_loader_collada_kinematics` | TODO | — | tween + `setTimeout` -> joint values from time |
 | LoaderColladaSkinning | `webgl_loader_collada_skinning` | TODO | — | |
-| LoaderDraco | `webgl_loader_draco` | TODO | — | |
+| LoaderDraco | `webgl_loader_draco` | completed | — | see Audit |
 | LoaderFbx | `webgl_loader_fbx` | TODO | — | |
 | LoaderFbxNurbs | `webgl_loader_fbx_nurbs` | TODO | — | |
 | LoaderGcode | `webgl_loader_gcode` | TODO | — | |
-| LoaderKmz | `webgl_loader_kmz` | TODO | — | |
+| LoaderKmz | `webgl_loader_kmz` | completed | — | see Audit |
 | LoaderLdraw | `webgl_loader_ldraw` | TODO | — | model dropdown |
 | LoaderNrrd | `webgl_loader_nrrd` | TODO | — | `VolumeSlice` canvas textures |
-| LoaderObj | `webgl_loader_obj` | TODO | — | |
+| LoaderObj | `webgl_loader_obj` | completed | — | see Audit |
 | LoaderPcd | `webgl_loader_pcd` | TODO | — | 1 px points; a point size control needs sprites |
 | LoaderPdb | `webgl_loader_pdb` | TODO | — | `CSS2DRenderer` atom labels dropped |
-| LoaderPly | `webgl_loader_ply` | TODO | — | |
-| LoaderStl | `webgl_loader_stl` | TODO | — | |
+| LoaderPly | `webgl_loader_ply` | completed | — | see Audit |
+| LoaderStl | `webgl_loader_stl` | completed | — | see Audit |
 | LoaderSvg | `webgl_loader_svg` | TODO | — | |
 | LoaderTtf | `webgl_loader_ttf` | TODO | — | typing -> a `text` property |
-| LoaderUsdz | `webgl_loader_usdz` | TODO | — | |
-| LoaderVox | `webgl_loader_vox` | TODO | — | |
+| LoaderUsdz | `webgl_loader_usdz` | completed | — | see Audit |
+| LoaderVox | `webgl_loader_vox` | completed | — | see Audit |
 | LoaderVrml | `webgl_loader_vrml` | TODO | — | file dropdown |
 | LoaderXyz | `webgl_loader_xyz` | TODO | — | |
 | LoaderIfc | `webgl_loader_ifc` | TODO | `dependency` | `web-ifc` |
@@ -604,6 +643,7 @@ Features or fixes outside the examples. Each one unblocks the rows tagged with i
 - **`renderer-option`**: the shared renderer (`RenderScheduler.ts`: `{antialias: false, alpha: true}`) has no stencil buffer (three defaults `stencil` to `false`), and `renderer.lighting`, `shadowMap.type = VSMShadowMap` and `shadowMap.transmitted` are renderer-wide (ADR-0001). Needed: enable stencil on the shared renderer, or a renderer a document can ask for.
 - **`three-upgrade`**: the source exists only after r186 (HEAD).
 - **`dependency`**: needs an npm package the workspace does not have (`three-bvh-csg`, `web-ifc`).
+- **`shared-refresh`** (three, since #34162 in r186; worked around): `NodeMaterialObserver.needsRefresh` gives an unchanged object whose material has no node properties a SHARED refresh, which uploads only shared uniform groups (`renderGroup`, `frameGroup`). A default `uniform()` is in `objectGroup`: read by a scene node (`fogNode`, `environmentNode`), its new value never reaches such objects until they or their material change. TRAA views write velocity and refresh fully, so only forward views go stale (FogHeight fog controls; CubemapMix reflections froze at their first time). Workaround: `setGroup(renderGroup)` (Map table; `Timeline.timeNode` since 2026-10-13). Standalone repro on the dev build: a plane with `MeshBasicNodeMaterial({color})` under `fogNode = fog(color, density)` keeps its first pixels after `density.value` changes, and updates with `renderGroup`. Upstream `webgpu_fog_height` uses the same uniforms and material type, so its GUI should be stale too (its page not run). Not reported upstream.
 - **`transmission-views`**: transmission materials (`MeshPhysicalMaterial.transmission`, glTF `KHR_materials_transmission`) sample module-level viewport mip textures that three copies from each render target. In the editor, with several views drawing per frame, WebGPU reports `Destroyed texture [RGBA16Float, the forward view's target size] used in a submit` on every redraw (seen headless; static documents only while playing). One render target alone is clean. Check three after r186 first (#34582 skips mipmaps for a copy without a mip chain, #34826 fixes a color buffer cache check); otherwise the fix is in the render scheduler or pipelines.
 
 ## Open questions

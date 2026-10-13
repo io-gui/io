@@ -72,6 +72,7 @@ export class IoPropertyEditor extends ReactiveElement {
 
     :host > .row > :not(span) {
       flex-grow: 1;
+      min-width: 0;
     }
     `
   }

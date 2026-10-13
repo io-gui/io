@@ -1,6 +1,6 @@
 import { Register, ReactiveObject, ReactiveObjectProps, Property } from '@io-gui/core'
 import { UniformNode } from 'three/webgpu'
-import { uniform } from 'three/tsl'
+import { renderGroup, uniform } from 'three/tsl'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumber } from '@io-gui/inputs'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
@@ -52,10 +52,12 @@ export class Timeline extends ReactiveObject {
 
   /**
    * `currentTime` as a TSL uniform. Shader animation built on it follows the timeline; TSL's global `time` keeps
-   * running while paused and ignores scrubbing.
+   * running while paused and ignores scrubbing. Shared per render like `time`: a per-object uniform reaches the GPU
+   * only when its object refreshes in full, which an unchanged object without node properties does not (it stays at
+   * its first value in scene nodes such as `environmentNode` or `fogNode`).
    */
   get timeNode(): UniformNode<'float', number> {
-    if (!this._timeNode) this._timeNode = uniform(this.currentTime)
+    if (!this._timeNode) this._timeNode = uniform(this.currentTime).setGroup(renderGroup)
     return this._timeNode
   }
 

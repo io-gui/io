@@ -121,6 +121,27 @@ describe('View', () => {
     view.dispose()
   })
 
+  it('keeps content behind the target inside the far plane when zooming in', () => {
+    const box = new Mesh(new BoxGeometry(2, 2, 2))
+    box.updateMatrixWorld(true)
+    const view = new View({overscan: 1})
+    view.frame(box)
+    let camera = view.getCamera(400, 400, null)
+    // How far the framed range reaches beyond the target: a sky or floor around the box can lie that far.
+    const beyondTarget = camera.far - view.navigation.distance
+
+    for (let i = 0; i < 10; i++) view.navigation.dolly(0.5)
+    camera = view.getCamera(400, 400, null)
+    expect(camera.far - view.navigation.distance).toBeGreaterThanOrEqual(beyondTarget - 1e-6)
+    expect(camera.near).toBeLessThan(view.navigation.distance)
+    expect(camera.near).toBeGreaterThan(0)
+
+    view.navigation.dolly(4)
+    camera = view.getCamera(400, 400, null)
+    expect(camera.far - view.navigation.distance).toBeGreaterThanOrEqual(beyondTarget - 1e-6)
+    view.dispose()
+  })
+
   it('applies viewport aspect and overscan without storing them', () => {
     const view = new View({overscan: 2})
     const wide = view.getCamera(800, 400, null) as PerspectiveCamera

@@ -112,15 +112,18 @@ export class ViewNavigation {
     this.target.addScaledVector(_right, -dx * worldPerPixel).addScaledVector(_up, dy * worldPerPixel)
   }
 
-  /** Scales the distance to the target (> 1 moves away). Perspective clip planes scale along. */
+  /**
+   * Scales the distance to the target (> 1 moves away). In perspective, the near plane scales along; the far plane
+   * moves with the eye, or scales if that reaches farther, so zooming in keeps what lies behind the target in range.
+   */
   dolly(factor: number) {
     const distance = Math.max(this.distance * factor, MIN_DISTANCE)
     const applied = distance / this.distance
-    this.distance = distance
     if (this.projection === 'perspective') {
       this.near *= applied
-      this.far *= applied
+      this.far = Math.max(this.far + distance - this.distance, this.far * applied)
     }
+    this.distance = distance
   }
 
   getPosition(out: Vector3) {
