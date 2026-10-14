@@ -198,7 +198,9 @@ describe('ThreeScenegraph', () => {
     const view = element.getBoundingClientRect()
     expect(element.scrollLeft).toBeGreaterThan(0)
     expect(icon.left).toBeGreaterThanOrEqual(view.left)
-    expect(label.right).toBeLessThanOrEqual(view.left + element.clientWidth)
+    // Scroll offsets snap to device pixels while text widths are fractional: scrolling the label's edge into view
+    // can leave it a fraction of a device pixel past the view's (headless: scrollLeft 110 for 110.375).
+    expect(label.right).toBeLessThanOrEqual(view.left + element.clientWidth + 1 / devicePixelRatio)
   })
 
   it('moves between rows, collapses and expands with arrow keys', async () => {

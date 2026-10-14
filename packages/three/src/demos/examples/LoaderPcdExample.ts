@@ -30,7 +30,7 @@ export class LoaderPcdExample extends Document {
   declare file: string
 
   /** Point size in world units at a distance of one (size attenuation). */
-  @Property({type: Number, value: 0.005})
+  @Property({type: Number, value: 0.001})
   declare size: number
 
   @Property({type: Color, init: null})

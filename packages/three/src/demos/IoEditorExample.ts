@@ -291,11 +291,11 @@ export class IoEditorExample extends ReactiveElement {
     if (!EXAMPLE_MENU.selectedID) {
       EXAMPLE_MENU.selectedID = _SELECTED_EXAMPLE
     } else {
-      this.open(EXAMPLE_MENU.selectedID)
+      void this.open(EXAMPLE_MENU.selectedID)
     }
     this.editor.isPlaying = _isPlaying
   }
-  
+
   override disconnectedCallback(): void {
     super.disconnectedCallback()
     _SELECTED_EXAMPLE = EXAMPLE_MENU.selectedID
@@ -305,7 +305,7 @@ export class IoEditorExample extends ReactiveElement {
   }
 
   onExampleSelected(event: CustomEvent<{value: string}>) {
-    this.open(event.detail.value)
+    void this.open(event.detail.value)
   }
 
   override ready() {
