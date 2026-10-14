@@ -65,6 +65,9 @@ todos:
   - id: shared-uniforms
     content: "Per-object uniforms in scene nodes (fogNode, environmentNode) stay stale in forward views (three #34162 SHARED refresh). Timeline.timeNode moved to renderGroup; FogHeight uniforms too. Upstream report not filed (see Blockers: shared-refresh)"
     status: completed
+  - id: batch-webgl-2026-10-14
+    content: "Convert 30 webgl_* loader and material candidates: Collada x2, FBX x2, 3MF x2, PCD, XYZ, VRML, GCode, SVG, glTF AVIF / instancing / variants, MDD, five texture loaders, ten materials (Audit: Converted 2026-10-14). Worktree branch examples-webgl"
+    status: completed
 isProject: false
 ---
 
@@ -206,7 +209,11 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 ### Async content
 
 - Content added outside a transaction (loaded models) needs `this.notify({kind: 'structure'})`, or views and the scene graph miss it. A texture loaded in the background needs `this.notify({kind: 'material'})` in its load callback, because views draw only on changes.
-- Optional framing hint after loading: `this.dispatch('frame-object', {object, overscan?}, true)`. It bubbles through the editor to the viewports showing the document. Skinned bounds read the bones' world matrices, which nothing has drawn yet for a fresh `SkeletonUtils.clone`: call `updateMatrixWorld(true)` on what you frame first (AnimationMultiple). An `overscan` below 1 frames closer, for content larger than its fog range (InstancingMorph).
+- Optional framing hint after loading: `this.dispatch('frame-object', {object, overscan?}, true)`. It bubbles through the editor to the viewports showing the document. `object` can be an array. Skinned bounds read the bones' world matrices, which nothing has drawn yet for a fresh `SkeletonUtils.clone`: call `updateMatrixWorld(true)` on what you frame first (AnimationMultiple). The same goes for framing objects below a loaded file's own transforms: framing updates only each framed object's matrix, not its ancestors' (LoaderVrml framed ten times too far). An `overscan` below 1 frames closer, for content larger than its fog range (InstancingMorph).
+- Framing reads current morph influences. Content that morphs beyond its rest shape frames a detached stand-in instead, for example a `Mesh` whose geometry is just the two corners of the geometry's morph-inclusive `boundingBox` (LoaderMdd).
+- A loader that returns before its textures arrive (`VRMLLoader`, `FBXLoader`, `ThreeMFLoader`, `ColladaLoader`) gets a `LoadingManager` whose `onLoad` calls `notify({kind: 'material'})`. A static document draws nothing until something changes, so the textures would stay black (LoaderVrml `meshWithTexture`). `GLTFLoader` resolves after its textures.
+- A dropdown that reloads content (an `asset` or `file` property) counts its loads and drops a result that is no longer the latest (LoaderFbx, Loader3mf, LoaderVrml, LoaderGcode, LoaderSvg, LoaderPcd). Dispose the previous model's geometries and materials as the source does.
+- Scenery the source keeps far away (VRML `Background` spheres, 10000 units, `depthTest: false`) lies beyond the views' far plane, which framing sets from the content's bounds (`FRAME_OVERFIT`). LoaderVrml redraws those spheres around each drawing camera in `onBeforeRender`. They also need explicit render orders: WebGPU sorted the ground sphere under the sky sphere.
 - Instances placed on the GPU (`positionNode`, identity instance matrices) have the bounds of one instance: set the `InstancedMesh`'s `boundingBox` and `boundingSphere` to the content's extent, for framing and culling (TslGalaxy, InstancePath).
 - Fields used by `onAnimate` before the load finishes: a placeholder (`new AnimationMixer(new Group())`) or optional chaining (`this.mixer?.update(delta)`). Change handlers guard content that may not be loaded yet (`if (this.model)`).
 
@@ -222,11 +229,16 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 - `registerEditorConfig` / `registerEditorGroups` go right after the class (`io-gui.mdc`, Editor Configs). `Main` lists the curated controls. `Hidden` lists public fields that are internal. The document's own groups (tone mapping, exposure, timeline, plus an `Advanced` catch-all) aggregate with the subclass's groups.
 - The Document tab shows about ten characters of a property name: keep names short and distinct within that (MaterialsEnvmaps `rotateX` instead of `backgroundRotationX`; TslRagingSea keeps the source's `largeSpeed`, `smallFrequency`). A nested `ioObject` takes `labelWidth` (MorphtargetsFace blend shapes).
 - Colors and vectors edited in place: a `@Property({type: Color, init: null})` (or `Vector2`) with an `xMutated()` that copies it into the material or uniform and calls `notify`. Plain public fields do not observe in-place edits, so a paused view would not redraw.
+- Controls that depend on the loaded content (one per clip, one per morph target) cannot be dropdowns: editor configs are per class, and their menus are copied per object. Use a record property shown with `ioObject`. A record of functions shows a button per entry, for example clips (LoaderFbx `clips`). A record of accessors over the content shows a slider per entry, for example morph influences (LoaderFbx `morphs`, MorphtargetsFace `expressions`). Replace the record on each load.
+- Private fields show in the `Advanced` catch-all: list internal state (loaders, load counters, pending promises) in `Hidden`.
 - Change handlers do not run for default values. They do run inside the base constructor for values passed in `args`, before subclass fields exist. Call `xChanged()` at the end of the constructor to apply the default, and keep the state that handlers touch in `declare`d or lazily created fields if args must work.
 
 ### WebGPU notes
 
-- WebGPU points are 1 px. Use a `Sprite` with `PointsNodeMaterial({positionNode: instancedBufferAttribute(attribute)})` and `sprite.count` (GeometryConvex).
+- WebGPU points are 1 px. Use a `Sprite` with `PointsNodeMaterial({positionNode: instancedBufferAttribute(attribute)})` and `sprite.count` (GeometryConvex). A `Sprite`'s bounds, picking and frustum culling are one quad at its origin. When the points are the content (loaded clouds), keep the `Points`, which still draw 1 px points and are what picking and framing see. Add a child `InstancedMesh(new PlaneGeometry(1, 1), pointsMaterial, count)` named `Sprites` that draws the sized points: unselectable, with the cloud's `boundingBox` and `boundingSphere` (LoaderPcd, LoaderXyz). Sizes follow WebGL: `sizeAttenuation` scales by half the view's height over depth.
+- `PMREMGenerator` output in WebGPU is a cube texture, not WebGL's 2D CubeUV atlas: it cannot be a plane's `map` (the envmaps examples' `debug` plane, dropped). Generate PMREMs in `onRendererInitialized` once the source images have loaded. `fromEquirectangular`, `fromCubemap` and `fromScene` are synchronous there.
+- `NoBlending` with `premultipliedAlpha` draws a texture's raw color where WebGL draws it premultiplied (black). Seen in MaterialsBlending's alpha flare row.
+- Canvas textures built from a DOM canvas: draw on an `OffscreenCanvas` (`CanvasTexture<OffscreenCanvas>`), or cut images with `createImageBitmap(image, sx, sy, sw, sh)` (MaterialsBlending, PanoramaCube).
 - Vertex attribute strides must be multiples of 4 bytes, so 3 × `Float16` is invalid; use `Float32Array` (GeometryColors).
 - Addons built on `ShaderMaterial` (`Sky`, `Water`, `Reflector`) need their node versions (`SkyMesh`, `WaterMesh`, TSL `reflector()`).
 - Imports are named, from `three/webgpu` and `three/tsl`, with addons from `three/addons/...`. Bare `three` is aliased to `three/webgpu` (`vite.config.ts`).
@@ -320,6 +332,37 @@ Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 co
 | InstanceMesh | `webgpu_instance_mesh` | `instanceCount` property; 8π s loop (the 10 s color mix jumps at the wrap); `?amount` query dropped (10) | OK |
 | InstancePath | `webgpu_instance_path` | `InstancedMesh` (identity matrices) with the heart's bounds instead of `Mesh.count`; 20 s loop (8 pulses; the bobbing jumps at the wrap) | OK |
 | TslRagingSea | `webgpu_tsl_raging_sea` | TSL `time` -> `timeline.timeNode`; 20 s loop; source GUI names (`largeSpeed`, `smallIterations`, ...) in Main / Emissive / Waves groups | OK |
+| **Converted 2026-10-14** | | | Checked in the editor (headless Chromium on the GPU, branch `examples-webgl`): renders, scene graph names, Document tab controls with playback paused (asset and file switches, clip buttons, morph and material sliders, variants, envMap switches), all 30 opened in one page with no console errors |
+| LoaderCollada | `webgl_loader_collada` | elf turns with time (4π s loop, the source's 0.5 rad/s); textures through a `LoadingManager` | OK |
+| LoaderColladaSkinning | `webgl_loader_collada_skinning` | duration = clip; grid dropped; frames the model | OK |
+| LoaderFbx | `webgl_loader_fbx` | `DirectionalLight` with the HEAD shadow box (r186 had `SunLight`); `asset` dropdown; the clip dropdown becomes `clips` buttons and the morph folders a flat `morphs` record (a mesh-name prefix only when names repeat); duration = playing clip; grid dropped; frames each file | OK |
+| LoaderFbxNurbs | `webgl_loader_fbx_nurbs` | grid dropped; no background (source: black clear) | OK |
+| Loader3mf | `webgl_loader_3mf` | Z-up files turned upright (-90° about x) instead of the camera's up axis, light with them; `asset` dropdown | OK |
+| Loader3mfMaterials | `webgl_loader_3mf_materials` | `DirectionalLight` as at HEAD (r186 had `SunLight`); frames the truck (1000-unit floor) | OK |
+| LoaderPcd | `webgl_loader_pcd` | sized points from a child `InstancedMesh` (WebGPU notes); `file` / `size` / `color` properties keep their values across files (the source's GUI resets with each file); no background | OK |
+| LoaderXyz | `webgl_loader_xyz` | sized points as LoaderPcd; tumble from time, 20π s loop (two and five turns) | OK |
+| LoaderVrml | `webgl_loader_vrml` | `asset` dropdown; background spheres drawn around each view's camera, in loader order, unselectable and left out of framing (Async content) | Fixed: framing ignored the file's transforms; textured files stayed black (no redraw on texture load) |
+| LoaderGcode | `webgl_loader_gcode` | `asset` dropdown; no background | OK |
+| LoaderSvg | `webgl_loader_svg` | `file` (labeled options) / `fills` / `strokes` / `fillWire` / `strokeWire` properties; meshes rebuilt from the loaded data on option changes (the source reloads); grid dropped | OK |
+| LoaderGltfAvif | `webgl_loader_gltf_avif` | none | OK |
+| LoaderGltfInstancing | `webgl_loader_gltf_instancing` | environment and model load together | OK |
+| LoaderGltfVariants | `webgl_loader_gltf_variants` | the variant names are listed before the model loads (`midnight` / `beach` / `street`); environment and model load together | OK |
+| LoaderMdd | `webgl_loader_mdd` | duration = clip; frames the morph targets' extent through a stand-in (Async content) | OK |
+| LoaderTextureExr | `webgl_loader_texture_exr` | exposure is the document's; ortho camera dropped | OK |
+| LoaderTextureHdr | `webgl_loader_texture_hdr` | as LoaderTextureExr | OK |
+| LoaderTextureTga | `webgl_loader_texture_tga` | none | OK |
+| LoaderTextureTiff | `webgl_loader_texture_tiff` | planes added at once, textured on load; no background | OK |
+| LoaderTextureUltrahdr | `webgl_loader_texture_ultrahdr` | knot turns once per 20 s loop while `autoRotate` is on and holds its angle when off; exposure is the document's | OK |
+| MaterialsBumpmap | `webgl_materials_bumpmap` | `bumpMap` (the source's `enableBumpMap`) / `bumpScale` properties | OK |
+| MaterialsCubemap | `webgl_materials_cubemap` | heads named after their materials | OK |
+| MaterialsCubemapRefraction | `webgl_materials_cubemap_refraction` | mouse-driven camera dropped; statues grouped and framed | OK |
+| MaterialsEnvmapsExr | `webgl_materials_envmaps_exr` | PMREMs in `onRendererInitialized`; `debug` plane dropped (WebGPU notes); knot turns once per 20 s loop; exposure is the document's | OK |
+| MaterialsEnvmapsHdr | `webgl_materials_envmaps_hdr` | as MaterialsEnvmapsExr | OK |
+| MaterialsNormalmap | `webgl_materials_normalmap` | `normalMap` / `normalScale` properties; bleach bypass, color correction and FXAA post dropped (`document-pipeline`) | OK |
+| MaterialsNormalmapObjectSpace | `webgl_materials_normalmap_object_space` | point light at the source camera's position; meshes grouped as `Nefertiti` | OK |
+| MaterialsTextureRotation | `webgl_materials_texture_rotation` | anisotropy set in `onRendererInitialized` | OK |
+| MaterialsBlending | `webgl_materials_blending` | background scroll from time (12.5 s loop); `OffscreenCanvas` background and labels | Open: `NoBlending` draws the alpha flare unpremultiplied (WebGPU notes) |
+| PanoramaCube | `webgl_panorama_cube` | source camera kept as `Camera` (the panorama shows from inside the box); faces cut with `createImageBitmap`; box unselectable | OK |
 
 Removed: CameraLogarithmicDepthBuffer (renderer-level option, see What fits); CameraArray (runtime multi-view, see What fits; 2026-10-13).
 
@@ -364,7 +407,7 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | MorphtargetsSphere | `webgl_morphtargets_sphere` | TODO | — | points on the morphing vertices: WebGPU points are 1 px, and `Sprite` points from an instanced attribute do not follow morph targets |
 | LoaderBvh | `webgl_loader_bvh` | TODO | — | the skeleton is the content: drawn by the skeleton helpers overlay (bones without a skinned mesh draw too; on in the demo host). Bones have no geometry, so framing falls back to a 0.2 box at the origin: keep the source camera, or wait for a framing box (`framing-motion`) |
 | LoaderMd2 | `webgl_loader_md2` | TODO | — | `MD2Character`: skin, weapon and animation as dropdowns |
-| LoaderMdd | `webgl_loader_mdd` | TODO | — | |
+| LoaderMdd | `webgl_loader_mdd` | completed | — | see Audit |
 | LoaderGltfAnimationPointer | `webgl_loader_gltf_animation_pointer` | TODO | — | `KHR_animation_pointer` |
 | Watch | `webgl_watch` | TODO | — | hands follow the wall clock with tweens: derive them from timeline time; TAA and bloom dropped |
 | **Geometry and objects** | | | | |
@@ -448,32 +491,32 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | CubemapDynamic | `webgpu_cubemap_dynamic` | TODO | `per-frame-gpu` | `CubeCamera.update` each frame |
 | ParallaxUv | `webgpu_parallax_uv` | TODO | — | |
 | ProceduralTexture | `webgpu_procedural_texture` | completed | — | see Audit |
-| MaterialsBlending | `webgl_materials_blending` | TODO | — | |
+| MaterialsBlending | `webgl_materials_blending` | completed | — | see Audit |
 | MaterialsBlendingCustom | `webgl_materials_blending_custom` | TODO | — | |
-| MaterialsBumpmap | `webgl_materials_bumpmap` | TODO | — | |
+| MaterialsBumpmap | `webgl_materials_bumpmap` | completed | — | see Audit |
 | MaterialsCar | `webgl_materials_car` | TODO | `transmission-views` | wheel spin and grid scroll from time; body / detail / glass colors; glass is `transmission: 1` |
-| MaterialsCubemap | `webgl_materials_cubemap` | TODO | — | |
-| MaterialsCubemapRefraction | `webgl_materials_cubemap_refraction` | TODO | — | |
-| MaterialsEnvmapsExr | `webgl_materials_envmaps_exr` | TODO | — | |
+| MaterialsCubemap | `webgl_materials_cubemap` | completed | — | see Audit |
+| MaterialsCubemapRefraction | `webgl_materials_cubemap_refraction` | completed | — | see Audit |
+| MaterialsEnvmapsExr | `webgl_materials_envmaps_exr` | completed | — | see Audit |
 | MaterialsEnvmapsFasthdr | `webgl_materials_envmaps_fasthdr` | TODO | `transmission-views` | `transmission: 1` material |
-| MaterialsEnvmapsHdr | `webgl_materials_envmaps_hdr` | TODO | — | |
+| MaterialsEnvmapsHdr | `webgl_materials_envmaps_hdr` | completed | — | see Audit |
 | MaterialsModified | `webgl_materials_modified` | TODO | — | `onBeforeCompile` twist -> TSL `positionNode` |
-| MaterialsNormalmap | `webgl_materials_normalmap` | TODO | — | bleach-bypass / color-correction post dropped |
-| MaterialsNormalmapObjectSpace | `webgl_materials_normalmap_object_space` | TODO | — | |
+| MaterialsNormalmap | `webgl_materials_normalmap` | completed | — | see Audit |
+| MaterialsNormalmapObjectSpace | `webgl_materials_normalmap_object_space` | completed | — | see Audit |
 | MaterialsPhysicalTransmissionAlpha | `webgl_materials_physical_transmission_alpha` | TODO | `transmission-views` |  |
-| MaterialsTextureRotation | `webgl_materials_texture_rotation` | TODO | — | |
+| MaterialsTextureRotation | `webgl_materials_texture_rotation` | completed | — | see Audit |
 | Equirectangular | `webgpu_equirectangular` | TODO | — | background only, nothing to select |
-| PanoramaCube | `webgl_panorama_cube` | TODO | — | background only, nothing to select |
+| PanoramaCube | `webgl_panorama_cube` | completed | — | see Audit |
 | Textures2dArray | `webgpu_textures_2d-array` | completed | — | see Audit |
 | Textures2dArrayCompressed | `webgpu_textures_2d-array_compressed` | TODO | — | `KTX2Loader.detectSupport` and the load in `onRendererInitialized` |
 | TexturesPartialupdate | `webgpu_textures_partialupdate` | TODO | `per-frame-gpu` | `copyTextureToTexture` on a timer |
 | LoaderTextureKtx2 | `webgpu_loader_texture_ktx2` | TODO | — | scissor grid -> planes laid out in one scene; loads in `onRendererInitialized` (`detectSupport`) |
 | LoaderTextureDds | `webgl_loader_texture_dds` | TODO | — | BC formats: desktop GPUs only |
-| LoaderTextureExr | `webgl_loader_texture_exr` | TODO | — | |
-| LoaderTextureHdr | `webgl_loader_texture_hdr` | TODO | — | |
-| LoaderTextureTga | `webgl_loader_texture_tga` | TODO | — | |
-| LoaderTextureTiff | `webgl_loader_texture_tiff` | TODO | — | |
-| LoaderTextureUltrahdr | `webgl_loader_texture_ultrahdr` | TODO | — | |
+| LoaderTextureExr | `webgl_loader_texture_exr` | completed | — | see Audit |
+| LoaderTextureHdr | `webgl_loader_texture_hdr` | completed | — | see Audit |
+| LoaderTextureTga | `webgl_loader_texture_tga` | completed | — | see Audit |
+| LoaderTextureTiff | `webgl_loader_texture_tiff` | completed | — | see Audit |
+| LoaderTextureUltrahdr | `webgl_loader_texture_ultrahdr` | completed | — | see Audit |
 | Tonemapping | `webgpu_tonemapping` | TODO | — | GUI maps onto the document's `toneMapping` / `toneMappingExposure` |
 | VolumeCloud | `webgpu_volume_cloud` | TODO | — | |
 | MaterialsNodeProxy | `webgpu_materials_node_proxy` | TODO | `three-upgrade` | not in r186 |
@@ -587,35 +630,35 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | LoaderGltfSheen | `webgpu_loader_gltf_sheen` | TODO | — | |
 | LoaderGltfTransmission | `webgpu_loader_gltf_transmission` | in progress | `transmission-views` | converted, see Audit; WebGPU errors while playing |
 | LoaderGltfDiffuseRoughness | `webgpu_loader_gltf_diffuse_roughness` | TODO | `three-upgrade` | not in r186 |
-| LoaderGltfAvif | `webgl_loader_gltf_avif` | TODO | — | |
-| LoaderGltfInstancing | `webgl_loader_gltf_instancing` | TODO | — | |
-| LoaderGltfVariants | `webgl_loader_gltf_variants` | TODO | — | variant dropdown |
+| LoaderGltfAvif | `webgl_loader_gltf_avif` | completed | — | see Audit |
+| LoaderGltfInstancing | `webgl_loader_gltf_instancing` | completed | — | see Audit |
+| LoaderGltfVariants | `webgl_loader_gltf_variants` | completed | — | see Audit |
 | Loader3dm | `webgl_loader_3dm` | TODO | — | rhino3dm wasm from the CDN |
 | Loader3ds | `webgl_loader_3ds` | completed | — | see Audit |
-| Loader3mf | `webgl_loader_3mf` | TODO | — | |
-| Loader3mfMaterials | `webgl_loader_3mf_materials` | TODO | — | |
+| Loader3mf | `webgl_loader_3mf` | completed | — | see Audit |
+| Loader3mfMaterials | `webgl_loader_3mf_materials` | completed | — | see Audit |
 | LoaderAmf | `webgl_loader_amf` | completed | — | see Audit |
-| LoaderCollada | `webgl_loader_collada` | TODO | — | |
+| LoaderCollada | `webgl_loader_collada` | completed | — | see Audit |
 | LoaderColladaKinematics | `webgl_loader_collada_kinematics` | TODO | — | tween + `setTimeout` -> joint values from time |
-| LoaderColladaSkinning | `webgl_loader_collada_skinning` | TODO | — | |
+| LoaderColladaSkinning | `webgl_loader_collada_skinning` | completed | — | see Audit |
 | LoaderDraco | `webgl_loader_draco` | completed | — | see Audit |
-| LoaderFbx | `webgl_loader_fbx` | TODO | — | |
-| LoaderFbxNurbs | `webgl_loader_fbx_nurbs` | TODO | — | |
-| LoaderGcode | `webgl_loader_gcode` | TODO | — | |
+| LoaderFbx | `webgl_loader_fbx` | completed | — | see Audit |
+| LoaderFbxNurbs | `webgl_loader_fbx_nurbs` | completed | — | see Audit |
+| LoaderGcode | `webgl_loader_gcode` | completed | — | see Audit |
 | LoaderKmz | `webgl_loader_kmz` | completed | — | see Audit |
 | LoaderLdraw | `webgl_loader_ldraw` | TODO | — | model dropdown |
 | LoaderNrrd | `webgl_loader_nrrd` | TODO | — | `VolumeSlice` canvas textures |
 | LoaderObj | `webgl_loader_obj` | completed | — | see Audit |
-| LoaderPcd | `webgl_loader_pcd` | TODO | — | 1 px points; a point size control needs sprites |
+| LoaderPcd | `webgl_loader_pcd` | completed | — | see Audit |
 | LoaderPdb | `webgl_loader_pdb` | TODO | — | `CSS2DRenderer` atom labels dropped |
 | LoaderPly | `webgl_loader_ply` | completed | — | see Audit |
 | LoaderStl | `webgl_loader_stl` | completed | — | see Audit |
-| LoaderSvg | `webgl_loader_svg` | TODO | — | |
+| LoaderSvg | `webgl_loader_svg` | completed | — | see Audit |
 | LoaderTtf | `webgl_loader_ttf` | TODO | — | typing -> a `text` property |
 | LoaderUsdz | `webgl_loader_usdz` | completed | — | see Audit |
 | LoaderVox | `webgl_loader_vox` | completed | — | see Audit |
-| LoaderVrml | `webgl_loader_vrml` | TODO | — | file dropdown |
-| LoaderXyz | `webgl_loader_xyz` | TODO | — | |
+| LoaderVrml | `webgl_loader_vrml` | completed | — | see Audit |
+| LoaderXyz | `webgl_loader_xyz` | completed | — | see Audit |
 | LoaderIfc | `webgl_loader_ifc` | TODO | `dependency` | `web-ifc` |
 
 Not candidates:

@@ -1,3 +1,3 @@
 # Current Focus
 
-(none) — 2026-10-13 batch of 25 example conversions done (committed d33448e0); follow-ups uncommitted: Timeline.timeNode renderGroup, FogHeight camera + renderGroup uniforms, plan updates. Offered: upstream report for shared-refresh bug (three #34162).
+webgl_* batch of 30 example conversions done in worktree /Users/aki/Projects/io-examples-webgl (branch examples-webgl, uncommitted). Pending: user review, commit, merge into dev (conflicts expected in IoEditorExample.ts DOCUMENTS, conversion plan, .memory). Untracked `.verify/` scripts + screenshots: delete before commit. Open: ThreeScenegraph deep-row scroll test 200.375 > 200 in worktree (unrelated). webgpu_* rows unclaimed (peer paused them; tell peer before starting).

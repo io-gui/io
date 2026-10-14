@@ -74,6 +74,10 @@
 - **three shared-refresh (r186 #34162):** unchanged obj w/ material w/o node props -> SHARED refresh -> only shared uniform groups upload. Default `uniform()` = objectGroup -> in scene nodes (fogNode, environmentNode) stale in FORWARD views forever (TRAA views refresh FULL via velocity MRT). Fix: `.setGroup(renderGroup)`; Timeline.timeNode = renderGroup (2026-10-13). Upstream bug, standalone repro done, not filed.
 - **ViewNavigation.dolly:** far = max(far + Δdistance, far*applied) (was far*applied -> zoom in clipped skies). Near still scales.
 - **Document tab labels ~10 chars** -> short distinct prop names; nested ioObject `labelWidth`. In-place Color/Vector edits: @Property(type, init: null) + xMutated -> notify (public fields not observed -> paused views stale).
+- **Framing loaded leaves:** ViewNavigation.frame -> expandByObject updates only framed object's matrix, not ancestors -> fresh loaded hierarchy frames wrong (VRML 10x) -> `updateMatrixWorld(true)` before frame-object (skinned case same).
+- **Static doc async textures:** paused doc draws only on changes -> loader textures after model stay black -> LoadingManager onLoad notify('material'). GLTFLoader resolves after textures.
+- **WebGPU PMREM = cube texture** (not WebGL CubeUV 2D atlas) -> can't be plane `map`.
+- **Parallel sessions:** worktree for io must be SIBLING dir (`link:../../../three.js` relative); isolation guard refuses complex shell/heredoc python touching paths -> plain commands / Edit tool.
 - **dist tracked:** `tsc -b` rewrites packages/*/dist; user commits src only -> restore dist after checks (`git checkout -- packages/three/dist/...`, rm new untracked dist files).
 - **three WebGPU (r185):** don't share one StorageBufferAttribute as atomic (compute) + readonly (fragment) -> writes invisible. MeshBasicNodeMaterial MultiplyBlending may draw opaque -> opacityNode + NormalBlending for DataTexture overlays.
 - **After three upgrade:** restart `pnpm dev` (Vite checks lockfile only at startup; stale pre-bundle). Isolated check: scratch .mjs config importing repo vite.config.ts + mergeConfig({cacheDir, server.port}) w/ `--configLoader native`.
