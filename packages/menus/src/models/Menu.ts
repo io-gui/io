@@ -2,8 +2,8 @@ import { Register, Property, WithBinding } from '@io-gui/core'
 import { Option, OptionProps, OptionData } from './Option.js'
 
 export type MenuData = OptionData & {
-  selectedID?: string
-  path?: string
+  selectedID?: WithBinding<string>
+  path?: WithBinding<string>
   expandedIDs?: string
 }
 

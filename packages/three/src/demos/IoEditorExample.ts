@@ -162,6 +162,15 @@ const DOCUMENTS: Record<string, () => Promise<Document>> = {
   TslRagingSeaExample: () => import('./examples/TslRagingSeaExample.js').then(module => new module.TslRagingSeaExample()),
 }
 
+const EXAMPLE_MENU = new Menu({
+  id: 'example-menu',
+  options: Object.keys(DOCUMENTS).map(name => ({id: name})),
+  selectedID: $({key: 'example', storage: 'hash', value: ''})
+})
+let _SELECTED_EXAMPLE = 'AnimationKeyframesExample'
+
+let _isPlaying = false
+
 /** What the 3D views draw over the content: overlays are off unless a view turns them on. */
 const VIEW_OVERLAYS: ViewOverlays = {
   grid: true,
@@ -247,6 +256,28 @@ export class IoEditorExample extends ReactiveElement {
   @Field(Map)
   declare private _documents: Map<string, Promise<Document>>
 
+  override connectedCallback(): void {
+    super.connectedCallback()
+    if (!EXAMPLE_MENU.selectedID) {
+      EXAMPLE_MENU.selectedID = _SELECTED_EXAMPLE
+    } else {
+      this.open(EXAMPLE_MENU.selectedID)
+    }
+    this.editor.isPlaying = _isPlaying
+  }
+  
+  override disconnectedCallback(): void {
+    super.disconnectedCallback()
+    _SELECTED_EXAMPLE = EXAMPLE_MENU.selectedID
+    EXAMPLE_MENU.selectedID = ''
+    _isPlaying = this.editor.isPlaying
+    this.editor.isPlaying = false
+  }
+
+  onExampleSelected(event: CustomEvent<{value: string}>) {
+    this.open(event.detail.value)
+  }
+
   override ready() {
     this.views.top.setAxisView('top')
     this.views.bottom.setAxisView('bottom')
@@ -260,17 +291,12 @@ export class IoEditorExample extends ReactiveElement {
     this.editor.setActiveTool('3d', 'object', 'transform.translate')
     this.selection = this.editor.selection
 
+    EXAMPLE_MENU.addEventListener('selectedID-changed', this.onExampleSelected)
+
     this.render([
       div({class: 'heading'}, [
         ioField({value: this.bind('documentName')}),
-        ioOptionSelect({
-          label: 'Load Example',
-          model: new Menu({
-            id: 'example-menu',
-            options: Object.keys(DOCUMENTS).map(name => ({id: name})),
-          }),
-          value: this.bind('documentName'),
-        }),
+        ioOptionSelect({ label: 'Load Example', model: EXAMPLE_MENU }),
       ]),
       ioLayout({class: 'content',
         model: editorLayout,
@@ -296,8 +322,6 @@ export class IoEditorExample extends ReactiveElement {
       threeTimeline({editor: this.editor}),
       threeEditorStatus({editor: this.editor}),
     ])
-
-    this.documentName = 'AnimationKeyframesExample'
   }
 
   editorMutated() {
@@ -310,10 +334,6 @@ export class IoEditorExample extends ReactiveElement {
 
   selectionMutated() {
     this.activeObject = this.selection.activeObject
-  }
-
-  documentNameChanged() {
-    void this.open(this.documentName)
   }
 
   async open(name: string) {
@@ -341,6 +361,7 @@ export class IoEditorExample extends ReactiveElement {
     this.views.perspective.dispose()
     this.views.uv.dispose()
     this.views.camera.dispose()
+    EXAMPLE_MENU.removeEventListener('selectedID-changed', this.onExampleSelected)
     for (const loading of this._documents.values()) void loading.then(document => document.dispose())
     super.dispose()
   }
