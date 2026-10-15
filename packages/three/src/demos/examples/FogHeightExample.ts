@@ -1,5 +1,5 @@
 import { AmbientLight, BoxGeometry, DirectionalLight, InstancedMesh, MeshPhongNodeMaterial, Object3D, PerspectiveCamera } from 'three/webgpu'
-import { exponentialHeightFogFactor, uniform, fog, color, renderGroup } from 'three/tsl'
+import { exponentialHeightFogFactor, uniform, fog, color } from 'three/tsl'
 import { Register, Property } from '@io-gui/core'
 import { Document, DocumentProps } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
@@ -13,10 +13,8 @@ import { ioNumberSlider } from '@io-gui/sliders'
 export class FogHeightExample extends Document {
 
   public boxes: InstancedMesh
-  // Shared per render: as per-object uniforms (the source's), changes would not reach objects whose materials have no
-  // node properties, which three refreshes only in their shared uniforms when nothing else changed.
-  private densityUniform = uniform( 0.04 ).setGroup( renderGroup )
-  private heightUniform = uniform( 2 ).setGroup( renderGroup )
+  private densityUniform = uniform( 0.04 )
+  private heightUniform = uniform( 2 )
 
   @Property({type: Number, value: 0.04})
   declare density: number
