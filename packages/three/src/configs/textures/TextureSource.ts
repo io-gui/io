@@ -1,12 +1,11 @@
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioSwitch } from '@io-gui/inputs'
-import { Source } from 'three/webgpu'
+import { TextureSource } from 'three/webgpu'
 
-registerEditorConfig(Source, [
+registerEditorConfig(TextureSource, [
   ['needsUpdate', ioSwitch({value: false})],
 ])
 
-registerEditorGroups(Source, {
+registerEditorGroups(TextureSource, {
   Advanced: ['version'],
 })
-

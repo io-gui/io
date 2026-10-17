@@ -308,13 +308,15 @@ describe('View', () => {
   })
 
   it('round-trips through JSON', () => {
-    const view = new View({overscan: 1.5, clearColor: 0x223344, pipeline: 'probe', overlays: {grid: true}, toneMapping: 4, toneMappingExposure: 0.5})
+    const view = new View({overscan: 1.5, clearColor: 0x223344, pipeline: 'probe', overlays: {grid: true}, toneMapping: 4, toneMappingExposure: 0.5, bloom: false, msaa: true})
     view.setAxisView('top')
     const copy = new View().applyJSON(JSON.parse(JSON.stringify(view.toJSON())))
     expect(copy.toJSON()).toEqual(view.toJSON())
     expect(copy.pipeline).toBe('probe')
     expect(copy.toneMapping).toBe(4)
     expect(copy.toneMappingExposure).toBe(0.5)
+    expect(copy.bloom).toBe(false)
+    expect(copy.msaa).toBe(true)
     expect(copy.isOverlayEnabled('grid')).toBe(true)
     view.dispose()
     copy.dispose()

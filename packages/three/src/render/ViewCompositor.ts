@@ -30,6 +30,7 @@ export class ViewCompositor {
   private readonly _overlays: OverlayEntry[] = []
   private _width = 0
   private _height = 0
+  private _samples = 0
   private _hasOutput = false
   /** `id:kind` pairs warned about, so a flag in a view of the wrong kind warns once. */
   private readonly _kindWarnings = new Set<string>()
@@ -47,6 +48,10 @@ export class ViewCompositor {
     material.blending = NoBlending
     material.depthTest = false
     material.depthWrite = false
+    // The pipeline's depth binds as a multisampled texture under MSAA, but three's shader cache key ignores how bound
+    // textures are sampled: key the present material by sample count, so it rebuilds with the right binding.
+    const programCacheKey = material.customProgramCacheKey.bind(material)
+    material.customProgramCacheKey = () => `${programCacheKey()}:${this._samples}`
     this._present = createScreenQuad(material)
     this._present.renderOrder = -Infinity
     this.scene.add(this._present)
@@ -71,6 +76,7 @@ export class ViewCompositor {
     this._pipelineId = id
     this._width = 0
     this._height = 0
+    this._samples = 0
     this._hasOutput = false
   }
 
@@ -127,6 +133,13 @@ export class ViewCompositor {
       this._height = height
       pipeline.setSize(width, height)
       this._hasOutput = false
+    }
+    const samples = ctx.view.msaa ? 4 : 0
+    if (samples !== this._samples) {
+      this._samples = samples
+      pipeline.setSamples?.(samples)
+      this._hasOutput = false
+      this._presentMaterial.needsUpdate = true
     }
 
     let result: ViewRenderResult | void = undefined

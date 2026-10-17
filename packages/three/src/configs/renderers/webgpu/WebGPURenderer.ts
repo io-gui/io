@@ -1,5 +1,4 @@
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
-// import { ioNumber } from '@io-gui/inputs'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 import {
@@ -14,10 +13,6 @@ import {
   AgXToneMapping,
   NeutralToneMapping,
   CustomToneMapping,
-  // BasicShadowMap,
-  // PCFShadowMap,
-  // PCFSoftShadowMap,
-  // VSMShadowMap,
 } from 'three/webgpu'
 
 registerEditorConfig(WebGPURenderer, [
@@ -82,5 +77,3 @@ registerEditorGroups(WebGPURenderer, {
     '_inspector',
   ],
 })
-
-

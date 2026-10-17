@@ -16,6 +16,11 @@ export type PostProcessingPipelineOptions = {
    * path tracing). 0 (default) draws once per change.
    */
   convergeFrames?: number
+  /**
+   * Whether the graph takes a multisampled scene pass when the view asks for MSAA (default true). TRAA does not: it
+   * copies the scene depth into its history, which WebGPU cannot do from a multisampled texture.
+   */
+  msaa?: boolean
 }
 
 /**
@@ -32,6 +37,7 @@ export class PostProcessingPipeline extends RenderTargetPipeline {
   readonly postProcessing: RenderPipeline
   readonly scenePass: PassNode
   convergeFrames: number
+  readonly msaa: boolean
 
   private readonly _build: PostProcessingBuilder
   private _camera: Camera | null = null
@@ -41,10 +47,18 @@ export class PostProcessingPipeline extends RenderTargetPipeline {
     super()
     this._build = build
     this.convergeFrames = options.convergeFrames ?? 0
+    this.msaa = options.msaa ?? true
     this.scenePass = pass(new Scene(), new PerspectiveCamera())
     this.postProcessing = new RenderPipeline(renderer)
     this.postProcessing.outputColorTransform = false
     this.output = {color: this.target.texture, depth: this.scenePass.getTexture('depth')}
+  }
+
+  /** Multisamples the scene pass (unless `msaa` is false), which rebuilds the graph; the output target stays single-sampled. */
+  override setSamples(samples: number) {
+    if (!this.msaa || (this.scenePass.options.samples ?? 0) === samples) return
+    this.scenePass.options.samples = samples
+    this.postProcessing.needsUpdate = true
   }
 
   protected draw(ctx: PipelineContext): ViewRenderResult {

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { ACESFilmicToneMapping, AgXToneMapping, Mesh, NeutralToneMapping, NoToneMapping, PlaneGeometry, Texture, WebGPURenderer } from 'three/webgpu'
-import { DirtyReason, ForwardPipeline, PipelineContext, SelectionModel, Editor, View, UVPipeline, ViewCompositor, ViewPipeline, collectUVMeshes, pipelineTypes } from '@io-gui/three'
+import { BloomStage, DirtyReason, ForwardPipeline, PipelineContext, SelectionModel, Editor, View, UVPipeline, ViewCompositor, ViewPipeline, collectUVMeshes, pipelineTypes } from '@io-gui/three'
 
 type FakeRenderer = WebGPURenderer & {renders: unknown[]}
 
@@ -20,9 +20,11 @@ function fakeRenderer(): FakeRenderer {
 
 class ProbePipeline implements ViewPipeline {
   draws = 0
+  samples: number[] = []
   toneMapping?: typeof AgXToneMapping
   readonly output = {color: new Texture(), depth: null}
   setSize() {}
+  setSamples(samples: number) { this.samples.push(samples) }
   render() { this.draws++ }
   dispose() {}
 }
@@ -125,6 +127,22 @@ describe('ViewCompositor', () => {
     expect(renderer.toneMapping).toBe(ACESFilmicToneMapping)
   })
 
+  it('multisamples the pipeline while the view asks for MSAA, and draws it again when that changes', () => {
+    view.pipeline = 'probe'
+    compositor.syncPipeline(view)
+    compositor.render(context(['overlay']))
+    expect(probe!.samples).toEqual([])
+    view.msaa = true
+    compositor.render(context(['overlay']))
+    compositor.render(context(['overlay']))
+    expect(probe!.samples).toEqual([4])
+    expect(probe!.draws).toBe(2)
+    view.msaa = false
+    compositor.render(context(['overlay']))
+    expect(probe!.samples).toEqual([4, 0])
+    expect(probe!.draws).toBe(3)
+  })
+
   it('redraws only overlays for selection changes, unless the pipeline says otherwise', () => {
     const source = editor.document
     compositor.syncPipeline(view)
@@ -134,6 +152,47 @@ describe('ViewCompositor', () => {
     compositor.syncPipeline(view)
     expect(compositor.listens({kind: 'selection', source})).toBe('content')
     expect(compositor.listens({kind: 'transform', source})).toBe(false)
+  })
+})
+
+describe('RenderTargetPipeline', () => {
+  it('adds bloom when the view says so, else when the document does, and presents the bloom target', () => {
+    const bloom = vi.spyOn(BloomStage.prototype, 'render').mockImplementation(() => {})
+    const editor = new Editor()
+    const view = new View()
+    const pipeline = new ForwardPipeline()
+    const renderer = fakeRenderer()
+    const draw = () => pipeline.render({
+      renderer, editor, document: editor.document, scene: editor.document.scene, view,
+      camera: view.getCamera(100, 100, null), selection: editor.selection, width: 100, height: 100, pixelRatio: 1,
+      reasons: new Set(['content']), frame: {frame: 1, delta: 0, time: 0},
+    })
+
+    draw()
+    expect(bloom).not.toHaveBeenCalled()
+    expect(pipeline.output.color).toBe(pipeline.target.texture)
+    editor.document.bloom.enabled = true
+    draw()
+    expect(bloom).toHaveBeenCalledTimes(1)
+    expect(bloom.mock.calls[0][1]).toBe(editor.document.bloom)
+    expect(pipeline.output.color).not.toBe(pipeline.target.texture)
+    expect(pipeline.output.depth).toBe(pipeline.target.depthTexture)
+    view.bloom = false
+    draw()
+    expect(bloom).toHaveBeenCalledTimes(1)
+    expect(pipeline.output.color).toBe(pipeline.target.texture)
+    editor.document.bloom.enabled = false
+    view.bloom = true
+    draw()
+    expect(bloom).toHaveBeenCalledTimes(2)
+
+    pipeline.setSamples(4)
+    expect(pipeline.target.samples).toBe(4)
+
+    bloom.mockRestore()
+    pipeline.dispose()
+    view.dispose()
+    editor.dispose()
   })
 })
 

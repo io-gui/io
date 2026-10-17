@@ -1,5 +1,5 @@
-import { CameraHelper, Color, DirectionalLightHelper, Group, HemisphereLightHelper, Object3D, PointLightHelper, Quaternion, SkeletonHelper, SpotLightHelper, Vector3 } from 'three/webgpu'
-import type { Bone, Camera, DirectionalLight, HemisphereLight, Light, PointLight, RectAreaLight, SkinnedMesh, SpotLight } from 'three/webgpu'
+import { Box3, BufferGeometry, CameraHelper, Color, DirectionalLightHelper, DoubleSide, Group, HemisphereLightHelper, Line, LineBasicMaterial, Mesh, MeshBasicMaterial, Object3D, PlaneGeometry, PointLightHelper, Quaternion, SkeletonHelper, Sphere, SpotLightHelper, Vector3 } from 'three/webgpu'
+import type { Bone, Camera, ClippingGroup, DirectionalLight, HemisphereLight, Light, PointLight, RectAreaLight, SkinnedMesh, SpotLight } from 'three/webgpu'
 import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js'
 import type { Overlay, OverlayContext, OverlayType } from '../Overlay.js'
 import { OUTLINE_COLORS } from './SelectionOutlineOverlay.js'
@@ -14,6 +14,8 @@ const SELECTED = new Color(OUTLINE_COLORS.selected)
 const CAMERA = new Color(0x8c8c8c)
 const BONE_START = new Color(0x0000ff)
 const BONE_END = new Color(0x00ff00)
+/** Clipping planes take the color of their normal's main axis: the translate gizmo's axis colors. */
+const PLANE_AXES = [new Color(0xff3352), new Color(0x8bdc00), new Color(0x2890ff)]
 
 /** The helper of one content object, as the overlay keeps it from draw to draw. */
 export interface Helper {
@@ -216,6 +218,79 @@ class SkeletonHelperEntry implements Helper {
   }
 }
 
+/** A unit square facing +Z: the outline (closed, as WebGPU has no line loops) and the fill of a clipping plane helper. */
+const PLANE_OUTLINE = new BufferGeometry().setFromPoints([
+  new Vector3(-0.5, -0.5, 0), new Vector3(0.5, -0.5, 0), new Vector3(0.5, 0.5, 0), new Vector3(-0.5, 0.5, 0), new Vector3(-0.5, -0.5, 0),
+])
+const PLANE_FILL = new PlaneGeometry(1, 1)
+const PLANE_FILL_OPACITY = 0.2
+const PLANE_SIZE_EMPTY = 2
+
+const _box = new Box3()
+const _sphere = new Sphere()
+const _forward = new Vector3(0, 0, 1)
+
+type PlaneHelperParts = {outline: Line<BufferGeometry, LineBasicMaterial>; fill: Mesh<PlaneGeometry, MeshBasicMaterial>}
+
+/**
+ * One square per plane of a clipping group, as three's `PlaneHelper` draws it: an outline, filled while the group is
+ * selected (a fill spanning the content would tint the whole view). The planes are in world space (the group's transform
+ * does not move them); each square is centered on what the group clips and spans its bounding sphere. A disabled group
+ * draws nothing.
+ */
+class ClippingHelperEntry implements Helper {
+  readonly object = new Group()
+  private readonly _group: ClippingGroup
+  private readonly _planes: PlaneHelperParts[] = []
+
+  constructor(group: ClippingGroup) {
+    this._group = group
+    for (let i = 0; i < group.clippingPlanes.length; i++) {
+      const outline = new Line(PLANE_OUTLINE, new LineBasicMaterial({toneMapped: false}))
+      const fill = new Mesh(PLANE_FILL, new MeshBasicMaterial({
+        transparent: true, opacity: PLANE_FILL_OPACITY, side: DoubleSide, forceSinglePass: true, depthWrite: false, toneMapped: false,
+      }))
+      const plane = new Group()
+      plane.add(outline, fill)
+      this.object.add(plane)
+      this._planes.push({outline, fill})
+    }
+  }
+
+  update(_ctx: OverlayContext, color: Color | null) {
+    const group = this._group
+    this.object.visible = group.enabled
+    if (!group.enabled) return
+    _box.setFromObject(group)
+    if (_box.isEmpty()) _sphere.set(_sphere.center.set(0, 0, 0), PLANE_SIZE_EMPTY / 2)
+    else _box.getBoundingSphere(_sphere)
+    const size = Math.max(_sphere.radius * 2, Number.EPSILON)
+    group.clippingPlanes.forEach((plane, i) => {
+      const helper = this.object.children[i]
+      plane.projectPoint(_sphere.center, helper.position)
+      helper.quaternion.setFromUnitVectors(_forward, plane.normal)
+      helper.scale.setScalar(size)
+      const normal = plane.normal
+      const axis = Math.abs(normal.x) >= Math.abs(normal.y) && Math.abs(normal.x) >= Math.abs(normal.z) ? 0 : Math.abs(normal.y) >= Math.abs(normal.z) ? 1 : 2
+      const parts = this._planes[i]
+      parts.outline.material.color.copy(color ?? PLANE_AXES[axis])
+      parts.fill.material.color.copy(color ?? PLANE_AXES[axis])
+      parts.fill.visible = color !== null
+    })
+  }
+
+  fits() {
+    return this._group.clippingPlanes.length === this._planes.length
+  }
+
+  dispose() {
+    for (const {outline, fill} of this._planes) {
+      outline.material.dispose()
+      fill.material.dispose()
+    }
+  }
+}
+
 type Flags = Record<string, boolean | undefined>
 
 export const cameraHelpers: HelperKind = {
@@ -236,6 +311,12 @@ export const lightHelpers: HelperKind = {
 export const skeletonHelpers: HelperKind = {
   accepts: object => !!(object as Bone).isBone && !(object.parent as Bone | null)?.isBone,
   create: object => new SkeletonHelperEntry(object as Bone),
+}
+
+/** Clipping groups (`ClippingGroup`), one plane helper per clipping plane. */
+export const clippingHelpers: HelperKind = {
+  accepts: object => !!(object as unknown as Flags).isClippingGroup,
+  create: object => new ClippingHelperEntry(object as ClippingGroup),
 }
 
 export const cameraHelperOverlayType: OverlayType = {
@@ -260,4 +341,12 @@ export const skeletonHelperOverlayType: OverlayType = {
   viewKinds: ['3d'],
   order: 12,
   create: () => new HelperOverlay('SkeletonHelperOverlay', skeletonHelpers),
+}
+
+export const clippingHelperOverlayType: OverlayType = {
+  id: 'clippingHelpers',
+  label: 'Clipping plane helpers',
+  viewKinds: ['3d'],
+  order: 13,
+  create: () => new HelperOverlay('ClippingHelperOverlay', clippingHelpers),
 }

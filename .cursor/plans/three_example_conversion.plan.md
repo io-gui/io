@@ -68,6 +68,18 @@ todos:
   - id: batch-webgl-2026-10-14
     content: "Convert 30 webgl_* loader and material candidates: Collada x2, FBX x2, 3MF x2, PCD, XYZ, VRML, GCode, SVG, glTF AVIF / instancing / variants, MDD, five texture loaders, ten materials (Audit: Converted 2026-10-14). Worktree branch examples-webgl"
     status: completed
+  - id: batch-webgpu-2026-10-15
+    content: "Convert 30 webgpu_* candidates: nine lights / shadows / probes, eleven materials and textures, six TSL and particles, Clipping, GeometryLoft, LoaderGltf, LoaderGltfSheen (Audit: Converted 2026-10-15). Sun controls that re-bake the environment tagged renderer-on-change"
+    status: completed
+  - id: views-bloom-msaa-2026-10-16
+    content: "Bloom as Document.bloom with a View.bloom override (Tornado, Retroreflection get their source bloom), View.msaa (alphaToCoverage works in MSAA views), clippingHelpers overlay (ClippingIntersection drops its PlaneHelpers). three_future_work.plan.md: document-bloom, view-msaa, clipping-helpers"
+    status: completed
+  - id: occlusion-upstream
+    content: "File the occlusion issue: isOccluded() returns another camera's result since r183 (#32546 keys render contexts without camera). Kit https://claude.ai/artifact/R4gDW6w2E2bwT9LwE2A11K. Occlusion reverted to the source's behavior meanwhile"
+    status: pending
+  - id: batch-2026-10-15-b
+    content: "Convert 30 more: the verify-per-view rows (Mirror, Reflection x3, Refraction, Lensflares, Occlusion, MeshBatch, GaussianSplat, ParticlesSoft), the dropped-post rows (Water, TslVfxTornado, MaterialsRetroreflection, SkinningInstancing), KTX2 x3, LinesFat x2, SkinningPoints, InstanceSprites, Sandbox, ModifierCurve, ShadowmapArray and six webgl_* rows (Audit: Converted 2026-10-15, batch 2)"
+    status: completed
 isProject: false
 ---
 
@@ -184,6 +196,9 @@ Naming: drop the `webgl_` / `webgpu_` / `misc_` prefix and PascalCase the rest (
 | `dracoLoader.setDecoderPath(DRACO_GLTF_CONFIG)` | the same: the decoder resolves next to three's `DRACOLoader.js` (Vite rewrites the URL when pre-bundling; the bundle keeps three external) |
 | `Sky` + `pmremGenerator.fromScene(sky)` | an unselectable `SkyMesh` in the scene, plus a second one in a `Scene` of its own for `fromScene` in `onRendererInitialized` (AnimationKeyframes). `SkyMesh` drifts its clouds on TSL's global `time`, so set `cloudSpeed` to 0 unless they should move. A 10000-unit sky dominates whole-scene bounds: frame the model with `frame-object` |
 | Several viewports or scissor halves | scene cameras, seen through camera view tabs |
+| `ColorManagement.workingColorSpace = SRGBColorSpace` (global) | convert the content's colors to the working space instead: `material.colorNode = colorSpaceToWorking( colorNode, SRGBColorSpace )` (GaussianSplat) |
+| `scenePass.add( bloom( scenePass, strength, radius, threshold ) )` (bloom of the scene color) | `super({bloom: new Bloom({enabled: true, strength, radius, threshold})})`: the document's bloom, drawn by views that follow it (`View.bloom`; in the demo host the Scene Camera view). Bloom of an emissive MRT output has no equivalent yet (`bloom-emissive`, Water) |
+| `KTX2Loader.detectSupport( renderer )` | in `onRendererInitialized`, loading from there; `dispose()` the loader once loaded (three warns about several active KTX2 loaders) |
 | Keyboard switches (`O` / `P` keys) | properties |
 
 GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
@@ -209,20 +224,25 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 ### Async content
 
 - Content added outside a transaction (loaded models) needs `this.notify({kind: 'structure'})`, or views and the scene graph miss it. A texture loaded in the background needs `this.notify({kind: 'material'})` in its load callback, because views draw only on changes.
-- Optional framing hint after loading: `this.dispatch('frame-object', {object, overscan?}, true)`. It bubbles through the editor to the viewports showing the document. `object` can be an array. Skinned bounds read the bones' world matrices, which nothing has drawn yet for a fresh `SkeletonUtils.clone`: call `updateMatrixWorld(true)` on what you frame first (AnimationMultiple). The same goes for framing objects below a loaded file's own transforms: framing updates only each framed object's matrix, not its ancestors' (LoaderVrml framed ten times too far). An `overscan` below 1 frames closer, for content larger than its fog range (InstancingMorph).
+- Framing hint after loading: `this.dispatch('frame-object', {object, overscan?}, true)`. Needed when the scene holds nothing but lights or scenery at first show: first-show framing then fits that, and the camera can open inside the content that arrives (Lightprobe, MaterialsMatcap, MaterialxNoise). It bubbles through the editor to the viewports showing the document. `object` can be an array. Skinned bounds read the bones' world matrices, which nothing has drawn yet for a fresh `SkeletonUtils.clone`: call `updateMatrixWorld(true)` on what you frame first (AnimationMultiple). The same goes for framing objects below a loaded file's own transforms: framing updates only each framed object's matrix, not its ancestors' (LoaderVrml framed ten times too far). An `overscan` below 1 frames closer, for content larger than its fog range (InstancingMorph).
+- Content built in the constructor whose scenery dwarfs it (a large ground, an enclosing curtain): dispatch `frame-object` from `onRendererInitialized`, which runs at the document's first draw, when the views showing it hear the event (Clipping, GeometryLoft). Frame an extent inside enclosing scenery: GeometryLoft frames its pedestals, so the perspective view opens inside the curtain.
 - Framing reads current morph influences. Content that morphs beyond its rest shape frames a detached stand-in instead, for example a `Mesh` whose geometry is just the two corners of the geometry's morph-inclusive `boundingBox` (LoaderMdd).
 - A loader that returns before its textures arrive (`VRMLLoader`, `FBXLoader`, `ThreeMFLoader`, `ColladaLoader`) gets a `LoadingManager` whose `onLoad` calls `notify({kind: 'material'})`. A static document draws nothing until something changes, so the textures would stay black (LoaderVrml `meshWithTexture`). `GLTFLoader` resolves after its textures.
 - A dropdown that reloads content (an `asset` or `file` property) counts its loads and drops a result that is no longer the latest (LoaderFbx, Loader3mf, LoaderVrml, LoaderGcode, LoaderSvg, LoaderPcd). Dispose the previous model's geometries and materials as the source does.
 - Scenery the source keeps far away (VRML `Background` spheres, 10000 units, `depthTest: false`) lies beyond the views' far plane, which framing sets from the content's bounds (`FRAME_OVERFIT`). LoaderVrml redraws those spheres around each drawing camera in `onBeforeRender`. They also need explicit render orders: WebGPU sorted the ground sphere under the sky sphere.
 - Instances placed on the GPU (`positionNode`, identity instance matrices) have the bounds of one instance: set the `InstancedMesh`'s `boundingBox` and `boundingSphere` to the content's extent, for framing and culling (TslGalaxy, InstancePath).
+- Framing reads vertex positions (`expandByObject( object, true )`) except for `InstancedMesh` and `BatchedMesh`, which use their `boundingBox`. Content drawn on the GPU from one small geometry that is not an `InstancedMesh` (`Mesh.count` instances, `GaussianSplat`) frames a detached stand-in whose two vertices are the content's world corners (Reflection, GaussianSplat).
+- Whole-scene framing can put the views beyond the fog: an `overscan` below 1 frames from inside the content (InstanceSprites' 2000-unit cube in `FogExp2( 0.001 )`).
+- Content derived from other objects' transforms (curve handles) rebuilds on the document's `commit` event, which tool edits dispatch with their transaction even while paused, and checks for uncommitted (Inspector) edits in `onAnimate` (ModifierCurve).
 - Fields used by `onAnimate` before the load finishes: a placeholder (`new AnimationMixer(new Group())`) or optional chaining (`this.mixer?.update(delta)`). Change handlers guard content that may not be loaded yet (`if (this.model)`).
 
 ### Scene graph and picking
 
 - Name what the scene graph should show: the scene graph and inspector label rows by `name`, or by `<ClassName>` when there is none. Name lights by role (`Key`, `Ambient`).
 - Do not rename loaded nodes that animation tracks address by name: the clip's tracks stop binding (`PropertyBinding: No target node found`). The horse's morph track targets `mesh_0`.
+- `Object3D.copy` copies `name`: name an object again after copying generated content into it (`lightProbe.copy( LightProbeGenerator.fromCubeTexture( ... ) )`).
 - `userData.selectable = false` on floors, backdrops and other scenery. It applies to descendants too.
-- Do not author camera, light or skeleton helpers (`CameraHelper`, `PointLightHelper`, `RectAreaLightHelper`, `SkeletonHelper`, ...): the helper overlays draw them in every view for any document (`cameraHelpers` and `lightHelpers` on, `skeletonHelpers` off by default; `scene-helpers` in [three_future_work.plan.md](./three_future_work.plan.md), ADR-0006). Drop the source's helpers and its `show helpers` / `show skeleton` toggles. A `SkeletonHelper` built only to collect bones (retargeting) stays, out of the scene. A model toggle hides the meshes, not the model root, so its skeleton still shows. Helpers that are the subject (normal, tangent and box helpers) are content: a `Helpers` group, unselectable, toggled by `showHelpers`, added after the objects they follow.
+- Do not author camera, light or skeleton helpers (`CameraHelper`, `PointLightHelper`, `RectAreaLightHelper`, `SkeletonHelper`, ...): the helper overlays draw them in every view for any document (`cameraHelpers` and `lightHelpers` on, `skeletonHelpers` off by default; `scene-helpers` in [three_future_work.plan.md](./three_future_work.plan.md), ADR-0006). Drop the source's helpers and its `show helpers` / `show skeleton` toggles. A `SkeletonHelper` built only to collect bones (retargeting) stays, out of the scene. A model toggle hides the meshes, not the model root, so its skeleton still shows. Clipping planes of `ClippingGroup`s come from the `clippingHelpers` overlay: drop the source's `PlaneHelper`s and their toggle (ClippingIntersection). Helpers that are the subject (normal, tangent and box helpers) are content: a `Helpers` group, unselectable, toggled by `showHelpers`, added after the objects they follow.
 
 ### Properties and groups
 
@@ -230,6 +250,8 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 - The Document tab shows about ten characters of a property name: keep names short and distinct within that (MaterialsEnvmaps `rotateX` instead of `backgroundRotationX`; TslRagingSea keeps the source's `largeSpeed`, `smallFrequency`). A nested `ioObject` takes `labelWidth` (MorphtargetsFace blend shapes).
 - Colors and vectors edited in place: a `@Property({type: Color, init: null})` (or `Vector2`) with an `xMutated()` that copies it into the material or uniform and calls `notify`. Plain public fields do not observe in-place edits, so a paused view would not redraw.
 - Controls that depend on the loaded content (one per clip, one per morph target) cannot be dropdowns: editor configs are per class, and their menus are copied per object. Use a record property shown with `ioObject`. A record of functions shows a button per entry, for example clips (LoaderFbx `clips`). A record of accessors over the content shows a slider per entry, for example morph influences (LoaderFbx `morphs`, MorphtargetsFace `expressions`). Replace the record on each load.
+- Many shader values: `reference( name, type, object )` nodes to the document's own properties need no change handlers, as in the sources that refer to a settings object (CubemapAdjustments). A group of settings repeated per layer is a small `ReactiveObject` subclass as a property, shown with `ioObject({expanded: true})`; its nodes refer to its properties, and the document's `xMutated()` notifies (TslHalftone `shade`, `highlight`).
+- A dropdown of names fetched at runtime: editor configs copy their menus when the Document tab first shows, so fetch the names with a top-level `await` in the example's module, before the class registers its config (LoaderGltf `asset`, the Khronos sample index). A failed fetch falls back to one entry.
 - Private fields show in the `Advanced` catch-all: list internal state (loaders, load counters, pending promises) in `Hidden`.
 - Change handlers do not run for default values. They do run inside the base constructor for values passed in `args`, before subclass fields exist. Call `xChanged()` at the end of the constructor to apply the default, and keep the state that handlers touch in `declare`d or lazily created fields if args must work.
 
@@ -240,7 +262,13 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 - `NoBlending` with `premultipliedAlpha` draws a texture's raw color where WebGL draws it premultiplied (black). Seen in MaterialsBlending's alpha flare row.
 - Canvas textures built from a DOM canvas: draw on an `OffscreenCanvas` (`CanvasTexture<OffscreenCanvas>`), or cut images with `createImageBitmap(image, sx, sy, sw, sh)` (MaterialsBlending, PanoramaCube).
 - Vertex attribute strides must be multiples of 4 bytes, so 3 × `Float16` is invalid; use `Float32Array` (GeometryColors).
+- A material with `fragmentNode` writes only the first color output: the TRAA views' MRT pass (color and velocity) makes WebGPU reject its pipeline. `LightProbeHelperGPU` is one: Lightprobe and LightprobeCubecamera give the helper a `MeshBasicNodeMaterial` whose `colorNode` is the same irradiance. `outputNode` is fine (it is merged with the MRT).
+- A standard material's `envMap` that is a `CubeTexture` still loading binds a 2D placeholder as a cube in the PMREM path and fails WebGPU validation until it loads (upstream; the source races the same way). Add the mesh once the cube map has loaded (MaterialsDisplacementmap).
 - Addons built on `ShaderMaterial` (`Sky`, `Water`, `Reflector`) need their node versions (`SkyMesh`, `WaterMesh`, TSL `reflector()`).
+- WebGPU allows 8 vertex buffers per pipeline. An `InstancedMesh` adds its instance matrix, and TRAA views a second one for velocity: geometry with four instanced attributes (Reflection's tree) stays `Mesh.count` instances.
+- A compute pass inside a material (`positionNode = Fn( ... )().compute( count )`, SkinningPoints) builds its pipeline when it first runs. Inside a TRAA view's pass, skinning then sees the velocity output and refers to `positionPrevious`, which compute shaders lack. Run it once with `renderer.compute` outside the views' draws (from `onRendererInitialized` or the load callback, keeping the renderer): the pipeline is cached.
+- Occlusion query results arrive after the draw that ran the query, and three keeps them per render context, which it shares between draws into targets of the same format and outputs whatever the camera (since r183, #32546; upstream kit under `occlusion-upstream`). Views drawn alike overwrite each other's results, so `renderer.isOccluded` can return another view's result (Occlusion keeps the source's behavior and documents it).
+- `alphaToCoverage` needs a multisampled target: it works in views with `View.msaa` (not TRAA views, whose pipeline ignores MSAA), and does nothing elsewhere (Clipping, ClippingIntersection).
 - Imports are named, from `three/webgpu` and `three/tsl`, with addons from `three/addons/...`. Bare `three` is aliased to `three/webgpu` (`vite.config.ts`).
 - `@types/three` 0.186 is stricter than the JS sources:
   - `UniformNode<'float', number>` (node type and value type), `Node<'vec3'>` for typed nodes. Untyped `Node` has no math methods.
@@ -363,6 +391,68 @@ Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 co
 | MaterialsTextureRotation | `webgl_materials_texture_rotation` | anisotropy set in `onRendererInitialized` | Upstream still untracked (`shared-refresh`: texture transforms; issue kit 2026-10-15). In the editor the controls reach forward views when several draw: three keys render objects by object, material, target format and scene (not camera), so same-format view targets share render objects and each target switch forces a full refresh. One forward view alone stays stale; TRAA views update |
 | MaterialsBlending | `webgl_materials_blending` | background scroll from time (12.5 s loop); `OffscreenCanvas` background and labels | Open: `NoBlending` draws the alpha flare unpremultiplied (WebGPU notes) |
 | PanoramaCube | `webgl_panorama_cube` | source camera kept as `Camera` (the panorama shows from inside the box); faces cut with `createImageBitmap`; box unselectable | OK |
+| **Converted 2026-10-15** | | | Checked in the editor (headless Chromium on the GPU, own dev server): renders against `examples/screenshots`, scene graph names, Document tab controls changed with playback paused, all 30 opened in one page with no console errors |
+| LightsCustom | `webgpu_lights_custom` | 20π s loop; the source turns the scene, here a `Pivot` group with the lights and points; 500k 1 px points as in the source | OK |
+| LightsIesSpotlight | `webgpu_lights_ies_spotlight` | 4 s loop; lights join the scene once their IES profiles load; `helper` toggle dropped (light helpers overlay); frames the lights' square through a stand-in (200-unit floor) | OK |
+| LightsPhysical | `webgpu_lights_physical` | 4π s loop; exposure is the document's (the source's 0.68, raised to the fifth power); `shadows` turns the bulb's shadow off instead of the renderer's shadow map; `bulbPower` / `irradiance` dropdowns | OK |
+| LightsProjector | `webgpu_lights_projector` | 6π s loop (the caustics jump at the wrap); `video` projection dropped; `shadows` as LightsPhysical; frames Lucy (200-unit floor) | OK |
+| LightsSelective | `webgpu_lights_selective` | 40π s loop; the center teapot's `roughness` / `metalness` | OK |
+| LightsSpotlight | `webgpu_lights_spotlight` | 6π s loop; `map` dropdown; `helpers` toggle dropped; frames Lucy | OK |
+| ShadowmapPointlight | `webgpu_shadowmap_pointlight` | 20π s loop; alpha map drawn on an `OffscreenCanvas`; room unselectable | OK |
+| Lightprobe | `webgpu_lightprobe` | `probe` / `directional` / `envMap` intensities; the probe helper is content, with a basic material (WebGPU notes: `fragmentNode`); frames the sphere | Open: the probe's `intensity` stays stale in a lone forward view (`shared-refresh`, issue kit 3; upstream fix expected) |
+| LightprobeCubecamera | `webgpu_lightprobe_cubecamera` | cube camera renders once in `onRendererInitialized`, after the background loads; helper as in Lightprobe; frames the helper | OK |
+| MaterialsAlphahash | `webgpu_materials_alphahash` | SSAA post dropped (`document-pipeline`; the TRAA views converge the hash noise); `?amount` query dropped (3) | OK |
+| MaterialsArrays | `webgpu_materials_arrays` | table unselectable | OK |
+| MaterialsCubemapMipmaps | `webgpu_materials_cubemap_mipmaps` | spheres added and framed once the nine levels load | OK |
+| MaterialsDisplacementmap | `webgpu_materials_displacementmap` | ortho camera dropped; camera light (pink) at the source camera's position; 10π/3 s loop (source 0.01 rad per frame); head added once its cube map loads too (WebGPU notes); short names `aoIntensity`, `envIntensity`, `displacement` | OK |
+| MaterialsMatcap | `webgpu_materials_matcap` | drag-and-drop matcaps dropped; exposure is the document's | OK |
+| MaterialxNoise | `webgpu_materialx_noise` | TSL `time` -> `timeline.timeNode`; 8π s loop (the noise jumps at the wrap); spheres turn once per loop (source 0.005 rad per frame); MaterialX helpers typed loosely for @types 0.186 | OK |
+| ParallaxUv | `webgpu_parallax_uv` | auto-rotating camera dropped; `blurriness` / `parallaxScale` / `uvScale` | OK |
+| CubemapAdjustments | `webgpu_cubemap_adjustments` | the source's reference nodes point at the document's own properties | OK (forward views need #34996, in the linked dev build) |
+| Tonemapping | `webgpu_tonemapping` | tone mapping type and exposure are the document's; background `blurriness` / `intensity` | OK |
+| Equirectangular | `webgpu_equirectangular` | auto-rotating camera dropped; nothing to select | OK |
+| PmremScene | `webgpu_pmrem_scene` | PMREM of the scene in `onRendererInitialized` once the background loads; the center sphere joins then; `forceWebGL` dropped | OK |
+| TslAngularSlicing | `webgpu_tsl_angular_slicing` | `DirectionalLight` as at HEAD (r186 had `SunLight`); source camera kept as `Camera` (the cut faces it; default framing looks at the far side); DRACO decoder path set | OK |
+| TslEarth | `webgpu_tsl_earth` | 80π s loop (one turn at the source's 0.025 rad/s); `dayColor` / `twilightColor` (source `atmosphere…Color`) | OK |
+| TslHalftone | `webgpu_tsl_halftone` | 2π s loop (the highlight's direction); each layer is a `Halftone` object (`shade`, `highlight`, nested editors) read through reference nodes | OK |
+| TslWood | `webgpu_tsl_wood` | blocks built at once (the source yields to the page per block); custom wood parameters as a `custom` accessor record (140 px labels); frames the blocks when the labels load (40-unit floor) | OK |
+| VolumeCloud | `webgpu_volume_cloud` | 15π s loop; the 10-unit sky sphere becomes a background node sampling the same gradient by direction (`OffscreenCanvas`), so the sky does not dominate framing; the cloud does not write depth (its transparent box hid the grid) | OK |
+| Particles | `webgpu_particles` | TSL `time` -> `timeline.timeNode`; 20 s loop (each life jumps at the wrap); `InstancedMesh`es with the plumes' bounds instead of `Mesh.count`; grid helper dropped | OK |
+| Clipping | `webgpu_clipping` | `DirectionalLight` as at HEAD; 20π s loop; frames the knot from `onRendererInitialized` (9-unit ground); `alphaToCoverage` smooths the cuts in MSAA views; planes from the `clippingHelpers` overlay | OK |
+| GeometryLoft | `webgpu_geometry_loft` | `DirectionalLight` as at HEAD; 100π/3 s loop (source 0.001 rad per frame); frames the pedestals from `onRendererInitialized`, so the perspective view starts inside the curtain | Open: the axis views look at the curtain (radius 55) from outside |
+| LoaderGltf | `webgpu_loader_gltf` | `asset` dropdown of the Khronos sample index, fetched with a top-level `await` (Properties and groups); `compileAsync` dropped (needs the renderer); clips follow timeline time (`setTime`), duration = longest clip; static (the default model has no clips; animated ones play with the transport) | OK |
+| LoaderGltfSheen | `webgpu_loader_gltf_sheen` | frames the chair | OK |
+| **Converted 2026-10-15, batch 2** | | | Checked as the first batch: renders against `examples/screenshots` (Perspective and Front views), scene graph names, Document tab controls (ModifierCurve: a handle moved by a committed transaction), all 30 opened in one page with no console errors |
+| Mirror | `webgpu_mirror` | 20π s loop (the half sphere at 0.1 rad/s, source 0.002 rad per frame); room unselectable; each view draws its own reflections | OK |
+| Reflection | `webgpu_reflection` | tween.js effectors derived from time (57 s loop; the boxes' bob jumps at the wrap); blur and vignette post dropped; auto-rotating camera dropped; the boxes stay `Mesh.count` instances (WebGPU notes: vertex buffers) and frame through a stand-in (Async content) | OK |
+| ReflectionBlurred | `webgpu_reflection_blurred` | TSL `time` -> `timeline.timeNode`; duration = clip (the rings' hue jumps at the wrap); `roughness` / `radius` / `resolutionScale`; frames Michelle | OK |
+| ReflectionRoughness | `webgpu_reflection_roughness` | 10 s loop (the noise scroll); auto-rotating camera dropped; frames the box | OK |
+| Refraction | `webgpu_refraction` | 2π s loop; room unselectable; the pane refracts each view's own frame | OK |
+| Lensflares | `webgpu_lensflares` | 3000 boxes as one `InstancedMesh`; `FlyControls` dropped; source camera kept as `Camera` (whole-scene framing sees the 16000-unit field from outside, dim); flares drawn per view | OK |
+| Occlusion | `webgpu_occlusion` | none (the node reads the previous draw's result, as in the source) | Open: views drawn alike share occlusion results, so the plane can flicker or show another view's result (WebGPU notes; `occlusion-upstream`). A redraw-until-settled workaround was tried and reverted (2026-10-16) |
+| MeshBatch | `webgpu_mesh_batch` | spins derived from time about each instance's per-frame rotation axis, rates rounded to whole turns per 20π s loop; `webgpu` toggle and auto-rotating camera dropped; `count` rebuilds the mesh | OK |
+| GaussianSplat | `webgpu_gaussian_splat` | global sRGB working color space -> `colorSpaceToWorking` on the splat color (Map; the splats blend in linear, close to the source except in soft edges). Switching `ColorManagement.workingColorSpace` per document was considered and rejected (2026-10-16): it is global (other documents, editors and overlays), read when colors are created and shaders built, and needs a rebuild of every material on each switch; exact parity would need a splat layer pass blended in sRGB and converted once (`document-pipeline`); `source` dropdown with a load counter; hit marker and license text dropped; frames a stand-in (Async content); sorts per drawing camera | OK |
+| ParticlesSoft | `webgpu_particles_soft` | `mode` -> `soft`; `InstancedMesh` instead of `Sprite.count`; 20 s (each life jumps at the wrap); frames Lucy (100-unit ground) | Open: orthographic views fade with the perspective depth formula |
+| Water | `webgpu_water` | flow from document time (`WaterNode.updateBeforeType` NONE; the node advances by wall-clock delta per render); 5 s loop; bloom (of the emissive output, `bloom-emissive`) and FXAA dropped; source camera kept as `Camera`; ground unselectable | Upstream: `WaterNode.setup` adds a reflector target to the water per build, one per view pipeline (six unnamed rows) |
+| TslVfxTornado | `webgpu_tsl_vfx_tornado` | 20 s loop (the noise; the turbulence jumps at the wrap); the source's bloom is `document.bloom` (2026-10-16; its controls are the Document tab's Bloom) | OK |
+| MaterialsRetroreflection | `webgpu_materials_retroreflection` | the flashlight rides the kept source camera `Camera` and its mirror light stays below it (the source moves both with the orbiting camera); the source's bloom is `document.bloom` (2026-10-16); night environment PMREM in `onRendererInitialized`; frames the cones (40-unit floor) | OK |
+| SkinningInstancing | `webgpu_skinning_instancing` | blur post dropped; camera light at the source camera's position, camera kept as `Camera`; `instanceColor = null` as at HEAD; duration = clip (the color oscillation jumps at the wrap); frames one instance (1000-unit ground) | OK |
+| SkinningPoints | `webgpu_skinning_points` | `InstancedMesh` of quads with the model's bounds instead of `Sprite.count`; compute passes built outside the views' draws (WebGPU notes); source camera kept as `Camera` (the model lies on the ground) | OK |
+| InstanceSprites | `webgpu_instance_sprites` | pointer camera dropped; hue from time (20 s loop; the spin jumps at the wrap); `InstancedMesh` with the cube's bounds; frames with `overscan` 0.4 (whole-scene framing is beyond the fog) | OK |
+| Sandbox | `webgpu_sandbox` | 10 s loop (box turns at 2π/10 and 4π/10 rad/s, source 0.6 and 1.2); the KTX2 plane joins after `detectSupport` in `onRendererInitialized` | OK |
+| ModifierCurve | `webgpu_modifier_curve` | `TransformControls` dropped: the handles move with the translate tool (curve rebuilt on `commit`) or the Inspector (picked up while playing); offset from time (50/3 s loop) | OK |
+| LinesFat | `webgpu_lines_fat` | inset view dropped (views of any size show the pixel widths); source camera kept as `Camera`; `worldUnits` resets the width as the source does | OK |
+| LinesFatWireframe | `webgpu_lines_fat_wireframe` | as LinesFat | OK |
+| Textures2dArrayCompressed | `webgpu_textures_2d-array_compressed` | layer from time (5 s loop, ten sweeps); KTX2 loads in `onRendererInitialized` | OK |
+| LoaderTextureKtx2 | `webgpu_loader_texture_ktx2` | scissor grid of scenes -> one plane per file, a row per section; labels dropped; all 16 files load on the Apple GPU | OK |
+| LoaderGltfCompressed | `webgpu_loader_gltf_compressed` | camera light at the source camera's position; loads in `onRendererInitialized` | OK |
+| ShadowmapArray | `webgpu_shadowmap_array` | `BasicShadowMap` -> the shared renderer's PCF; tile helper dropped; 40π s loop; frames the shapes (1500-unit ground) | Upstream: `TileShadowNode` adds its tile lights next to the light (eight unnamed rows under `SunGroup`) |
+| GeometryTextShapes | `webgl_geometry_text_shapes` | frames the text | OK |
+| GeometryTextStroke | `webgl_geometry_text_stroke` | frames the three messages | OK |
+| ModifierSimplifier | `webgl_modifier_simplifier` | light at the source camera's position; a counter drops stale simplifications | OK |
+| ModifierEdgesplit | `webgl_modifier_edgesplit` | disposes replaced split geometries | OK |
+| ClippingIntersection | `webgl_clipping_intersection` | per-material clipping planes -> a `ClippingGroup`; `PlaneHelper`s and `showHelpers` dropped for the `clippingHelpers` overlay (2026-10-16); `alphaToCoverage` smooths the cut in MSAA views | OK |
+| MaterialsModified | `webgl_materials_modified` | `onBeforeCompile` twist -> TSL `positionNode` and `normalNode` on `MeshNormalNodeMaterial`; 2π s loop | OK |
 
 Removed: CameraLogarithmicDepthBuffer (renderer-level option, see What fits); CameraArray (runtime multi-view, see What fits; 2026-10-13).
 
@@ -372,7 +462,7 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 
 - An example with both a `webgl_*` and a `webgpu_*` version converts from the `webgpu_*` one. Renamed twins count too: `webgl_gpgpu_birds` -> `webgpu_compute_birds`, `gpgpu_water` -> `compute_water`, `materials_physical_clearcoat` -> `clearcoat`, `materials_physical_transmission` -> `materials_transmission`, `materials_subsurface_scattering` -> `materials_sss`, `shaders_ocean` -> `ocean`, `shaders_sky` -> `sky`, `materials_cubemap_dynamic` -> `cubemap_dynamic`, `texture2darray(_compressed)` -> `textures_2d-array(_compressed)`, `materials_texture_partialupdate` -> `textures_partialupdate`, `materials_texture_anisotropy` -> `textures_anisotropy`, `rendertarget_texture2darray` -> `rendertarget_2d-array_3d`, `panorama_equirectangular` -> `equirectangular`, `video_panorama_equirectangular` -> `video_panorama`, `postprocessing_unreal_bloom(_selective)` -> `postprocessing_bloom(_selective)`, `postprocessing_sao / ssao / gtao` -> `postprocessing_ao`, `postprocessing_taa` -> `postprocessing_traa`.
 - `webgl_*` / `misc_*` only: kept when the scene stands on its own once the host-provided parts are dropped. GLSL (`ShaderMaterial`, `onBeforeCompile`) is rewritten in TSL only when the shader is small and not the subject.
-- **The conversion does not change `@io-gui/three`** (or the demo host beyond its `DOCUMENTS` entry). An example that needs a framework feature or fix stays TODO with its tag in **Blocked by** (see Blockers below) until that work is done. Cosmetic post-processing (bloom, vignette, blur, FXAA) is dropped and noted, so the scene converts now; the full look waits for `document-pipeline`.
+- **The conversion does not change `@io-gui/three`** (or the demo host beyond its `DOCUMENTS` entry). An example that needs a framework feature or fix stays TODO with its tag in **Blocked by** (see Blockers below) until that work is done. Bloom of the scene color is the document's `bloom` (Map). Other cosmetic post-processing (vignette, blur, FXAA, emissive bloom) is dropped and noted, so the scene converts now; the full look waits for `document-pipeline`.
 - "Verify per view" marks content that updates itself for the drawing camera (`onBeforeRender`, LOD, reflectors, splat sorting, occlusion queries): it should work through any view, but check it with two views open before calling the example done.
 
 | Example | Source | Status | Blocked by | Notes |
@@ -397,8 +487,8 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | AnimationMultiple | `webgl_animation_multiple` | completed | — | see Audit |
 | AnimationSkinningMorph | `webgl_animation_skinning_morph` | TODO | — | robot states / emotes / expressions; emote buttons make it a live document (ADR-0009), like skinning blending |
 | Skinning | `webgpu_skinning` | completed | — | see Audit |
-| SkinningInstancing | `webgpu_skinning_instancing` | TODO | — | blur post dropped |
-| SkinningPoints | `webgpu_skinning_points` | TODO | — | compute runs through the material's `positionNode` (`onInit`), no per-frame `renderer.compute` |
+| SkinningInstancing | `webgpu_skinning_instancing` | completed | — | see Audit |
+| SkinningPoints | `webgpu_skinning_points` | completed | — | see Audit |
 | SkinningInstancingIndividual | `webgpu_skinning_instancing_individual` | TODO | `per-frame-gpu` | `renderer.compute(computeSkinning)` each frame |
 | InstancingMorph | `webgpu_instancing_morph` | completed | — | see Audit |
 | Morphtargets | `webgpu_morphtargets` | completed | — | see Audit |
@@ -423,73 +513,73 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | GeometryCube | `webgl_geometry_cube` | completed | — | see Audit |
 | GeometryExtrudeShapes | `webgl_geometry_extrude_shapes` | completed | — | see Audit |
 | GeometryExtrudeSplines | `webgl_geometry_extrude_splines` | TODO | — | spline camera as a named scene camera (like `TrainCamera`) |
-| GeometryLoft | `webgpu_geometry_loft` | TODO | — | |
+| GeometryLoft | `webgpu_geometry_loft` | completed | — | see Audit; axis views see the curtain from outside |
 | GeometryMinecraft | `webgl_geometry_minecraft` | TODO | — | `FirstPersonControls` dropped |
 | GeometryNurbs | `webgl_geometry_nurbs` | TODO | — | pointer rotation dropped |
 | GeometryShapes | `webgl_geometry_shapes` | TODO | — | pointer rotation dropped |
 | GeometryTeapot | `webgl_geometry_teapot` | completed | — | see Audit |
 | GeometryTerrain | `webgl_geometry_terrain` | TODO | — | `FirstPersonControls` dropped |
 | GeometryText | `webgl_geometry_text` | TODO | — | typing -> a `text` property |
-| GeometryTextShapes | `webgl_geometry_text_shapes` | TODO | — | |
-| GeometryTextStroke | `webgl_geometry_text_stroke` | TODO | — | |
+| GeometryTextShapes | `webgl_geometry_text_shapes` | completed | — | see Audit |
+| GeometryTextStroke | `webgl_geometry_text_stroke` | completed | — | see Audit |
 | GeometryCsg | `webgl_geometry_csg` | TODO | `dependency` | `three-bvh-csg` |
-| GeneratorBuilding | `webgpu_generator_building` | TODO | — | |
-| GeneratorCity | `webgpu_generator_city` | TODO | — | bloom dropped |
+| GeneratorBuilding | `webgpu_generator_building` | TODO | `renderer-on-change` | `timeOfDay` re-bakes the sky environment (`fromScene`); the generator controls rebuild geometry only |
+| GeneratorCity | `webgpu_generator_city` | TODO | `renderer-on-change`, `per-frame-gpu` | bloom dropped; the probe grid bakes over several frames, and `seed` / `timeOfDay` restart the bake and re-bake the sky environment |
 | InstanceMesh | `webgpu_instance_mesh` | completed | — | see Audit |
 | InstancePath | `webgpu_instance_path` | completed | — | see Audit |
-| InstanceSprites | `webgpu_instance_sprites` | TODO | — | pointer-driven camera dropped |
+| InstanceSprites | `webgpu_instance_sprites` | completed | — | see Audit |
 | InstanceUniform | `webgpu_instance_uniform` | completed | — | see Audit |
 | InstancePoints | `webgpu_instance_points` | TODO | `per-frame-gpu` | `renderer.compute(computeSize)` each frame; inset view -> scene camera |
 | InstancingDynamic | `webgl_instancing_dynamic` | TODO | — | |
 | InstancingPerformance | `webgl_instancing_performance` | TODO | — | method (instanced / merged / naive) as a dropdown |
 | InstancingScatter | `webgl_instancing_scatter` | TODO | — | `MeshSurfaceSampler`; resample button |
-| MeshBatch | `webgpu_mesh_batch` | TODO | — | |
+| MeshBatch | `webgpu_mesh_batch` | completed | — | see Audit |
 | Lod | `webgl_lod` | TODO | — | verify per view (`LOD.autoUpdate` uses the drawing camera) |
 | Marchingcubes | `webgl_marchingcubes` | TODO | — | `ToonShader` material options dropped or ported to TSL |
-| ModifierCurve | `webgpu_modifier_curve` | TODO | — | `TransformControls` on the curve points dropped; editing the points needs the curve rebuilt on the document's `commit` event (check before relying on it) |
-| ModifierEdgesplit | `webgl_modifier_edgesplit` | TODO | — | |
-| ModifierSimplifier | `webgl_modifier_simplifier` | TODO | — | |
+| ModifierCurve | `webgpu_modifier_curve` | completed | — | see Audit |
+| ModifierEdgesplit | `webgl_modifier_edgesplit` | completed | — | see Audit |
+| ModifierSimplifier | `webgl_modifier_simplifier` | completed | — | see Audit |
 | ModifierSubdivision | `webgl_modifier_subdivision` | TODO | — | |
 | MathOrientationTransform | `webgl_math_orientation_transform` | TODO | — | `setTimeout` target picks -> timeline schedule |
 | Helpers | `webgl_helpers` | TODO | — | normal / tangent / box helpers are the subject: content in a `Helpers` group (Scene graph and picking); the light helpers come from the overlay |
 | LinesColors | `webgl_lines_colors` | TODO | — | pointer-driven camera dropped |
 | LinesDashed | `webgl_lines_dashed` | completed | — | see Audit |
-| LinesFat | `webgpu_lines_fat` | TODO | — | inset view -> scene camera |
-| LinesFatWireframe | `webgpu_lines_fat_wireframe` | TODO | — | inset view -> scene camera |
+| LinesFat | `webgpu_lines_fat` | completed | — | see Audit |
+| LinesFatWireframe | `webgpu_lines_fat_wireframe` | completed | — | see Audit |
 | Sprites | `webgpu_sprites` | completed | — | see Audit |
 | PointsBillboards | `webgl_points_billboards` | TODO | — | 1 px points -> `Sprite` |
 | PointsSprites | `webgl_points_sprites` | TODO | — | 1 px points -> `Sprite` |
 | PointsWaves | `webgl_points_waves` | TODO | — | `ShaderMaterial` -> TSL sprite material |
 | PointsDynamic | `webgl_points_dynamic` | TODO | `document-pipeline` | the post chain is part of the subject |
-| GaussianSplat | `webgpu_gaussian_splat` | TODO | — | raycast hit marker dropped; splat source dropdown; verify per view (sorting by camera) |
+| GaussianSplat | `webgpu_gaussian_splat` | completed | — | see Audit |
 | **Clipping** | | | | |
-| Clipping | `webgpu_clipping` | TODO | — | |
+| Clipping | `webgpu_clipping` | completed | — | see Audit |
 | ClippingAdvanced | `webgl_clipping_advanced` | TODO | — | `ClippingGroup` |
-| ClippingIntersection | `webgl_clipping_intersection` | TODO | — | `ClippingGroup.clipIntersection` |
+| ClippingIntersection | `webgl_clipping_intersection` | completed | — | see Audit |
 | ClippingStencil | `webgpu_clipping_stencil` | TODO | `renderer-option` | needs `stencil: true` |
 | **Materials and textures** | | | | |
 | Materials | `webgpu_materials` | completed | — | see Audit |
-| MaterialsAlphahash | `webgpu_materials_alphahash` | TODO | — | noisy without TAA; the `traa` views converge it |
-| MaterialsArrays | `webgpu_materials_arrays` | TODO | — | |
+| MaterialsAlphahash | `webgpu_materials_alphahash` | completed | — | see Audit |
+| MaterialsArrays | `webgpu_materials_arrays` | completed | — | see Audit |
 | MaterialsBasic | `webgpu_materials_basic` | completed | — | see Audit |
-| MaterialsCubemapMipmaps | `webgpu_materials_cubemap_mipmaps` | TODO | — | |
-| MaterialsDisplacementmap | `webgpu_materials_displacementmap` | TODO | — | |
+| MaterialsCubemapMipmaps | `webgpu_materials_cubemap_mipmaps` | completed | — | see Audit |
+| MaterialsDisplacementmap | `webgpu_materials_displacementmap` | completed | — | see Audit |
 | MaterialsEnvmaps | `webgpu_materials_envmaps` | completed | — | see Audit |
 | MaterialsEnvmapsGroundprojected | `webgpu_materials_envmaps_groundprojected` | TODO | `transmission-views` | `GroundedSkybox` dominates bounds (`framing-scenery`); glass is `transmission: 1` |
 | MaterialsEnvmapsBpcem | `webgpu_materials_envmaps_bpcem` | TODO | `per-frame-gpu` | `CubeCamera.update` each frame |
 | MaterialsLightmap | `webgpu_materials_lightmap` | completed | — | see Audit |
-| MaterialsMatcap | `webgpu_materials_matcap` | TODO | — | |
-| MaterialsRetroreflection | `webgpu_materials_retroreflection` | TODO | — | bloom dropped |
+| MaterialsMatcap | `webgpu_materials_matcap` | completed | — | see Audit |
+| MaterialsRetroreflection | `webgpu_materials_retroreflection` | completed | — | see Audit |
 | MaterialsSss | `webgpu_materials_sss` | completed | — | see Audit |
 | MaterialsToon | `webgpu_materials_toon` | completed | — | see Audit; toon outline post dropped |
 | MaterialsTransmission | `webgpu_materials_transmission` | TODO | `transmission-views` |  |
-| MaterialxNoise | `webgpu_materialx_noise` | TODO | — | |
+| MaterialxNoise | `webgpu_materialx_noise` | completed | — | see Audit |
 | LoaderMaterialx | `webgpu_loader_materialx` | TODO | `transmission-views` | the transmission test files |
 | Clearcoat | `webgpu_clearcoat` | completed | — | see Audit |
-| CubemapAdjustments | `webgpu_cubemap_adjustments` | TODO | — | |
+| CubemapAdjustments | `webgpu_cubemap_adjustments` | completed | — | see Audit |
 | CubemapMix | `webgpu_cubemap_mix` | completed | — | see Audit |
 | CubemapDynamic | `webgpu_cubemap_dynamic` | TODO | `per-frame-gpu` | `CubeCamera.update` each frame |
-| ParallaxUv | `webgpu_parallax_uv` | TODO | — | |
+| ParallaxUv | `webgpu_parallax_uv` | completed | — | see Audit |
 | ProceduralTexture | `webgpu_procedural_texture` | completed | — | see Audit |
 | MaterialsBlending | `webgl_materials_blending` | completed | — | see Audit |
 | MaterialsBlendingCustom | `webgl_materials_blending_custom` | TODO | — | |
@@ -500,36 +590,36 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | MaterialsEnvmapsExr | `webgl_materials_envmaps_exr` | completed | — | see Audit |
 | MaterialsEnvmapsFasthdr | `webgl_materials_envmaps_fasthdr` | TODO | `transmission-views` | `transmission: 1` material |
 | MaterialsEnvmapsHdr | `webgl_materials_envmaps_hdr` | completed | — | see Audit |
-| MaterialsModified | `webgl_materials_modified` | TODO | — | `onBeforeCompile` twist -> TSL `positionNode` |
+| MaterialsModified | `webgl_materials_modified` | completed | — | see Audit |
 | MaterialsNormalmap | `webgl_materials_normalmap` | completed | — | see Audit |
 | MaterialsNormalmapObjectSpace | `webgl_materials_normalmap_object_space` | completed | — | see Audit |
 | MaterialsPhysicalTransmissionAlpha | `webgl_materials_physical_transmission_alpha` | TODO | `transmission-views` |  |
 | MaterialsTextureRotation | `webgl_materials_texture_rotation` | completed | — | see Audit |
-| Equirectangular | `webgpu_equirectangular` | TODO | — | background only, nothing to select |
+| Equirectangular | `webgpu_equirectangular` | completed | — | see Audit |
 | PanoramaCube | `webgl_panorama_cube` | completed | — | see Audit |
 | Textures2dArray | `webgpu_textures_2d-array` | completed | — | see Audit |
-| Textures2dArrayCompressed | `webgpu_textures_2d-array_compressed` | TODO | — | `KTX2Loader.detectSupport` and the load in `onRendererInitialized` |
+| Textures2dArrayCompressed | `webgpu_textures_2d-array_compressed` | completed | — | see Audit |
 | TexturesPartialupdate | `webgpu_textures_partialupdate` | TODO | `per-frame-gpu` | `copyTextureToTexture` on a timer |
-| LoaderTextureKtx2 | `webgpu_loader_texture_ktx2` | TODO | — | scissor grid -> planes laid out in one scene; loads in `onRendererInitialized` (`detectSupport`) |
+| LoaderTextureKtx2 | `webgpu_loader_texture_ktx2` | completed | — | see Audit |
 | LoaderTextureDds | `webgl_loader_texture_dds` | TODO | — | BC formats: desktop GPUs only |
 | LoaderTextureExr | `webgl_loader_texture_exr` | completed | — | see Audit |
 | LoaderTextureHdr | `webgl_loader_texture_hdr` | completed | — | see Audit |
 | LoaderTextureTga | `webgl_loader_texture_tga` | completed | — | see Audit |
 | LoaderTextureTiff | `webgl_loader_texture_tiff` | completed | — | see Audit |
 | LoaderTextureUltrahdr | `webgl_loader_texture_ultrahdr` | completed | — | see Audit |
-| Tonemapping | `webgpu_tonemapping` | TODO | — | GUI maps onto the document's `toneMapping` / `toneMappingExposure` |
-| VolumeCloud | `webgpu_volume_cloud` | TODO | — | |
+| Tonemapping | `webgpu_tonemapping` | completed | — | see Audit |
+| VolumeCloud | `webgpu_volume_cloud` | completed | — | see Audit |
 | MaterialsNodeProxy | `webgpu_materials_node_proxy` | TODO | `three-upgrade` | not in r186 |
 | **TSL and procedural** | | | | |
-| TslAngularSlicing | `webgpu_tsl_angular_slicing` | TODO | — | |
-| TslEarth | `webgpu_tsl_earth` | TODO | — | |
+| TslAngularSlicing | `webgpu_tsl_angular_slicing` | completed | — | see Audit |
+| TslEarth | `webgpu_tsl_earth` | completed | — | see Audit |
 | TslGalaxy | `webgpu_tsl_galaxy` | completed | — | see Audit |
-| TslHalftone | `webgpu_tsl_halftone` | TODO | — | |
+| TslHalftone | `webgpu_tsl_halftone` | completed | — | see Audit |
 | TslProceduralTerrain | `webgpu_tsl_procedural_terrain` | TODO | `transmission-views` | pointer drag dropped; the water is `transmission: 1` |
 | TslRagingSea | `webgpu_tsl_raging_sea` | completed | — | see Audit |
 | TslVfxFlames | `webgpu_tsl_vfx_flames` | completed | — | see Audit |
-| TslVfxTornado | `webgpu_tsl_vfx_tornado` | TODO | — | bloom dropped (it carries much of the look) |
-| TslWood | `webgpu_tsl_wood` | TODO | — | |
+| TslVfxTornado | `webgpu_tsl_vfx_tornado` | completed | — | see Audit |
+| TslWood | `webgpu_tsl_wood` | completed | — | see Audit |
 | TslVfxLinkedparticles | `webgpu_tsl_vfx_linkedparticles` | TODO | `per-frame-gpu`, `document-pipeline` | |
 | TslComputeAttractorsParticles | `webgpu_tsl_compute_attractors_particles` | TODO | `per-frame-gpu` | attractor `TransformControls` dropped |
 | TslOcclusionDither | `webgpu_tsl_occlusion_dither` | TODO | `three-upgrade` | not in r186 |
@@ -545,33 +635,33 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | ComputeWater | `webgpu_compute_water` | TODO | `per-frame-gpu` | pointer ripples dropped (ducks and waves remain) |
 | VolumeFire | `webgpu_volume_fire` | TODO | `per-frame-gpu`, `document-pipeline` | |
 | **Lights, shadows, environment** | | | | |
-| CustomFog | `webgpu_custom_fog` | TODO | — | |
+| CustomFog | `webgpu_custom_fog` | TODO | `renderer-on-change` | sun `elevation` / `azimuth` re-bake the sky environment (`fromScene`) |
 | FogHeight | `webgpu_fog_height` | completed | — | see Audit |
 | CustomFogBackground | `webgpu_custom_fog_background` | TODO | `document-pipeline` | fog composed in post |
 | CustomFogScattering | `webgpu_custom_fog_scattering` | TODO | `document-pipeline` | |
-| Lensflares | `webgpu_lensflares` | TODO | — | `LensflareMesh`; verify per view (occlusion) |
-| Lightprobe | `webgpu_lightprobe` | TODO | — | |
-| LightprobeCubecamera | `webgpu_lightprobe_cubecamera` | TODO | — | one `CubeCamera.update` in `onRendererInitialized` |
+| Lensflares | `webgpu_lensflares` | completed | — | see Audit |
+| Lightprobe | `webgpu_lightprobe` | completed | — | see Audit; open: `shared-refresh` (probe `intensity`) |
+| LightprobeCubecamera | `webgpu_lightprobe_cubecamera` | completed | — | see Audit |
 | Lightprobes | `webgpu_lightprobes` | TODO | `renderer-on-change` | bake in `onRendererInitialized`; the resolution control rebakes |
 | LightprobesComplex | `webgpu_lightprobes_complex` | TODO | `renderer-on-change` | as Lightprobes |
 | LightprobesSponza | `webgpu_lightprobes_sponza` | TODO | `renderer-on-change` | as Lightprobes |
-| LightsCustom | `webgpu_lights_custom` | TODO | — | |
-| LightsIesSpotlight | `webgpu_lights_ies_spotlight` | TODO | — | |
+| LightsCustom | `webgpu_lights_custom` | completed | — | see Audit |
+| LightsIesSpotlight | `webgpu_lights_ies_spotlight` | completed | — | see Audit |
 | LightsPhong | `webgpu_lights_phong` | completed | — | see Audit |
-| LightsPhysical | `webgpu_lights_physical` | TODO | — | |
+| LightsPhysical | `webgpu_lights_physical` | completed | — | see Audit |
 | LightsPointlights | `webgpu_lights_pointlights` | completed | — | see Audit |
-| LightsProjector | `webgpu_lights_projector` | TODO | — | video map option dropped |
+| LightsProjector | `webgpu_lights_projector` | completed | — | see Audit |
 | LightsRectarealight | `webgpu_lights_rectarealight` | completed | — | see Audit; source camera kept as scene camera (`framing-scenery`) |
-| LightsSelective | `webgpu_lights_selective` | TODO | — | |
-| LightsSpotlight | `webgpu_lights_spotlight` | TODO | — | |
-| LightsSunlight | `webgpu_lights_sunlight` | TODO | — | |
+| LightsSelective | `webgpu_lights_selective` | completed | — | see Audit |
+| LightsSpotlight | `webgpu_lights_spotlight` | completed | — | see Audit |
+| LightsSunlight | `webgpu_lights_sunlight` | TODO | `renderer-on-change` | `azimuth` / `elevation` re-bake the sky environment (`fromScene`). The cascades refit per camera per frame (`ShadowNode` keys updates by camera), so they work per view |
 | LightsHemisphere | `webgl_lights_hemisphere` | TODO | — | sky dome `ShaderMaterial` -> TSL gradient |
 | LightsSpotlights | `webgl_lights_spotlights` | TODO | — | tween.js (wall clock) -> derive from time |
 | LightsDynamic | `webgpu_lights_dynamic` | TODO | `renderer-option` | `renderer.lighting = new DynamicLighting()` |
 | LightsClustered | `webgpu_lights_clustered` | TODO | `renderer-option` | `renderer.lighting` (clustered); FXAA dropped |
 | Shadowmap | `webgpu_shadowmap` | completed | — | see Audit; source camera kept as scene camera (`framing-scenery`) |
-| ShadowmapArray | `webgpu_shadowmap_array` | TODO | — | `BasicShadowMap` is renderer-level: per-light `shadow.filterNode` (three API) or accept PCF |
-| ShadowmapPointlight | `webgpu_shadowmap_pointlight` | TODO | — | as ShadowmapArray |
+| ShadowmapArray | `webgpu_shadowmap_array` | completed | — | see Audit |
+| ShadowmapPointlight | `webgpu_shadowmap_pointlight` | completed | — | see Audit |
 | ShadowmapPerformance | `webgl_shadowmap_performance` | TODO | — | |
 | ShadowmapOpacity | `webgpu_shadowmap_opacity` | TODO | `renderer-option` | `shadowMap.transmitted` |
 | ShadowmapVsm | `webgpu_shadowmap_vsm` | TODO | `renderer-option` | `shadowMap.type = VSMShadowMap` |
@@ -580,24 +670,24 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | ShadowContact | `webgpu_shadow_contact` | TODO | `per-frame-gpu` | renders a depth target from below each frame |
 | Shadowmesh | `webgl_shadowmesh` | TODO | `renderer-option` | `ShadowMesh` writes stencil |
 | Caustics | `webgpu_caustics` | TODO | `renderer-option` | `shadowMap.transmitted` |
-| Occlusion | `webgpu_occlusion` | TODO | — | verify per view (occlusion queries) |
+| Occlusion | `webgpu_occlusion` | completed | — | see Audit |
 | Sky | `webgpu_sky` | TODO | `renderer-on-change` | sky controls regenerate the environment (`CubeCamera`); the AnimationKeyframes `SkyMesh` pattern covers the first bake |
-| Ocean | `webgpu_ocean` | TODO | — | bloom dropped; sky / water dominate bounds (`framing-scenery`) |
-| Water | `webgpu_water` | TODO | — | bloom and FXAA dropped |
+| Ocean | `webgpu_ocean` | TODO | `renderer-on-change` | sky `elevation` / `azimuth` re-bake the environment (`fromScene`); bloom dropped; sky / water dominate bounds (`framing-scenery`) |
+| Water | `webgpu_water` | completed | — | see Audit |
 | BackdropWater | `webgpu_backdrop_water` | TODO | `document-pipeline` | the underwater mask is post |
-| Mirror | `webgpu_mirror` | TODO | — | verify per view (reflector) |
-| Reflection | `webgpu_reflection` | TODO | — | blur and vignette post dropped; verify per view |
-| ReflectionBlurred | `webgpu_reflection_blurred` | TODO | — | verify per view |
-| ReflectionRoughness | `webgpu_reflection_roughness` | TODO | — | verify per view |
-| Refraction | `webgpu_refraction` | TODO | — | verify per view |
+| Mirror | `webgpu_mirror` | completed | — | see Audit |
+| Reflection | `webgpu_reflection` | completed | — | see Audit |
+| ReflectionBlurred | `webgpu_reflection_blurred` | completed | — | see Audit |
+| ReflectionRoughness | `webgpu_reflection_roughness` | completed | — | see Audit |
+| Refraction | `webgpu_refraction` | completed | — | see Audit |
 | Portal | `webgpu_portal` | TODO | `view-camera` | the portal material is `pass(scenePortal, camera)` with the main camera |
 | PmremCubemap | `webgpu_pmrem_cubemap` | completed | — | see Audit |
 | PmremEquirectangular | `webgpu_pmrem_equirectangular` | completed | — | see Audit |
-| PmremScene | `webgpu_pmrem_scene` | TODO | — | PMREM in `onRendererInitialized` |
-| Particles | `webgpu_particles` | TODO | — | TSL `time` -> `timeline.timeNode` |
-| ParticlesSoft | `webgpu_particles_soft` | TODO | — | |
+| PmremScene | `webgpu_pmrem_scene` | completed | — | see Audit |
+| Particles | `webgpu_particles` | completed | — | see Audit |
+| ParticlesSoft | `webgpu_particles_soft` | completed | — | see Audit |
 | Layers | `webgpu_layers` | TODO | `view-camera` | toggles the camera's layers |
-| Sandbox | `webgpu_sandbox` | TODO | — | |
+| Sandbox | `webgpu_sandbox` | completed | — | see Audit |
 | **Post-processing with scene-dependent effects** | | | | |
 | PostprocessingAo | `webgpu_postprocessing_ao` | TODO | `document-pipeline` | |
 | PostprocessingBloom | `webgpu_postprocessing_bloom` | TODO | `document-pipeline` | |
@@ -622,12 +712,12 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | Vxgi | `webgpu_vxgi` | TODO | `document-pipeline` | |
 | VxgiSponza | `webgpu_vxgi_sponza` | TODO | `document-pipeline` | |
 | **Loaders** | | | | |
-| LoaderGltf | `webgpu_loader_gltf` | TODO | — | |
+| LoaderGltf | `webgpu_loader_gltf` | completed | — | see Audit |
 | LoaderGltfAnisotropy | `webgpu_loader_gltf_anisotropy` | completed | — | see Audit |
-| LoaderGltfCompressed | `webgpu_loader_gltf_compressed` | TODO | — | KTX2 `detectSupport` in `onRendererInitialized` |
+| LoaderGltfCompressed | `webgpu_loader_gltf_compressed` | completed | — | see Audit |
 | LoaderGltfDispersion | `webgpu_loader_gltf_dispersion` | in progress | `transmission-views` | converted, see Audit; WebGPU errors while playing |
 | LoaderGltfIridescence | `webgpu_loader_gltf_iridescence` | in progress | `transmission-views` | converted, see Audit; WebGPU errors while playing |
-| LoaderGltfSheen | `webgpu_loader_gltf_sheen` | TODO | — | |
+| LoaderGltfSheen | `webgpu_loader_gltf_sheen` | completed | — | see Audit |
 | LoaderGltfTransmission | `webgpu_loader_gltf_transmission` | in progress | `transmission-views` | converted, see Audit; WebGPU errors while playing |
 | LoaderGltfDiffuseRoughness | `webgpu_loader_gltf_diffuse_roughness` | TODO | `three-upgrade` | not in r186 |
 | LoaderGltfAvif | `webgl_loader_gltf_avif` | completed | — | see Audit |
@@ -679,7 +769,7 @@ Not candidates:
 
 Features or fixes outside the examples. Each one unblocks the rows tagged with it; until then those stay TODO.
 
-- **`document-pipeline`**: a document cannot bring a post-processing graph. Pipelines are registered by the host (`pipelineTypes.register` in `IoEditorExample.ts`) and picked per `View.pipeline` (ADR-0006). Needed: a document-declared builder (`PostProcessingBuilder`) that views use, plus scene inputs it can read (MRT outputs such as emissive or a per-object bloom flag, the scene's lights). Also unblocks the full look of rows that drop cosmetic post.
+- **`document-pipeline`**: a document cannot bring a post-processing graph. Pipelines are registered by the host (`pipelineTypes.register` in `IoEditorExample.ts`) and picked per `View.pipeline` (ADR-0006). Needed: a document-declared builder (`PostProcessingBuilder`) that views use, plus scene inputs it can read (MRT outputs such as emissive or a per-object bloom flag, the scene's lights). Also unblocks the full look of rows that drop cosmetic post. Bloom of the scene color is covered since 2026-10-16 by `Document.bloom` with a per-view override (`document-bloom` in the future-work plan); emissive bloom is not (`bloom-emissive`).
 - **`per-frame-gpu`**: GPU work every tick (`renderer.compute`, `CubeCamera.update`, a render into a target). `onAnimate` gets no renderer, and `onRendererInitialized` runs once. Needed: a once-per-frame hook with the renderer, not per view draw. The simulations themselves are live documents (ADR-0009): they integrate only forward `delta` and ignore scrubbing back and wraps.
 - **`renderer-on-change`**: GPU work in a property handler (rebake light probes, regenerate a sky environment). Lighter form of `per-frame-gpu`: a way to queue a task for the renderers that draw the document.
 - **`view-camera`**: content bound to the camera that draws it: `CSMShadowNode` (one camera's frustum), `pass(scene, camera)` inside a material (Portal), camera layers (Layers). Views build their camera per draw (ADR-0005), so the document has no camera to bind. Needed: a per-view hook, or nodes that read the drawing camera.
@@ -694,4 +784,4 @@ Features or fixes outside the examples. Each one unblocks the rows tagged with i
 - **`interactive-timeline`** (decided 2026-10-11, ADR-0009): live documents treat the timeline as a clock and ignore time going back. Considered: recording button presses on the timeline and replaying them, which is exact under scrubbing but makes the demo authored content. Follow-up: pass the cause of a time change to `onAnimate` (`timeline-negative-delta` in the future-work plan).
 - **`inspector-refresh`**: Camera, Backdrop and the skinning examples call `dispatchMutation(...)` in `onAnimate` inside `debug:` blocks so the inspector follows per-frame values. Bundles strip debug blocks, so bundled builds stop refreshing. Alternative: the host refreshes the Document tab on `time` changes.
 - **`framing-motion`**: First-show framing uses the scene's bounds at rest. AnimationKeys' box travels 30 units from a 5-unit start, so the perspective view loses it; the conversion keeps the source camera as a scene camera. Option: a document-declared framing box, or `frame-object` with several objects / a box.
-- **`framing-scenery`**: First-show framing and frame-all use the whole scene's bounds, so a sky dome or a large floor dwarfs the subject. Documents work around it with `frame-object` on their model (Keyframes, the skinning and retargeting examples). Option: framing skips `userData.selectable === false` scenery.
+- **`framing-scenery`**: First-show framing and frame-all use the whole scene's bounds, so a sky dome or a large floor dwarfs the subject. Documents work around it with `frame-object` on their model (Keyframes, the skinning and retargeting examples), or from `onRendererInitialized` for content built in the constructor (Clipping, GeometryLoft). Axis views still see enclosing scenery from outside (GeometryLoft's curtain). Option: framing skips `userData.selectable === false` scenery.

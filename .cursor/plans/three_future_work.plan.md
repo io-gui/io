@@ -32,6 +32,18 @@ todos:
   - id: scene-helpers
     content: "Helpers (cameras, lights, skeletons) drawn automatically for any document as a per-view overlay"
     status: completed
+  - id: document-bloom
+    content: "Bloom as a document render setting (Document.bloom) with a per-view override (View.bloom), added by pipelines after their passes"
+    status: completed
+  - id: view-msaa
+    content: "MSAA as a view setting (View.msaa) that pipelines apply to their scene targets"
+    status: completed
+  - id: clipping-helpers
+    content: "Clipping plane helpers for ClippingGroups as a helper overlay (clippingHelpers)"
+    status: completed
+  - id: bloom-emissive
+    content: "Bloom from an emissive MRT output instead of the scene color (webgpu_water blooms only emissive)"
+    status: pending
 isProject: false
 ---
 
@@ -95,3 +107,28 @@ Done 2026-10-13 (`render/overlays/HelperOverlay.ts`). Decided in a grilling sess
 - **Not pickable.** Helpers live in the overlay scene, so clicking a light's icon does not select the light. Selecting lights and cameras in the viewport needs the `Picker` to consult overlays; later.
 - **Examples.** The authored helpers are gone: the `Helpers` groups and `showHelpers` in CameraExample, AnimationRetargeting and LightsRectarealight (the overlay draws its light panels), and the skeleton helper behind `showSkeleton` in AnimationSkinningBlending, whose `showModel` now hides only the meshes ([three.js_example_conversion.plan.md](./three.js_example_conversion.plan.md), Scene graph and picking).
 - **No overlay UI yet.** Views switch overlays only in code (`View.overlays`), so the demo turns them on in code. A viewport overlays menu (registered overlays for the view kind, by label, as checkboxes) would let users switch any of them; not built.
+
+### `clipping-helpers`
+
+Done 2026-10-16: a fourth helper kind, `clippingHelpers`, for `ClippingGroup`s (`HelperOverlay.ts`), replacing the `PlaneHelper`s that webgl_clipping_intersection authored into its scene.
+
+- **One square per clipping plane**, as `PlaneHelper` draws it, but sized and placed from what the group clips: centered on the group's bounding sphere center projected onto the plane, as wide as the sphere's diameter. Clipping planes are in world space (three ignores the group's transform), so nothing else moves them.
+- **Outline always, fill while selected.** A fill spanning the clipped content tinted whole views (Clipping's planes span its 9-unit ground). Planes take the color of their normal's main axis (the translate gizmo's axis colors), and the selection colors when the group is selected. A disabled group (`enabled = false`) draws nothing.
+- The outline is a closed `Line`: WebGPU has no line loops.
+
+### `document-bloom`
+
+Done 2026-10-16. Bloom is part of a document's look, like tone mapping, so it follows the same rule ([ADR-0006](../../packages/three/docs/adr/0006-content-scene-holds-only-content.md)): the document holds the setting, a view may override it.
+
+- **`Document.bloom`** is a `Bloom` (`enabled`, `strength`, `radius`, `threshold`: three's `BloomNode` inputs), shown in the Document tab's Rendering group. Examples declare their source's bloom (`TslVfxTornado`, `MaterialsRetroreflection`).
+- **`View.bloom`**: `true` or `false` overrides, `null` follows `document.bloom.enabled`. The demo host's Scene Camera view follows the document; its perspective and axis views are off, so editing views stay unaffected. The host's View tab shows the focused viewport's view (bloom, MSAA, ...).
+- **Where.** `RenderTargetPipeline` runs a `BloomStage` after `draw()`: the target's color plus `bloom()` into a target of its own, which becomes the output color. So it covers forward and post-processed pipelines alike, after TRAA and before the viewport tone-maps, as the sources compose it (`scenePass + bloom(scenePass)`). Strength, radius and threshold are uniforms; switching bloom changes only which target is presented. One stage per view, sized with it.
+- **Not covered:** bloom of an emissive MRT output (webgpu_water), `bloom-emissive`.
+
+### `view-msaa`
+
+Done 2026-10-16. `View.msaa` draws the content with 4 samples (WebGPU allows 1 or 4), which also makes `alphaToCoverage` work: three applies it only to multisampled targets, and the views were single-sampled.
+
+- The compositor calls `pipeline.setSamples(4 | 0)` when the flag changes and redraws. `RenderTargetPipeline` multisamples its target (three re-creates the textures); `PostProcessingPipeline` multisamples its scene pass, unless created with `{msaa: false}`.
+- **TRAA cannot**: it copies the scene depth into its history (`copyTextureToTexture`), which WebGPU refuses for a multisampled texture. The demo host registers its TRAA pipeline with `msaa: false`, so the axis views ignore the flag (TRAA anti-aliases already).
+- **Present material keyed by sample count.** The pipeline's depth then binds as a multisampled texture, but three's shader cache key ignores how bound textures are sampled, so a rebuilt present material reused the single-sampled binding layout (invalid bind group on every draw). The compositor appends the sample count to the material's `customProgramCacheKey`. Possibly worth an upstream issue.

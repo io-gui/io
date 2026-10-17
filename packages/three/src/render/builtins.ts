@@ -6,7 +6,7 @@ import { gridOverlayType } from './overlays/GridOverlay.js'
 import { selectionOutlineOverlayType } from './overlays/SelectionOutlineOverlay.js'
 import { cameraFrameOverlayType } from './overlays/CameraFrameOverlay.js'
 import { componentOverlayType } from './overlays/ComponentOverlay.js'
-import { cameraHelperOverlayType, lightHelperOverlayType, skeletonHelperOverlayType } from './overlays/HelperOverlay.js'
+import { cameraHelperOverlayType, clippingHelperOverlayType, lightHelperOverlayType, skeletonHelperOverlayType } from './overlays/HelperOverlay.js'
 
 pipelineTypes
   .register({id: 'forward', label: 'Forward', viewKinds: ['3d'], create: () => new ForwardPipeline()})
@@ -20,3 +20,4 @@ overlayTypes
   .register(cameraHelperOverlayType)
   .register(lightHelperOverlayType)
   .register(skeletonHelperOverlayType)
+  .register(clippingHelperOverlayType)

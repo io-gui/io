@@ -50,6 +50,8 @@ export interface ViewPipeline {
   readonly componentPicker?: ComponentPicker
   /** Drawing-buffer size in physical pixels. */
   setSize(width: number, height: number): void
+  /** MSAA sample count for the content (`view.msaa`: 4, else 0). Pipelines without it draw single-sampled. */
+  setSamples?(samples: number): void
   /** Draws the content. Return `{converged: false}` to be drawn again next frame (progressive pipelines). */
   render(ctx: PipelineContext): ViewRenderResult | void
   /**

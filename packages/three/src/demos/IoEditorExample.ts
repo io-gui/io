@@ -5,7 +5,7 @@ import { ioOptionSelect, Menu } from '@io-gui/menus'
 import { Object3D } from 'three/webgpu'
 import { mrt, output, velocity } from 'three/tsl'
 import { traa } from 'three/addons/tsl/display/TRAANode.js'
-import { PostProcessingPipeline, SelectionModel, Document, Editor, View, ViewOverlays, threeViewport, threeTimeline, threeScenegraph, pipelineTypes } from '@io-gui/three'
+import { PostProcessingPipeline, SelectionModel, Document, Editor, View, ViewOverlays, ThreeViewport, threeViewport, threeTimeline, threeScenegraph, pipelineTypes } from '@io-gui/three'
 import { ioLayout, Layout } from '@io-gui/layout'
 import { threeEditorStatus } from '../elements/ThreeEditorStatus.js'
 
@@ -15,7 +15,7 @@ pipelineTypes.register({
   create: renderer => new PostProcessingPipeline(renderer, (scenePass, camera) => {
     scenePass.setMRT(mrt({output, velocity}))
     return traa(scenePass.getTextureNode('output'), scenePass.getTextureNode('depth'), scenePass.getTextureNode('velocity'), camera)
-  }, {convergeFrames: 32}),
+  }, {convergeFrames: 32, msaa: false}),
 })
 
 const editorLayout = new Layout({
@@ -83,6 +83,7 @@ const editorLayout = new Layout({
               size: 'auto',
               tabs: [
                 { id: 'Inspector' },
+                { id: 'View' },
               ]
             }
           ],
@@ -190,6 +191,66 @@ const DOCUMENTS: Record<string, () => Promise<Document>> = {
   MaterialsTextureRotationExample: () => import('./examples/MaterialsTextureRotationExample.js').then(module => new module.MaterialsTextureRotationExample()),
   MaterialsBlendingExample: () => import('./examples/MaterialsBlendingExample.js').then(module => new module.MaterialsBlendingExample()),
   PanoramaCubeExample: () => import('./examples/PanoramaCubeExample.js').then(module => new module.PanoramaCubeExample()),
+  LightsCustomExample: () => import('./examples/LightsCustomExample.js').then(module => new module.LightsCustomExample()),
+  LightsIesSpotlightExample: () => import('./examples/LightsIesSpotlightExample.js').then(module => new module.LightsIesSpotlightExample()),
+  LightsPhysicalExample: () => import('./examples/LightsPhysicalExample.js').then(module => new module.LightsPhysicalExample()),
+  LightsProjectorExample: () => import('./examples/LightsProjectorExample.js').then(module => new module.LightsProjectorExample()),
+  LightsSelectiveExample: () => import('./examples/LightsSelectiveExample.js').then(module => new module.LightsSelectiveExample()),
+  LightsSpotlightExample: () => import('./examples/LightsSpotlightExample.js').then(module => new module.LightsSpotlightExample()),
+  ShadowmapPointlightExample: () => import('./examples/ShadowmapPointlightExample.js').then(module => new module.ShadowmapPointlightExample()),
+  LightprobeExample: () => import('./examples/LightprobeExample.js').then(module => new module.LightprobeExample()),
+  LightprobeCubecameraExample: () => import('./examples/LightprobeCubecameraExample.js').then(module => new module.LightprobeCubecameraExample()),
+  MaterialsAlphahashExample: () => import('./examples/MaterialsAlphahashExample.js').then(module => new module.MaterialsAlphahashExample()),
+  MaterialsArraysExample: () => import('./examples/MaterialsArraysExample.js').then(module => new module.MaterialsArraysExample()),
+  MaterialsCubemapMipmapsExample: () => import('./examples/MaterialsCubemapMipmapsExample.js').then(module => new module.MaterialsCubemapMipmapsExample()),
+  MaterialsDisplacementmapExample: () => import('./examples/MaterialsDisplacementmapExample.js').then(module => new module.MaterialsDisplacementmapExample()),
+  MaterialsMatcapExample: () => import('./examples/MaterialsMatcapExample.js').then(module => new module.MaterialsMatcapExample()),
+  MaterialxNoiseExample: () => import('./examples/MaterialxNoiseExample.js').then(module => new module.MaterialxNoiseExample()),
+  ParallaxUvExample: () => import('./examples/ParallaxUvExample.js').then(module => new module.ParallaxUvExample()),
+  CubemapAdjustmentsExample: () => import('./examples/CubemapAdjustmentsExample.js').then(module => new module.CubemapAdjustmentsExample()),
+  TonemappingExample: () => import('./examples/TonemappingExample.js').then(module => new module.TonemappingExample()),
+  EquirectangularExample: () => import('./examples/EquirectangularExample.js').then(module => new module.EquirectangularExample()),
+  PmremSceneExample: () => import('./examples/PmremSceneExample.js').then(module => new module.PmremSceneExample()),
+  TslAngularSlicingExample: () => import('./examples/TslAngularSlicingExample.js').then(module => new module.TslAngularSlicingExample()),
+  TslEarthExample: () => import('./examples/TslEarthExample.js').then(module => new module.TslEarthExample()),
+  TslHalftoneExample: () => import('./examples/TslHalftoneExample.js').then(module => new module.TslHalftoneExample()),
+  TslWoodExample: () => import('./examples/TslWoodExample.js').then(module => new module.TslWoodExample()),
+  VolumeCloudExample: () => import('./examples/VolumeCloudExample.js').then(module => new module.VolumeCloudExample()),
+  ParticlesExample: () => import('./examples/ParticlesExample.js').then(module => new module.ParticlesExample()),
+  ClippingExample: () => import('./examples/ClippingExample.js').then(module => new module.ClippingExample()),
+  GeometryLoftExample: () => import('./examples/GeometryLoftExample.js').then(module => new module.GeometryLoftExample()),
+  LoaderGltfExample: () => import('./examples/LoaderGltfExample.js').then(module => new module.LoaderGltfExample()),
+  LoaderGltfSheenExample: () => import('./examples/LoaderGltfSheenExample.js').then(module => new module.LoaderGltfSheenExample()),
+  MirrorExample: () => import('./examples/MirrorExample.js').then(module => new module.MirrorExample()),
+  ReflectionExample: () => import('./examples/ReflectionExample.js').then(module => new module.ReflectionExample()),
+  ReflectionBlurredExample: () => import('./examples/ReflectionBlurredExample.js').then(module => new module.ReflectionBlurredExample()),
+  ReflectionRoughnessExample: () => import('./examples/ReflectionRoughnessExample.js').then(module => new module.ReflectionRoughnessExample()),
+  RefractionExample: () => import('./examples/RefractionExample.js').then(module => new module.RefractionExample()),
+  LensflaresExample: () => import('./examples/LensflaresExample.js').then(module => new module.LensflaresExample()),
+  OcclusionExample: () => import('./examples/OcclusionExample.js').then(module => new module.OcclusionExample()),
+  MeshBatchExample: () => import('./examples/MeshBatchExample.js').then(module => new module.MeshBatchExample()),
+  GaussianSplatExample: () => import('./examples/GaussianSplatExample.js').then(module => new module.GaussianSplatExample()),
+  ParticlesSoftExample: () => import('./examples/ParticlesSoftExample.js').then(module => new module.ParticlesSoftExample()),
+  WaterExample: () => import('./examples/WaterExample.js').then(module => new module.WaterExample()),
+  TslVfxTornadoExample: () => import('./examples/TslVfxTornadoExample.js').then(module => new module.TslVfxTornadoExample()),
+  MaterialsRetroreflectionExample: () => import('./examples/MaterialsRetroreflectionExample.js').then(module => new module.MaterialsRetroreflectionExample()),
+  SkinningInstancingExample: () => import('./examples/SkinningInstancingExample.js').then(module => new module.SkinningInstancingExample()),
+  SkinningPointsExample: () => import('./examples/SkinningPointsExample.js').then(module => new module.SkinningPointsExample()),
+  InstanceSpritesExample: () => import('./examples/InstanceSpritesExample.js').then(module => new module.InstanceSpritesExample()),
+  SandboxExample: () => import('./examples/SandboxExample.js').then(module => new module.SandboxExample()),
+  ModifierCurveExample: () => import('./examples/ModifierCurveExample.js').then(module => new module.ModifierCurveExample()),
+  LinesFatExample: () => import('./examples/LinesFatExample.js').then(module => new module.LinesFatExample()),
+  LinesFatWireframeExample: () => import('./examples/LinesFatWireframeExample.js').then(module => new module.LinesFatWireframeExample()),
+  Textures2dArrayCompressedExample: () => import('./examples/Textures2dArrayCompressedExample.js').then(module => new module.Textures2dArrayCompressedExample()),
+  LoaderTextureKtx2Example: () => import('./examples/LoaderTextureKtx2Example.js').then(module => new module.LoaderTextureKtx2Example()),
+  LoaderGltfCompressedExample: () => import('./examples/LoaderGltfCompressedExample.js').then(module => new module.LoaderGltfCompressedExample()),
+  ShadowmapArrayExample: () => import('./examples/ShadowmapArrayExample.js').then(module => new module.ShadowmapArrayExample()),
+  GeometryTextShapesExample: () => import('./examples/GeometryTextShapesExample.js').then(module => new module.GeometryTextShapesExample()),
+  GeometryTextStrokeExample: () => import('./examples/GeometryTextStrokeExample.js').then(module => new module.GeometryTextStrokeExample()),
+  ModifierSimplifierExample: () => import('./examples/ModifierSimplifierExample.js').then(module => new module.ModifierSimplifierExample()),
+  ModifierEdgesplitExample: () => import('./examples/ModifierEdgesplitExample.js').then(module => new module.ModifierEdgesplitExample()),
+  ClippingIntersectionExample: () => import('./examples/ClippingIntersectionExample.js').then(module => new module.ClippingIntersectionExample()),
+  MaterialsModifiedExample: () => import('./examples/MaterialsModifiedExample.js').then(module => new module.MaterialsModifiedExample()),
 }
 
 const EXAMPLE_MENU = new Menu({
@@ -210,6 +271,7 @@ const VIEW_OVERLAYS: ViewOverlays = {
   cameraHelpers: true,
   lightHelpers: true,
   skeletonHelpers: true,
+  clippingHelpers: true,
   gizmos: true,
 }
 
@@ -217,7 +279,9 @@ const VIEW_OVERLAYS: ViewOverlays = {
  * One Editor in tabbed views, each with its own pipeline (ADR-0006) and interaction profile: a forward
  * perspective view with the Move tool, select-only axis views post-processed with TRAA, and a
  * select-only UV view of the selection, and a select-only Camera view through the document's first scene camera.
- * The 3D views turn on every overlay (`VIEW_OVERLAYS`; the Camera view without the grid).
+ * The 3D views turn on every overlay (`VIEW_OVERLAYS`; the Camera view without the grid). The Camera view draws the
+ * document's bloom; the other views do not until their `bloom` is switched on. The View tab shows the settings (bloom,
+ * MSAA) of the view focused last.
  * The inspector follows the active object; the Document tab shows the document's own properties. The Scene tab is
  * the document's scene graph: click a row to select its object, its triangle to collapse it, double-click or F2 to
  * rename it; what is collapsed is kept in localStorage by object uuid. Selecting in a view reveals the object there.
@@ -255,13 +319,13 @@ export class IoEditorExample extends ReactiveElement {
   declare editor: Editor
 
   @Field({
-    top: new View({pipeline: 'traa', overlays: VIEW_OVERLAYS}),
-    bottom: new View({pipeline: 'traa', overlays: VIEW_OVERLAYS}),
-    left: new View({pipeline: 'traa', overlays: VIEW_OVERLAYS}),
-    right: new View({pipeline: 'traa', overlays: VIEW_OVERLAYS}),
-    front: new View({pipeline: 'traa', overlays: VIEW_OVERLAYS}),
-    back: new View({pipeline: 'traa', overlays: VIEW_OVERLAYS}),
-    perspective: new View({overlays: VIEW_OVERLAYS}),
+    top: new View({pipeline: 'traa', overlays: VIEW_OVERLAYS, bloom: false}),
+    bottom: new View({pipeline: 'traa', overlays: VIEW_OVERLAYS, bloom: false}),
+    left: new View({pipeline: 'traa', overlays: VIEW_OVERLAYS, bloom: false}),
+    right: new View({pipeline: 'traa', overlays: VIEW_OVERLAYS, bloom: false}),
+    front: new View({pipeline: 'traa', overlays: VIEW_OVERLAYS, bloom: false}),
+    back: new View({pipeline: 'traa', overlays: VIEW_OVERLAYS, bloom: false}),
+    perspective: new View({overlays: VIEW_OVERLAYS, bloom: false}),
     uv: new View({kind: 'uv', profile: 'select' }),
     camera: new View({profile: 'select', overlays: { cameraFrame: true }}),
   })
@@ -278,6 +342,10 @@ export class IoEditorExample extends ReactiveElement {
   @Property({type: Object3D, value: undefined})
   declare activeObject: Object3D | undefined
 
+  /** The view of the viewport focused last, shown in the View tab. */
+  @Property({type: View, value: undefined})
+  declare activeView: View | undefined
+
   /** The document last asked for; it becomes the editor's document once loaded. */
   @Property({type: String, value: ''})
   declare documentName: string
@@ -285,6 +353,18 @@ export class IoEditorExample extends ReactiveElement {
   /** Loaded documents by name. A Field: `ready()` runs inside the base constructor. */
   @Field(Map)
   declare private _documents: Map<string, Promise<Document>>
+
+  static override get Listeners() {
+    return {
+      'focusin': 'onFocusIn',
+    }
+  }
+
+  /** A viewport takes focus on pointer down: show its view's settings. */
+  onFocusIn(event: FocusEvent) {
+    const viewport = event.composedPath().find(target => target instanceof ThreeViewport) as ThreeViewport | undefined
+    if (viewport) this.activeView = viewport.view
+  }
 
   override connectedCallback(): void {
     super.connectedCallback()
@@ -317,6 +397,7 @@ export class IoEditorExample extends ReactiveElement {
     this.views.back.setAxisView('back')
     this.views.perspective.setAxisView('free')
     this.views.camera.setCameraView()
+    this.activeView = this.views.perspective
 
     this.editor.setActiveTool('3d', 'object', 'transform.translate')
     this.selection = this.editor.selection
@@ -346,6 +427,7 @@ export class IoEditorExample extends ReactiveElement {
             disclosure: $<Record<string, boolean>>({key: 'three-scenegraph-disclosure', storage: 'local', value: {}}),
           }),
           ioPropertyEditor({id: 'Inspector', value: this.bind('activeObject')}),
+          ioPropertyEditor({id: 'View', value: this.bind('activeView')}),
           ioPropertyEditor({id: 'Document', value: this.editor.bind('document')}),
         ]
       }),

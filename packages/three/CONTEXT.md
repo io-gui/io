@@ -117,7 +117,7 @@ _Avoid_: change bus, notifier, event bus
 _Avoid_: animating, running, live
 
 **View**:
-Serializable ReactiveObject holding one view's state: kind, pipeline, overlay flags, profile, navigation, overscan, clear color and tone-mapping overrides. Shown by a ThreeViewport and outlives it.
+Serializable ReactiveObject holding one view's state: kind, pipeline, overlay flags, profile, navigation, overscan, clear color, tone-mapping and bloom overrides, and MSAA. Shown by a ThreeViewport and outlives it.
 _Avoid_: viewport state, ViewCameras (removed)
 
 **View kind**:
@@ -137,7 +137,7 @@ Something a view draws on top of its pipeline output from its own small scene, n
 _Avoid_: helper (alone: a three.js helper object), decoration
 
 **Helper overlay**:
-An overlay that draws three.js helpers (frustums, light icons, bones) for one kind of content object: cameras, lights or skeletons. The helpers mirror the content scene but are never part of it, so they are not exported, framed or picked.
+An overlay that draws three.js helpers (frustums, light icons, bones, clipping planes) for one kind of content object: cameras, lights, skeletons or clipping groups. The helpers mirror the content scene but are never part of it, so they are not exported, framed or picked.
 _Avoid_: scene helpers (authored into the content scene), extras
 
 **Edit set**:

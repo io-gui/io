@@ -8,7 +8,7 @@ status: accepted
 
 This keeps export, `frameObject` bounds, object picking and other views clean. The obvious path of adding helpers to the scene leaks them into all of those.
 
-Pipelines are created per view because render targets and post-processing graphs are sized per view. Shader and pipeline caches stay shared in the one renderer. Tone mapping, exposure and background are pipeline inputs taken from document settings, with optional per-view overrides. This replaces saving and restoring `renderer.toneMapping` around each draw.
+Pipelines are created per view because render targets and post-processing graphs are sized per view. Shader and pipeline caches stay shared in the one renderer. Tone mapping, exposure and background are pipeline inputs taken from document settings, with optional per-view overrides. This replaces saving and restoring `renderer.toneMapping` around each draw. Bloom follows the same rule: `Document.bloom` holds the look, `View.bloom` overrides whether a view draws it, and pipelines add it after their own passes (TRAA included) and before the viewport tone-maps. MSAA is a view setting (`View.msaa`) that a pipeline applies to its scene targets when it can.
 
 ## Consequences
 

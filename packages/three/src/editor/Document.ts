@@ -3,8 +3,9 @@ import { MathUtils, NoToneMapping, Object3D, Scene, ToneMapping, WebGPURenderer,
 import { Patch, changeKindForPatch, insertChild, invertPatch, resolvePath, writeValue } from './Patch.js'
 import { Transaction } from './Transaction.js'
 import { Timeline } from './Timeline.js'
+import { Bloom } from './Bloom.js'
 import { isDescendant } from '../utils/sceneGraph.js'
-import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioObject, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 
@@ -12,6 +13,7 @@ export type DocumentProps = ReactiveObjectProps & {
   scene?: Scene
   toneMapping?: ToneMapping
   toneMappingExposure?: number
+  bloom?: Bloom
   timeline?: Timeline
 }
 
@@ -48,6 +50,10 @@ export class Document extends ReactiveObject {
 
   @Property({type: Number, value: 1})
   declare toneMappingExposure: number
+
+  /** Glow around bright content, drawn by views that follow it (`View.bloom`). */
+  @Property({type: Bloom, init: null})
+  declare bloom: Bloom
 
   /**
    * The document's own clock. Every change of its `currentTime` runs `onAnimate`, whether it comes from playback,
@@ -201,6 +207,10 @@ export class Document extends ReactiveObject {
     this.notify({kind: 'settings'})
   }
 
+  bloomMutated() {
+    this.notify({kind: 'settings'})
+  }
+
   /** Runs `onAnimate` with the timeline time elapsed since it last ran, and reports a `time` change. */
   private _animate() {
     const time = this.timeline.currentTime
@@ -279,10 +289,11 @@ registerEditorConfig(Document, [
     {value: AgXToneMapping, id: 'AgXToneMapping'},
     {value: NeutralToneMapping, id: 'NeutralToneMapping'},
   ]})})],
+  ['bloom', ioObject({expanded: true})],
 ])
 
 registerEditorGroups(Document, {
   Animation: ['timeline'],
-  Rendering: ['toneMapping', 'toneMappingExposure'],
+  Rendering: ['toneMapping', 'toneMappingExposure', 'bloom'],
   Advanced: [new RegExp(/^[\s\S]*$/)]
 })

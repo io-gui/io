@@ -57,6 +57,7 @@
 ### io-three
 
 - Design doc (Claude Docs): https://claude.ai/code/artifact/cb23d4fe-d4ad-406c-9d62-919db30887dd (WebGL fallback mention superseded by ADR-0001).
+- **Editor configs:** external three classes live in mirrored `src/configs/` paths. String/regex rules register on narrowest class; `Object` only for value-type dispatch (`[Vector3, widget]`). Visual audit = standalone `demos/ThreeEditorConfigs.ts` / root **Three Configs**.
 - **Arch = ADR 0001-0009** + io-gui.mdc Document/Editor/View. Future work (undo/commands/collab per ADR-0008, BVH picker, blobs, scene helpers): `three_future_work.plan.md`, start only when asked. No back-compat since 2026-10-07 (ThreeApplet, ToolBase, viewport applet/tool props gone; external GlobeTool must port to ToolDefinition).
 - **Timeline:** `Editor.tick` -> `timeline.advance(frame.delta)`. `frameRate` = stepping/snap/dividers only, no playback effect (user: fps matters only for video export, revisit then). UI: ThreeTimeline + ThreeTimelineRange (IoGl).
 - RenderScheduler rAF must run after core FrameScheduler rAF in same frame (import order).
@@ -78,8 +79,17 @@
 - **Framing loaded leaves:** ViewNavigation.frame -> expandByObject updates only framed object's matrix, not ancestors -> fresh loaded hierarchy frames wrong (VRML 10x) -> `updateMatrixWorld(true)` before frame-object (skinned case same).
 - **Static doc async textures:** paused doc draws only on changes -> loader textures after model stay black -> LoadingManager onLoad notify('material'). GLTFLoader resolves after textures.
 - **WebGPU PMREM = cube texture** (not WebGL CubeUV 2D atlas) -> can't be plane `map`.
-- **Parallel sessions:** worktree for io must be SIBLING dir (`link:../../../three.js` relative); isolation guard refuses complex shell/heredoc python touching paths -> plain commands / Edit tool.
-- **dist tracked:** `tsc -b` rewrites packages/*/dist; user commits src only -> restore dist after checks (`git checkout -- packages/three/dist/...`, rm new untracked dist files).
+- **fragmentNode vs MRT:** material w/ `fragmentNode` writes 1 output -> TRAA views (mrt output+velocity) reject pipeline. `outputNode` OK (merged w/ MRT). LightProbeHelperGPU -> swap to MeshBasicNodeMaterial colorNode.
+- **Framing w/o async load:** dispatch `frame-object` in `onRendererInitialized` (doc on screen at 1st draw; Clipping, GeometryLoft). Async-only content: first-show frames empty scene -> must frame after load.
+- **Framing precise:** ViewNavigation.frame uses expandByObject(obj, true) -> reads verts; only InstancedMesh/BatchedMesh use boundingBox. Mesh.count / GaussianSplat -> frame detached stand-in Mesh w/ 2 world-corner verts. Content bigger than fog range -> overscan < 1.
+- **WebGPU vertex buffer cap 8:** InstancedMesh matrix + TRAA velocity prev matrix count -> 4 instanced attrs overflow -> keep Mesh.count (Reflection tree).
+- **Compute in material positionNode:** pipeline built at 1st run; inside TRAA pass skinning sees velocity MRT -> `positionPrevious` unresolved in compute -> run renderer.compute once outside draws (keep renderer from onRendererInitialized), cached after (SkinningPoints).
+- **three render contexts (r183+):** keyed by target format/MRT/callDepth, not camera -> per-context state (occlusion results) shared across views drawn alike. Forward views share ctx; TRAA views each own mrt() -> separate.
+- **MSAA in views:** View.msaa -> pipeline.setSamples; TRAA can't (copyTextureToTexture of multisampled depth). Material sampling a texture whose sample count changes needs a distinct customProgramCacheKey (cache key ignores it).
+- **WebGPU no LineLoop:** use Line with first point repeated.
+- **Editor menus copied per object** at first Document tab show (getEditorConfig: Menu toJSON/applyJSON, CONFIG_CACHE) -> runtime-fetched dropdown = top-level await in module (LoaderGltf).
+- **Parallel sessions:** user prefers NO worktrees (2026-10-15): all agents (Claude Code, Cursor) work in /Users/aki/Projects/io on different files. `.memory/` write clash -> merge both sides (append, don't overwrite). Never stash/checkout/restore others' files. Old note: worktree must be SIBLING dir (`link:../../../three.js` relative).
+- **dist tracked:** `tsc -b` rewrites packages/*/dist; user commits src only -> restore dist after checks (`git checkout -- packages/three/dist/...`, rm new untracked dist files). Shared checkout: typecheck w/o emit instead: `npx tsc -p packages/three/tsconfig.json --noEmit --incremental false --composite false` (~3 s, catches errors).
 - **three WebGPU (r185):** don't share one StorageBufferAttribute as atomic (compute) + readonly (fragment) -> writes invisible. MeshBasicNodeMaterial MultiplyBlending may draw opaque -> opacityNode + NormalBlending for DataTexture overlays.
 - **After three upgrade:** restart `pnpm dev` (Vite checks lockfile only at startup; stale pre-bundle). Isolated check: scratch .mjs config importing repo vite.config.ts + mergeConfig({cacheDir, server.port}) w/ `--configLoader native`.
 

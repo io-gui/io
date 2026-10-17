@@ -4,6 +4,8 @@ import { AxisView, ViewNavigation, ViewNavigationData } from './ViewNavigation.j
 import { ViewCamera, cameraAspect, copyProjection, worldPerPixelAt } from '../utils/camera.js'
 import { isDescendant } from '../utils/sceneGraph.js'
 import type { InteractionProfile } from '../tools/Tool.js'
+import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioOptionSelect, Menu } from '@io-gui/menus'
 
 /** `3d` shows the content scene; `uv` shows the UV layout of the edit set in a 2D view of the 0–1 square. */
 export type ViewKind = '3d' | 'uv'
@@ -28,6 +30,8 @@ export interface ViewOverlays {
   lightHelpers?: boolean
   /** Bones of skeletons. */
   skeletonHelpers?: boolean
+  /** Planes of clipping groups. */
+  clippingHelpers?: boolean
   /** The active tool's gizmos, in `full` profile views. */
   gizmos?: boolean
 }
@@ -45,6 +49,8 @@ type ViewSettings = {
   xray?: boolean
   toneMapping?: ToneMapping | null
   toneMappingExposure?: number | null
+  bloom?: boolean | null
+  msaa?: boolean
   profile?: InteractionProfile
   overscan?: number
   clearColor?: number
@@ -87,6 +93,17 @@ export class View extends ReactiveObject {
   /** Overrides the document's exposure in this view; `null` uses the document's. */
   @Property({value: null})
   declare toneMappingExposure: number | null
+
+  /** Overrides the document's bloom in this view (`true` draws it, `false` does not); `null` follows `document.bloom.enabled`. */
+  @Property({value: null})
+  declare bloom: boolean | null
+
+  /**
+   * Draws the content with 4× multisampling, which also smooths the edges of `alphaToCoverage` materials. Pipelines that
+   * cannot take a multisampled scene ignore it (a `PostProcessingPipeline` with `msaa: false`, such as TRAA).
+   */
+  @Property({type: Boolean, value: false})
+  declare msaa: boolean
 
   /** What the viewport's router installs: `full` (tool + navigation), `select`, `navigate`, `none`. */
   @Property({type: String, value: 'full'})
@@ -332,13 +349,14 @@ export class View extends ReactiveObject {
     return camera
   }
 
-  /** Core serializes the primitive settings; the overlay flags, tone mapping overrides (also `null`) and navigation are added. */
+  /** Core serializes the primitive settings; the overlay flags, the overrides (also `null`) and navigation are added. */
   override toJSON(): ViewData {
     return {
       ...super.toJSON() as ViewData,
       overlays: {...this.overlays},
       toneMapping: this.toneMapping,
       toneMappingExposure: this.toneMappingExposure,
+      bloom: this.bloom,
       navigation: this.navigation.toJSON(),
     }
   }
@@ -352,3 +370,16 @@ export class View extends ReactiveObject {
     return this
   }
 }
+
+registerEditorConfig(View, [
+  ['bloom', ioOptionSelect({model: new Menu({options: [
+    {value: null, id: 'Document'},
+    {value: true, id: 'On'},
+    {value: false, id: 'Off'},
+  ]})})],
+])
+
+registerEditorGroups(View, {
+  Main: ['bloom', 'msaa'],
+  Hidden: ['navigation'],
+})

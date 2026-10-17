@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { AmbientLight, Bone, CameraHelper, Color, Group, Mesh, OrthographicCamera, PerspectiveCamera, PointLight, PointLightHelper, SkeletonHelper, Skeleton, SkinnedMesh, BoxGeometry } from 'three/webgpu'
-import { Editor, HelperOverlay, OUTLINE_COLORS, OverlayContext, View, cameraHelpers, lightHelpers, skeletonHelpers } from '@io-gui/three'
+import { AmbientLight, Bone, CameraHelper, ClippingGroup, Color, Group, Line, LineBasicMaterial, Mesh, OrthographicCamera, PerspectiveCamera, Plane, PointLight, PointLightHelper, SkeletonHelper, Skeleton, SkinnedMesh, BoxGeometry, Vector3 } from 'three/webgpu'
+import { Editor, HelperOverlay, OUTLINE_COLORS, OverlayContext, View, cameraHelpers, clippingHelpers, lightHelpers, skeletonHelpers } from '@io-gui/three'
 
 describe('HelperOverlay', () => {
   let editor: Editor
@@ -95,6 +95,46 @@ describe('HelperOverlay', () => {
     expect(rebuilt.bones.length).toBe(3)
     root.visible = false
     expect(prepare(overlay)).toEqual([])
+    overlay.dispose()
+  })
+
+  it('draws a square per plane of an enabled clipping group, centered on what it clips, and rebuilds when planes change', () => {
+    const scene = editor.document.scene
+    const group = new ClippingGroup()
+    group.clippingPlanes = [new Plane(new Vector3(1, 0, 0), -2), new Plane(new Vector3(0, -1, 0), 0)]
+    const box = new Mesh(new BoxGeometry(2, 2, 2))
+    box.position.set(2, 1, 0)
+    group.add(box)
+    scene.add(group)
+    const overlay = new HelperOverlay('clipping', clippingHelpers)
+
+    const [helper] = prepare(overlay)
+    const [x, y] = helper.children
+    // The box spans (1, 0, -1)–(3, 2, 1): its center projected on each plane, its bounding sphere's diameter wide.
+    expect(x.getWorldPosition(new Vector3()).toArray()).toEqual([2, 1, 0])
+    expect(y.getWorldPosition(new Vector3()).toArray()).toEqual([2, 0, 0])
+    expect(x.scale.x).toBeCloseTo(2 * Math.sqrt(3), 5)
+    expect(new Vector3(0, 0, 1).applyQuaternion(y.quaternion).toArray().map(Math.round)).toEqual([0, -1, 0])
+    const color = (plane: typeof x) => ((plane.children[0] as Line).material as LineBasicMaterial).color.getHex()
+    expect(color(x)).toBe(0xff3352)
+    expect(color(y)).toBe(0x8bdc00)
+    // Filled only while the group is selected.
+    expect(x.children[1].visible).toBe(false)
+    editor.selection.set([group.uuid])
+    prepare(overlay)
+    expect(x.children[1].visible).toBe(true)
+    expect(color(x)).toBe(new Color(OUTLINE_COLORS.active).getHex())
+    editor.selection.set([])
+
+    group.enabled = false
+    prepare(overlay)
+    expect(helper.visible).toBe(false)
+    group.enabled = true
+    group.clippingPlanes = [new Plane(new Vector3(0, 0, 1), 0)]
+    const [rebuilt] = prepare(overlay)
+    expect(rebuilt).not.toBe(helper)
+    expect(rebuilt.visible).toBe(true)
+    expect(rebuilt.children.length).toBe(1)
     overlay.dispose()
   })
 
