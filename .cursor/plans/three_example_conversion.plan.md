@@ -75,11 +75,20 @@ todos:
     content: "Bloom as Document.bloom with a View.bloom override (Tornado, Retroreflection get their source bloom), View.msaa (alphaToCoverage works in MSAA views), clippingHelpers overlay (ClippingIntersection drops its PlaneHelpers). three_future_work.plan.md: document-bloom, view-msaa, clipping-helpers"
     status: completed
   - id: occlusion-upstream
-    content: "File the occlusion issue: isOccluded() returns another camera's result since r183 (#32546 keys render contexts without camera). Kit https://claude.ai/artifact/R4gDW6w2E2bwT9LwE2A11K. Occlusion reverted to the source's behavior meanwhile"
+    content: "File the occlusion issue: isOccluded() returns another camera's result since r183 (#32546 keys render contexts without camera). Kit https://claude.ai/artifact/R4gDW6w2E2bwT9LwE2A11K. Fixed upstream: #35066 'Backend: Keep occlusion query results per camera' (in the dev build c9a92ccae3, 2026-10-17)"
+    status: completed
+  - id: occlusion-recheck
+    content: "Recheck Occlusion with two views on the dev build (#35066) and drop its Open note in the Audit; the WebGPU notes' occlusion paragraph then describes r186 only"
     status: pending
   - id: batch-2026-10-15-b
     content: "Convert 30 more: the verify-per-view rows (Mirror, Reflection x3, Refraction, Lensflares, Occlusion, MeshBatch, GaussianSplat, ParticlesSoft), the dropped-post rows (Water, TslVfxTornado, MaterialsRetroreflection, SkinningInstancing), KTX2 x3, LinesFat x2, SkinningPoints, InstanceSprites, Sandbox, ModifierCurve, ShadowmapArray and six webgl_* rows (Audit: Converted 2026-10-15, batch 2)"
     status: completed
+  - id: batch-2026-10-17
+    content: "Convert the 39 remaining unblocked candidates: points and buffergeometry (Sprite children), geometry (NURBS, shapes, text, TTF, extrude splines, Minecraft, terrain), instancing x3, LOD, helpers, marching cubes (toon shaders in TSL), ClippingAdvanced (nested ClippingGroups), custom blending, DDS, lights x2, ShadowmapPerformance, LUT, skinning morph, BVH, MD2, 3DM, Collada kinematics, LDraw, NRRD, PDB, Watch, MorphtargetsSphere (Audit: Converted 2026-10-17, batch 3). ModifierSubdivision and LoaderGltfAnimationPointer retagged `dependency`"
+    status: completed
+  - id: upstream-batch3
+    content: "Upstream candidates found in batch 3 (WebGPU notes): MarchingCubes.count read as instance count; InstancedMesh of an InstancedBufferGeometry draws geometry.instanceCount (Infinity); DynamicDrawUsage re-uploads whole buffers every draw; CompressedCubeTexture sized 1x1 (Textures.getSize); a loading CompressedTexture has no mipmaps; uncompressed DDS (RGBAFormat CompressedTexture) has no block data; Min/Max blend equations need One factors in WebGPU"
+    status: pending
 isProject: false
 ---
 
@@ -257,7 +266,7 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 
 ### WebGPU notes
 
-- WebGPU points are 1 px. Use a `Sprite` with `PointsNodeMaterial({positionNode: instancedBufferAttribute(attribute)})` and `sprite.count` (GeometryConvex). A `Sprite`'s bounds, picking and frustum culling are one quad at its origin. When the points are the content (loaded clouds), keep the `Points`, which still draw 1 px points and are what picking and framing see. Add a child `InstancedMesh(new PlaneGeometry(1, 1), pointsMaterial, count)` named `Sprites` that draws the sized points: unselectable, with the cloud's `boundingBox` and `boundingSphere` (LoaderPcd, LoaderXyz). Sizes follow WebGL: `sizeAttenuation` scales by half the view's height over depth.
+- WebGPU points are 1 px. Use a `Sprite` with `PointsNodeMaterial({positionNode: instancedBufferAttribute(attribute)})` and `sprite.count` (GeometryConvex). A `Sprite`'s bounds, picking and frustum culling are one quad at its origin. When the points are the content (loaded clouds), keep the `Points`, which still draw 1 px points and are what picking and framing see. Add a child `InstancedMesh(new PlaneGeometry(1, 1), pointsMaterial, count)` named `Sprites` that draws the sized points: unselectable, with the cloud's `boundingBox` and `boundingSphere` (LoaderPcd, LoaderXyz). Generated clouds of up to half a million points use a child `Sprite` with `count` and `frustumCulled = false` instead, which needs no instance matrices (BuffergeometryPoints, PointsBillboards). Sizes follow WebGL: `sizeAttenuation` scales by half the view's height over depth.
 - `PMREMGenerator` output in WebGPU is a cube texture, not WebGL's 2D CubeUV atlas: it cannot be a plane's `map` (the envmaps examples' `debug` plane, dropped). Generate PMREMs in `onRendererInitialized` once the source images have loaded. `fromEquirectangular`, `fromCubemap` and `fromScene` are synchronous there.
 - `NoBlending` with `premultipliedAlpha` draws a texture's raw color where WebGL draws it premultiplied (black). Seen in MaterialsBlending's alpha flare row.
 - Canvas textures built from a DOM canvas: draw on an `OffscreenCanvas` (`CanvasTexture<OffscreenCanvas>`), or cut images with `createImageBitmap(image, sx, sy, sw, sh)` (MaterialsBlending, PanoramaCube).
@@ -269,6 +278,14 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 - A compute pass inside a material (`positionNode = Fn( ... )().compute( count )`, SkinningPoints) builds its pipeline when it first runs. Inside a TRAA view's pass, skinning then sees the velocity output and refers to `positionPrevious`, which compute shaders lack. Run it once with `renderer.compute` outside the views' draws (from `onRendererInitialized` or the load callback, keeping the renderer): the pipeline is cached.
 - Occlusion query results arrive after the draw that ran the query, and three keeps them per render context, which it shares between draws into targets of the same format and outputs whatever the camera (since r183, #32546; upstream kit under `occlusion-upstream`). Views drawn alike overwrite each other's results, so `renderer.isOccluded` can return another view's result (Occlusion keeps the source's behavior and documents it).
 - `alphaToCoverage` needs a multisampled target: it works in views with `View.msaa` (not TRAA views, whose pipeline ignores MSAA), and does nothing elsewhere (Clipping, ClippingIntersection).
+- A mesh's `count` is its instance count in WebGPU. `MarchingCubes` keeps its vertex count in `count`, so each view drew it once per vertex: set `count = 1` after `update()`, whose draw range already holds the vertices (Marchingcubes). An `InstancedMesh` whose geometry is an `InstancedBufferGeometry` draws `geometry.instanceCount` (Infinity by default, and `drawIndexed` throws): set it to the mesh's count (BuffergeometryInstancingInterleaved).
+- `DynamicDrawUsage` attributes upload whole on every draw of every view, changed or not (`Attributes.js`). Big dynamic buffers stall the editor (MarchingCubes' 100000 polygons, Drawrange's million segments): keep them static and mark `needsUpdate` with update ranges over the drawn part.
+- A draw that throws leaves the renderer mid-pass: documents opened after it in the same page log `structures must have at least one member` for ordinary materials. When many documents fail alike, open each alone first.
+- Compressed textures: one still loading has no `mipmaps`, which binding reads, so assign maps in the load callback. Uncompressed DDS files load as `CompressedTexture`s in `RGBAFormat`, which the compressed upload has no block size for: make them `DataTexture`s. A `CompressedCubeTexture` (DDS cube maps) is sized from its face array's `width`, uploads 1 × 1 and fails validation (LoaderTextureDds drops its cube maps).
+- `MinEquation` / `MaxEquation` need `One` factors in WebGPU, where WebGL ignores the factors: set them (MaterialsBlendingCustom).
+- 1 px `Points` that keep a `PointsMaterial.map` warn that the geometry has no `uv`: give the map to the sprites only (PointsBillboards, PointsSprites).
+- The `fragmentNode` rule above holds for addon materials too: `LDrawConditionalLineNodeMaterial` gets a subclass that moves it to `outputNode` (LoaderLdraw).
+- Framing reads children: a `Sprite` under a scaled mesh (glTF scale 100) frames as a 100-unit quad, so frame a stand-in (MorphtargetsSphere).
 - Imports are named, from `three/webgpu` and `three/tsl`, with addons from `three/addons/...`. Bare `three` is aliased to `three/webgpu` (`vite.config.ts`).
 - `@types/three` 0.186 is stricter than the JS sources:
   - `UniformNode<'float', number>` (node type and value type), `Node<'vec3'>` for typed nodes. Untyped `Node` has no math methods.
@@ -453,6 +470,46 @@ Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 co
 | ModifierEdgesplit | `webgl_modifier_edgesplit` | disposes replaced split geometries | OK |
 | ClippingIntersection | `webgl_clipping_intersection` | per-material clipping planes -> a `ClippingGroup`; `PlaneHelper`s and `showHelpers` dropped for the `clippingHelpers` overlay (2026-10-16); `alphaToCoverage` smooths the cut in MSAA views | OK |
 | MaterialsModified | `webgl_materials_modified` | `onBeforeCompile` twist -> TSL `positionNode` and `normalNode` on `MeshNormalNodeMaterial`; 2π s loop | OK |
+| **Converted 2026-10-17, batch 3** | | | Checked as the earlier batches: renders against `examples/screenshots` (Perspective and Front views), Document tab controls changed headlessly (`controls3.mjs`: every dropdown, toggle and button of the batch), all 39 opened in one page with no console errors (addon warnings only: 3DM `iridescenceThicknessRange`, Collada Z-up, NRRD canvas readback) |
+| BuffergeometryPoints | `webgl_buffergeometry_points` | 8π s loop; the `Points` keep picking and framing, a child `Sprite` (`frustumCulled` off) draws the 15-unit points | OK |
+| BuffergeometryPointsInterleaved | `webgl_buffergeometry_points_interleaved` | as BuffergeometryPoints; the sprites read the same interleaved bytes and unpack the 8-bit color from a `uint` word (node buffer attributes take no `normalized` flag) | OK |
+| BuffergeometryDrawrange | `webgl_buffergeometry_drawrange` | particles move by `delta` (scrubbing moves them back); 20π s loop of the group turn; 3 px dots as a child `Sprite`; the line buffers are static with update ranges (WebGPU notes: dynamic usage) | OK |
+| BuffergeometryInstancingInterleaved | `webgl_buffergeometry_instancing_interleaved` | crate spin derived from time about (1, 1, 1) at 0.4 rad/s (the source multiplies a small rotation per frame); 40π s loop; `geometry.instanceCount` set (WebGPU notes); source camera kept as `Camera` in the middle of the cloud | OK |
+| PointsBillboards | `webgl_points_billboards` | hue from time (20 s loop); pointer camera dropped; discs as a child `Sprite`, the 1 px `Points` without the map; frames with `overscan` 0.4 (whole-scene framing is beyond the fog) | OK |
+| PointsSprites | `webgl_points_sprites` | as PointsBillboards; layer turns in whole turns per 40π s, hue six cycles per loop (source every 20 s); `texture` toggles the sprites' maps | OK |
+| PointsWaves | `webgl_points_waves` | GLSL point shader -> `PointsNodeMaterial` with position and size from `instanceIndex` and `timeline.timeNode` (10π/3 s loop), round dots by alpha test; one `InstancedMesh` with the grid's bounds; pointer camera dropped | OK |
+| LinesColors | `webgl_lines_colors` | 4π s loop; pointer camera dropped | OK |
+| Lod | `webgl_lod` | `FlyControls` dropped; source camera kept as `Camera` inside the field (whole-scene framing sees it from outside, low levels); each view picks levels for its own camera | OK |
+| Helpers | `webgl_helpers` | vertex normals / tangents, box, grid and polar grid helpers are content in an unselectable `Helpers` group (`showHelpers`); the point light helper is the overlay's; light path from time (200π/3 s loop); orbiting camera dropped | OK |
+| GeometryNurbs | `webgl_geometry_nurbs` | pointer rotation dropped | OK |
+| GeometryShapes | `webgl_geometry_shapes` | a group per shape; point sets get child `Sprite`s; camera light at the source camera's position; pointer rotation dropped | OK |
+| GeometryText | `webgl_geometry_text` | key presses -> `text`; `fontName` / `fontWeight` dropdowns, `bevelEnabled`, `changeColor` button; fonts cached per document instead of the global `Cache.enabled`; floor unselectable, frames the text | OK |
+| LoaderTtf | `webgl_loader_ttf` | key presses -> `text`; floor unselectable, frames the text | OK |
+| GeometryExtrudeSplines | `webgl_geometry_extrude_splines` | `SplineCamera` rides the tube once per 20 s loop (the source's `animationView` is a camera view); camera helper and eye sphere dropped for the overlay | OK |
+| GeometryMinecraft | `webgl_geometry_minecraft` | `FirstPersonControls` dropped; source camera kept as `Camera` | OK |
+| GeometryTerrain | `webgl_geometry_terrain` | `FirstPersonControls` dropped; source camera kept as `Camera`; the seeded `Math.random` replacement stays local; canvases are `OffscreenCanvas`es; frames a stand-in ahead of the source camera (whole-scene framing is beyond the fog) | OK |
+| MathOrientationTransform | `webgl_math_orientation_transform` | ten random targets drawn once, one per 2 s of a 20 s loop starting from the last (the source's `setTimeout`); the turn derived from time | OK |
+| InstancingDynamic | `webgl_instancing_dynamic` | color waves every 3 s scheduled in timeline time (the source's `setInterval` + tween), first wave at 0 s; bob rate rounded to six per 9 s loop; orbiting camera dropped | OK |
+| InstancingPerformance | `webgl_instancing_performance` | `drawCalls` / `gpuMemory` read-only properties for the Performance folder; naive meshes in a `Naive` group; auto-rotating camera dropped; frames the heads once they load | OK |
+| InstancingScatter | `webgl_instancing_scatter` | lives derived from time (eight per 8π s loop, π s each; source 3.3 s), each life's spot from a seeded sampler, so scrubbing and looping repeat the garden; `resample` reseeds; the sway rotates a `Garden` group | OK |
+| Marchingcubes | `webgl_marchingcubes` | the four GLSL toon shaders as TSL color nodes; envMaps assigned once the cube maps load; blobs move by `delta` times `speed`; static buffers with update ranges and `count` reset to 1 after each update (WebGPU notes) | OK |
+| ClippingAdvanced | `webgl_clipping_advanced` | per-material and renderer planes -> nested `ClippingGroup`s (`Global` around everything, `Local` for the cubes with `clipShadows`, a group per volume face); 20π s loop | OK |
+| MaterialsBlendingCustom | `webgl_materials_blending_custom` | `Min` / `Max` draw with `One` factors (WebGPU notes); labels and background on `OffscreenCanvas`es | OK |
+| LoaderTextureDds | `webgl_loader_texture_dds` | the three DDS cube maps dropped (WebGPU notes: compressed cube textures); maps assigned once loaded; uncompressed files as `DataTexture`s | Upstream: compressed cube textures, loading compressed textures, uncompressed DDS (`upstream-batch3`) |
+| LightsHemisphere | `webgl_lights_hemisphere` | sky dome `ShaderMaterial` -> a background node with the same gradient; light toggles are properties (helpers from the overlay); duration = the 1 s flap; ground unselectable, frames the flamingo | OK |
+| LightsSpotlights | `webgl_lights_spotlights` | tweens to eight random targets per light, one per 5 s of a 40 s loop starting from the last; floor unselectable, frames a stand-in around the lit area | OK |
+| ShadowmapPerformance | `webgl_shadowmap_performance` | `DirectionalLight` as at HEAD (r186 had `SunLight`); horses run a fixed 3000-unit lane (source respawns up to 500 back), eleven runs per 60 s loop; gallop advances by `delta`; `FirstPersonControls` dropped, source camera kept as `Camera`; frames the blocks (fog) | OK |
+| GeometryColorsLookuptable | `webgl_geometry_colors_lookuptable` | the legend's second ortho scene -> a `Legend` sprite beside the model (`OffscreenCanvas`); camera light at the source camera's position; frames model and legend | OK |
+| AnimationSkinningMorph | `webgl_animation_skinning_morph` | live document (ADR-0009); `state` dropdown, `emotes` buttons, `expressions` sliders; grid from the overlay; ground unselectable, frames the robot | OK |
+| LoaderBvh | `webgl_loader_bvh` | the skeleton helpers overlay draws the bones; duration = clip; frames a stand-in box around the dancer (bones have no geometry) | OK |
+| LoaderMd2 | `webgl_loader_md2` | `skin` / `weapon` dropdowns (weapon `none` as at start), `animations` buttons (duration = clip), `speed`, `wireframe` | OK |
+| Loader3dm | `webgl_loader_3dm` | the global `Object3D.DEFAULT_UP` -> a `Z Up` group turning the model; `layers` record of toggles | OK (addon warning: `iridescenceThicknessRange`) |
+| LoaderColladaKinematics | `webgl_loader_collada_kinematics` | ten random poses drawn once, eased in timeline time (the source chains tweens with `setTimeout`), the loop starts from the last; orbiting camera dropped | OK |
+| LoaderPdb | `webgl_loader_pdb` | `CSS2DRenderer` labels dropped, atoms named by element; `molecule` dropdown with a load counter; 50π s loop | OK |
+| Watch | `webgl_watch` | hands from 10:10 plus document time (60 s loop; the source reads the wall clock); the optional bloom is `document.bloom` (off, as `postProcess`); TAA is the TRAA views'; camera tween dropped; frames the watch, not its floor | OK |
+| LoaderLdraw | `webgl_loader_ldraw` | `LDrawConditionalLineNodeMaterial` with its `fragmentNode` as `outputNode` (TRAA views); `buildingStep` clamped to `buildingSteps`; progress bar dropped | OK |
+| LoaderNrrd | `webgl_loader_nrrd` | slider ranges from `I.nrrd`'s dimensions and value range (editor configs are per class); trackball camera dropped; slices paint on the addon's DOM canvases | OK |
+| MorphtargetsSphere | `webgl_morphtargets_sphere` | discs as a child `Sprite` whose position node adds each morph target's offsets weighted by the mesh's influences; morph swing rounded to three per 4π s loop; frames a stand-in (the sprite's quad scales with the mesh) | OK |
 
 Removed: CameraLogarithmicDepthBuffer (renderer-level option, see What fits); CameraArray (runtime multi-view, see What fits; 2026-10-13).
 
@@ -485,7 +542,7 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | **Animation and morphs** | | | | |
 | AnimationKeys | `misc_animation_keys` | completed | — | see Audit; source camera kept as scene camera (`framing-motion`) |
 | AnimationMultiple | `webgl_animation_multiple` | completed | — | see Audit |
-| AnimationSkinningMorph | `webgl_animation_skinning_morph` | TODO | — | robot states / emotes / expressions; emote buttons make it a live document (ADR-0009), like skinning blending |
+| AnimationSkinningMorph | `webgl_animation_skinning_morph` | completed | — | see Audit |
 | Skinning | `webgpu_skinning` | completed | — | see Audit |
 | SkinningInstancing | `webgpu_skinning_instancing` | completed | — | see Audit |
 | SkinningPoints | `webgpu_skinning_points` | completed | — | see Audit |
@@ -494,32 +551,32 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | Morphtargets | `webgpu_morphtargets` | completed | — | see Audit |
 | MorphtargetsFace | `webgpu_morphtargets_face` | completed | — | see Audit |
 | MorphtargetsHorse | `webgl_morphtargets_horse` | completed | — | see Audit |
-| MorphtargetsSphere | `webgl_morphtargets_sphere` | TODO | — | points on the morphing vertices: WebGPU points are 1 px, and `Sprite` points from an instanced attribute do not follow morph targets |
-| LoaderBvh | `webgl_loader_bvh` | TODO | — | the skeleton is the content: drawn by the skeleton helpers overlay (bones without a skinned mesh draw too; on in the demo host). Bones have no geometry, so framing falls back to a 0.2 box at the origin: keep the source camera, or wait for a framing box (`framing-motion`) |
-| LoaderMd2 | `webgl_loader_md2` | TODO | — | `MD2Character`: skin, weapon and animation as dropdowns |
+| MorphtargetsSphere | `webgl_morphtargets_sphere` | completed | — | see Audit |
+| LoaderBvh | `webgl_loader_bvh` | completed | — | see Audit |
+| LoaderMd2 | `webgl_loader_md2` | completed | — | see Audit |
 | LoaderMdd | `webgl_loader_mdd` | completed | — | see Audit |
-| LoaderGltfAnimationPointer | `webgl_loader_gltf_animation_pointer` | TODO | — | `KHR_animation_pointer` |
-| Watch | `webgl_watch` | TODO | — | hands follow the wall clock with tweens: derive them from timeline time; TAA and bloom dropped |
+| LoaderGltfAnimationPointer | `webgl_loader_gltf_animation_pointer` | TODO | `dependency` | `KHR_animation_pointer` through `@needle-tools/three-animation-pointer` |
+| Watch | `webgl_watch` | completed | — | see Audit |
 | **Geometry and objects** | | | | |
 | Buffergeometry | `webgl_buffergeometry` | completed | — | see Audit |
 | BuffergeometryIndexed | `webgl_buffergeometry_indexed` | completed | — | see Audit |
-| BuffergeometryDrawrange | `webgl_buffergeometry_drawrange` | TODO | — | integrated particle motion (advance by `delta`); 1 px points -> `Sprite` |
-| BuffergeometryInstancingInterleaved | `webgl_buffergeometry_instancing_interleaved` | TODO | — | |
+| BuffergeometryDrawrange | `webgl_buffergeometry_drawrange` | completed | — | see Audit |
+| BuffergeometryInstancingInterleaved | `webgl_buffergeometry_instancing_interleaved` | completed | — | see Audit |
 | BuffergeometryLines | `webgl_buffergeometry_lines` | completed | — | see Audit |
 | BuffergeometryLinesIndexed | `webgl_buffergeometry_lines_indexed` | completed | — | see Audit |
-| BuffergeometryPoints | `webgl_buffergeometry_points` | TODO | — | 1 px points -> `Sprite` |
-| BuffergeometryPointsInterleaved | `webgl_buffergeometry_points_interleaved` | TODO | — | 1 px points -> `Sprite` |
-| GeometryColorsLookuptable | `webgl_geometry_colors_lookuptable` | TODO | — | the legend is a second ortho scene drawn over the view: drop it, or a sprite in the scene |
+| BuffergeometryPoints | `webgl_buffergeometry_points` | completed | — | see Audit |
+| BuffergeometryPointsInterleaved | `webgl_buffergeometry_points_interleaved` | completed | — | see Audit |
+| GeometryColorsLookuptable | `webgl_geometry_colors_lookuptable` | completed | — | see Audit |
 | GeometryCube | `webgl_geometry_cube` | completed | — | see Audit |
 | GeometryExtrudeShapes | `webgl_geometry_extrude_shapes` | completed | — | see Audit |
-| GeometryExtrudeSplines | `webgl_geometry_extrude_splines` | TODO | — | spline camera as a named scene camera (like `TrainCamera`) |
+| GeometryExtrudeSplines | `webgl_geometry_extrude_splines` | completed | — | see Audit |
 | GeometryLoft | `webgpu_geometry_loft` | completed | — | see Audit; axis views see the curtain from outside |
-| GeometryMinecraft | `webgl_geometry_minecraft` | TODO | — | `FirstPersonControls` dropped |
-| GeometryNurbs | `webgl_geometry_nurbs` | TODO | — | pointer rotation dropped |
-| GeometryShapes | `webgl_geometry_shapes` | TODO | — | pointer rotation dropped |
+| GeometryMinecraft | `webgl_geometry_minecraft` | completed | — | see Audit |
+| GeometryNurbs | `webgl_geometry_nurbs` | completed | — | see Audit |
+| GeometryShapes | `webgl_geometry_shapes` | completed | — | see Audit |
 | GeometryTeapot | `webgl_geometry_teapot` | completed | — | see Audit |
-| GeometryTerrain | `webgl_geometry_terrain` | TODO | — | `FirstPersonControls` dropped |
-| GeometryText | `webgl_geometry_text` | TODO | — | typing -> a `text` property |
+| GeometryTerrain | `webgl_geometry_terrain` | completed | — | see Audit |
+| GeometryText | `webgl_geometry_text` | completed | — | see Audit |
 | GeometryTextShapes | `webgl_geometry_text_shapes` | completed | — | see Audit |
 | GeometryTextStroke | `webgl_geometry_text_stroke` | completed | — | see Audit |
 | GeometryCsg | `webgl_geometry_csg` | TODO | `dependency` | `three-bvh-csg` |
@@ -530,31 +587,31 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | InstanceSprites | `webgpu_instance_sprites` | completed | — | see Audit |
 | InstanceUniform | `webgpu_instance_uniform` | completed | — | see Audit |
 | InstancePoints | `webgpu_instance_points` | TODO | `per-frame-gpu` | `renderer.compute(computeSize)` each frame; inset view -> scene camera |
-| InstancingDynamic | `webgl_instancing_dynamic` | TODO | — | |
-| InstancingPerformance | `webgl_instancing_performance` | TODO | — | method (instanced / merged / naive) as a dropdown |
-| InstancingScatter | `webgl_instancing_scatter` | TODO | — | `MeshSurfaceSampler`; resample button |
+| InstancingDynamic | `webgl_instancing_dynamic` | completed | — | see Audit |
+| InstancingPerformance | `webgl_instancing_performance` | completed | — | see Audit |
+| InstancingScatter | `webgl_instancing_scatter` | completed | — | see Audit |
 | MeshBatch | `webgpu_mesh_batch` | completed | — | see Audit |
-| Lod | `webgl_lod` | TODO | — | verify per view (`LOD.autoUpdate` uses the drawing camera) |
-| Marchingcubes | `webgl_marchingcubes` | TODO | — | `ToonShader` material options dropped or ported to TSL |
+| Lod | `webgl_lod` | completed | — | see Audit |
+| Marchingcubes | `webgl_marchingcubes` | completed | — | see Audit |
 | ModifierCurve | `webgpu_modifier_curve` | completed | — | see Audit |
 | ModifierEdgesplit | `webgl_modifier_edgesplit` | completed | — | see Audit |
 | ModifierSimplifier | `webgl_modifier_simplifier` | completed | — | see Audit |
-| ModifierSubdivision | `webgl_modifier_subdivision` | TODO | — | |
-| MathOrientationTransform | `webgl_math_orientation_transform` | TODO | — | `setTimeout` target picks -> timeline schedule |
-| Helpers | `webgl_helpers` | TODO | — | normal / tangent / box helpers are the subject: content in a `Helpers` group (Scene graph and picking); the light helpers come from the overlay |
-| LinesColors | `webgl_lines_colors` | TODO | — | pointer-driven camera dropped |
+| ModifierSubdivision | `webgl_modifier_subdivision` | TODO | `dependency` | `three-subdivide` (the source maps it to the CDN in its import map) |
+| MathOrientationTransform | `webgl_math_orientation_transform` | completed | — | see Audit |
+| Helpers | `webgl_helpers` | completed | — | see Audit |
+| LinesColors | `webgl_lines_colors` | completed | — | see Audit |
 | LinesDashed | `webgl_lines_dashed` | completed | — | see Audit |
 | LinesFat | `webgpu_lines_fat` | completed | — | see Audit |
 | LinesFatWireframe | `webgpu_lines_fat_wireframe` | completed | — | see Audit |
 | Sprites | `webgpu_sprites` | completed | — | see Audit |
-| PointsBillboards | `webgl_points_billboards` | TODO | — | 1 px points -> `Sprite` |
-| PointsSprites | `webgl_points_sprites` | TODO | — | 1 px points -> `Sprite` |
-| PointsWaves | `webgl_points_waves` | TODO | — | `ShaderMaterial` -> TSL sprite material |
+| PointsBillboards | `webgl_points_billboards` | completed | — | see Audit |
+| PointsSprites | `webgl_points_sprites` | completed | — | see Audit |
+| PointsWaves | `webgl_points_waves` | completed | — | see Audit |
 | PointsDynamic | `webgl_points_dynamic` | TODO | `document-pipeline` | the post chain is part of the subject |
 | GaussianSplat | `webgpu_gaussian_splat` | completed | — | see Audit |
 | **Clipping** | | | | |
 | Clipping | `webgpu_clipping` | completed | — | see Audit |
-| ClippingAdvanced | `webgl_clipping_advanced` | TODO | — | `ClippingGroup` |
+| ClippingAdvanced | `webgl_clipping_advanced` | completed | — | see Audit |
 | ClippingIntersection | `webgl_clipping_intersection` | completed | — | see Audit |
 | ClippingStencil | `webgpu_clipping_stencil` | TODO | `renderer-option` | needs `stencil: true` |
 | **Materials and textures** | | | | |
@@ -582,7 +639,7 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | ParallaxUv | `webgpu_parallax_uv` | completed | — | see Audit |
 | ProceduralTexture | `webgpu_procedural_texture` | completed | — | see Audit |
 | MaterialsBlending | `webgl_materials_blending` | completed | — | see Audit |
-| MaterialsBlendingCustom | `webgl_materials_blending_custom` | TODO | — | |
+| MaterialsBlendingCustom | `webgl_materials_blending_custom` | completed | — | see Audit |
 | MaterialsBumpmap | `webgl_materials_bumpmap` | completed | — | see Audit |
 | MaterialsCar | `webgl_materials_car` | TODO | `transmission-views` | wheel spin and grid scroll from time; body / detail / glass colors; glass is `transmission: 1` |
 | MaterialsCubemap | `webgl_materials_cubemap` | completed | — | see Audit |
@@ -601,7 +658,7 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | Textures2dArrayCompressed | `webgpu_textures_2d-array_compressed` | completed | — | see Audit |
 | TexturesPartialupdate | `webgpu_textures_partialupdate` | TODO | `per-frame-gpu` | `copyTextureToTexture` on a timer |
 | LoaderTextureKtx2 | `webgpu_loader_texture_ktx2` | completed | — | see Audit |
-| LoaderTextureDds | `webgl_loader_texture_dds` | TODO | — | BC formats: desktop GPUs only |
+| LoaderTextureDds | `webgl_loader_texture_dds` | completed | — | see Audit |
 | LoaderTextureExr | `webgl_loader_texture_exr` | completed | — | see Audit |
 | LoaderTextureHdr | `webgl_loader_texture_hdr` | completed | — | see Audit |
 | LoaderTextureTga | `webgl_loader_texture_tga` | completed | — | see Audit |
@@ -655,14 +712,14 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | LightsSelective | `webgpu_lights_selective` | completed | — | see Audit |
 | LightsSpotlight | `webgpu_lights_spotlight` | completed | — | see Audit |
 | LightsSunlight | `webgpu_lights_sunlight` | TODO | `renderer-on-change` | `azimuth` / `elevation` re-bake the sky environment (`fromScene`). The cascades refit per camera per frame (`ShadowNode` keys updates by camera), so they work per view |
-| LightsHemisphere | `webgl_lights_hemisphere` | TODO | — | sky dome `ShaderMaterial` -> TSL gradient |
-| LightsSpotlights | `webgl_lights_spotlights` | TODO | — | tween.js (wall clock) -> derive from time |
+| LightsHemisphere | `webgl_lights_hemisphere` | completed | — | see Audit |
+| LightsSpotlights | `webgl_lights_spotlights` | completed | — | see Audit |
 | LightsDynamic | `webgpu_lights_dynamic` | TODO | `renderer-option` | `renderer.lighting = new DynamicLighting()` |
 | LightsClustered | `webgpu_lights_clustered` | TODO | `renderer-option` | `renderer.lighting` (clustered); FXAA dropped |
 | Shadowmap | `webgpu_shadowmap` | completed | — | see Audit; source camera kept as scene camera (`framing-scenery`) |
 | ShadowmapArray | `webgpu_shadowmap_array` | completed | — | see Audit |
 | ShadowmapPointlight | `webgpu_shadowmap_pointlight` | completed | — | see Audit |
-| ShadowmapPerformance | `webgl_shadowmap_performance` | TODO | — | |
+| ShadowmapPerformance | `webgl_shadowmap_performance` | completed | — | see Audit |
 | ShadowmapOpacity | `webgpu_shadowmap_opacity` | TODO | `renderer-option` | `shadowMap.transmitted` |
 | ShadowmapVsm | `webgpu_shadowmap_vsm` | TODO | `renderer-option` | `shadowMap.type = VSMShadowMap` |
 | ShadowmapCsm | `webgpu_shadowmap_csm` | TODO | `view-camera` | `CSMShadowNode` splits one camera's frustum |
@@ -723,28 +780,28 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | LoaderGltfAvif | `webgl_loader_gltf_avif` | completed | — | see Audit |
 | LoaderGltfInstancing | `webgl_loader_gltf_instancing` | completed | — | see Audit |
 | LoaderGltfVariants | `webgl_loader_gltf_variants` | completed | — | see Audit |
-| Loader3dm | `webgl_loader_3dm` | TODO | — | rhino3dm wasm from the CDN |
+| Loader3dm | `webgl_loader_3dm` | completed | — | see Audit |
 | Loader3ds | `webgl_loader_3ds` | completed | — | see Audit |
 | Loader3mf | `webgl_loader_3mf` | completed | — | see Audit |
 | Loader3mfMaterials | `webgl_loader_3mf_materials` | completed | — | see Audit |
 | LoaderAmf | `webgl_loader_amf` | completed | — | see Audit |
 | LoaderCollada | `webgl_loader_collada` | completed | — | see Audit |
-| LoaderColladaKinematics | `webgl_loader_collada_kinematics` | TODO | — | tween + `setTimeout` -> joint values from time |
+| LoaderColladaKinematics | `webgl_loader_collada_kinematics` | completed | — | see Audit |
 | LoaderColladaSkinning | `webgl_loader_collada_skinning` | completed | — | see Audit |
 | LoaderDraco | `webgl_loader_draco` | completed | — | see Audit |
 | LoaderFbx | `webgl_loader_fbx` | completed | — | see Audit |
 | LoaderFbxNurbs | `webgl_loader_fbx_nurbs` | completed | — | see Audit |
 | LoaderGcode | `webgl_loader_gcode` | completed | — | see Audit |
 | LoaderKmz | `webgl_loader_kmz` | completed | — | see Audit |
-| LoaderLdraw | `webgl_loader_ldraw` | TODO | — | model dropdown |
-| LoaderNrrd | `webgl_loader_nrrd` | TODO | — | `VolumeSlice` canvas textures |
+| LoaderLdraw | `webgl_loader_ldraw` | completed | — | see Audit |
+| LoaderNrrd | `webgl_loader_nrrd` | completed | — | see Audit |
 | LoaderObj | `webgl_loader_obj` | completed | — | see Audit |
 | LoaderPcd | `webgl_loader_pcd` | completed | — | see Audit |
-| LoaderPdb | `webgl_loader_pdb` | TODO | — | `CSS2DRenderer` atom labels dropped |
+| LoaderPdb | `webgl_loader_pdb` | completed | — | see Audit |
 | LoaderPly | `webgl_loader_ply` | completed | — | see Audit |
 | LoaderStl | `webgl_loader_stl` | completed | — | see Audit |
 | LoaderSvg | `webgl_loader_svg` | completed | — | see Audit |
-| LoaderTtf | `webgl_loader_ttf` | TODO | — | typing -> a `text` property |
+| LoaderTtf | `webgl_loader_ttf` | completed | — | see Audit |
 | LoaderUsdz | `webgl_loader_usdz` | completed | — | see Audit |
 | LoaderVox | `webgl_loader_vox` | completed | — | see Audit |
 | LoaderVrml | `webgl_loader_vrml` | completed | — | see Audit |
@@ -775,7 +832,7 @@ Features or fixes outside the examples. Each one unblocks the rows tagged with i
 - **`view-camera`**: content bound to the camera that draws it: `CSMShadowNode` (one camera's frustum), `pass(scene, camera)` inside a material (Portal), camera layers (Layers). Views build their camera per draw (ADR-0005), so the document has no camera to bind. Needed: a per-view hook, or nodes that read the drawing camera.
 - **`renderer-option`**: the shared renderer (`RenderScheduler.ts`: `{antialias: false, alpha: true}`) has no stencil buffer (three defaults `stencil` to `false`), and `renderer.lighting`, `shadowMap.type = VSMShadowMap` and `shadowMap.transmitted` are renderer-wide (ADR-0001). Needed: enable stencil on the shared renderer, or a renderer a document can ask for.
 - **`three-upgrade`**: the source exists only after r186 (HEAD).
-- **`dependency`**: needs an npm package the workspace does not have (`three-bvh-csg`, `web-ifc`).
+- **`dependency`**: needs an npm package the workspace does not have (`three-bvh-csg`, `web-ifc`, `three-subdivide`, `@needle-tools/three-animation-pointer`).
 - **`shared-refresh`** (three, since #34162 in r186; worked around): `NodeMaterialObserver.needsRefresh` gives an unchanged object whose material has no node properties a SHARED refresh, which uploads only shared uniform groups (`renderGroup`, `frameGroup`). A default `uniform()` is in `objectGroup`: read by a scene node (`fogNode`, `environmentNode`), its new value never reaches such objects until they or their material change. TRAA views write velocity and refresh fully, so only forward views go stale (FogHeight fog controls; CubemapMix reflections froze at their first time). Workaround: `setGroup(renderGroup)` (Map table; `Timeline.timeNode` since 2026-10-13). Standalone repro on the dev build: a plane with `MeshBasicNodeMaterial({color})` under `fogNode = fog(color, density)` keeps its first pixels after `density.value` changes, and updates with `renderGroup`. Upstream's own `webgpu_fog_height` and `webgpu_cubemap_adjustments` are stale too (checked headlessly 2026-10-14; bisected to #34162). Upstream fix three.js #34996 (merged 2026-10-14, Mugen87 cleanup `c5e5061ed0`, in the dev build `ca10fb69aa`): `NodeMaterialObserver.containsNode()` treats a custom `scene.fogNode` / `scene.environmentNode` like material node properties. FogHeight dropped its workaround on 2026-10-14; recheck it on dev (io links `../three.js`). Once a release has it, the `Timeline.timeNode` workaround can go too. Second gap, same cause (2026-10-14): built-in state the observer does not track, so changes never reach unchanged objects: texture `offset`/`repeat`/`rotation`/`center`/`matrix` (MaterialsTextureRotation), `refractionRatio`, `clearcoatRoughnessMap`, `thicknessMap`, in-place `iridescenceThicknessRange` edits. PR #35002 (closed 2026-10-14): Mugen87 asked for step-by-step fixes and issues first, and merged the three missing properties himself as #35022 (2026-10-15). Still broken on dev `ec2b7458ea`: texture transforms and `iridescenceThicknessRange`, plus three found by a property sweep: `LightProbe` `sh`/`intensity` (object-group uniform, regression in r186), `Sprite.center` and standard `envMap` (both bound to the first object or material that built the shader, older than r186). Issue kits https://claude.ai/artifact/VcLnhjZSTRQ4jQPZH39eiz (2026-10-15).
 - **`transmission-views`**: transmission materials (`MeshPhysicalMaterial.transmission`, glTF `KHR_materials_transmission`) sample module-level viewport mip textures that three copies from each render target. In the editor, with several views drawing per frame, WebGPU reports `Destroyed texture [RGBA16Float, the forward view's target size] used in a submit` on every redraw (seen headless; static documents only while playing). One render target alone is clean. Check three after r186 first (#34582 skips mipmaps for a copy without a mip chain, #34826 fixes a color buffer cache check); otherwise the fix is in the render scheduler or pipelines.
 
