@@ -21,8 +21,9 @@ import { Document, DocumentProps, Timeline } from '@io-gui/three'
 const PERIOD = 2 * Math.PI
 
 /**
- * Uncompressed DDS files (ARGB, 24-bit RGB) arrive as a `CompressedTexture` in `RGBAFormat`, which WebGPU uploads as
- * blocks of a compressed format and has no block size for. The same pixels as a `DataTexture`, mip chain included.
+ * Workaround (upstream: #35082): uncompressed DDS files (ARGB, 24-bit RGB) arrive as a `CompressedTexture` in
+ * `RGBAFormat`, which WebGPU uploads as blocks of a compressed format and has no block size for. The same pixels as a
+ * `DataTexture`, mip chain included.
  */
 function uncompressed( texture: CompressedTexture ): Texture {
   // DDSLoader sets RGBAFormat on uncompressed files, outside the typed compressed formats.
@@ -44,10 +45,11 @@ function uncompressed( texture: CompressedTexture ): Texture {
 
 /**
  * Ten boxes and a torus textured from DDS files: DXT1, DXT3 and DXT5 with and without mipmaps, uncompressed ARGB, BC6H
- * HDR (signed and unsigned) and a 24-bit normal map. BC formats need a desktop GPU. The source's three DDS cube maps
- * (the torus' environment map and two boxes) are dropped: WebGPU sizes a compressed cube texture from its face array's
- * `width`, which is undefined, so it uploads a 1 × 1 texture and fails validation. Each map is assigned once loaded;
- * the uncompressed ones become `DataTexture`s (see `uncompressed`).
+ * HDR (signed and unsigned) and a 24-bit normal map. BC formats need a desktop GPU. Workaround (upstream: #35083,
+ * #35084): the source's three DDS cube maps (the torus' environment map and two boxes) are dropped. `DDSLoader` returns
+ * them as 2D compressed textures with six faces, and WebGPU does not upload compressed cube textures (it sizes them
+ * 1 × 1 from the face array). Each map is assigned once loaded; the uncompressed ones become `DataTexture`s (see
+ * `uncompressed`).
  * Turns with document time; plays when opened.
  */
 @Register
@@ -80,8 +82,8 @@ export class LoaderTextureDdsExample extends Document {
     const material12 = new MeshBasicMaterial()
     const material13 = new MeshBasicMaterial( { transparent: true } )
 
-    // A compressed texture still loading has no mipmaps, which WebGPU reads when it binds the texture: assign each map
-    // once it arrives (views draw on document changes only, so report it too).
+    // Workaround (upstream: #35081): a compressed texture still loading has no mipmaps, which WebGPU reads when it
+    // binds the texture: assign each map once it arrives (views draw on document changes only, so report it too).
     const loader = new DDSLoader()
     const load = ( url: string, material: MeshBasicMaterial, options: { srgb?: boolean; linear?: boolean } = {} ) => {
       loader.load( 'https://threejs.org/examples/textures/' + url, ( texture ) => {

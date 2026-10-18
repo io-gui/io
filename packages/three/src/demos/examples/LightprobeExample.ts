@@ -8,9 +8,9 @@ import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
 /**
- * Gives a light probe helper a basic material that draws the same irradiance. The helper's own material sets
- * `fragmentNode`, which writes only the first color output: in the TRAA views' MRT pass (color and velocity) WebGPU
- * rejects its pipeline.
+ * Gives a light probe helper a basic material that draws the same irradiance. Workaround (upstream:
+ * triage-fragment-node-mrt): the helper's own material sets `fragmentNode`, which writes only the first color output:
+ * in the TRAA views' MRT pass (color and velocity) WebGPU rejects its pipeline.
  */
 function useBasicMaterial( helper: LightProbeHelper ) {
   const { _sh: sh, _intensity: intensity } = helper as unknown as { _sh: Node; _intensity: Node<'float'> }

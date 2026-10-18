@@ -55,8 +55,9 @@ const rainbow = [
 ]
 
 /**
- * `MarchingCubes` creates its buffers (100000 polygons) with `DynamicDrawUsage`, which WebGPURenderer uploads whole on
- * every draw of every view, changed or not. Static buffers upload when `update()` marks them, within update ranges.
+ * Workaround (upstream: dynamic-usage): `MarchingCubes` creates its buffers (100000 polygons) with `DynamicDrawUsage`,
+ * which WebGPURenderer uploads whole on every draw of every view, changed or not. Static buffers upload when `update()`
+ * marks them, within update ranges.
  */
 function staticUsage( effect: MarchingCubes ) {
   for ( const attribute of Object.values( effect.geometry.attributes ) as BufferAttribute[] ) attribute.setUsage( StaticDrawUsage )
@@ -180,7 +181,8 @@ export class MarchingcubesExample extends Document {
     const chrome = new MeshLambertMaterial( { color: 0xffffff } )
     const liquid = new MeshLambertMaterial( { color: 0xffffff, refractionRatio: 0.85 } )
 
-    // A cube map that is still loading fails WebGPU validation as an `envMap`: assign the maps once they arrive.
+    // Workaround (upstream: triage-cube-envmap-loading): a cube map that is still loading fails WebGPU validation as an
+    // `envMap`: assign the maps once they arrive.
     const cubeTextureLoader = new CubeTextureLoader()
     cubeTextureLoader.load( urls, ( reflectionCube ) => {
       shiny.envMap = reflectionCube
@@ -283,14 +285,15 @@ export class MarchingcubesExample extends Document {
 
     object.update()
 
-    // Upload only the vertices drawn.
+    // Workaround (upstream: dynamic-usage): upload only the vertices drawn.
     for ( const attribute of Object.values( object.geometry.attributes ) as BufferAttribute[] ) {
       attribute.clearUpdateRanges()
       attribute.addUpdateRange( 0, object.count * attribute.itemSize )
     }
 
-    // `MarchingCubes.count` is its vertex count, already in the draw range; WebGPURenderer reads a mesh's `count` as its
-    // instance count, so it would draw the mesh once per vertex. `update()` starts counting from 0 again.
+    // Workaround (upstream: mesh-count): `MarchingCubes.count` is its vertex count, already in the draw range;
+    // WebGPURenderer reads a mesh's `count` as its instance count, so it would draw the mesh once per vertex.
+    // `update()` starts counting from 0 again.
     object.count = 1
 
     this.notify({kind: 'geometry'})

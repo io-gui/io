@@ -113,8 +113,9 @@ export class MaterialsDisplacementmapExample extends Document {
   }
 
   /**
-   * Adds the head once its environment map has loaded too: drawn before, the standard material's environment binds a
-   * 2D placeholder as a cube texture and fails WebGPU validation (the source races the same way).
+   * Adds the head once its environment map has loaded too. Workaround (upstream: triage-cube-envmap-loading): drawn
+   * before, the standard material's environment binds a 2D placeholder as a cube texture and fails WebGPU validation
+   * (the source races the same way).
    */
   private async loadModel() {
     try {

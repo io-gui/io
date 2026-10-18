@@ -31,7 +31,7 @@ Other rules (read on demand):
 
 ## Cursor plans (`.cursor/plans/*.plan.md`)
 
-Design plans for past/ongoing work (frontmatter has `name`, `overview`, and a `todos` list with statuses). Check them for context before working on related features (layout package improvements, principles evaluation, three.js example conversion, three.js UI configs, core construction order).
+Design plans for past/ongoing work (frontmatter has `name`, `overview`, and a `todos` list with statuses). Check them for context before working on related features (layout package improvements, principles evaluation, three.js example conversion, three.js upstream fixes, three.js UI configs, core construction order).
 
 ## CI
 

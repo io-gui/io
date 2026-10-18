@@ -129,8 +129,8 @@ export class BuffergeometryInstancingInterleavedExample extends Document {
     const scale = new Vector3( 1, 1, 1 )
     let x, y, z, w
 
-    // WebGPU draws an InstancedMesh of an InstancedBufferGeometry with the geometry's instanceCount (Infinity by
-    // default) instead of the mesh's count, which WebGL uses.
+    // Workaround (upstream: instanced-mesh-instance-count): WebGPU draws an InstancedMesh of an InstancedBufferGeometry
+    // with the geometry's instanceCount (Infinity by default) instead of the mesh's count, which WebGL uses.
     geometry.instanceCount = instances
 
     this.mesh = new InstancedMesh( geometry, material, instances )

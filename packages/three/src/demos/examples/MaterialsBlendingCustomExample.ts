@@ -190,6 +190,8 @@ export class MaterialsBlendingCustomExample extends Document {
   blendEquationChanged() {
     if ( ! this.materials ) return
     const equation = equations[ this.blendEquation ]
+    // Workaround (upstream: minmax-blend-factors): WebGPU rejects Min / Max unless both factors are One; WebGL ignores
+    // them.
     const minMax = equation === MinEquation || equation === MaxEquation
 
     for ( const { material, src, dst } of this.materials ) {

@@ -87,7 +87,10 @@ todos:
     content: "Convert the 39 remaining unblocked candidates: points and buffergeometry (Sprite children), geometry (NURBS, shapes, text, TTF, extrude splines, Minecraft, terrain), instancing x3, LOD, helpers, marching cubes (toon shaders in TSL), ClippingAdvanced (nested ClippingGroups), custom blending, DDS, lights x2, ShadowmapPerformance, LUT, skinning morph, BVH, MD2, 3DM, Collada kinematics, LDraw, NRRD, PDB, Watch, MorphtargetsSphere (Audit: Converted 2026-10-17, batch 3). ModifierSubdivision and LoaderGltfAnimationPointer retagged `dependency`"
     status: completed
   - id: upstream-batch3
-    content: "Upstream candidates found in batch 3 (WebGPU notes): MarchingCubes.count read as instance count; InstancedMesh of an InstancedBufferGeometry draws geometry.instanceCount (Infinity); DynamicDrawUsage re-uploads whole buffers every draw; CompressedCubeTexture sized 1x1 (Textures.getSize); a loading CompressedTexture has no mipmaps; uncompressed DDS (RGBAFormat CompressedTexture) has no block data; Min/Max blend equations need One factors in WebGPU"
+    content: "Upstream candidates found in batch 3 moved to three_upstream_fixes.plan.md (2026-10-18): compressed textures filed as #35081-#35084; mesh-count, dynamic-usage, instanced-mesh-instance-count, minmax-blend-factors planned. Workarounds indexed in Upstream workarounds below"
+    status: completed
+  - id: remove-workarounds
+    content: "As each three_upstream_fixes.plan.md fix reaches the linked three build, remove its rows in Upstream workarounds (restore the source's code), recheck the example and update its Audit row"
     status: pending
 isProject: false
 ---
@@ -278,11 +281,11 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 - A compute pass inside a material (`positionNode = Fn( ... )().compute( count )`, SkinningPoints) builds its pipeline when it first runs. Inside a TRAA view's pass, skinning then sees the velocity output and refers to `positionPrevious`, which compute shaders lack. Run it once with `renderer.compute` outside the views' draws (from `onRendererInitialized` or the load callback, keeping the renderer): the pipeline is cached.
 - Occlusion query results arrive after the draw that ran the query, and three keeps them per render context, which it shares between draws into targets of the same format and outputs whatever the camera (since r183, #32546; upstream kit under `occlusion-upstream`). Views drawn alike overwrite each other's results, so `renderer.isOccluded` can return another view's result (Occlusion keeps the source's behavior and documents it).
 - `alphaToCoverage` needs a multisampled target: it works in views with `View.msaa` (not TRAA views, whose pipeline ignores MSAA), and does nothing elsewhere (Clipping, ClippingIntersection).
-- A mesh's `count` is its instance count in WebGPU. `MarchingCubes` keeps its vertex count in `count`, so each view drew it once per vertex: set `count = 1` after `update()`, whose draw range already holds the vertices (Marchingcubes). An `InstancedMesh` whose geometry is an `InstancedBufferGeometry` draws `geometry.instanceCount` (Infinity by default, and `drawIndexed` throws): set it to the mesh's count (BuffergeometryInstancingInterleaved).
-- `DynamicDrawUsage` attributes upload whole on every draw of every view, changed or not (`Attributes.js`). Big dynamic buffers stall the editor (MarchingCubes' 100000 polygons, Drawrange's million segments): keep them static and mark `needsUpdate` with update ranges over the drawn part.
+- A mesh's `count` is its instance count in WebGPU. `MarchingCubes` keeps its vertex count in `count`, so each view drew it once per vertex: set `count = 1` after `update()`, whose draw range already holds the vertices (Marchingcubes; upstream `mesh-count`). An `InstancedMesh` whose geometry is an `InstancedBufferGeometry` draws `geometry.instanceCount` (Infinity by default, and `drawIndexed` throws): set it to the mesh's count (BuffergeometryInstancingInterleaved; upstream `instanced-mesh-instance-count`).
+- `DynamicDrawUsage` attributes upload whole on every draw of every view, changed or not (`Attributes.js`). Big dynamic buffers stall the editor (MarchingCubes' 100000 polygons, Drawrange's million segments): keep them static and mark `needsUpdate` with update ranges over the drawn part (upstream `dynamic-usage`).
 - A draw that throws leaves the renderer mid-pass: documents opened after it in the same page log `structures must have at least one member` for ordinary materials. When many documents fail alike, open each alone first.
-- Compressed textures: one still loading has no `mipmaps`, which binding reads, so assign maps in the load callback. Uncompressed DDS files load as `CompressedTexture`s in `RGBAFormat`, which the compressed upload has no block size for: make them `DataTexture`s. A `CompressedCubeTexture` (DDS cube maps) is sized from its face array's `width`, uploads 1 × 1 and fails validation (LoaderTextureDds drops its cube maps).
-- `MinEquation` / `MaxEquation` need `One` factors in WebGPU, where WebGL ignores the factors: set them (MaterialsBlendingCustom).
+- Compressed textures: one still loading has no `mipmaps`, which binding reads, so assign maps in the load callback. Uncompressed DDS files load as `CompressedTexture`s in `RGBAFormat`, which the compressed upload has no block size for: make them `DataTexture`s. DDS cube maps load as 2D `CompressedTexture`s with six faces, and WebGPU does not upload a `CompressedCubeTexture` either (sized from its face array's `width`: 1 × 1, fails validation), so LoaderTextureDds drops its cube maps. Filed: #35081 (mipmaps), #35082 (uncompressed), #35083 + #35084 (cube maps).
+- `MinEquation` / `MaxEquation` need `One` factors in WebGPU, where WebGL ignores the factors: set them (MaterialsBlendingCustom; upstream `minmax-blend-factors`).
 - 1 px `Points` that keep a `PointsMaterial.map` warn that the geometry has no `uv`: give the map to the sprites only (PointsBillboards, PointsSprites).
 - The `fragmentNode` rule above holds for addon materials too: `LDrawConditionalLineNodeMaterial` gets a subclass that moves it to `outputNode` (LoaderLdraw).
 - Framing reads children: a `Sprite` under a scaled mesh (glTF scale 100) frames as a 100-unit quad, so frame a stand-in (MorphtargetsSphere).
@@ -292,6 +295,25 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
   - `Fn` infers its arguments from the annotated parameter: `Fn(([a, b]: [Node<'vec2'>, Node<'float'>]) => ..., {a: 'vec2', b: 'float', return: 'vec3'})`, with the layout as the second argument (the old `Fn<[Node, Node]>(...).setLayout(...)` no longer types).
   - Arguments are not converted implicitly: pass `normalWorldGeometry.xy` to a `vec2` input, and `color(c).rgb` to multiply with a `vec3`.
   - `bool(true)` instead of `true` in `assign()`.
+
+## Upstream workarounds
+
+Example code that works around a three bug and differs from its source because of it. The fixes, their status and repros are in [three_upstream_fixes.plan.md](three_upstream_fixes.plan.md) (column Upstream: its todo id or PR). Each site has a `Workaround (upstream: <id>)` comment: `grep -rn "Workaround (upstream" packages/three/src`. When a fix is in the linked three build, restore the source's code as the last column says, recheck the example, update its Audit row and delete the row here (`remove-workarounds`). WebGPU limitations that no fix will change (1 px points as `Sprite` children, PMREM cube textures, vertex buffer limits) are not workarounds and stay in the WebGPU notes.
+
+| Example | Workaround | Upstream | Restore (source) |
+| --- | --- | --- | --- |
+| Marchingcubes | `object.count = 1` after `update()` in `updateCubes` | `mesh-count` | delete the line |
+| Marchingcubes | `staticUsage()` (constructor, `resolutionChanged`) and update ranges in `updateCubes` | `dynamic-usage` | the addon's `DynamicDrawUsage` buffers; delete `staticUsage` and the range loop |
+| Marchingcubes | env maps assigned in the cube map's load callback | `triage-cube-envmap-loading` | `envMap: reflectionCube` in the `shiny` / `chrome` materials |
+| BuffergeometryDrawrange | line `position` / `color` without `DynamicDrawUsage`; update ranges in `connect()` | `dynamic-usage` | `.setUsage( DynamicDrawUsage )` on both; `needsUpdate` only |
+| BuffergeometryInstancingInterleaved | `geometry.instanceCount = instances` | `instanced-mesh-instance-count` | delete the line |
+| MaterialsBlendingCustom | `blendEquationChanged` sets `OneFactor` for Min / Max | `minmax-blend-factors` | keep each material's `src` / `dst` for every equation |
+| LoaderTextureDds | maps assigned in the load callback (`load()`) | #35081 | `map: loader.load( url )` at material creation |
+| LoaderTextureDds | `uncompressed()`: uncompressed files as `DataTexture`s | #35082 | the loaded texture as is |
+| LoaderTextureDds | the three DDS cube maps dropped (torus `envMap`, two cube boxes) | #35083 + #35084 | `cubemap1`-`cubemap3`, `material5` / `material6` and their boxes from the source |
+| MaterialsDisplacementmap | head added once the cube map has loaded | `triage-cube-envmap-loading` | add the head when the model loads |
+| Lightprobe, LightprobeCubecamera | `useBasicMaterial()`: the probe helper gets a `MeshBasicNodeMaterial` | `triage-fragment-node-mrt` | the helper's own material |
+| LoaderLdraw | `ConditionalLineMaterial`: `fragmentNode` moved to `outputNode` | `triage-fragment-node-mrt` | `setConditionalLineMaterial( LDrawConditionalLineMaterial )` |
 
 ## Workflow
 
@@ -416,12 +438,12 @@ Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 co
 | LightsSelective | `webgpu_lights_selective` | 40π s loop; the center teapot's `roughness` / `metalness` | OK |
 | LightsSpotlight | `webgpu_lights_spotlight` | 6π s loop; `map` dropdown; `helpers` toggle dropped; frames Lucy | OK |
 | ShadowmapPointlight | `webgpu_shadowmap_pointlight` | 20π s loop; alpha map drawn on an `OffscreenCanvas`; room unselectable | OK |
-| Lightprobe | `webgpu_lightprobe` | `probe` / `directional` / `envMap` intensities; the probe helper is content, with a basic material (WebGPU notes: `fragmentNode`); frames the sphere | Open: the probe's `intensity` stays stale in a lone forward view (`shared-refresh`, issue kit 3; upstream fix expected) |
-| LightprobeCubecamera | `webgpu_lightprobe_cubecamera` | cube camera renders once in `onRendererInitialized`, after the background loads; helper as in Lightprobe; frames the helper | OK |
+| Lightprobe | `webgpu_lightprobe` | `probe` / `directional` / `envMap` intensities; the probe helper is content, with a basic material (WebGPU notes: `fragmentNode`); frames the sphere | Open: the probe's `intensity` stays stale in a lone forward view (`shared-refresh`, issue kit 3; upstream fix expected). Workaround: `triage-fragment-node-mrt` (Upstream workarounds) |
+| LightprobeCubecamera | `webgpu_lightprobe_cubecamera` | cube camera renders once in `onRendererInitialized`, after the background loads; helper as in Lightprobe; frames the helper | Workaround: `triage-fragment-node-mrt` (Upstream workarounds) |
 | MaterialsAlphahash | `webgpu_materials_alphahash` | SSAA post dropped (`document-pipeline`; the TRAA views converge the hash noise); `?amount` query dropped (3) | OK |
 | MaterialsArrays | `webgpu_materials_arrays` | table unselectable | OK |
 | MaterialsCubemapMipmaps | `webgpu_materials_cubemap_mipmaps` | spheres added and framed once the nine levels load | OK |
-| MaterialsDisplacementmap | `webgpu_materials_displacementmap` | ortho camera dropped; camera light (pink) at the source camera's position; 10π/3 s loop (source 0.01 rad per frame); head added once its cube map loads too (WebGPU notes); short names `aoIntensity`, `envIntensity`, `displacement` | OK |
+| MaterialsDisplacementmap | `webgpu_materials_displacementmap` | ortho camera dropped; camera light (pink) at the source camera's position; 10π/3 s loop (source 0.01 rad per frame); head added once its cube map loads too (WebGPU notes); short names `aoIntensity`, `envIntensity`, `displacement` | Workaround: `triage-cube-envmap-loading` (Upstream workarounds) |
 | MaterialsMatcap | `webgpu_materials_matcap` | drag-and-drop matcaps dropped; exposure is the document's | OK |
 | MaterialxNoise | `webgpu_materialx_noise` | TSL `time` -> `timeline.timeNode`; 8π s loop (the noise jumps at the wrap); spheres turn once per loop (source 0.005 rad per frame); MaterialX helpers typed loosely for @types 0.186 | OK |
 | ParallaxUv | `webgpu_parallax_uv` | auto-rotating camera dropped; `blurriness` / `parallaxScale` / `uvScale` | OK |
@@ -473,8 +495,8 @@ Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 co
 | **Converted 2026-10-17, batch 3** | | | Checked as the earlier batches: renders against `examples/screenshots` (Perspective and Front views), Document tab controls changed headlessly (`controls3.mjs`: every dropdown, toggle and button of the batch), all 39 opened in one page with no console errors (addon warnings only: 3DM `iridescenceThicknessRange`, Collada Z-up, NRRD canvas readback) |
 | BuffergeometryPoints | `webgl_buffergeometry_points` | 8π s loop; the `Points` keep picking and framing, a child `Sprite` (`frustumCulled` off) draws the 15-unit points | OK |
 | BuffergeometryPointsInterleaved | `webgl_buffergeometry_points_interleaved` | as BuffergeometryPoints; the sprites read the same interleaved bytes and unpack the 8-bit color from a `uint` word (node buffer attributes take no `normalized` flag) | OK |
-| BuffergeometryDrawrange | `webgl_buffergeometry_drawrange` | particles move by `delta` (scrubbing moves them back); 20π s loop of the group turn; 3 px dots as a child `Sprite`; the line buffers are static with update ranges (WebGPU notes: dynamic usage) | OK |
-| BuffergeometryInstancingInterleaved | `webgl_buffergeometry_instancing_interleaved` | crate spin derived from time about (1, 1, 1) at 0.4 rad/s (the source multiplies a small rotation per frame); 40π s loop; `geometry.instanceCount` set (WebGPU notes); source camera kept as `Camera` in the middle of the cloud | OK |
+| BuffergeometryDrawrange | `webgl_buffergeometry_drawrange` | particles move by `delta` (scrubbing moves them back); 20π s loop of the group turn; 3 px dots as a child `Sprite`; the line buffers are static with update ranges (WebGPU notes: dynamic usage) | Workaround: `dynamic-usage` (Upstream workarounds) |
+| BuffergeometryInstancingInterleaved | `webgl_buffergeometry_instancing_interleaved` | crate spin derived from time about (1, 1, 1) at 0.4 rad/s (the source multiplies a small rotation per frame); 40π s loop; `geometry.instanceCount` set (WebGPU notes); source camera kept as `Camera` in the middle of the cloud | Workaround: `instanced-mesh-instance-count` (Upstream workarounds) |
 | PointsBillboards | `webgl_points_billboards` | hue from time (20 s loop); pointer camera dropped; discs as a child `Sprite`, the 1 px `Points` without the map; frames with `overscan` 0.4 (whole-scene framing is beyond the fog) | OK |
 | PointsSprites | `webgl_points_sprites` | as PointsBillboards; layer turns in whole turns per 40π s, hue six cycles per loop (source every 20 s); `texture` toggles the sprites' maps | OK |
 | PointsWaves | `webgl_points_waves` | GLSL point shader -> `PointsNodeMaterial` with position and size from `instanceIndex` and `timeline.timeNode` (10π/3 s loop), round dots by alpha test; one `InstancedMesh` with the grid's bounds; pointer camera dropped | OK |
@@ -492,10 +514,10 @@ Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 co
 | InstancingDynamic | `webgl_instancing_dynamic` | color waves every 3 s scheduled in timeline time (the source's `setInterval` + tween), first wave at 0 s; bob rate rounded to six per 9 s loop; orbiting camera dropped | OK |
 | InstancingPerformance | `webgl_instancing_performance` | `drawCalls` / `gpuMemory` read-only properties for the Performance folder; naive meshes in a `Naive` group; auto-rotating camera dropped; frames the heads once they load | OK |
 | InstancingScatter | `webgl_instancing_scatter` | lives derived from time (eight per 8π s loop, π s each; source 3.3 s), each life's spot from a seeded sampler, so scrubbing and looping repeat the garden; `resample` reseeds; the sway rotates a `Garden` group | OK |
-| Marchingcubes | `webgl_marchingcubes` | the four GLSL toon shaders as TSL color nodes; envMaps assigned once the cube maps load; blobs move by `delta` times `speed`; static buffers with update ranges and `count` reset to 1 after each update (WebGPU notes) | OK |
+| Marchingcubes | `webgl_marchingcubes` | the four GLSL toon shaders as TSL color nodes; envMaps assigned once the cube maps load; blobs move by `delta` times `speed`; static buffers with update ranges and `count` reset to 1 after each update (WebGPU notes) | Workarounds: `mesh-count`, `dynamic-usage`, `triage-cube-envmap-loading` (Upstream workarounds) |
 | ClippingAdvanced | `webgl_clipping_advanced` | per-material and renderer planes -> nested `ClippingGroup`s (`Global` around everything, `Local` for the cubes with `clipShadows`, a group per volume face); 20π s loop | OK |
-| MaterialsBlendingCustom | `webgl_materials_blending_custom` | `Min` / `Max` draw with `One` factors (WebGPU notes); labels and background on `OffscreenCanvas`es | OK |
-| LoaderTextureDds | `webgl_loader_texture_dds` | the three DDS cube maps dropped (WebGPU notes: compressed cube textures); maps assigned once loaded; uncompressed files as `DataTexture`s | Upstream: compressed cube textures, loading compressed textures, uncompressed DDS (`upstream-batch3`) |
+| MaterialsBlendingCustom | `webgl_materials_blending_custom` | `Min` / `Max` draw with `One` factors (WebGPU notes); labels and background on `OffscreenCanvas`es | Workaround: `minmax-blend-factors` (Upstream workarounds) |
+| LoaderTextureDds | `webgl_loader_texture_dds` | the three DDS cube maps dropped (WebGPU notes: compressed cube textures); maps assigned once loaded; uncompressed files as `DataTexture`s | Workarounds: #35081, #35082, #35083 + #35084 (Upstream workarounds) |
 | LightsHemisphere | `webgl_lights_hemisphere` | sky dome `ShaderMaterial` -> a background node with the same gradient; light toggles are properties (helpers from the overlay); duration = the 1 s flap; ground unselectable, frames the flamingo | OK |
 | LightsSpotlights | `webgl_lights_spotlights` | tweens to eight random targets per light, one per 5 s of a 40 s loop starting from the last; floor unselectable, frames a stand-in around the lit area | OK |
 | ShadowmapPerformance | `webgl_shadowmap_performance` | `DirectionalLight` as at HEAD (r186 had `SunLight`); horses run a fixed 3000-unit lane (source respawns up to 500 back), eleven runs per 60 s loop; gallop advances by `delta`; `FirstPersonControls` dropped, source camera kept as `Camera`; frames the blocks (fog) | OK |
@@ -507,7 +529,7 @@ Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 co
 | LoaderColladaKinematics | `webgl_loader_collada_kinematics` | ten random poses drawn once, eased in timeline time (the source chains tweens with `setTimeout`), the loop starts from the last; orbiting camera dropped | OK |
 | LoaderPdb | `webgl_loader_pdb` | `CSS2DRenderer` labels dropped, atoms named by element; `molecule` dropdown with a load counter; 50π s loop | OK |
 | Watch | `webgl_watch` | hands from 10:10 plus document time (60 s loop; the source reads the wall clock); the optional bloom is `document.bloom` (off, as `postProcess`); TAA is the TRAA views'; camera tween dropped; frames the watch, not its floor | OK |
-| LoaderLdraw | `webgl_loader_ldraw` | `LDrawConditionalLineNodeMaterial` with its `fragmentNode` as `outputNode` (TRAA views); `buildingStep` clamped to `buildingSteps`; progress bar dropped | OK |
+| LoaderLdraw | `webgl_loader_ldraw` | `LDrawConditionalLineNodeMaterial` with its `fragmentNode` as `outputNode` (TRAA views); `buildingStep` clamped to `buildingSteps`; progress bar dropped | Workaround: `triage-fragment-node-mrt` (Upstream workarounds) |
 | LoaderNrrd | `webgl_loader_nrrd` | slider ranges from `I.nrrd`'s dimensions and value range (editor configs are per class); trackball camera dropped; slices paint on the addon's DOM canvases | OK |
 | MorphtargetsSphere | `webgl_morphtargets_sphere` | discs as a child `Sprite` whose position node adds each morph target's offsets weighted by the mesh's influences; morph swing rounded to three per 4π s loop; frames a stand-in (the sprite's quad scales with the mesh) | OK |
 

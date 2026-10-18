@@ -151,8 +151,8 @@ export class BuffergeometryDrawrangeExample extends Document {
 
     const geometry = new BufferGeometry()
 
-    // Not DynamicDrawUsage: WebGPURenderer uploads dynamic buffers whole on every draw of every view, and these hold a
-    // million segments. `connect()` marks the drawn range instead.
+    // Workaround (upstream: dynamic-usage): not DynamicDrawUsage, which WebGPURenderer uploads whole on every draw of
+    // every view, and these hold a million segments. `connect()` marks the drawn range instead.
     geometry.setAttribute( 'position', new BufferAttribute( this.positions, 3 ) )
     geometry.setAttribute( 'color', new BufferAttribute( this.colors, 3 ) )
 
@@ -295,6 +295,7 @@ export class BuffergeometryDrawrangeExample extends Document {
     const geometry = this.linesMesh.geometry
     geometry.setDrawRange( 0, numConnected * 2 )
 
+    // Workaround (upstream: dynamic-usage): the source sets `needsUpdate` only.
     for ( const attribute of [ geometry.attributes.position, geometry.attributes.color ] as BufferAttribute[] ) {
       attribute.clearUpdateRanges()
       attribute.addUpdateRange( 0, Math.max( numConnected * 6, 1 ) )

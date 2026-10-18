@@ -21,8 +21,9 @@ import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 
 /**
- * The conditional line material with its `fragmentNode` as `outputNode`: a `fragmentNode` writes only the first color
- * output, which the TRAA views' color and velocity pass rejects; an `outputNode` merges with it.
+ * The conditional line material with its `fragmentNode` as `outputNode`. Workaround (upstream:
+ * triage-fragment-node-mrt): a `fragmentNode` writes only the first color output, which the TRAA views' color and
+ * velocity pass rejects; an `outputNode` merges with it.
  */
 class ConditionalLineMaterial extends LDrawConditionalLineMaterial {
   constructor(parameters?: ConstructorParameters<typeof LDrawConditionalLineMaterial>[ 0 ]) {
