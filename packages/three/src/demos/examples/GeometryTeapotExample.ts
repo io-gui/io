@@ -8,6 +8,7 @@ import {
   MeshBasicMaterial,
   MeshLambertMaterial,
   MeshPhongMaterial,
+  PerspectiveCamera,
   RepeatWrapping,
   SRGBColorSpace,
   TextureLoader
@@ -54,6 +55,12 @@ export class GeometryTeapotExample extends Document {
 
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 80000 )
+    camera.name = 'Camera'
+    camera.position.set( - 600, 550, 1300 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     // LIGHTS
 

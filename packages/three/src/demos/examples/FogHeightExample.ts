@@ -7,7 +7,7 @@ import { ioNumberSlider } from '@io-gui/sliders'
 
 /**
  * A grid of tall boxes standing in exponential height fog; fog density and height are in the Document tab. The fog
- * thickens with distance, so the source's camera, inside the grid, is kept as the scene camera `Camera`.
+ * thickens with distance, so the source's camera, inside the grid, is the active camera.
  */
 @Register
 export class FogHeightExample extends Document {
@@ -25,11 +25,11 @@ export class FogHeightExample extends Document {
   constructor(args?: DocumentProps) {
     super(args)
 
-    const camera = new PerspectiveCamera( 45, 1, 1, 600 )
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 600 )
     camera.name = 'Camera'
     camera.position.set( 20, 10, 25 )
     camera.lookAt( 0, 0, 0 )
-    this.scene.add( camera )
+    this.activeCamera = camera
 
     // height fog
 

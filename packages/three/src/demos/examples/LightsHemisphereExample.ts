@@ -7,12 +7,13 @@ import {
   HemisphereLight,
   Mesh,
   MeshLambertMaterial,
+  PerspectiveCamera,
   PlaneGeometry
 } from 'three/webgpu'
 import { float, max, mix, normalize, positionWorldDirection, pow, uniform, vec3 } from 'three/tsl'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
@@ -42,8 +43,16 @@ export class LightsHemisphereExample extends Document {
   @Property({type: Number, value: 1})
   declare shadowIntensity: number
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: 1}), ...args})
+
+    const camera = new PerspectiveCamera( 30, 400 / 250, 1, 5000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 250 )
+    this.activeCamera = camera
 
     this.scene.background = new Color().setHSL( 0.6, 0, 1 )
     const fog = new Fog( this.scene.background, 1, 5000 )
@@ -112,6 +121,10 @@ export class LightsHemisphereExample extends Document {
     void this.loadModel()
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   hemisphereLightChanged() {
     if ( ! this.hemiLight ) return
     this.hemiLight.visible = this.hemisphereLight
@@ -157,7 +170,7 @@ export class LightsHemisphereExample extends Document {
 
       this.notify({kind: 'structure'})
       model.updateMatrixWorld( true )
-      this.dispatch('frame-object', {object: mesh}, true)
+      this._frameTarget = mesh
     } catch ( e ) {
       console.error( e )
     }

@@ -2,11 +2,10 @@ import { Group, Mesh, MeshBasicNodeMaterial, Vector2 } from 'three/webgpu'
 import { Fn, abs, float, screenUV, select, uniform, vec4 } from 'three/tsl'
 import type { Overlay, OverlayContext, OverlayType } from '../Overlay.js'
 import { createScreenQuad } from '../screenQuad.js'
-import { cameraAspect } from '../../utils/camera.js'
 
 /**
- * Passepartout for views that look through a scene camera: darkens what lies outside the camera's frame
- * (the view fits the frame inside the viewport with the view's overscan, ADR-0005).
+ * Passepartout: darkens what lies outside the view's framed area, the frame of the scene camera it looks through or
+ * else the whole viewport (the view fits the frame inside the viewport with the view's overscan, ADR-0005).
  */
 export class CameraFrameOverlay implements Overlay {
 
@@ -38,14 +37,11 @@ export class CameraFrameOverlay implements Overlay {
   }
 
   prepare(ctx: OverlayContext) {
-    const source = ctx.view.getSourceCamera(ctx.scene)
-    this._quad.visible = !!source
-    if (!source) return
     const aspect = ctx.width / Math.max(1, ctx.height)
-    const sourceAspect = cameraAspect(source)
+    const frameAspect = ctx.view.getFrameAspect(ctx.width, ctx.height, ctx.document)
     const overscan = ctx.view.overscan
-    if (sourceAspect > aspect) this._half.value.set(1 / overscan, aspect / sourceAspect / overscan)
-    else this._half.value.set(sourceAspect / aspect / overscan, 1 / overscan)
+    if (frameAspect > aspect) this._half.value.set(1 / overscan, aspect / frameAspect / overscan)
+    else this._half.value.set(frameAspect / aspect / overscan, 1 / overscan)
   }
 
   dispose() {

@@ -4,19 +4,24 @@ import {
   Float32BufferAttribute,
   FogExp2,
   InstancedBufferAttribute,
+  Mesh,
+  PerspectiveCamera,
   Points,
   PointsMaterial,
   PointsNodeMaterial,
-  SRGBColorSpace,
   Sprite,
+  SRGBColorSpace,
   Texture,
   TextureLoader,
-  WebGPURenderer
+  Vector3
 } from 'three/webgpu'
 import { instancedBufferAttribute } from 'three/tsl'
 import { Register, Property } from '@io-gui/core'
 import { Document, DocumentProps, Timeline } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
+
+/** What views frame: inside the cube, about where the source camera stands (whole-scene framing stands beyond the fog). */
+const FRAME_EXTENT = new Mesh( new BufferGeometry().setFromPoints( [ new Vector3( - 400, - 400, - 400 ), new Vector3( 400, 400, 400 ) ] ) )
 
 /**
  * Seconds in which the motion repeats: the timeline length, so looping is seamless. The layers turn 0.05, 0.1, 0.15,
@@ -37,8 +42,8 @@ const LAYERS: [ [ number, number, number ], number, number ][] = [
 /**
  * Snow: five layers of points sharing one geometry, each with its own snowflake texture, size and hue, turning at
  * different rates with document time. `texture` (Document tab) draws plain squares instead. WebGPU draws `Points` 1 px
- * wide, so each layer has a child `Sprite` named `Sprites` that draws the flakes. Views frame from inside the cube, as whole-scene framing would stand beyond the fog. The pointer-driven camera is
- * dropped.
+ * wide, so each layer has a child `Sprite` named `Sprites` that draws the flakes. Views frame from inside the cube, as whole-scene framing would stand beyond the fog. The active camera stands where the source's
+ * pointer-driven camera rests.
  * Plays when opened.
  */
 @Register
@@ -53,6 +58,12 @@ export class PointsSpritesExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 75, 400 / 250, 1, 2000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 1000 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.fog = new FogExp2( 0x000000, 0.0008 )
 
@@ -128,13 +139,8 @@ export class PointsSpritesExample extends Document {
     }
   }
 
-  /**
-   * Whole-scene framing would put the views outside the cube, where the fog hides everything: frame closer, about where
-   * the source camera stands (on the cube's face), once the document is on screen.
-   */
-  override onRendererInitialized(renderer: WebGPURenderer) {
-    super.onRendererInitialized(renderer)
-    this.dispatch('frame-object', {object: this.layers[ 0 ], overscan: 0.4}, true)
+  override getEditorFrameTarget() {
+    return FRAME_EXTENT
   }
 
   textureChanged() {

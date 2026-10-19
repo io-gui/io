@@ -4,12 +4,13 @@ import {
   Material,
   Mesh,
   MeshStandardMaterial,
+  PerspectiveCamera,
   PlaneGeometry,
   PointLight,
   ReinhardToneMapping,
   RepeatWrapping,
-  SRGBColorSpace,
   SphereGeometry,
+  SRGBColorSpace,
   Texture,
   TextureLoader
 } from 'three/webgpu'
@@ -74,6 +75,12 @@ export class LightsPhysicalExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({toneMapping: ReinhardToneMapping, toneMappingExposure: Math.pow( 0.68, 5.0 ), timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 50, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( - 4, 2, 4 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     const bulbGeometry = new SphereGeometry( 0.02, 16, 8 )
     this.bulbLight = new PointLight( 0xffee88, 1, 100, 2 )

@@ -1,4 +1,4 @@
-import { Register } from '@io-gui/core'
+import { Register, Field } from '@io-gui/core'
 import {
   AnimationClip,
   AnimationMixer,
@@ -10,8 +10,9 @@ import {
   Mesh,
   NeutralToneMapping,
   NodeMaterial,
+  PerspectiveCamera,
   Skeleton,
-  SkeletonHelper,
+  SkeletonHelper
 } from 'three/webgpu'
 import {
   color,
@@ -24,7 +25,7 @@ import {
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
 type FbxModel = Group & {
   animations: AnimationClip[]
@@ -59,8 +60,17 @@ export class AnimationRetargetingReadyplayerExample extends Document {
   public sourceMixer?: AnimationMixer
   public targetMixer?: AnimationMixer
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({toneMapping: NeutralToneMapping, timeline: new Timeline({autoplay: true}), ...args})
+
+    const camera = new PerspectiveCamera( 40, 400 / 250, 0.25, 50 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 3, 5 )
+    camera.lookAt( 0, 1, 0 )
+    this.activeCamera = camera
 
     const horizontalEffect = screenUV.x.mix(color(0x13172b), color(0x311649))
     const lightEffect = screenUV.distance(vec2(0.5, 1.0)).oneMinus().mul(color(0x0c5d68))
@@ -101,6 +111,10 @@ export class AnimationRetargetingReadyplayerExample extends Document {
     void this.loadModels()
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   private async loadModels() {
     const [sourceModel, targetModel] = await Promise.all([
       loadFbx('https://threejs.org/examples/models/fbx/mixamo.fbx'),
@@ -124,7 +138,7 @@ export class AnimationRetargetingReadyplayerExample extends Document {
     this.targetMixer = this.retargetModel(source, targetModel).setTime(this.timeline.currentTime)
 
     this.notify({kind: 'structure'})
-    this.dispatch('frame-object', {object: models, overscan: 1.5}, true)
+    this._frameTarget = models
   }
 
   private getSource(sourceModel: FbxModel): AnimationSource {

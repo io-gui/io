@@ -309,7 +309,7 @@ export function initFields(node: ReactiveNode) {
       initialValue = constructType(initialValue as AnyConstructor)
     } else if (initialValue instanceof Array) {
       initialValue = initialValue.slice()
-    } else if (typeof initialValue === 'object') {
+    } else if (initialValue !== null && typeof initialValue === 'object') {
       // TODO: Consider removing this copy and just use the initialValue directly or prevent object field values
       initialValue = Object.assign({}, initialValue)
     }

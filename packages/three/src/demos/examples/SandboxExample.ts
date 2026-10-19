@@ -8,11 +8,12 @@ import {
   Mesh,
   MeshBasicNodeMaterial,
   Node,
+  PerspectiveCamera,
   PlaneGeometry,
   Points,
   PointsNodeMaterial,
-  RGBAFormat,
   RepeatWrapping,
+  RGBAFormat,
   SphereGeometry,
   TextureLoader,
   Vector3,
@@ -43,6 +44,11 @@ export class SandboxExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 70, 400 / 250, 0.1, 10 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 4 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x222222 )
 

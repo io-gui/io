@@ -1,8 +1,8 @@
-import { BufferGeometry, Color, Mesh, MeshNormalNodeMaterial, Node } from 'three/webgpu'
+import { BufferGeometry, Color, Mesh, MeshNormalNodeMaterial, Node, PerspectiveCamera } from 'three/webgpu'
 import { cos, positionLocal, normalLocal, sin, transformNormalToView, vec3 } from 'three/tsl'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
 /** Seconds of one twist cycle (`sin` of time in seconds): the timeline length, so looping is seamless. */
 const PERIOD = 2 * Math.PI
@@ -15,12 +15,25 @@ const PERIOD = 2 * Math.PI
 @Register
 export class MaterialsModifiedExample extends Document {
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 27, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 20 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x000000 )
 
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadModel() {
@@ -42,7 +55,7 @@ export class MaterialsModifiedExample extends Document {
       this.scene.add( right )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: [ left, right ]}, true)
+      this._frameTarget = [ left, right ]
     } catch ( e ) {
       console.error( e )
     }

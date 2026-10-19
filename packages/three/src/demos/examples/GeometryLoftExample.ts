@@ -12,6 +12,7 @@ import {
   Mesh,
   MeshStandardNodeMaterial,
   NeutralToneMapping,
+  PerspectiveCamera,
   PMREMGenerator,
   SplineCurve,
   Vector2,
@@ -21,8 +22,8 @@ import {
 import { bumpMap, color, cos, float, mix, mx_fractal_noise_float, mx_noise_float, mx_worley_noise_float, positionLocal, screenUV, sin, smoothstep, uv, vec3 } from 'three/tsl'
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import { LoftGeometry } from 'three/addons/geometries/LoftGeometry.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
 
 // revolves a smoothed 2d profile ( x = radius, y = height ) into
@@ -541,8 +542,17 @@ export class GeometryLoftExample extends Document {
   @Property({type: Boolean, value: false})
   declare wireframe: boolean
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({toneMapping: NeutralToneMapping, timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 15, 40 )
+    camera.lookAt( 0, - 3, 0 )
+    this.activeCamera = camera
 
     this.scene.environmentIntensity = 0.4
 
@@ -913,6 +923,10 @@ export class GeometryLoftExample extends Document {
     this.pose( this.timeline.currentTime )
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   override onRendererInitialized(renderer: WebGPURenderer) {
     super.onRendererInitialized(renderer)
 
@@ -921,9 +935,9 @@ export class GeometryLoftExample extends Document {
     pmremGenerator.dispose()
 
     // Whole-scene framing would look at the curtain (radius 55) from outside: frame the pedestals, so the perspective
-    // view starts inside it. The document is on screen now, so the views showing it hear the hint.
+    // view starts inside it.
     const extent = new Mesh( new BufferGeometry().setFromPoints( [ new Vector3( - 13, - 5, - 13 ), new Vector3( 13, 2, 13 ) ] ) )
-    this.dispatch('frame-object', {object: extent}, true)
+    this._frameTarget = extent
   }
 
   sectionsChanged() {

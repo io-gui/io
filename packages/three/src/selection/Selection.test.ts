@@ -7,7 +7,7 @@ type Host = InputHost & {selection: SelectionModel}
 function createHost(document: Document, selection: SelectionModel): Host {
   const element = window.document.createElement('div') as unknown as Host
   const view = new View({overscan: 1})
-  Object.assign(element, {view, scene: document.scene, selection, getViewCamera: () => view.getCamera(200, 100, document.scene)})
+  Object.assign(element, {view, scene: document.scene, document, selection, getViewCamera: () => view.getCamera(200, 100, document)})
   element.style.cssText = 'position:fixed;left:0;top:0;width:200px;height:100px'
   window.document.body.appendChild(element)
   return element

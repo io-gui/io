@@ -1,7 +1,7 @@
 import { AmbientLight, BufferGeometry, DirectionalLight, LoadingManager, Mesh, MeshBasicMaterial, Object3D, PerspectiveCamera, Scene, Vector3 } from 'three/webgpu'
 import { VRMLLoader } from 'three/addons/loaders/VRMLLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 
@@ -41,8 +41,18 @@ export class LoaderVrmlExample extends Document {
   /** Counts loads, so a slow file does not replace a newer pick. */
   private loads = 0
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 60, 400 / 250, 0.1, 1e10 )
+    camera.name = 'Camera'
+    camera.position.set( - 10, 5, 10 )
+    camera.lookAt( 0, 0, 0 )
+    this.scene.add( camera )
+    this.activeCamera = camera
 
     const ambientLight = new AmbientLight( 0xffffff, 1.2 )
     ambientLight.name = 'Ambient'
@@ -54,6 +64,10 @@ export class LoaderVrmlExample extends Document {
     this.scene.add( dirLight )
 
     this.assetChanged()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   assetChanged() {
@@ -96,7 +110,7 @@ export class LoaderVrmlExample extends Document {
       this.notify({kind: 'structure'})
       // Framing leaves reads their world matrices, which nothing has computed yet below the file's transforms.
       object.updateMatrixWorld( true )
-      if ( content.length ) this.dispatch('frame-object', {object: content}, true)
+      if ( content.length ) this._frameTarget = content
     } catch ( e ) {
       console.error( e )
     }

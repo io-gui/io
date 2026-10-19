@@ -5,6 +5,7 @@ import {
   Mesh,
   MeshBasicMaterial,
   MeshSSSNodeMaterial,
+  PerspectiveCamera,
   PointLight,
   RepeatWrapping,
   SphereGeometry,
@@ -13,8 +14,8 @@ import {
 } from 'three/webgpu'
 import { texture, uniform, vec3 } from 'three/tsl'
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
@@ -51,8 +52,17 @@ export class MaterialsSssExample extends Document {
   @Property({type: Number, value: 16.0})
   declare scale: number
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 40, 400 / 250, 1, 5000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 300, 1600 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     // Lights
 
@@ -88,6 +98,10 @@ export class MaterialsSssExample extends Document {
     void this.loadModel()
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   private async loadModel() {
     // Views draw on document changes only, so report each texture when it arrives.
     const onLoad = () => this.notify({kind: 'material'})
@@ -121,7 +135,7 @@ export class MaterialsSssExample extends Document {
       this.pose( this.timeline.currentTime )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: model}, true)
+      this._frameTarget = model
     } catch ( e ) {
       console.error( e )
     }

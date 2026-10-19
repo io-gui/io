@@ -1,15 +1,24 @@
-import { ACESFilmicToneMapping, Group, Mesh, MeshPhysicalNodeMaterial, SphereGeometry } from 'three/webgpu'
+import { ACESFilmicToneMapping, Group, Mesh, MeshPhysicalNodeMaterial, PerspectiveCamera, SphereGeometry } from 'three/webgpu'
 import { normalWorldGeometry, uniform, pmremTexture } from 'three/tsl'
 import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 
 /** A 6×5 grid of physical spheres (roughness across, metalness up) reflecting the Pisa HDR cube map, shown blurred behind them through `pmremTexture`. */
 @Register
 export class PmremCubemapExample extends Document {
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({toneMapping: ACESFilmicToneMapping, ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 0.25, 20 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 8 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     new HDRCubeTextureLoader()
       .setPath( 'https://threejs.org/examples/textures/cube/pisaHDR/' )
@@ -38,7 +47,11 @@ export class PmremCubemapExample extends Document {
 
         this.scene.add( spheres )
         this.notify({kind: 'structure'})
-        this.dispatch('frame-object', {object: spheres}, true)
+        this._frameTarget = spheres
       } )
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 }

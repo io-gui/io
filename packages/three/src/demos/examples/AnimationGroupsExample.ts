@@ -8,6 +8,7 @@ import {
   Mesh,
   MeshBasicMaterial,
   NumberKeyframeTrack,
+  PerspectiveCamera,
   Quaternion,
   QuaternionKeyframeTrack,
   Vector3
@@ -23,6 +24,12 @@ export class AnimationGroupsExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true}), ...args})
+
+    const camera = new PerspectiveCamera( 40, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 50, 50, 100 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     // all objects of this animation group share a common animation state
     const animationGroup = new AnimationObjectGroup()

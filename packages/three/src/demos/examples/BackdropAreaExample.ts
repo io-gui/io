@@ -1,4 +1,4 @@
-import { Property, Register } from '@io-gui/core'
+import { Property, Register, Field } from '@io-gui/core'
 import {
   AmbientLight,
   AnimationMixer,
@@ -24,7 +24,7 @@ import {
 } from 'three/tsl'
 import { hashBlur } from 'three/addons/tsl/display/hashBlur.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Document, DocumentProps, threeVector3, Timeline } from '@io-gui/three'
+import { Document, DocumentProps, FrameTarget, threeVector3, Timeline } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 
@@ -49,6 +49,9 @@ export class BackdropAreaExample extends Document {
 
   @Property({type: String, value: 'checker'})
   declare material: string
+
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
 
   constructor(args?: DocumentProps) {
     super({toneMapping: NeutralToneMapping, toneMappingExposure: 0.9, timeline: new Timeline({autoplay: true}), ...args})
@@ -102,11 +105,11 @@ export class BackdropAreaExample extends Document {
     }
 
     // Camera
-    const camera = new PerspectiveCamera(50, 1, 0.25, 25)
+    const camera = new PerspectiveCamera(50, 400 / 250, 0.25, 25)
     camera.name = 'Camera'
     camera.position.set(3, 2, 3)
     camera.lookAt(0, 1, 0)
-    this.scene.add(camera)
+    this.activeCamera = camera
 
     // Box
     this.box = new Mesh(new BoxGeometry(2, 2, 2), this.blurredBlurMaterial)
@@ -132,6 +135,10 @@ export class BackdropAreaExample extends Document {
     this.materialChanged()
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   materialChanged() {
     if (this.materials[this.material]) {
       this.box.material = this.materials[this.material]
@@ -152,7 +159,7 @@ export class BackdropAreaExample extends Document {
       this.scene.add(object)
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: this.box}, true)
+      this._frameTarget = this.box
     })
   }
 

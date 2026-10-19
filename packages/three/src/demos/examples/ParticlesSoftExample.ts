@@ -7,19 +7,20 @@ import {
   Mesh,
   MeshStandardMaterial,
   MeshStandardNodeMaterial,
+  PerspectiveCamera,
   PlaneGeometry,
-  SRGBColorSpace,
   Sphere,
   SpotLight,
   SpriteNodeMaterial,
+  SRGBColorSpace,
   TextureLoader,
   Vector3
 } from 'three/webgpu'
 import { float, range, texture, mix, uv, color, rotateUV, positionLocal, uniform } from 'three/tsl'
 import { softParticles } from 'three/addons/tsl/utils/SoftParticles.js'
 import { PLYLoader } from 'three/addons/loaders/PLYLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
@@ -49,8 +50,17 @@ export class ParticlesSoftExample extends Document {
   @Property({type: Number, value: 2})
   declare softContrast: number
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: DURATION}), ...args})
+
+    const camera = new PerspectiveCamera( 60, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 6, 8, 8 )
+    camera.lookAt( 0, 4, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x000000 )
     this.scene.fog = new FogExp2( 0x000000, 0.025 )
@@ -132,6 +142,10 @@ export class ParticlesSoftExample extends Document {
     this.scene.add( smoke )
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   private async loadModel() {
     try {
       const geometry = await new PLYLoader().loadAsync( 'https://threejs.org/examples/models/ply/binary/Lucy100k.ply' )
@@ -147,7 +161,7 @@ export class ParticlesSoftExample extends Document {
 
       this.notify({kind: 'structure'})
       // The 100-unit ground would dominate whole-scene framing.
-      this.dispatch('frame-object', {object: mesh}, true)
+      this._frameTarget = mesh
     } catch ( e ) {
       console.error( e )
     }

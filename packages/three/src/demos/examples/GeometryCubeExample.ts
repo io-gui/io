@@ -1,4 +1,4 @@
-import { BoxGeometry, Mesh, MeshBasicMaterial, SRGBColorSpace, TextureLoader } from 'three/webgpu'
+import { BoxGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, SRGBColorSpace, TextureLoader } from 'three/webgpu'
 import { Register } from '@io-gui/core'
 import { Document, DocumentProps, Timeline } from '@io-gui/three'
 
@@ -13,6 +13,11 @@ export class GeometryCubeExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: SPIN_PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 70, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 2 )
+    this.activeCamera = camera
 
     // Views draw on document changes only, so report the texture when it arrives.
     const texture = new TextureLoader().load( 'https://threejs.org/examples/textures/crate.gif', () => this.notify({kind: 'material'}) )

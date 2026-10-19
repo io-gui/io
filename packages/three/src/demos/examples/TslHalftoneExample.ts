@@ -1,4 +1,4 @@
-import { AmbientLight, Color, DirectionalLight, Mesh, MeshStandardMaterial, MeshStandardNodeMaterial, Node, SphereGeometry, TorusKnotGeometry, Vector3 } from 'three/webgpu'
+import { AmbientLight, Color, DirectionalLight, Mesh, MeshStandardMaterial, MeshStandardNodeMaterial, Node, PerspectiveCamera, SphereGeometry, TorusKnotGeometry, Vector3 } from 'three/webgpu'
 import { mix, normalWorld, output, Fn, reference, vec4, rotate, screenCoordinate, screenSize } from 'three/tsl'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { Register, ReactiveObject, ReactiveObjectProps, Property } from '@io-gui/core'
@@ -92,6 +92,12 @@ export class TslHalftoneExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 25, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 6, 3, 10 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     // lights
 

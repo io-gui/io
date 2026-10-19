@@ -6,6 +6,7 @@ import {
   Mesh,
   MeshBasicNodeMaterial,
   Node,
+  PerspectiveCamera,
   PlaneGeometry,
   RepeatWrapping,
   TextureLoader
@@ -60,6 +61,12 @@ export class TslVfxTornadoExample extends Document {
       timeline: new Timeline({autoplay: true, duration: PERIOD}),
       ...args,
     })
+
+    const camera = new PerspectiveCamera( 25, 400 / 250, 0.1, 50 )
+    camera.name = 'Camera'
+    camera.position.set( 1, 1, 3 )
+    camera.lookAt( 0, 0.4, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x201919 )
 

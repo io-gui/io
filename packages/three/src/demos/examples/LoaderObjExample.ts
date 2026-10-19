@@ -1,12 +1,15 @@
-import { AmbientLight, LoadingManager, PointLight } from 'three/webgpu'
+import { AmbientLight, LoadingManager, PerspectiveCamera, PointLight } from 'three/webgpu'
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js'
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 
 /** The male02 model from an OBJ file with its MTL materials and textures. */
 @Register
 export class LoaderObjExample extends Document {
+
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
 
   constructor(args?: DocumentProps) {
     super(args)
@@ -15,13 +18,21 @@ export class LoaderObjExample extends Document {
     ambientLight.name = 'Ambient'
     this.scene.add( ambientLight )
 
-    // The source attaches the light to its camera at (0, 0, 2.5).
+    const camera = new PerspectiveCamera( 45, 400 / 250, 0.1, 20 )
+    camera.name = 'Camera'
+    camera.position.z = 2.5
+    this.scene.add( camera )
+    this.activeCamera = camera
+
     const pointLight = new PointLight( 0xffffff, 15 )
     pointLight.name = 'Point'
-    pointLight.position.set( 0, 0, 2.5 )
-    this.scene.add( pointLight )
+    camera.add( pointLight )
 
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadModel() {
@@ -42,7 +53,7 @@ export class LoaderObjExample extends Document {
       this.scene.add( object )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object}, true)
+      this._frameTarget = object
     } catch ( e ) {
       console.error( e )
     }

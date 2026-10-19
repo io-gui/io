@@ -1,4 +1,4 @@
-import { AdditiveBlending, Box3, Color, InstancedMesh, PlaneGeometry, Sphere, SpriteNodeMaterial, Vector3 } from 'three/webgpu'
+import { AdditiveBlending, Box3, Color, InstancedMesh, PerspectiveCamera, PlaneGeometry, Sphere, SpriteNodeMaterial, Vector3 } from 'three/webgpu'
 import { color, cos, float, mix, range, sin, uniform, uv, vec3, vec4, TWO_PI } from 'three/tsl'
 import { Register, Property } from '@io-gui/core'
 import { Document, DocumentProps, Timeline } from '@io-gui/three'
@@ -31,6 +31,12 @@ export class TslGalaxyExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: DURATION}), ...args})
+
+    const camera = new PerspectiveCamera( 50, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 4, 2, 5 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x201919 )
 

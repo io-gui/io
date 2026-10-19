@@ -250,6 +250,46 @@ describe('RenderScheduler', () => {
     expect(view.draws.length).toBe(3)
   })
 
+  it('runs onBeforeDraw once per document and renderer before views draw its changes', () => {
+    const scheduler = new RenderScheduler({autoStart: false})
+    const document = new Document()
+    const scene = new Scene()
+    const shared = fakeRenderer()
+    const own = fakeRenderer()
+    const order: string[] = []
+    const before: Array<[WebGPURenderer, boolean]> = []
+    document.onBeforeDraw = renderer => {
+      order.push('before')
+      before.push([renderer, scene.matrixWorldAutoUpdate])
+    }
+    const a = fakeView({document, scene, source: document, renderer: shared, onDraw: () => order.push('draw')})
+    const b = fakeView({document, scene, source: document, renderer: shared, onDraw: () => order.push('draw')})
+    const c = fakeView({document, scene, source: document, renderer: own, onDraw: () => order.push('draw')})
+    scheduler.register(a)
+    scheduler.register(b)
+    scheduler.register(c)
+    scheduler.step()
+    expect(order).toEqual(['before', 'before', 'draw', 'draw', 'draw'])
+    expect(before).toEqual([[shared, false], [own, false]])
+
+    // Redraws that change only a view do not run it.
+    scheduler.tag(a, 'view')
+    scheduler.step()
+    expect(before.length).toBe(2)
+
+    document.notify({kind: 'time'})
+    scheduler.step()
+    expect(before.length).toBe(4)
+
+    // Notifying from it runs it again next frame (twice per frame: two renderers).
+    let runs = 0
+    document.onBeforeDraw = () => { if (++runs <= 2) document.notify({kind: 'other'}) }
+    document.notify({kind: 'other'})
+    for (let i = 0; i < 5; i++) scheduler.step()
+    expect(runs).toBe(4)
+    document.dispose()
+  })
+
   it('evaluates each scene once per frame and restores matrixWorldAutoUpdate', () => {
     const scheduler = new RenderScheduler({autoStart: false})
     const scene = new Scene()

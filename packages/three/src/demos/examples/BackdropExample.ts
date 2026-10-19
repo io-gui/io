@@ -4,13 +4,14 @@ import { registerEditorGroups } from '@io-gui/editors'
 import {
   AnimationMixer,
   Group,
+  MathUtils,
   Mesh,
   MeshStandardNodeMaterial,
-  SphereGeometry,
-  SpotLight,
-  MathUtils,
-  Node,
   NeutralToneMapping,
+  Node,
+  PerspectiveCamera,
+  SphereGeometry,
+  SpotLight
 } from 'three/webgpu'
 import {
   float,
@@ -49,13 +50,18 @@ export class BackdropExample extends Document {
     // Background
     this.scene.backgroundNode = screenUV.y.mix(color(0x66bbff), color(0x4466ff))
 
-    // Light
+    // Camera, carrying the light
+    const camera = new PerspectiveCamera(50, 400 / 250, 0.01, 100)
+    camera.name = 'Camera'
+    camera.position.set(1, 2, 3)
+    camera.lookAt(0, 1, 0)
+    this.activeCamera = camera
+
     const light = new SpotLight(0xffffff, 1)
     light.name = 'Spot'
-    light.position.set(1, 2, 3)
-    light.lookAt(0, 1, 0)
     light.power = 2000
-    this.scene.add(light)
+    camera.add(light)
+    this.scene.add(camera)
 
     // Portals
     this.portals = new Group()

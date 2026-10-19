@@ -8,6 +8,7 @@ import {
   MeshBasicMaterial,
   MeshPhongNodeMaterial,
   NearestFilter,
+  PerspectiveCamera,
   PointLight,
   RepeatWrapping,
   SphereGeometry
@@ -45,6 +46,12 @@ export class ShadowmapPointlightExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 10, 40 )
+    camera.lookAt( 0, 10, 0 )
+    this.activeCamera = camera
 
     const ambientLight = new AmbientLight( 0x111122, 3 )
     ambientLight.name = 'Ambient'

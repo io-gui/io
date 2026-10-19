@@ -1,7 +1,7 @@
-import { Color, Group, Mesh, MeshBasicMaterial, ShapeGeometry } from 'three/webgpu'
+import { Color, Group, Mesh, MeshBasicMaterial, PerspectiveCamera, ShapeGeometry } from 'three/webgpu'
 import { SVGLoader, SVGResult, StrokeStyle } from 'three/addons/loaders/SVGLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 
@@ -78,12 +78,25 @@ export class LoaderSvgExample extends Document {
   /** Counts loads, so a slow file does not replace a newer pick. */
   private loads = 0
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 50, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 200 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0xb0b0b0 )
 
     this.fileChanged()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   fileChanged() {
@@ -105,7 +118,7 @@ export class LoaderSvgExample extends Document {
 
       this.data = data
       this.build()
-      if ( this.drawing ) this.dispatch('frame-object', {object: this.drawing}, true)
+      if ( this.drawing ) this._frameTarget = this.drawing
     } catch ( e ) {
       console.error( e )
     }

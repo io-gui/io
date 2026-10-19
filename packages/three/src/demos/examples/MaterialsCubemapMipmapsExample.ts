@@ -1,6 +1,6 @@
-import { CubeTexture, CubeTextureLoader, LinearFilter, LinearMipMapLinearFilter, Mesh, MeshBasicMaterial, SRGBColorSpace, SphereGeometry } from 'three/webgpu'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { CubeTexture, CubeTextureLoader, LinearFilter, LinearMipMapLinearFilter, Mesh, MeshBasicMaterial, PerspectiveCamera, SphereGeometry, SRGBColorSpace } from 'three/webgpu'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 
 // load customized cube texture
 async function loadCubeTextureWithMipmaps() {
@@ -47,9 +47,22 @@ async function loadCubeTextureWithMipmaps() {
 @Register
 export class MaterialsCubemapMipmapsExample extends Document {
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 50, 400 / 250, 1, 10000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 500 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadModel() {
@@ -86,7 +99,7 @@ export class MaterialsCubemapMipmapsExample extends Document {
       this.scene.add( autoMesh )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: [ mesh, autoMesh ]}, true)
+      this._frameTarget = [ mesh, autoMesh ]
     } catch ( e ) {
       console.error( e )
     }

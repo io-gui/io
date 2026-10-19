@@ -7,6 +7,7 @@ import {
   LineBasicMaterial,
   LineSegments,
   Mesh,
+  PerspectiveCamera,
   PointLight,
   PolarGridHelper,
   WireframeGeometry
@@ -28,12 +29,14 @@ const PERIOD = 200 * Math.PI / 3
  * Helpers as the subject: vertex normals and tangents of Lee Perry-Smith's head, its wireframe and edges beside it, box
  * helpers around each part, the group and the whole scene, and a square and a polar grid. The helpers are content in an
  * unselectable `Helpers` group (`showHelpers` in the Document tab); the point light's helper comes from the light
- * helpers overlay. The light moves with document time; the orbiting camera is dropped. Plays when opened.
+ * helpers overlay. The light and the active camera, circling the head as in the source, move with document time. Plays
+ * when opened.
  */
 @Register
 export class HelpersExample extends Document {
 
   public light: PointLight
+  public camera: PerspectiveCamera
   public helpers: Group
   private vnh?: VertexNormalsHelper
   private vth?: VertexTangentsHelper
@@ -43,6 +46,10 @@ export class HelpersExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    this.camera = new PerspectiveCamera( 70, 400 / 250, 1, 1000 )
+    this.camera.name = 'Camera'
+    this.activeCamera = this.camera
 
     this.light = new PointLight()
     this.light.name = 'Point'
@@ -146,6 +153,11 @@ export class HelpersExample extends Document {
     this.light.position.x = Math.sin( t * 1.7 ) * 300
     this.light.position.y = Math.cos( t * 1.5 ) * 400
     this.light.position.z = Math.cos( t * 1.3 ) * 300
+
+    // Ten turns per loop.
+    this.camera.position.x = 400 * Math.cos( t )
+    this.camera.position.z = 400 * Math.sin( t )
+    this.camera.lookAt( 0, 0, 0 )
   }
 }
 
@@ -156,5 +168,5 @@ function named<T extends { name: string }>(object: T, name: string): T {
 
 registerEditorGroups(HelpersExample, {
   Main: ['showHelpers'],
-  Hidden: ['light', 'helpers', 'vnh', 'vth'],
+  Hidden: ['light', 'camera', 'helpers', 'vnh', 'vth'],
 })

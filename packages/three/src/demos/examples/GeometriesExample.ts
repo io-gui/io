@@ -11,6 +11,7 @@ import {
   Mesh,
   MeshPhongMaterial,
   OctahedronGeometry,
+  PerspectiveCamera,
   PlaneGeometry,
   PointLight,
   RepeatWrapping,
@@ -47,10 +48,17 @@ export class GeometriesExample extends Document {
     ambientLight.name = 'Ambient'
     this.scene.add( ambientLight )
 
+    // The source circles its camera once in 63 s, a third of a turn per loop here: it stays where the circle starts.
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 2000 )
+    camera.name = 'Camera'
+    camera.position.set( 800, 500, 0 )
+    camera.lookAt( 0, 0, 0 )
+    this.scene.add( camera )
+    this.activeCamera = camera
+
     const pointLight = new PointLight( 0xffffff, 2.5, 0, 0 )
     pointLight.name = 'Point'
-    pointLight.position.set( 0, 500, 0 )
-    this.scene.add( pointLight )
+    camera.add( pointLight )
 
     // Views draw on document changes only, so report the texture when it arrives.
     const map = new TextureLoader().load( 'https://threejs.org/examples/textures/uv_grid_opengl.jpg', () => this.notify({kind: 'material'}) )

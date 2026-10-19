@@ -10,6 +10,7 @@ import {
   MeshLambertMaterial,
   MeshPhongMaterial,
   MeshStandardMaterial,
+  PerspectiveCamera,
   PointLight,
   RepeatWrapping,
   SRGBColorSpace,
@@ -113,6 +114,12 @@ export class MarchingcubesExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: 60}), ...args})
+
+    const sourceCamera = new PerspectiveCamera( 45, 400 / 250, 1, 10000 )
+    sourceCamera.name = 'Camera'
+    sourceCamera.position.set( - 500, 500, 1500 )
+    sourceCamera.lookAt( 0, 0, 0 )
+    this.activeCamera = sourceCamera
 
     this.scene.background = new Color( 0x050505 )
 

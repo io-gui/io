@@ -38,6 +38,15 @@ todos:
   - id: view-msaa
     content: "MSAA as a view setting (View.msaa) that pipelines apply to their scene targets"
     status: completed
+  - id: document-active-camera
+    content: "Document.activeCamera (ADR-0011): the camera a document is presented through, in or outside the scene graph; views set with setCameraView() follow it. View camera methods take the document"
+    status: completed
+  - id: view-camera-select
+    content: "Camera select per view: the document's camera, the free view, any scene camera, and lights looked through as cameras (Maya-style virtual cameras for aiming spot lights). A view override like View.bloom: the document's activeCamera stays untouched, so 'Document' switches back. Lights need a camera built from their pose (spot: fov from angle; directional/rect: orthographic). Serialize the choice with the view"
+    status: pending
+  - id: document-frame-hook
+    content: "Per-frame GPU work for documents: Document.onBeforeDraw(renderer, delta), run by the RenderScheduler once per frame and renderer before views draw the document's changes; delta = time played forward only (ADR-0010)"
+    status: completed
   - id: clipping-helpers
     content: "Clipping plane helpers for ClippingGroups as a helper overlay (clippingHelpers)"
     status: completed
@@ -132,3 +141,21 @@ Done 2026-10-16. `View.msaa` draws the content with 4 samples (WebGPU allows 1 o
 - The compositor calls `pipeline.setSamples(4 | 0)` when the flag changes and redraws. `RenderTargetPipeline` multisamples its target (three re-creates the textures); `PostProcessingPipeline` multisamples its scene pass, unless created with `{msaa: false}`.
 - **TRAA cannot**: it copies the scene depth into its history (`copyTextureToTexture`), which WebGPU refuses for a multisampled texture. The demo host registers its TRAA pipeline with `msaa: false`, so the axis views ignore the flag (TRAA anti-aliases already).
 - **Present material keyed by sample count.** The pipeline's depth then binds as a multisampled texture, but three's shader cache key ignores how bound textures are sampled, so a rebuilt present material reused the single-sampled binding layout (invalid bind group on every draw). The compositor appends the sample count to the material's `customProgramCacheKey`. Possibly worth an upstream issue.
+
+### `document-frame-hook`
+
+Done 2026-10-18. `Document.onBeforeDraw(renderer, delta)` ([ADR-0010](../../packages/three/docs/adr/0010-documents-do-frame-gpu-work-before-views-draw.md)): the frame's GPU work (compute, `CubeCamera.update`, renders into targets), run by the scheduler once per frame and renderer before views draw the document's changes. `delta` counts only time played forward, so GPU simulations are live content (ADR-0009).
+
+### `document-active-camera`
+
+Done 2026-10-19. `Document.activeCamera` ([ADR-0011](../../packages/three/docs/adr/0011-documents-name-an-active-camera.md)): the camera the document is presented through, like Blender's scene camera. It need not be in the scene graph. Views set with `setCameraView()` follow it, falling back to the first scene camera; the demo host's Scene Camera view does. View camera methods (`getCamera`, `getSourceCamera`, `getWorldPerPixel`) take the document. Converted examples keep their source camera as the active camera (conversion plan, Map).
+
+### `view-camera-select`
+
+Not scheduled (raised 2026-10-19). A camera select per view listing what it can look through: the document's camera, the free view, every scene camera, and lights looked through as cameras, as Maya's look-through: a virtual camera aims a spot light by navigating.
+
+- **Switching back.** Choosing a camera in a view must not overwrite `Document.activeCamera`: it is a view override, like `View.bloom` over `Document.bloom`. The view keeps its own choice, with `null` meaning "follow the document" (what `setCameraView()` sets now). The document's camera stays known, so the select's "Document" entry switches back at any time, also after the document changes its camera.
+- **Lights as cameras.** A view builds a camera from the light's pose (ADR-0005: scene objects are never mutated to fit a view). Spot lights get a perspective camera with the cone's angle as fov; directional and rect area lights get an orthographic one along their direction (rect area: its size). Navigating while looking through a light moves the light through an undoable operator, as planned `lockCameraToView` does for cameras.
+- **Persistence.** Today `setCameraView()` and named camera requests are not serialized with the view. The select's value should be (`View.toJSON`): `document`, `free`, or an object id.
+- **The list.** Cameras and lights of the document's scene, plus the active camera when it is outside the scene. Labels by name or `<ClassName>`, as the scene graph does.
+

@@ -31,7 +31,7 @@ const instances = 5000
 /**
  * 5000 crates from one `InstancedMesh` whose cube geometry keeps positions and uvs in one interleaved buffer (eight
  * floats per vertex). The cloud turns, and each crate spins about its own (1, 1, 1) axis, both derived from document
- * time. The source camera is kept as `Camera`, looking out from the middle of the cloud. Plays when opened.
+ * time. The source camera, looking out from the middle of the cloud, is the active camera. Plays when opened.
  */
 @Register
 export class BuffergeometryInstancingInterleavedExample extends Document {
@@ -46,9 +46,9 @@ export class BuffergeometryInstancingInterleavedExample extends Document {
     this.scene.background = new Color( 0x101010 )
 
     // The source looks out from the middle of the cloud.
-    const camera = new PerspectiveCamera( 50, 1, 1, 1000 )
+    const camera = new PerspectiveCamera( 50, 400 / 250, 1, 1000 )
     camera.name = 'Camera'
-    this.scene.add( camera )
+    this.activeCamera = camera
 
     // geometry
 

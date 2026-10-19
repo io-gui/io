@@ -10,6 +10,7 @@ import {
   MathUtils,
   Mesh,
   MeshLambertMaterial,
+  PerspectiveCamera,
   RepeatWrapping,
   SRGBColorSpace,
   TextureLoader,
@@ -32,6 +33,11 @@ export class GeometryNurbsExample extends Document {
 
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 50, 400 / 250, 1, 2000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 150, 750 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0xf0f0f0 )
 

@@ -7,11 +7,12 @@ import {
   MeshPhongMaterial,
   MeshPhongNodeMaterial,
   Object3D,
+  PerspectiveCamera,
   PlaneGeometry,
   PointLight,
   RepeatWrapping,
-  SRGBColorSpace,
   SphereGeometry,
+  SRGBColorSpace,
   TextureLoader
 } from 'three/webgpu'
 import { reflector, uv, texture, color } from 'three/tsl'
@@ -38,6 +39,12 @@ export class MirrorExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 500 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 75, 160 )
+    camera.lookAt( 0, 40, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x000000 )
 

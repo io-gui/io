@@ -1,5 +1,5 @@
 import { Register, ReactiveElement, ReactiveElementProps, Property, div, Field, Storage as $ } from '@io-gui/core'
-import { ioField } from '@io-gui/inputs'
+import { ioField, ioButton } from '@io-gui/inputs'
 import { ioPropertyEditor } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 import { Object3D } from 'three/webgpu'
@@ -54,15 +54,15 @@ const editorLayout = new Layout({
             {
               type: 'panel',
               tabs: [
-                { id: 'Perspective', selected: true },
-                { id: 'Top' },
+                { id: 'Top', selected: true },
                 { id: 'Bottom' }
               ]
             }, {
               type: 'panel',
               tabs: [
                 { id: 'UV' },
-                { id: 'Scene Camera', selected: true },
+                { id: 'Perspective' },
+                { id: 'Active', selected: true },
               ]
             }
           ],
@@ -118,8 +118,17 @@ const DOCUMENTS: Record<string, () => Promise<Document>> = {
   ClippingAdvancedExample: () => import('./examples/ClippingAdvancedExample.js').then(module => new module.ClippingAdvancedExample()),
   ClippingExample: () => import('./examples/ClippingExample.js').then(module => new module.ClippingExample()),
   ClippingIntersectionExample: () => import('./examples/ClippingIntersectionExample.js').then(module => new module.ClippingIntersectionExample()),
+  ComputeBirdsExample: () => import('./examples/ComputeBirdsExample.js').then(module => new module.ComputeBirdsExample()),
+  ComputeClothExample: () => import('./examples/ComputeClothExample.js').then(module => new module.ComputeClothExample()),
+  ComputeParticlesExample: () => import('./examples/ComputeParticlesExample.js').then(module => new module.ComputeParticlesExample()),
+  ComputeParticlesFluidExample: () => import('./examples/ComputeParticlesFluidExample.js').then(module => new module.ComputeParticlesFluidExample()),
+  ComputeParticlesRainExample: () => import('./examples/ComputeParticlesRainExample.js').then(module => new module.ComputeParticlesRainExample()),
+  ComputePointsExample: () => import('./examples/ComputePointsExample.js').then(module => new module.ComputePointsExample()),
+  ComputeTexture3dExample: () => import('./examples/ComputeTexture3dExample.js').then(module => new module.ComputeTexture3dExample()),
   ComputeTextureExample: () => import('./examples/ComputeTextureExample.js').then(module => new module.ComputeTextureExample()),
+  ComputeWaterExample: () => import('./examples/ComputeWaterExample.js').then(module => new module.ComputeWaterExample()),
   CubemapAdjustmentsExample: () => import('./examples/CubemapAdjustmentsExample.js').then(module => new module.CubemapAdjustmentsExample()),
+  CubemapDynamicExample: () => import('./examples/CubemapDynamicExample.js').then(module => new module.CubemapDynamicExample()),
   CubemapMixExample: () => import('./examples/CubemapMixExample.js').then(module => new module.CubemapMixExample()),
   EquirectangularExample: () => import('./examples/EquirectangularExample.js').then(module => new module.EquirectangularExample()),
   FogHeightExample: () => import('./examples/FogHeightExample.js').then(module => new module.FogHeightExample()),
@@ -143,6 +152,7 @@ const DOCUMENTS: Record<string, () => Promise<Document>> = {
   HelpersExample: () => import('./examples/HelpersExample.js').then(module => new module.HelpersExample()),
   InstanceMeshExample: () => import('./examples/InstanceMeshExample.js').then(module => new module.InstanceMeshExample()),
   InstancePathExample: () => import('./examples/InstancePathExample.js').then(module => new module.InstancePathExample()),
+  InstancePointsExample: () => import('./examples/InstancePointsExample.js').then(module => new module.InstancePointsExample()),
   InstanceSpritesExample: () => import('./examples/InstanceSpritesExample.js').then(module => new module.InstanceSpritesExample()),
   InstanceUniformExample: () => import('./examples/InstanceUniformExample.js').then(module => new module.InstanceUniformExample()),
   InstancingDynamicExample: () => import('./examples/InstancingDynamicExample.js').then(module => new module.InstancingDynamicExample()),
@@ -225,6 +235,7 @@ const DOCUMENTS: Record<string, () => Promise<Document>> = {
   MaterialsCubemapMipmapsExample: () => import('./examples/MaterialsCubemapMipmapsExample.js').then(module => new module.MaterialsCubemapMipmapsExample()),
   MaterialsCubemapRefractionExample: () => import('./examples/MaterialsCubemapRefractionExample.js').then(module => new module.MaterialsCubemapRefractionExample()),
   MaterialsDisplacementmapExample: () => import('./examples/MaterialsDisplacementmapExample.js').then(module => new module.MaterialsDisplacementmapExample()),
+  MaterialsEnvmapsBpcemExample: () => import('./examples/MaterialsEnvmapsBpcemExample.js').then(module => new module.MaterialsEnvmapsBpcemExample()),
   MaterialsEnvmapsExample: () => import('./examples/MaterialsEnvmapsExample.js').then(module => new module.MaterialsEnvmapsExample()),
   MaterialsEnvmapsExrExample: () => import('./examples/MaterialsEnvmapsExrExample.js').then(module => new module.MaterialsEnvmapsExrExample()),
   MaterialsEnvmapsHdrExample: () => import('./examples/MaterialsEnvmapsHdrExample.js').then(module => new module.MaterialsEnvmapsHdrExample()),
@@ -266,18 +277,23 @@ const DOCUMENTS: Record<string, () => Promise<Document>> = {
   ReflectionRoughnessExample: () => import('./examples/ReflectionRoughnessExample.js').then(module => new module.ReflectionRoughnessExample()),
   RefractionExample: () => import('./examples/RefractionExample.js').then(module => new module.RefractionExample()),
   SandboxExample: () => import('./examples/SandboxExample.js').then(module => new module.SandboxExample()),
+  ShadowContactExample: () => import('./examples/ShadowContactExample.js').then(module => new module.ShadowContactExample()),
   ShadowmapArrayExample: () => import('./examples/ShadowmapArrayExample.js').then(module => new module.ShadowmapArrayExample()),
   ShadowmapExample: () => import('./examples/ShadowmapExample.js').then(module => new module.ShadowmapExample()),
   ShadowmapPerformanceExample: () => import('./examples/ShadowmapPerformanceExample.js').then(module => new module.ShadowmapPerformanceExample()),
   ShadowmapPointlightExample: () => import('./examples/ShadowmapPointlightExample.js').then(module => new module.ShadowmapPointlightExample()),
+  ShadowmapProgressiveExample: () => import('./examples/ShadowmapProgressiveExample.js').then(module => new module.ShadowmapProgressiveExample()),
   SkinningExample: () => import('./examples/SkinningExample.js').then(module => new module.SkinningExample()),
   SkinningInstancingExample: () => import('./examples/SkinningInstancingExample.js').then(module => new module.SkinningInstancingExample()),
+  SkinningInstancingIndividualExample: () => import('./examples/SkinningInstancingIndividualExample.js').then(module => new module.SkinningInstancingIndividualExample()),
   SkinningPointsExample: () => import('./examples/SkinningPointsExample.js').then(module => new module.SkinningPointsExample()),
   SpritesExample: () => import('./examples/SpritesExample.js').then(module => new module.SpritesExample()),
   Textures2dArrayCompressedExample: () => import('./examples/Textures2dArrayCompressedExample.js').then(module => new module.Textures2dArrayCompressedExample()),
   Textures2dArrayExample: () => import('./examples/Textures2dArrayExample.js').then(module => new module.Textures2dArrayExample()),
+  TexturesPartialupdateExample: () => import('./examples/TexturesPartialupdateExample.js').then(module => new module.TexturesPartialupdateExample()),
   TonemappingExample: () => import('./examples/TonemappingExample.js').then(module => new module.TonemappingExample()),
   TslAngularSlicingExample: () => import('./examples/TslAngularSlicingExample.js').then(module => new module.TslAngularSlicingExample()),
+  TslComputeAttractorsParticlesExample: () => import('./examples/TslComputeAttractorsParticlesExample.js').then(module => new module.TslComputeAttractorsParticlesExample()),
   TslEarthExample: () => import('./examples/TslEarthExample.js').then(module => new module.TslEarthExample()),
   TslGalaxyExample: () => import('./examples/TslGalaxyExample.js').then(module => new module.TslGalaxyExample()),
   TslHalftoneExample: () => import('./examples/TslHalftoneExample.js').then(module => new module.TslHalftoneExample()),
@@ -305,7 +321,7 @@ const VIEW_OVERLAYS: ViewOverlays = {
   grid: true,
   components: true,
   selection: true,
-  cameraFrame: true,
+  cameraFrame: false,
   cameraHelpers: true,
   lightHelpers: true,
   skeletonHelpers: true,
@@ -316,7 +332,8 @@ const VIEW_OVERLAYS: ViewOverlays = {
 /**
  * One Editor in tabbed views, each with its own pipeline (ADR-0006) and interaction profile: a forward
  * perspective view with the Move tool, select-only axis views post-processed with TRAA, and a
- * select-only UV view of the selection, and a select-only Camera view through the document's first scene camera.
+ * select-only UV view of the selection, and a select-only Camera view through the document's active camera (the source
+ * example's camera; ADR-0011).
  * The 3D views turn on every overlay (`VIEW_OVERLAYS`; the Camera view without the grid). The Camera view draws the
  * document's bloom; the other views do not until their `bloom` is switched on. The View tab shows the settings (bloom,
  * MSAA) of the view focused last.
@@ -442,8 +459,15 @@ export class IoEditorExample extends ReactiveElement {
 
     EXAMPLE_MENU.addEventListener('selectedID-changed', this.onExampleSelected)
 
+    const onNextExample = () => {
+      const currentIndex = EXAMPLE_MENU.options.findIndex(option => option.id === EXAMPLE_MENU.selectedID)
+      const nextIndex = (currentIndex + 1) % EXAMPLE_MENU.options.length
+      EXAMPLE_MENU.selectedID = EXAMPLE_MENU.options[nextIndex].id
+    }
+
     this.render([
       div({class: 'heading'}, [
+        ioButton({ label: 'Next Example', action: onNextExample }),
         ioField({value: this.bind('documentName')}),
         ioOptionSelect({ label: 'Load Example', model: EXAMPLE_MENU }),
       ]),
@@ -458,7 +482,7 @@ export class IoEditorExample extends ReactiveElement {
           {group: 'view', ...threeViewport({id: 'Back', editor: this.editor, view: this.views.back})},
           {group: 'view', ...threeViewport({id: 'Perspective', editor: this.editor, view: this.views.perspective})},
           {group: 'view', ...threeViewport({id: 'UV', editor: this.editor, view: this.views.uv})},
-          {group: 'view', ...threeViewport({id: 'Scene Camera', editor: this.editor, view: this.views.camera})},
+          {group: 'view', ...threeViewport({id: 'Active', editor: this.editor, view: this.views.camera})},
           threeScenegraph({
             id: 'Scene',
             editor: this.editor,

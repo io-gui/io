@@ -4,7 +4,7 @@ import { Document, DocumentProps } from '@io-gui/three'
 
 /**
  * A skybox: a unit box seen from inside, its six faces cut from one image strip (with `createImageBitmap` instead of a
- * DOM canvas). The panorama shows through the source's camera at its center, kept as the scene camera `Camera`; other
+ * DOM canvas). The panorama shows through the source's camera at its center, the active camera; other
  * views see the box from outside. The box is scenery (unselectable).
  */
 @Register
@@ -13,10 +13,10 @@ export class PanoramaCubeExample extends Document {
   constructor(args?: DocumentProps) {
     super(args)
 
-    const camera = new PerspectiveCamera( 90, 1, 0.1, 100 )
+    const camera = new PerspectiveCamera( 90, 400 / 250, 0.1, 100 )
     camera.name = 'Camera'
     camera.position.z = 0.01
-    this.scene.add( camera )
+    this.activeCamera = camera
 
     const textures = this.getTexturesFromAtlasFile( 'https://threejs.org/examples/textures/cube/sun_temple_stripe.jpg', 6 )
 

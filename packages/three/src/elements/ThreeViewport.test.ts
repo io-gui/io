@@ -130,12 +130,15 @@ describe('ThreeViewport', () => {
     view.dispose()
   })
 
-  it('frames objects on the editor frame-object event', () => {
+  it('frames the document\'s editor frame target, also in a viewport made after it loaded', () => {
+    const floor = new Mesh(new BoxGeometry(100, 1, 100))
+    floor.position.set(50, 0, 0)
+    const model = new Mesh(new BoxGeometry(1, 1, 1))
+    model.position.set(-20, 0, 0)
+    editor.document.scene.add(floor, model)
+    editor.document.scene.updateMatrixWorld(true)
+    editor.document.getEditorFrameTarget = () => model
     const viewport = new ThreeViewport({ editor })
-    const mesh = new Mesh(new BoxGeometry(1, 1, 1))
-    mesh.position.set(-20, 0, 0)
-    mesh.updateMatrixWorld(true)
-    editor.dispatch('frame-object', {object: mesh}, true)
     expect(viewport.view.navigation.target.x).toBeCloseTo(-20, 5)
     viewport.dispose()
   })

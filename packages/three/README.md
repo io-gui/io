@@ -73,7 +73,7 @@ type ThreeViewportProps = {
 - Automatic resize handling with pixel ratio support
 - Drawn by the RenderScheduler only when tagged dirty
 - `getViewCamera()` returns the camera it draws and picks with
-- Frames an object when its editor dispatches `frame-object` with `{object, overscan?}`
+- Frames the document by itself ([ADR-0012](./docs/adr/0012-documents-name-what-editor-views-frame.md)): its `getEditorFrameTarget()`, or the whole scene when it returns `null`. A view that has not been navigated frames again when the target changes (a model loaded), also in viewports made later (a tab opened after loading). Navigating or framing on request (`view.frame(object, fitScale?)`, F) stops it
 - The camera comes from the view: `view: new View().setAxisView('top')` for an axis view (`'free'` is the default perspective view), or `.setCameraView()` to look through the first scene camera. Pick one of several with `.setCameraView('name:shot')` or `.setCameraView('uuid:<uuid>')`. A scene camera added later (async asset load) is picked up when it appears, then tracked by uuid; until then the view shows its `free` view. Without a uuid, the view looks for the camera again in each document the editor switches to
 - All input goes through `viewport.inputRouter` (see Input below)
 - Draws through `viewport.compositor`: the view's pipeline, then overlays and `viewport.gizmoLayer` (see Pipelines and Overlays)
@@ -161,7 +161,7 @@ registerObjectIcon(Character, 'app:character'); // Character and its subclasses
 
 ### Editor and Document
 
-The app object and its content ([ADR-0002](./docs/adr/0002-app-view-frame-layers.md)). Viewports show `editor.document`; assigning a new document switches every viewport, and each view remembers its camera per document. A view seeing a document for the first time keeps its axis view (top, front, ...) and frames the new scene.
+The app object and its content ([ADR-0002](./docs/adr/0002-app-view-frame-layers.md)). Viewports show `editor.document`; assigning a new document switches every viewport, and each view remembers its camera per document. A view seeing a document for the first time keeps its axis view (top, front, ...) and frames the new document.
 
 ```typescript
 const editor = new Editor({ isPlaying: false });
@@ -181,6 +181,18 @@ editor.document = new Document(); // switch; switching back restores each view's
 A `Document` subclass has its own `onRendererInitialized(renderer)`. It runs once per renderer, before that renderer first draws the document, including for a document opened after the renderer was ready. GPU setup that belongs to the content, such as a compute pass that fills a texture, goes there, so the document works in any editor.
 
 Its `onAnimate(delta, time)` runs on every change of `document.timeline.currentTime`: each frame while the editor plays (after the editor's own `onAnimate`), and whenever the timeline is scrubbed, stepped or set. `time` is the timeline's current time and `delta` the change, negative when time goes back (scrubbing back, a loop wrap). Derive time-driven state from `time`; advance what can only integrate, such as an `AnimationMixer`, by `delta`.
+
+Its `activeCamera` is the camera the document is presented through (ADR-0011). Views set with `view.setCameraView()` look through it, or through the first camera in the scene when it is `null`. It need not be in the scene graph: a camera outside it is looked through but not drawn, picked or framed.
+
+Override `getEditorFrameTarget()` to name what editor views frame, when scenery dwarfs the subject (ADR-0012). It is editor-only: other runtimes never call it. Return the model once it has loaded; views that were not navigated frame it then.
+
+```typescript
+override getEditorFrameTarget() {
+  return this._model // null until loaded: views frame the whole scene meanwhile
+}
+```
+
+Its `onBeforeDraw(renderer, delta)` does the GPU work of a frame: `renderer.compute`, `CubeCamera.update`, renders into targets. The scheduler runs it once per frame and renderer, after evaluating the scene and before the views of that renderer draw the document's changes (not for navigation-only redraws). `delta` is the timeline time played forward since it last ran for that renderer: scrubbing back and loop wraps add nothing, so GPU simulations never rewind (ADR-0009, ADR-0010). It is 0 for changes other than time, and can be large after scrubbing forward. Calling `notify()` from it runs it again next frame.
 
 ### Timeline
 
@@ -357,7 +369,7 @@ All overlays are off by default; a view lists the ones it draws (`new View({over
 | `grid` | Floor grid with axes; on the plane facing axis views; spacing follows zoom |
 | `components` | Edit mode: wire, points and selected faces of the edit set |
 | `selection` | Outline of selected meshes and lines (mask of proxies sharing their geometry) |
-| `cameraFrame` | Darkens what lies outside a scene camera's frame when looking through it |
+| `cameraFrame` | Darkens what lies outside the framed area: the frame of the scene camera the view looks through, or the viewport inside the overscan margin |
 | `cameraHelpers` | Frustum of each shown scene camera, except the one the view looks through |
 | `lightHelpers` | Point, directional and hemisphere light icons at a constant screen size; spot cones and rect area panels at their real size |
 | `skeletonHelpers` | Bones of each shown skeleton, also while its meshes are hidden |

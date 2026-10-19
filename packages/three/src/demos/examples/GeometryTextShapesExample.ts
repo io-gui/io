@@ -8,11 +8,12 @@ import {
   Mesh,
   MeshBasicMaterial,
   Path,
+  PerspectiveCamera,
   ShapeGeometry
 } from 'three/webgpu'
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 
 /**
  * Two lines of text from a typeface's shapes: a translucent `ShapeGeometry` fill, and the outlines (shapes and holes)
@@ -21,12 +22,25 @@ import { Document, DocumentProps } from '@io-gui/three'
 @Register
 export class GeometryTextShapesExample extends Document {
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 10000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, - 400, 600 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0xf0f0f0 )
 
     void this.loadFont()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadFont() {
@@ -102,7 +116,7 @@ export class GeometryTextShapesExample extends Document {
       this.scene.add( lineText )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: [ text, lineText ]}, true)
+      this._frameTarget = [ text, lineText ]
     } catch ( e ) {
       console.error( e )
     }

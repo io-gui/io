@@ -1,11 +1,11 @@
-import { AmbientLight, BufferGeometry, CubeRefractionMapping, CubeTextureLoader, Group, Mesh, MeshPhongMaterial } from 'three/webgpu'
+import { AmbientLight, BufferGeometry, CubeRefractionMapping, CubeTextureLoader, Group, Mesh, MeshPhongMaterial, PerspectiveCamera } from 'three/webgpu'
 import { PLYLoader } from 'three/addons/loaders/PLYLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 
 /**
  * Three Lucy statues refracting a cube map that is also the background, with different colors and refraction ratios.
- * The source's mouse-driven camera is dropped.
+ * The active camera stands where the source's mouse-driven camera rests.
  */
 @Register
 export class MaterialsCubemapRefractionExample extends Document {
@@ -13,8 +13,17 @@ export class MaterialsCubemapRefractionExample extends Document {
   public statues: Group
   private materials: MeshPhongMaterial[]
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 50, 400 / 250, 1, 100000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, - 4000 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     const r = 'https://threejs.org/examples/textures/cube/Park3Med/'
 
@@ -50,13 +59,17 @@ export class MaterialsCubemapRefractionExample extends Document {
     void this.loadModel()
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   private async loadModel() {
     try {
       const geometry = await new PLYLoader().loadAsync( 'https://threejs.org/examples/models/ply/binary/Lucy100k.ply' )
       this.createScene( geometry )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: this.statues}, true)
+      this._frameTarget = this.statues
     } catch ( e ) {
       console.error( e )
     }

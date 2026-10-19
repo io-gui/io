@@ -8,6 +8,7 @@ import {
   MeshBasicMaterial,
   MeshStandardMaterial,
   Object3D,
+  PerspectiveCamera,
   PMREMGenerator,
   WebGPURenderer
 } from 'three/webgpu'
@@ -15,8 +16,8 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import { LDrawLoader } from 'three/addons/loaders/LDrawLoader.js'
 import { LDrawUtils } from 'three/addons/utils/LDrawUtils.js'
 import { LDrawConditionalLineMaterial } from 'three/addons/materials/LDrawConditionalLineNodeMaterial.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 
@@ -95,12 +96,25 @@ export class LoaderLdrawExample extends Document {
   /** Counts loads, so a slow file does not replace a newer pick. */
   private loads = 0
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({toneMapping: ACESFilmicToneMapping, ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 10000 )
+    camera.name = 'Camera'
+    camera.position.set( 150, 200, 250 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0xdeebed )
 
     this.reloadObject( true )
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   override onRendererInitialized(renderer: WebGPURenderer) {
@@ -240,7 +254,7 @@ export class LoaderLdrawExample extends Document {
 
       if ( resetCamera ) {
         model.updateMatrixWorld( true )
-        this.dispatch('frame-object', {object: model}, true)
+        this._frameTarget = model
       }
     } catch ( e ) {
       console.error( e )

@@ -3,13 +3,14 @@ import {
   BoxGeometry,
   Mesh,
   MeshPhongMaterial,
+  PerspectiveCamera,
   PlaneGeometry,
   SpotLight,
   Vector3,
   WebGPURenderer
 } from 'three/webgpu'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
 /** Seconds between new light targets (the source's `setTimeout`). */
 const INTERVAL = 5
@@ -73,8 +74,17 @@ export class LightsSpotlightsExample extends Document {
   private steps: Step[][]
   private focus: Mesh
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: STEPS * INTERVAL}), ...args})
+
+    const camera = new PerspectiveCamera( 35, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 4.6, 2.2, - 2.1 )
+    camera.lookAt( 0, 0.5, 0 )
+    this.activeCamera = camera
 
     const matFloor = new MeshPhongMaterial( { color: 0x808080 } )
     const matBox = new MeshPhongMaterial( { color: 0xaaaaaa } )
@@ -119,9 +129,13 @@ export class LightsSpotlightsExample extends Document {
     this.pose( this.timeline.currentTime )
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   override onRendererInitialized(renderer: WebGPURenderer) {
     super.onRendererInitialized(renderer)
-    this.dispatch('frame-object', {object: this.focus}, true)
+    this._frameTarget = this.focus
   }
 
   override onAnimate(delta: number, time: number) {

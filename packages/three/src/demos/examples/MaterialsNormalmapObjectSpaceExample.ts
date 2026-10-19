@@ -1,13 +1,16 @@
-import { AmbientLight, Box3, DoubleSide, Group, Mesh, MeshStandardMaterial, ObjectSpaceNormalMap, PointLight } from 'three/webgpu'
+import { AmbientLight, Box3, DoubleSide, Group, Mesh, MeshStandardMaterial, ObjectSpaceNormalMap, PerspectiveCamera, PointLight } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 
 /** The Nefertiti bust shaded with an object-space normal map and no vertex normals. */
 @Register
 export class MaterialsNormalmapObjectSpaceExample extends Document {
 
   public bust: Group
+
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
 
   constructor(args?: DocumentProps) {
     super(args)
@@ -20,17 +23,26 @@ export class MaterialsNormalmapObjectSpaceExample extends Document {
 
     // light
 
-    // The source attaches the light to its camera at (- 10, 0, 23).
+    const camera = new PerspectiveCamera( 40, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( - 10, 0, 23 )
+    camera.lookAt( 0, 0, 0 )
+    this.scene.add( camera )
+    this.activeCamera = camera
+
     const light = new PointLight( 0xffffff, 4.5, 0, 0 )
     light.name = 'Point'
-    light.position.set( - 10, 0, 23 )
-    this.scene.add( light )
+    camera.add( light )
 
     this.bust = new Group()
     this.bust.name = 'Nefertiti'
     this.scene.add( this.bust )
 
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadModel() {
@@ -68,7 +80,7 @@ export class MaterialsNormalmapObjectSpaceExample extends Document {
       }
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: this.bust}, true)
+      this._frameTarget = this.bust
     } catch ( e ) {
       console.error( e )
     }

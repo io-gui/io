@@ -1,7 +1,7 @@
-import { AmbientLight, CubeRefractionMapping, CubeTextureLoader, Mesh, MeshLambertMaterial, MixOperation, PointLight } from 'three/webgpu'
+import { AmbientLight, CubeRefractionMapping, CubeTextureLoader, Mesh, MeshLambertMaterial, MixOperation, PerspectiveCamera, PointLight } from 'three/webgpu'
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 
 /**
  * Three Walt heads with Lambert materials and a cube environment map: reflective (center), refractive (left) and
@@ -10,8 +10,17 @@ import { Document, DocumentProps } from '@io-gui/three'
 @Register
 export class MaterialsCubemapExample extends Document {
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 50, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 13 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     //cubemap
 
@@ -51,6 +60,10 @@ export class MaterialsCubemapExample extends Document {
     void this.loadModels( cubeMaterial1, cubeMaterial2, cubeMaterial3 )
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   private async loadModels(cubeMaterial1: MeshLambertMaterial, cubeMaterial2: MeshLambertMaterial, cubeMaterial3: MeshLambertMaterial) {
     try {
       const object = await new OBJLoader().setPath( 'https://threejs.org/examples/models/obj/walt/' ).loadAsync( 'WaltHead.obj' )
@@ -74,7 +87,7 @@ export class MaterialsCubemapExample extends Document {
       this.scene.add( head, head2, head3 )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: [ head, head2, head3 ]}, true)
+      this._frameTarget = [ head, head2, head3 ]
     } catch ( e ) {
       console.error( e )
     }

@@ -1,4 +1,4 @@
-import { Register } from '@io-gui/core'
+import { Register, Field } from '@io-gui/core'
 import {
   AnimationClip,
   AnimationMixer,
@@ -38,7 +38,7 @@ import {
 } from 'three/tsl'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
 type GltfModel = {
   scene: Group
@@ -75,8 +75,10 @@ const lightSpeed = /*#__PURE__*/ Fn(([suv_immutable, time]: [Node<'vec2'>, Node<
 export class AnimationRetargetingExample extends Document {
   public sourceMixer?: AnimationMixer
   public targetMixer?: AnimationMixer
-  public camera: PerspectiveCamera
   public group: Group = new Group()
+
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
 
   constructor(args?: DocumentProps) {
     super({toneMapping: NeutralToneMapping, timeline: new Timeline({autoplay: true}), ...args})
@@ -115,16 +117,21 @@ export class AnimationRetargetingExample extends Document {
     floor.position.set(0, 0, 0)
     this.scene.add(floor)
 
-    this.camera = new PerspectiveCamera(40, 1, .25, 50)
-    this.camera.position.set(0, 1, 4)
-    this.camera.name = 'camera'
-    this.scene.add(this.camera)
+    const camera = new PerspectiveCamera(40, 400 / 250, .25, 50)
+    camera.position.set(0, 1, 4)
+    camera.lookAt(0, 1, 0)
+    camera.name = 'Camera'
+    this.activeCamera = camera
 
     this.group.name = 'Models'
     this.scene.add(this.group)
 
     // Load and setup models
     void this.loadModels()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadModels() {
@@ -156,7 +163,7 @@ export class AnimationRetargetingExample extends Document {
     this.targetMixer = this.retargetModel(source, targetModel).setTime(this.timeline.currentTime)
 
     this.notify({kind: 'structure'})
-    this.dispatch('frame-object', {object: this.group}, true)
+    this._frameTarget = this.group
   }
 
   private getSource(sourceModel: GltfModel): AnimationSource {

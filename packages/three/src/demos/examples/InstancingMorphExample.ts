@@ -1,5 +1,7 @@
 import {
   AnimationMixer,
+  Box3,
+  BufferGeometry,
   Color,
   Fog,
   HemisphereLight,
@@ -9,13 +11,14 @@ import {
   MeshStandardNodeMaterial,
   PerspectiveCamera,
   PlaneGeometry,
+  Vector3,
   WebGPURenderer
 } from 'three/webgpu'
 import { SunLight } from 'three/addons/lights/SunLight.js'
 import { SunLightNode } from 'three/addons/lights/SunLightNode.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
 
 const offset = 5000
@@ -30,7 +33,7 @@ const DURATION = 63
 /**
  * A herd of 1024 instanced horses, each galloping at its own offset into the clip: per instance, the clip is sampled
  * at its time and the morph weights are copied with `setMorphAt`. Lit by a sun light with cascaded shadows (fitted
- * to each view's camera). The source's camera, flying over the herd, is the scene camera `Camera`. Plays when opened.
+ * to each view's camera). The source's camera, flying over the herd, is the active camera. Plays when opened.
  */
 @Register
 export class InstancingMorphExample extends Document {
@@ -41,12 +44,15 @@ export class InstancingMorphExample extends Document {
   private dummy?: Mesh
   private timeOffsets = new Float32Array( count )
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: DURATION}), ...args})
 
-    this.camera = new PerspectiveCamera( 60, 1, 100, 10000 )
+    this.camera = new PerspectiveCamera( 60, 400 / 250, 100, 10000 )
     this.camera.name = 'Camera'
-    this.scene.add( this.camera )
+    this.activeCamera = this.camera
 
     for ( let i = 0; i < count; i ++ ) {
       this.timeOffsets[ i ] = Math.random() * 3
@@ -80,6 +86,10 @@ export class InstancingMorphExample extends Document {
 
     this.pose( 0 )
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   override onRendererInitialized(renderer: WebGPURenderer) {
@@ -121,7 +131,10 @@ export class InstancingMorphExample extends Document {
       this.notify({kind: 'structure'})
       // The herd, not the scene: the ground spans a million units. Closer than the whole herd, which spans 10000
       // units: the fog hides what is farther than that.
-      this.dispatch('frame-object', {object: mesh, overscan: 0.5}, true)
+      const herd = new Box3().setFromObject( mesh, true )
+      const center = herd.getCenter( new Vector3() )
+      const halfSize = herd.getSize( new Vector3() ).multiplyScalar( 0.25 )
+      this._frameTarget = new Mesh( new BufferGeometry().setFromPoints( [ center.clone().sub( halfSize ), center.add( halfSize ) ] ) )
     } catch ( e ) {
       console.error( e )
     }

@@ -1,8 +1,8 @@
-import { ACESFilmicToneMapping, AnimationMixer, EquirectangularReflectionMapping, Group, Material, Mesh, Texture } from 'three/webgpu'
+import { ACESFilmicToneMapping, AnimationMixer, Box3, EquirectangularReflectionMapping, Group, Material, Mesh, Object3D, PerspectiveCamera, Texture, Vector3 } from 'three/webgpu'
 import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 import { ioNumberSlider } from '@io-gui/sliders'
@@ -43,9 +43,21 @@ export class LoaderGltfExample extends Document {
 
   /** Counts loads, so a slow model does not replace a newer pick. */
   private loads = 0
+  private camera: PerspectiveCamera
+  /** What the source's `OrbitControls` look at: the last model's center. */
+  private cameraTarget = new Vector3( 0, 0, - 0.2 )
+
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
 
   constructor(args?: DocumentProps) {
     super({toneMapping: ACESFilmicToneMapping, ...args})
+
+    this.camera = new PerspectiveCamera( 45, 400 / 250, 0.25, 20 )
+    this.camera.name = 'Camera'
+    this.camera.position.set( - 1.8, 0.6, 2.7 )
+    this.camera.lookAt( this.cameraTarget )
+    this.activeCamera = this.camera
 
     new UltraHDRLoader()
       .setPath( 'https://threejs.org/examples/textures/equirectangular/' )
@@ -62,12 +74,40 @@ export class LoaderGltfExample extends Document {
     this.assetChanged()
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   assetChanged() {
     const modelInfo = MODELS.find( m => m.name === this.asset )
     if ( modelInfo ) void this.loadModel( modelInfo )
   }
 
   blurrinessChanged() { this.scene.backgroundBlurriness = this.blurriness }
+
+  /** The source's `fitCameraToSelection`: moves the active camera along its view to frame `selection`. */
+  private fitCameraToSelection( selection: Object3D, fitOffset = 1.3 ) {
+    const camera = this.camera
+    const box = new Box3().setFromObject( selection )
+
+    const size = box.getSize( new Vector3() )
+    const center = box.getCenter( new Vector3() )
+
+    const maxSize = Math.max( size.x, size.y, size.z )
+    const fitHeightDistance = maxSize / ( 2 * Math.atan( Math.PI * camera.fov / 360 ) )
+    const distance = fitOffset * fitHeightDistance
+
+    const direction = this.cameraTarget.clone().sub( camera.position ).normalize().multiplyScalar( distance )
+
+    this.cameraTarget.copy( center )
+
+    camera.near = distance / 100
+    camera.far = distance * 100
+    camera.updateProjectionMatrix()
+
+    camera.position.copy( this.cameraTarget ).sub( direction )
+    camera.lookAt( this.cameraTarget )
+  }
 
   private async loadModel( modelInfo: ModelInfo ) {
     const variants = modelInfo.variants
@@ -102,7 +142,8 @@ export class LoaderGltfExample extends Document {
       this.notify({kind: 'structure'})
       // Skinned bounds read the bones' world matrices, which nothing has drawn yet.
       this.model.updateMatrixWorld( true )
-      this.dispatch('frame-object', {object: this.model}, true)
+      this.fitCameraToSelection( this.model )
+      this._frameTarget = this.model
     } catch ( e ) {
       console.error( e )
     }
@@ -150,5 +191,5 @@ registerEditorConfig(LoaderGltfExample, [
 
 registerEditorGroups(LoaderGltfExample, {
   Main: ['asset', 'blurriness'],
-  Hidden: ['model', 'mixer', 'loads'],
+  Hidden: ['model', 'mixer', 'loads', 'camera', 'cameraTarget'],
 })

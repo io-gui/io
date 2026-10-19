@@ -9,11 +9,12 @@ import {
   LoopOnce,
   Mesh,
   MeshPhongMaterial,
+  PerspectiveCamera,
   PlaneGeometry
 } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { ioObject, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 import { ioNumberSlider } from '@io-gui/sliders'
@@ -46,8 +47,17 @@ export class AnimationSkinningMorphExample extends Document {
   @Property({type: Object, init: null})
   declare expressions: Record<string, number>
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true}), ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 0.25, 100 )
+    camera.name = 'Camera'
+    camera.position.set( - 5, 3, 10 )
+    camera.lookAt( 0, 2, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0xe0e0e0 )
     this.scene.fog = new Fog( 0xe0e0e0, 20, 100 )
@@ -75,6 +85,10 @@ export class AnimationSkinningMorphExample extends Document {
     this.emotes = Object.fromEntries( EMOTES.map( name => [ name, () => this.playEmote( name ) ] ) )
 
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadModel() {
@@ -123,7 +137,7 @@ export class AnimationSkinningMorphExample extends Document {
       this.activeAction.play()
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: model}, true)
+      this._frameTarget = model
     } catch ( e ) {
       console.error( e )
     }

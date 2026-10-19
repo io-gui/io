@@ -4,11 +4,14 @@ import type { SelectionModel } from '../selection/SelectionModel.js'
 import type { Picker } from '../selection/Picker.js'
 import type { ComponentPicker } from '../selection/ComponentPicker.js'
 import type { Editor } from '../editor/Editor.js'
+import type { Document } from '../editor/Document.js'
 
 /** What an InputRouter needs from the element it routes for. Implemented by ThreeViewport. */
 export interface InputHost extends HTMLElement {
   readonly view: View
   readonly scene: Scene | null
+  /** The shown document: its scene, and the active camera of views that follow it. */
+  readonly document?: Document | null
   /** Current editor mode (`'object'`, `'edit'`, ...), for keymap `when.mode`. */
   readonly mode?: string
   /** Selection of the shown document, when the host has one. */

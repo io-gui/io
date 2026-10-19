@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { InputHost, InputRouter, NavigationBehavior, View, navigationKeymaps } from '@io-gui/three'
-import { BoxGeometry, Mesh, PerspectiveCamera, Scene, Spherical, Vector3 } from 'three/webgpu'
+import { Document as ThreeDocument, InputHost, InputRouter, NavigationBehavior, View, navigationKeymaps } from '@io-gui/three'
+import { BoxGeometry, Mesh, PerspectiveCamera, Spherical, Vector3 } from 'three/webgpu'
 
 function createHost(): InputHost {
   const element = document.createElement('div') as unknown as InputHost
   const view = new View({overscan: 1})
-  const scene = new Scene()
-  Object.assign(element, {view, scene, getViewCamera: () => view.getCamera(200, 100, scene)})
+  const content = new ThreeDocument()
+  Object.assign(element, {view, scene: content.scene, document: content, getViewCamera: () => view.getCamera(200, 100, content)})
   element.style.cssText = 'position:fixed;left:0;top:0;width:200px;height:100px'
   document.body.appendChild(element)
   return element
@@ -51,7 +51,7 @@ describe('NavigationBehavior', () => {
 
   it('pans on RMB drag so the scene follows the pointer', () => {
     const view = host.view
-    const worldPerPixel = view.getWorldPerPixel(200, 100, host.scene)
+    const worldPerPixel = view.getWorldPerPixel(200, 100, host.document ?? null)
     const right = new Vector3(1, 0, 0).applyQuaternion(view.navigation.rotation)
     drag(host, [100, 50], [110, 50], {button: 2})
     expect(view.navigation.target.distanceTo(right.multiplyScalar(-10 * worldPerPixel))).toBeLessThan(1e-9)

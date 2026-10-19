@@ -8,6 +8,7 @@ import {
   Mesh,
   Node,
   NodeMaterial,
+  PerspectiveCamera,
   RedFormat,
   SRGBColorSpace,
   Texture3DNode,
@@ -103,6 +104,11 @@ export class VolumeCloudExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 60, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 1.5 )
+    this.activeCamera = camera
 
     // Sky
 

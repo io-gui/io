@@ -1,4 +1,4 @@
-import { BufferGeometry, Float32BufferAttribute, Line, LineBasicMaterial } from 'three/webgpu'
+import { BufferGeometry, Float32BufferAttribute, Line, LineBasicMaterial, PerspectiveCamera } from 'three/webgpu'
 import { Register } from '@io-gui/core'
 import { Document, DocumentProps, Timeline } from '@io-gui/three'
 
@@ -16,6 +16,11 @@ export class BuffergeometryLinesExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 27, 400 / 250, 1, 4000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 2750 )
+    this.activeCamera = camera
 
     const geometry = new BufferGeometry()
     const material = new LineBasicMaterial( { vertexColors: true } )

@@ -4,6 +4,7 @@ import {
   Mesh,
   MeshStandardNodeMaterial,
   NoColorSpace,
+  PerspectiveCamera,
   ReinhardToneMapping,
   RepeatWrapping,
   SRGBColorSpace,
@@ -18,8 +19,8 @@ import { ioNumberSlider } from '@io-gui/sliders'
 
 /**
  * An ice disc whose lower layer is offset by a displacement texture (`parallaxUV`), so it seems to lie deep below
- * the surface, under an HDR sky. `blurriness`, `parallaxScale` and `uvScale` are in the Document tab. The source's
- * auto-rotating camera is dropped. Static.
+ * the surface, under an HDR sky. `blurriness`, `parallaxScale` and `uvScale` are in the Document tab. The active
+ * camera stands where the source's auto-rotation starts. Static.
  */
 @Register
 export class ParallaxUvExample extends Document {
@@ -38,6 +39,12 @@ export class ParallaxUvExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({toneMapping: ReinhardToneMapping, toneMappingExposure: 6, ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 15, 7, 15 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     // Views draw on document changes only, so report each texture when it arrives.
     const onLoad = () => this.notify({kind: 'material'})

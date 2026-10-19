@@ -29,11 +29,11 @@ export class AnimationKeysExample extends Document {
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true}), ...args})
 
-    const camera = new PerspectiveCamera( 40, 1, 1, 1000 )
+    const camera = new PerspectiveCamera( 40, 400 / 250, 1, 1000 )
     camera.name = 'Camera'
     camera.position.set( 25, 25, 50 )
     camera.lookAt( this.scene.position )
-    this.scene.add( camera )
+    this.activeCamera = camera
 
     const geometry = new BoxGeometry( 5, 5, 5 )
     const material = new MeshBasicMaterial( { color: 0xffffff, transparent: true } )

@@ -19,8 +19,8 @@ import {
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
 const SHADOW_MAP_WIDTH = 2048, SHADOW_MAP_HEIGHT = 1024
 
@@ -44,7 +44,7 @@ const PERIOD = 11 * RUN_LENGTH / SPEED
  * 601 galloping horses (morph animation shared through 25 `AnimationObjectGroup`s) crossing a shadowed floor past
  * 3D text, under one shadow-casting directional light, as at HEAD (r186 used a `SunLight`). The horses' runs are
  * derived from document time and their gallop advances by `delta`. `FirstPersonControls` are dropped: the source camera
- * is kept as `Camera`, and views frame the blocks (the 10000-unit floor lies beyond the fog). Plays when opened.
+ * is the active camera, and views frame the blocks (the 10000-unit floor lies beyond the fog). Plays when opened.
  */
 @Register
 export class ShadowmapPerformanceExample extends Document {
@@ -55,16 +55,19 @@ export class ShadowmapPerformanceExample extends Document {
   /** Each horse's x at time 0. */
   private starts: number[] = []
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
 
     // CAMERA
 
-    const camera = new PerspectiveCamera( 23, 1, NEAR, FAR )
+    const camera = new PerspectiveCamera( 23, 400 / 250, NEAR, FAR )
     camera.name = 'Camera'
     camera.position.set( 700, 50, 1900 )
     camera.lookAt( 0, 0, 0 )
-    this.scene.add( camera )
+    this.activeCamera = camera
 
     // SCENE
 
@@ -146,10 +149,14 @@ export class ShadowmapPerformanceExample extends Document {
     void this.loadHorses()
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   /** Whole-scene framing would stand beyond the fog: frame the blocks once the document is on screen. */
   override onRendererInitialized(renderer: WebGPURenderer) {
     super.onRendererInitialized(renderer)
-    this.dispatch('frame-object', {object: this.cubes}, true)
+    this._frameTarget = this.cubes
   }
 
   private async loadText() {

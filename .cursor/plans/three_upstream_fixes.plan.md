@@ -1,18 +1,18 @@
 ---
 name: three.js Upstream Fixes
-overview: WebGPURenderer and addon bugs found while converting three.js examples (three_example_conversion.plan.md), with a fix plan for each and the example workarounds to remove once a fix is in the three io runs. Compressed textures are filed (#35081-#35084); Mesh.count, dynamic buffers, instance count and Min/Max blending are planned here and not yet filed.
+overview: WebGPURenderer and addon bugs found while converting three.js examples (three_example_conversion.plan.md), with a fix plan for each and the example workarounds to remove once a fix is in the three io runs. Compressed textures were filed as #35081-#35084 (#35081-#35083 merged, #35084 in review); Mesh.count, dynamic buffers, instance count and Min/Max blending are planned here and not yet filed.
 todos:
   - id: compressed-mipmaps
-    content: "#35081 CompressedTexture: Default `mipmaps` to an empty array (branch fixes/compressed-texture-mipmaps). Then: LoaderTextureDds assigns maps at load call again"
-    status: in_progress
+    content: "#35081 CompressedTexture: Default `mipmaps` to an empty array (branch fixes/compressed-texture-mipmaps). Merged 2026-10-19 (db1ef0781a). Then, once ../three.js has it: LoaderTextureDds assigns maps at load call again (unless #35084's rework moves the source to callbacks)"
+    status: completed
   - id: compressed-rgba
-    content: "#35082 WebGPURenderer: Support uncompressed data in compressed textures (fixes/compressed-texture-rgba). Then: LoaderTextureDds drops `uncompressed()`"
-    status: in_progress
+    content: "#35082 WebGPURenderer: Support uncompressed data in compressed textures (fixes/compressed-texture-rgba). Merged 2026-10-19 (bc88736756). Then, once ../three.js has it: LoaderTextureDds drops `uncompressed()`"
+    status: completed
   - id: compressed-cube
-    content: "#35083 WebGPURenderer: Support `CompressedCubeTexture` (fixes/compressed-cube-texture). With #35084: LoaderTextureDds restores its three cube maps"
-    status: in_progress
+    content: "#35083 WebGPURenderer: Support `CompressedCubeTexture` (fixes/compressed-cube-texture). Merged 2026-10-19 (f9ba4abd3d). With #35084: LoaderTextureDds restores its three cube maps"
+    status: completed
   - id: compressed-loader-cube
-    content: "#35084 CompressedTextureLoader: Return cube maps as cube textures (fixes/compressed-texture-loader-cube). Needs #35083 to render in WebGPU"
+    content: "#35084 CompressedTextureLoader: Return cube maps as cube textures (fixes/compressed-texture-loader-cube). Review 2026-10-19 (Mugen87): no `is*` flag patching; proposes `load()` without a return value, the texture only in `onLoad`, as KTX2Loader. Rework pending, see '#35084 review'"
     status: in_progress
   - id: mesh-count
     content: "MarchingCubes keeps its vertex count in `Mesh.count`, which WebGPURenderer reads as the instance count. Fix in the addon. Then: Marchingcubes drops `count = 1`"
@@ -26,6 +26,9 @@ todos:
   - id: minmax-blend-factors
     content: "CustomBlending with MinEquation / MaxEquation fails pipeline validation unless both factors are One. Force One in the WebGPU backend. Then: MaterialsBlendingCustom keeps the source's factors"
     status: pending
+  - id: cache-key-deprecated-accessor
+    content: "Regression in dev (#35039, the fix of #35029): RenderObject.getMaterialCacheKey reads every prototype getter, including MeshPhysicalMaterial's deprecated iridescenceThicknessRange, which warns once per page for any physical material. Skip the alias in the cache key. No io workaround (three's renderer reads it). Fixed upstream by Mugen87 as planned (2b7c79ef26, 2026-10-19: the alias in the skip regex); gone in io once ../three.js has it"
+    status: completed
   - id: triage-cube-envmap-loading
     content: "Triage, not planned: a loading CubeTexture as a standard material's envMap binds a 2D placeholder as a cube (MaterialsDisplacementmap, Marchingcubes)"
     status: pending
@@ -49,7 +52,7 @@ Bugs in `WebGPURenderer` or three addons that converted examples work around. Ea
 
 ## Compressed textures (filed 2026-10-18)
 
-Found in LoaderTextureDds (`webgl_loader_texture_dds`). Branches in `../three.js`, not in `dev`.
+Found in LoaderTextureDds (`webgl_loader_texture_dds`). Branches in `../three.js`. #35081-#35083 merged in `upstream/dev` on 2026-10-19; `../three.js` `dev` is still at `0978e2b62e`, so io gets them after `git pull upstream dev` and `npm run build` there.
 
 | PR | Branch | Fixes | Workaround it removes |
 | --- | --- | --- | --- |
@@ -57,6 +60,46 @@ Found in LoaderTextureDds (`webgl_loader_texture_dds`). Branches in `../three.js
 | [#35082](https://github.com/mrdoob/three.js/pull/35082) WebGPURenderer: Support uncompressed data in compressed textures. | `fixes/compressed-texture-rgba` | uncompressed DDS files (`CompressedTexture` in `RGBAFormat`) have no block size in the compressed upload | `uncompressed()`: `DataTexture` conversion |
 | [#35083](https://github.com/mrdoob/three.js/pull/35083) WebGPURenderer: Support `CompressedCubeTexture`. | `fixes/compressed-cube-texture` | a compressed cube texture is sized from its face array's `width` (`Textures.getSize`), uploads 1 × 1 and fails validation | with #35084: the three dropped cube maps |
 | [#35084](https://github.com/mrdoob/three.js/pull/35084) CompressedTextureLoader: Return cube maps as cube textures. | `fixes/compressed-texture-loader-cube` | DDS cube maps load as 2D `CompressedTexture`s with six images | with #35083: the three dropped cube maps |
+
+### #35084 review (2026-10-19)
+
+**Mugen87.**
+
+- Don't set `is*` flags on an instance; a cube map should be a `CompressedCubeTexture`.
+- `load()` returns a `CompressedTexture` before the file says what it holds. He proposes the `KTX2Loader` way: no return value, the texture only in `onLoad`.
+- He also wants plain `Texture`s for uncompressed data eventually (#35082 review).
+
+**Flags.** Patched flags don't survive `clone()`. `new this.constructor().copy()` returns a plain `CompressedTexture` with the six faces and `CubeReflectionMapping`, but no flags: the original bug again. This was checked in node. `MaterialXDocument` clones the textures that handlers return (`materialx/MaterialXDocument.js:530`).
+
+**Cost of a callback-only `load()`.**
+
+- The DDS, PVRTC and KTX examples build their materials from the return value: 14, 8 and 9 loads.
+- `FBXLoader.loadTexture()` (`FBXLoader.js:492`) and `MTLLoader.loadTexture()` (`MTLLoader.js:583`, used at `:362`) use the return value of a `LoadingManager` handler. FBX and OBJ/MTL assets with a DDS handler would throw on `undefined`. `KTX2Loader` can't be their handler today for the same reason.
+- `GLTFLoader` and `MaterialXDocument` load through the callback. `loadAsync()` resolves with the callback's texture, so it keeps working.
+
+**Rework, if Mugen87 agrees.**
+
+- `load()` returns nothing. `onLoad` gets a `CompressedTexture` for 2D data, or `new CompressedCubeTexture( faces, format )` for a single-file cube map and for the six-file form.
+- The examples use the callbacks, and the screenshots are updated.
+- FBX and MTL: either they assign the texture once it has loaded, or a migration-guide note. That is his call.
+- Rejected: keep `load()`'s return value for 2D and pass cube maps to `onLoad` as a `CompressedCubeTexture`. The returned object and the one passed to `onLoad` would differ for cube maps. Code that sets properties on the texture in `onLoad`, while its materials hold the returned one (the DDS and PVRTC examples), would silently lose them.
+
+**Non-breaking first step (proposed to the user 2026-10-19).** `load()` hands out its texture before the file is read, and `onLoad` must receive that same object. So `load()` itself cannot deliver a cube map as a `CompressedCubeTexture` without breaking someone.
+
+- `CompressedTextureLoader` overrides `loadAsync()` to resolve with the right class. Promise users never see the early texture, so for them only the cube maps change, and they now work.
+- `load()` stays as it is. It warns once when it loads a cube map, pointing to `loadAsync()`.
+- The DDS and PVRTC examples load their cube maps with `loadAsync()`.
+- Later, if Mugen87 wants callback-only:
+  - first, FBX and MTL wait for the callback, which also lets them take a `KTX2Loader` handler;
+  - then `load()` warns when called without `onLoad`;
+  - about 10 releases later, the return value goes.
+- No warning reaches 2D code that both passes `onLoad` and uses the return value; that needs a migration-guide note.
+- During the deprecation period, `load()` and `loadAsync()` deliver cube maps differently.
+
+**io.**
+
+- Callback-only moves the source to the callback shape LoaderTextureDds already has (the #35081 workaround).
+- In the meantime, once `../three.js` has #35083: wrap the loaded faces in a `CompressedCubeTexture` in the load callback. That should restore the three cube maps (untested).
 
 ## mesh-count: MarchingCubes keeps its vertex count in `Mesh.count`
 
@@ -112,6 +155,17 @@ PR: `RenderObject: Use the instance count of InstancedMesh with instanced geomet
 PR: `WebGPUPipelineUtils: Use One factors for Min and Max blending.` Check `webgl_materials_blending_custom` under `WebGPURenderer` (all equation and factor combinations), and that the WebGL fallback backend is unaffected.
 
 **Workarounds.** MaterialsBlendingCustom: `blendEquationChanged` sets `blendSrc` / `blendDst` to `OneFactor` for Min/Max; it goes back to the selected factors.
+
+## cache-key-deprecated-accessor: every physical material warns about `iridescenceThicknessRange`
+
+**Cause.** #35039 (2026-10-16, the fix of #35029: the range did not update and was shared between materials) replaced `MeshPhysicalMaterial.iridescenceThicknessRange` with `iridescenceThicknessMinimum` / `Maximum` and kept the old name as a deprecated accessor that calls `warnOnce` (`src/materials/MeshPhysicalMaterial.js:607-620`). `RenderObject.getMaterialCacheKey()` builds the key from `getKeys( material )`, which collects the material's own keys and every getter on its prototype chain (`src/renderers/common/RenderObject.js:7`, cached per constructor since #33805), so it reads the deprecated getter. The first `MeshPhysicalMaterial` (or `MeshPhysicalNodeMaterial`) any `WebGPURenderer` draws logs `MeshPhysicalMaterial: The "iridescenceThicknessRange" property has been replaced by ...`, once per page. Not in r186; in the dev build io links (seen in LoaderUsdz, ComputeCloth, Clearcoat, AnimationRetargeting, SkinningInstancingIndividual, Loader3dm: stack `get iridescenceThicknessRange` ← `RenderObject.getMaterialCacheKey` ← `getCacheKey` ← `new RenderObject`).
+
+**Repro.** Draw a mesh with `new MeshPhysicalNodeMaterial()` with `WebGPURenderer` on dev: the warning appears though nothing uses the old name.
+
+**Fix.** Skip the alias where the key is built: add `iridescenceThicknessRange` to the properties `getMaterialCacheKey` ignores (the regex next to `visible|version|uuid|...`), with a `@deprecated r187` comment. The key already sees `iridescenceThicknessMinimum` / `Maximum`, and numbers only reduce to on/off there. A general rule (skip accessors that only forward to other properties) has no signal to rely on; this is the only deprecated material accessor today. Remove the skip with the alias.
+PR: `RenderObject: Ignore deprecated iridescenceThicknessRange in the material cache key.` Check that no warning is logged for physical materials, and that changing `iridescenceThicknessMinimum` still updates (#35029's repro).
+
+**Workarounds.** None in io: the renderer reads the property. Examples that set the range (none of ours) would move to the new properties on the next three upgrade.
 
 ## Triage (not planned)
 

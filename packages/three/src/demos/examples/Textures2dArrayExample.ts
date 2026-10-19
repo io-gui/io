@@ -1,8 +1,8 @@
-import { DataArrayTexture, FileLoader, Mesh, MeshBasicNodeMaterial, Node, PlaneGeometry, RedFormat } from 'three/webgpu'
+import { DataArrayTexture, FileLoader, Mesh, MeshBasicNodeMaterial, Node, PerspectiveCamera, PlaneGeometry, RedFormat } from 'three/webgpu'
 import { texture, uv, oscTriangle } from 'three/tsl'
 import { unzipSync } from 'three/addons/libs/fflate.module.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
 /** Seconds of one sweep through the layers and back (`oscTriangle` of time × 0.5): the timeline length. */
 const PERIOD = 2
@@ -17,9 +17,21 @@ const planeHeight = 50
 @Register
 export class Textures2dArrayExample extends Document {
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 0.1, 2000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 70 )
+    this.activeCamera = camera
     void this.load()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async load() {
@@ -53,7 +65,7 @@ export class Textures2dArrayExample extends Document {
       this.scene.add( mesh )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: mesh}, true)
+      this._frameTarget = mesh
     } catch ( e ) {
       console.error( e )
     }
