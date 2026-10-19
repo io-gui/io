@@ -8,6 +8,7 @@ import {
   Group,
   Mesh,
   MeshBasicMaterial,
+  PerspectiveCamera,
   SphereGeometry
 } from 'three/webgpu'
 import { Register, Property } from '@io-gui/core'
@@ -26,8 +27,8 @@ const mappings: Record<string, CubeTextureMapping> = {
 
 /**
  * Five hundred spheres sharing one `MeshBasicMaterial` that reflects or refracts the Pisa cube map behind them. The
- * material's color, mapping, refraction ratio and opacity are in the Document tab. The source's mouse-following
- * camera is dropped. Plays when opened.
+ * material's color, mapping, refraction ratio and opacity are in the Document tab. The active camera stands where
+ * the source's mouse-following camera rests. Plays when opened.
  */
 @Register
 export class MaterialsBasicExample extends Document {
@@ -53,6 +54,12 @@ export class MaterialsBasicExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 60, 400 / 250, 0.01, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 3 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     const path = 'https://threejs.org/examples/textures/cube/pisa/'
     const format = '.png'

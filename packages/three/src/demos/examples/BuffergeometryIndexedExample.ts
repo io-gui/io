@@ -1,4 +1,4 @@
-import { BufferGeometry, Color, DoubleSide, Float32BufferAttribute, HemisphereLight, Mesh, MeshPhongMaterial, SRGBColorSpace } from 'three/webgpu'
+import { BufferGeometry, Color, DoubleSide, Float32BufferAttribute, HemisphereLight, Mesh, MeshPhongMaterial, PerspectiveCamera, SRGBColorSpace } from 'three/webgpu'
 import { Register, Property } from '@io-gui/core'
 import { Document, DocumentProps, Timeline } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
@@ -18,6 +18,11 @@ export class BuffergeometryIndexedExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 27, 400 / 250, 1, 3500 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 64 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x050505 )
 

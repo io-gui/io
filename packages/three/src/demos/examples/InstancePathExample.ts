@@ -7,6 +7,7 @@ import {
   MeshStandardNodeMaterial,
   NeutralToneMapping,
   Path,
+  PerspectiveCamera,
   PMREMGenerator,
   Sphere,
   Vector2,
@@ -35,6 +36,12 @@ export class InstancePathExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({toneMapping: NeutralToneMapping, timeline: new Timeline({autoplay: true, duration: DURATION}), ...args})
+
+    const camera = new PerspectiveCamera( 60, 400 / 250, 0.01, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 15 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.backgroundNode = screenUV.distance( .5 ).remap( 0, 0.65 ).mix( color( 0x94254c ), color( 0x000000 ) )
 

@@ -75,6 +75,7 @@ import './geometries/DodecahedronGeometry.js'
 import './geometries/EdgesGeometry.js'
 import './geometries/WireframeGeometry.js'
 // import './materials/Materials.js';
+import './materials/MeshPhysicalMaterial.js'
 // import './loaders/AnimationLoader.js';
 // import './loaders/CompressedTextureLoader.js';
 // import './loaders/CubeTextureLoader.js';

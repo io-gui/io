@@ -1,7 +1,7 @@
-import { BoxGeometry, BufferGeometry, IESSpotLight, MathUtils, Mesh, MeshPhongMaterial, PlaneGeometry, Vector3 } from 'three/webgpu'
+import { BoxGeometry, BufferGeometry, IESSpotLight, MathUtils, Mesh, MeshPhongMaterial, PerspectiveCamera, PlaneGeometry, Vector3 } from 'three/webgpu'
 import { IESLoader } from 'three/addons/loaders/IESLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
 /** Seconds in which the spots sweep in and out once (π/2 rad/s): the timeline length, so looping is seamless. */
 const PERIOD = 4
@@ -24,8 +24,17 @@ export class LightsIesSpotlightExample extends Document {
 
   public lights: IESSpotLight[] = []
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 35, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 16, 4, 1 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     const material = new MeshPhongMaterial( { color: 0x999999/*, dithering: true*/ } )
 
@@ -46,6 +55,10 @@ export class LightsIesSpotlightExample extends Document {
     this.scene.add( mesh2 )
 
     void this.loadLights()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   /** Adds the lights with their IES profiles: a light's shader is built with or without one. */
@@ -76,7 +89,7 @@ export class LightsIesSpotlightExample extends Document {
 
       // The 200-unit floor would dominate whole-scene framing: frame the square the lights stand on.
       const extent = new Mesh( new BufferGeometry().setFromPoints( [ new Vector3( - 6.5, 0, - 6.5 ), new Vector3( 6.5, 3, 6.5 ) ] ) )
-      this.dispatch('frame-object', {object: extent}, true)
+      this._frameTarget = extent
     } catch ( e ) {
       console.error( e )
     }

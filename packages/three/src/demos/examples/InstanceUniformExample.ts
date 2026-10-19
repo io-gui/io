@@ -1,4 +1,4 @@
-import { Color, CubeTextureLoader, Mesh, MeshBasicNodeMaterial, Node, NodeFrame, NodeUpdateType } from 'three/webgpu'
+import { Color, CubeTextureLoader, Mesh, MeshBasicNodeMaterial, Node, NodeFrame, NodeUpdateType, PerspectiveCamera } from 'three/webgpu'
 import { uniform, cubeTexture } from 'three/tsl'
 import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js'
 import { Register } from '@io-gui/core'
@@ -43,6 +43,12 @@ export class InstanceUniformExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: SPIN_PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 4000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 200, 1200 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     // CubeMap
 

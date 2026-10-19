@@ -1,4 +1,4 @@
-import { BufferGeometry, Color, Group, LightingModel, LightsNode, Mesh, Node, NodeMaterial, PointLight, Points, PointsNodeMaterial, SphereGeometry, Vector3 } from 'three/webgpu'
+import { BufferGeometry, Color, Group, LightingModel, LightsNode, Mesh, Node, NodeMaterial, PerspectiveCamera, PointLight, Points, PointsNodeMaterial, SphereGeometry, Vector3 } from 'three/webgpu'
 import { color, context, lights } from 'three/tsl'
 import { Register } from '@io-gui/core'
 import { Document, DocumentProps, Timeline } from '@io-gui/three'
@@ -32,6 +32,12 @@ export class LightsCustomExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 70, 400 / 250, 0.1, 10 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 1.5 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x000000 )
 

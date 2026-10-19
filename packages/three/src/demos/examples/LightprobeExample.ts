@@ -1,9 +1,9 @@
-import { CubeTextureLoader, DirectionalLight, LightProbe, Material, Mesh, MeshBasicNodeMaterial, MeshStandardMaterial, Node, SphereGeometry } from 'three/webgpu'
+import { CubeTextureLoader, DirectionalLight, LightProbe, Material, Mesh, MeshBasicNodeMaterial, MeshStandardMaterial, Node, PerspectiveCamera, SphereGeometry } from 'three/webgpu'
 import { getShIrradianceAt, normalWorld } from 'three/tsl'
 import { LightProbeGenerator } from 'three/addons/lights/LightProbeGenerator.js'
 import { LightProbeHelper } from 'three/addons/helpers/LightProbeHelperGPU.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
@@ -46,8 +46,17 @@ export class LightprobeExample extends Document {
   @Property({type: Number, value: 1})
   declare envMap: number
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 40, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 30 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     // probe
 
@@ -106,8 +115,12 @@ export class LightprobeExample extends Document {
       this.scene.add( helper )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: this.mesh}, true)
+      this._frameTarget = this.mesh
     } )
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   probeChanged() {

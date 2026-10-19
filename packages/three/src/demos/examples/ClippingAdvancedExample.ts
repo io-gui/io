@@ -11,6 +11,7 @@ import {
   Mesh,
   MeshBasicMaterial,
   MeshPhongMaterial,
+  PerspectiveCamera,
   Plane,
   PlaneGeometry,
   SpotLight,
@@ -184,6 +185,12 @@ export class ClippingAdvancedExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 36, 400 / 250, 0.25, 16 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 1.5, 3 )
+    camera.lookAt( 0, 1, 0 )
+    this.activeCamera = camera
 
     // Lights
 

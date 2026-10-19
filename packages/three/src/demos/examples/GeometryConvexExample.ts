@@ -2,17 +2,18 @@ import {
   AmbientLight,
   BufferGeometry,
   DodecahedronGeometry,
+  DoubleSide,
   Group,
   InstancedBufferAttribute,
   Mesh,
   MeshLambertMaterial,
+  PerspectiveCamera,
   PointLight,
   PointsNodeMaterial,
-  SRGBColorSpace,
   Sprite,
+  SRGBColorSpace,
   TextureLoader,
-  Vector3,
-  DoubleSide
+  Vector3
 } from 'three/webgpu'
 import { instancedBufferAttribute, texture, float, color } from 'three/tsl'
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js'
@@ -40,10 +41,16 @@ export class GeometryConvexExample extends Document {
 
     // point light
 
+    const camera = new PerspectiveCamera( 40, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 15, 20, 30 )
+    camera.lookAt( 0, 0, 0 )
+    this.scene.add( camera )
+    this.activeCamera = camera
+
     const light = new PointLight( 0xffffff, 3, 0, 0 )
     light.name = 'Point'
-    light.position.set( 15, 20, 30 )
-    this.scene.add( light )
+    camera.add( light )
 
     // textures
 

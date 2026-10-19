@@ -4,6 +4,7 @@ import {
   Color,
   IndirectStorageBufferAttribute,
   InstancedMesh,
+  PerspectiveCamera,
   PlaneGeometry,
   Sphere,
   SpriteNodeMaterial,
@@ -36,6 +37,12 @@ export class ParticlesExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: DURATION}), ...args})
+
+    const camera = new PerspectiveCamera( 60, 400 / 250, 1, 5000 )
+    camera.name = 'Camera'
+    camera.position.set( 1300, 500, 0 )
+    camera.lookAt( 0, 500, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x333333 )
 

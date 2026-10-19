@@ -24,7 +24,7 @@ import { ioNumberSlider } from '@io-gui/sliders'
 /**
  * A gearbox whose outer hull is cut open by an angular slice in TSL: a mask discards the hull inside the angle range,
  * and back faces seen through the cut are drawn in a flat color. `sliceStart`, `sliceArc` and `sliceColor` are in
- * the Document tab. The source camera is kept as `Camera`: the cut faces it. The key light is a `DirectionalLight` as
+ * the Document tab. The source camera is the active camera: the cut faces it. The key light is a `DirectionalLight` as
  * at HEAD (r186 had `SunLight`). Static.
  */
 @Register
@@ -135,12 +135,12 @@ export class TslAngularSlicingExample extends Document {
     plane.userData.selectable = false
     this.scene.add( plane )
 
-    // The cut faces the source's camera; camera views can look through it.
-    const camera = new PerspectiveCamera( 35, 1, 0.1, 100 )
+    // The cut faces the source's camera.
+    const camera = new PerspectiveCamera( 35, 400 / 250, 0.1, 100 )
     camera.name = 'Camera'
     camera.position.set( - 5, 5, 12 )
     camera.lookAt( 0, 0, 0 )
-    this.scene.add( camera )
+    this.activeCamera = camera
 
     this.sliceColor.copy( this.sliceColorUniform.value )
   }

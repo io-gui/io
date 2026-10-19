@@ -1,7 +1,7 @@
-import { BackSide, Color, DirectionalLight, Mesh, MeshBasicNodeMaterial, MeshPhongMaterial, ObjectLoader, SphereGeometry } from 'three/webgpu'
+import { BackSide, Color, DirectionalLight, Mesh, MeshBasicNodeMaterial, MeshPhongMaterial, ObjectLoader, PerspectiveCamera, SphereGeometry } from 'three/webgpu'
 import { vec4, color, positionLocal, mix } from 'three/tsl'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
@@ -17,8 +17,17 @@ export class MaterialsLightmapExample extends Document {
   @Property({type: Number, value: 1})
   declare lightMapIntensity: number
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 40, 400 / 250, 1, 10000 )
+    camera.name = 'Camera'
+    camera.position.set( 700, 200, - 500 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     // LIGHTS
 
@@ -50,6 +59,10 @@ export class MaterialsLightmapExample extends Document {
     void this.loadModel()
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   private async loadModel() {
     try {
       const object = await new ObjectLoader().loadAsync( 'https://threejs.org/examples/models/json/lightmap/lightmap.json' ) as Mesh
@@ -60,7 +73,7 @@ export class MaterialsLightmapExample extends Document {
 
       this.notify({kind: 'structure'})
       // The model, not the scene: the sky dome spans 8000 units.
-      this.dispatch('frame-object', {object}, true)
+      this._frameTarget = object
     } catch ( e ) {
       console.error( e )
     }

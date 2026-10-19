@@ -7,7 +7,7 @@ describe('HelperOverlay', () => {
   let view: View
 
   function context(height = 100): OverlayContext {
-    const camera = view.getCamera(100, height, editor.document.scene)
+    const camera = view.getCamera(100, height, editor.document)
     camera.updateMatrixWorld()
     return {
       renderer: null!, editor, document: editor.document, scene: editor.document.scene, view, camera,

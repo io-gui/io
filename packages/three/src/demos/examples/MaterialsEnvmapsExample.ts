@@ -8,6 +8,7 @@ import {
   IcosahedronGeometry,
   Mesh,
   MeshBasicMaterial,
+  PerspectiveCamera,
   SRGBColorSpace,
   Texture,
   TextureLoader
@@ -57,6 +58,12 @@ export class MaterialsEnvmapsExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 70, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 2.5 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     // Textures
 

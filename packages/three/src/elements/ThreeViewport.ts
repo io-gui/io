@@ -1,5 +1,5 @@
 import { Register, ReactiveElement, ReactiveElementProps, Property, Change, Field, WithBinding } from '@io-gui/core'
-import { WebGPURenderer, CanvasTarget, Scene, Object3D, OrthographicCamera, PerspectiveCamera } from 'three/webgpu'
+import { WebGPURenderer, CanvasTarget, Scene, OrthographicCamera, PerspectiveCamera } from 'three/webgpu'
 import { Editor } from '../editor/Editor.js'
 import type { Document, DocumentChange } from '../editor/Document.js'
 import type { Behavior } from '../input/Behavior.js'
@@ -98,7 +98,6 @@ export class ThreeViewport extends ReactiveElement implements ScheduledView {
 
   static override get Listeners() {
     return {
-      'frame-object': 'onFrameObject',
       'navigation-changed': 'onNavigationChanged',
     }
   }
@@ -214,13 +213,7 @@ export class ThreeViewport extends ReactiveElement implements ScheduledView {
 
   /** The camera this viewport draws and picks with, built from its view at the current size. */
   getViewCamera(): PerspectiveCamera | OrthographicCamera {
-    return this.view.getCamera(this.width, this.height, this.scene)
-  }
-
-  /** Event `frame-object` with `{object, overscan?}`: frames the object in this viewport's view. */
-  onFrameObject(event: CustomEvent<{object: Object3D; overscan?: number}>) {
-    event.stopPropagation()
-    this.view.frame(event.detail.object, event.detail.overscan ?? 1)
+    return this.view.getCamera(this.width, this.height, this.document)
   }
 
   /** Event `navigation-changed` from the view: camera moves only redraw, they change no behaviors, pipeline or overlays. */
@@ -229,14 +222,15 @@ export class ThreeViewport extends ReactiveElement implements ScheduledView {
     this.tag('view')
   }
 
+  /** Frames the view by itself (ADR-0012); also before each draw, so a frame target loaded while hidden is caught up. */
   private _syncView() {
     const view = this.view
-    const scene = this.scene
+    const document = this.document
     if (!view) return
     if (view.kind === 'uv') {
       if (!view.navigation.framed || view.navigation.axisView !== 'front') view.frameUV()
-    } else if (!view.navigation.framed && scene) {
-      view.frame(scene)
+    } else if (document?.scene) {
+      view.autoFrame(document)
     }
   }
 
@@ -357,6 +351,7 @@ export class ThreeViewport extends ReactiveElement implements ScheduledView {
       void editor.onRendererInitialized(this.renderer)
     }
     document._prepareRenderer(this.renderer)
+    this._syncView()
     const renderer = this.renderer
     renderer.setCanvasTarget(this.renderTarget)
     renderer.setSize(this.width, this.height)

@@ -1,7 +1,7 @@
-import { AmbientLight, BufferGeometry, Color, DirectionalLight, Mesh, MeshPhongMaterial, PointLight, SRGBColorSpace, Texture, TextureLoader, Vector2 } from 'three/webgpu'
+import { AmbientLight, BufferGeometry, Color, DirectionalLight, Mesh, MeshPhongMaterial, PerspectiveCamera, PointLight, SRGBColorSpace, Texture, TextureLoader, Vector2 } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
@@ -23,8 +23,17 @@ export class MaterialsNormalmapExample extends Document {
   @Property({type: Number, value: 1})
   declare normalScale: number
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 27, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 12 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x494949 )
 
@@ -72,6 +81,10 @@ export class MaterialsNormalmapExample extends Document {
     void this.loadModel()
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   normalMapChanged() {
     if ( ! this.material ) return
     this.material.normalMap = this.normalMap ? this.normalTexture : null
@@ -94,7 +107,7 @@ export class MaterialsNormalmapExample extends Document {
       this.scene.add( this.mesh )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: this.mesh}, true)
+      this._frameTarget = this.mesh
     } catch ( e ) {
       console.error( e )
     }

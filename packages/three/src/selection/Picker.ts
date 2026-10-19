@@ -92,7 +92,7 @@ export class RaycastPicker implements Picker {
     _raycaster.setFromCamera(_ndc, camera)
     _raycaster.layers.mask = camera.layers.mask
     // Raycaster thresholds are world units (default 1); keep line and point hits to a few pixels.
-    const threshold = host.view.getWorldPerPixel(rect.width, rect.height, host.scene) * PICK_RADIUS
+    const threshold = host.view.getWorldPerPixel(rect.width, rect.height, host.document ?? null) * PICK_RADIUS
     _raycaster.params.Line.threshold = threshold
     _raycaster.params.Points.threshold = threshold
     for (const intersection of _raycaster.intersectObject(root, true)) {

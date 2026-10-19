@@ -1,16 +1,32 @@
-import { ACESFilmicToneMapping, EquirectangularReflectionMapping } from 'three/webgpu'
+import { ACESFilmicToneMapping, EquirectangularReflectionMapping, PerspectiveCamera } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 
-/** The iridescent glTF lamp (`KHR_materials_iridescence`) in the Venice sunset HDR environment. The source's camera auto-rotation is dropped. */
+/**
+ * The iridescent glTF lamp (`KHR_materials_iridescence`) in the Venice sunset HDR environment. The active camera stands
+ * where the source's auto-rotation starts.
+ */
 @Register
 export class LoaderGltfIridescenceExample extends Document {
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({toneMapping: ACESFilmicToneMapping, ...args})
+
+    const camera = new PerspectiveCamera( 50, 400 / 250, 0.05, 20 )
+    camera.name = 'Camera'
+    camera.position.set( 0.35, 0.05, 0.35 )
+    camera.lookAt( 0, 0.2, 0 )
+    this.activeCamera = camera
     void this.load()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async load() {
@@ -32,7 +48,7 @@ export class LoaderGltfIridescenceExample extends Document {
       this.scene.add( gltf.scene )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: gltf.scene}, true)
+      this._frameTarget = gltf.scene
     } catch ( e ) {
       console.error( e )
     }

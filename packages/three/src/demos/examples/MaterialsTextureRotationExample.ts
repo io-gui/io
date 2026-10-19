@@ -1,4 +1,4 @@
-import { BoxGeometry, Mesh, MeshBasicMaterial, RepeatWrapping, SRGBColorSpace, Texture, TextureLoader, WebGPURenderer } from 'three/webgpu'
+import { BoxGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, RepeatWrapping, SRGBColorSpace, Texture, TextureLoader, WebGPURenderer } from 'three/webgpu'
 import { Register, Property } from '@io-gui/core'
 import { Document, DocumentProps } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
@@ -35,6 +35,13 @@ export class MaterialsTextureRotationExample extends Document {
 
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 40, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 10, 15, 25 )
+    camera.lookAt( 0, 0, 0 )
+    this.scene.add( camera )
+    this.activeCamera = camera
 
     const geometry = new BoxGeometry( 10, 10, 10 )
 

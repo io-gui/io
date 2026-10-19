@@ -1,8 +1,8 @@
-import { BoxGeometry, Mesh, MeshStandardMaterial, PerspectiveCamera, RectAreaLight, RectAreaLightNode, TorusKnotGeometry } from 'three/webgpu'
+import { BoxGeometry, BufferGeometry, Mesh, MeshStandardMaterial, PerspectiveCamera, RectAreaLight, RectAreaLightNode, TorusKnotGeometry, Vector3 } from 'three/webgpu'
 import { checker, uv } from 'three/tsl'
 import { RectAreaLightTexturesLib } from 'three/addons/lights/RectAreaLightTexturesLib.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
 RectAreaLightNode.setLTC( RectAreaLightTexturesLib.init() )
 
@@ -11,8 +11,8 @@ const PERIOD = 4 * Math.PI
 
 /**
  * A glossy torus knot lit by three turning rect area lights (red, green, blue) over a checker-rough floor. The
- * source's camera is a scene camera: the 2000-unit floor dwarfs the knot in the views' first-show framing.
- * The light panels are the light helpers overlay. Plays when opened.
+ * source's camera is the active camera; editor views frame the knot and the light panels behind it, which the 2000-unit
+ * floor would dwarf. The light panels are the light helpers overlay. Plays when opened.
  */
 @Register
 export class LightsRectarealightExample extends Document {
@@ -21,14 +21,17 @@ export class LightsRectarealightExample extends Document {
   public rectLight2: RectAreaLight
   public rectLight3: RectAreaLight
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
 
-    const camera = new PerspectiveCamera( 45, 1, 1, 1000 )
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 1000 )
     camera.name = 'Camera'
     camera.position.set( 0, 5, - 15 )
     camera.lookAt( 0, 5.5, 0 )
-    this.scene.add( camera )
+    this.activeCamera = camera
 
     this.rectLight1 = new RectAreaLight( 0xff0000, 5, 4, 10 )
     this.rectLight1.name = 'Red'
@@ -59,6 +62,14 @@ export class LightsRectarealightExample extends Document {
     meshKnot.name = 'TorusKnot'
     meshKnot.position.set( 0, 5.5, 0 )
     this.scene.add( meshKnot )
+
+    // The lights have no geometry to frame: a stand-in for the knot and the panels (4 × 10 at x = - 5, 0 and 5, z = 5,
+    // turning about y).
+    this._frameTarget = new Mesh( new BufferGeometry().setFromPoints( [ new Vector3( - 7, 1, - 2 ), new Vector3( 7, 11, 7 ) ] ) )
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   override onAnimate(delta: number, time: number) {

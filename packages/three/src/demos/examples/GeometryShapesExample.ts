@@ -11,6 +11,7 @@ import {
   Mesh,
   MeshPhongMaterial,
   Path,
+  PerspectiveCamera,
   PointLight,
   Points,
   PointsMaterial,
@@ -18,8 +19,8 @@ import {
   RepeatWrapping,
   Shape,
   ShapeGeometry,
-  SRGBColorSpace,
   Sprite,
+  SRGBColorSpace,
   TextureLoader,
   Vector2
 } from 'three/webgpu'
@@ -31,8 +32,8 @@ import { Document, DocumentProps } from '@io-gui/three'
  * Eleven 2D shapes (California, a heart, a smiley with holes, ...), each drawn seven ways from back to front: a
  * `ShapeGeometry` with a uv grid, a flat one, an extrusion, its outline as a line, a line through equally spaced
  * points, and both point sets. WebGPU draws `Points` 1 px wide, so each point set has a child `Sprite` that draws its
- * dots at the source's size. The camera's light is a point light at the source camera's position; the pointer drag that
- * turned the group is dropped. Static.
+ * dots at the source's size. The light rides on the source camera, the active camera; the pointer drag that turned the
+ * group is dropped. Static.
  */
 @Register
 export class GeometryShapesExample extends Document {
@@ -42,11 +43,15 @@ export class GeometryShapesExample extends Document {
 
     this.scene.background = new Color( 0xf0f0f0 )
 
-    // The source attaches its light to the camera at (0, 150, 500).
+    const camera = new PerspectiveCamera( 50, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 150, 500 )
+    this.scene.add( camera )
+    this.activeCamera = camera
+
     const light = new PointLight( 0xffffff, 2.5, 0, 0 )
     light.name = 'Camera Light'
-    light.position.set( 0, 150, 500 )
-    this.scene.add( light )
+    camera.add( light )
 
     const group = new Group()
     group.name = 'Shapes'

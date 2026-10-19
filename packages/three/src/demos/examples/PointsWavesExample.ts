@@ -1,4 +1,4 @@
-import { Box3, InstancedMesh, PlaneGeometry, PointsNodeMaterial, Sphere, Vector3 } from 'three/webgpu'
+import { Box3, InstancedMesh, PerspectiveCamera, PlaneGeometry, PointsNodeMaterial, Sphere, Vector3 } from 'three/webgpu'
 import { color, distance, float, instanceIndex, positionView, sin, step, uv, vec2, vec3 } from 'three/tsl'
 import { Register } from '@io-gui/core'
 import { Document, DocumentProps, Timeline } from '@io-gui/three'
@@ -17,7 +17,8 @@ const PERIOD = 10 * Math.PI / 3
 /**
  * A 50 × 50 grid of dots rippling in two sine waves, each dot growing with its height. The source's GLSL point shader is
  * a `PointsNodeMaterial` whose position and size come from the instance index and document time, drawn as one
- * `InstancedMesh` of quads (WebGPU points are 1 px). The pointer-driven camera is dropped. Plays when opened.
+ * `InstancedMesh` of quads (WebGPU points are 1 px). The active camera stands where
+ * the source's pointer-driven camera rests. Plays when opened.
  */
 @Register
 export class PointsWavesExample extends Document {
@@ -26,6 +27,12 @@ export class PointsWavesExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 75, 400 / 250, 1, 10000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 1000 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     const numParticles = AMOUNTX * AMOUNTY
 

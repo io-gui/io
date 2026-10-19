@@ -16,6 +16,7 @@ export type ViewNavigationData = {
   axisView: AxisView
   cameraSource: string | null
   framed: boolean
+  autoFramed: string | null
 }
 
 export const AXIS_VIEW_DIRECTIONS: Readonly<Record<Exclude<AxisView, 'free'>, readonly [number, number, number]>> = {
@@ -63,8 +64,13 @@ export class ViewNavigation {
   axisView: AxisView = 'free'
   /** `uuid` of a scene camera to look through, or null. */
   cameraSource: string | null = null
-  /** False until the view has been framed or restored, so a new view frames its scene once. */
+  /** False until the view has been framed or restored, so a new view frames its document once. */
   framed = false
+  /**
+   * Key of the frame target the view framed by itself (`View.autoFrame`, ADR-0012); null once it is navigated or
+   * framed on request. While set, the view frames again when its document's frame target changes.
+   */
+  autoFramed: string | null = null
 
   constructor() {
     this.setDirection(DEFAULT_DIRECTION)
@@ -136,10 +142,10 @@ export class ViewNavigation {
   }
 
   /**
-   * Fits `object` (or several) into a square viewport without changing the view direction.
-   * `padding` > 1 leaves room around the object.
+   * Fits `object` (or several) into a square viewport without changing the view direction. The fitted box is scaled
+   * by `fitScale` (> 1 leaves room around the object); the view's `overscan` adds its margin on top.
    */
-  frame(object: Object3D | readonly Object3D[], padding = 1) {
+  frame(object: Object3D | readonly Object3D[], fitScale = 1) {
     // precise=true: use current morph influences, not unused morph extremes
     _frameBox.makeEmpty()
     for (const item of Array.isArray(object) ? object : [object]) _frameBox.expandByObject(item, true)
@@ -147,14 +153,14 @@ export class ViewNavigation {
       // Focusing on a Group, AmbientLight, etc
       _frameBox.setFromCenterAndSize(_center.set(0, 0, 0), _size.set(0.2, 0.2, 0.2))
     }
-    this.frameBox(_frameBox, padding)
+    this.frameBox(_frameBox, fitScale)
   }
 
   /** Fits a world-space box, like `frame`. */
-  frameBox(box: Box3, padding = 1) {
+  frameBox(box: Box3, fitScale = 1) {
     _box.copy(box)
     _box.getCenter(_center)
-    _box.getSize(_size).multiplyScalar(0.5 * padding)
+    _box.getSize(_size).multiplyScalar(0.5 * fitScale)
     _box.min.copy(_center).sub(_size)
     _box.max.copy(_center).add(_size)
 
@@ -210,6 +216,7 @@ export class ViewNavigation {
       axisView: this.axisView,
       cameraSource: this.cameraSource,
       framed: this.framed,
+      autoFramed: this.autoFramed,
     }
   }
 
@@ -224,6 +231,7 @@ export class ViewNavigation {
     if (data.axisView !== undefined) this.axisView = data.axisView
     if (data.cameraSource !== undefined) this.cameraSource = data.cameraSource
     this.framed = data.framed ?? true
+    this.autoFramed = data.autoFramed ?? null
     return this
   }
 }

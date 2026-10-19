@@ -1,4 +1,4 @@
-import { CubeTexture, CubeTextureLoader, Mesh, MeshBasicMaterial, MeshBasicNodeMaterial, PMREMGenerator, SphereGeometry, WebGPURenderer } from 'three/webgpu'
+import { CubeTexture, CubeTextureLoader, Mesh, MeshBasicMaterial, MeshBasicNodeMaterial, PerspectiveCamera, PMREMGenerator, SphereGeometry, WebGPURenderer } from 'three/webgpu'
 import { normalWorld, uniform, pmremTexture } from 'three/tsl'
 import { Register, Property } from '@io-gui/core'
 import { Document, DocumentProps } from '@io-gui/three'
@@ -33,6 +33,12 @@ export class PmremSceneExample extends Document {
 
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 0.25, 20 )
+    camera.name = 'Camera'
+    camera.position.set( - 1.8, 0.6, 2.7 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     const loader = new CubeTextureLoader().setPath( 'https://threejs.org/examples/textures/cube/Park3Med/' )
     this.background = loader.loadAsync( [ 'px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg' ] ).then( texture => {

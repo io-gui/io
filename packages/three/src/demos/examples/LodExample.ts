@@ -14,7 +14,7 @@ import { Document, DocumentProps } from '@io-gui/three'
 /**
  * 1000 wireframe spheres, each a `LOD` of five icosahedron details picked by its distance to the camera (50, 300, 1000,
  * 2000 and 8000 units). Each view picks levels for its own camera. The source flies its camera through the field
- * (`FlyControls`, dropped); the camera is kept as `Camera` at its start, inside the field, while whole-scene framing
+ * (`FlyControls`, dropped); the active camera stands at its start, inside the field, while whole-scene framing
  * shows the field from outside. Static.
  */
 @Register
@@ -23,10 +23,10 @@ export class LodExample extends Document {
   constructor(args?: DocumentProps) {
     super(args)
 
-    const camera = new PerspectiveCamera( 45, 1, 1, 15000 )
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 15000 )
     camera.name = 'Camera'
     camera.position.z = 1000
-    this.scene.add( camera )
+    this.activeCamera = camera
 
     this.scene.fog = new Fog( 0x000000, 1, 15000 )
 

@@ -1,4 +1,4 @@
-import { AmbientLight, BoxGeometry, Color, Float32BufferAttribute, Mesh, MeshPhongMaterial, PointLight, Vector3 } from 'three/webgpu'
+import { AmbientLight, BoxGeometry, Color, Float32BufferAttribute, Mesh, MeshPhongMaterial, PerspectiveCamera, PointLight, Vector3 } from 'three/webgpu'
 import { Register, Property } from '@io-gui/core'
 import { Document, DocumentProps } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
@@ -69,11 +69,15 @@ export class MorphtargetsExample extends Document {
     ambientLight.name = 'Ambient'
     this.scene.add( ambientLight )
 
-    // The source attaches the light to its camera at (0, 0, 10).
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 20 )
+    camera.name = 'Camera'
+    camera.position.z = 10
+    this.scene.add( camera )
+    this.activeCamera = camera
+
     const pointLight = new PointLight( 0xffffff, 200 )
     pointLight.name = 'Point'
-    pointLight.position.set( 0, 0, 10 )
-    this.scene.add( pointLight )
+    camera.add( pointLight )
 
     const material = new MeshPhongMaterial( {
       color: 0xff0000,

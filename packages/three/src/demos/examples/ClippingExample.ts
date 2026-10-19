@@ -5,6 +5,7 @@ import {
   DoubleSide,
   Mesh,
   MeshPhongNodeMaterial,
+  PerspectiveCamera,
   Plane,
   PlaneGeometry,
   SpotLight,
@@ -12,8 +13,8 @@ import {
   Vector3,
   WebGPURenderer
 } from 'three/webgpu'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
@@ -62,8 +63,17 @@ export class ClippingExample extends Document {
   @Property({type: Number, value: 0.1})
   declare globalPlane: number
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 36, 400 / 250, 0.25, 16 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 1.3, 3 )
+    camera.lookAt( 0, 1, 0 )
+    this.activeCamera = camera
 
     // Lights
 
@@ -144,10 +154,14 @@ export class ClippingExample extends Document {
     this.pose( this.timeline.currentTime )
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   /** The 9-unit ground would dominate whole-scene framing: frame the knot once the document is on screen. */
   override onRendererInitialized(renderer: WebGPURenderer) {
     super.onRendererInitialized(renderer)
-    this.dispatch('frame-object', {object: this.object}, true)
+    this._frameTarget = this.object
   }
 
   alphaToCoverageChanged() {

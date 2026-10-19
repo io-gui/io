@@ -24,7 +24,7 @@ const PERIOD = 40 * Math.PI
 
 /**
  * Spot and directional light shadows: a noise-masked torus knot casting a cut-out shadow, four pillars, and a ground
- * whose received shadow position is jittered by noise. The source's camera is a scene camera: the 600-unit ground
+ * whose received shadow position is jittered by noise. The source's camera is the active camera: the 600-unit ground
  * dwarfs the knot in the views' first-show framing. Plays when opened.
  */
 @Register
@@ -37,11 +37,11 @@ export class ShadowmapExample extends Document {
   constructor(args?: DocumentProps) {
     super({toneMapping: ACESFilmicToneMapping, timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
 
-    const camera = new PerspectiveCamera( 45, 1, 1, 1000 )
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 1000 )
     camera.name = 'Camera'
     camera.position.set( 0, 10, 20 )
     camera.lookAt( 0, 2, 0 )
-    this.scene.add( camera )
+    this.activeCamera = camera
 
     this.scene.backgroundNode = color( 0x222244 )
     this.scene.fog = new Fog( 0x222244, 50, 100 )

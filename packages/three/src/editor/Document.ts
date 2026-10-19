@@ -1,5 +1,5 @@
 import { Register, ReactiveObject, ReactiveObjectProps, Property, Field } from '@io-gui/core'
-import { MathUtils, NoToneMapping, Object3D, Scene, ToneMapping, WebGPURenderer, ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, LinearToneMapping, NeutralToneMapping, ReinhardToneMapping } from 'three/webgpu'
+import { MathUtils, NoToneMapping, Object3D, OrthographicCamera, PerspectiveCamera, Scene, ToneMapping, WebGPURenderer, ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, LinearToneMapping, NeutralToneMapping, ReinhardToneMapping } from 'three/webgpu'
 import { Patch, changeKindForPatch, insertChild, invertPatch, resolvePath, writeValue } from './Patch.js'
 import { Transaction } from './Transaction.js'
 import { Timeline } from './Timeline.js'
@@ -15,7 +15,11 @@ export type DocumentProps = ReactiveObjectProps & {
   toneMappingExposure?: number
   bloom?: Bloom
   timeline?: Timeline
+  activeCamera?: PerspectiveCamera | OrthographicCamera | null
 }
+
+/** What editor views frame of a document (`Document.getEditorFrameTarget`, ADR-0012). */
+export type FrameTarget = Object3D | readonly Object3D[]
 
 export type ChangeKind = 'transform' | 'geometry' | 'material' | 'structure' | 'selection' | 'settings' | 'time' | 'other'
 
@@ -62,6 +66,15 @@ export class Document extends ReactiveObject {
   @Property({type: Timeline, init: null})
   declare timeline: Timeline
 
+  /**
+   * The camera the document is presented through, like Blender's scene camera (ADR-0011). Views that follow the
+   * document (`View.setCameraView()`) look through it; other views keep their own navigation or scene camera. It need
+   * not be in `scene`: a camera outside the scene graph is looked through, but not drawn, picked, framed or listed in
+   * the scene graph. `null` lets following views use the first camera in the scene.
+   */
+  @Property({value: null})
+  declare activeCamera: PerspectiveCamera | OrthographicCamera | null
+
   /** Stable id of this document, used to key per-document session state (selection, view navigation). */
   readonly uuid: string = MathUtils.generateUUID()
 
@@ -83,6 +96,13 @@ export class Document extends ReactiveObject {
   /** The timeline time `onAnimate` last ran for. A Field: `timelineChanged` can run inside the base constructor. */
   @Field(0)
   declare private _animatedTime: number
+
+  /** Timeline seconds played forward (the positive changes of `currentTime`) since the document was created. */
+  @Field(0)
+  declare private _playedTime: number
+
+  /** `_playedTime` when `onBeforeDraw` last ran, per renderer. */
+  private readonly _drawnTime = new WeakMap<WebGPURenderer, number>()
 
   constructor(args?: DocumentProps) {
     super(args)
@@ -203,11 +223,40 @@ export class Document extends ReactiveObject {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onAnimate(delta: number, time: number) {}
 
+  /**
+   * Called once per frame and renderer before that renderer's views draw the document's changes (or draw it for the
+   * first time); not for redraws that change only a view, such as navigation. Do the GPU work of a frame here:
+   * `renderer.compute`, `CubeCamera.update`, renders into targets. The scene is evaluated (world matrices are current);
+   * move objects in `onAnimate`, not here, and leave the renderer's target as found.
+   *
+   * `delta` is the timeline time played forward since it last ran for this renderer: positive changes of `currentTime`
+   * only, so scrubbing back and loop wraps add nothing and simulations never rewind (ADR-0009). It is 0 when the
+   * document changed some other way, and large after scrubbing forward, so clamp or substep. GPU state is per renderer:
+   * each renderer that draws the document steps its own copy. Call `notify()` here to run again next frame
+   * (progressive work).
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onBeforeDraw(renderer: WebGPURenderer, delta: number) {}
+
+  /**
+   * Editor only (ADR-0012): what editor views frame by default, when they frame the document by themselves and when
+   * framing with nothing selected. `null` frames the whole scene. Return the objects of interest, leaving out what
+   * dwarfs them (a large ground plane, a sky). Views ask before they draw and frame again when the answer changes, so
+   * return content once it is loaded. Other runtimes never call it.
+   */
+  getEditorFrameTarget(): FrameTarget | null {
+    return null
+  }
+
   override mutated() {
     this.notify({kind: 'settings'})
   }
 
   bloomMutated() {
+    this.notify({kind: 'settings'})
+  }
+
+  activeCameraMutated() {
     this.notify({kind: 'settings'})
   }
 
@@ -217,6 +266,7 @@ export class Document extends ReactiveObject {
     const delta = time - this._animatedTime
     if (delta === 0) return
     this._animatedTime = time
+    if (delta > 0) this._playedTime += delta
     this.onAnimate(delta, time)
     this.notify({kind: 'time'})
   }
@@ -226,6 +276,14 @@ export class Document extends ReactiveObject {
     if (this._renderers.has(renderer)) return
     this._renderers.add(renderer)
     void this.onRendererInitialized(renderer)
+  }
+
+  /** @internal Called by the RenderScheduler before a renderer's views draw this document's changes. */
+  _beforeDraw(renderer: WebGPURenderer) {
+    this._prepareRenderer(renderer)
+    const drawnTime = this._drawnTime.get(renderer) ?? this._playedTime
+    this._drawnTime.set(renderer, this._playedTime)
+    this.onBeforeDraw(renderer, this._playedTime - drawnTime)
   }
 
   /** @internal Applies a patch and reports it. */
@@ -290,10 +348,11 @@ registerEditorConfig(Document, [
     {value: NeutralToneMapping, id: 'NeutralToneMapping'},
   ]})})],
   ['bloom', ioObject({expanded: true})],
+  ['activeCamera', ioObject()],
 ])
 
 registerEditorGroups(Document, {
   Animation: ['timeline'],
-  Rendering: ['toneMapping', 'toneMappingExposure', 'bloom'],
+  Rendering: ['toneMapping', 'toneMappingExposure', 'bloom', 'activeCamera'],
   Advanced: [new RegExp(/^[\s\S]*$/)]
 })

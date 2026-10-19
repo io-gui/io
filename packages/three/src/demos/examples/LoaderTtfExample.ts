@@ -6,6 +6,7 @@ import {
   Mesh,
   MeshBasicMaterial,
   MeshPhongMaterial,
+  PerspectiveCamera,
   PlaneGeometry,
   SRGBColorSpace
 } from 'three/webgpu'
@@ -36,13 +37,18 @@ export class LoaderTtfExample extends Document {
   private textMesh1?: Mesh
   private textMesh2?: Mesh
   private font?: Font
-  private framed = false
 
   @Property({type: String, value: 'three.js'})
   declare text: string
 
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 30, 400 / 250, 1, 1500 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 400, 700 )
+    camera.lookAt( 0, 150, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x000000 )
     this.scene.fog = new Fog( 0x000000, 250, 1400 )
@@ -76,6 +82,10 @@ export class LoaderTtfExample extends Document {
     this.scene.add( plane )
 
     void this.loadFont()
+  }
+
+  override getEditorFrameTarget() {
+    return this.textMesh1 ? this.group : null
   }
 
   textChanged() { this.refreshText() }
@@ -142,17 +152,10 @@ export class LoaderTtfExample extends Document {
     if ( this.text && this.font ) this.createText( this.font )
 
     this.notify({kind: 'structure'})
-
-    // The floor dwarfs the text: frame the text once it first shows.
-    if ( ! this.framed && this.textMesh1 ) {
-      this.framed = true
-      this.group.updateMatrixWorld( true )
-      this.dispatch('frame-object', {object: this.group}, true)
-    }
   }
 }
 
 registerEditorGroups(LoaderTtfExample, {
   Main: ['text'],
-  Hidden: ['group', 'material', 'textMesh1', 'textMesh2', 'font', 'framed'],
+  Hidden: ['group', 'material', 'textMesh1', 'textMesh2', 'font'],
 })

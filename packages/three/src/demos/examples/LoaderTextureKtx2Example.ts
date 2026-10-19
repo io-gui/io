@@ -1,7 +1,7 @@
 import { Color, Group, Mesh, MeshBasicMaterial, PlaneGeometry, WebGPURenderer } from 'three/webgpu'
 import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 
 const sections = [
   {
@@ -47,15 +47,23 @@ const ROW = 1.5
 /**
  * The KTX2 test textures, one plane per file named after it, in a row per section: uncompressed, compressed (each needs
  * native GPU support; files the device cannot sample fail to load and are left out, as in the source) and Basis
- * Universal. The source's scissor grid of one scene per file and its labels are dropped. The textures load in
- * `onRendererInitialized`, after `detectSupport`. Static.
+ * Universal. The source's scissor grid of one scene per file and its labels are dropped; its cameras each look at one
+ * file, so the document names no active camera and views frame the rows. The textures load in `onRendererInitialized`,
+ * after `detectSupport`. Static.
  */
 @Register
 export class LoaderTextureKtx2Example extends Document {
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
     this.scene.background = new Color( 0xe0e0e0 )
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   override onRendererInitialized(renderer: WebGPURenderer) {
@@ -92,7 +100,7 @@ export class LoaderTextureKtx2Example extends Document {
 
     const groups = await Promise.all( rows )
     loader.dispose()
-    this.dispatch('frame-object', {object: groups}, true)
+    this._frameTarget = groups
   }
 }
 

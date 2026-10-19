@@ -8,6 +8,7 @@ import {
   MultiplyBlending,
   NoBlending,
   NormalBlending,
+  PerspectiveCamera,
   PlaneGeometry,
   RepeatWrapping,
   SRGBColorSpace,
@@ -36,6 +37,11 @@ export class MaterialsBlendingExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 70, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 600 )
+    this.activeCamera = camera
 
     // BACKGROUND
 

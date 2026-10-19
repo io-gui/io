@@ -1,14 +1,24 @@
-import { Color, DirectionalLight, Fog, HemisphereLight, LoadingManager, Mesh, MeshPhongMaterial, PlaneGeometry } from 'three/webgpu'
+import { Color, DirectionalLight, Fog, HemisphereLight, LoadingManager, Mesh, MeshPhongMaterial, PerspectiveCamera, PlaneGeometry } from 'three/webgpu'
 import { ThreeMFLoader } from 'three/addons/loaders/3MFLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 
 /** A truck from a 3MF file with its materials, casting shadows on a floor. */
 @Register
 export class Loader3mfMaterialsExample extends Document {
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 35, 400 / 250, 1, 500 )
+    camera.name = 'Camera'
+    camera.position.set( - 50, 40, 50 )
+    camera.lookAt( 0, 20, 0 )
+    this.scene.add( camera )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0xa0a0a0 )
     this.scene.fog = new Fog( 0xa0a0a0, 10, 500 )
@@ -43,6 +53,10 @@ export class Loader3mfMaterialsExample extends Document {
     void this.loadModel()
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   private async loadModel() {
     const manager = new LoadingManager( () => this.notify({kind: 'material'}) )
 
@@ -57,7 +71,7 @@ export class Loader3mfMaterialsExample extends Document {
 
       this.notify({kind: 'structure'})
       // The truck, not the scene: the floor spans 1000 units.
-      this.dispatch('frame-object', {object}, true)
+      this._frameTarget = object
     } catch ( e ) {
       console.error( e )
     }

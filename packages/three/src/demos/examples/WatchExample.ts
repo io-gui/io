@@ -8,13 +8,16 @@ import {
   MeshStandardMaterial,
   NeutralToneMapping,
   Object3D,
-  PointLight
+  PerspectiveCamera,
+  PointLight,
+  Spherical,
+  Vector3
 } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js'
 import { DRACOLoader, DRACO_GLTF_CONFIG } from 'three/addons/loaders/DRACOLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Bloom, Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Bloom, Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
@@ -33,7 +36,8 @@ const HOUR = 10, MINUTE = 10, DAY = 6, MONTH = 9
  * A Rolex in a studio HDR environment, with gold and silver parts, an iridescent glass and shadows. `roughness`,
  * `metalness` and `opacity` are in the Document tab. The hands follow document time from 10:10 (the source shows the
  * wall clock). The source's optional bloom (`postProcess`) is the document's `bloom`, off by default (its controls are
- * the Document tab's Bloom); its TAA is the TRAA views'. The camera tween is dropped. Plays when opened.
+ * the Document tab's Bloom); its TAA is the TRAA views'. The active camera stands where the source's camera tween
+ * ends. Plays when opened.
  */
 @Register
 export class WatchExample extends Document {
@@ -50,6 +54,9 @@ export class WatchExample extends Document {
   @Property({type: Number, value: 0.8})
   declare opacity: number
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({
       toneMapping: NeutralToneMapping,
@@ -58,6 +65,15 @@ export class WatchExample extends Document {
       timeline: new Timeline({autoplay: true, duration: PERIOD}),
       ...args,
     })
+
+    // The source tweens its camera to 1 unit from the watch, turned to - 0.2π, over 6 s after loading: where it rests.
+    const camera = new PerspectiveCamera( 55, 400 / 250, 0.1, 20 )
+    camera.name = 'Camera'
+    const target = new Vector3( 0, - 0.1, 0 )
+    const start = new Spherical().setFromVector3( new Vector3( 0.8, 0.5, - 1.5 ).sub( target ) )
+    camera.position.setFromSpherical( new Spherical( 1, start.phi, - Math.PI * 0.2 ) ).add( target )
+    camera.lookAt( target )
+    this.activeCamera = camera
 
     const dirLight = new DirectionalLight( 0xFFFFFF, 6 )
     dirLight.name = 'Key'
@@ -82,6 +98,10 @@ export class WatchExample extends Document {
     this.scene.add( pointLight )
 
     void this.load()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async load() {
@@ -153,7 +173,7 @@ export class WatchExample extends Document {
       this.notify({kind: 'structure'})
       // Frame the watch, not its floor.
       model.updateMatrixWorld( true )
-      this.dispatch('frame-object', {object: model.children.filter( child => ! child.getObjectByName( 'floor' ) )}, true)
+      this._frameTarget = model.children.filter( child => ! child.getObjectByName( 'floor' ) )
     } catch ( e ) {
       console.error( e )
     }

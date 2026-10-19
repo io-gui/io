@@ -7,17 +7,21 @@ import {
   Matrix4,
   Mesh,
   MeshNormalMaterial,
+  PerspectiveCamera,
   Quaternion,
   Vector3
 } from 'three/webgpu'
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
 import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Document, DocumentProps, Timeline } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 import { ioNumberSlider } from '@io-gui/sliders'
 
 const METHODS = [ 'INSTANCED', 'MERGED', 'NAIVE' ]
+
+/** Seconds of one turn of the camera: `OrbitControls.autoRotate` at its default speed (2) turns once in 30 s. */
+const PERIOD = 30
 
 const randomizeMatrix = function () {
 
@@ -75,7 +79,8 @@ function formatBytes( bytes: number, decimals: number ) {
 /**
  * `count` Suzanne heads at random places, built one of three ways (`method`, Document tab): one `InstancedMesh`, one
  * merged geometry, or a mesh each (in a `Naive` group). `drawCalls` and `gpuMemory` show what the method costs, as in
- * the source's Performance folder. The auto-rotating camera is dropped. Static.
+ * the source's Performance folder. The active camera circles the heads once per loop, as the source's
+ * `OrbitControls.autoRotate`. Plays when opened.
  */
 @Register
 export class InstancingPerformanceExample extends Document {
@@ -97,18 +102,38 @@ export class InstancingPerformanceExample extends Document {
   public content?: Mesh | Group
   private material = new MeshNormalMaterial()
   private geometry?: BufferGeometry
-  private framed = false
+  private camera: PerspectiveCamera
 
   constructor(args?: DocumentProps) {
-    super(args)
+    super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    this.camera = new PerspectiveCamera( 70, 400 / 250, 1, 100 )
+    this.camera.name = 'Camera'
+    this.activeCamera = this.camera
+    this.turnCamera( this.timeline.currentTime )
 
     this.scene.background = new Color( 0xffffff )
 
     void this.loadGeometry()
   }
 
+  override getEditorFrameTarget() {
+    return this.content ?? null
+  }
+
   methodChanged() { this.initMesh() }
   countChanged() { this.initMesh() }
+
+  override onAnimate(delta: number, time: number) {
+    this.turnCamera( time )
+  }
+
+  /** `OrbitControls.autoRotate` about the origin from (0, 0, 30): clockwise seen from above. */
+  private turnCamera(time: number) {
+    const angle = - time * 2 * Math.PI / PERIOD
+    this.camera.position.set( Math.sin( angle ) * 30, 0, Math.cos( angle ) * 30 )
+    this.camera.lookAt( 0, 0, 0 )
+  }
 
   private async loadGeometry() {
     try {
@@ -158,13 +183,6 @@ export class InstancingPerformanceExample extends Document {
 
     this.scene.add( this.content! )
     this.notify({kind: 'structure'})
-
-    // The views showed an empty scene: frame the heads once they first show.
-    if ( ! this.framed ) {
-      this.framed = true
-      this.content!.updateMatrixWorld( true )
-      this.dispatch('frame-object', {object: this.content}, true)
-    }
   }
 
   private makeInstanced(geometry: BufferGeometry) {
@@ -252,5 +270,5 @@ registerEditorConfig(InstancingPerformanceExample, [
 
 registerEditorGroups(InstancingPerformanceExample, {
   Main: ['method', 'count', 'drawCalls', 'gpuMemory'],
-  Hidden: ['content', 'material', 'geometry', 'framed'],
+  Hidden: ['content', 'material', 'geometry', 'camera'],
 })

@@ -59,7 +59,7 @@
     "@io-gui/sliders": "workspace:*",
     "@io-gui/colors": "workspace:*",
     "@types/three": "^0.186.0",
-    "three": "link:../../../three.js"
+    "three": "^0.186.1"
   },
   "peerDependencies": {
     "@io-gui/core": "^2.0.0-alpha.5",

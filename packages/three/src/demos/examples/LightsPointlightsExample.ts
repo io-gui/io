@@ -6,6 +6,7 @@ import {
   Mesh,
   MeshBasicMaterial,
   MeshPhongNodeMaterial,
+  PerspectiveCamera,
   Plane,
   PointLight,
   SphereGeometry,
@@ -13,8 +14,8 @@ import {
 } from 'three/webgpu'
 import { abs, attribute, distance, float, max, modelWorldMatrixInverse, positionLocal, sin, uniform } from 'three/tsl'
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
 /**
  * Seconds in which the motion repeats: the timeline length, so looping is seamless. The lights' frequencies (0.25,
@@ -91,8 +92,17 @@ export class LightsPointlightsExample extends Document {
   public light1: PointLight
   public light2: PointLight
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 50, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 100 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x000000 )
 
@@ -116,6 +126,10 @@ export class LightsPointlightsExample extends Document {
 
     this.pose( 0 )
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private createMaterial() {
@@ -155,7 +169,7 @@ export class LightsPointlightsExample extends Document {
       this.scene.add( mesh )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: mesh}, true)
+      this._frameTarget = mesh
     } catch ( e ) {
       console.error( e )
     }

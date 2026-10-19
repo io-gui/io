@@ -13,21 +13,24 @@ import {
 } from 'three/webgpu'
 import { mix, range, color, oscSine } from 'three/tsl'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
 
 /**
  * Thirty instances of the skinned, animated Michelle model: the skinned mesh is flagged as instanced (the source's
  * hack), and each instance blends to its own random color and metalness on a slow oscillator of document time (it
  * jumps at the wrap; duration = the clip). The depth-of-field blur post is dropped (`document-pipeline`). The source
- * camera is kept as `Camera`, and its light is placed at its position. The black ground is unselectable. Plays when
+ * camera is the active camera, in the scene with its light, as in the source. The black ground is unselectable. Plays when
  * opened.
  */
 @Register
 export class SkinningInstancingExample extends Document {
 
   public mixer?: AnimationMixer
+
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true}), ...args})
@@ -41,18 +44,17 @@ export class SkinningInstancingExample extends Document {
     centerLight.power = 400
     this.scene.add( centerLight )
 
-    // The source attaches this light to its camera at (1, 2, 3).
     const cameraLight = new PointLight( 0x0099ff, 1, 100 )
     cameraLight.name = 'CameraLight'
     cameraLight.power = 400
-    cameraLight.position.set( 1, 2, 3 )
-    this.scene.add( cameraLight )
 
-    const camera = new PerspectiveCamera( 50, 1, 0.01, 40 )
+    const camera = new PerspectiveCamera( 50, 400 / 250, 0.01, 40 )
     camera.name = 'Camera'
     camera.position.set( 1, 2, 3 )
     camera.lookAt( 0, 1, 0 )
+    camera.add( cameraLight )
     this.scene.add( camera )
+    this.activeCamera = camera
 
     const geometry = new PlaneGeometry( 1000, 1000 )
     geometry.rotateX( - Math.PI / 2 )
@@ -63,6 +65,10 @@ export class SkinningInstancingExample extends Document {
     this.scene.add( plane )
 
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadModel() {
@@ -117,7 +123,7 @@ export class SkinningInstancingExample extends Document {
 
       this.notify({kind: 'structure'})
       // The 1000-unit ground would dominate whole-scene framing. Framing sees one instance.
-      this.dispatch('frame-object', {object}, true)
+      this._frameTarget = object
     } catch ( e ) {
       console.error( e )
     }

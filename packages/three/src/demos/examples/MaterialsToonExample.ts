@@ -6,6 +6,7 @@ import {
   Mesh,
   MeshBasicNodeMaterial,
   MeshToonNodeMaterial,
+  PerspectiveCamera,
   PointLight,
   RedFormat,
   SphereGeometry,
@@ -31,6 +32,12 @@ export class MaterialsToonExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 40, 400 / 250, 1, 2500 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 400, 1400 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x444488 )
 

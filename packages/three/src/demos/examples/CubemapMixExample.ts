@@ -1,9 +1,9 @@
-import { CubeTextureLoader, LinearMipmapLinearFilter, LinearToneMapping } from 'three/webgpu'
+import { CubeTextureLoader, LinearMipmapLinearFilter, LinearToneMapping, PerspectiveCamera } from 'three/webgpu'
 import { mix, oscSine, pmremTexture, float } from 'three/tsl'
 import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
 /** Seconds of one environment cross-fade cycle (`oscSine` of time × 0.1): the timeline length. */
 const PERIOD = 10
@@ -12,9 +12,22 @@ const PERIOD = 10
 @Register
 export class CubemapMixExample extends Document {
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({toneMapping: LinearToneMapping, timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 0.25, 20 )
+    camera.name = 'Camera'
+    camera.position.set( - 1.8, 0.6, 2.7 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
     void this.load()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async load() {
@@ -48,7 +61,7 @@ export class CubemapMixExample extends Document {
       this.scene.add( gltf.scene )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: gltf.scene}, true)
+      this._frameTarget = gltf.scene
     } catch ( e ) {
       console.error( e )
     }

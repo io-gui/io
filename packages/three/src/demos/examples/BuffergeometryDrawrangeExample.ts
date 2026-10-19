@@ -10,6 +10,7 @@ import {
   LineBasicMaterial,
   LineSegments,
   Mesh,
+  PerspectiveCamera,
   Points,
   PointsMaterial,
   PointsNodeMaterial,
@@ -78,6 +79,12 @@ export class BuffergeometryDrawrangeExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 4000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 1750 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.group = new Group()
     this.group.name = 'Plexus'

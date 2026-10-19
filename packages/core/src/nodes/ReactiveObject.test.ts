@@ -1215,6 +1215,40 @@ describe('ReactiveObject', () => {
     node.dispose()
   })
 
+  it('initializes fields: constructs types, copies arrays and objects, keeps null and primitives', () => {
+    const sharedArray = [1, 2]
+    const sharedObject = {a: 1}
+    @Register
+    class FieldsNode extends ReactiveObject {
+      static override get Fields() {
+        return {
+          map: Map,
+          list: sharedArray,
+          record: sharedObject,
+          empty: null,
+          missing: undefined,
+          label: 'text',
+        }
+      }
+      declare map: Map<string, number>
+      declare list: number[]
+      declare record: {a: number}
+      declare empty: null
+      declare missing: undefined
+      declare label: string
+    }
+    const node = new FieldsNode()
+    expect(node.map).toBeInstanceOf(Map)
+    expect(node.list).toEqual([1, 2])
+    expect(node.list).not.toBe(sharedArray)
+    expect(node.record).toEqual({a: 1})
+    expect(node.record).not.toBe(sharedObject)
+    expect(node.empty).toBe(null)
+    expect(node.missing).toBe(undefined)
+    expect(node.label).toBe('text')
+    node.dispose()
+  })
+
   describe('toJSON and applyJSON', () => {
     it('serializes primitives and nested toJSON values', () => {
       const node = new JsonNode()

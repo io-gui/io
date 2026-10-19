@@ -1,14 +1,23 @@
-import { AmbientLight, DirectionalLight, LoadingManager, Mesh, MeshPhongMaterial, TextureLoader } from 'three/webgpu'
+import { AmbientLight, DirectionalLight, LoadingManager, Mesh, MeshPhongMaterial, PerspectiveCamera, TextureLoader } from 'three/webgpu'
 import { TDSLoader } from 'three/addons/loaders/TDSLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 
 /** The portal gun from a 3DS file with its textures, plus a separately loaded normal map. */
 @Register
 export class Loader3dsExample extends Document {
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 60, 400 / 250, 0.1, 10 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 2 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     const ambientLight = new AmbientLight( 0xffffff, 3 )
     ambientLight.name = 'Ambient'
@@ -20,6 +29,10 @@ export class Loader3dsExample extends Document {
     this.scene.add( directionalLight )
 
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadModel() {
@@ -46,7 +59,7 @@ export class Loader3dsExample extends Document {
       this.scene.add( object )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object}, true)
+      this._frameTarget = object
     } catch ( e ) {
       console.error( e )
     }

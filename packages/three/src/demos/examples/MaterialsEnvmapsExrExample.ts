@@ -3,6 +3,7 @@ import {
   EquirectangularReflectionMapping,
   Mesh,
   MeshStandardMaterial,
+  PerspectiveCamera,
   PMREMGenerator,
   SRGBColorSpace,
   Texture,
@@ -50,6 +51,12 @@ export class MaterialsEnvmapsExrExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({toneMapping: ACESFilmicToneMapping, timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 40, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 120 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     const geometry = new TorusKnotGeometry( 18, 8, 150, 20 )
     const material = new MeshStandardMaterial( {

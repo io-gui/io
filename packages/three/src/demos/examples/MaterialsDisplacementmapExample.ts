@@ -4,13 +4,14 @@ import {
   DoubleSide,
   Mesh,
   MeshStandardNodeMaterial,
+  OrthographicCamera,
   PointLight,
   TextureLoader,
   Vector2
 } from 'three/webgpu'
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
@@ -19,8 +20,8 @@ const PERIOD = 10 * Math.PI / 3
 
 /**
  * A ninja head with displacement, normal and ambient occlusion maps and a cube map reflection, under a circling red
- * light. The material and light settings are in the Document tab. The source's orthographic camera is dropped, and
- * its camera light (pink) is placed at the source camera's position. Plays when opened.
+ * light. The material and light settings are in the Document tab. The source's orthographic camera is the active
+ * camera, with its light (pink) on it. Plays when opened.
  */
 @Register
 export class MaterialsDisplacementmapExample extends Document {
@@ -50,6 +51,9 @@ export class MaterialsDisplacementmapExample extends Document {
   @Property({type: Number, value: 1.0})
   declare normalScale: number
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
 
@@ -64,10 +68,18 @@ export class MaterialsDisplacementmapExample extends Document {
     this.pointLight.position.z = 2500
     this.scene.add( this.pointLight )
 
+    // The source's orthographic camera, 500 high, carrying the pink light.
+    const height = 500
+    const aspect = 400 / 250
+    const camera = new OrthographicCamera( - height * aspect, height * aspect, height, - height, 1, 10000 )
+    camera.name = 'Camera'
+    camera.position.z = 1500
+    this.scene.add( camera )
+    this.activeCamera = camera
+
     const pointLight2 = new PointLight( 0xff6666, 3, 0, 0 )
     pointLight2.name = 'Pink'
-    pointLight2.position.z = 1500
-    this.scene.add( pointLight2 )
+    camera.add( pointLight2 )
 
     const pointLight3 = new PointLight( 0x0000ff, 1.5, 0, 0 )
     pointLight3.name = 'Blue'
@@ -112,6 +124,10 @@ export class MaterialsDisplacementmapExample extends Document {
     this.pose( this.timeline.currentTime )
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   /**
    * Adds the head once its environment map has loaded too. Workaround (upstream: triage-cube-envmap-loading): drawn
    * before, the standard material's environment binds a 2D placeholder as a cube texture and fails WebGPU validation
@@ -145,7 +161,7 @@ export class MaterialsDisplacementmapExample extends Document {
       this.scene.add( mesh )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: mesh}, true)
+      this._frameTarget = mesh
     } catch ( e ) {
       console.error( e )
     }

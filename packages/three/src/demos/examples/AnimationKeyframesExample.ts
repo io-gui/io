@@ -10,8 +10,8 @@ import {
 import { SkyMesh } from 'three/addons/objects/SkyMesh.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { DRACOLoader, DRACO_GLTF_CONFIG } from 'three/addons/loaders/DRACOLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
 /**
  * The source's sky: sun at elevation 11°, azimuth -55°. Its clouds hold still: the source never advances the sky's
@@ -40,10 +40,17 @@ export class AnimationKeyframesExample extends Document {
 
   public mixer: AnimationMixer = new AnimationMixer(new Object3D())
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({toneMapping: ACESFilmicToneMapping, timeline: new Timeline({autoplay: true}), ...args})
     this.scene.add( createSky() )
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   override onRendererInitialized(renderer: WebGPURenderer) {
@@ -82,7 +89,7 @@ export class AnimationKeyframesExample extends Document {
 
       this.notify({kind: 'structure'})
       // The model, not the scene: the sky spans 10000 units.
-      this.dispatch('frame-object', {object: model}, true)
+      this._frameTarget = model
     } catch ( e ) {
       console.error( e )
     }

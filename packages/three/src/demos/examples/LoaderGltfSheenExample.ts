@@ -1,8 +1,8 @@
-import { ACESFilmicToneMapping, Color, EquirectangularReflectionMapping, Mesh, MeshPhysicalMaterial } from 'three/webgpu'
+import { ACESFilmicToneMapping, Color, EquirectangularReflectionMapping, Mesh, MeshPhysicalMaterial, PerspectiveCamera } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
@@ -18,8 +18,17 @@ export class LoaderGltfSheenExample extends Document {
   @Property({type: Number, value: 1})
   declare sheen: number
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1, ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 0.1, 20 )
+    camera.name = 'Camera'
+    camera.position.set( - 0.75, 0.7, 1.25 )
+    camera.lookAt( 0, 0.35, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0xAAAAAA )
 
@@ -37,6 +46,10 @@ export class LoaderGltfSheenExample extends Document {
     void this.loadModel()
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   private async loadModel() {
     try {
       const gltf = await new GLTFLoader()
@@ -51,7 +64,7 @@ export class LoaderGltfSheenExample extends Document {
       this.sheen = this.fabric.sheen
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: gltf.scene}, true)
+      this._frameTarget = gltf.scene
     } catch ( e ) {
       console.error( e )
     }

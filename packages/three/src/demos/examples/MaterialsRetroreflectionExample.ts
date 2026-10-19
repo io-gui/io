@@ -25,15 +25,15 @@ import {
 } from 'three/webgpu'
 import { color, mix, mx_noise_float, positionLocal, positionWorld, materialColor, materialRoughness, reflector, transformNormalToView, vec2, vec3 } from 'three/tsl'
 import { hashBlur } from 'three/addons/tsl/display/hashBlur.js'
-import { Register, Property } from '@io-gui/core'
-import { Bloom, Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Bloom, Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
 /**
  * Traffic cones on wet asphalt at night, lit by a flashlight: the cones' white bands are retroreflective
- * (`retroreflectivity`), so they glow toward the light's source. The flashlight rides on the source camera, kept as
- * `Camera`: look through it to see the bands light up; other views see them from away from the light. A second light
+ * (`retroreflectivity`), so they glow toward the light's source. The flashlight rides on the source camera, the
+ * active camera (in the scene, as in the source): look through it to see the bands light up; other views see them from away from the light. A second light
  * mirrored below the ground stands in for the beam bounced off the puddles. The floor is a TSL asphalt with puddles
  * that mirror the scene through a blurred `reflector()`. `enabled`, `amount` and `flashLight` are in the Document tab.
  * The source's bloom (strength 0.15) is the document's `bloom`, drawn by views that follow it (the Scene Camera view in
@@ -57,17 +57,21 @@ export class MaterialsRetroreflectionExample extends Document {
   @Property({type: Number, value: 5.0})
   declare flashLight: number
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({toneMapping: ACESFilmicToneMapping, bloom: new Bloom({enabled: true, strength: 0.15, radius: 0, threshold: 0}), ...args})
 
     this.scene.background = new Color( 0x0f131a )
     this.scene.fog = new Fog( 0x0f131a, 4, 18 )
 
-    const camera = new PerspectiveCamera( 45, 1, 0.1, 100 )
+    const camera = new PerspectiveCamera( 45, 400 / 250, 0.1, 100 )
     camera.name = 'Camera'
     camera.position.set( 2.3, 1.32, 3.25 )
     camera.lookAt( 0, 0.33, 0 )
     this.scene.add( camera )
+    this.activeCamera = camera
 
     // camera-mounted LED flashlight (~6500K = sRGB white)
     this.frontLight = new PointLight( 0xffffff, this.flashLight, 12 )
@@ -87,6 +91,10 @@ export class MaterialsRetroreflectionExample extends Document {
     this.updateMaterial()
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   override onRendererInitialized(renderer: WebGPURenderer) {
     super.onRendererInitialized(renderer)
 
@@ -96,7 +104,7 @@ export class MaterialsRetroreflectionExample extends Document {
     this.notify({kind: 'material'})
 
     // The 40-unit floor would dominate whole-scene framing.
-    this.dispatch('frame-object', {object: this.cones}, true)
+    this._frameTarget = this.cones
   }
 
   private createNightEnvironment() {

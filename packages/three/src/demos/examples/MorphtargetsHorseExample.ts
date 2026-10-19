@@ -1,16 +1,28 @@
-import { AnimationMixer, Color, DirectionalLight } from 'three/webgpu'
+import { AnimationMixer, Color, DirectionalLight, PerspectiveCamera } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
-/** The morph-target galloping horse, its clip played in 1 s. The source's orbiting camera is dropped. Plays when opened. */
+/**
+ * The morph-target galloping horse, its clip played in 1 s. The active camera stands where the source's orbit starts
+ * (one turn a minute). Plays when opened.
+ */
 @Register
 export class MorphtargetsHorseExample extends Document {
 
   public mixer?: AnimationMixer
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: 1}), ...args})
+
+    const camera = new PerspectiveCamera( 50, 400 / 250, 1, 10000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 300, 600 )
+    camera.lookAt( 0, 150, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0xf0f0f0 )
 
@@ -27,6 +39,10 @@ export class MorphtargetsHorseExample extends Document {
     void this.loadModel()
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   private async loadModel() {
     try {
       const gltf = await new GLTFLoader().loadAsync( 'https://threejs.org/examples/models/gltf/Horse.glb' )
@@ -40,7 +56,7 @@ export class MorphtargetsHorseExample extends Document {
       this.mixer.setTime( this.timeline.currentTime )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: mesh}, true)
+      this._frameTarget = mesh
     } catch ( e ) {
       console.error( e )
     }

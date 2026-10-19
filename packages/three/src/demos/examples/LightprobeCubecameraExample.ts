@@ -1,9 +1,9 @@
-import { CubeCamera, CubeRenderTarget, CubeTexture, CubeTextureLoader, LightProbe, Material, MeshBasicNodeMaterial, Node, WebGPURenderer } from 'three/webgpu'
+import { CubeCamera, CubeRenderTarget, CubeTexture, CubeTextureLoader, LightProbe, Material, MeshBasicNodeMaterial, Node, PerspectiveCamera, WebGPURenderer } from 'three/webgpu'
 import { getShIrradianceAt, normalWorld } from 'three/tsl'
 import { LightProbeHelper } from 'three/addons/helpers/LightProbeHelperGPU.js'
 import { LightProbeGenerator } from 'three/addons/lights/LightProbeGenerator.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
 
 /**
@@ -37,8 +37,17 @@ export class LightprobeCubecameraExample extends Document {
   private background: Promise<CubeTexture>
   private preparing?: Promise<void>
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 40, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 30 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.cubeRenderTarget = new CubeRenderTarget( 256 )
     this.cubeCamera = new CubeCamera( 1, 1000, this.cubeRenderTarget )
@@ -68,6 +77,10 @@ export class LightprobeCubecameraExample extends Document {
     } )
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   override onRendererInitialized(renderer: WebGPURenderer) {
     super.onRendererInitialized(renderer)
     this.preparing ??= this.prepare( renderer )
@@ -92,7 +105,7 @@ export class LightprobeCubecameraExample extends Document {
       this.scene.add( helper )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: helper}, true)
+      this._frameTarget = helper
     } catch ( e ) {
       console.error( e )
     }

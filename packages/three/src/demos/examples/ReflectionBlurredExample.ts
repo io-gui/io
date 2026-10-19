@@ -7,6 +7,7 @@ import {
   MeshStandardNodeMaterial,
   NeutralToneMapping,
   Node,
+  PerspectiveCamera,
   PlaneGeometry,
   PointLight,
   SRGBColorSpace,
@@ -15,8 +16,8 @@ import {
 import { Fn, vec4, fract, sample, abs, uniform, pow, color, max, length, rangeFogFactor, sub, reflector, normalWorld, hue, mix, positionWorld } from 'three/tsl'
 import { hashBlur } from 'three/addons/tsl/display/hashBlur.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
@@ -44,8 +45,17 @@ export class ReflectionBlurredExample extends Document {
   @Property({type: Number, value: .5})
   declare resolutionScale: number
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({toneMapping: NeutralToneMapping, toneMappingExposure: 1.3, timeline: new Timeline({autoplay: true}), ...args})
+
+    const camera = new PerspectiveCamera( 50, 400 / 250, 0.25, 30 )
+    camera.name = 'Camera'
+    camera.position.set( - 2.5, 2, 2.5 )
+    camera.lookAt( 0, 0.5, 0 )
+    this.activeCamera = camera
 
     const time = this.timeline.timeNode
 
@@ -163,6 +173,10 @@ export class ReflectionBlurredExample extends Document {
     this.scene.add( floor )
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   private async loadModel() {
     try {
       const gltf = await new GLTFLoader().loadAsync( 'https://threejs.org/examples/models/gltf/Michelle.glb' )
@@ -178,7 +192,7 @@ export class ReflectionBlurredExample extends Document {
 
       this.notify({kind: 'structure'})
       // The 50-unit floor would dominate whole-scene framing.
-      this.dispatch('frame-object', {object: model}, true)
+      this._frameTarget = model
     } catch ( e ) {
       console.error( e )
     }

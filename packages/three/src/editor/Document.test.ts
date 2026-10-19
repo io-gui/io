@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { Document, Editor, Timeline, Transaction } from '@io-gui/three'
-import { Color, Group, Mesh, MeshBasicMaterial, Object3D, Vector3, WebGPURenderer } from 'three/webgpu'
+import { Color, Group, Mesh, MeshBasicMaterial, Object3D, PerspectiveCamera, Vector3, WebGPURenderer } from 'three/webgpu'
 
 function snapshot(document: Document) {
   return JSON.stringify(document.scene.toJSON().object)
@@ -206,6 +206,15 @@ describe('Document transactions', () => {
     document.toneMappingExposure = 2
     expect(document.drainChanges().map(change => change.kind)).toEqual(['settings'])
   })
+
+  it('reports a new active camera, which need not be in the scene', () => {
+    const camera = new PerspectiveCamera()
+    document.activeCamera = camera
+    expect(document.drainChanges().map(change => change.kind)).toEqual(['settings'])
+    expect(camera.parent).toBe(null)
+    document.activeCamera = null
+    expect(document.drainChanges().map(change => change.kind)).toEqual(['settings'])
+  })
 })
 
 describe('Document timeline', () => {
@@ -247,6 +256,31 @@ describe('Document timeline', () => {
     expect(calls).toEqual([[1, 1], [2, 3]])
     document.timeline.currentTime = 4
     expect(calls[2]).toEqual([1, 4])
+  })
+
+  it('runs onBeforeDraw with the time played forward since it last ran for the renderer', () => {
+    const draws: Array<[WebGPURenderer, number]> = []
+    const initialized: WebGPURenderer[] = []
+    document.onRendererInitialized = renderer => { initialized.push(renderer) }
+    document.onBeforeDraw = (renderer, delta) => { draws.push([renderer, delta]) }
+    const first = {} as WebGPURenderer
+    const second = {} as WebGPURenderer
+    document.timeline.currentTime = 1
+    document._beforeDraw(first)
+    expect(initialized).toEqual([first])
+    document.timeline.currentTime = 1.5
+    document.timeline.currentTime = 2
+    document._beforeDraw(first)
+    // Scrubbing back and a loop wrap add nothing; playing forward again does.
+    document.timeline.currentTime = 0.5
+    document.timeline.currentTime = 0.75
+    document._beforeDraw(first)
+    document._beforeDraw(first)
+    document._beforeDraw(second)
+    document.timeline.currentTime = 1
+    document._beforeDraw(second)
+    expect(draws).toEqual([[first, 0], [first, 1], [first, 0.25], [first, 0], [second, 0], [second, 0.25]])
+    expect(initialized).toEqual([first, second])
   })
 })
 

@@ -17,8 +17,16 @@ A document's clock (`document.timeline`): `currentTime` within `[0, duration]` s
 _Avoid_: clock (as a type name), document time, playhead (that is its UI), time (alone, for the property)
 
 **Live document**:
-A document whose state builds up from interaction while it plays, like a game, rather than following `time` (the skinning blending demos). It uses the timeline only as a clock: it integrates positive `delta` and ignores time going back (ADR-0009).
+A document whose state builds up from interaction while it plays, like a game, rather than following `time` (the skinning blending demos). It uses the timeline only as a clock: it integrates positive `delta` and ignores time going back (ADR-0009). GPU simulations are live content stepped in `onBeforeDraw`, whose `delta` counts only time played forward (ADR-0010).
 _Avoid_: interactive document, realtime document
+
+**Active camera**:
+`Document.activeCamera`: the camera a document is presented through (ADR-0011). Views set with `setCameraView()` follow it; it need not be in the scene graph, and then is looked through but not drawn, picked or framed. When a document names none, following views use the first scene camera.
+_Avoid_: main camera, scene camera (any camera in the scene), default camera
+
+**Frame target**:
+`Document.getEditorFrameTarget()`: editor-only hook naming what editor views frame by default (ADR-0012): the objects of interest, without scenery that dwarfs them. `null` frames the whole scene. Views frame it by themselves (**auto-framing**) until navigated or framed on request, and again when it changes. Other runtimes never call it.
+_Avoid_: focus, frame-object (the removed event)
 
 **Timeline range**:
 `ThreeTimelineRange`: the scrubbable `IoGl` strip of one timeline, with the playhead and frame-aligned dividers at any zoom. `ThreeTimeline` adds transport buttons and time fields for the editor's document.
@@ -101,7 +109,7 @@ The single default `WebGPURenderer` (`getDefaultRenderer()`) reused across viewp
 _Avoid_: global GL context, IoGl (core 2D shader quad)
 
 **RenderScheduler**:
-The singleton that owns the render loop and is the only code that renders. Draws tagged, visible viewports once per frame within a frame budget.
+The singleton that owns the render loop and is the only code that renders. Draws tagged, visible viewports once per frame within a frame budget, after running each changed document's `onBeforeDraw` once per renderer (its GPU work for the frame).
 _Avoid_: render loop (as a class name), animation loop
 
 **Dirty tag**:
@@ -149,7 +157,7 @@ A gizmo is an on-screen handle with a screen-space hit test that starts an opera
 _Avoid_: manipulator, TransformControls, handle (alone)
 
 **ViewNavigation**:
-A view's navigation as numbers: target, rotation, distance, projection, fov, clip range, axis view (`free` or an axis) and an optional scene camera (`cameraSource`, by uuid; `View.setCameraView()` resolves the first scene camera, or a `name:`, to it once the camera is in the scene, and again in each newly shown document). The draw camera is built from it per frame.
+A view's navigation as numbers: target, rotation, distance, projection, fov, clip range, axis view (`free` or an axis), whether it is framed and whether it framed itself (`autoFramed`, the key of its frame target) and an optional scene camera (`cameraSource`, by uuid; `View.setCameraView()` resolves the first scene camera, or a `name:`, to it once the camera is in the scene, and again in each newly shown document). The draw camera is built from it per frame.
 _Avoid_: camera rig, camera controller, orbit state
 
 **Axis view**:

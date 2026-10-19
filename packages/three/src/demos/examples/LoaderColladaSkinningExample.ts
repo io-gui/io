@@ -1,7 +1,7 @@
-import { AmbientLight, AnimationMixer, DirectionalLight } from 'three/webgpu'
+import { AmbientLight, AnimationMixer, DirectionalLight, PerspectiveCamera } from 'three/webgpu'
 import { ColladaLoader } from 'three/addons/loaders/ColladaLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
 /** The skinned stormtrooper from a Collada file, playing its clip. The source's grid is dropped. Plays when opened. */
 @Register
@@ -9,8 +9,17 @@ export class LoaderColladaSkinningExample extends Document {
 
   public mixer?: AnimationMixer
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true}), ...args})
+
+    const camera = new PerspectiveCamera( 25, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 15, 10, - 15 )
+    camera.lookAt( 0, 2, 0 )
+    this.activeCamera = camera
 
     const ambientLight = new AmbientLight( 0xffffff, 0.6 )
     ambientLight.name = 'Ambient'
@@ -22,6 +31,10 @@ export class LoaderColladaSkinningExample extends Document {
     this.scene.add( directionalLight )
 
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadModel() {
@@ -43,7 +56,7 @@ export class LoaderColladaSkinningExample extends Document {
       this.notify({kind: 'structure'})
       // Skinned bounds read the bones' world matrices, which nothing has drawn yet.
       avatar.updateMatrixWorld( true )
-      this.dispatch('frame-object', {object: avatar}, true)
+      this._frameTarget = avatar
     } catch ( e ) {
       console.error( e )
     }

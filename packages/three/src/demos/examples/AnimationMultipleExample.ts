@@ -11,13 +11,14 @@ import {
   Mesh,
   MeshPhongMaterial,
   Object3D,
+  PerspectiveCamera,
   PlaneGeometry,
   SkinnedMesh
 } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
 
 /** Seconds of playback: ten cycles of the run clip (0.7 s), so the run loops seamlessly; idle and walk jump at the wrap. */
@@ -39,8 +40,17 @@ export class AnimationMultipleExample extends Document {
   @Property({type: Boolean, value: false})
   declare sharedSkeleton: boolean
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: DURATION}), ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 2, 3, - 6 )
+    camera.lookAt( 0, 1, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0xa0a0a0 )
     this.scene.fog = new Fog( 0xa0a0a0, 10, 50 )
@@ -79,6 +89,10 @@ export class AnimationMultipleExample extends Document {
     void this.loadModel()
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   private async loadModel() {
     try {
       const gltf = await new GLTFLoader().loadAsync( 'https://threejs.org/examples/models/gltf/Soldier.glb' )
@@ -94,7 +108,7 @@ export class AnimationMultipleExample extends Document {
       // Skinned bounds read the bones' world matrices, which nothing has drawn yet.
       this.soldiers.updateMatrixWorld( true )
       // The soldiers, not the scene: the ground spans 200 units.
-      this.dispatch('frame-object', {object: this.soldiers}, true)
+      this._frameTarget = this.soldiers
     } catch ( e ) {
       console.error( e )
     }

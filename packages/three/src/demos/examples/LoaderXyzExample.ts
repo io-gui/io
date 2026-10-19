@@ -1,8 +1,8 @@
-import { BufferGeometry, InstancedBufferAttribute, InstancedMesh, PlaneGeometry, Points, PointsMaterial, PointsNodeMaterial, Sphere } from 'three/webgpu'
+import { BufferGeometry, InstancedBufferAttribute, InstancedMesh, PerspectiveCamera, PlaneGeometry, Points, PointsMaterial, PointsNodeMaterial, Sphere } from 'three/webgpu'
 import { instancedBufferAttribute, materialColor } from 'three/tsl'
 import { XYZLoader } from 'three/addons/loaders/XYZLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
 /**
  * Seconds in which the tumble repeats: the timeline length, so looping is seamless. The source turns 0.2 rad/s about x
@@ -20,9 +20,23 @@ export class LoaderXyzExample extends Document {
 
   public points?: Points<BufferGeometry, PointsMaterial>
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 50, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 10, 7, 10 )
+    camera.lookAt( 0, 0, 0 )
+    this.scene.add( camera )
+    this.activeCamera = camera
     void this.loadPoints()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadPoints() {
@@ -40,7 +54,7 @@ export class LoaderXyzExample extends Document {
       this.scene.add( this.points )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: this.points}, true)
+      this._frameTarget = this.points
     } catch ( e ) {
       console.error( e )
     }

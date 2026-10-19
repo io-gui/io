@@ -3,6 +3,7 @@ import {
   HemisphereLight,
   Mesh,
   MeshStandardMaterial,
+  PerspectiveCamera,
   SRGBColorSpace,
   Texture,
   TextureLoader
@@ -10,8 +11,8 @@ import {
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js'
 import { EdgeSplitModifier } from 'three/addons/modifiers/EdgeSplitModifier.js'
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
@@ -43,8 +44,17 @@ export class ModifierEdgesplitExample extends Document {
   @Property({type: Boolean, value: true})
   declare tryKeepNormals: boolean
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 75, 400 / 250, 0.1, 2000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 4 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     const light = new HemisphereLight( 0xffffff, 0x444444, 3 )
     light.name = 'Hemisphere'
@@ -57,6 +67,10 @@ export class ModifierEdgesplitExample extends Document {
       this.map.colorSpace = SRGBColorSpace
       this.updateMesh()
     } )
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadModel() {
@@ -79,7 +93,7 @@ export class ModifierEdgesplitExample extends Document {
       this.updateMesh()
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: mesh}, true)
+      this._frameTarget = mesh
     } catch ( e ) {
       console.error( e )
     }

@@ -15,6 +15,7 @@ import {
   MeshPhongMaterial,
   MeshPhongNodeMaterial,
   Object3D,
+  PerspectiveCamera,
   PlaneGeometry,
   SphereGeometry,
   TorusGeometry,
@@ -23,8 +24,8 @@ import {
 } from 'three/webgpu'
 import { mx_fractal_noise_vec3, positionWorld, Fn, color } from 'three/tsl'
 import { TileShadowNode } from 'three/addons/tsl/shadows/TileShadowNode.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
 
 /**
@@ -46,8 +47,17 @@ export class ShadowmapArrayExample extends Document {
   public torusKnot!: Mesh
   public content: Object3D[] = []
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1.2, timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 45, 60, 100 )
+    camera.lookAt( 0, 5, 0 )
+    this.activeCamera = camera
 
     this.scene.backgroundNode = color( 0xCCCCFF ) // Brighter blue sky
     this.scene.fog = new Fog( 0xCCCCFF, 700, 1000 )
@@ -114,10 +124,14 @@ export class ShadowmapArrayExample extends Document {
     this.pose( this.timeline.currentTime )
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   /** The 1500-unit ground would dominate whole-scene framing: frame the shapes once the document is on screen. */
   override onRendererInitialized(renderer: WebGPURenderer) {
     super.onRendererInitialized(renderer)
-    this.dispatch('frame-object', {object: this.content}, true)
+    this._frameTarget = this.content
   }
 
   private add( object: Object3D, name: string ) {

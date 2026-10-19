@@ -7,6 +7,7 @@ import {
   MeshBasicMaterial,
   MeshPhysicalNodeMaterial,
   Node,
+  PerspectiveCamera,
   PointLight,
   SphereGeometry
 } from 'three/webgpu'
@@ -25,8 +26,8 @@ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.
 import { Font, FontLoader } from 'three/addons/loaders/FontLoader.js'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'
 import { mxHextileComputeBlendWeights, mxHextileCoord } from 'three/addons/loaders/materialx/MaterialXHextile.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
 
 /**
@@ -51,8 +52,16 @@ export class MaterialxNoiseExample extends Document {
   public group: Group
   private spheres: Mesh[] = []
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1.25, timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 27, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 190 )
+    this.activeCamera = camera
 
     this.group = new Group()
     this.group.name = 'Noises'
@@ -75,6 +84,10 @@ export class MaterialxNoiseExample extends Document {
     void this.load()
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   private async load() {
     try {
       const [ hdrTexture, font ] = await Promise.all( [
@@ -94,7 +107,7 @@ export class MaterialxNoiseExample extends Document {
 
       this.pose( this.timeline.currentTime )
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: this.group}, true)
+      this._frameTarget = this.group
     } catch ( e ) {
       console.error( e )
     }

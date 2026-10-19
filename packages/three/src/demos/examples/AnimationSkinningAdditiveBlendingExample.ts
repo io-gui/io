@@ -1,4 +1,4 @@
-import { Property, Register } from '@io-gui/core'
+import { Property, Register, Field } from '@io-gui/core'
 import {
   AnimationAction,
   AnimationClip,
@@ -11,10 +11,11 @@ import {
   HemisphereLight,
   Mesh,
   MeshPhongMaterial,
-  PlaneGeometry,
+  PerspectiveCamera,
+  PlaneGeometry
 } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { ioObject, ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 
 type GltfModel = {
@@ -61,8 +62,17 @@ export class AnimationSkinningAdditiveBlendingExample extends Document {
     headShake: null,
   }
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true}), ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( - 1, 2, 3 )
+    camera.lookAt( 0, 1, 0 )
+    this.activeCamera = camera
 
     // Scene setup
     this.scene.background = new Color(0xa0a0a0)
@@ -97,6 +107,10 @@ export class AnimationSkinningAdditiveBlendingExample extends Document {
     this.scene.add(ground)
 
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadModel() {
@@ -144,7 +158,7 @@ export class AnimationSkinningAdditiveBlendingExample extends Document {
     })
 
     this.notify({kind: 'structure'})
-    this.dispatch('frame-object', {object: model}, true)
+    this._frameTarget = model
   }
 
   private setWeight(action: AnimationAction, weight: number) {

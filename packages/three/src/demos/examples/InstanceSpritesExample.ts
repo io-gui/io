@@ -1,28 +1,34 @@
 import {
   Box3,
+  BufferGeometry,
   Color,
   FogExp2,
   InstancedBufferAttribute,
   InstancedMesh,
+  Mesh,
+  PerspectiveCamera,
   PlaneGeometry,
-  SRGBColorSpace,
   Sphere,
   SpriteNodeMaterial,
+  SRGBColorSpace,
   TextureLoader,
-  Vector3,
-  WebGPURenderer
+  Vector3
 } from 'three/webgpu'
 import { uniform, instanceIndex, instancedBufferAttribute } from 'three/tsl'
 import { Register, Property } from '@io-gui/core'
 import { Document, DocumentProps, Timeline } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
 
+/** What views frame: inside the cube, about where the source camera stands (whole-scene framing stands beyond the fog). */
+const FRAME_EXTENT = new Mesh( new BufferGeometry().setFromPoints( [ new Vector3( - 400, - 400, - 400 ), new Vector3( 400, 400, 400 ) ] ) )
+
 /** Seconds of one turn of the sprites' hue: the timeline length. The sprites' spin jumps at the wrap. */
 const PERIOD = 20
 
 /**
  * 10000 snowflake sprites scattered in a 2000-unit cube, spinning with document time and cycling through hues.
- * `sizeAttenuation` is in the Document tab. The pointer-driven camera is dropped. The sprites are an `InstancedMesh`
+ * `sizeAttenuation` is in the Document tab. The active camera stands where the source's
+ * pointer-driven camera rests. The sprites are an `InstancedMesh`
  * with identity instance matrices and the cube's bounds, so framing and culling see them (the source draws a `Sprite`
  * with `count`). Plays when opened.
  */
@@ -38,6 +44,12 @@ export class InstanceSpritesExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 55, 400 / 250, 2, 2000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 1000 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x000000 )
     this.scene.fog = new FogExp2( 0x000000, 0.001 )
@@ -79,13 +91,8 @@ export class InstanceSpritesExample extends Document {
     this.pose( this.timeline.currentTime )
   }
 
-  /**
-   * Whole-scene framing would put the views outside the cube, where the fog hides everything: frame closer, about where
-   * the source camera stands (on the cube's face), once the document is on screen.
-   */
-  override onRendererInitialized(renderer: WebGPURenderer) {
-    super.onRendererInitialized(renderer)
-    this.dispatch('frame-object', {object: this.particles, overscan: 0.4}, true)
+  override getEditorFrameTarget() {
+    return FRAME_EXTENT
   }
 
   sizeAttenuationChanged() {

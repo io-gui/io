@@ -6,6 +6,7 @@ import {
   MeshStandardMaterial,
   NeutralToneMapping,
   Object3D,
+  PerspectiveCamera,
   PMREMGenerator,
   SRGBColorSpace,
   TextureLoader,
@@ -44,8 +45,8 @@ function sinusoidalIn( k: number ) {
 /**
  * 10000 boxes in a grid, each bobbing at its own phase, with a new tint sweeping out from the center every three
  * seconds. Instance matrices and colors are updated from document time; the tint waves, which the source starts with
- * `setInterval` and tween.js, are scheduled in timeline time (the first wave now starts at 0 s). The orbiting camera is
- * dropped. Plays when opened.
+ * `setInterval` and tween.js, are scheduled in timeline time (the first wave now starts at 0 s). The active camera
+ * stands where the source's orbit starts (a third of a turn per loop). Plays when opened.
  */
 @Register
 export class InstancingDynamicExample extends Document {
@@ -56,6 +57,12 @@ export class InstancingDynamicExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({toneMapping: NeutralToneMapping, timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 60, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 10, 10 )
+    camera.lookAt( 0, 0, - 8 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0xadd8e6 )
 

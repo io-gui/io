@@ -11,16 +11,17 @@ import {
   MeshPhongNodeMaterial,
   MeshStandardNodeMaterial,
   Node,
+  PerspectiveCamera,
   RepeatWrapping,
-  SRGBColorSpace,
   Sphere,
+  SRGBColorSpace,
   TextureLoader,
   Vector3,
   WebGPURenderer
 } from 'three/webgpu'
 import { abs, color, float, Fn, instancedBufferAttribute, max, normalWorldGeometry, positionGeometry, positionLocal, pow2, reflector, sin, sub, texture, uniform, uv, vec2, vec3 } from 'three/tsl'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
 
 /**
@@ -40,7 +41,8 @@ function sweep(time: number, from: number, to: number, duration: number, delay: 
 /**
  * A tree of instanced boxes over a floor with a TSL `reflector()` reflection bent by a normal map. Two effectors sweep
  * up the tree and swell the boxes they pass (the source's tween.js tweens, derived from document time). Blur and
- * vignette post are dropped (`document-pipeline`); the auto-rotating camera is dropped, and the views frame the tree
+ * vignette post are dropped (`document-pipeline`); the active camera turns once per loop (the source's auto-rotation,
+ * once a minute), and the views frame the tree
  * (50-unit floor). The boxes are `Mesh.count` instances as in the source (an `InstancedMesh`'s matrix buffers would
  * pass WebGPU's 8 vertex buffers in TRAA views); the box geometry carries the tree's bounds, so framing and culling see
  * it. Plays when opened.
@@ -52,9 +54,17 @@ export class ReflectionExample extends Document {
   private uniformEffector1 = uniform( - 0.2 )
   private uniformEffector2 = uniform( - 0.2 )
   public tree: Mesh
+  private camera: PerspectiveCamera
+
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
 
   constructor(args?: DocumentProps) {
     super({toneMapping: ACESFilmicToneMapping, timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    this.camera = new PerspectiveCamera( 50, 400 / 250, 0.25, 30 )
+    this.camera.name = 'Camera'
+    this.activeCamera = this.camera
 
     this.scene.fog = new Fog( 0x4195a4, 1, 20 )
     this.scene.backgroundNode = normalWorldGeometry.y.mix( color( 0x4195a4 ), color( 0x0066ff ) )
@@ -125,6 +135,10 @@ export class ReflectionExample extends Document {
     this.pose( this.timeline.currentTime )
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   /**
    * The 50-unit floor would dominate whole-scene framing: frame the tree once the document is on screen. Framing reads
    * vertex positions, which are one box's: frame a detached stand-in whose two vertices are the tree's corners.
@@ -134,7 +148,7 @@ export class ReflectionExample extends Document {
     const box = this.tree.geometry.boundingBox!
     const standIn = new Mesh( new BufferGeometry().setFromPoints( [ box.min, box.max ] ) )
     standIn.scale.copy( this.tree.scale )
-    this.dispatch('frame-object', {object: standIn}, true)
+    this._frameTarget = standIn
   }
 
   override onAnimate(delta: number, time: number) {
@@ -144,6 +158,11 @@ export class ReflectionExample extends Document {
   private pose(time: number) {
     this.uniformEffector1.value = sweep( time, - 0.2, 1.2, 3, 0.8 )
     this.uniformEffector2.value = sweep( time, - 0.2, 1.2, 3, 0 )
+
+    // The source's `OrbitControls.autoRotate` about (0, 1, 0), one turn a minute: one turn per loop, from (4, 2, 4).
+    const angle = Math.PI / 4 - time * 2 * Math.PI / PERIOD
+    this.camera.position.set( Math.sin( angle ) * Math.SQRT2 * 4, 2, Math.cos( angle ) * Math.SQRT2 * 4 )
+    this.camera.lookAt( 0, 1, 0 )
   }
 
   private createTreeMesh() {
@@ -317,5 +336,5 @@ export class ReflectionExample extends Document {
 }
 
 registerEditorGroups(ReflectionExample, {
-  Hidden: ['uniformEffector1', 'uniformEffector2', 'tree'],
+  Hidden: ['uniformEffector1', 'uniformEffector2', 'tree', 'camera'],
 })

@@ -1,4 +1,4 @@
-import { PerspectiveCamera, OrthographicCamera, Group, BufferGeometry, Float32BufferAttribute, MathUtils, Mesh, MeshBasicMaterial, Points, PointsMaterial, SphereGeometry } from 'three/webgpu'
+import { PerspectiveCamera, OrthographicCamera, Group, BufferGeometry, Float32BufferAttribute, MathUtils, Mesh, MeshBasicMaterial, Points, PointsMaterial, SphereGeometry, Color } from 'three/webgpu'
 import { Register } from '@io-gui/core'
 import { registerEditorGroups } from '@io-gui/editors'
 import { Document, DocumentProps, Timeline } from '@io-gui/three'
@@ -10,7 +10,8 @@ const ORBIT_PERIOD = 25
 /**
  * A perspective and an orthographic scene camera on one rig, following an orbiting sphere while their
  * frustums change. Views draw each frustum (camera helpers overlay) except the one of the camera they look through;
- * the Document tab shows their projections. Plays when opened.
+ * the Document tab shows their projections. The active camera is the source's overview (its right half); the rig's
+ * cameras (its left half, switched with O / P) are scene cameras to look through. Plays when opened.
  */
 @Register
 export class CameraExample extends Document {
@@ -23,11 +24,14 @@ export class CameraExample extends Document {
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: ORBIT_PERIOD}), ...args})
 
+    this.scene.background = new Color(0x666666)
+
     this.perspectiveCamera = new PerspectiveCamera( 50, 0.5, 150, 1000 )
     this.perspectiveCamera.name = 'perspective'
 
     this.orthographicCamera = new OrthographicCamera( -1, 1, 1, -1, 150, 1000 )
     this.orthographicCamera.name = 'orthographic'
+    this.activeCamera = this.perspectiveCamera
 
     this.orthographicCamera.rotation.y = Math.PI
     this.perspectiveCamera.rotation.y = Math.PI

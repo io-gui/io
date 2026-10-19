@@ -54,7 +54,7 @@ export class HelperOverlay implements Overlay {
 
   prepare(ctx: OverlayContext) {
     const kind = this._kind
-    const source = ctx.view.getSourceCamera(ctx.scene)
+    const source = ctx.view.getSourceCamera(ctx.document)
     const colors = selectionColors(ctx)
     ctx.scene.traverseVisible(object => {
       if (object === source || !kind.accepts(object)) return

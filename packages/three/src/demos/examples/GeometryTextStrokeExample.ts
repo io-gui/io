@@ -5,12 +5,13 @@ import {
   Mesh,
   MeshBasicMaterial,
   Path,
+  PerspectiveCamera,
   ShapeGeometry
 } from 'three/webgpu'
 import { SVGLoader } from 'three/addons/loaders/SVGLoader.js'
 import { Font, FontLoader } from 'three/addons/loaders/FontLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 
 type TextMaterials = { dark: MeshBasicMaterial; lite: MeshBasicMaterial; color: Color }
 
@@ -22,12 +23,25 @@ type TextMaterials = { dark: MeshBasicMaterial; lite: MeshBasicMaterial; color: 
 @Register
 export class GeometryTextStrokeExample extends Document {
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 10000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, - 400, 1000 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0xf0f0f0 )
 
     void this.loadFont()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadFont() {
@@ -79,7 +93,7 @@ export class GeometryTextStrokeExample extends Document {
       this.scene.add( message1, message2, message3 )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: [ message1, message2, message3 ]}, true)
+      this._frameTarget = [ message1, message2, message3 ]
     } catch ( e ) {
       console.error( e )
     }

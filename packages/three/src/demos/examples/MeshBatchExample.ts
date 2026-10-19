@@ -8,6 +8,7 @@ import {
   Euler,
   Matrix4,
   MeshBasicNodeMaterial,
+  PerspectiveCamera,
   Quaternion,
   SphereGeometry,
   Vector3
@@ -79,8 +80,8 @@ function sortFunction( this: BatchedMesh & { _options?: SortOptions }, list: Sor
  * instances spin with document time (the source turns them by a small random rotation per frame; here each spins about
  * that rotation's axis, at a rate rounded to whole turns per loop). `count` rebuilds the mesh; `dynamic`, `opacity`,
  * `sortObjects`, `perObjectFrustumCulled`, `useCustomSort` and `randomizeGeometry` are in the Document tab. Sorting and
- * culling run for each drawing camera. The `webgpu` toggle (WebGL fallback) and the auto-rotating camera are dropped.
- * Plays when opened.
+ * culling run for each drawing camera. The active camera turns once per loop (the source's auto-rotation, once a
+ * minute). The `webgpu` toggle (WebGL fallback) is dropped. Plays when opened.
  */
 @Register
 export class MeshBatchExample extends Document {
@@ -91,6 +92,7 @@ export class MeshBatchExample extends Document {
   private ids: number[] = []
   /** Per instance: its start matrix, spin axis and spin rate (rad/s). */
   private spins: { base: Matrix4; axis: Vector3; rate: number }[] = []
+  private camera: PerspectiveCamera
 
   @Property({type: Number, value: 512})
   declare count: number
@@ -119,6 +121,11 @@ export class MeshBatchExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    this.camera = new PerspectiveCamera( 70, 400 / 250, 1, 100 )
+    this.camera.name = 'Camera'
+    this.activeCamera = this.camera
+    this.turnCamera( this.timeline.currentTime )
 
     this.scene.background = new Color( 0xc1c1ff )
 
@@ -220,7 +227,15 @@ export class MeshBatchExample extends Document {
   }
 
   override onAnimate(delta: number, time: number) {
+    this.turnCamera( time )
     this.pose( time )
+  }
+
+  /** The source's `OrbitControls.autoRotate` (one turn a minute): one turn per loop, clockwise seen from above. */
+  private turnCamera(time: number) {
+    const angle = - time * 2 * Math.PI / PERIOD
+    this.camera.position.set( Math.sin( angle ) * 30, 0, Math.cos( angle ) * 30 )
+    this.camera.lookAt( 0, 0, 0 )
   }
 
   /** Spins the first `dynamic` instances about their axes. */
@@ -243,5 +258,5 @@ registerEditorConfig(MeshBatchExample, [
 
 registerEditorGroups(MeshBatchExample, {
   Main: ['count', 'dynamic', 'opacity', 'sortObjects', 'perObjectFrustumCulled', 'useCustomSort', 'randomizeGeometry'],
-  Hidden: ['mesh', 'geometries', 'material', 'ids', 'spins'],
+  Hidden: ['mesh', 'geometries', 'material', 'ids', 'spins', 'camera'],
 })

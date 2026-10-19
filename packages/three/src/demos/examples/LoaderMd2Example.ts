@@ -5,6 +5,7 @@ import {
   Fog,
   Mesh,
   MeshPhongMaterial,
+  PerspectiveCamera,
   PlaneGeometry,
   RepeatWrapping,
   SpotLight,
@@ -12,8 +13,8 @@ import {
   TextureLoader
 } from 'three/webgpu'
 import { MD2Character } from 'three/addons/misc/MD2Character.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { ioObject, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 import { ioNumberSlider } from '@io-gui/sliders'
@@ -77,8 +78,17 @@ export class LoaderMd2Example extends Document {
 
   private loaded = false
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true}), ...args})
+
+    const camera = new PerspectiveCamera( 40, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 2, 4 )
+    camera.lookAt( 0, 0.5, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x050505 )
     this.scene.fog = new Fog( 0x050505, 2.5, 10 )
@@ -165,12 +175,16 @@ export class LoaderMd2Example extends Document {
 
       this.notify({kind: 'structure'})
       character.root.updateMatrixWorld( true )
-      this.dispatch('frame-object', {object: body}, true)
+      this._frameTarget = body
     }
 
     this.character.loadParts( config )
 
     this.scene.add( this.character.root )
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   speedChanged() {

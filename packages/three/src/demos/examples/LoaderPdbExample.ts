@@ -7,11 +7,12 @@ import {
   Mesh,
   MeshPhongMaterial,
   Object3D,
+  PerspectiveCamera,
   Vector3
 } from 'three/webgpu'
 import { PDBLoader } from 'three/addons/loaders/PDBLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 
@@ -62,8 +63,18 @@ export class LoaderPdbExample extends Document {
   private boxGeometry = new BoxGeometry( 1, 1, 1 )
   private sphereGeometry = new IcosahedronGeometry( 1, 3 )
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 70, 400 / 250, 1, 5000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 1000 )
+    camera.lookAt( 0, 0, 0 )
+    this.scene.add( camera )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x050505 )
 
@@ -83,6 +94,10 @@ export class LoaderPdbExample extends Document {
 
     this.pose( this.timeline.currentTime )
     this.moleculeChanged()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   moleculeChanged() {
@@ -175,7 +190,7 @@ export class LoaderPdbExample extends Document {
 
       this.notify({kind: 'structure'})
       this.root.updateMatrixWorld( true )
-      this.dispatch('frame-object', {object: this.root}, true)
+      this._frameTarget = this.root
     } catch ( e ) {
       console.error( e )
     }

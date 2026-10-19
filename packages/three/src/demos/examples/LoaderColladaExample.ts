@@ -1,7 +1,7 @@
-import { AmbientLight, DirectionalLight, LoadingManager, Object3D } from 'three/webgpu'
+import { AmbientLight, DirectionalLight, LoadingManager, Object3D, PerspectiveCamera } from 'three/webgpu'
 import { ColladaLoader } from 'three/addons/loaders/ColladaLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
 /** Seconds of one turn of the elf: the timeline length, so looping is seamless (the source turns 0.5 rad/s). */
 const PERIOD = 4 * Math.PI
@@ -12,8 +12,17 @@ export class LoaderColladaExample extends Document {
 
   public elf?: Object3D
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 0.1, 2000 )
+    camera.name = 'Camera'
+    camera.position.set( 8, 10, 8 )
+    camera.lookAt( 0, 3, 0 )
+    this.activeCamera = camera
 
     const ambientLight = new AmbientLight( 0xffffff )
     ambientLight.name = 'Ambient'
@@ -25,6 +34,10 @@ export class LoaderColladaExample extends Document {
     this.scene.add( directionalLight )
 
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadModel() {
@@ -42,7 +55,7 @@ export class LoaderColladaExample extends Document {
       this.scene.add( this.elf )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: this.elf}, true)
+      this._frameTarget = this.elf
     } catch ( e ) {
       console.error( e )
     }

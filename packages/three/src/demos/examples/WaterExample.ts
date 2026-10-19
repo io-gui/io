@@ -34,7 +34,7 @@ const PERIOD = FLOW_CYCLE / FLOW_SPEED
  * mixed by a Fresnel term and rippled by two flowing normal maps. `color`, `scale`, `flowX` and `flowY` are in the
  * Document tab. The flow is derived from document time (the node advances it per render by wall-clock delta). Bloom
  * and FXAA post are dropped (`document-pipeline`). The ground is unselectable. The source camera, low over the deck, is
- * kept as `Camera`. `WaterNode` adds a reflector target to the water each time it builds (once per view pipeline), so
+ * the active camera. `WaterNode` adds a reflector target to the water each time it builds (once per view pipeline), so
  * the water has several unnamed children. Plays when opened.
  */
 @Register
@@ -70,11 +70,11 @@ export class WaterExample extends Document {
     void this.loadModel()
 
     // The source looks across the water from low over the deck.
-    const camera = new PerspectiveCamera( 45, 1, 0.1, 200 )
+    const camera = new PerspectiveCamera( 45, 400 / 250, 0.1, 200 )
     camera.name = 'Camera'
     camera.position.set( - 20, 6, - 30 )
     camera.lookAt( 0, 0, - 5 )
-    this.scene.add( camera )
+    this.activeCamera = camera
 
     // water
 

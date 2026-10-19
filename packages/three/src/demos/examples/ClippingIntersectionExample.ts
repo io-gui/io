@@ -6,9 +6,10 @@ import {
   HemisphereLight,
   Mesh,
   MeshPhongMaterial,
+  PerspectiveCamera,
   Plane,
-  SRGBColorSpace,
   SphereGeometry,
+  SRGBColorSpace,
   Vector3
 } from 'three/webgpu'
 import { Register, Property } from '@io-gui/core'
@@ -45,6 +46,12 @@ export class ClippingIntersectionExample extends Document {
 
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 40, 400 / 250, 1, 200 )
+    camera.name = 'Camera'
+    camera.position.set( - 1.5, 2.5, 3 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x000000 )
 

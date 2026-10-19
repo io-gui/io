@@ -5,8 +5,9 @@ import {
   Mesh,
   MeshBasicNodeMaterial,
   MeshStandardNodeMaterial,
-  SRGBColorSpace,
+  PerspectiveCamera,
   SphereGeometry,
+  SRGBColorSpace,
   TextureLoader
 } from 'three/webgpu'
 import { step, normalWorldGeometry, output, texture, vec3, vec4, normalize, positionWorld, bumpMap, cameraPosition, color, uniform, mix, uv, max } from 'three/tsl'
@@ -48,6 +49,12 @@ export class TslEarthExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 25, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 4.5, 2, 3 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x000000 )
 

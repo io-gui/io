@@ -1,4 +1,4 @@
-import { AmbientLight, BoxGeometry, DirectionalLight, Mesh, MeshPhongMaterial, SRGBColorSpace } from 'three/webgpu'
+import { AmbientLight, BoxGeometry, DirectionalLight, Mesh, MeshPhongMaterial, PerspectiveCamera, SRGBColorSpace } from 'three/webgpu'
 import { TGALoader } from 'three/addons/loaders/TGALoader.js'
 import { Register } from '@io-gui/core'
 import { Document, DocumentProps } from '@io-gui/three'
@@ -9,6 +9,12 @@ export class LoaderTextureTgaExample extends Document {
 
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 1, 5 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     // Views draw on document changes only, so report each texture when it arrives.
     const onLoad = () => this.notify({kind: 'material'})

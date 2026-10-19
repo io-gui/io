@@ -5,13 +5,14 @@ import {
   HemisphereLight,
   Matrix4,
   Mesh,
-  MeshBasicMaterial
+  MeshBasicMaterial,
+  PerspectiveCamera
 } from 'three/webgpu'
 import { NRRDLoader } from 'three/addons/loaders/NRRDLoader.js'
 import { Volume } from 'three/addons/misc/Volume.js'
 import { VolumeSlice } from 'three/addons/misc/VolumeSlice.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
@@ -22,8 +23,8 @@ const MAX_VALUE = 3952
 /**
  * A brain MRI volume from an NRRD file, cut by three axis-aligned slices (`VolumeSlice`) inside the volume's bounding box.
  * `indexX`, `indexY` and `indexZ` move the slices; `lowerThreshold`, `upperThreshold`, `windowLow` and `windowHigh`
- * shape their gray levels (Document tab). The slices paint on canvases the addon creates. The trackball camera is
- * dropped. Static.
+ * shape their gray levels (Document tab). The slices paint on canvases the addon creates. The source's camera is the active
+ * camera; its trackball is dropped. Static.
  */
 @Register
 export class LoaderNrrdExample extends Document {
@@ -54,8 +55,18 @@ export class LoaderNrrdExample extends Document {
   @Property({type: Number, value: MAX_VALUE})
   declare windowHigh: number
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 60, 400 / 250, 0.01, 1e10 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 300 )
+    camera.lookAt( 0, 0, 0 )
+    this.scene.add( camera )
+    this.activeCamera = camera
 
     // light
 
@@ -69,6 +80,10 @@ export class LoaderNrrdExample extends Document {
     this.scene.add( dirLight )
 
     void this.loadVolume()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadVolume() {
@@ -109,7 +124,7 @@ export class LoaderNrrdExample extends Document {
 
       this.notify({kind: 'structure'})
       box.updateMatrixWorld( true )
-      this.dispatch('frame-object', {object: box}, true)
+      this._frameTarget = box
     } catch ( e ) {
       console.error( e )
     }

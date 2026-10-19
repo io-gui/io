@@ -4,6 +4,7 @@ import {
   Mesh,
   MeshBasicMaterial,
   MeshNormalMaterial,
+  PerspectiveCamera,
   Quaternion,
   SphereGeometry,
   Spherical,
@@ -40,6 +41,11 @@ export class MathOrientationTransformExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: TARGETS * INTERVAL}), ...args})
+
+    const camera = new PerspectiveCamera( 70, 400 / 250, 0.01, 10 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 5 )
+    this.activeCamera = camera
 
     const geometry = new ConeGeometry( 0.1, 0.5, 8 )
     geometry.rotateX( Math.PI * 0.5 )

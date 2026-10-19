@@ -3,18 +3,23 @@ import {
   Float32BufferAttribute,
   FogExp2,
   InstancedBufferAttribute,
+  Mesh,
+  PerspectiveCamera,
   Points,
   PointsMaterial,
   PointsNodeMaterial,
-  SRGBColorSpace,
   Sprite,
+  SRGBColorSpace,
   TextureLoader,
-  WebGPURenderer
+  Vector3
 } from 'three/webgpu'
 import { instancedBufferAttribute } from 'three/tsl'
 import { Register, Property } from '@io-gui/core'
 import { Document, DocumentProps, Timeline } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
+
+/** What views frame: inside the cube, about where the source camera stands (whole-scene framing stands beyond the fog). */
+const FRAME_EXTENT = new Mesh( new BufferGeometry().setFromPoints( [ new Vector3( - 400, - 400, - 400 ), new Vector3( 400, 400, 400 ) ] ) )
 
 /** Seconds in which the hue cycles (source: 0.05 per second): the timeline length. */
 const PERIOD = 20
@@ -22,7 +27,8 @@ const PERIOD = 20
 /**
  * 10000 disc billboards in a cube under exponential fog, their hue cycling with document time. `sizeAttenuation` (Document
  * tab) shrinks distant discs. Views frame from inside the cube, as whole-scene framing would stand beyond the fog. WebGPU draws `Points` 1 px wide, so a child `Sprite` named `Sprites` draws the discs; the
- * `Points` stay for picking and framing. The pointer-driven camera is dropped. Plays when opened.
+ * `Points` stay for picking and framing. The active camera stands where the
+ * source's pointer-driven camera rests. Plays when opened.
  */
 @Register
 export class PointsBillboardsExample extends Document {
@@ -35,6 +41,12 @@ export class PointsBillboardsExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 55, 400 / 250, 2, 2000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 1000 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.fog = new FogExp2( 0x000000, 0.001 )
 
@@ -86,13 +98,8 @@ export class PointsBillboardsExample extends Document {
     this.particles.add( sprites )
   }
 
-  /**
-   * Whole-scene framing would put the views outside the cube, where the fog hides everything: frame closer, about where
-   * the source camera stands (on the cube's face), once the document is on screen.
-   */
-  override onRendererInitialized(renderer: WebGPURenderer) {
-    super.onRendererInitialized(renderer)
-    this.dispatch('frame-object', {object: this.particles, overscan: 0.4}, true)
+  override getEditorFrameTarget() {
+    return FRAME_EXTENT
   }
 
   sizeAttenuationChanged() {
