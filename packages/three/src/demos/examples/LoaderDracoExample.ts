@@ -1,14 +1,26 @@
-import { Color, Fog, HemisphereLight, Mesh, MeshLambertMaterial, MeshStandardMaterial, PlaneGeometry, SpotLight } from 'three/webgpu'
+import { Color, Fog, HemisphereLight, Mesh, MeshLambertMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, SpotLight } from 'three/webgpu'
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 
-/** The Stanford bunny decoded from a Draco-compressed file, under a soft spot light. The source's orbiting camera is dropped. */
+/**
+ * The Stanford bunny decoded from a Draco-compressed file, under a soft spot light. The active camera stands where the
+ * source's orbit starts. Static.
+ */
 @Register
 export class LoaderDracoExample extends Document {
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 35, 400 / 250, 0.1, 15 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0.25, 0.5 )
+    camera.lookAt( 0, 0.1, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x443333 )
     this.scene.fog = new Fog( 0x443333, 1, 4 )
@@ -43,6 +55,10 @@ export class LoaderDracoExample extends Document {
     void this.loadModel()
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   private async loadModel() {
     // Configure and create Draco decoder.
     const dracoLoader = new DRACOLoader()
@@ -60,7 +76,7 @@ export class LoaderDracoExample extends Document {
 
       this.notify({kind: 'structure'})
       // The bunny, not the scene: the floor spans 8 units.
-      this.dispatch('frame-object', {object: mesh}, true)
+      this._frameTarget = mesh
     } catch ( e ) {
       console.error( e )
     } finally {

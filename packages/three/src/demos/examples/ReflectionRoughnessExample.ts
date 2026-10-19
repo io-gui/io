@@ -4,6 +4,7 @@ import {
   Mesh,
   MeshStandardNodeMaterial,
   NeutralToneMapping,
+  PerspectiveCamera,
   RepeatWrapping,
   SRGBColorSpace,
   TextureLoader,
@@ -11,8 +12,8 @@ import {
 } from 'three/webgpu'
 import { Fn, vec2, vec4, texture, uv, textureBicubic, rangeFogFactor, reflector } from 'three/tsl'
 import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
 
 /** Seconds in which the roughness noise scrolls one texture width (0.1 per second): the timeline length. */
@@ -20,7 +21,8 @@ const PERIOD = 10
 
 /**
  * A UV-grid box over a metal floor whose TSL `reflector()` reflection is blurred with `textureBicubic` by a
- * scrolling noise roughness. The auto-rotating camera is dropped; the views frame the box (50-unit floor). Plays when
+ * scrolling noise roughness. The active camera stands where the source's slow auto-rotation
+ * starts; the views frame the box (50-unit floor). Plays when
  * opened.
  */
 @Register
@@ -28,8 +30,17 @@ export class ReflectionRoughnessExample extends Document {
 
   public box: Mesh
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({toneMapping: NeutralToneMapping, toneMappingExposure: 1.5, timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 50, 400 / 250, 0.25, 30 )
+    camera.name = 'Camera'
+    camera.position.set( - 4, 1, 4 )
+    camera.lookAt( 0, 0.75, 0 )
+    this.activeCamera = camera
 
     new UltraHDRLoader().load( 'https://threejs.org/examples/textures/equirectangular/spruit_sunrise_2k.hdr.jpg', ( texture ) => {
       texture.mapping = EquirectangularReflectionMapping
@@ -101,10 +112,14 @@ export class ReflectionRoughnessExample extends Document {
     this.scene.add( floor )
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   /** The 50-unit floor would dominate whole-scene framing: frame the box once the document is on screen. */
   override onRendererInitialized(renderer: WebGPURenderer) {
     super.onRendererInitialized(renderer)
-    this.dispatch('frame-object', {object: this.box}, true)
+    this._frameTarget = this.box
   }
 }
 

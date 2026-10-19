@@ -78,14 +78,15 @@ const lookAt = new Vector3()
 
 /**
  * A wireframed tube extruded along one of sixteen curves (`spline`, Document tab), with a `SplineCamera` riding inside it
- * once per timeline loop, offset along the tube's normal. Look through it with a camera view (the source's
- * `animationView`); `lookAhead` aims it at the path 30 units ahead. Its helper comes from the camera helpers overlay (the
- * source's `cameraHelper` toggle and eye sphere are dropped). Plays when opened.
+ * once per timeline loop, offset along the tube's normal. `animationView` makes it the active camera instead of the
+ * source's overview; `lookAhead` aims it at the path 30 units ahead. Its helper comes from the camera helpers overlay
+ * (the source's `cameraHelper` toggle and eye sphere are dropped). Plays when opened.
  */
 @Register
 export class GeometryExtrudeSplinesExample extends Document {
 
   public parent: Object3D
+  public camera: PerspectiveCamera
   public splineCamera: PerspectiveCamera
   public mesh?: Mesh<TubeGeometry, MeshLambertMaterial>
   private material = new MeshLambertMaterial( { color: 0xff00ff } )
@@ -107,10 +108,18 @@ export class GeometryExtrudeSplinesExample extends Document {
   declare closed: boolean
 
   @Property({type: Boolean, value: false})
+  declare animationView: boolean
+
+  @Property({type: Boolean, value: false})
   declare lookAhead: boolean
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: LOOP_TIME}), ...args})
+
+    this.camera = new PerspectiveCamera( 50, 400 / 250, 0.01, 10000 )
+    this.camera.name = 'Camera'
+    this.camera.position.set( 0, 50, 500 )
+    this.camera.lookAt( 0, 0, 0 )
 
     this.scene.background = new Color( 0xf0f0f0 )
 
@@ -131,11 +140,18 @@ export class GeometryExtrudeSplinesExample extends Document {
     this.parent.name = 'Tube'
     this.scene.add( this.parent )
 
-    this.splineCamera = new PerspectiveCamera( 84, 1, 0.01, 1000 )
+    this.splineCamera = new PerspectiveCamera( 84, 400 / 250, 0.01, 1000 )
     this.splineCamera.name = 'SplineCamera'
     this.parent.add( this.splineCamera )
 
     this.addTube()
+    this.animationViewChanged()
+  }
+
+  /** The source renders through the spline camera with `animationView`, through its overview otherwise. */
+  animationViewChanged() {
+    if ( ! this.camera ) return
+    this.activeCamera = this.animationView ? this.splineCamera : this.camera
   }
 
   splineChanged() { this.addTube() }
@@ -242,6 +258,6 @@ registerEditorConfig(GeometryExtrudeSplinesExample, [
 ])
 
 registerEditorGroups(GeometryExtrudeSplinesExample, {
-  Main: ['spline', 'scale', 'extrusionSegments', 'radiusSegments', 'closed', 'lookAhead'],
-  Hidden: ['parent', 'splineCamera', 'mesh', 'material', 'wireframeMaterial'],
+  Main: ['spline', 'scale', 'extrusionSegments', 'radiusSegments', 'closed', 'animationView', 'lookAhead'],
+  Hidden: ['parent', 'camera', 'splineCamera', 'mesh', 'material', 'wireframeMaterial'],
 })

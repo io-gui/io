@@ -1,4 +1,4 @@
-import { Mesh, NodeMaterial, Data3DTexture, RedFormat, LinearFilter, Vector3, BackSide, BoxGeometry, Texture3DNode, Node, UniformNode } from 'three/webgpu'
+import { BackSide, BoxGeometry, Data3DTexture, LinearFilter, Mesh, Node, NodeMaterial, PerspectiveCamera, RedFormat, Texture3DNode, UniformNode, Vector3 } from 'three/webgpu'
 import { Break, If, Loop, select, bool, vec3, vec4, texture3D, uniform, Fn } from 'three/tsl'
 import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js'
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js'
@@ -28,6 +28,11 @@ export class VolumePerlinExample extends Document {
 
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 60, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 2 )
+    this.activeCamera = camera
 
     const size = 128
     const data = new Uint8Array( size * size * size )

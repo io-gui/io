@@ -1,4 +1,4 @@
-import { Color, Material, Mesh, MeshBasicNodeMaterial, MeshNormalMaterial, Node, RepeatWrapping, TextureLoader } from 'three/webgpu'
+import { Color, Material, Mesh, MeshBasicNodeMaterial, MeshNormalMaterial, Node, PerspectiveCamera, RepeatWrapping, TextureLoader } from 'three/webgpu'
 import type { CodeNodeInclude } from 'three/webgpu'
 import {
   Fn,
@@ -31,7 +31,8 @@ const SPIN_PERIOD = 20
 /**
  * Seventeen teapots, each named after its node material: positions and normals as colors, textures, opacity and
  * alpha test, the camera projection, desaturation in a TSL `Fn` and in WGSL, triplanar and screen-space mapping, and a
- * blur in a TSL `Loop`. The source's orbiting camera and grid are dropped. Plays when opened.
+ * blur in a TSL `Loop`. The active camera stands where the source's slow orbit starts (a
+ * third of a turn per loop); the grid is dropped. Plays when opened.
  */
 @Register
 export class MaterialsExample extends Document {
@@ -40,6 +41,12 @@ export class MaterialsExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: SPIN_PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 2000 )
+    camera.name = 'Camera'
+    camera.position.set( 1000, 200, 0 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x000000 )
 

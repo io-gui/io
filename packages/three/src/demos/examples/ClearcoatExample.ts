@@ -5,6 +5,7 @@ import {
   Mesh,
   MeshBasicMaterial,
   MeshPhysicalMaterial,
+  PerspectiveCamera,
   PointLight,
   RepeatWrapping,
   SphereGeometry,
@@ -35,6 +36,12 @@ export class ClearcoatExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1.25, timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 27, 400 / 250, 0.25, 50 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 10 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.group = new Group()
     this.group.name = 'Spheres'

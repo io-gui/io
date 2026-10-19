@@ -1,4 +1,4 @@
-import { Color, DirectionalLight, Mesh, MeshStandardNodeMaterial, Node, PlaneGeometry, Vector2 } from 'three/webgpu'
+import { Color, DirectionalLight, Mesh, MeshStandardNodeMaterial, Node, PerspectiveCamera, PlaneGeometry, Vector2 } from 'three/webgpu'
 import { float, mx_noise_float, Loop, color, positionLocal, sin, vec3, mul, uniform, Fn, transformNormalToView } from 'three/tsl'
 import { Register, Property } from '@io-gui/core'
 import { Document, DocumentProps, threeVector2, Timeline } from '@io-gui/three'
@@ -77,6 +77,12 @@ export class TslRagingSeaExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: DURATION}), ...args})
+
+    const camera = new PerspectiveCamera( 50, 400 / 250, 0.1, 10 )
+    camera.name = 'Camera'
+    camera.position.set( 1.25, 1.25, 1.25 )
+    camera.lookAt( 0, - 0.25, 0 )
+    this.activeCamera = camera
 
     // lights
 

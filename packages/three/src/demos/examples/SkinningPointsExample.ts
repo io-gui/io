@@ -15,8 +15,8 @@ import {
 } from 'three/webgpu'
 import { color, mix, computeSkinning, objectWorldMatrix, instancedArray, instanceIndex, Fn, shapeCircle } from 'three/tsl'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
 
 /**
@@ -24,7 +24,7 @@ import { registerEditorGroups } from '@io-gui/editors'
  * into a storage buffer once per frame, and the points are colored and sized by how far they moved since the previous
  * frame. The skinned mesh is hidden. The points are an `InstancedMesh` of quads with the model's bounds, so framing
  * and culling see them (the source draws a `Sprite` with `count`). The model lies on the ground: the source camera,
- * looking down, is kept as `Camera`. The compute passes are built once outside the views' draws (`buildComputes`).
+ * looking down, is the active camera. The compute passes are built once outside the views' draws (`buildComputes`).
  * Duration = the clip. Plays when opened.
  */
 @Register
@@ -34,6 +34,9 @@ export class SkinningPointsExample extends Document {
   private renderer?: WebGPURenderer
   /** The points' compute passes, until they are built. */
   private pendingComputes: ComputeNode[] = []
+
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true}), ...args})
@@ -45,13 +48,17 @@ export class SkinningPointsExample extends Document {
     this.scene.add( ambient )
 
     // The model lies on the ground; the source looks down at it.
-    const camera = new PerspectiveCamera( 50, 1, 1, 1000 )
+    const camera = new PerspectiveCamera( 50, 400 / 250, 1, 1000 )
     camera.name = 'Camera'
     camera.position.set( 0, 300, - 85 )
     camera.lookAt( 0, 0, - 85 )
-    this.scene.add( camera )
+    this.activeCamera = camera
 
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadModel() {
@@ -130,7 +137,7 @@ export class SkinningPointsExample extends Document {
       this.buildComputes()
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: pointClouds}, true)
+      this._frameTarget = pointClouds
     } catch ( e ) {
       console.error( e )
     }

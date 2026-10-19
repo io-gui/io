@@ -6,6 +6,7 @@ import {
   MathUtils,
   Mesh,
   MeshLambertMaterial,
+  PerspectiveCamera,
   PointLight,
   Shape,
   Vector2,
@@ -23,6 +24,12 @@ export class GeometryExtrudeShapesExample extends Document {
 
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 500 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x222222 )
 

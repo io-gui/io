@@ -17,13 +17,14 @@ import {
   OneMinusDstColorFactor,
   OneMinusSrcAlphaFactor,
   OneMinusSrcColorFactor,
+  PerspectiveCamera,
   PlaneGeometry,
   RepeatWrapping,
   ReverseSubtractEquation,
-  SRGBColorSpace,
   SrcAlphaFactor,
   SrcAlphaSaturateFactor,
   SrcColorFactor,
+  SRGBColorSpace,
   SubtractEquation,
   TextureLoader,
   ZeroFactor
@@ -86,6 +87,11 @@ export class MaterialsBlendingCustomExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 80, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 700 )
+    this.activeCamera = camera
 
     // BACKGROUND
 

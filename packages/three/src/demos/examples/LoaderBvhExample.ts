@@ -1,7 +1,7 @@
-import { AnimationMixer, BoxGeometry, Color, Mesh } from 'three/webgpu'
+import { AnimationMixer, BoxGeometry, Color, Mesh, PerspectiveCamera } from 'three/webgpu'
 import { BVHLoader } from 'three/addons/loaders/BVHLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
 /**
  * A pirouette from a BVH motion capture file: a bare skeleton, drawn by the skeleton helpers overlay (the source's
@@ -13,12 +13,25 @@ export class LoaderBvhExample extends Document {
 
   public mixer?: AnimationMixer
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true}), ...args})
+
+    const camera = new PerspectiveCamera( 60, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 200, 300 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0xeeeeee )
 
     void this.loadMotion()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadMotion() {
@@ -40,7 +53,7 @@ export class LoaderBvhExample extends Document {
       const focus = new Mesh( new BoxGeometry( 120, 200, 120 ) )
       focus.position.set( 0, 90, 0 )
       focus.updateMatrixWorld()
-      this.dispatch('frame-object', {object: focus}, true)
+      this._frameTarget = focus
     } catch ( e ) {
       console.error( e )
     }

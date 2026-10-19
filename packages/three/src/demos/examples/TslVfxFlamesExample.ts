@@ -1,4 +1,4 @@
-import { Color, DataTexture, DoubleSide, RGBAFormat, Sprite, SpriteNodeMaterial, SRGBColorSpace, TextureLoader, LinearFilter } from 'three/webgpu'
+import { Color, DataTexture, DoubleSide, LinearFilter, PerspectiveCamera, RGBAFormat, Sprite, SpriteNodeMaterial, SRGBColorSpace, TextureLoader } from 'three/webgpu'
 import { TWO_PI, oneMinus, spherizeUV, sin, step, texture, Fn, uv, vec2, vec3, vec4, mix, billboarding } from 'three/tsl'
 import { Register } from '@io-gui/core'
 import { Document, DocumentProps, Timeline } from '@io-gui/three'
@@ -39,6 +39,12 @@ export class TslVfxFlamesExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 25, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 1, 1, 3 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x201919 )
 

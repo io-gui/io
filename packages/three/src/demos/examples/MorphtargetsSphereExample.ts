@@ -6,6 +6,7 @@ import {
   InterleavedBufferAttribute,
   Material,
   Mesh,
+  PerspectiveCamera,
   PointLight,
   PointsNodeMaterial,
   SphereGeometry,
@@ -15,8 +16,8 @@ import {
 import { instancedBufferAttribute, uniform } from 'three/tsl'
 import type { Node } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
 /**
  * Seconds in which the motion repeats: the timeline length, so looping is seamless. The sphere turns 0.5 rad/s, and
@@ -47,8 +48,17 @@ export class MorphtargetsSphereExample extends Document {
 
   public mesh?: Mesh<BufferGeometry, Material>
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 0.2, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 5, 5 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     const light1 = new PointLight( 0xff2200, 50000 )
     light1.name = 'Red'
@@ -65,6 +75,10 @@ export class MorphtargetsSphereExample extends Document {
     this.scene.add( ambientLight )
 
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadModel() {
@@ -118,7 +132,7 @@ export class MorphtargetsSphereExample extends Document {
       geometry.computeBoundingSphere()
       const focus = new Mesh( new SphereGeometry( geometry.boundingSphere!.radius * mesh.scale.x ) )
       focus.updateMatrixWorld()
-      this.dispatch('frame-object', {object: focus}, true)
+      this._frameTarget = focus
     } catch ( e ) {
       console.error( e )
     }

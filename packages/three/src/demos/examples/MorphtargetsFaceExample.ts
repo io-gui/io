@@ -1,10 +1,10 @@
-import { ACESFilmicToneMapping, AnimationMixer, Color, Mesh, PMREMGenerator, WebGPURenderer } from 'three/webgpu'
+import { ACESFilmicToneMapping, AnimationMixer, Color, Mesh, PerspectiveCamera, PMREMGenerator, WebGPURenderer } from 'three/webgpu'
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js'
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { ioObject, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
@@ -25,9 +25,22 @@ export class MorphtargetsFaceExample extends Document {
   /** Loads once, for the first renderer: KTX2 picks its transcode target from the renderer. */
   private loading?: Promise<void>
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({toneMapping: ACESFilmicToneMapping, timeline: new Timeline({autoplay: true}), ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 20 )
+    camera.name = 'Camera'
+    camera.position.set( - 1.8, 0.8, 3 )
+    camera.lookAt( 0, 0.15, - 0.2 )
+    this.activeCamera = camera
     this.scene.background = new Color( 0x666666 )
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   override onRendererInitialized(renderer: WebGPURenderer) {
@@ -69,7 +82,7 @@ export class MorphtargetsFaceExample extends Document {
       this.expressions = expressions
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: mesh}, true)
+      this._frameTarget = mesh
     } catch ( e ) {
       console.error( e )
     }

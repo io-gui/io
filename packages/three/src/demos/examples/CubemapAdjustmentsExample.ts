@@ -7,6 +7,7 @@ import {
   Mesh,
   MeshStandardMaterial,
   Node,
+  PerspectiveCamera,
   SphereGeometry
 } from 'three/webgpu'
 import { uniform, mix, pmremTexture, reference, positionLocal, hue, saturation, positionWorld, normalWorld, positionWorldDirection, reflectVector } from 'three/tsl'
@@ -55,6 +56,13 @@ export class CubemapAdjustmentsExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({toneMapping: LinearToneMapping, ...args})
+
+    const initialDistance = 2
+    const camera = new PerspectiveCamera( 45, 400 / 250, 0.25, 20 )
+    camera.name = 'Camera'
+    camera.position.set( - 1.8 * initialDistance, 0.6 * initialDistance, 2.7 * initialDistance )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     // scene objects
 

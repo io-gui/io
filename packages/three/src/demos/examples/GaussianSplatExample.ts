@@ -1,33 +1,36 @@
-import { BufferGeometry, Color, Euler, Loader, Mesh, Node, SRGBColorSpace } from 'three/webgpu'
+import { BufferGeometry, Color, Euler, Loader, MathUtils, Mesh, Node, PerspectiveCamera, SRGBColorSpace, Vector3 } from 'three/webgpu'
 import { colorSpaceToWorking } from 'three/tsl'
 import { SPLATLoader } from 'three/addons/loaders/SPLATLoader.js'
 import { SPZLoader } from 'three/addons/loaders/SPZLoader.js'
 import { GaussianSplat } from 'three/addons/objects/GaussianSplat.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 
 type SplatLoader = Loader<BufferGeometry> & { loadAsync( url: string ): Promise<BufferGeometry> }
 
 /** The splat files, by dropdown label. Credits are in the source example. */
-const SOURCES: Record<string, { url: string; loader: new () => SplatLoader; rotation?: Euler }> = {
+const SOURCES: Record<string, { url: string; loader: new () => SplatLoader; rotation?: Euler; cameraPosition: Vector3 }> = {
   'Millipede (SPLAT)': {
     // Fabian Plum, https://superspl.at/scene/3d5482d4, CC Attribution
     url: 'https://threejs.org/examples/models/splat/millipede.splat',
     loader: SPLATLoader as new () => SplatLoader,
     rotation: new Euler( - Math.PI * - 1.10, Math.PI * - 0.10, Math.PI * 0.15 ),
+    cameraPosition: new Vector3( 0, 0.4, 1 ),
   },
   'Lion (SPZ)': {
     // Renaud, https://superspl.at/scene/56155c3f, CC Attribution
     url: 'https://threejs.org/examples/models/spz/lion.v3.spz',
     loader: SPZLoader as new () => SplatLoader,
     rotation: new Euler( Math.PI, 0, 0 ),
+    cameraPosition: new Vector3( 0, 0.2, 1 ),
   },
   'Tomatoes (SPZ v4)': {
     // Grail, https://superspl.at/scene/2826d2c0, CC Attribution
     url: 'https://threejs.org/examples/models/spz/tomatoes.v4.spz',
     loader: SPZLoader as new () => SplatLoader,
+    cameraPosition: new Vector3( 0, 0.35, 1 ),
   },
 }
 
@@ -43,14 +46,29 @@ export class GaussianSplatExample extends Document {
 
   public splats?: GaussianSplat
   private loadCount = 0
+  private camera: PerspectiveCamera
 
   @Property({type: String, value: 'Lion (SPZ)'})
   declare source: string
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    this.camera = new PerspectiveCamera( 50, 400 / 250, 0.01, 100 )
+    this.camera.name = 'Camera'
+    this.camera.position.set( 0, 0.35, 3.2 )
+    this.camera.lookAt( 0, 0, 0 )
+    this.activeCamera = this.camera
+
     this.scene.background = new Color( 0x07080f )
     this.sourceChanged()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   sourceChanged() {
@@ -73,6 +91,7 @@ export class GaussianSplatExample extends Document {
       this.splats.material.colorNode = colorSpaceToWorking( this.splats.material.colorNode as Node<'vec4'>, SRGBColorSpace ) as unknown as Node<'vec4'>
       if ( source.rotation !== undefined ) this.splats.rotation.copy( source.rotation )
       this.scene.add( this.splats )
+      this.fitCameraToSplats( splatData, source.cameraPosition )
 
       this.notify({kind: 'structure'})
 
@@ -81,10 +100,25 @@ export class GaussianSplatExample extends Document {
       this.splats.updateMatrixWorld()
       this.splats.computeBoundingBox()
       const box = this.splats.boundingBox!.clone().applyMatrix4( this.splats.matrixWorld )
-      this.dispatch('frame-object', {object: new Mesh( new BufferGeometry().setFromPoints( [ box.min, box.max ] ) )}, true)
+      this._frameTarget = new Mesh( new BufferGeometry().setFromPoints( [ box.min, box.max ] ) )
     } catch ( e ) {
       console.error( e )
     }
+  }
+
+  /** The source's `fitCameraToSplats`: the active camera at the splats' bounding sphere, from `direction`. */
+  private fitCameraToSplats( splatData: BufferGeometry, direction: Vector3 ) {
+    const camera = this.camera
+    this.splats!.updateWorldMatrix( true, false )
+    const sphere = splatData.boundingSphere!.clone().applyMatrix4( this.splats!.matrixWorld )
+    const radius = Math.max( sphere.radius, 0.01 )
+    const distance = radius / Math.sin( MathUtils.degToRad( camera.fov ) * 0.5 )
+
+    camera.position.copy( direction ).normalize().multiplyScalar( distance * 1.15 ).add( sphere.center )
+    camera.lookAt( sphere.center )
+    camera.near = Math.max( distance / 1000, 0.001 )
+    camera.far = Math.max( distance * 10, 10 )
+    camera.updateProjectionMatrix()
   }
 
   private disposeCurrentSplats() {
@@ -103,5 +137,5 @@ registerEditorConfig(GaussianSplatExample, [
 
 registerEditorGroups(GaussianSplatExample, {
   Main: ['source'],
-  Hidden: ['splats', 'loadCount'],
+  Hidden: ['splats', 'loadCount', 'camera'],
 })

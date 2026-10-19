@@ -1,14 +1,17 @@
-import { AmbientLight, AnimationMixer, LinearToneMapping, PointLight } from 'three/webgpu'
+import { AmbientLight, AnimationMixer, LinearToneMapping, PerspectiveCamera, PointLight } from 'three/webgpu'
 import { color, screenUV } from 'three/tsl'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
 /** The skinned, animated Michelle model over a blue gradient background. Plays when opened. */
 @Register
 export class SkinningExample extends Document {
 
   public mixer?: AnimationMixer
+
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
 
   constructor(args?: DocumentProps) {
     super({toneMapping: LinearToneMapping, toneMappingExposure: 0.4, timeline: new Timeline({autoplay: true}), ...args})
@@ -17,18 +20,27 @@ export class SkinningExample extends Document {
 
     //lights
 
-    // The source attaches the light to its camera at (1, 2, 3).
+    const camera = new PerspectiveCamera( 50, 400 / 250, 0.01, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 1, 2, 3 )
+    camera.lookAt( 0, 1, 0 )
+    this.scene.add( camera )
+    this.activeCamera = camera
+
     const light = new PointLight( 0xffffff, 1, 100 )
     light.name = 'Point'
     light.power = 2500
-    light.position.set( 1, 2, 3 )
-    this.scene.add( light )
+    camera.add( light )
 
     const ambient = new AmbientLight( 0x4466ff, 1 )
     ambient.name = 'Ambient'
     this.scene.add( ambient )
 
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadModel() {
@@ -44,7 +56,7 @@ export class SkinningExample extends Document {
       this.scene.add( object )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object}, true)
+      this._frameTarget = object
     } catch ( e ) {
       console.error( e )
     }

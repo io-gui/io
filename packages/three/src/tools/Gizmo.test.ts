@@ -11,8 +11,8 @@ function createHost(editor: Editor): Host {
   view.setAxisView('front')
   const tags: string[] = []
   Object.assign(element, {
-    view, editor, tags, scene: editor.document.scene, selection: editor.selection,
-    getViewCamera: () => view.getCamera(200, 100, editor.document.scene),
+    view, editor, tags, scene: editor.document.scene, document: editor.document, selection: editor.selection,
+    getViewCamera: () => view.getCamera(200, 100, editor.document),
     tag: (reason: string) => tags.push(reason),
   })
   Object.defineProperty(element, 'inputRouter', {value: new InputRouter(element)})

@@ -10,6 +10,7 @@ import {
   Mesh,
   MeshBasicNodeMaterial,
   MeshStandardNodeMaterial,
+  PerspectiveCamera,
   Vector3
 } from 'three/webgpu'
 import { Flow } from 'three/addons/modifiers/CurveModifierGPU.js'
@@ -42,6 +43,12 @@ export class ModifierCurveExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 40, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( 2, 2, 4 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     const initialPoints = [
       { x: 1, y: 0, z: - 1 },

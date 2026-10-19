@@ -1,4 +1,4 @@
-import { Mesh, MeshBasicMaterial, PlaneGeometry, SRGBColorSpace } from 'three/webgpu'
+import { Mesh, MeshBasicMaterial, PerspectiveCamera, PlaneGeometry, SRGBColorSpace } from 'three/webgpu'
 import { TIFFLoader } from 'three/addons/loaders/TIFFLoader.js'
 import { Register } from '@io-gui/core'
 import { Document, DocumentProps } from '@io-gui/three'
@@ -9,6 +9,11 @@ export class LoaderTextureTiffExample extends Document {
 
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 0.01, 10 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 4 )
+    this.activeCamera = camera
 
     // Views draw on document changes only, so report each texture when it arrives.
     const onLoad = () => this.notify({kind: 'material'})

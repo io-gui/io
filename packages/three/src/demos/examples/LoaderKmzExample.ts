@@ -1,14 +1,24 @@
-import { Color, DirectionalLight } from 'three/webgpu'
+import { Color, DirectionalLight, PerspectiveCamera } from 'three/webgpu'
 import { KMZLoader } from 'three/addons/loaders/KMZLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 
 /** A box from a KMZ archive (zipped Collada). The source's grid is dropped. */
 @Register
 export class LoaderKmzExample extends Document {
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 35, 400 / 250, 1, 500 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 5, 10 )
+    camera.lookAt( 0, 0, 0 )
+    this.scene.add( camera )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x999999 )
 
@@ -20,6 +30,10 @@ export class LoaderKmzExample extends Document {
     void this.loadModel()
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   private async loadModel() {
     try {
       const kmz = await new KMZLoader().loadAsync( 'https://threejs.org/examples/models/kmz/Box.kmz' )
@@ -28,7 +42,7 @@ export class LoaderKmzExample extends Document {
       this.scene.add( kmz.scene )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: kmz.scene}, true)
+      this._frameTarget = kmz.scene
     } catch ( e ) {
       console.error( e )
     }

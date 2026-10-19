@@ -21,7 +21,7 @@ import { Document, DocumentProps } from '@io-gui/three'
 /**
  * Three point lights with `LensflareMesh` flares among 3000 boxes spread over 16000 units. The flares are drawn in
  * screen space by each view at its own size, and hidden where the boxes occlude the lights. `FlyControls` are dropped;
- * the source camera is kept as `Camera`, inside the field looking at the lights. The boxes are one `InstancedMesh`
+ * the source camera is the active camera, inside the field looking at the lights. The boxes are one `InstancedMesh`
  * (the source adds 3000 meshes). Static.
  */
 @Register
@@ -106,9 +106,9 @@ export class LensflaresExample extends Document {
     addLight( 'Red', 0.995, 0.5, 0.95, 5000, 5000, - 1000 )
 
     // The flares are seen from inside the field, facing the lights.
-    const camera = new PerspectiveCamera( 40, 1, 1, 15000 )
+    const camera = new PerspectiveCamera( 40, 400 / 250, 1, 15000 )
     camera.name = 'Camera'
     camera.position.z = 250
-    this.scene.add( camera )
+    this.activeCamera = camera
   }
 }

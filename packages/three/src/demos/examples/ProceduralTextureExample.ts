@@ -1,4 +1,4 @@
-import { Mesh, MeshBasicNodeMaterial, PlaneGeometry } from 'three/webgpu'
+import { Mesh, MeshBasicNodeMaterial, OrthographicCamera, PlaneGeometry } from 'three/webgpu'
 import { checker, uv, uniform, convertToTexture } from 'three/tsl'
 import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js'
 import { Register, Property } from '@io-gui/core'
@@ -9,7 +9,7 @@ import { ioNumberSlider } from '@io-gui/sliders'
 /**
  * A plane whose material renders a procedural checker into a 512² texture (`convertToTexture`) and blurs that
  * texture. The UV scale (before the render to texture), blur amount (after it) and auto update are in the Document
- * tab. The source's orthographic camera is dropped.
+ * tab. The source's orthographic camera is the active camera.
  */
 @Register
 export class ProceduralTextureExample extends Document {
@@ -30,6 +30,12 @@ export class ProceduralTextureExample extends Document {
 
   constructor(args?: DocumentProps) {
     super(args)
+
+    const aspect = 400 / 250
+    const camera = new OrthographicCamera( - aspect, aspect, 1, - 1, 0, 2 )
+    camera.name = 'Camera'
+    camera.position.z = 1
+    this.activeCamera = camera
 
     // procedural to texture
 

@@ -60,8 +60,9 @@ export type RenderSchedulerOptions = {
 }
 
 /**
- * The only thing that renders (ADR-0003). Each frame it collects changes into typed dirty tags (and hands them to
- * change listeners), ticks playing editors, evaluates each scene once and draws tagged views within a frame budget.
+ * The only thing that renders (ADR-0003). Each frame it ticks playing editors, collects changes into typed dirty tags
+ * (and hands them to change listeners), evaluates each scene once, lets documents do their GPU work for the frame
+ * (`onBeforeDraw`) and draws tagged views within a frame budget.
  */
 export class RenderScheduler {
 
@@ -172,6 +173,22 @@ export class RenderScheduler {
         scene.updateMatrixWorld()
         scenes.set(scene, scene.matrixWorldAutoUpdate)
         scene.matrixWorldAutoUpdate = false
+      }
+    }
+
+    // Documents do the frame's GPU work once per renderer, before views draw what changed in them.
+    const prepared = new Map<Document, Set<WebGPURenderer>>()
+    for (const view of drawList) {
+      const document = view.document
+      if (!document || !this._views.get(view)!.has('content')) continue
+      let renderers = prepared.get(document)
+      if (!renderers) prepared.set(document, renderers = new Set())
+      if (renderers.has(view.renderer)) continue
+      renderers.add(view.renderer)
+      try {
+        document._beforeDraw(view.renderer)
+      } catch (e) {
+        console.error(e)
       }
     }
 

@@ -1,8 +1,8 @@
-import { BufferGeometry, Color, InstancedBufferAttribute, InstancedMesh, PlaneGeometry, Points, PointsMaterial, PointsNodeMaterial, Sphere } from 'three/webgpu'
+import { BufferGeometry, Color, InstancedBufferAttribute, InstancedMesh, PerspectiveCamera, PlaneGeometry, Points, PointsMaterial, PointsNodeMaterial, Sphere } from 'three/webgpu'
 import { instancedBufferAttribute, materialColor } from 'three/tsl'
 import { PCDLoader } from 'three/addons/loaders/PCDLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 import { ioNumberSlider } from '@io-gui/sliders'
@@ -40,9 +40,23 @@ export class LoaderPcdExample extends Document {
   /** Counts loads, so a slow file does not replace a newer pick. */
   private loads = 0
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 30, 400 / 250, 0.01, 40 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 1 )
+    camera.lookAt( 0, 0, 0 )
+    this.scene.add( camera )
+    this.activeCamera = camera
     this.fileChanged()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   fileChanged() {
@@ -95,7 +109,7 @@ export class LoaderPcdExample extends Document {
       this.colorMutated()
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: points}, true)
+      this._frameTarget = points
     } catch ( e ) {
       console.error( e )
     }

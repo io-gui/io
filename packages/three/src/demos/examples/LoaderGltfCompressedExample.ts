@@ -1,17 +1,20 @@
-import { Color, PointLight, ReinhardToneMapping, WebGPURenderer } from 'three/webgpu'
+import { Color, PerspectiveCamera, PointLight, ReinhardToneMapping, WebGPURenderer } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js'
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 
 /**
  * A coffee machine glTF with KTX2 (Basis) textures and Meshopt-compressed geometry. The file loads in
- * `onRendererInitialized`, after `detectSupport` picks the texture format. The source attaches its light to the camera;
- * here it stands at the source camera's position. Static.
+ * `onRendererInitialized`, after `detectSupport` picks the texture format. The light rides on the source's
+ * camera, the active camera. Static.
  */
 @Register
 export class LoaderGltfCompressedExample extends Document {
+
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
 
   constructor(args?: DocumentProps) {
     super({toneMapping: ReinhardToneMapping, toneMappingExposure: 1, ...args})
@@ -20,11 +23,21 @@ export class LoaderGltfCompressedExample extends Document {
 
     //lights
 
+    const camera = new PerspectiveCamera( 50, 400 / 250, 1, 20 )
+    camera.name = 'Camera'
+    camera.position.set( 2, 2, 2 )
+    camera.lookAt( 0, 0, 0 )
+    this.scene.add( camera )
+    this.activeCamera = camera
+
     const light = new PointLight( 0xffffff )
     light.name = 'Point'
     light.power = 1300
-    light.position.set( 2, 2, 2 )
-    this.scene.add( light )
+    camera.add( light )
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   override onRendererInitialized(renderer: WebGPURenderer) {
@@ -49,7 +62,7 @@ export class LoaderGltfCompressedExample extends Document {
       this.scene.add( gltfScene )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: gltfScene}, true)
+      this._frameTarget = gltfScene
     } catch ( e ) {
       console.error( e )
     }

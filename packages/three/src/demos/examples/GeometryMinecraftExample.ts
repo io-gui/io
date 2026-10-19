@@ -50,7 +50,7 @@ function generateHeight( width: number, height: number ) {
 
 /**
  * A 128 × 128 block terrain from Perlin noise, merged into one mesh of only the visible block faces and textured from a
- * Minecraft atlas. `FirstPersonControls` are dropped: the source camera is kept as `Camera`, standing above the middle of
+ * Minecraft atlas. `FirstPersonControls` are dropped: the source camera is the active camera, standing above the middle of
  * the world. Static.
  */
 @Register
@@ -67,10 +67,10 @@ export class GeometryMinecraftExample extends Document {
 
     }
 
-    const camera = new PerspectiveCamera( 60, 1, 1, 20000 )
+    const camera = new PerspectiveCamera( 60, 400 / 250, 1, 20000 )
     camera.name = 'Camera'
     camera.position.y = getY( worldHalfWidth, worldHalfDepth ) * 100 + 100
-    this.scene.add( camera )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0xbfd1e5 )
 

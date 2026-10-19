@@ -1,4 +1,4 @@
-import { BufferGeometry, CatmullRomCurve3, Color, Float32BufferAttribute, Fog, Line, LineDashedMaterial, LineSegments, Vector3 } from 'three/webgpu'
+import { BufferGeometry, CatmullRomCurve3, Color, Float32BufferAttribute, Fog, Line, LineDashedMaterial, LineSegments, PerspectiveCamera, Vector3 } from 'three/webgpu'
 import * as GeometryUtils from 'three/addons/utils/GeometryUtils.js'
 import { Register } from '@io-gui/core'
 import { Document, DocumentProps, Timeline } from '@io-gui/three'
@@ -66,6 +66,11 @@ export class LinesDashedExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 60, 400 / 250, 1, 200 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 150 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x111111 )
     this.scene.fog = new Fog( 0x111111, 150, 200 )

@@ -1,4 +1,4 @@
-import { Property, Register } from '@io-gui/core'
+import { Property, Register, Field } from '@io-gui/core'
 import {
   AnimationAction,
   AnimationClip,
@@ -14,7 +14,7 @@ import {
   PlaneGeometry,
 } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { ioObject, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
@@ -72,7 +72,6 @@ export class AnimationSkinningBlendingExample extends Document {
   @Property({type: Number, value: 0})
   declare runWeight: number
 
-  public camera: PerspectiveCamera
   public model?: Group
   public mixer: AnimationMixer = new AnimationMixer(new Group())
   public actions: Record<string, AnimationAction> = {}
@@ -83,15 +82,18 @@ export class AnimationSkinningBlendingExample extends Document {
   /** Mixer time at which the running crossfade ends; Infinity while none runs or one waits for a loop end. */
   private crossfadeEnd = Infinity
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true}), ...args})
 
     // Camera
-    this.camera = new PerspectiveCamera( 45, 1, 1, 100 )
-    this.camera.name = 'Camera'
-    this.camera.position.set( 1, 2, - 3 )
-    this.camera.lookAt( 0, 1, 0 )
-    this.scene.add(this.camera)
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 1, 2, - 3 )
+    camera.lookAt( 0, 1, 0 )
+    this.activeCamera = camera
 
     // Scene setup
     this.scene.background = new Color(0xa0a0a0)
@@ -128,6 +130,10 @@ export class AnimationSkinningBlendingExample extends Document {
     void this.loadModel()
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   private async loadModel() {
     const gltf = await loadGltf('https://threejs.org/examples/models/gltf/Soldier.glb')
     const model = gltf.scene
@@ -157,7 +163,7 @@ export class AnimationSkinningBlendingExample extends Document {
     this.updateWeights()
 
     this.notify({kind: 'structure'})
-    this.dispatch('frame-object', {object: model}, true)
+    this._frameTarget = model
   }
 
   showModelChanged() {
@@ -291,7 +297,6 @@ registerEditorGroups(AnimationSkinningBlendingExample, {
     'customDuration',
   ],
   Hidden: [
-    'camera',
     'actions',
     'model',
     'isCrossfading',

@@ -8,20 +8,33 @@ import {
   Mesh,
   MeshPhongMaterial,
   MeshStandardMaterial,
+  PerspectiveCamera,
   PlaneGeometry
 } from 'three/webgpu'
 import { PLYLoader } from 'three/addons/loaders/PLYLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 
-/** Two PLY files on a floor: ASCII dolphins and the binary Lucy statue. The source's orbiting camera is dropped. */
+/**
+ * Two PLY files on a floor: ASCII dolphins and the binary Lucy statue. The active camera stands where the source's orbit
+ * starts.
+ */
 @Register
 export class LoaderPlyExample extends Document {
 
   public models: Group
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 35, 400 / 250, 1, 15 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0.15, 2.5 )
+    camera.lookAt( 0, - 0.1, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x72645b )
     this.scene.fog = new Fog( 0x72645b, 2, 15 )
@@ -53,6 +66,10 @@ export class LoaderPlyExample extends Document {
     this.addShadowedLight( 'Fill', 0.5, 1, - 1, 0xffd500, 3 )
 
     void this.loadModels()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private addShadowedLight(name: string, x: number, y: number, z: number, color: ColorRepresentation, intensity: number) {
@@ -114,7 +131,7 @@ export class LoaderPlyExample extends Document {
 
       this.notify({kind: 'structure'})
       // The models, not the scene: the floor spans 40 units.
-      this.dispatch('frame-object', {object: this.models}, true)
+      this._frameTarget = this.models
     } catch ( e ) {
       console.error( e )
     }

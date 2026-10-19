@@ -1,7 +1,7 @@
-import { BufferGeometryLoader, Color, DynamicDrawUsage, InstancedMesh, MeshBasicMaterial, Object3D } from 'three/webgpu'
+import { BufferGeometryLoader, Color, DynamicDrawUsage, InstancedMesh, MeshBasicMaterial, Object3D, PerspectiveCamera } from 'three/webgpu'
 import { mix, range, normalWorld, oscSine } from 'three/tsl'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
@@ -27,9 +27,22 @@ export class InstanceMeshExample extends Document {
   @Property({type: Number, value: count})
   declare instanceCount: number
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 60, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( amount * 0.9, amount * 0.9, amount * 0.9 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadModel() {
@@ -55,7 +68,7 @@ export class InstanceMeshExample extends Document {
       this.pose( this.timeline.currentTime )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: mesh}, true)
+      this._frameTarget = mesh
     } catch ( e ) {
       console.error( e )
     }

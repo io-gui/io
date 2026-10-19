@@ -8,23 +8,24 @@ import {
   Float32BufferAttribute,
   Mesh,
   MeshLambertMaterial,
+  PerspectiveCamera,
   PointLight,
-  SRGBColorSpace,
   Sprite,
   SpriteMaterial,
+  SRGBColorSpace,
   Vector3
 } from 'three/webgpu'
 import { Lut } from 'three/addons/math/Lut.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 
 /**
  * A pressure field on a mesh colored through a lookup table (`Lut`), with `colorMap` (rainbow, cool to warm, black body,
  * grayscale) in the Document tab. The source draws the color scale in a second, orthographic scene over the view; here
- * it is a `Legend` sprite beside the model, painted on an `OffscreenCanvas`. The camera's light is a point light at the
- * source camera's position. Static.
+ * it is a `Legend` sprite beside the model, painted on an `OffscreenCanvas`. The light rides on the source's perspective
+ * camera, the active camera. Static.
  */
 @Register
 export class GeometryColorsLookuptableExample extends Document {
@@ -37,6 +38,9 @@ export class GeometryColorsLookuptableExample extends Document {
 
   @Property({type: String, value: 'rainbow'})
   declare colorMap: string
+
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
 
   constructor(args?: DocumentProps) {
     super(args)
@@ -62,15 +66,27 @@ export class GeometryColorsLookuptableExample extends Document {
       vertexColors: true
     } ) )
     this.mesh.name = 'Pressure'
+    // Its geometry arrives with the model.
+    this.mesh.visible = false
     this.scene.add( this.mesh )
 
-    // The source attaches its light to the camera at (0, 0, 10).
+    // The source's perspective camera, carrying the light (its orthographic camera draws the color scale).
+    const camera = new PerspectiveCamera( 60, 400 / 250, 1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 10 )
+    camera.lookAt( 0, 0, 0 )
+    this.scene.add( camera )
+    this.activeCamera = camera
+
     const pointLight = new PointLight( 0xffffff, 3, 0, 0 )
     pointLight.name = 'Camera Light'
-    pointLight.position.set( 0, 0, 10 )
-    this.scene.add( pointLight )
+    camera.add( pointLight )
 
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   colorMapChanged() {
@@ -97,6 +113,7 @@ export class GeometryColorsLookuptableExample extends Document {
 
       this.mesh.geometry.dispose()
       this.mesh.geometry = geometry
+      this.mesh.visible = true
 
       // The legend stands right of the model, as tall as it, eight times taller than wide.
       const box = new Box3().setFromBufferAttribute( geometry.attributes.position as Float32BufferAttribute )
@@ -108,7 +125,7 @@ export class GeometryColorsLookuptableExample extends Document {
       this.updateColors()
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: [ this.mesh, this.sprite ]}, true)
+      this._frameTarget = [ this.mesh, this.sprite ]
     } catch ( e ) {
       console.error( e )
     }

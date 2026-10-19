@@ -8,6 +8,7 @@ import {
   Material,
   Mesh,
   MeshBasicMaterial,
+  PerspectiveCamera,
   RGBAFormat,
   SRGBColorSpace,
   Texture,
@@ -59,6 +60,11 @@ export class LoaderTextureDdsExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 50, 400 / 250, 1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 0, - 2, 16 )
+    this.activeCamera = camera
 
     const geometry = new BoxGeometry( 2, 2, 2 )
 

@@ -39,7 +39,6 @@ export const allClasses = {
   Core: {
     eventDispatcher: new THREE.EventDispatcher(),
     object3D: new THREE.Object3D(),
-    clock: new THREE.Clock(),
     timer: new THREE.Timer(),
     layers: new THREE.Layers(),
     raycaster: new THREE.Raycaster(),

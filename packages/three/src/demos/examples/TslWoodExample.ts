@@ -10,6 +10,7 @@ import {
   MeshStandardMaterial,
   NeutralToneMapping,
   Node,
+  PerspectiveCamera,
   Vector3
 } from 'three/webgpu'
 import * as TSL from 'three/tsl'
@@ -18,8 +19,8 @@ import { Font, FontLoader } from 'three/addons/loaders/FontLoader.js'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js'
 import { WoodNodeMaterial, WoodGenuses, Finishes } from 'three/addons/materials/WoodNodeMaterial.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { ioObject, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
@@ -118,8 +119,17 @@ export class TslWoodExample extends Document {
   @Property({type: Object, init: null})
   declare custom: Record<string, number | Color>
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({toneMapping: NeutralToneMapping, toneMappingExposure: 1.0, ...args})
+
+    const camera = new PerspectiveCamera( 75, 400 / 250, 0.1, 1000 )
+    camera.name = 'Camera'
+    camera.position.set( - 0.1, 5, 0.548 )
+    camera.lookAt( 0, 0, 0.548 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0xffffff )
 
@@ -159,6 +169,10 @@ export class TslWoodExample extends Document {
     this.customMaterial = this.addCustomWood()
 
     void this.loadLabels()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private addCustomWood() {
@@ -239,7 +253,7 @@ export class TslWoodExample extends Document {
 
       this.notify({kind: 'structure'})
       // The 40-unit floor would dominate whole-scene framing.
-      this.dispatch('frame-object', {object: this.base}, true)
+      this._frameTarget = this.base
     } catch ( e ) {
       console.error( e )
     }

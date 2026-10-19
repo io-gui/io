@@ -13,8 +13,8 @@ import {
   WebGPURenderer
 } from 'three/webgpu'
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 
 const worldWidth = 256, worldDepth = 256
 
@@ -115,13 +115,16 @@ function generateTexture( data: Uint8Array, width: number, height: number, rando
 
 /**
  * A 7500-unit terrain from Perlin noise, with baked shading painted on an `OffscreenCanvas`, in dense exponential fog.
- * `FirstPersonControls` are dropped: the source camera is kept as `Camera`. Whole-scene framing would stand beyond the
+ * `FirstPersonControls` are dropped: the source camera is the active camera. Whole-scene framing would stand beyond the
  * fog, so views frame what the source camera looks at. Static.
  */
 @Register
 export class GeometryTerrainExample extends Document {
 
   public mesh: Mesh<PlaneGeometry, MeshBasicMaterial>
+
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
 
   constructor(args?: DocumentProps) {
     super(args)
@@ -132,11 +135,11 @@ export class GeometryTerrainExample extends Document {
     const random = seededRandom()
     const data = generateHeight( worldWidth, worldDepth, random )
 
-    const camera = new PerspectiveCamera( 60, 1, 1, 10000 )
+    const camera = new PerspectiveCamera( 60, 400 / 250, 1, 10000 )
     camera.name = 'Camera'
     camera.position.set( 100, 800, - 800 )
     camera.lookAt( - 100, 810, - 800 )
-    this.scene.add( camera )
+    this.activeCamera = camera
 
     const geometry = new PlaneGeometry( 7500, 7500, worldWidth - 1, worldDepth - 1 )
     geometry.rotateX( - Math.PI / 2 )
@@ -162,6 +165,10 @@ export class GeometryTerrainExample extends Document {
     this.scene.add( this.mesh )
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   /**
    * Whole-scene framing would put the views far outside the terrain, where the fog hides everything: frame a detached
    * stand-in 300 units ahead of the source camera, so the views open about where it stands, once the document is on
@@ -172,6 +179,6 @@ export class GeometryTerrainExample extends Document {
     const focus = new Mesh( new BoxGeometry( 150, 150, 150 ) )
     focus.position.set( - 200, 810, - 800 )
     focus.updateMatrixWorld()
-    this.dispatch('frame-object', {object: focus}, true)
+    this._frameTarget = focus
   }
 }

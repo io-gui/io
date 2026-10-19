@@ -6,6 +6,7 @@ import {
   Mesh,
   MeshLambertMaterial,
   Node,
+  PerspectiveCamera,
   PlaneGeometry,
   ProjectorLight,
   SRGBColorSpace,
@@ -14,8 +15,8 @@ import {
 } from 'three/webgpu'
 import { Fn, color, mx_worley_noise_float } from 'three/tsl'
 import { PLYLoader } from 'three/addons/loaders/PLYLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 import { ioNumberSlider } from '@io-gui/sliders'
@@ -69,8 +70,17 @@ export class LightsProjectorExample extends Document {
   @Property({type: Boolean, value: true})
   declare shadows: boolean
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({toneMapping: ACESFilmicToneMapping, timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 40, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 7, 4, 1 )
+    camera.lookAt( 0, 1, 0 )
+    this.activeCamera = camera
 
     // Lights
 
@@ -123,6 +133,10 @@ export class LightsProjectorExample extends Document {
     this.pose( this.timeline.currentTime )
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   private async loadModel() {
     try {
       const geometry = await new PLYLoader().loadAsync( 'https://threejs.org/examples/models/ply/binary/Lucy100k.ply' )
@@ -140,7 +154,7 @@ export class LightsProjectorExample extends Document {
 
       this.notify({kind: 'structure'})
       // The 200-unit floor would dominate whole-scene framing.
-      this.dispatch('frame-object', {object: mesh}, true)
+      this._frameTarget = mesh
     } catch ( e ) {
       console.error( e )
     }

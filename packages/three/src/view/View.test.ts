@@ -1,6 +1,13 @@
 import { describe, it, expect, vi } from 'vitest'
-import { View, ViewNavigation } from '@io-gui/three'
-import { Box3, BoxGeometry, BufferAttribute, Mesh, OrthographicCamera, PerspectiveCamera, PlaneGeometry, Scene, Vector3 } from 'three/webgpu'
+import { Document, View, ViewNavigation } from '@io-gui/three'
+import { Box3, BoxGeometry, BufferAttribute, Mesh, Object3D, OrthographicCamera, PerspectiveCamera, PlaneGeometry, Scene, Vector3 } from 'three/webgpu'
+
+/** A document whose scene holds `objects`. */
+function documentWith(...objects: Object3D[]) {
+  const document = new Document()
+  if (objects.length) document.scene.add(...objects)
+  return document
+}
 
 function forwardOf(camera: PerspectiveCamera | OrthographicCamera) {
   return new Vector3(0, 0, -1).applyQuaternion(camera.quaternion)
@@ -162,11 +169,66 @@ describe('View', () => {
     const view = new View({overscan: 1})
     view.setAxisView('left')
     view.frame(scene)
-    const camera = view.getCamera(400, 400, scene) as OrthographicCamera
+    const camera = view.getCamera(400, 400, null) as OrthographicCamera
     expect(camera).toBeInstanceOf(OrthographicCamera)
     // Box seen from the left is 6 deep (z) by 4 high (y): half extent 3 fits the larger side.
     expect(camera.top).toBeCloseTo(3, 5)
     expect(camera.right).toBeCloseTo(3, 5)
+    view.dispose()
+  })
+
+  it('frames the document by itself, again when its frame target changes, until navigated or framed on request', () => {
+    const floor = new Mesh(new BoxGeometry(100, 1, 100))
+    const model = new Mesh(new BoxGeometry(1, 1, 1))
+    model.position.set(-20, 0, 0)
+    const document = documentWith(floor)
+    let target: Object3D | null = null
+    document.getEditorFrameTarget = () => target
+    const view = new View()
+    const framings = vi.fn()
+    view.addEventListener('navigation-changed', framings)
+
+    view.autoFrame(document)
+    expect(view.navigation.target.x).toBeCloseTo(0, 5)
+    view.autoFrame(document)
+    expect(framings).toHaveBeenCalledTimes(1)
+
+    document.scene.add(model)
+    document.scene.updateMatrixWorld(true)
+    target = model
+    view.autoFrame(document)
+    expect(view.navigation.target.x).toBeCloseTo(-20, 5)
+    expect(framings).toHaveBeenCalledTimes(2)
+
+    // Restored per document, still framing itself.
+    view.switchDocument('a', 'b')
+    view.switchDocument('b', 'a')
+    expect(view.navigation.autoFramed).toBe(model.uuid)
+
+    view.navigation.orbit(0.1, 0)
+    view.markNavigationChanged()
+    target = null
+    view.autoFrame(document)
+    expect(view.navigation.target.x).toBeCloseTo(-20, 5)
+
+    const requested = new View()
+    requested.frame(floor)
+    target = model
+    requested.autoFrame(document)
+    expect(requested.navigation.target.x).toBeCloseTo(0, 5)
+    view.dispose()
+    requested.dispose()
+  })
+
+  it('frames the editor frame target of a document, or its scene when it names none', () => {
+    const model = new Mesh()
+    const document = documentWith(model)
+    const view = new View()
+    expect(view.getFrameTarget(document)).toBe(document.scene)
+    document.getEditorFrameTarget = () => []
+    expect(view.getFrameTarget(document)).toBe(document.scene)
+    document.getEditorFrameTarget = () => model
+    expect(view.getFrameTarget(document)).toBe(model)
     view.dispose()
   })
 
@@ -185,74 +247,95 @@ describe('View', () => {
     view.dispose()
   })
 
-  it('looks for the requested scene camera in each document it is switched to', () => {
-    const first = new Scene()
-    const firstCamera = new PerspectiveCamera()
-    first.add(firstCamera)
-    const second = new Scene()
+  it('follows the document\'s active camera in each document, in or outside the scene', () => {
+    const first = documentWith(new PerspectiveCamera())
+    const outside = new PerspectiveCamera(40, 1.5, 0.1, 100)
+    outside.position.set(1, 2, 3)
+    first.activeCamera = outside
     const secondCamera = new PerspectiveCamera()
-    second.add(secondCamera)
-    const view = new View().setCameraView()
-    expect(view.getSourceCamera(first)).toBe(firstCamera)
+    const second = documentWith(secondCamera)
+    second.activeCamera = secondCamera
+
+    const view = new View({overscan: 1}).setCameraView()
+    expect(view.getSourceCamera(first)).toBe(outside)
+    // A camera outside the scene graph is not evaluated with the scene: the view reads its own transform.
+    expect(view.getCamera(400, 400, first).position.toArray()).toEqual([1, 2, 3])
     view.switchDocument('a', 'b')
     expect(view.getSourceCamera(second)).toBe(secondCamera)
     view.switchDocument('b', 'a')
-    expect(view.getSourceCamera(first)).toBe(firstCamera)
+    second.activeCamera = null
+    expect(view.getSourceCamera(second)).toBe(secondCamera)
+
     view.setAxisView('top')
-    view.switchDocument('a', 'c')
-    expect(view.getSourceCamera(second)).toBe(null)
+    expect(view.getSourceCamera(first)).toBe(null)
     view.dispose()
   })
 
   it('looks through scene cameras by uuid without mutating them', () => {
-    const scene = new Scene()
     const sceneCamera = new PerspectiveCamera(45, 1.5, 0.1, 100)
     sceneCamera.position.set(1, 2, 3)
-    scene.add(sceneCamera)
-    scene.updateMatrixWorld(true)
+    const document = documentWith(sceneCamera)
+    document.scene.updateMatrixWorld(true)
     const before = JSON.stringify(sceneCamera.toJSON())
 
     const view = new View({overscan: 2})
     view.setCameraView(`uuid:${sceneCamera.uuid}`)
-    const camera = view.getCamera(800, 400, scene) as PerspectiveCamera
+    const camera = view.getCamera(800, 400, document) as PerspectiveCamera
     expect(camera).not.toBe(sceneCamera)
     expect(camera.position.toArray()).toEqual([1, 2, 3])
     expect(camera.aspect).toBeCloseTo(2, 5)
     expect(camera.zoom).toBeCloseTo(0.5, 5)
     expect(JSON.stringify(sceneCamera.toJSON())).toBe(before)
 
-    expect(view.getSourceCamera(new Scene())).toBe(null)
+    expect(view.getSourceCamera(new Document())).toBe(null)
     view.dispose()
   })
 
   it('resolves a named scene camera to its uuid once it is in the scene', () => {
-    const scene = new Scene()
     const other = new OrthographicCamera()
     const shot = new PerspectiveCamera()
     shot.name = 'shot'
-    scene.add(other, shot)
+    const document = documentWith(other, shot)
+    // A named camera is looked for in the scene, whatever the document's active camera.
+    document.activeCamera = other
 
     const view = new View().setCameraView('name:shot')
-    expect(view.getSourceCamera(new Scene())).toBe(null)
-    expect(view.getSourceCamera(scene)).toBe(shot)
+    expect(view.getSourceCamera(new Document())).toBe(null)
+    expect(view.getSourceCamera(document)).toBe(shot)
     expect(view.navigation.cameraSource).toBe(shot.uuid)
     shot.name = 'renamed'
-    expect(view.getSourceCamera(scene)).toBe(shot)
+    expect(view.getSourceCamera(document)).toBe(shot)
 
     view.setAxisView('free')
-    expect(view.getSourceCamera(scene)).toBe(null)
+    expect(view.getSourceCamera(document)).toBe(null)
     view.dispose()
   })
 
-  it('looks through the first scene camera without an id, and uses the free view until one is added', () => {
-    const scene = new Scene()
+  it('looks through the first scene camera when the document names none, and uses the free view until one is added', async () => {
+    const document = new Document()
     const view = new View().setAxisView('top').setCameraView()
-    expect(view.getSourceCamera(scene)).toBe(null)
+    expect(view.getSourceCamera(document)).toBe(null)
     expect(view.navigation.axisView).toBe('free')
     const first = new OrthographicCamera()
-    scene.add(first, new PerspectiveCamera())
-    expect(view.getSourceCamera(scene)).toBe(first)
-    expect(new View().setCameraView(null).getSourceCamera(scene)).toBe(first)
+    document.scene.add(first, new PerspectiveCamera())
+    // The scene was found without cameras in this task; the next task looks again.
+    await Promise.resolve()
+    expect(view.getSourceCamera(document)).toBe(first)
+    expect(new View().setCameraView(null).getSourceCamera(document)).toBe(first)
+    view.dispose()
+  })
+
+  it('frames the source camera aspect, or the viewport aspect', () => {
+    const shot = new PerspectiveCamera(50, 2.35)
+    shot.name = 'shot'
+    const document = documentWith(shot)
+    const view = new View()
+    expect(view.getFrameAspect(800, 400, document)).toBe(2)
+    view.setAxisView('top')
+    expect(view.getFrameAspect(300, 600, document)).toBe(0.5)
+    expect(view.getFrameAspect(0, 0, document)).toBe(1)
+    view.setCameraView('name:shot')
+    expect(view.getFrameAspect(800, 400, document)).toBe(2.35)
     view.dispose()
   })
 
@@ -268,12 +351,11 @@ describe('View', () => {
   })
 
   it('keeps the orthographic scene camera frustum center when fitting', () => {
-    const scene = new Scene()
     const board = new OrthographicCamera(2, 10, 8, 0, 0.1, 1000)
-    scene.add(board)
+    const document = documentWith(board)
     const view = new View({overscan: 1})
     view.setCameraView(`uuid:${board.uuid}`)
-    const camera = view.getCamera(800, 400, scene) as OrthographicCamera
+    const camera = view.getCamera(800, 400, document) as OrthographicCamera
     expect((camera.left + camera.right) / 2).toBeCloseTo(6, 5)
     expect((camera.top + camera.bottom) / 2).toBeCloseTo(4, 5)
     expect(board.left).toBe(2)
@@ -282,28 +364,34 @@ describe('View', () => {
   })
 
   it('finds its scene camera without walking the scene on every call', () => {
-    const scene = new Scene()
     const camera = new PerspectiveCamera()
-    scene.add(new Mesh(new BoxGeometry()), camera)
+    const document = documentWith(new Mesh(new BoxGeometry()), camera)
     const view = new View().setCameraView(`uuid:${camera.uuid}`)
-    const walk = vi.spyOn(scene, 'getObjectByProperty')
-    for (let i = 0; i < 5; i++) expect(view.getSourceCamera(scene)).toBe(camera)
+    const walk = vi.spyOn(document.scene, 'getObjectByProperty')
+    for (let i = 0; i < 5; i++) expect(view.getSourceCamera(document)).toBe(camera)
     expect(walk).toHaveBeenCalledTimes(1)
-    scene.remove(camera)
-    for (let i = 0; i < 5; i++) expect(view.getSourceCamera(scene)).toBe(null)
+    document.scene.remove(camera)
+    for (let i = 0; i < 5; i++) expect(view.getSourceCamera(document)).toBe(null)
     expect(walk).toHaveBeenCalledTimes(2)
+
+    // A view following a document that names no camera looks for the first one once while it stays in the scene.
+    const following = new View().setCameraView()
+    const traverse = vi.spyOn(document.scene, 'traverse')
+    document.scene.add(camera)
+    for (let i = 0; i < 5; i++) expect(following.getSourceCamera(document)).toBe(camera)
+    expect(traverse).toHaveBeenCalledTimes(1)
     view.dispose()
+    following.dispose()
   })
 
   it('measures pick tolerance at the scene, not the orbit distance, through a scene camera', () => {
-    const scene = new Scene()
     const camera = new PerspectiveCamera(60, 1, 0.1, 100)
     camera.position.set(0, 0, 20)
-    scene.add(new Mesh(new BoxGeometry()), camera)
+    const document = documentWith(new Mesh(new BoxGeometry()), camera)
     const view = new View({overscan: 1}).setCameraView(`uuid:${camera.uuid}`)
     view.navigation.distance = 2
-    const drawn = view.getCamera(100, 100, scene) as PerspectiveCamera
-    expect(view.getWorldPerPixel(100, 100, scene)).toBeCloseTo(2 * 20 * Math.tan(drawn.fov * Math.PI / 360) / drawn.zoom / 100, 5)
+    const drawn = view.getCamera(100, 100, document) as PerspectiveCamera
+    expect(view.getWorldPerPixel(100, 100, document)).toBeCloseTo(2 * 20 * Math.tan(drawn.fov * Math.PI / 360) / drawn.zoom / 100, 5)
     view.dispose()
   })
 

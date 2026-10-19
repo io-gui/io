@@ -16,7 +16,9 @@
     "coverage": "vitest run --project coverage --coverage",
     "bench": "vitest bench --run --no-file-parallelism --reporter=json --outputFile=./benchmarks/results.json",
     "bench:baseline": "vitest bench --run --no-file-parallelism --reporter=json --outputFile=./benchmarks/results-baseline.json",
-    "clean": "rm -rf packages/**/dist packages/**/tsconfig.tsbuildinfo"
+    "clean": "rm -rf packages/**/dist packages/**/tsconfig.tsbuildinfo",
+    "three:link": "ln -sfn ../../../../three.js packages/three/node_modules/three && rm -rf node_modules/.vite",
+    "three:unlink": "rm packages/three/node_modules/three && pnpm install && rm -rf node_modules/.vite"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

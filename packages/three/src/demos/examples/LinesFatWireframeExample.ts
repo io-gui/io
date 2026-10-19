@@ -22,7 +22,7 @@ const DASH_GAP: Record<string, [ number, number ]> = { '2 : 1': [ 2, 1 ], '1 : 1
 /**
  * An icosahedron's edges as a fat `Wireframe` (`WireframeGeometry2`), beside the same edges as 1 px `LineSegments`.
  * The line type, pixel width and dash settings are in the Document tab. The source's inset view, which draws the same
- * camera's view small, is dropped: views of any size show the pixel widths. The source camera is kept as `Camera`.
+ * camera's view small, is dropped: views of any size show the pixel widths. The source camera is the active camera.
  * Static.
  */
 @Register
@@ -54,11 +54,11 @@ export class LinesFatWireframeExample extends Document {
 
     this.scene.background = new Color( 0x000000 )
 
-    const camera = new PerspectiveCamera( 40, 1, 1, 1000 )
+    const camera = new PerspectiveCamera( 40, 400 / 250, 1, 1000 )
     camera.name = 'Camera'
     camera.position.set( - 50, 0, 50 )
     camera.lookAt( 0, 0, 0 )
-    this.scene.add( camera )
+    this.activeCamera = camera
 
     // Wireframe ( WireframeGeometry2, Line2NodeMaterial )
 

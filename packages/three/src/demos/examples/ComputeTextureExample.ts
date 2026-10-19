@@ -1,4 +1,4 @@
-import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture, ComputeNode, WebGPURenderer } from 'three/webgpu'
+import { ComputeNode, Mesh, MeshBasicNodeMaterial, OrthographicCamera, PlaneGeometry, StorageTexture, WebGPURenderer } from 'three/webgpu'
 import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl'
 import { Register } from '@io-gui/core'
 import { Document, DocumentProps } from '@io-gui/three'
@@ -9,6 +9,12 @@ export class ComputeTextureExample extends Document {
   public computeNode: ComputeNode
   constructor(args?: DocumentProps) {
     super(args)
+
+    const aspect = 400 / 250
+    const camera = new OrthographicCamera( - aspect, aspect, 1, - 1, 0, 2 )
+    camera.name = 'Camera'
+    camera.position.z = 1
+    this.activeCamera = camera
     const width = 512, height = 512
     this.storageTexture = new StorageTexture(width, height)
 

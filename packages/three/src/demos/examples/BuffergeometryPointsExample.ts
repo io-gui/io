@@ -4,11 +4,12 @@ import {
   Float32BufferAttribute,
   Fog,
   InstancedBufferAttribute,
+  PerspectiveCamera,
   Points,
   PointsMaterial,
   PointsNodeMaterial,
-  SRGBColorSpace,
-  Sprite
+  Sprite,
+  SRGBColorSpace
 } from 'three/webgpu'
 import { instancedBufferAttribute } from 'three/tsl'
 import { Register } from '@io-gui/core'
@@ -32,6 +33,11 @@ export class BuffergeometryPointsExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 27, 400 / 250, 5, 3500 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 2750 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x050505 )
     this.scene.fog = new Fog( 0x050505, 2000, 3500 )

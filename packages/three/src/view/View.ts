@@ -4,6 +4,7 @@ import { AxisView, ViewNavigation, ViewNavigationData } from './ViewNavigation.j
 import { ViewCamera, cameraAspect, copyProjection, worldPerPixelAt } from '../utils/camera.js'
 import { isDescendant } from '../utils/sceneGraph.js'
 import type { InteractionProfile } from '../tools/Tool.js'
+import type { Document } from '../editor/Document.js'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 
@@ -22,7 +23,7 @@ export interface ViewOverlays {
   components?: boolean
   /** Outline of selected meshes and lines. */
   selection?: boolean
-  /** Darkens what lies outside a scene camera's frame when looking through it. */
+  /** Darkens what lies outside the framed area: a scene camera's frame, or the viewport inside the overscan margin. */
   cameraFrame?: boolean
   /** Frustums of scene cameras, except the one the view looks through. */
   cameraHelpers?: boolean
@@ -63,6 +64,10 @@ export type ViewData = ViewSettings & {navigation?: Partial<ViewNavigationData>}
 
 const _box = new Box3()
 const _center = new Vector3()
+
+function isViewCamera(object: Object3D | null | undefined): object is ViewCamera {
+  return !!object && ((object as PerspectiveCamera).isPerspectiveCamera === true || (object as OrthographicCamera).isOrthographicCamera === true)
+}
 
 /**
  * State of one view (ADR-0002): navigation and display settings, independent of any element.
@@ -125,14 +130,18 @@ export class View extends ReactiveObject {
   private readonly _orthographic = new OrthographicCamera()
   private readonly _scenePerspective = new PerspectiveCamera()
   private readonly _sceneOrthographic = new OrthographicCamera()
-  /** Scene camera name `setCameraView` waits for (`''` = first scene camera); null when none is pending. */
+  /** Whether the view looks through the shown document's `activeCamera` (`setCameraView()`), in every document. */
+  private _followDocument = false
+  /** Scene camera name `setCameraView` waits for; null when none is pending. */
   private _cameraSourceName: string | null = null
-  /** What `setCameraView` asked for by name (`''` = first scene camera), looked for again in each document shown; null otherwise. */
+  /** What `setCameraView` asked for by name, looked for again in each document shown; null otherwise. */
   private _cameraRequest: string | null = null
-  /** Last scene camera found for `navigation.cameraSource`; reused while it is still in the scene. */
+  /** Last scene camera found for `navigation.cameraSource`, or the first scene camera; reused while it is still in the scene. */
   private _sourceCamera: Object3D | null = null
   /** A `cameraSource` uuid not found in the scene; not searched again until the current task ends. */
   private _missingSource: string | null = null
+  /** A scene found without cameras by a view following its document; not searched again until the current task ends. */
+  private _sceneWithoutCamera: Scene | null = null
   /** Session state: navigation per document uuid, so switching documents back restores the camera. */
   private readonly _navigationByDocument = new Map<string, ViewNavigationData>()
 
@@ -144,14 +153,22 @@ export class View extends ReactiveObject {
    * Call after changing `navigation` directly, so viewports showing this view redraw. The methods below call
    * it themselves. It dispatches `navigation-changed` to the view's parents (the viewports holding it), not a
    * reactive mutation: navigation runs per pointer move, and inspectors or bindings of the view need not wake.
+   * The view stops framing itself (`autoFrame`): it keeps what was navigated or framed on request.
    */
   markNavigationChanged() {
+    this.navigation.autoFramed = null
+    this._dispatchNavigationChanged()
+  }
+
+  private _dispatchNavigationChanged() {
     this.dispatch('navigation-changed', undefined, true)
   }
 
   /** Looks through the view's own navigation: an orthographic axis view, or the default perspective view with `free`. */
   setAxisView(axis: AxisView) {
     this.navigation.cameraSource = null
+    this._sourceCamera = null
+    this._followDocument = false
     this._cameraSourceName = null
     this._cameraRequest = null
     this.navigation.setAxisView(axis)
@@ -160,19 +177,21 @@ export class View extends ReactiveObject {
   }
 
   /**
-   * Looks through a scene camera. `'uuid:<uuid>'` picks a camera by uuid, `'name:<name>'` by name; with no id
-   * (or `null`) the first camera found in the scene is used. Names and the first camera resolve to a uuid once
-   * a camera is in the scene, so a camera that is still loading is picked up when it is added; until then, or
-   * when the scene has no camera, the view shows its own `free` perspective view. An id without a prefix warns
-   * and uses the `free` view.
+   * Looks through a camera of the shown document. With no id (or `null`) the view follows the document's
+   * `activeCamera` (ADR-0011), in every document it shows; when a document names none, the first camera found in its
+   * scene. `'uuid:<uuid>'` picks a scene camera by uuid, `'name:<name>'` by name; a name resolves to a uuid once such a
+   * camera is in the scene, so a camera that is still loading is picked up when it is added. Until then, or when there
+   * is no camera, the view shows its own `free` perspective view. An id without a prefix warns and uses the `free` view.
    */
   setCameraView(id: string | null = null) {
     this.navigation.cameraSource = null
+    this._sourceCamera = null
+    this._followDocument = false
     this._cameraSourceName = null
     this.navigation.setAxisView('free')
     this._cameraRequest = null
     if (id === null) {
-      this._cameraSourceName = this._cameraRequest = ''
+      this._followDocument = true
     } else if (id.startsWith('uuid:')) {
       this.navigation.cameraSource = id.slice(5)
     } else if (id.startsWith('name:')) {
@@ -184,17 +203,42 @@ export class View extends ReactiveObject {
     return this
   }
 
-  frame(object: Object3D | readonly Object3D[], padding = 1) {
-    if (this.kind === 'uv') return this.frameUV()
-    this.navigation.frame(object, padding)
+  /** Fits `object` (or several) in the view, the box scaled by `fitScale`; `overscan` adds the view's margin. */
+  frame(object: Object3D | readonly Object3D[], fitScale = 1) {
+    if (this.kind === 'uv') return this.frameUV(fitScale)
+    this.navigation.frame(object, fitScale)
     this.markNavigationChanged()
   }
 
   /** Shows the 0–1 UV square, looking down -Z (2D views). */
-  frameUV(padding = 1.05) {
+  frameUV(fitScale = 1) {
     if (this.navigation.axisView !== 'front') this.navigation.setAxisView('front')
-    this.navigation.frameBox(UV_BOX, padding)
+    this.navigation.frameBox(UV_BOX, fitScale)
     this.markNavigationChanged()
+  }
+
+  /** What the view frames of `document` by default (ADR-0012): its editor frame target, else its whole scene. */
+  getFrameTarget(document: Document): Object3D | readonly Object3D[] {
+    const target = document.getEditorFrameTarget()
+    if (!target || (Array.isArray(target) && target.length === 0)) return document.scene
+    return target
+  }
+
+  /**
+   * Frames `document`'s frame target while the view frames itself (ADR-0012): when it is not framed yet, and again
+   * whenever the target changes (a loaded model replaces the scene), until it is navigated or framed on request.
+   */
+  autoFrame(document: Document) {
+    const navigation = this.navigation
+    if (navigation.framed && navigation.autoFramed === null) return
+    const target = this.getFrameTarget(document)
+    const key = Array.isArray(target) ? target.map(object => object.uuid).join(',') : (target as Object3D).uuid
+    if (navigation.framed && navigation.autoFramed === key) return
+    // Content built or loaded since the last draw has stale world matrices (skinned bounds read the bones').
+    document.scene.updateMatrixWorld()
+    navigation.frame(target)
+    navigation.autoFramed = key
+    this._dispatchNavigationChanged()
   }
 
   isOverlayEnabled(id: OverlayId) {
@@ -207,8 +251,9 @@ export class View extends ReactiveObject {
 
   /**
    * Stores the current navigation for `fromDocument` and restores the one saved for `toDocument`,
-   * or starts unframed in the same axis view (the viewport then frames the new scene). A view set with
-   * `setCameraView()` or `setCameraView('name:…')` looks for that camera in the new document.
+   * or starts unframed in the same axis view (the viewport then frames the new document). A view set with
+   * `setCameraView('name:…')` looks for that camera in the new document; one set with `setCameraView()` follows the new
+   * document's active camera.
    */
   switchDocument(fromDocument: string | null, toDocument: string) {
     if (fromDocument === toDocument) return
@@ -221,16 +266,25 @@ export class View extends ReactiveObject {
       this.navigation.copy(new ViewNavigation()).framed = false
       this.navigation.setAxisView(axisView)
     }
-    // A view on the first or a named scene camera looks for it in a document where it has none yet.
+    // A view on a named scene camera looks for it in a document where it has none yet.
     this._cameraSourceName = this._cameraRequest !== null && !this.navigation.cameraSource ? this._cameraRequest : null
-    this.markNavigationChanged()
+    this._dispatchNavigationChanged()
   }
 
-  /** The scene camera this view looks through, if it is set and present in `scene`. */
-  getSourceCamera(scene: Scene | null): ViewCamera | null {
-    if (this._cameraSourceName !== null && scene) this._resolveCameraSourceName(scene)
+  /**
+   * The camera this view looks through in `document`: its active camera (or first scene camera) when the view follows
+   * the document, else the scene camera it is set to, if present in the scene.
+   */
+  getSourceCamera(document: Document | null): ViewCamera | null {
+    const scene = document?.scene ?? null
+    if (!document || !scene) return null
+    if (this._followDocument) {
+      const activeCamera = document.activeCamera
+      return isViewCamera(activeCamera) ? activeCamera : this._firstSceneCamera(scene)
+    }
+    if (this._cameraSourceName !== null) this._resolveCameraSourceName(scene)
     const uuid = this.navigation.cameraSource
-    if (!uuid || !scene) return null
+    if (!uuid) return null
     // Called several times per draw and per pointer event: avoid walking the scene each time.
     let camera = this._sourceCamera?.uuid === uuid && isDescendant(this._sourceCamera, scene) ? this._sourceCamera as Camera : undefined
     if (!camera) {
@@ -242,19 +296,39 @@ export class View extends ReactiveObject {
         queueMicrotask(() => { this._missingSource = null })
       }
     }
-    if ((camera as PerspectiveCamera)?.isPerspectiveCamera || (camera as OrthographicCamera)?.isOrthographicCamera) {
-      return camera as ViewCamera
+    return isViewCamera(camera) ? camera : null
+  }
+
+  /** Width over height of the area the view frames at this size: the source camera's frame, or the whole viewport. */
+  getFrameAspect(width: number, height: number, document: Document | null) {
+    const source = this.getSourceCamera(document)
+    if (source) return cameraAspect(source)
+    return width > 0 && height > 0 ? width / height : 1
+  }
+
+  /** The first camera found in `scene`, for a view following a document that names no active camera. */
+  private _firstSceneCamera(scene: Scene): ViewCamera | null {
+    // Called several times per draw and per pointer event: avoid walking the scene each time.
+    const cached = this._sourceCamera
+    if (isViewCamera(cached) && isDescendant(cached, scene)) return cached
+    if (this._sceneWithoutCamera === scene) return null
+    let found: ViewCamera | null = null
+    scene.traverse(object => {
+      if (!found && isViewCamera(object)) found = object
+    })
+    this._sourceCamera = found
+    if (!found) {
+      this._sceneWithoutCamera = scene
+      queueMicrotask(() => { this._sceneWithoutCamera = null })
     }
-    return null
+    return found
   }
 
   private _resolveCameraSourceName(scene: Scene) {
     const name = this._cameraSourceName
     let found: Object3D | undefined
     scene.traverse(object => {
-      if (found) return
-      const isCamera = (object as PerspectiveCamera).isPerspectiveCamera || (object as OrthographicCamera).isOrthographicCamera
-      if (isCamera && (!name || object.name === name)) found = object
+      if (!found && isViewCamera(object) && object.name === name) found = object
     })
     if (!found) return
     // Resolved while drawing or picking with this camera, so no mutation is dispatched.
@@ -266,9 +340,9 @@ export class View extends ReactiveObject {
    * The camera to draw and pick with at this size. Built from state every call; owned by the view.
    * Scene cameras are copied, never mutated (ADR-0005).
    */
-  getCamera(width: number, height: number, scene: Scene | null): ViewCamera {
+  getCamera(width: number, height: number, document: Document | null): ViewCamera {
     const aspect = width > 0 && height > 0 ? width / height : 1
-    const source = this.getSourceCamera(scene)
+    const source = this.getSourceCamera(document)
     if (source) return this._fromSceneCamera(source, aspect)
 
     const nav = this.navigation
@@ -306,10 +380,11 @@ export class View extends ReactiveObject {
   }
 
   /** World units covered by one CSS pixel at the target (at the scene's centre through a scene camera, which has no target). */
-  getWorldPerPixel(width: number, height: number, scene: Scene | null) {
-    const camera = this.getCamera(width, height, scene)
+  getWorldPerPixel(width: number, height: number, document: Document | null) {
+    const camera = this.getCamera(width, height, document)
     let point = this.navigation.target
-    if (scene && this.getSourceCamera(scene)) {
+    const scene = document?.scene
+    if (scene && this.getSourceCamera(document)) {
       point = _box.setFromObject(scene).isEmpty() ? camera.localToWorld(_center.set(0, 0, -1)) : _box.getCenter(_center)
     }
     return worldPerPixelAt(camera, point, height)
@@ -366,7 +441,7 @@ export class View extends ReactiveObject {
     if (navigation) this.navigation.applyJSON(navigation)
     if (settings.overlays) settings.overlays = {...settings.overlays}
     this.setProperties(settings)
-    this.markNavigationChanged()
+    this._dispatchNavigationChanged()
     return this
   }
 }

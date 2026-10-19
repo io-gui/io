@@ -1,4 +1,4 @@
-import { Mesh, MeshStandardNodeMaterial, PointLight, RepeatWrapping, SphereGeometry, TextureLoader } from 'three/webgpu'
+import { Mesh, MeshStandardNodeMaterial, PerspectiveCamera, PointLight, RepeatWrapping, SphereGeometry, TextureLoader } from 'three/webgpu'
 import { color, fog, rangeFogFactor, texture, lights, normalMap } from 'three/tsl'
 import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js'
 import { Register, Property } from '@io-gui/core'
@@ -34,6 +34,12 @@ export class LightsSelectiveExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 50, 400 / 250, 0.01, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 7 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.fogNode = fog( color( 0xFF00FF ), rangeFogFactor( 12, 30 ) )
 

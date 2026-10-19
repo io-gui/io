@@ -1,7 +1,7 @@
-import { AmbientLight, Box3, BufferGeometry, Color, DirectionalLight, Group, LoadingManager, Mesh, MeshPhongMaterial, Vector3 } from 'three/webgpu'
+import { AmbientLight, Box3, BufferGeometry, Color, DirectionalLight, Group, LoadingManager, Mesh, MeshPhongMaterial, PerspectiveCamera, Vector3 } from 'three/webgpu'
 import { ThreeMFLoader } from 'three/addons/loaders/3MFLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 
@@ -18,7 +18,7 @@ const ASSETS = [
 /**
  * 3MF test files, picked with `asset` (Document tab), centered at the origin. 3MF models are Z-up (made for 3D
  * printing): the source turns its camera's up axis to z, the conversion turns the model upright (-90° about x) for the
- * Y-up views, and the light with it.
+ * Y-up views, and the light and the active camera with it.
  */
 @Register
 export class Loader3mfExample extends Document {
@@ -32,8 +32,19 @@ export class Loader3mfExample extends Document {
   /** Counts loads, so a slow file does not replace a newer pick. */
   private loads = 0
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    // The source's Z-up camera at (-100, -250, 100), turned like the model.
+    const camera = new PerspectiveCamera( 35, 400 / 250, 1, 500 )
+    camera.name = 'Camera'
+    camera.position.set( - 100, 100, 250 )
+    camera.lookAt( 0, 0, 0 )
+    this.scene.add( camera )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x333333 )
 
@@ -51,6 +62,10 @@ export class Loader3mfExample extends Document {
     this.loader = new ThreeMFLoader( new LoadingManager( () => this.notify({kind: 'material'}) ) )
 
     this.assetChanged()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   assetChanged() {
@@ -77,7 +92,7 @@ export class Loader3mfExample extends Document {
       this.scene.add( object )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object}, true)
+      this._frameTarget = object
     } catch ( e ) {
       console.error( e )
     }

@@ -9,6 +9,7 @@ import {
   NodeFrame,
   NodeUpdateType,
   Object3D,
+  PerspectiveCamera,
   PlaneGeometry,
   SphereGeometry
 } from 'three/webgpu'
@@ -50,6 +51,12 @@ export class OcclusionExample extends Document {
 
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 50, 400 / 250, 0.01, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 7 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     // lights
 

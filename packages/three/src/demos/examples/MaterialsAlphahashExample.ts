@@ -1,4 +1,4 @@
-import { Color, IcosahedronGeometry, InstancedMesh, Matrix4, MeshStandardMaterial, PMREMGenerator, WebGPURenderer } from 'three/webgpu'
+import { Color, IcosahedronGeometry, InstancedMesh, Matrix4, MeshStandardMaterial, PerspectiveCamera, PMREMGenerator, WebGPURenderer } from 'three/webgpu'
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import { Register, Property } from '@io-gui/core'
 import { Document, DocumentProps } from '@io-gui/three'
@@ -26,6 +26,12 @@ export class MaterialsAlphahashExample extends Document {
 
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 60, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( AMOUNT, AMOUNT, AMOUNT )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     const count = Math.pow( AMOUNT, 3 )
     const color = new Color()

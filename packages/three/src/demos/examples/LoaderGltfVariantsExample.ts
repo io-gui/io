@@ -1,8 +1,8 @@
-import { ACESFilmicToneMapping, EquirectangularReflectionMapping, Material, Mesh, Object3D } from 'three/webgpu'
+import { ACESFilmicToneMapping, EquirectangularReflectionMapping, Material, Mesh, Object3D, PerspectiveCamera } from 'three/webgpu'
 import { GLTF, GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 
@@ -25,10 +25,23 @@ export class LoaderGltfVariantsExample extends Document {
 
   private gltf?: GLTF
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({toneMapping: ACESFilmicToneMapping, ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 0.25, 20 )
+    camera.name = 'Camera'
+    camera.position.set( 2.5, 1.5, 3 )
+    camera.lookAt( 0, 0.5, - 0.2 )
+    this.activeCamera = camera
     void this.loadEnvironment()
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   variantChanged() {
@@ -65,7 +78,7 @@ export class LoaderGltfVariantsExample extends Document {
       await this.selectVariant( this.variant )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: gltf.scene}, true)
+      this._frameTarget = gltf.scene
     } catch ( e ) {
       console.error( e )
     }

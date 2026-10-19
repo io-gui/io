@@ -1,9 +1,9 @@
-import { DirectionalLight, EquirectangularReflectionMapping, NeutralToneMapping } from 'three/webgpu'
+import { DirectionalLight, EquirectangularReflectionMapping, NeutralToneMapping, PerspectiveCamera } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { DRACOLoader, DRACO_GLTF_CONFIG } from 'three/addons/loaders/DRACOLoader.js'
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
@@ -21,8 +21,17 @@ export class TonemappingExample extends Document {
   @Property({type: Number, value: 1.0})
   declare intensity: number
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({toneMapping: NeutralToneMapping, toneMappingExposure: 1.0, ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 0.01, 10 )
+    camera.name = 'Camera'
+    camera.position.set( - 0.02, 0.03, 0.05 )
+    camera.lookAt( 0, 0.03, 0 )
+    this.activeCamera = camera
 
     const light = new DirectionalLight( 0xfff3ee, 3 ) // simulate sun
     light.name = 'Sun'
@@ -33,6 +42,10 @@ export class TonemappingExample extends Document {
 
     this.blurrinessChanged()
     this.intensityChanged()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async load() {
@@ -65,7 +78,7 @@ export class TonemappingExample extends Document {
       this.scene.add( gltf.scene )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: gltf.scene}, true)
+      this._frameTarget = gltf.scene
     } catch ( e ) {
       console.error( e )
     }

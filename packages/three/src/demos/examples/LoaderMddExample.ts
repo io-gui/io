@@ -1,7 +1,7 @@
-import { AnimationMixer, BoxGeometry, BufferGeometry, Mesh, MeshNormalMaterial } from 'three/webgpu'
+import { AnimationMixer, BoxGeometry, BufferGeometry, Mesh, MeshNormalMaterial, PerspectiveCamera } from 'three/webgpu'
 import { MDDLoader } from 'three/addons/loaders/MDDLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
 /** A cube deformed by vertex animation from an MDD file: one morph target per frame, played by its clip. Plays when opened. */
 @Register
@@ -9,9 +9,22 @@ export class LoaderMddExample extends Document {
 
   public mixer?: AnimationMixer
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true}), ...args})
+
+    const camera = new PerspectiveCamera( 35, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 8, 8, 8 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
     void this.loadAnimation()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadAnimation() {
@@ -42,7 +55,7 @@ export class LoaderMddExample extends Document {
       geometry.computeBoundingBox()
       const { min, max } = geometry.boundingBox!
       const extent = new Mesh( new BufferGeometry().setFromPoints( [ min, max ] ) )
-      this.dispatch('frame-object', {object: extent}, true)
+      this._frameTarget = extent
     } catch ( e ) {
       console.error( e )
     }

@@ -1,7 +1,7 @@
-import { HemisphereLight, MathUtils, Object3D } from 'three/webgpu'
+import { HemisphereLight, MathUtils, Object3D, PerspectiveCamera } from 'three/webgpu'
 import { ColladaLoader } from 'three/addons/loaders/ColladaLoader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 
 /** Random poses per loop: the timeline is their total length and starts from the last pose, so looping is seamless. */
 const POSES = 10
@@ -32,7 +32,8 @@ function quadraticOut( k: number ) {
 /**
  * An ABB IRB 52 industrial robot from a COLLADA file with kinematics, moving its joints to random poses within their
  * limits. The source chains tween.js tweens with `setTimeout`; here ten poses are drawn once and the moves derived from
- * document time. The orbiting camera is dropped; the grid comes from the grid overlay. Plays when opened.
+ * document time. The active camera stands where the source's slow orbit
+ * starts; the grid comes from the grid overlay. Plays when opened.
  */
 @Register
 export class LoaderColladaKinematicsExample extends Document {
@@ -41,8 +42,17 @@ export class LoaderColladaKinematicsExample extends Document {
   private kinematics?: Kinematics
   private poses: Pose[] = []
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true}), ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 2000 )
+    camera.name = 'Camera'
+    camera.position.set( 20, 10, 0 )
+    camera.lookAt( 0, 5, 0 )
+    this.activeCamera = camera
 
     // Lights
 
@@ -51,6 +61,10 @@ export class LoaderColladaKinematicsExample extends Document {
     this.scene.add( light )
 
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadModel() {
@@ -72,7 +86,7 @@ export class LoaderColladaKinematicsExample extends Document {
       this.pose( this.timeline.currentTime )
       this.notify({kind: 'structure'})
       dae.updateMatrixWorld( true )
-      this.dispatch('frame-object', {object: dae}, true)
+      this._frameTarget = dae
     } catch ( e ) {
       console.error( e )
     }

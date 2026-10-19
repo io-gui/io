@@ -1,8 +1,8 @@
-import { Mesh, NodeMaterial, PlaneGeometry, Texture, WebGPURenderer } from 'three/webgpu'
+import { Mesh, NodeMaterial, PerspectiveCamera, PlaneGeometry, Texture, WebGPURenderer } from 'three/webgpu'
 import { texture, uniform, uv } from 'three/tsl'
 import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js'
-import { Register } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
 
 /** Layers in the texture array, and layers shown per second. */
@@ -25,9 +25,21 @@ export class Textures2dArrayCompressedExample extends Document {
 
   private depth = uniform( 0 )
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 0.1, 2000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 70 )
+    this.activeCamera = camera
     this.pose( this.timeline.currentTime )
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   override onRendererInitialized(renderer: WebGPURenderer) {
@@ -51,7 +63,7 @@ export class Textures2dArrayCompressedExample extends Document {
       this.scene.add( mesh )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: mesh}, true)
+      this._frameTarget = mesh
     } catch ( e ) {
       console.error( e )
     }

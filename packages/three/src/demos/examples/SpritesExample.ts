@@ -1,4 +1,4 @@
-import { Color, Group, Sprite, SpriteNodeMaterial, Texture, TextureLoader } from 'three/webgpu'
+import { Color, Group, PerspectiveCamera, Sprite, SpriteNodeMaterial, Texture, TextureLoader } from 'three/webgpu'
 import { texture, uv, userData, fog, rangeFogFactor, color } from 'three/tsl'
 import { Register } from '@io-gui/core'
 import { Document, DocumentProps, Timeline } from '@io-gui/three'
@@ -27,6 +27,11 @@ export class SpritesExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 60, 400 / 250, 1, 2100 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 1500 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x000000 )
     this.scene.fogNode = fog( color( 0x0000ff ), rangeFogFactor( 1500, 2100 ) )

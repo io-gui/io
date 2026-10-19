@@ -10,12 +10,13 @@ import {
   LoadingManager,
   Mesh,
   MeshPhongMaterial,
+  PerspectiveCamera,
   PlaneGeometry,
   SkinnedMesh
 } from 'three/webgpu'
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps, Timeline } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { ioObject, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 import { ioNumberSlider } from '@io-gui/sliders'
@@ -71,8 +72,17 @@ export class LoaderFbxExample extends Document {
   /** Counts loads, so a slow file does not replace a newer pick. */
   private loads = 0
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true}), ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 2000 )
+    camera.name = 'Camera'
+    camera.position.set( 100, 200, 300 )
+    camera.lookAt( 0, 100, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0xa0a0a0 )
     this.scene.fog = new Fog( 0xa0a0a0, 200, 1000 )
@@ -106,6 +116,10 @@ export class LoaderFbxExample extends Document {
     this.loader = new FBXLoader( new LoadingManager( () => this.notify({kind: 'material'}) ) )
 
     this.assetChanged()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   assetChanged() {
@@ -162,7 +176,7 @@ export class LoaderFbxExample extends Document {
       this.notify({kind: 'structure'})
       // Skinned bounds read the bones' world matrices, which nothing has drawn yet.
       object.updateMatrixWorld( true )
-      this.dispatch('frame-object', {object}, true)
+      this._frameTarget = object
     } catch ( e ) {
       console.error( e )
     }

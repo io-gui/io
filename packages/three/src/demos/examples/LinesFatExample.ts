@@ -27,7 +27,7 @@ const DASH_GAP: Record<string, [ number, number ]> = { '2 : 1': [ 2, 1 ], '1 : 1
  * A 3D Hilbert curve as a fat `Line2` with vertex colors, beside the same curve as a 1 px `Line` strip. The line type,
  * width (pixels, or world units), `alphaToCoverage` and dash settings are in the Document tab. The source's inset view,
  * which draws the same camera's view small, is dropped: views of any size show the pixel widths. The source camera is
- * kept as `Camera`. Static.
+ * the active camera. Static.
  */
 @Register
 export class LinesFatExample extends Document {
@@ -67,11 +67,11 @@ export class LinesFatExample extends Document {
 
     this.scene.background = new Color( 0x000000 )
 
-    const camera = new PerspectiveCamera( 40, 1, 1, 1000 )
+    const camera = new PerspectiveCamera( 40, 400 / 250, 1, 1000 )
     camera.name = 'Camera'
     camera.position.set( - 40, 0, 60 )
     camera.lookAt( 0, 0, 0 )
-    this.scene.add( camera )
+    this.activeCamera = camera
 
     // Position and THREE.Color Data
 

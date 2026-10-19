@@ -4,6 +4,7 @@ import {
   Mesh,
   MeshBasicNodeMaterial,
   MeshPhongMaterial,
+  PerspectiveCamera,
   PlaneGeometry,
   PointLight,
   RepeatWrapping,
@@ -32,6 +33,12 @@ export class RefractionExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 45, 400 / 250, 1, 500 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 50, 160 )
+    camera.lookAt( 0, 50, 0 )
+    this.activeCamera = camera
 
     const geometry = new IcosahedronGeometry( 5, 0 )
     const material = new MeshPhongMaterial( { color: 0xffffff, emissive: 0x7b7b7b, flatShading: true } )

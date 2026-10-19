@@ -1,7 +1,7 @@
-import { DirectionalLight, Group, Object3D } from 'three/webgpu'
+import { DirectionalLight, Group, Object3D, PerspectiveCamera } from 'three/webgpu'
 import { Rhino3dmLoader } from 'three/addons/loaders/3DMLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { ioObject, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 
 interface Rhino3dmLayer {
@@ -12,7 +12,8 @@ interface Rhino3dmLayer {
 /**
  * The Rhino logo from a Rhino 3DM file (`Rhino3dmLoader`, with the rhino3dm library from the CDN), with a visibility
  * toggle per Rhino layer in `layers` (Document tab). The source makes Z the global up axis
- * (`Object3D.DEFAULT_UP`); here the model turns Z-up to Y-up instead, and its light with it. Static.
+ * (`Object3D.DEFAULT_UP`); here the model turns Z-up to Y-up instead, and its light and the active camera with it.
+ * Static.
  */
 @Register
 export class Loader3dmExample extends Document {
@@ -23,8 +24,18 @@ export class Loader3dmExample extends Document {
   @Property({type: Object, init: null})
   declare layers: Record<string, boolean>
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 60, 400 / 250, 1, 1000 )
+    camera.name = 'Camera'
+    // The source's Z-up camera at (26, - 40, 5), turned Y-up like the model.
+    camera.position.set( 26, 5, 40 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     // The source's light at (0, 0, 2) with Z up.
     const directionalLight = new DirectionalLight( 0xffffff, 6 )
@@ -33,6 +44,10 @@ export class Loader3dmExample extends Document {
     this.scene.add( directionalLight )
 
     void this.loadModel()
+  }
+
+  override getEditorFrameTarget() {
+    return this._frameTarget
   }
 
   private async loadModel() {
@@ -73,7 +88,7 @@ export class Loader3dmExample extends Document {
 
       this.notify({kind: 'structure'})
       model.updateMatrixWorld( true )
-      this.dispatch('frame-object', {object: model}, true)
+      this._frameTarget = model
     } catch ( e ) {
       console.error( e )
     }

@@ -6,6 +6,7 @@ import {
   HalfFloatType,
   Mesh,
   MeshStandardMaterial,
+  PerspectiveCamera,
   TorusKnotGeometry
 } from 'three/webgpu'
 import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js'
@@ -53,6 +54,12 @@ export class LoaderTextureUltrahdrExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({toneMapping: ACESFilmicToneMapping, timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 50, 400 / 250, 1, 500 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, - 6 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.torusMesh = new Mesh(
       new TorusKnotGeometry( 1, 0.4, 128, 128, 1, 3 ),

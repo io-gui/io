@@ -5,6 +5,7 @@ import {
   Float32BufferAttribute,
   Line,
   LineBasicMaterial,
+  PerspectiveCamera,
   SRGBColorSpace,
   Vector3
 } from 'three/webgpu'
@@ -18,7 +19,7 @@ const PERIOD = 4 * Math.PI
 /**
  * Six 3D Hilbert curves with vertex colors: the top row draws the curve's points, the bottom row a Catmull-Rom spline
  * through them, colored by x, by y and by length. Neighbors turn in opposite directions with document time. The
- * pointer-driven camera is dropped. Plays when opened.
+ * active camera stands where the source's pointer-driven camera rests. Plays when opened.
  */
 @Register
 export class LinesColorsExample extends Document {
@@ -27,6 +28,12 @@ export class LinesColorsExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 33, 400 / 250, 1, 10000 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 200, 1000 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     const hilbertPoints = GeometryUtils.hilbert3D( new Vector3( 0, 0, 0 ), 200.0, 1, 0, 1, 2, 3, 4, 5, 6, 7 )
 

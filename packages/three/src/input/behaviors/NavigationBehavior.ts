@@ -34,7 +34,7 @@ export class NavigationBehavior implements Behavior {
 
   private _isEnabled() {
     const view = this._host.view
-    return !!view && !view.getSourceCamera(this._host.scene)
+    return !!view && !view.getSourceCamera(this._host.document ?? null)
   }
 
   wantsCapture(event: ViewInputEvent): boolean {
@@ -94,8 +94,9 @@ export class NavigationBehavior implements Behavior {
     if (view.kind === 'uv' && entry.action === 'view.axis') return false
     if (entry.action === 'view.frameSelected') {
       const selected = this._host.selection?.getObjects() ?? []
+      const document = this._host.document
       if (selected.length) view.frame(selected)
-      else if (this._host.scene) view.frame(this._host.scene)
+      else if (document?.scene) view.frame(view.getFrameTarget(document))
     } else if (entry.action === 'view.frameAll') {
       const scene = this._host.scene
       if (scene) view.frame(scene)
@@ -122,7 +123,7 @@ export class NavigationBehavior implements Behavior {
         nav.orbit(-2 * Math.PI * event.dx / height, -2 * Math.PI * event.dy / height)
         break
       case 'view.pan':
-        nav.pan(event.dx, event.dy, view.getWorldPerPixel(event.width, event.height, this._host.scene))
+        nav.pan(event.dx, event.dy, view.getWorldPerPixel(event.width, event.height, this._host.document ?? null))
         break
       case 'view.dolly':
         nav.dolly(Math.exp(event.dy * DRAG_DOLLY_SPEED))
@@ -147,7 +148,7 @@ export class NavigationBehavior implements Behavior {
     const previous = this._pinch!
     const view = event.view
     const nav = view.navigation
-    nav.pan(next.x - previous.x, next.y - previous.y, view.getWorldPerPixel(event.width, event.height, this._host.scene))
+    nav.pan(next.x - previous.x, next.y - previous.y, view.getWorldPerPixel(event.width, event.height, this._host.document ?? null))
     if (next.distance > 0 && previous.distance > 0) nav.dolly(previous.distance / next.distance)
     this._pinch = next
     view.markNavigationChanged()

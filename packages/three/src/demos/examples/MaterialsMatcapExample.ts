@@ -1,8 +1,8 @@
-import { ACESFilmicToneMapping, Color, Mesh, MeshMatcapNodeMaterial, TextureLoader } from 'three/webgpu'
+import { ACESFilmicToneMapping, Color, Mesh, MeshMatcapNodeMaterial, PerspectiveCamera, TextureLoader } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { EXRLoader } from 'three/addons/loaders/EXRLoader.js'
-import { Register, Property } from '@io-gui/core'
-import { Document, DocumentProps } from '@io-gui/three'
+import { Register, Property, Field } from '@io-gui/core'
+import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
 
 /**
@@ -18,8 +18,17 @@ export class MaterialsMatcapExample extends Document {
   @Property({type: Color, init: null})
   declare color: Color
 
+  @Field(null)
+  declare private _frameTarget: FrameTarget | null
+
   constructor(args?: DocumentProps) {
     super({toneMapping: ACESFilmicToneMapping, ...args})
+
+    const camera = new PerspectiveCamera( 40, 400 / 250, 1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 0, 0, 13 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     // Views draw on document changes only, so report each texture when it arrives.
     const onLoad = () => this.notify({kind: 'material'})
@@ -41,6 +50,10 @@ export class MaterialsMatcapExample extends Document {
     this.colorChanged()
   }
 
+  override getEditorFrameTarget() {
+    return this._frameTarget
+  }
+
   private async loadModel() {
     try {
       const gltf = await new GLTFLoader().loadAsync( 'https://threejs.org/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb' )
@@ -51,7 +64,7 @@ export class MaterialsMatcapExample extends Document {
       this.scene.add( mesh )
 
       this.notify({kind: 'structure'})
-      this.dispatch('frame-object', {object: mesh}, true)
+      this._frameTarget = mesh
     } catch ( e ) {
       console.error( e )
     }

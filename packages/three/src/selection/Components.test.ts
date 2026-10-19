@@ -13,10 +13,11 @@ function createHost(editor: Editor, view: View, componentPicker: ComponentPicker
     view: {value: view},
     editor: {value: editor},
     scene: {get: () => editor.document.scene},
+    document: {get: () => editor.document},
     selection: {get: () => editor.selection},
     mode: {get: () => editor.mode},
     componentPicker: {value: componentPicker},
-    getViewCamera: {value: () => view.getCamera(WIDTH, HEIGHT, editor.document.scene)},
+    getViewCamera: {value: () => view.getCamera(WIDTH, HEIGHT, editor.document)},
   })
   element.style.cssText = `position:fixed;left:0;top:0;width:${WIDTH}px;height:${HEIGHT}px`
   window.document.body.appendChild(element)

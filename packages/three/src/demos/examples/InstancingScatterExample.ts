@@ -10,6 +10,7 @@ import {
   Mesh,
   MeshLambertMaterial,
   Object3D,
+  PerspectiveCamera,
   PointLight,
   TorusKnotGeometry,
   Vector3
@@ -107,6 +108,12 @@ export class InstancingScatterExample extends Document {
 
   constructor(args?: DocumentProps) {
     super({timeline: new Timeline({autoplay: true, duration: PERIOD}), ...args})
+
+    const camera = new PerspectiveCamera( 60, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( 25, 25, 25 )
+    camera.lookAt( 0, 0, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0xE39469 )
 

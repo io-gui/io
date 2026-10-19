@@ -12,6 +12,7 @@ import {
   Mesh,
   MeshStandardMaterial,
   OctahedronGeometry,
+  PerspectiveCamera,
   TetrahedronGeometry,
   Vector3
 } from 'three/webgpu'
@@ -88,6 +89,12 @@ export class MaterialsArraysExample extends Document {
 
   constructor(args?: DocumentProps) {
     super(args)
+
+    const camera = new PerspectiveCamera( 40, 400 / 250, 0.1, 100 )
+    camera.name = 'Camera'
+    camera.position.set( - 6, 7, 14 )
+    camera.lookAt( 0, 0.5, 0 )
+    this.activeCamera = camera
 
     this.scene.background = new Color( 0x222222 )
 
