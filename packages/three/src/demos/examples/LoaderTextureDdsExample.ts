@@ -1,17 +1,18 @@
 import {
   AdditiveBlending,
   BoxGeometry,
+  CompressedCubeTexture,
   CompressedTexture,
-  DataTexture,
+  CompressedTextureImageData,
+  CubeReflectionMapping,
   DoubleSide,
   LinearFilter,
+  LoadingManager,
   Material,
   Mesh,
   MeshBasicMaterial,
   PerspectiveCamera,
-  RGBAFormat,
   SRGBColorSpace,
-  Texture,
   TorusGeometry
 } from 'three/webgpu'
 import { DDSLoader } from 'three/addons/loaders/DDSLoader.js'
@@ -22,35 +23,19 @@ import { Document, DocumentProps, Timeline } from '@io-gui/three'
 const PERIOD = 2 * Math.PI
 
 /**
- * Workaround (upstream: #35082): uncompressed DDS files (ARGB, 24-bit RGB) arrive as a `CompressedTexture` in
- * `RGBAFormat`, which WebGPU uploads as blocks of a compressed format and has no block size for. The same pixels as a
- * `DataTexture`, mip chain included.
+ * Workaround (upstream: #35084): `DDSLoader` returns a cube map as a 2D `CompressedTexture` with the six faces as its
+ * image. The same faces as a `CompressedCubeTexture`, which renderers sample as a cube.
  */
-function uncompressed( texture: CompressedTexture ): Texture {
-  // DDSLoader sets RGBAFormat on uncompressed files, outside the typed compressed formats.
-  if ( ( texture.format as number ) !== RGBAFormat ) return texture
-
-  const mipmaps = texture.mipmaps as unknown as { data: Uint8Array; width: number; height: number }[]
-  const level = mipmaps[ 0 ]
-  const data = new DataTexture( level.data, level.width, level.height, RGBAFormat )
-  if ( mipmaps.length > 1 ) {
-    data.mipmaps = mipmaps as unknown as DataTexture['mipmaps']
-    data.generateMipmaps = false
-  }
-  data.minFilter = texture.minFilter
-  data.magFilter = texture.magFilter
-  data.needsUpdate = true
-
-  return data
+function cubeTexture( texture: CompressedTexture ): CompressedCubeTexture {
+  const faces = texture.image as unknown as CompressedTextureImageData[]
+  return new CompressedCubeTexture( faces, texture.format, texture.type )
 }
 
 /**
- * Ten boxes and a torus textured from DDS files: DXT1, DXT3 and DXT5 with and without mipmaps, uncompressed ARGB, BC6H
- * HDR (signed and unsigned) and a 24-bit normal map. BC formats need a desktop GPU. Workaround (upstream: #35083,
- * #35084): the source's three DDS cube maps (the torus' environment map and two boxes) are dropped. `DDSLoader` returns
- * them as 2D compressed textures with six faces, and WebGPU does not upload compressed cube textures (it sizes them
- * 1 × 1 from the face array). Each map is assigned once loaded; the uncompressed ones become `DataTexture`s (see
- * `uncompressed`).
+ * Twelve boxes and a torus textured from DDS files: DXT1, DXT3 and DXT5 with and without mipmaps, uncompressed ARGB, BC6H
+ * HDR (signed and unsigned), a 24-bit normal map and three cube maps (the torus' environment map and two boxes). BC
+ * formats need a desktop GPU. Workaround (upstream: #35084): each cube map is assigned to its material once loaded, as a
+ * `CompressedCubeTexture` (see `cubeTexture`).
  * Turns with document time; plays when opened.
  */
 @Register
@@ -76,44 +61,82 @@ export class LoaderTextureDdsExample extends Document {
     DXT5 - RGBA - transparent textures with full alpha range
     */
 
-    const material1 = new MeshBasicMaterial()
-    const material2 = new MeshBasicMaterial()
-    const material3 = new MeshBasicMaterial( { alphaTest: 0.5, side: DoubleSide } )
-    const material4 = new MeshBasicMaterial( { side: DoubleSide, blending: AdditiveBlending, depthTest: false, transparent: true } )
-    const material7 = new MeshBasicMaterial()
-    const material8 = new MeshBasicMaterial()
-    const material9 = new MeshBasicMaterial()
-    const material10 = new MeshBasicMaterial()
-    const material11 = new MeshBasicMaterial()
-    const material12 = new MeshBasicMaterial()
-    const material13 = new MeshBasicMaterial( { transparent: true } )
+    // Views draw on document changes only: report the textures once they have loaded.
+    const loader = new DDSLoader( new LoadingManager( () => this.notify({kind: 'material'}) ) )
+    loader.setPath( 'https://threejs.org/examples/textures/' )
 
-    // Workaround (upstream: #35081): a compressed texture still loading has no mipmaps, which WebGPU reads when it
-    // binds the texture: assign each map once it arrives (views draw on document changes only, so report it too).
-    const loader = new DDSLoader()
-    const load = ( url: string, material: MeshBasicMaterial, options: { srgb?: boolean; linear?: boolean } = {} ) => {
-      loader.load( 'https://threejs.org/examples/textures/' + url, ( texture ) => {
-        const map = uncompressed( texture )
-        if ( options.linear ) map.minFilter = map.magFilter = LinearFilter
-        map.anisotropy = 4
-        if ( options.srgb ) map.colorSpace = SRGBColorSpace
-        material.map = map
+    const map1 = loader.load( 'compressed/disturb_dxt1_nomip.dds' )
+    map1.minFilter = map1.magFilter = LinearFilter
+    map1.anisotropy = 4
+    map1.colorSpace = SRGBColorSpace
+
+    const map2 = loader.load( 'compressed/disturb_dxt1_mip.dds' )
+    map2.anisotropy = 4
+    map2.colorSpace = SRGBColorSpace
+
+    const map3 = loader.load( 'compressed/hepatica_dxt3_mip.dds' )
+    map3.anisotropy = 4
+    map3.colorSpace = SRGBColorSpace
+
+    const map4 = loader.load( 'compressed/explosion_dxt5_mip.dds' )
+    map4.anisotropy = 4
+    map4.colorSpace = SRGBColorSpace
+
+    const map5 = loader.load( 'compressed/disturb_argb_nomip.dds' )
+    map5.minFilter = map5.magFilter = LinearFilter
+    map5.anisotropy = 4
+    map5.colorSpace = SRGBColorSpace
+
+    const map6 = loader.load( 'compressed/disturb_argb_mip.dds' )
+    map6.anisotropy = 4
+    map6.colorSpace = SRGBColorSpace
+
+    const map7 = loader.load( 'compressed/disturb_dx10_bc6h_signed_nomip.dds' )
+    map7.anisotropy = 4
+
+    const map8 = loader.load( 'compressed/disturb_dx10_bc6h_signed_mip.dds' )
+    map8.anisotropy = 4
+
+    const map9 = loader.load( 'compressed/disturb_dx10_bc6h_unsigned_nomip.dds' )
+    map9.anisotropy = 4
+
+    const map10 = loader.load( 'compressed/disturb_dx10_bc6h_unsigned_mip.dds' )
+    map10.anisotropy = 4
+
+    const map11 = loader.load( 'wave_normals_24bit_uncompressed.dds' )
+    map11.anisotropy = 4
+
+    // Workaround (upstream: #35084): the source passes the textures `load()` returns as `envMap` at material creation.
+    const loadCubemap = ( url: string, material: MeshBasicMaterial ) => {
+      loader.load( url, ( texture ) => {
+        const cubemap = cubeTexture( texture )
+        cubemap.magFilter = LinearFilter
+        cubemap.minFilter = LinearFilter
+        cubemap.mapping = CubeReflectionMapping
+        cubemap.colorSpace = SRGBColorSpace
+        cubemap.needsUpdate = true
+        material.envMap = cubemap
         material.needsUpdate = true
-        this.notify({kind: 'material'})
       } )
     }
 
-    load( 'compressed/disturb_dxt1_nomip.dds', material1, { srgb: true, linear: true } )
-    load( 'compressed/disturb_dxt1_mip.dds', material2, { srgb: true } )
-    load( 'compressed/hepatica_dxt3_mip.dds', material3, { srgb: true } )
-    load( 'compressed/explosion_dxt5_mip.dds', material4, { srgb: true } )
-    load( 'compressed/disturb_argb_nomip.dds', material7, { srgb: true, linear: true } )
-    load( 'compressed/disturb_argb_mip.dds', material8, { srgb: true } )
-    load( 'compressed/disturb_dx10_bc6h_signed_nomip.dds', material9 )
-    load( 'compressed/disturb_dx10_bc6h_signed_mip.dds', material10 )
-    load( 'compressed/disturb_dx10_bc6h_unsigned_nomip.dds', material11 )
-    load( 'compressed/disturb_dx10_bc6h_unsigned_mip.dds', material12 )
-    load( 'wave_normals_24bit_uncompressed.dds', material13 )
+    const material1 = new MeshBasicMaterial( { map: map1 } )
+    const material2 = new MeshBasicMaterial( { map: map2 } )
+    const material3 = new MeshBasicMaterial( { map: map3, alphaTest: 0.5, side: DoubleSide } )
+    const material4 = new MeshBasicMaterial( { map: map4, side: DoubleSide, blending: AdditiveBlending, depthTest: false, transparent: true } )
+    const material5 = new MeshBasicMaterial()
+    const material6 = new MeshBasicMaterial()
+    const material7 = new MeshBasicMaterial( { map: map5 } )
+    const material8 = new MeshBasicMaterial( { map: map6 } )
+    const material9 = new MeshBasicMaterial( { map: map7 } )
+    const material10 = new MeshBasicMaterial( { map: map8 } )
+    const material11 = new MeshBasicMaterial( { map: map9 } )
+    const material12 = new MeshBasicMaterial( { map: map10 } )
+    const material13 = new MeshBasicMaterial( { map: map11, transparent: true } )
+
+    loadCubemap( 'compressed/Mountains.dds', material1 )
+    loadCubemap( 'compressed/Mountains_argb_mip.dds', material5 )
+    loadCubemap( 'compressed/Mountains_argb_nomip.dds', material6 )
 
     const add = ( name: string, mesh: Mesh<BoxGeometry | TorusGeometry, Material>, x: number, y: number ) => {
       mesh.name = name
@@ -127,6 +150,8 @@ export class LoaderTextureDdsExample extends Document {
     add( 'DXT1 Mip', new Mesh( geometry, material2 ), - 6, - 2 )
     add( 'DXT3 Mip', new Mesh( geometry, material3 ), - 6, 2 )
     add( 'DXT5 Mip', new Mesh( geometry, material4 ), - 10, 2 )
+    add( 'ARGB Cube Mip', new Mesh( geometry, material5 ), - 2, 2 )
+    add( 'ARGB Cube', new Mesh( geometry, material6 ), - 2, - 2 )
     add( 'ARGB', new Mesh( geometry, material7 ), 2, - 2 )
     add( 'ARGB Mip', new Mesh( geometry, material8 ), 2, 2 )
     add( 'BC6H Signed', new Mesh( geometry, material9 ), 6, - 2 )

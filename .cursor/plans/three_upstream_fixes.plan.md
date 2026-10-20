@@ -3,16 +3,16 @@ name: three.js Upstream Fixes
 overview: WebGPURenderer and addon bugs found while converting three.js examples (three_example_conversion.plan.md), with a fix plan for each and the example workarounds to remove once a fix is in the three io runs. Compressed textures were filed as #35081-#35084 (#35081-#35083 merged, #35084 in review); Mesh.count, dynamic buffers, instance count and Min/Max blending are planned here and not yet filed.
 todos:
   - id: compressed-mipmaps
-    content: "#35081 CompressedTexture: Default `mipmaps` to an empty array (branch fixes/compressed-texture-mipmaps). Merged 2026-10-19 (db1ef0781a). Then, once ../three.js has it: LoaderTextureDds assigns maps at load call again (unless #35084's rework moves the source to callbacks)"
+    content: "#35081 CompressedTexture: Default `mipmaps` to an empty array (branch fixes/compressed-texture-mipmaps). Merged 2026-10-19 (db1ef0781a). LoaderTextureDds assigns maps at the load call again (done 2026-10-19)"
     status: completed
   - id: compressed-rgba
-    content: "#35082 WebGPURenderer: Support uncompressed data in compressed textures (fixes/compressed-texture-rgba). Merged 2026-10-19 (bc88736756). Then, once ../three.js has it: LoaderTextureDds drops `uncompressed()`"
+    content: "#35082 WebGPURenderer: Support uncompressed data in compressed textures (fixes/compressed-texture-rgba). Merged 2026-10-19 (bc88736756). LoaderTextureDds dropped `uncompressed()` (done 2026-10-19)"
     status: completed
   - id: compressed-cube
-    content: "#35083 WebGPURenderer: Support `CompressedCubeTexture` (fixes/compressed-cube-texture). Merged 2026-10-19 (f9ba4abd3d). With #35084: LoaderTextureDds restores its three cube maps"
+    content: "#35083 WebGPURenderer: Support `CompressedCubeTexture` (fixes/compressed-cube-texture). Merged 2026-10-19 (f9ba4abd3d). LoaderTextureDds restored its three cube maps (done 2026-10-19), wrapped as `CompressedCubeTexture`s until #35084"
     status: completed
   - id: compressed-loader-cube
-    content: "#35084 CompressedTextureLoader: Return cube maps as cube textures (fixes/compressed-texture-loader-cube). Review 2026-10-19 (Mugen87): no `is*` flag patching; proposes `load()` without a return value, the texture only in `onLoad`, as KTX2Loader. Rework pending, see '#35084 review'"
+    content: "#35084 CompressedTextureLoader: Return cube maps as cube textures (fixes/compressed-texture-loader-cube). Review 2026-10-19 (Mugen87): no `is*` flag patching; proposes `load()` without a return value, the texture only in `onLoad`, as KTX2Loader. Reworked 2026-10-19 on the branch (dev merged in; rework uncommitted): `loadAsync()` resolves with a CompressedCubeTexture for cube maps (else CompressedTexture), `load()` unchanged plus a cube-map deprecation warning. DataTexture for uncompressed data dropped after review. See '#35084 review'"
     status: in_progress
   - id: mesh-count
     content: "MarchingCubes keeps its vertex count in `Mesh.count`, which WebGPURenderer reads as the instance count. Fix in the addon. Then: Marchingcubes drops `count = 1`"
@@ -52,14 +52,14 @@ Bugs in `WebGPURenderer` or three addons that converted examples work around. Ea
 
 ## Compressed textures (filed 2026-10-18)
 
-Found in LoaderTextureDds (`webgl_loader_texture_dds`). Branches in `../three.js`. #35081-#35083 merged in `upstream/dev` on 2026-10-19; `../three.js` `dev` is still at `0978e2b62e`, so io gets them after `git pull upstream dev` and `npm run build` there.
+Found in LoaderTextureDds (`webgl_loader_texture_dds`). Branches in `../three.js`. #35081-#35083 merged in `upstream/dev` on 2026-10-19; `../three.js` `dev` pulled to `ad4f951a86` and rebuilt the same day, and their LoaderTextureDds workarounds were removed. They ship in r187; io's `three` peer range is still `>=0.186.0`, so raise it to `>=0.187.0` before publishing.
 
 | PR | Branch | Fixes | Workaround it removes |
 | --- | --- | --- | --- |
-| [#35081](https://github.com/mrdoob/three.js/pull/35081) CompressedTexture: Default `mipmaps` to an empty array. | `fixes/compressed-texture-mipmaps` | a compressed texture still loading has `mipmaps` undefined, which binding reads | maps assigned in the load callback (`load()` helper) |
-| [#35082](https://github.com/mrdoob/three.js/pull/35082) WebGPURenderer: Support uncompressed data in compressed textures. | `fixes/compressed-texture-rgba` | uncompressed DDS files (`CompressedTexture` in `RGBAFormat`) have no block size in the compressed upload | `uncompressed()`: `DataTexture` conversion |
-| [#35083](https://github.com/mrdoob/three.js/pull/35083) WebGPURenderer: Support `CompressedCubeTexture`. | `fixes/compressed-cube-texture` | a compressed cube texture is sized from its face array's `width` (`Textures.getSize`), uploads 1 × 1 and fails validation | with #35084: the three dropped cube maps |
-| [#35084](https://github.com/mrdoob/three.js/pull/35084) CompressedTextureLoader: Return cube maps as cube textures. | `fixes/compressed-texture-loader-cube` | DDS cube maps load as 2D `CompressedTexture`s with six images | with #35083: the three dropped cube maps |
+| [#35081](https://github.com/mrdoob/three.js/pull/35081) CompressedTexture: Default `mipmaps` to an empty array. | `fixes/compressed-texture-mipmaps` | a compressed texture still loading has `mipmaps` undefined, which binding reads | maps assigned in the load callback (`load()` helper): removed |
+| [#35082](https://github.com/mrdoob/three.js/pull/35082) WebGPURenderer: Support uncompressed data in compressed textures. | `fixes/compressed-texture-rgba` | uncompressed DDS files (`CompressedTexture` in `RGBAFormat`) have no block size in the compressed upload | `uncompressed()`: `DataTexture` conversion: removed |
+| [#35083](https://github.com/mrdoob/three.js/pull/35083) WebGPURenderer: Support `CompressedCubeTexture`. | `fixes/compressed-cube-texture` | a compressed cube texture is sized from its face array's `width` (`Textures.getSize`), uploads 1 × 1 and fails validation | the three dropped cube maps: restored, wrapped (#35084 workaround) |
+| [#35084](https://github.com/mrdoob/three.js/pull/35084) CompressedTextureLoader: Return cube maps as cube textures. | `fixes/compressed-texture-loader-cube` | DDS cube maps load as 2D `CompressedTexture`s with six images | `cubeTexture()` wrap and the env maps assigned once loaded |
 
 ### #35084 review (2026-10-19)
 
@@ -96,10 +96,35 @@ Found in LoaderTextureDds (`webgl_loader_texture_dds`). Branches in `../three.js
 - No warning reaches 2D code that both passes `onLoad` and uses the return value; that needs a migration-guide note.
 - During the deprecation period, `load()` and `loadAsync()` deliver cube maps differently.
 
+**Rework (2026-10-19).**
+
+- The user asked to merge `dev` into the branch without building. Done with `git merge-tree` and `commit-tree` (merge commit `9c8feaa495`), so the rebuilt `build/` in `../three.js` stayed in place. The branch is checked out there.
+- The user first asked to also cover Mugen87's #35082 wish (`Texture`s for uncompressed data). A `DataTexture` branch for `RGBAFormat` 2D data was built and verified, then dropped after another agent's review. Its problems:
+  - it was inconsistent: uncompressed cube maps stay `CompressedCubeTexture`s, and `load()` still returns a `CompressedTexture` for the same file;
+  - it changed a working result: `loadAsync()` results lose `isCompressedTexture`.
+  - What it would buy: `GLTFExporter` writes `DataTexture`s from `image.data`, but decompresses any `CompressedTexture` on the GPU and throws without `setTextureUtils()`.
+  - It belongs to the callback-only step, when the results change anyway.
+  - Uncompressed cube maps could be a `CubeTexture` of `DataTexture` faces only with mip levels as cubes of `DataTexture`s (WebGL reads `mipmap.image[ i ].image`, WebGPU `mipmap.images[ i ]`). No loader builds that.
+- Review points applied: `// @deprecated r187` on the warning, tests for six files and uncompressed cube maps, and the TexData JSDoc typo (height). The two array-path issues are left alone, since they aren't new: an array that isn't six files misbehaves, and the last face loaded sets the format.
+- The rework is uncommitted and touches four files:
+  - `src/loaders/CompressedTextureLoader.js`:
+    - `_loadData()` loads and parses one file or six.
+    - `load()` behaves as on dev. When it loads a cube map it calls `warnOnce( 'CompressedTextureLoader: Loading cube maps with load() has been deprecated. Use loadAsync() instead.' ); // @deprecated r187`.
+    - `loadAsync()` resolves with `createTexture()`: a `CompressedCubeTexture` for faces (uncompressed ones too), a `CompressedTexture` otherwise. It doesn't go through `load()`, as `ObjectLoader.loadAsync()` doesn't.
+  - The `loadAsync` unit test (`test/unit/src/loaders/CompressedTextureLoader.tests.js`): compressed and uncompressed 2D, cube maps in one file (compressed and uncompressed), and in six files.
+  - `webgl_loader_texture_dds` and `webgl_loader_texture_pvrtc`: cube maps via `loadAsync().then()`, which assigns `envMap`. The `mapping` lines are dropped.
+  - The PR's DDS screenshot is kept.
+- Checks:
+  - eslint is clean, and `npm run test-unit` passes (1968 pass, 0 fail).
+  - The examples were rendered from `src/` with no build: Playwright rewrites the import map, and time is frozen at 0 (`scratchpad/verify/srcmap.mjs`, python http.server on 3019).
+  - DDS in WebGL and in WebGPU (`WebGPURenderer` swapped in): no errors, and both match the PR screenshot. PVRTC in WebGL: no errors.
+  - In-page: `load()` keeps returning 2D cube maps and logs the warning once. `loadAsync()` gives a `CompressedCubeTexture` (mapping 301), and a `CompressedTexture` for uncompressed data.
+- Proposed PR title: `CompressedTextureLoader: Return cube maps from loadAsync() as CompressedCubeTexture.`
+
 **io.**
 
 - Callback-only moves the source to the callback shape LoaderTextureDds already has (the #35081 workaround).
-- In the meantime, once `../three.js` has #35083: wrap the loaded faces in a `CompressedCubeTexture` in the load callback. That should restore the three cube maps (untested).
+- Done 2026-10-19: LoaderTextureDds wraps the loaded faces in a `CompressedCubeTexture` (`cubeTexture`) and assigns the env maps once loaded. Checked headless: the time-0 frame matches the reference screenshot, with no errors.
 
 ## mesh-count: MarchingCubes keeps its vertex count in `Mesh.count`
 
