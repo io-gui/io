@@ -1,6 +1,6 @@
 ---
 name: three.js Upstream Fixes
-overview: WebGPURenderer and addon bugs found while converting three.js examples (three_example_conversion.plan.md), with a fix plan for each and the example workarounds to remove once a fix is in the three io runs. Compressed textures were filed as #35081-#35084 (#35081-#35083 merged, #35084 in review); Mesh.count, dynamic buffers, instance count and Min/Max blending are planned here and not yet filed.
+overview: WebGPURenderer and addon bugs found while converting three.js examples (packages/three/src/demos/ExamplesConversion.plan.md), with a fix plan for each and the example workarounds to remove once a fix is in the three io runs. Compressed textures were filed as #35081-#35084 (#35081-#35083 merged, #35084 in review); Mesh.count, dynamic buffers, instance count and Min/Max blending are planned here and not yet filed.
 todos:
   - id: compressed-mipmaps
     content: "#35081 CompressedTexture: Default `mipmaps` to an empty array (branch fixes/compressed-texture-mipmaps). Merged 2026-10-19 (db1ef0781a). LoaderTextureDds assigns maps at the load call again (done 2026-10-19)"
@@ -43,7 +43,7 @@ isProject: false
 
 # three.js Upstream Fixes
 
-Bugs in `WebGPURenderer` or three addons that converted examples work around. Each section gives the cause with source references (three.js dev `0978e2b62e`, 2026-10-18), a standalone repro, the proposed fix and the workarounds that go once the fix is in the three io runs. The workaround index (example, code, what to restore) is the **Upstream workarounds** table in [three_example_conversion.plan.md](three_example_conversion.plan.md); code carries a `Workaround (upstream: <id>)` comment at each site (`grep -rn "Workaround (upstream" packages/three/src`).
+Bugs in `WebGPURenderer` or three addons that converted examples work around. Each section gives the cause with source references (three.js dev `0978e2b62e`, 2026-10-18), a standalone repro, the proposed fix and the workarounds that go once the fix is in the three io runs. Each example's sidecar (`packages/three/src/demos/examples/<Name>Example.md`) lists its workarounds under Workarounds (the fix id, the code and where, what to restore), and the Open table of [ExamplesConversion.plan.md](../../packages/three/src/demos/ExamplesConversion.plan.md) indexes them by example; code carries a `Workaround (upstream: <id>)` comment at each site (`grep -rn "Workaround (upstream" packages/three/src`).
 
 ## Workflow
 
@@ -51,7 +51,7 @@ Bugs in `WebGPURenderer` or three addons that converted examples work around. Ea
 - One branch per fix off `upstream/dev`, named `fixes/<topic>`, one commit, PR title in upstream style (`Component: Sentence.`). Maintainers prefer an issue or a minimal repro first and small steps (Mugen87 on #35002).
 - Repro first: a standalone page (`WebGPURenderer`, no io), checked headlessly against the dev build. Then the fix, `npm run lint` and `npm run test-unit` in `../three.js`, and the affected upstream examples (`npm run test-e2e` screenshots where they exist).
 - To test the io example without its workaround before a fix merges: check out the fix branch in `../three.js`, `npm run build`, restart `pnpm dev`, remove the workaround locally. Switch `../three.js` back to `dev` (and rebuild) afterwards.
-- **Removing a workaround:** once the fix is merged and in the build io links (and before publishing, in the three release io-gui requires), remove it as the table says, recheck the example (Perspective and Front views, its controls, all documents in one page) and mark the Audit row.
+- **Removing a workaround:** once the fix is merged and in the build io links (and before publishing, in the three release io-gui requires), remove it as the sidecar's Workarounds bullet says, recheck the example (Perspective and Front views, its controls, all documents in one page) and move the bullet to the sidecar's History (the conversion plan's Workflows, Remove a workaround).
 
 ## Compressed textures (filed 2026-10-18)
 

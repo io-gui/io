@@ -4,6 +4,7 @@
 
 ./CONTEXT.md # context map
 ./packages/<package_name>/CONTEXT.md # package context
+./packages/three/src/demos/CONTEXT.md # three.js examples
 
 # Architecture Decision Records
 
@@ -31,7 +32,7 @@ Other rules (read on demand):
 
 ## Cursor plans (`.cursor/plans/*.plan.md`)
 
-Design plans for past/ongoing work (frontmatter has `name`, `overview`, and a `todos` list with statuses). Check them for context before working on related features (layout package improvements, principles evaluation, three.js example conversion, three.js upstream fixes, three.js UI configs, core construction order).
+Design plans for past/ongoing work (frontmatter has `name`, `overview`, and a `todos` list with statuses). Check them for context before working on related features (layout package improvements, principles evaluation, three.js upstream fixes, three.js UI configs, core construction order). The three.js example conversion plan lives next to the examples instead: `packages/three/src/demos/ExamplesConversion.plan.md`, with a sidecar `examples/<Name>Example.md` per converted example (`node packages/three/scripts/examples.mjs check`).
 
 ## CI
 
