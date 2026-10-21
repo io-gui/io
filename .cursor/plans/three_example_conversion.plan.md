@@ -39,8 +39,8 @@ todos:
     content: "Unblock: once-per-frame renderer hook for compute / CubeCamera / render targets; scrub and wrap policy for GPU simulations. Done 2026-10-18: Document.onBeforeDraw(renderer, delta), ADR-0010 (delta = time played forward only)"
     status: completed
   - id: blocker-renderer-on-change
-    content: "Unblock: queue GPU work from a property handler (rebake probes, regenerate sky environment)"
-    status: pending
+    content: "Unblock: queue GPU work from a property handler (rebake probes, regenerate sky environment). Done 2026-10-20 without framework changes: the handler bumps a version, onBeforeDraw redoes the work per renderer (GPU work per frame)"
+    status: completed
   - id: blocker-view-camera
     content: "Unblock: content bound to the drawing camera (CSM, pass() in a material, camera layers)"
     status: pending
@@ -48,14 +48,14 @@ todos:
     content: "Unblock: stencil on the shared renderer; renderer.lighting, VSM, shadowMap.transmitted per document?"
     status: pending
   - id: blocker-transmission-views
-    content: "Unblock: transmission materials log 'Destroyed texture ... used in a submit' while several views redraw (framebuffer copy per view target). See Blockers"
-    status: pending
+    content: "Unblock: transmission materials log 'Destroyed texture ... used in a submit' while several views redraw (framebuffer copy per view target). Not reproducible 2026-10-20 (four views playing and resizing, clean on three 0.186.1 and on the r187dev build). See Blockers"
+    status: completed
   - id: framing-motion
     content: "First-show framing uses the bounds at rest; content that moves beyond them (AnimationKeys) leaves the frame"
     status: pending
   - id: low-hanging-2026-10-11
-    content: "Convert the unblocked candidates that need nothing from the editor (Candidates table, Audit rows)"
-    status: in_progress
+    content: "Convert the unblocked candidates that need nothing from the editor (Candidates table, Audit rows). Its last rows, LoaderGltfDispersion / Iridescence / Transmission, completed 2026-10-20"
+    status: completed
   - id: batch-2026-10-13
     content: "Convert 25 more unblocked candidates: morphs, materials, procedural/TSL, nine loaders, FogHeight, InstanceMesh, InstancePath, TslRagingSea (Audit: Converted 2026-10-13)"
     status: completed
@@ -95,6 +95,12 @@ todos:
   - id: active-camera-2026-10-19
     content: "Document.activeCamera (ADR-0011) and a view mode that follows it (View.setCameraView()); all 211 converted examples name their source camera as the active camera (outside the scene unless the source adds it; aspect 400 / 250), lights put back on cameras where sources carry them. Audit: Active cameras"
     status: completed
+  - id: batch-2026-10-20
+    content: "Convert 20: the renderer-on-change rows on onBeforeDraw (Sky, Lightprobes, LightprobesComplex, LightprobesSponza, LightsSunlight, CustomFog, Ocean, GeneratorBuilding, GeneratorCity), the transmission rows (MaterialsTransmission, MaterialsCar, MaterialsEnvmapsFasthdr, MaterialsEnvmapsGroundprojected, MaterialsPhysicalTransmissionAlpha, LoaderMaterialx, TslProceduralTerrain; LoaderGltfDispersion / Iridescence / Transmission completed) and the post-r186 rows on the linked r187dev build (MaterialsNodeProxy, TslOcclusionDither, LoaderGltfDiffuseRoughness, LoaderJpegxl) (Audit: Converted 2026-10-20, batch 5). New upstream sources sorted: LoaderVdb (dependency), LightsClusteredCity (renderer-option), webgl_loader_priority (not a candidate)"
+    status: completed
+  - id: r187-followups
+    content: "Once r187 is released: load the dev-branch assets from threejs.org (MaterialsEnvmapsFasthdr, LoaderMaterialx, LoaderGltfDiffuseRoughness, LoaderJpegxl: raw.githubusercontent.com/mrdoob/three.js/dev), raise the peer range to >=0.187.0. With @types/three 0.187: drop the @ts-expect-error imports (ProxyNodeMaterial, JXLLoader) and the casts for Light.registerNode, Texture.isPMREMTexture, ReferenceNode.element(), materialReference(). InstancingMorph still calls renderer.library.addLight() (deprecated in r187: SunLight.registerNode)"
+    status: pending
   - id: remove-workarounds
     content: "As each three_upstream_fixes.plan.md fix reaches the linked three build, remove its rows in Upstream workarounds (restore the source's code), recheck the example and update its Audit row"
     status: pending
@@ -113,7 +119,7 @@ The earlier `ThreeApplet` + `IoThreeExample` element pattern was replaced on 202
 - Convert from the r186 version. The checkout has no r183–r186 tags; the r186 release commit is `148ef33ecb` (`git -C ../three.js fetch --tags` would add `r186`):
   - `git -C ../three.js show 148ef33ecb:examples/<file>.html` (r186 version)
   - `git -C ../three.js log --oneline 148ef33ecb..HEAD -- examples/<file>.html` (later changes)
-- Port changes made after r186 only when 0.186 has the APIs. Upstream also reverts: the skinning sources used `SunLight` at r186 and went back to `DirectionalLight` after it, as ours do.
+- Port changes made after r186 only when 0.186 has the APIs. Exception since 2026-10-20 (batch 5): `packages/three/node_modules/three` links the `../three.js` dev checkout (r187dev), so post-r186 sources convert against it. r187-only APIs are typed with casts or `@ts-expect-error` imports, and assets that reach threejs.org only with r187 load from the dev branch on raw.githubusercontent.com (todo `r187-followups`). Rebuild `../three.js` after pulling: its committed `build/` can lag its `examples/jsm` addons (2026-10-20: the build predated #34936, and every addon loader threw `loader.setPriority is not a function`). Upstream also reverts: the skinning sources used `SunLight` at r186 and went back to `DirectionalLight` after it, as ours do.
 - After upgrading `three`, restart `pnpm dev`. Vite checks the lockfile only at startup and serves the old pre-bundled three until then.
 - `webgl_*` and `misc_*` sources convert too: classic materials run on `WebGPURenderer` through the node library. See the WebGPU notes below for the cases that do not.
 
@@ -207,13 +213,13 @@ Naming: drop the `webgl_` / `webgpu_` / `misc_` prefix and PascalCase the rest (
 | `renderer.compute(...)`, `cubeCamera.update(...)`, renders into targets in `animate()` | `onBeforeDraw(renderer, delta)` (see GPU work per frame) |
 | `animate()` with `Date.now()` or elapsed time | `onAnimate(delta, time)` deriving state from `time` |
 | `mixer.update(timer.getDelta())` | `mixer.update(delta)` in `onAnimate` |
-| TSL `time`, `oscSine()` (implicit `time`) | `this.timeline.timeNode`, for example `oscSine(this.timeline.timeNode)` |
+| TSL `time`, `oscSine()` (implicit `time`) | `this.timeline.timeNode`, for example `oscSine(this.timeline.timeNode)`. An addon material that reads `time` itself (`SkyMesh` clouds, `WaterMesh` waves): `material.contextNode = overrideNode( time, this.timeline.timeNode )` |
 | `uniform()` read by a scene node (`fogNode`, `environmentNode`) | `uniform().setGroup(renderGroup)`. A per-object uniform reaches the GPU only on a full refresh of its object; objects whose materials have no node properties get shared refreshes only, so the change never shows in forward views (TRAA views refresh fully for velocity). `timeline.timeNode` is shared already (see `shared-refresh` under Blockers) |
 | The source's main camera (`camera`: projection, position, `lookAt` or the controls' `target`, `up`) | `this.activeCamera` ([ADR-0011](../../packages/three/docs/adr/0011-documents-name-an-active-camera.md)): a camera named `Camera` with the source's fov or frustum, near, far, position and orientation, and aspect `400 / 250` (the reference screenshots), so the Scene Camera view reproduces the source's framing. Keep it out of the scene unless the source adds it there. Several cameras: the one the source renders the main view with; a source toggle between cameras (`animationView`) becomes a property that sets `activeCamera`. Cameras that are content (rigs, a camera riding a path) stay in the scene |
 | Light attached to the camera (`camera.add(light)`; the source adds the camera to the scene) | the same: the active camera in the scene with the light on it |
 | Relative asset path `models/gltf/X.glb` | `https://threejs.org/examples/models/gltf/X.glb` |
 | `dracoLoader.setDecoderPath(DRACO_GLTF_CONFIG)` | the same: the decoder resolves next to three's `DRACOLoader.js` (Vite rewrites the URL when pre-bundling; the bundle keeps three external) |
-| `Sky` + `pmremGenerator.fromScene(sky)` | an unselectable `SkyMesh` in the scene, plus a second one in a `Scene` of its own for `fromScene` in `onRendererInitialized` (AnimationKeyframes). `SkyMesh` drifts its clouds on TSL's global `time`, so set `cloudSpeed` to 0 unless they should move. A 10000-unit sky dominates whole-scene bounds: frame the model with `frame-object` |
+| `Sky` + `pmremGenerator.fromScene(sky)` | an unselectable `SkyMesh` in the scene, plus a second one in a `Scene` of its own for `fromScene` in `onRendererInitialized` (AnimationKeyframes). `SkyMesh` drifts its clouds on TSL's global `time`, so set `cloudSpeed` to 0 unless they should move; clouds that move follow the timeline with `sky.material.contextNode = overrideNode( time, this.timeline.timeNode )` (Sky, Ocean, GeneratorBuilding, GeneratorCity). A 10000-unit sky dominates whole-scene bounds: frame the model with `frame-object` |
 | Several viewports or scissor halves | scene cameras, seen through camera view tabs |
 | `ColorManagement.workingColorSpace = SRGBColorSpace` (global) | convert the content's colors to the working space instead: `material.colorNode = colorSpaceToWorking( colorNode, SRGBColorSpace )` (GaussianSplat) |
 | `scenePass.add( bloom( scenePass, strength, radius, threshold ) )` (bloom of the scene color) | `super({bloom: new Bloom({enabled: true, strength, radius, threshold})})`: the document's bloom, drawn by views that follow it (`View.bloom`; in the demo host the Scene Camera view). Bloom of an emissive MRT output has no equivalent yet (`bloom-emissive`, Water) |
@@ -252,6 +258,8 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 - Captures and renders into targets (`CubeCamera.update`, depth from below, collision heights) run on every call: they follow any change, including edits (CubemapDynamic, MaterialsEnvmapsBpcem, ShadowContact). Save and restore the renderer around a render into a target with `RendererUtils.resetRendererState` / `restoreRendererState`; restore objects hidden for a capture to their own visibility.
 - Move objects in `onAnimate`, from `time`; the hook runs after the scene is evaluated. A simulation that collides with a moving object interpolates toward its posed position over a draw's steps (ComputeCloth's sphere).
 - Initialize simulation buffers in `onRendererInitialized` (`renderer.compute( init )`), not in a compute node's `onInit`, which waits for the first step: a paused document would show uninitialized buffers.
+- Edits that need GPU work (regenerate a sky environment, re-bake light probes, convert an equirect to a cube map) bump a version in the property handler; the hook compares it with what each renderer last made and redoes the work, with `delta` 0 (LightsSunlight, CustomFog, Ocean, GeneratorBuilding: PMREM `fromScene` with a `PMREMGenerator` per renderer, reusing the target with `{ renderTarget }` where the source does; Lightprobes, LightprobesComplex: a bake per renderer and grid; MaterialsEnvmapsGroundprojected: `fromEquirectangularTexture` once per renderer). `scene.environment` holds one texture, so with several renderers the last one's wins, as with PMREMs from `onRendererInitialized`.
+- Probe grids that the source bakes over frames bake a slice per hook call and notify until the last pass is done, with progress per renderer that edits restart (LightprobesSponza 16 probes, GeneratorCity one row). Objects hidden for a bake (helpers, the city for its box proxy, a sun disc) are restored to their own state.
 - Buttons that do GPU work (`hit`, `reset`) count presses; the hook applies the presses each renderer has not applied yet (ComputeParticles, TslComputeAttractorsParticles).
 - Progressive work notifies from the hook to run again next frame, and stops when settled: ShadowmapProgressive accumulates for two blend windows after any change, and restarts when its light origin or model moves.
 - GPU state lives per renderer. Content bound to one renderer at construction (`ProgressiveLightMap`) serves the first renderer only.
@@ -297,7 +305,7 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 - `NoBlending` with `premultipliedAlpha` draws a texture's raw color where WebGL draws it premultiplied (black). Seen in MaterialsBlending's alpha flare row.
 - Canvas textures built from a DOM canvas: draw on an `OffscreenCanvas` (`CanvasTexture<OffscreenCanvas>`), or cut images with `createImageBitmap(image, sx, sy, sw, sh)` (MaterialsBlending, PanoramaCube).
 - Vertex attribute strides must be multiples of 4 bytes, so 3 × `Float16` is invalid; use `Float32Array` (GeometryColors).
-- A material with `fragmentNode` writes only the first color output: the TRAA views' MRT pass (color and velocity) makes WebGPU reject its pipeline. `LightProbeHelperGPU` is one: Lightprobe and LightprobeCubecamera give the helper a `MeshBasicNodeMaterial` whose `colorNode` is the same irradiance. `outputNode` is fine (it is merged with the MRT).
+- A material with `fragmentNode` writes only the first color output: the TRAA views' MRT pass (color and velocity) makes WebGPU reject its pipeline. `LightProbeHelperGPU` is one: Lightprobe and LightprobeCubecamera give the helper a `MeshBasicNodeMaterial` whose `colorNode` is the same irradiance. `LightProbeGridHelper` is another: Lightprobes, LightprobesComplex, LightprobesSponza and GeneratorCity reuse its `fragmentNode` as the `colorNode` of a `MeshBasicNodeMaterial` (checked 2026-10-20: the raw helper material makes the TRAA views fail validation). `outputNode` is fine (it is merged with the MRT).
 - A standard material's `envMap` that is a `CubeTexture` still loading binds a 2D placeholder as a cube in the PMREM path and fails WebGPU validation until it loads (upstream; the source races the same way). Add the mesh once the cube map has loaded (MaterialsDisplacementmap).
 - Addons built on `ShaderMaterial` (`Sky`, `Water`, `Reflector`) need their node versions (`SkyMesh`, `WaterMesh`, TSL `reflector()`).
 - WebGPU allows 8 vertex buffers per pipeline. An `InstancedMesh` adds its instance matrix, and TRAA views a second one for velocity: geometry with four instanced attributes (Reflection's tree) stays `Mesh.count` instances.
@@ -334,6 +342,7 @@ Example code that works around a three bug and differs from its source because o
 | LoaderTextureDds | cube maps assigned once loaded, wrapped as `CompressedCubeTexture`s (`cubeTexture`, `loadCubemap`) | #35084 (in review) | `cubemap1`-`cubemap3` from `load()` as `envMap` at material creation, with the source's callbacks; if #35084 lands as `loadAsync()`, follow the updated source |
 | MaterialsDisplacementmap | head added once the cube map has loaded | `triage-cube-envmap-loading` | add the head when the model loads |
 | Lightprobe, LightprobeCubecamera | `useBasicMaterial()`: the probe helper gets a `MeshBasicNodeMaterial` | `triage-fragment-node-mrt` | the helper's own material |
+| Lightprobes, LightprobesComplex, LightprobesSponza, GeneratorCity | `useBasicMaterial()`: the `LightProbeGridHelper` gets a `MeshBasicNodeMaterial` with its `fragmentNode` as `colorNode` | `triage-fragment-node-mrt` | the helper's own material |
 | LoaderLdraw | `ConditionalLineMaterial`: `fragmentNode` moved to `outputNode` | `triage-fragment-node-mrt` | `setConditionalLineMaterial( LDrawConditionalLineMaterial )` |
 
 ## Workflow
@@ -379,10 +388,10 @@ Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 co
 | LightsRectarealight | `webgpu_lights_rectarealight` | 4π s loop; light panels from the light helpers overlay (2026-10-13); source camera is the active camera; editor views frame a stand-in for the knot and the turning panels (`getEditorFrameTarget`, ADR-0012) | Fixed 2026-10-19: views framed the 2000-unit floor (`framing-scenery`) |
 | Shadowmap | `webgpu_shadowmap` | 40π s loop (knot 0.25 / 0.5 / 1, light group 0.7 rad/s); source camera kept as `Camera` | Open: `framing-scenery` (600-unit ground; with the 50–100 fog the perspective view opens on fog color) |
 | Skinning | `webgpu_skinning` | point light at the source camera's position instead of on the camera; frames the model | OK |
-| LoaderGltfIridescence | `webgpu_loader_gltf_iridescence` | camera auto-rotation dropped; frames the model | Open: `transmission-views` |
+| LoaderGltfIridescence | `webgpu_loader_gltf_iridescence` | camera auto-rotation dropped; frames the model | OK: `transmission-views` not reproducible (2026-10-20: playing in four views with resizes, no errors) |
 | LoaderGltfAnisotropy | `webgpu_loader_gltf_anisotropy` | frames the model | OK |
-| LoaderGltfDispersion | `webgpu_loader_gltf_dispersion` | frames the model | Open: `transmission-views` |
-| LoaderGltfTransmission | `webgpu_loader_gltf_transmission` | duration = clip; camera auto-rotation dropped; frames the model | Open: `transmission-views` |
+| LoaderGltfDispersion | `webgpu_loader_gltf_dispersion` | frames the model | OK: `transmission-views` not reproducible (2026-10-20: playing in four views with resizes, no errors) |
+| LoaderGltfTransmission | `webgpu_loader_gltf_transmission` | duration = clip; camera auto-rotation dropped; frames the model | OK: `transmission-views` not reproducible (2026-10-20: playing in four views with resizes, no errors) |
 | PmremCubemap | `webgpu_pmrem_cubemap` | spheres grouped, framed on load | OK |
 | PmremEquirectangular | `webgpu_pmrem_equirectangular` | spheres grouped, framed on load | OK |
 | CubemapMix | `webgpu_cubemap_mix` | TSL `time` -> `timeline.timeNode`; 10 s loop (one cross-fade cycle) | OK |
@@ -578,12 +587,33 @@ Sources compared at r186 and HEAD. "Fixed" is what this audit changed. All 15 co
 | Moving cameras | | | from document time where the source's motion fits the loop in whole turns: Helpers (orbit, 10 turns), CubemapDynamic, MeshBatch, Reflection and InstancingPerformance (`OrbitControls.autoRotate`, one turn per loop; InstancingPerformance plays for it, a 30 s loop); InstancingMorph as before. Slower motions stand where they start: Geometries, Materials, InstancingDynamic, LoaderColladaKinematics, LoaderDraco, LoaderPly, LoaderStl, MorphtargetsHorse (orbits), Equirectangular, LoaderGltfIridescence, LoaderGltfTransmission, ParallaxUv, ReflectionBlurred, ReflectionRoughness (auto-rotation). Pointer-driven cameras rest where the pointer at the centre leaves them (GeometryColors, InstanceSprites, LinesColors, MaterialsBasic, MaterialsCubemapRefraction, PointsBillboards, PointsSprites, PointsWaves). Watch: where the source's 6 s tween ends |
 | Special cameras | | | Z-up sources turned like their models (Loader3mf, LoaderAmf, Loader3dm: (x, y, z) → (x, z, - y)); LoaderGltf and GaussianSplat refit the camera to each loaded model as the sources do (`fitCameraToSelection`, `fitCameraToSplats`); GeometryExtrudeSplines' `animationView` is back and switches the active camera to `SplineCamera`; Camera: the source's overview (right half, aspect `0.5 * 400 / 250`), the rig's cameras stay scene cameras; TrainCamera in AnimationKeyframes stays as content. LoaderTextureKtx2 names none: its source draws one scene per file, each through its own camera |
 | Open | | | Helpers the sources show as visuals come from overlays, which the Scene Camera view does not draw: LoaderBvh shows nothing (its bare skeleton; the source adds a `SkeletonHelper`), LightsRectarealight and MaterialsEnvmapsBpcem lack their glowing area-light panels. Either the Scene Camera view draws light and skeleton helpers, or examples whose helpers are the subject author them as content |
+| **Converted 2026-10-20, batch 5** | | | The renderer-on-change rows on `onBeforeDraw` (GPU work per frame), the transmission rows and the post-r186 rows on the linked r187dev build. Checked headlessly on a scratch Vite server with three from `../three.js/src` (HEAD `d94661f706`): the active view against `examples/screenshots`, and Sponza, Ocean, GeneratorCity and LoaderMaterialx against their sources rendered from the same sources on the same GPU (`srcmap.mjs`); property edits and scrubbing step by step; the transmission rows playing in four views while the window resizes. All 20 and the three completed glTF rows opened in one page: no errors; warnings only from the MaterialX samples' own logs and the JPEG XL fallback. Tests 211/211, `tsc`, eslint (0 errors) |
+| Sky | `webgpu_sky` | the `CubeCamera` captures in `onBeforeDraw` on every change; clouds drift on the timeline (`overrideNode( time, timeline.timeNode )`, 60 s loop, jump at the wrap); the source's `exposure` is the document's; frames the sphere | OK |
+| Lightprobes | `webgpu_lightprobes` | the grid bakes in `onBeforeDraw`, once per renderer and grid; `resolution` replaces the grid (no 250 ms debounce); `gi` (source `enabled`); the grid helper's basic material (Upstream workarounds); walls unselectable | OK |
+| LightprobesComplex | `webgpu_lightprobes_complex` | as Lightprobes; both grids and helpers hidden while either bakes, as the source bakes them before adding them | OK |
+| LightprobesSponza | `webgpu_lightprobes_sponza` | HEAD (16 probes per frame, `SunLight.registerNode`, r187); progressive bake in `onBeforeDraw`, per renderer, restarted by the light, `shadows` and `bounces`; the counts replace the grid; `shadows` switches the sun's `castShadow` only (the shadow map is the shared renderer's); first-person controls and Log Camera dropped | OK: matches the source rendered from src (the screenshot is brighter) |
+| LightsSunlight | `webgpu_lights_sunlight` | the sky environment regenerates in `onBeforeDraw` when the sun moves, from a second `SkyMesh` in a scene of its own; `shadowFar`, `shadowRes`; `SunLight.registerNode` (r187); first-person controls dropped; the cascades refit per view | OK |
+| CustomFog | `webgpu_custom_fog` | the environment regenerates in `onBeforeDraw` (target reused); fog noise on `timeline.timeNode` (60 s loop, jumps at the wrap); the forest thins around the active camera in every view (the source's main camera, not the drawing one, which is the light in the shadow pass); `regenerate` applies `erosion` / `valleyBias` with the next seed, as in the source; first-person controls dropped | OK |
+| Ocean | `webgpu_ocean` | the environment regenerates in `onBeforeDraw`; waves and clouds on the timeline (`overrideNode`); the box from time (20π s loop: its z turn, the waves and the clouds jump at the wrap); bloom is the document's; frames the box | OK: matches the source rendered from src |
+| GeneratorBuilding | `webgpu_generator_building` | the environment (no sun disc) regenerates in `onBeforeDraw`; `OrbitControls.autoRotate` from time, one turn per 200 s loop; clouds on the timeline; `DirectionalLight` as at HEAD (#34586); frames the tower | OK |
+| GeneratorCity | `webgpu_generator_city` | probes bake a row per draw against the box proxy, after the environment; both per renderer, restarted by `seed` / `timeOfDay`; bloom is the document's (its quarter resolution dropped); clouds on the timeline; first-person controls dropped; the grid helper's basic material | OK: matches the source rendered from src |
+| MaterialsTransmission | `webgpu_materials_transmission` | stripes drawn on an `OffscreenCanvas`; `thickness` 0.01 applied from the start (the source only on edit) | OK |
+| MaterialsCar | `webgl_materials_car` | wheels and grid scroll from time (10 s loop); the colour pickers are `body`, `details`, `glass`; the grid is content (unselectable) | OK |
+| MaterialsEnvmapsFasthdr | `webgl_materials_envmaps_fasthdr` | HEAD (r187 prefiltered cubemaps with `isPMREMTexture`; r186 loaded CubeUV atlases) from the dev branch; a KTX2 loader per load from the first renderer; `blurriness` (source `backgroundBlurriness`); `fov` sets the active camera's | OK |
+| MaterialsEnvmapsGroundprojected | `webgpu_materials_envmaps_groundprojected` | the cube map converts in `onBeforeDraw` once per renderer; the skybox is added once the HDR has loaded; `grounded` hides it and shows the HDR background; frames the car | OK |
+| MaterialsPhysicalTransmissionAlpha | `webgl_materials_physical_transmission_alpha` | the HTML table behind the transparent canvas is a `Table` of four unlit quads behind the model (tone-mapped with the frame, so paler than CSS colors); every control starts from the dragon's material (the source reads nine) | OK |
+| LoaderMaterialx | `webgpu_loader_materialx` | HEAD; image handlers on the loader's own `LoadingManager` (the source adds them to `DefaultLoadingManager`); `compileAsync` dropped; local samples from the dev branch (four are r187); models named by sample; frames a stand-in for the final grid; `showCalibration`, `showPreview` | OK. One `tangent` attribute warning in some runs, origin unknown (all visible ball meshes have tangents). The source rendered from src logs ~360 WebGPU validation errors (upstream `triage-materialx-compile-async`) |
+| TslProceduralTerrain | `webgpu_tsl_procedural_terrain` | the pointer drag is the `offset` property; `DirectionalLight` as at HEAD (#34586); water controls in a Water group | OK |
+| MaterialsNodeProxy | `webgpu_materials_node_proxy` | post-r186; `ProxyNodeMaterial` (r187) through a `@ts-expect-error` import; the spheres in a `Spheres` group; waves on the timeline (4π s loop); the shader build count and compile time dropped | OK |
+| TslOcclusionDither | `webgpu_tsl_occlusion_dither` | post-r186; walk derived from time (one circle per 2π / 0.35 s loop; the stride jumps at the wrap); `paused` is the transport; frames the walls; each view cuts the cone from its own camera | OK |
+| LoaderGltfDiffuseRoughness | `webgpu_loader_gltf_diffuse_roughness` | post-r186; the model from the dev branch | OK |
+| LoaderJpegxl | `webgpu_loader_jpegxl` | post-r186; tone mapping and exposure are the document's; HTML labels dropped (the planes are named); the image from the dev branch | OK on the fallback only: headless Chromium has no float16 `srgb-linear` canvas, so the JPEG XL plane is dark and warns, as the source does there |
 
 Removed: CameraLogarithmicDepthBuffer (renderer-level option, see What fits); CameraArray (runtime multi-view, see What fits; 2026-10-13).
 
 ## Candidates (2026-10-11)
 
-Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at r186). Selection rules:
+Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at r186; 615 at HEAD on 2026-10-20, the four new sources sorted in). Selection rules:
 
 - An example with both a `webgl_*` and a `webgpu_*` version converts from the `webgpu_*` one. Renamed twins count too: `webgl_gpgpu_birds` -> `webgpu_compute_birds`, `gpgpu_water` -> `compute_water`, `materials_physical_clearcoat` -> `clearcoat`, `materials_physical_transmission` -> `materials_transmission`, `materials_subsurface_scattering` -> `materials_sss`, `shaders_ocean` -> `ocean`, `shaders_sky` -> `sky`, `materials_cubemap_dynamic` -> `cubemap_dynamic`, `texture2darray(_compressed)` -> `textures_2d-array(_compressed)`, `materials_texture_partialupdate` -> `textures_partialupdate`, `materials_texture_anisotropy` -> `textures_anisotropy`, `rendertarget_texture2darray` -> `rendertarget_2d-array_3d`, `panorama_equirectangular` -> `equirectangular`, `video_panorama_equirectangular` -> `video_panorama`, `postprocessing_unreal_bloom(_selective)` -> `postprocessing_bloom(_selective)`, `postprocessing_sao / ssao / gtao` -> `postprocessing_ao`, `postprocessing_taa` -> `postprocessing_traa`.
 - `webgl_*` / `misc_*` only: kept when the scene stands on its own once the host-provided parts are dropped. GLSL (`ShaderMaterial`, `onBeforeCompile`) is rewritten in TSL only when the shader is small and not the subject.
@@ -648,8 +678,8 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | GeometryTextShapes | `webgl_geometry_text_shapes` | completed | — | see Audit |
 | GeometryTextStroke | `webgl_geometry_text_stroke` | completed | — | see Audit |
 | GeometryCsg | `webgl_geometry_csg` | TODO | `dependency` | `three-bvh-csg` |
-| GeneratorBuilding | `webgpu_generator_building` | TODO | `renderer-on-change` | `timeOfDay` re-bakes the sky environment (`fromScene`); the generator controls rebuild geometry only |
-| GeneratorCity | `webgpu_generator_city` | TODO | `renderer-on-change` | bloom dropped; the probe grid bakes over several frames in `onBeforeDraw` (ADR-0010), and `seed` / `timeOfDay` restart the bake and re-bake the sky environment |
+| GeneratorBuilding | `webgpu_generator_building` | completed | — | see Audit |
+| GeneratorCity | `webgpu_generator_city` | completed | — | see Audit |
 | InstanceMesh | `webgpu_instance_mesh` | completed | — | see Audit |
 | InstancePath | `webgpu_instance_path` | completed | — | see Audit |
 | InstanceSprites | `webgpu_instance_sprites` | completed | — | see Audit |
@@ -690,16 +720,16 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | MaterialsCubemapMipmaps | `webgpu_materials_cubemap_mipmaps` | completed | — | see Audit |
 | MaterialsDisplacementmap | `webgpu_materials_displacementmap` | completed | — | see Audit |
 | MaterialsEnvmaps | `webgpu_materials_envmaps` | completed | — | see Audit |
-| MaterialsEnvmapsGroundprojected | `webgpu_materials_envmaps_groundprojected` | TODO | `transmission-views` | `GroundedSkybox` dominates bounds (`framing-scenery`); glass is `transmission: 1` |
+| MaterialsEnvmapsGroundprojected | `webgpu_materials_envmaps_groundprojected` | completed | — | see Audit |
 | MaterialsEnvmapsBpcem | `webgpu_materials_envmaps_bpcem` | completed | — | see Audit |
 | MaterialsLightmap | `webgpu_materials_lightmap` | completed | — | see Audit |
 | MaterialsMatcap | `webgpu_materials_matcap` | completed | — | see Audit |
 | MaterialsRetroreflection | `webgpu_materials_retroreflection` | completed | — | see Audit |
 | MaterialsSss | `webgpu_materials_sss` | completed | — | see Audit |
 | MaterialsToon | `webgpu_materials_toon` | completed | — | see Audit; toon outline post dropped |
-| MaterialsTransmission | `webgpu_materials_transmission` | TODO | `transmission-views` |  |
+| MaterialsTransmission | `webgpu_materials_transmission` | completed | — | see Audit |
 | MaterialxNoise | `webgpu_materialx_noise` | completed | — | see Audit |
-| LoaderMaterialx | `webgpu_loader_materialx` | TODO | `transmission-views` | the transmission test files |
+| LoaderMaterialx | `webgpu_loader_materialx` | completed | — | see Audit |
 | Clearcoat | `webgpu_clearcoat` | completed | — | see Audit |
 | CubemapAdjustments | `webgpu_cubemap_adjustments` | completed | — | see Audit |
 | CubemapMix | `webgpu_cubemap_mix` | completed | — | see Audit |
@@ -709,16 +739,16 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | MaterialsBlending | `webgl_materials_blending` | completed | — | see Audit |
 | MaterialsBlendingCustom | `webgl_materials_blending_custom` | completed | — | see Audit |
 | MaterialsBumpmap | `webgl_materials_bumpmap` | completed | — | see Audit |
-| MaterialsCar | `webgl_materials_car` | TODO | `transmission-views` | wheel spin and grid scroll from time; body / detail / glass colors; glass is `transmission: 1` |
+| MaterialsCar | `webgl_materials_car` | completed | — | see Audit |
 | MaterialsCubemap | `webgl_materials_cubemap` | completed | — | see Audit |
 | MaterialsCubemapRefraction | `webgl_materials_cubemap_refraction` | completed | — | see Audit |
 | MaterialsEnvmapsExr | `webgl_materials_envmaps_exr` | completed | — | see Audit |
-| MaterialsEnvmapsFasthdr | `webgl_materials_envmaps_fasthdr` | TODO | `transmission-views` | `transmission: 1` material |
+| MaterialsEnvmapsFasthdr | `webgl_materials_envmaps_fasthdr` | completed | — | see Audit |
 | MaterialsEnvmapsHdr | `webgl_materials_envmaps_hdr` | completed | — | see Audit |
 | MaterialsModified | `webgl_materials_modified` | completed | — | see Audit |
 | MaterialsNormalmap | `webgl_materials_normalmap` | completed | — | see Audit |
 | MaterialsNormalmapObjectSpace | `webgl_materials_normalmap_object_space` | completed | — | see Audit |
-| MaterialsPhysicalTransmissionAlpha | `webgl_materials_physical_transmission_alpha` | TODO | `transmission-views` |  |
+| MaterialsPhysicalTransmissionAlpha | `webgl_materials_physical_transmission_alpha` | completed | — | see Audit |
 | MaterialsTextureRotation | `webgl_materials_texture_rotation` | completed | — | see Audit |
 | Equirectangular | `webgpu_equirectangular` | completed | — | see Audit |
 | PanoramaCube | `webgl_panorama_cube` | completed | — | see Audit |
@@ -734,20 +764,20 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | LoaderTextureUltrahdr | `webgl_loader_texture_ultrahdr` | completed | — | see Audit |
 | Tonemapping | `webgpu_tonemapping` | completed | — | see Audit |
 | VolumeCloud | `webgpu_volume_cloud` | completed | — | see Audit |
-| MaterialsNodeProxy | `webgpu_materials_node_proxy` | TODO | `three-upgrade` | not in r186 |
+| MaterialsNodeProxy | `webgpu_materials_node_proxy` | completed | — | see Audit |
 | **TSL and procedural** | | | | |
 | TslAngularSlicing | `webgpu_tsl_angular_slicing` | completed | — | see Audit |
 | TslEarth | `webgpu_tsl_earth` | completed | — | see Audit |
 | TslGalaxy | `webgpu_tsl_galaxy` | completed | — | see Audit |
 | TslHalftone | `webgpu_tsl_halftone` | completed | — | see Audit |
-| TslProceduralTerrain | `webgpu_tsl_procedural_terrain` | TODO | `transmission-views` | pointer drag dropped; the water is `transmission: 1` |
+| TslProceduralTerrain | `webgpu_tsl_procedural_terrain` | completed | — | see Audit |
 | TslRagingSea | `webgpu_tsl_raging_sea` | completed | — | see Audit |
 | TslVfxFlames | `webgpu_tsl_vfx_flames` | completed | — | see Audit |
 | TslVfxTornado | `webgpu_tsl_vfx_tornado` | completed | — | see Audit |
 | TslWood | `webgpu_tsl_wood` | completed | — | see Audit |
 | TslVfxLinkedparticles | `webgpu_tsl_vfx_linkedparticles` | TODO | `document-pipeline` | |
 | TslComputeAttractorsParticles | `webgpu_tsl_compute_attractors_particles` | completed | — | see Audit |
-| TslOcclusionDither | `webgpu_tsl_occlusion_dither` | TODO | `three-upgrade` | not in r186 |
+| TslOcclusionDither | `webgpu_tsl_occlusion_dither` | completed | — | see Audit |
 | **Compute simulations** | | | | |
 | ComputeBirds | `webgpu_compute_birds` | completed | — | see Audit |
 | ComputeCloth | `webgpu_compute_cloth` | completed | — | see Audit |
@@ -760,16 +790,16 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | ComputeWater | `webgpu_compute_water` | completed | — | see Audit |
 | VolumeFire | `webgpu_volume_fire` | TODO | `document-pipeline` | |
 | **Lights, shadows, environment** | | | | |
-| CustomFog | `webgpu_custom_fog` | TODO | `renderer-on-change` | sun `elevation` / `azimuth` re-bake the sky environment (`fromScene`) |
+| CustomFog | `webgpu_custom_fog` | completed | — | see Audit |
 | FogHeight | `webgpu_fog_height` | completed | — | see Audit |
 | CustomFogBackground | `webgpu_custom_fog_background` | TODO | `document-pipeline` | fog composed in post |
 | CustomFogScattering | `webgpu_custom_fog_scattering` | TODO | `document-pipeline` | |
 | Lensflares | `webgpu_lensflares` | completed | — | see Audit |
 | Lightprobe | `webgpu_lightprobe` | completed | — | see Audit; open: `shared-refresh` (probe `intensity`) |
 | LightprobeCubecamera | `webgpu_lightprobe_cubecamera` | completed | — | see Audit |
-| Lightprobes | `webgpu_lightprobes` | TODO | `renderer-on-change` | bake in `onRendererInitialized`; the resolution control rebakes |
-| LightprobesComplex | `webgpu_lightprobes_complex` | TODO | `renderer-on-change` | as Lightprobes |
-| LightprobesSponza | `webgpu_lightprobes_sponza` | TODO | `renderer-on-change` | as Lightprobes |
+| Lightprobes | `webgpu_lightprobes` | completed | — | see Audit |
+| LightprobesComplex | `webgpu_lightprobes_complex` | completed | — | see Audit |
+| LightprobesSponza | `webgpu_lightprobes_sponza` | completed | — | see Audit |
 | LightsCustom | `webgpu_lights_custom` | completed | — | see Audit |
 | LightsIesSpotlight | `webgpu_lights_ies_spotlight` | completed | — | see Audit |
 | LightsPhong | `webgpu_lights_phong` | completed | — | see Audit |
@@ -779,11 +809,12 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | LightsRectarealight | `webgpu_lights_rectarealight` | completed | — | see Audit |
 | LightsSelective | `webgpu_lights_selective` | completed | — | see Audit |
 | LightsSpotlight | `webgpu_lights_spotlight` | completed | — | see Audit |
-| LightsSunlight | `webgpu_lights_sunlight` | TODO | `renderer-on-change` | `azimuth` / `elevation` re-bake the sky environment (`fromScene`). The cascades refit per camera per frame (`ShadowNode` keys updates by camera), so they work per view |
+| LightsSunlight | `webgpu_lights_sunlight` | completed | — | see Audit |
 | LightsHemisphere | `webgl_lights_hemisphere` | completed | — | see Audit |
 | LightsSpotlights | `webgl_lights_spotlights` | completed | — | see Audit |
 | LightsDynamic | `webgpu_lights_dynamic` | TODO | `renderer-option` | `renderer.lighting = new DynamicLighting()` |
 | LightsClustered | `webgpu_lights_clustered` | TODO | `renderer-option` | `renderer.lighting` (clustered); FXAA dropped |
+| LightsClusteredCity | `webgpu_lights_clustered_city` | TODO | `renderer-option` | `renderer.lighting = new ClusteredLighting( 2048 )` (post-r186, 2026-10-16); its bloom would be the document's; traffic and light animation from time; the camera tour as an animated active camera |
 | Shadowmap | `webgpu_shadowmap` | completed | — | see Audit; source camera kept as scene camera (`framing-scenery`) |
 | ShadowmapArray | `webgpu_shadowmap_array` | completed | — | see Audit |
 | ShadowmapPointlight | `webgpu_shadowmap_pointlight` | completed | — | see Audit |
@@ -796,8 +827,8 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | Shadowmesh | `webgl_shadowmesh` | TODO | `renderer-option` | `ShadowMesh` writes stencil |
 | Caustics | `webgpu_caustics` | TODO | `renderer-option` | `shadowMap.transmitted` |
 | Occlusion | `webgpu_occlusion` | completed | — | see Audit |
-| Sky | `webgpu_sky` | TODO | `renderer-on-change` | sky controls regenerate the environment (`CubeCamera`); the AnimationKeyframes `SkyMesh` pattern covers the first bake |
-| Ocean | `webgpu_ocean` | TODO | `renderer-on-change` | sky `elevation` / `azimuth` re-bake the environment (`fromScene`); bloom dropped; sky / water dominate bounds (`framing-scenery`) |
+| Sky | `webgpu_sky` | completed | — | see Audit |
+| Ocean | `webgpu_ocean` | completed | — | see Audit |
 | Water | `webgpu_water` | completed | — | see Audit |
 | BackdropWater | `webgpu_backdrop_water` | TODO | `document-pipeline` | the underwater mask is post |
 | Mirror | `webgpu_mirror` | completed | — | see Audit |
@@ -840,11 +871,12 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | LoaderGltf | `webgpu_loader_gltf` | completed | — | see Audit |
 | LoaderGltfAnisotropy | `webgpu_loader_gltf_anisotropy` | completed | — | see Audit |
 | LoaderGltfCompressed | `webgpu_loader_gltf_compressed` | completed | — | see Audit |
-| LoaderGltfDispersion | `webgpu_loader_gltf_dispersion` | in progress | `transmission-views` | converted, see Audit; WebGPU errors while playing |
-| LoaderGltfIridescence | `webgpu_loader_gltf_iridescence` | in progress | `transmission-views` | converted, see Audit; WebGPU errors while playing |
+| LoaderGltfDispersion | `webgpu_loader_gltf_dispersion` | completed | — | see Audit |
+| LoaderGltfIridescence | `webgpu_loader_gltf_iridescence` | completed | — | see Audit |
 | LoaderGltfSheen | `webgpu_loader_gltf_sheen` | completed | — | see Audit |
-| LoaderGltfTransmission | `webgpu_loader_gltf_transmission` | in progress | `transmission-views` | converted, see Audit; WebGPU errors while playing |
-| LoaderGltfDiffuseRoughness | `webgpu_loader_gltf_diffuse_roughness` | TODO | `three-upgrade` | not in r186 |
+| LoaderGltfTransmission | `webgpu_loader_gltf_transmission` | completed | — | see Audit |
+| LoaderGltfDiffuseRoughness | `webgpu_loader_gltf_diffuse_roughness` | completed | — | see Audit |
+| LoaderJpegxl | `webgpu_loader_jpegxl` | completed | — | see Audit (post-r186, 2026-10-19) |
 | LoaderGltfAvif | `webgl_loader_gltf_avif` | completed | — | see Audit |
 | LoaderGltfInstancing | `webgl_loader_gltf_instancing` | completed | — | see Audit |
 | LoaderGltfVariants | `webgl_loader_gltf_variants` | completed | — | see Audit |
@@ -875,12 +907,13 @@ Every `src_examples` source sorted against What fits (611 files at HEAD, 608 at 
 | LoaderVrml | `webgl_loader_vrml` | completed | — | see Audit |
 | LoaderXyz | `webgl_loader_xyz` | completed | — | see Audit |
 | LoaderIfc | `webgl_loader_ifc` | TODO | `dependency` | `web-ifc` |
+| LoaderVdb | `webgl_loader_vdb` | TODO | `dependency` | `three-vdb-loader` (post-r186, 2026-10-16); threshold / range / opacity / steps re-run the volume material |
 
 Not candidates:
 
 - **Out of scope** (as asked): `webxr_*`, `webgpu_xr_*`, `css2d_*`, `css3d_*`, `svg_*`, plus `physics_*` (external engines stepping in wall-clock time), `webaudio_*`, `games_fps`, `index`.
 - **WebGL twins** of the webgpu examples above (81 by name, plus the renamed ones under the selection rules).
-- **Renderer-level or renderer tests**: `camera_logarithmicdepthbuffer`, `reversed_depth_buffer`, `centroid_sampling`, `multisampled_renderbuffers`, `hdr`, `compile_async`, `furnace_test`, `pmrem_test`, `test_memory`, `webgl_test_memory2`, `webgl_test_wide_gamut`, `performance`, `performance_renderbundle`, `multiple_canvas`, `display_stereo`, `webgl_effects_*`, `webgl_worker_offscreencanvas`, `webgl_buffergeometry_glbufferattribute`, `webgl_clipculldistance`, `webgl_ubo`, `webgl_ubo_arrays`, `webgl_read_float_buffer`, `webgpu_renderer_pathtracer` (post-r186).
+- **Renderer-level or renderer tests**: `camera_logarithmicdepthbuffer`, `reversed_depth_buffer`, `centroid_sampling`, `multisampled_renderbuffers`, `hdr`, `compile_async`, `furnace_test`, `pmrem_test`, `test_memory`, `webgl_test_memory2`, `webgl_test_wide_gamut`, `performance`, `performance_renderbundle`, `multiple_canvas`, `display_stereo`, `webgl_effects_*`, `webgl_worker_offscreencanvas`, `webgl_buffergeometry_glbufferattribute`, `webgl_clipculldistance`, `webgl_ubo`, `webgl_ubo_arrays`, `webgl_read_float_buffer`, `webgpu_renderer_pathtracer` (post-r186), `webgl_loader_priority` (post-r186: fetch priorities and their timings in the DOM; its one model is LoaderGltf's).
 - **Custom render loops, render targets, split screens**: `depth_texture`, `rtt`, `multiple_elements`, `webgl_multiple_elements_text`, `multiple_rendertargets(_readback)`, `webgl_multiple_scenes_comparison`, `webgl_multiple_views`, `rendertarget_2d-array_3d`, `webgl_framebuffer_texture`, `mrt`, `mrt_mask`, `deferred`, `webgl_simple_gi`, `texturegather`, `texturegrad`, `materials_texture_manualmipmap`, `textures_anisotropy`, `webgl_materials_texture_filters`, `webgl_shadowmap_viewer`, `storage_buffer`, `struct_drawindirect`, `compute_reduce`, `compute_sort_bitonic`, `compute_rasterizer(_ibl)`, `compute_texture_pingpong`, `shadertoy`, `tsl_interoperability`.
 - **Screen-space filters**: these are view pipelines (`pipelineTypes.register` in the host), not documents: `postprocessing`, `postprocessing_3dlut`, `_afterimage`, `_anamorphic`, `_ca`, `_difference`, `_direct`, `_fxaa`, `_masking`, `_motion_blur`, `_pixel`, `_radial_blur`, `_retro`, `_smaa`, `_sobel`, `_ssaa`, `_transition`, `_traa`, `upscaling_fsr1`, `upscaling_taau`; webgl only: `postprocessing_advanced`, `_backgrounds`, `_glitch`, `_procedural`, `_rgb_halftone`, `_dof2`.
 - **Interaction is the subject** (tools and operators): `misc_boxselection`, `misc_controls_*`, `misc_raycaster_helper`, `webgl_animation_skinning_ik`, `webgl_animation_walk`, `webgl_decals`, `webgl_geometry_spline_editor`, `webgl_geometry_terrain_raycast`, `webgl_interactive_*`, `webgl_instancing_raycast`, `lines_fat_raycasting`, `webgl_math_obb`, `webgl_modifier_curve_instanced`, `webgl_raycaster_*`, `sculpt`, `webgl_materials_texture_canvas`, `webgl_loader_md2_control`, `compute_geometry`, `webgl_buffergeometry_selective_draw`, `webgl_batch_lod_bvh`.
@@ -896,13 +929,13 @@ Features or fixes outside the examples. Each one unblocks the rows tagged with i
 
 - **`document-pipeline`**: a document cannot bring a post-processing graph. Pipelines are registered by the host (`pipelineTypes.register` in `IoEditorExample.ts`) and picked per `View.pipeline` (ADR-0006). Needed: a document-declared builder (`PostProcessingBuilder`) that views use, plus scene inputs it can read (MRT outputs such as emissive or a per-object bloom flag, the scene's lights). Also unblocks the full look of rows that drop cosmetic post. Bloom of the scene color is covered since 2026-10-16 by `Document.bloom` with a per-view override (`document-bloom` in the future-work plan); emissive bloom is not (`bloom-emissive`).
 - **`per-frame-gpu`** (resolved 2026-10-18): GPU work every tick (`renderer.compute`, `CubeCamera.update`, a render into a target). `Document.onBeforeDraw(renderer, delta)` ([ADR-0010](../../packages/three/docs/adr/0010-documents-do-frame-gpu-work-before-views-draw.md)) runs once per frame and renderer, before views draw the document's changes; `delta` counts only time played forward, so simulations are live documents (ADR-0009). See Conversion rules, GPU work per frame.
-- **`renderer-on-change`**: GPU work in a property handler (rebake light probes, regenerate a sky environment). Lighter form of `per-frame-gpu`: a way to queue a task for the renderers that draw the document. Likely served by `onBeforeDraw` (ADR-0010): the handler marks the work (a counter per renderer, as ComputeParticles' `hit`) and notifies; the hook does it. Not tried yet.
+- **`renderer-on-change`** (resolved 2026-10-20): GPU work in a property handler (rebake light probes, regenerate a sky environment). Served by `onBeforeDraw` (ADR-0010) without framework changes: the handler bumps a version and the hook redoes the work for each renderer that has not (Conversion rules, GPU work per frame; batch 5).
 - **`view-camera`**: content bound to the camera that draws it: `CSMShadowNode` (one camera's frustum), `pass(scene, camera)` inside a material (Portal), camera layers (Layers). Views build their camera per draw (ADR-0005), so the document has no camera to bind. Needed: a per-view hook, or nodes that read the drawing camera.
 - **`renderer-option`**: the shared renderer (`RenderScheduler.ts`: `{antialias: false, alpha: true}`) has no stencil buffer (three defaults `stencil` to `false`), and `renderer.lighting`, `shadowMap.type = VSMShadowMap` and `shadowMap.transmitted` are renderer-wide (ADR-0001). Needed: enable stencil on the shared renderer, or a renderer a document can ask for.
-- **`three-upgrade`**: the source exists only after r186 (HEAD).
+- **`three-upgrade`** (resolved 2026-10-20 for the linked build): the source exists only after r186 (HEAD). io links the `../three.js` r187dev checkout, so these convert against it (Sources; todo `r187-followups`).
 - **`dependency`**: needs an npm package the workspace does not have (`three-bvh-csg`, `web-ifc`, `three-subdivide`, `@needle-tools/three-animation-pointer`).
 - **`shared-refresh`** (three, since #34162 in r186; worked around): `NodeMaterialObserver.needsRefresh` gives an unchanged object whose material has no node properties a SHARED refresh, which uploads only shared uniform groups (`renderGroup`, `frameGroup`). A default `uniform()` is in `objectGroup`: read by a scene node (`fogNode`, `environmentNode`), its new value never reaches such objects until they or their material change. TRAA views write velocity and refresh fully, so only forward views go stale (FogHeight fog controls; CubemapMix reflections froze at their first time). Workaround: `setGroup(renderGroup)` (Map table; `Timeline.timeNode` since 2026-10-13). Standalone repro on the dev build: a plane with `MeshBasicNodeMaterial({color})` under `fogNode = fog(color, density)` keeps its first pixels after `density.value` changes, and updates with `renderGroup`. Upstream's own `webgpu_fog_height` and `webgpu_cubemap_adjustments` are stale too (checked headlessly 2026-10-14; bisected to #34162). Upstream fix three.js #34996 (merged 2026-10-14, Mugen87 cleanup `c5e5061ed0`, in the dev build `ca10fb69aa`): `NodeMaterialObserver.containsNode()` treats a custom `scene.fogNode` / `scene.environmentNode` like material node properties. FogHeight dropped its workaround on 2026-10-14; recheck it on dev (io links `../three.js`). Once a release has it, the `Timeline.timeNode` workaround can go too. Second gap, same cause (2026-10-14): built-in state the observer does not track, so changes never reach unchanged objects: texture `offset`/`repeat`/`rotation`/`center`/`matrix` (MaterialsTextureRotation), `refractionRatio`, `clearcoatRoughnessMap`, `thicknessMap`, in-place `iridescenceThicknessRange` edits. PR #35002 (closed 2026-10-14): Mugen87 asked for step-by-step fixes and issues first, and merged the three missing properties himself as #35022 (2026-10-15). Still broken on dev `ec2b7458ea`: texture transforms and `iridescenceThicknessRange`, plus three found by a property sweep: `LightProbe` `sh`/`intensity` (object-group uniform, regression in r186), `Sprite.center` and standard `envMap` (both bound to the first object or material that built the shader, older than r186). Issue kits https://claude.ai/artifact/VcLnhjZSTRQ4jQPZH39eiz (2026-10-15).
-- **`transmission-views`**: transmission materials (`MeshPhysicalMaterial.transmission`, glTF `KHR_materials_transmission`) sample module-level viewport mip textures that three copies from each render target. In the editor, with several views drawing per frame, WebGPU reports `Destroyed texture [RGBA16Float, the forward view's target size] used in a submit` on every redraw (seen headless; static documents only while playing). One render target alone is clean. Check three after r186 first (#34582 skips mipmaps for a copy without a mip chain, #34826 fixes a color buffer cache check); otherwise the fix is in the render scheduler or pipelines.
+- **`transmission-views`** (not reproducible 2026-10-20: four views playing and resizing are clean on three 0.186.1 and on the r187dev build; the transmission rows converted in batch 5): transmission materials (`MeshPhysicalMaterial.transmission`, glTF `KHR_materials_transmission`) sample module-level viewport mip textures that three copies from each render target. In the editor, with several views drawing per frame, WebGPU reports `Destroyed texture [RGBA16Float, the forward view's target size] used in a submit` on every redraw (seen headless; static documents only while playing). One render target alone is clean. Check three after r186 first (#34582 skips mipmaps for a copy without a mip chain, #34826 fixes a color buffer cache check); otherwise the fix is in the render scheduler or pipelines.
 
 ## Open questions
 

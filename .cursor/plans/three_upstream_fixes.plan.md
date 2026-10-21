@@ -33,7 +33,10 @@ todos:
     content: "Triage, not planned: a loading CubeTexture as a standard material's envMap binds a 2D placeholder as a cube (MaterialsDisplacementmap, Marchingcubes)"
     status: pending
   - id: triage-fragment-node-mrt
-    content: "Triage, not planned: a material with fragmentNode fails in an MRT pass (TRAA color + velocity): LightProbeHelperGPU, LDrawConditionalLineNodeMaterial (Lightprobe, LightprobeCubecamera, LoaderLdraw)"
+    content: "Triage, not planned: a material with fragmentNode fails in an MRT pass (TRAA color + velocity): LightProbeHelperGPU, LightProbeGridHelper, LDrawConditionalLineNodeMaterial (Lightprobe, LightprobeCubecamera, Lightprobes x3, GeneratorCity, LoaderLdraw)"
+    status: pending
+  - id: triage-materialx-compile-async
+    content: "Triage, not planned: webgpu_loader_materialx rendered from src (dev d94661f706, headless Chromium) logs ~360 WebGPU validation errors ('CommandEncoder renderContext_0 is already finished', invalid render pass encoders) while it loads; likely compileAsync of each sample during the animation loop. No io workaround: the conversion does not precompile"
     status: pending
 isProject: false
 ---
@@ -195,4 +198,5 @@ PR: `RenderObject: Ignore deprecated iridescenceThicknessRange in the material c
 ## Triage (not planned)
 
 - **triage-cube-envmap-loading:** a `CubeTexture` still loading, set as a standard material's `envMap`, binds a 2D placeholder as a cube in the PMREM path and fails validation until it loads (the sources race the same way). Workarounds: MaterialsDisplacementmap adds the head once the cube map loads; Marchingcubes assigns the env maps in the load callback.
-- **triage-fragment-node-mrt:** a material with `fragmentNode` writes only the first color output, and an MRT pass (TRAA views: color and velocity) rejects its pipeline. `outputNode` is merged with the MRT. Upstream materials that set `fragmentNode`: `LightProbeHelperGPU`, `LDrawConditionalLineNodeMaterial`. Could be a fix in the addons (use `outputNode`) or in the MRT handling. Workarounds: Lightprobe and LightprobeCubecamera (`useBasicMaterial`), LoaderLdraw (`ConditionalLineMaterial`).
+- **triage-fragment-node-mrt:** a material with `fragmentNode` writes only the first color output, and an MRT pass (TRAA views: color and velocity) rejects its pipeline. `outputNode` is merged with the MRT. Upstream materials that set `fragmentNode`: `LightProbeHelperGPU`, `LightProbeGridHelper`, `LDrawConditionalLineNodeMaterial`. Could be a fix in the addons (use `outputNode`) or in the MRT handling. Workarounds: Lightprobe and LightprobeCubecamera (`useBasicMaterial`), Lightprobes, LightprobesComplex, LightprobesSponza and GeneratorCity (`useBasicMaterial` with the grid helper's `fragmentNode` as `colorNode`; checked 2026-10-20: the helper's own material fails validation in the TRAA views), LoaderLdraw (`ConditionalLineMaterial`).
+- **triage-materialx-compile-async:** `webgpu_loader_materialx` rendered from the sources (dev `d94661f706`, headless Chromium on Metal) logs about 360 WebGPU validation errors while its samples load: `[CommandEncoder "renderContext_0"] is already finished`, `Parent encoder of [Invalid RenderPassEncoder] is already finished`. The page awaits `renderer.compileAsync( model, camera, scene )` per sample while `setAnimationLoop` keeps rendering, which likely interleaves two passes on one encoder. Not investigated; the conversion (LoaderMaterialx) does not precompile and logs none.
