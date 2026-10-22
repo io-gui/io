@@ -145,7 +145,7 @@ Something a view draws on top of its pipeline output from its own small scene, n
 _Avoid_: helper (alone: a three.js helper object), decoration
 
 **Helper overlay**:
-An overlay that draws three.js helpers (frustums, light icons, bones, clipping planes) for one kind of content object: cameras, lights, skeletons or clipping groups. The helpers mirror the content scene but are never part of it, so they are not exported, framed or picked.
+An overlay that draws three.js helpers (frustums, light icons, bones, clipping planes, probe spheres) for one kind of content object: cameras, lights, skeletons, clipping groups or light probes. The helpers mirror the content scene but are never part of it, so they are not exported, framed or picked.
 _Avoid_: scene helpers (authored into the content scene), extras
 
 **Edit set**:

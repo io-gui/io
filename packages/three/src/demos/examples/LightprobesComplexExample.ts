@@ -6,9 +6,7 @@ import {
   ConeGeometry,
   CylinderGeometry,
   Mesh,
-  MeshBasicNodeMaterial,
   MeshStandardMaterial,
-  Node,
   PerspectiveCamera,
   PlaneGeometry,
   PointLight,
@@ -17,27 +15,16 @@ import {
   WebGPURenderer
 } from 'three/webgpu'
 import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js'
-import { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js'
 import { Register, Property } from '@io-gui/core'
 import { Document, DocumentProps } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
 /**
- * Workaround (upstream: triage-fragment-node-mrt): the helper's `fragmentNode` writes only the first color output,
- * so the TRAA views' MRT pass rejects its pipeline. The same irradiance as the color of a basic material.
- */
-function useBasicMaterial( helper: LightProbeGridHelper ) {
-  const previous = helper.material
-  helper.material = new MeshBasicNodeMaterial( { colorNode: previous.fragmentNode as Node<'vec4'> } )
-  previous.dispose()
-}
-
-/**
  * Two rooms joined by a doorway, a warm point light in one and a cool one in the other, each room with a baked
  * `LightProbeGrid` whose `falloff` blends the two at the doorway. The grids bake in `onBeforeDraw` before their first
  * draw, and again when `resolution` replaces them; neither is lit by the other while baking. `gi` toggles the grids'
- * light, `showProbes` their helpers (each probe's irradiance on a small sphere).
+ * light. The probe helpers overlay shows each probe's irradiance on a small sphere in the editor's views.
  */
 @Register
 export class LightprobesComplexExample extends Document {
@@ -48,13 +35,8 @@ export class LightprobesComplexExample extends Document {
   @Property({type: Number, value: 6})
   declare resolution: number
 
-  @Property({type: Boolean, value: false})
-  declare showProbes: boolean
-
   public probesLeft: LightProbeGrid
   public probesRight: LightProbeGrid
-  public probesHelperLeft: LightProbeGridHelper
-  public probesHelperRight: LightProbeGridHelper
   /** The left grid each renderer baked last (both grids are replaced together). */
   private baked = new WeakMap<WebGPURenderer, LightProbeGrid>()
 
@@ -223,9 +205,6 @@ export class LightprobesComplexExample extends Document {
 
     this.probesLeft = this.createProbes( 'Probes Left', - 3.9 )
     this.probesRight = this.createProbes( 'Probes Right', 3.9 )
-
-    this.probesHelperLeft = this.createHelper( 'Probes Helper Left', this.probesLeft )
-    this.probesHelperRight = this.createHelper( 'Probes Helper Right', this.probesRight )
   }
 
   /** The `falloff` fades each volume past its boundary, so the rooms blend at the doorway without bleeding into each other. */
@@ -237,16 +216,6 @@ export class LightprobesComplexExample extends Document {
     probes.visible = this.gi
     this.scene.add( probes )
     return probes
-  }
-
-  private createHelper( name: string, probes: LightProbeGrid ) {
-    const helper = new LightProbeGridHelper( probes )
-    helper.name = name
-    helper.visible = this.showProbes
-    helper.userData.selectable = false
-    useBasicMaterial( helper )
-    this.scene.add( helper )
-    return helper
   }
 
   giChanged() {
@@ -267,28 +236,17 @@ export class LightprobesComplexExample extends Document {
     this.probesLeft = this.createProbes( 'Probes Left', - 3.9 )
     this.probesRight = this.createProbes( 'Probes Right', 3.9 )
 
-    this.probesHelperLeft.probes = this.probesLeft
-    this.probesHelperLeft.update()
-    this.probesHelperRight.probes = this.probesRight
-    this.probesHelperRight.update()
-
     this.notify({kind: 'structure'})
   }
 
-  showProbesChanged() {
-    if ( ! this.probesHelperLeft ) return
-    this.probesHelperLeft.visible = this.showProbes
-    this.probesHelperRight.visible = this.showProbes
-  }
-
   /**
-   * Bakes both grids once per renderer, and the new grids when `resolution` replaced them. Both grids and helpers are
-   * hidden while baking (the source bakes the grids before adding them), so neither lights the other's captures.
+   * Bakes both grids once per renderer, and the new grids when `resolution` replaced them. Both grids are hidden while
+   * baking (the source bakes the grids before adding them), so neither lights the other's captures.
    */
   override onBeforeDraw(renderer: WebGPURenderer) {
     if ( this.baked.get( renderer ) === this.probesLeft ) return
 
-    const hidden = [ this.probesLeft, this.probesRight, this.probesHelperLeft, this.probesHelperRight ]
+    const hidden = [ this.probesLeft, this.probesRight ]
     const visible = hidden.map( object => object.visible )
 
     for ( const object of hidden ) object.visible = false
@@ -300,10 +258,6 @@ export class LightprobesComplexExample extends Document {
       hidden.forEach( ( object, i ) => object.visible = visible[ i ] )
     }
 
-    // The helpers sample the grids' atlases, which the first bakes create.
-    this.probesHelperLeft.update()
-    this.probesHelperRight.update()
-
     this.baked.set( renderer, this.probesLeft )
   }
 }
@@ -313,6 +267,6 @@ registerEditorConfig(LightprobesComplexExample, [
 ])
 
 registerEditorGroups(LightprobesComplexExample, {
-  Main: ['gi', 'resolution', 'showProbes'],
-  Hidden: ['probesLeft', 'probesRight', 'probesHelperLeft', 'probesHelperRight', 'baked'],
+  Main: ['gi', 'resolution'],
+  Hidden: ['probesLeft', 'probesRight', 'baked'],
 })

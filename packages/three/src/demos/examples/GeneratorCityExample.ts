@@ -9,8 +9,6 @@ import {
   MathUtils,
   Matrix4,
   Mesh,
-  MeshBasicNodeMaterial,
-  Node,
   Object3D,
   PerspectiveCamera,
   PlaneGeometry,
@@ -26,7 +24,6 @@ import { overrideNode, time } from 'three/tsl'
 import { SkyMesh } from 'three/addons/objects/SkyMesh.js'
 import { CityGenerator, createBuildingMaterial, createRoadMaterial } from 'three/addons/generators/CityGenerator.js'
 import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js'
-import { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js'
 import { Register, Property, Field } from '@io-gui/core'
 import { Bloom, Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
@@ -55,16 +52,6 @@ function createSky( timeNode: UniformNode<'float', number> ) {
   return sky
 }
 
-/**
- * Workaround (upstream: triage-fragment-node-mrt): the helper's `fragmentNode` writes only the first color output,
- * so the TRAA views' MRT pass rejects its pipeline. The same irradiance as the color of a basic material.
- */
-function useBasicMaterial( helper: LightProbeGridHelper ) {
-  const previous = helper.material
-  helper.material = new MeshBasicNodeMaterial( { colorNode: previous.fragmentNode as Node<'vec4'> } )
-  previous.dispose()
-}
-
 /** What a renderer has baked: its sky environment and how far it got with the probes. */
 interface Bake {
   pmremGenerator: PMREMGenerator
@@ -79,9 +66,10 @@ interface Bake {
  * environment and a `LightProbeGrid` whose occlusion-aware irradiance puts the streets in shade. `timeOfDay` walks the
  * sun along its arc, `seed` builds another city; both regenerate the sky environment and restart the probe bake in
  * `onBeforeDraw`, which bakes one row of probes per draw against the city's box proxy (direct light, then one
- * bounce). `gi` toggles the grid's light, `showProbes` its helper. The source's bloom is the document's (Rendering),
- * as is its exposure; its first-person controls are dropped, and the active camera keeps its start pose. The clouds
- * drift on the timeline. Plays when opened.
+ * bounce). `gi` toggles the grid's light; the probe helpers overlay draws the probes in the editor's views, so the
+ * source's `showProbes` is dropped. The source's bloom is the document's (Rendering), as is its exposure; its
+ * first-person controls are dropped, and the active camera keeps its start pose. The clouds drift on the timeline.
+ * Plays when opened.
  */
 @Register
 export class GeneratorCityExample extends Document {
@@ -96,15 +84,11 @@ export class GeneratorCityExample extends Document {
   @Property({type: Boolean, value: true})
   declare gi: boolean
 
-  @Property({type: Boolean, value: false})
-  declare showProbes: boolean
-
   public city: CityGenerator
   public cityGroup: Group | null = null
   public sunLight: DirectionalLight
   public sky: SkyMesh
   public probes: LightProbeGrid
-  public probesHelper: LightProbeGridHelper
   private cityProxy: InstancedMesh | null = null
   private materials: { building: Material }
   private cityBounds: Box3
@@ -114,8 +98,6 @@ export class GeneratorCityExample extends Document {
   /** Bumped by edits that regenerate the environment and restart the probe bake. */
   private bakeVersion = 0
   private bakes = new WeakMap<WebGPURenderer, Bake>()
-  /** Whether the helper samples the grid's atlas, which the first bake creates. */
-  private helperBound = false
 
   @Field(null)
   declare private _frameTarget: FrameTarget | null
@@ -190,13 +172,6 @@ export class GeneratorCityExample extends Document {
     this.probes.position.set( 0, GRID_SIZE.y / 2 + 1, 0 )
     this.probes.visible = this.gi
     this.scene.add( this.probes )
-
-    this.probesHelper = new LightProbeGridHelper( this.probes, 3 )
-    this.probesHelper.name = 'Probes Helper'
-    this.probesHelper.visible = this.showProbes
-    this.probesHelper.userData.selectable = false
-    useBasicMaterial( this.probesHelper )
-    this.scene.add( this.probesHelper )
   }
 
   /** The sky dwarfs the city. */
@@ -217,10 +192,6 @@ export class GeneratorCityExample extends Document {
 
   giChanged() {
     if ( this.probes ) this.probes.visible = this.gi
-  }
-
-  showProbesChanged() {
-    if ( this.probesHelper ) this.probesHelper.visible = this.showProbes
   }
 
   private updateSun() {
@@ -339,12 +310,8 @@ export class GeneratorCityExample extends Document {
     const cityProxy = this.cityProxy
     if ( bake.bakeIndex >= totalProbes || ! cityGroup || ! cityProxy ) return
 
-    // capture the box proxy, ground and sky without the helper or sun disc.
+    // capture the box proxy, ground and sky without the sun disc.
     // the directional light supplies sunlight; pass 1 captures the diffuse bounce
-    const helper = this.probesHelper
-    const helperVisible = helper.visible
-
-    helper.visible = false
     cityGroup.visible = false
     cityProxy.visible = true
     this.sky.showSunDisc.value = false
@@ -364,12 +331,6 @@ export class GeneratorCityExample extends Document {
       this.sky.showSunDisc.value = true
       cityProxy.visible = false
       cityGroup.visible = true
-      helper.visible = helperVisible
-    }
-
-    if ( ! this.helperBound ) {
-      helper.update()
-      this.helperBound = true
     }
 
     bake.bakeIndex += GRID_PROBES.x
@@ -389,9 +350,9 @@ registerEditorConfig(GeneratorCityExample, [
 ])
 
 registerEditorGroups(GeneratorCityExample, {
-  Main: ['seed', 'timeOfDay', 'gi', 'showProbes'],
+  Main: ['seed', 'timeOfDay', 'gi'],
   Hidden: [
-    'city', 'cityGroup', 'sunLight', 'sky', 'probes', 'probesHelper', 'cityProxy', 'materials', 'cityBounds', 'sun',
-    'envScene', 'environmentSky', 'bakeVersion', 'bakes', 'helperBound',
+    'city', 'cityGroup', 'sunLight', 'sky', 'probes', 'cityProxy', 'materials', 'cityBounds', 'sun', 'envScene',
+    'environmentSky', 'bakeVersion', 'bakes',
   ],
 })

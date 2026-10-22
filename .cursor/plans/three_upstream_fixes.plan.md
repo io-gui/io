@@ -29,11 +29,14 @@ todos:
   - id: cache-key-deprecated-accessor
     content: "Regression in dev (#35039, the fix of #35029): RenderObject.getMaterialCacheKey reads every prototype getter, including MeshPhysicalMaterial's deprecated iridescenceThicknessRange, which warns once per page for any physical material. Skip the alias in the cache key. No io workaround (three's renderer reads it). Fixed upstream by Mugen87 as planned (2b7c79ef26, 2026-10-19: the alias in the skip regex); gone in io once ../three.js has it"
     status: completed
+  - id: velocity-per-view
+    content: "VelocityNode keeps one previous world matrix per object and overwrites it after every draw, so of several views drawing velocity in one frame only the first sees objects move (confirmed 2026-10-22; TRAA smears them in the others). Track previous matrices per object and camera. io workaround in place 2026-10-22 (ViewVelocityNode / viewVelocity; canary test in ViewVelocityNode.test.ts)"
+    status: pending
   - id: triage-cube-envmap-loading
     content: "Triage, not planned: a loading CubeTexture as a standard material's envMap binds a 2D placeholder as a cube (MaterialsDisplacementmap, Marchingcubes)"
     status: pending
   - id: triage-fragment-node-mrt
-    content: "Triage, not planned: a material with fragmentNode fails in an MRT pass (TRAA color + velocity): LightProbeHelperGPU, LightProbeGridHelper, LDrawConditionalLineNodeMaterial (Lightprobe, LightprobeCubecamera, Lightprobes x3, GeneratorCity, LoaderLdraw)"
+    content: "Triage, not planned: a material with fragmentNode fails in an MRT pass (TRAA color + velocity): LightProbeHelperGPU, LightProbeGridHelper, LDrawConditionalLineNodeMaterial (LightprobeCubecamera, LoaderLdraw; the probe helpers overlay draws the other probe examples' helpers without MRT)"
     status: pending
   - id: triage-materialx-compile-async
     content: "Triage, not planned: webgpu_loader_materialx rendered from src (dev d94661f706, headless Chromium) logs ~360 WebGPU validation errors ('CommandEncoder renderContext_0 is already finished', invalid render pass encoders) while it loads; likely compileAsync of each sample during the animation loop. No io workaround: the conversion does not precompile"
@@ -195,8 +198,53 @@ PR: `RenderObject: Ignore deprecated iridescenceThicknessRange in the material c
 
 **Workarounds.** None in io: the renderer reads the property. Examples that set the range (none of ours) would move to the new properties on the next three upgrade.
 
+## velocity-per-view: velocity tracks objects, not views
+
+**Cause.**
+- **Per-object storage.** `VelocityNode.update` (`src/nodes/accessors/VelocityNode.js:111-152`, dev `d94661f706`) copies `getPreviousMatrix( object )` into `previousModelWorldMatrix` before each draw of an object. `updateAfter` (`:159-161`, `updateAfterType = OBJECT`) overwrites it with `object.matrixWorld` after each draw. The matrix lives in the object's node data (`getData( object )`), whatever the camera.
+- **Consequence.** A second camera that draws the object in the same frame reads the matrix the first draw just wrote, so its velocity shows no object motion. A view that skipped frames gets the motion since any camera's last draw, not since its own, while its history is its own.
+- **What is unaffected.** The camera half is kept per camera and frame (`cameraData.frameId`), and skinning shifts previous bone matrices once per skeleton and frame (`Skinning.js:243-262`). So only object motion is lost.
+- **Scope.** Single-view pages never see this. Several views or passes with velocity per frame do: an editor's viewports, or a TRAA pass plus a second velocity pass with another camera.
+
+**Repro** (headless, dev build `d94661f706`):
+- Two `pass( scene, camera )` with `mrt( { output, velocity } )` and two cameras look at a box moved 0.1 per frame. Both pipelines render each frame.
+- The pass rendered first reads velocity.x 0.0476 at the box; the second reads 0. Swapping the order swaps them, and one pass alone reads 0.0476.
+- In io's demo host (Front, Right and Top TRAA views on screen, one sphere moved), only the view drawn first had velocity: 3895 pixels against 0 and 0.
+- A sphere moving at constant speed smears under TRAA in the later views. Mean pixel difference was 4.97 on the sphere against 0.83 elsewhere, compared with the same view drawn first.
+
+**Fix.** Key the previous matrix by object and camera, shift it once per frame and camera, and drop `updateAfter`:
+```js
+update( { frameId, camera, object } ) {
+
+	const entry = getPreviousEntry( object, camera ); // { frameId, previous, current }, both start at object.matrixWorld
+
+	if ( entry.frameId !== frameId ) {
+
+		entry.frameId = frameId;
+		entry.previous.copy( entry.current );
+		entry.current.copy( object.matrixWorld );
+
+	}
+
+	this.previousModelWorldMatrix.value.copy( entry.previous );
+
+	// camera matrices as before
+
+}
+```
+- **Storage.** A `WeakMap` keyed by camera in the object's data, since cameras come and go.
+- **Behavior change.** The previous matrix is the one this camera drew last. So a view that skipped frames reprojects across them, as its history does.
+- **Same-frame redraws.** Two velocity passes with one camera in the same frame shift once.
+- **PR:** `VelocityNode: Track previous object matrices per camera.`
+- **Check:** `webgpu_postprocessing_traa`, `_motion_blur`, `_ssr` and `_ssgi`, and XR (one `ArrayCamera` per frame).
+
+**Workarounds.** io (2026-10-22, `velocity-per-view` in [three_effects.plan.md](./three_effects.plan.md)):
+- **The node.** `ViewVelocityNode` / `viewVelocity` (`packages/three/src/render/ViewVelocityNode.ts`) is a `VelocityNode` subclass with the fix's logic, one instance shared by the TRAA views.
+- **Where it is used.** The demo host's TRAA writes it in its MRT and names it as TRAA's context `velocity`, which TRAA un-jitters. The README and SKILL.md show the same.
+- **When to remove it.** A canary in `ViewVelocityNode.test.ts` fails once three tracks previous matrices per camera. Then remove the node and use `velocity` again (demo host, README, SKILL.md).
+
 ## Triage (not planned)
 
 - **triage-cube-envmap-loading:** a `CubeTexture` still loading, set as a standard material's `envMap`, binds a 2D placeholder as a cube in the PMREM path and fails validation until it loads (the sources race the same way). Workarounds: MaterialsDisplacementmap adds the head once the cube map loads; Marchingcubes assigns the env maps in the load callback.
-- **triage-fragment-node-mrt:** a material with `fragmentNode` writes only the first color output, and an MRT pass (TRAA views: color and velocity) rejects its pipeline. `outputNode` is merged with the MRT. Upstream materials that set `fragmentNode`: `LightProbeHelperGPU`, `LightProbeGridHelper`, `LDrawConditionalLineNodeMaterial`. Could be a fix in the addons (use `outputNode`) or in the MRT handling. Workarounds: Lightprobe and LightprobeCubecamera (`useBasicMaterial`), Lightprobes, LightprobesComplex, LightprobesSponza and GeneratorCity (`useBasicMaterial` with the grid helper's `fragmentNode` as `colorNode`; checked 2026-10-20: the helper's own material fails validation in the TRAA views), LoaderLdraw (`ConditionalLineMaterial`).
+- **triage-fragment-node-mrt:** a material with `fragmentNode` writes only the first color output, and an MRT pass (TRAA views: color and velocity) rejects its pipeline. `outputNode` is merged with the MRT. Upstream materials that set `fragmentNode`: `LightProbeHelperGPU`, `LightProbeGridHelper`, `LDrawConditionalLineNodeMaterial`. Could be a fix in the addons (use `outputNode`) or in the MRT handling. Workarounds: LightprobeCubecamera (`useBasicMaterial`, its probe helper being content), LoaderLdraw (`ConditionalLineMaterial`). Checked 2026-10-20: `LightProbeGridHelper`'s own material fails validation in the TRAA views. Since 2026-10-21 the editor's probe helpers overlay draws `LightProbeHelperGPU` and `LightProbeGridHelper` in the overlay pass, which has no MRT, with their own materials: Lightprobe, Lightprobes, LightprobesComplex, LightprobesSponza and GeneratorCity no longer author helpers, nor need the workaround.
 - **triage-materialx-compile-async:** `webgpu_loader_materialx` rendered from the sources (dev `d94661f706`, headless Chromium on Metal) logs about 360 WebGPU validation errors while its samples load: `[CommandEncoder "renderContext_0"] is already finished`, `Parent encoder of [Invalid RenderPassEncoder] is already finished`. The page awaits `renderer.compileAsync( model, camera, scene )` per sample while `setAnimationLoop` keeps rendering, which likely interleaves two passes on one encoder. Not investigated; the conversion (LoaderMaterialx) does not precompile and logs none.

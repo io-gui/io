@@ -12,7 +12,7 @@ todos:
     content: "Whole-scene framing (first show, frame all) includes skies and large floors; examples frame their model instead. Skip unselectable scenery in the framework?"
     status: pending
   - id: blocker-document-pipeline
-    content: "Unblock: a document brings its own post-processing graph and scene inputs (MRT). See Blockers"
+    content: "Unblock: a document brings its own post-processing graph and scene inputs (MRT). See Blockers. Design: .cursor/plans/three_effects.plan.md (2026-10-22)"
     status: pending
   - id: blocker-view-camera
     content: "Unblock: content bound to the drawing camera (CSM, pass() in a material, camera layers)"
@@ -27,19 +27,13 @@ todos:
     content: "Recheck Occlusion with two views on the linked build (#35066) and close the Open item in its sidecar; the WebGPU notes' occlusion paragraph then describes r186 only"
     status: pending
   - id: r187-followups
-    content: "Once r187 is released: load the dev-branch assets from threejs.org (MaterialsEnvmapsFasthdr, LoaderMaterialx, LoaderGltfDiffuseRoughness, LoaderJpegxl: raw.githubusercontent.com/mrdoob/three.js/dev), raise the peer range to >=0.187.0. With @types/three 0.187: drop the @ts-expect-error imports (ProxyNodeMaterial, JXLLoader) and the casts for Light.registerNode, Texture.isPMREMTexture, ReferenceNode.element(), materialReference(). InstancingMorph still calls renderer.library.addLight() (deprecated in r187: SunLight.registerNode)"
+    content: "Once r187 is released: load the dev-branch assets from threejs.org (MaterialsEnvmapsFasthdr, LoaderMaterialx, LoaderGltfDiffuseRoughness, LoaderJpegxl: raw.githubusercontent.com/mrdoob/three.js/dev), add LoaderSvg's two #35005 test files (closePathInitialPoint, closePathOpenSubpath), raise the peer range to >=0.187.0. With @types/three 0.187: drop the @ts-expect-error imports (ProxyNodeMaterial, JXLLoader) and the casts for Light.registerNode (LightsSunlight, LightprobesSponza, InstancingMorph), Texture.isPMREMTexture, ReferenceNode.element(), materialReference()"
     status: pending
   - id: remove-workarounds
     content: "As each three_upstream_fixes.plan.md fix reaches the linked three build, remove its workaround from the examples whose sidecars list it under Workarounds (Workflows, Remove a workaround)"
     status: pending
   - id: upstream-port
-    content: "Port the upstream source changes that sidecars list under Upstream as not ported yet (2026-10-21 baseline: LoaderGltf, the camera fit's Math.tan from #34585)"
-    status: pending
-  - id: scene-camera-helpers
-    content: "Helpers the sources show as visuals come from overlays, which the Scene Camera view does not draw: LoaderBvh shows nothing (its bare skeleton), LightsRectarealight and MaterialsEnvmapsBpcem lack their glowing area-light panels. Either the Scene Camera view draws light and skeleton helpers, or examples whose helpers are the subject author them as content"
-    status: pending
-  - id: cull-follows-camera
-    content: "CustomFog: the forest cull centre is the active camera's position, copied once in the constructor. The camera is in the scene since 2026-10-21 (to see whether the forest follows it), and moving it leaves the trees and the shadow map as they were. Copy the position in onBeforeDraw and refresh the shadow map when it changes, or take the camera out of the scene again"
+    content: "Standing: port the upstream source changes that sidecars list under Upstream as not ported yet (the Open table shows them under `upstream-port`; none since LoaderGltf's camera fit was ported 2026-10-21)"
     status: pending
 isProject: false
 ---
@@ -126,21 +120,14 @@ Open items and workarounds, from the sidecars' Open and Workarounds sections. Id
 | [BuffergeometryDrawrange](examples/BuffergeometryDrawrangeExample.md) |  | `dynamic-usage` |
 | [BuffergeometryInstancingInterleaved](examples/BuffergeometryInstancingInterleavedExample.md) |  | `instanced-mesh-instance-count` |
 | [Camera](examples/CameraExample.md) | `inspector-refresh` |  |
-| [CustomFog](examples/CustomFogExample.md) | `cull-follows-camera` |  |
 | [FogHeight](examples/FogHeightExample.md) | `shared-refresh` |  |
 | [GaussianSplat](examples/GaussianSplatExample.md) | `document-pipeline` |  |
-| [GeneratorCity](examples/GeneratorCityExample.md) |  | `triage-fragment-node-mrt` |
 | [GeometryLoft](examples/GeometryLoftExample.md) | `framing-scenery` |  |
 | [InstancingMorph](examples/InstancingMorphExample.md) | `r187-followups`, `framing-scenery` |  |
-| [Lightprobe](examples/LightprobeExample.md) | `shared-refresh` | `triage-fragment-node-mrt` |
+| [Lightprobe](examples/LightprobeExample.md) | `shared-refresh` |  |
 | [LightprobeCubecamera](examples/LightprobeCubecameraExample.md) |  | `triage-fragment-node-mrt` |
-| [Lightprobes](examples/LightprobesExample.md) |  | `triage-fragment-node-mrt` |
-| [LightprobesComplex](examples/LightprobesComplexExample.md) |  | `triage-fragment-node-mrt` |
-| [LightprobesSponza](examples/LightprobesSponzaExample.md) | `r187-followups` | `triage-fragment-node-mrt` |
-| [LightsRectarealight](examples/LightsRectarealightExample.md) | `scene-camera-helpers` |  |
+| [LightprobesSponza](examples/LightprobesSponzaExample.md) | `r187-followups` |  |
 | [LightsSunlight](examples/LightsSunlightExample.md) | `r187-followups` |  |
-| [LoaderBvh](examples/LoaderBvhExample.md) | `scene-camera-helpers` |  |
-| [LoaderGltf](examples/LoaderGltfExample.md) | `upstream-port` |  |
 | [LoaderGltfDiffuseRoughness](examples/LoaderGltfDiffuseRoughnessExample.md) | `r187-followups` |  |
 | [LoaderJpegxl](examples/LoaderJpegxlExample.md) | `r187-followups` |  |
 | [LoaderLdraw](examples/LoaderLdrawExample.md) |  | `triage-fragment-node-mrt` |
@@ -151,7 +138,6 @@ Open items and workarounds, from the sidecars' Open and Workarounds sections. Id
 | [MaterialsAlphahash](examples/MaterialsAlphahashExample.md) | `document-pipeline` |  |
 | [MaterialsBlendingCustom](examples/MaterialsBlendingCustomExample.md) |  | `minmax-blend-factors` |
 | [MaterialsDisplacementmap](examples/MaterialsDisplacementmapExample.md) |  | `triage-cube-envmap-loading` |
-| [MaterialsEnvmapsBpcem](examples/MaterialsEnvmapsBpcemExample.md) | `scene-camera-helpers` |  |
 | [MaterialsEnvmapsFasthdr](examples/MaterialsEnvmapsFasthdrExample.md) | `r187-followups` |  |
 | [MaterialsNodeProxy](examples/MaterialsNodeProxyExample.md) | `r187-followups` |  |
 | [MaterialsNormalmap](examples/MaterialsNormalmapExample.md) | `document-pipeline` |  |
@@ -263,7 +249,7 @@ Traits that examples share, set in each sidecar's `tags`. A tag says when to rev
 - `camera-in-scene` (26): Backdrop, CustomFog, Geometries, GeometryColorsLookuptable, GeometryConvex, GeometryShapes, Loader3mf, Loader3mfMaterials, LoaderAmf, LoaderGltfCompressed, LoaderKmz, LoaderNrrd, LoaderObj, LoaderPcd, LoaderPdb, LoaderVox, LoaderVrml, LoaderXyz, MaterialsDisplacementmap, MaterialsNormalmapObjectSpace, MaterialsRetroreflection, MaterialsTextureRotation, ModifierSimplifier, Morphtargets, Skinning, SkinningInstancing
 - `moving-camera` (8): CubemapDynamic, GeneratorBuilding, GeometryExtrudeSplines, Helpers, InstancingMorph, InstancingPerformance, MeshBatch, Reflection
 - `verify-per-view` (10): GaussianSplat, Lensflares, LightsSunlight, LoaderVrml, Lod, MeshBatch, Mirror, Occlusion, Refraction, TslOcclusionDither
-- `types` (9): ComputeParticlesFluid, InstanceUniform, LightprobesSponza, LightsSunlight, LoaderJpegxl, Materials, MaterialsEnvmapsFasthdr, MaterialsNodeProxy, MaterialxNoise
+- `types` (10): ComputeParticlesFluid, InstanceUniform, InstancingMorph, LightprobesSponza, LightsSunlight, LoaderJpegxl, Materials, MaterialsEnvmapsFasthdr, MaterialsNodeProxy, MaterialxNoise
 <!-- /examples.mjs -->
 
 ## Not candidates
@@ -295,7 +281,7 @@ Removed: CameraLogarithmicDepthBuffer (renderer-level option, see What fits); Ca
 
 Features or fixes outside the examples. Each one unblocks the rows tagged with it; until then those stay TODO.
 
-- **`document-pipeline`**: a document cannot bring a post-processing graph. Pipelines are registered by the host (`pipelineTypes.register` in `IoEditorExample.ts`) and picked per `View.pipeline` (ADR-0006). Needed: a document-declared builder (`PostProcessingBuilder`) that views use, plus scene inputs it can read (MRT outputs such as emissive or a per-object bloom flag, the scene's lights). Also unblocks the full look of rows that drop cosmetic post. Bloom of the scene color is covered since 2026-10-16 by `Document.bloom` with a per-view override (`document-bloom` in the future-work plan); emissive bloom is not (`bloom-emissive`).
+- **`document-pipeline`**: a document cannot bring a post-processing graph. Pipelines are registered by the host (`pipelineTypes.register` in `IoEditorExample.ts`) and picked per `View.pipeline` (ADR-0006). Needed: a document-declared builder (`PostProcessingBuilder`) that views use, plus scene inputs it can read (MRT outputs such as emissive or a per-object bloom flag, the scene's lights). Also unblocks the full look of rows that drop cosmetic post. Bloom of the scene color is covered since 2026-10-16 by `Document.bloom` with a per-view override (`document-bloom` in the future-work plan); emissive bloom is not (`bloom-emissive`). Design (2026-10-22): [three_effects.plan.md](../../../../.cursor/plans/three_effects.plan.md). Documents list `Effect` objects and views compile them; its capability phases unblock these rows step by step, each proved by the examples named in its todo.
 - **`per-frame-gpu`** (resolved 2026-10-18): GPU work every tick (`renderer.compute`, `CubeCamera.update`, renders into targets). Served by `Document.onBeforeDraw(renderer, delta)` ([ADR-0010](../../docs/adr/0010-documents-do-frame-gpu-work-before-views-draw.md)); see GPU work per frame. Its examples carry the tag.
 - **`renderer-on-change`** (resolved 2026-10-20): GPU work after a property edit (rebake light probes, regenerate a sky environment). Served by `onBeforeDraw` without framework changes: the handler bumps a version and the hook redoes the work per renderer. Its examples carry the tag.
 - **`view-camera`**: content bound to the camera that draws it: `CSMShadowNode` (one camera's frustum), `pass(scene, camera)` inside a material (Portal), camera layers (Layers). Views build their camera per draw (ADR-0005), so the document has no camera to bind. Needed: a per-view hook, or nodes that read the drawing camera.
@@ -528,7 +514,7 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 - Move objects in `onAnimate`, from `time`; the hook runs after the scene is evaluated. A simulation that collides with a moving object interpolates toward its posed position over a draw's steps (ComputeCloth's sphere).
 - Initialize simulation buffers in `onRendererInitialized` (`renderer.compute( init )`), not in a compute node's `onInit`, which waits for the first step: a paused document would show uninitialized buffers.
 - Edits that need GPU work (regenerate a sky environment, re-bake light probes, convert an equirect to a cube map) bump a version in the property handler; the hook compares it with what each renderer last made and redoes the work, with `delta` 0 (LightsSunlight, CustomFog, Ocean, GeneratorBuilding: PMREM `fromScene` with a `PMREMGenerator` per renderer, reusing the target with `{ renderTarget }` where the source does; Lightprobes, LightprobesComplex: a bake per renderer and grid; MaterialsEnvmapsGroundprojected: `fromEquirectangularTexture` once per renderer). `scene.environment` holds one texture, so with several renderers the last one's wins, as with PMREMs from `onRendererInitialized`.
-- Probe grids that the source bakes over frames bake a slice per hook call and notify until the last pass is done, with progress per renderer that edits restart (LightprobesSponza 16 probes, GeneratorCity one row). Objects hidden for a bake (helpers, the city for its box proxy, a sun disc) are restored to their own state.
+- Probe grids that the source bakes over frames bake a slice per hook call and notify until the last pass is done, with progress per renderer that edits restart (LightprobesSponza 16 probes, GeneratorCity one row). Objects hidden for a bake (the other grid, the city for its box proxy, a sun disc) are restored to their own state.
 - Buttons that do GPU work (`hit`, `reset`) count presses; the hook applies the presses each renderer has not applied yet (ComputeParticles, TslComputeAttractorsParticles).
 - Progressive work notifies from the hook to run again next frame, and stops when settled: ShadowmapProgressive accumulates for two blend windows after any change, and restarts when its light origin or model moves.
 - GPU state lives per renderer. Content bound to one renderer at construction (`ProgressiveLightMap`) serves the first renderer only.
@@ -554,7 +540,7 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 - Do not rename loaded nodes that animation tracks address by name: the clip's tracks stop binding (`PropertyBinding: No target node found`). The horse's morph track targets `mesh_0`.
 - `Object3D.copy` copies `name`: name an object again after copying generated content into it (`lightProbe.copy( LightProbeGenerator.fromCubeTexture( ... ) )`).
 - `userData.selectable = false` on floors, backdrops and other scenery. It applies to descendants too.
-- Do not author camera, light or skeleton helpers (`CameraHelper`, `PointLightHelper`, `RectAreaLightHelper`, `SkeletonHelper`, ...): the helper overlays draw them in every view for any document (`cameraHelpers` and `lightHelpers` on, `skeletonHelpers` off by default; `scene-helpers` in [three_future_work.plan.md](../../../../.cursor/plans/three_future_work.plan.md), ADR-0006). Drop the source's helpers and its `show helpers` / `show skeleton` toggles. A `SkeletonHelper` built only to collect bones (retargeting) stays, out of the scene. A model toggle hides the meshes, not the model root, so its skeleton still shows. Clipping planes of `ClippingGroup`s come from the `clippingHelpers` overlay: drop the source's `PlaneHelper`s and their toggle (ClippingIntersection). Helpers that are the subject (normal, tangent and box helpers) are content: a `Helpers` group, unselectable, toggled by `showHelpers`, added after the objects they follow.
+- Do not author camera, light, skeleton or probe helpers (`CameraHelper`, `PointLightHelper`, `RectAreaLightHelper`, `SkeletonHelper`, `LightProbeHelper`, `LightProbeGridHelper`, ...): the helper overlays draw them in the editor's views for any document (all on in the demo host's 3D views, `VIEW_OVERLAYS`; `scene-helpers` in [three_future_work.plan.md](../../../../.cursor/plans/three_future_work.plan.md), ADR-0006). The Scene Camera view draws no helpers (decided 2026-10-21): where a helper is the source's visual (LoaderBvh's bare skeleton, LightsRectarealight's and MaterialsEnvmapsBpcem's area-light panels), that view differs from the source, and the sidecar says so. Drop the source's helpers and its `show helpers` / `show skeleton` toggles. A `SkeletonHelper` built only to collect bones (retargeting) stays, out of the scene. A model toggle hides the meshes, not the model root, so its skeleton still shows. Clipping planes of `ClippingGroup`s come from the `clippingHelpers` overlay: drop the source's `PlaneHelper`s and their toggle (ClippingIntersection). Light probes and probe grids come from the `probeHelpers` overlay (a probe at the light icons' size, a grid's probes as spheres an eighth of their spacing once it has baked): drop the source's probe helpers and their `showProbes` / `probeSize` controls (Lightprobe, Lightprobes, LightprobesComplex, LightprobesSponza, GeneratorCity). LightprobeCubecamera's probe helper is its subject and stays content. Helpers that are the subject (normal, tangent and box helpers) are content: a `Helpers` group, unselectable, toggled by `showHelpers`, added after the objects they follow.
 
 ### Properties and groups
 
@@ -574,7 +560,7 @@ GUI (`lil-gui`, `Inspector.createParameters`) becomes properties and groups:
 - `NoBlending` with `premultipliedAlpha` draws a texture's raw color where WebGL draws it premultiplied (black). Seen in MaterialsBlending's alpha flare row.
 - Canvas textures built from a DOM canvas: draw on an `OffscreenCanvas` (`CanvasTexture<OffscreenCanvas>`), or cut images with `createImageBitmap(image, sx, sy, sw, sh)` (MaterialsBlending, PanoramaCube).
 - Vertex attribute strides must be multiples of 4 bytes, so 3 × `Float16` is invalid; use `Float32Array` (GeometryColors).
-- A material with `fragmentNode` writes only the first color output: the TRAA views' MRT pass (color and velocity) makes WebGPU reject its pipeline. `LightProbeHelperGPU` is one: Lightprobe and LightprobeCubecamera give the helper a `MeshBasicNodeMaterial` whose `colorNode` is the same irradiance. `LightProbeGridHelper` is another: Lightprobes, LightprobesComplex, LightprobesSponza and GeneratorCity reuse its `fragmentNode` as the `colorNode` of a `MeshBasicNodeMaterial` (checked 2026-10-20: the raw helper material makes the TRAA views fail validation). `outputNode` is fine (it is merged with the MRT).
+- A material with `fragmentNode` writes only the first color output: the TRAA views' MRT pass (color and velocity) makes WebGPU reject its pipeline (checked 2026-10-20 with `LightProbeGridHelper`; `triage-fragment-node-mrt`). The overlay pass has no MRT, so the probe helpers overlay draws `LightProbeHelperGPU` and `LightProbeGridHelper` with their own materials. In content, give such a material a `MeshBasicNodeMaterial` whose `colorNode` is the same color (LightprobeCubecamera's probe helper), or move its `fragmentNode` to `outputNode`, which is merged with the MRT (LoaderLdraw's conditional lines).
 - A standard material's `envMap` that is a `CubeTexture` still loading binds a 2D placeholder as a cube in the PMREM path and fails WebGPU validation until it loads (upstream; the source races the same way). Add the mesh once the cube map has loaded (MaterialsDisplacementmap).
 - Addons built on `ShaderMaterial` (`Sky`, `Water`, `Reflector`) need their node versions (`SkyMesh`, `WaterMesh`, TSL `reflector()`).
 - WebGPU allows 8 vertex buffers per pipeline. An `InstancedMesh` adds its instance matrix, and TRAA views a second one for velocity: geometry with four instanced attributes (Reflection's tree) stays `Mesh.count` instances.
@@ -620,3 +606,4 @@ Batches and passes. Each example's sidecar has its own History.
 | 2026-10-19 | Active cameras (ADR-0011): every example names its source's camera; frame targets (ADR-0012) | 211 | the Scene Camera view of all 211 against `examples/screenshots` |
 | 2026-10-20 | Batch 5: renderer-on-change, transmission and post-r186 rows on the linked r187dev build `d94661f706`; three glTF rows completed | 20 | the active view against `examples/screenshots`, sources rendered from `src` on the same GPU, edits and scrubbing, four views while resizing, all in one page |
 | 2026-10-21 | Sidecars: the Audit moved to `examples/<Name>Example.md`; upstream baseline at `d94661f706`; plan moved here from `.cursor/plans/` | 231 | `examples.mjs check` |
+| 2026-10-21 | The probe helpers overlay (`probeHelpers`): five examples drop their probe helpers and `triage-fragment-node-mrt`; InstancePoints cuts its circles with an `alphaTest` | 7 | the probes in the Front and Perspective views, none in the Camera view, without console errors; `pnpm test`, `examples.mjs check` |

@@ -355,10 +355,13 @@ view.setOverlay("grid", true); // every overlay is off until the view turns it o
 view.toneMapping = NoToneMapping; // per-view override; null uses the document's
 
 pipelineTypes.register({ id: "traa", create: (renderer) => new PostProcessingPipeline(renderer, (scenePass, camera) => {
-  scenePass.setMRT(mrt({ output, velocity }));
-  return traa(scenePass.getTextureNode("output"), scenePass.getTextureNode("depth"), scenePass.getTextureNode("velocity"), camera);
-}, { convergeFrames: 32 }) }); // accumulates for 32 frames after each change, then stops drawing
+  scenePass.setMRT(mrt({ output, velocity: viewVelocity }));
+  const resolved = traa(scenePass.getTextureNode("output"), scenePass.getTextureNode("depth"), scenePass.getTextureNode("velocity"), camera);
+  return context(resolved, { velocity: viewVelocity }); // TRAA un-jitters the velocity node its context names
+}, { convergeFrames: 32, msaa: false }) }); // accumulates for 32 frames after each change, then stops drawing
 ```
+
+`viewVelocity` is three's `velocity` measured per camera. three keeps one previous matrix per object, so with `velocity` only the first view drawn in a frame sees objects move, and TRAA smears them in the others (until three tracks it per camera: `velocity-per-view` in the upstream fixes plan).
 
 Custom pipelines implement `ViewPipeline` (`output`, `setSize`, `render(ctx)`, optional `toneMapping`, `picker`, `listens`) or extend `RenderTargetPipeline`. Custom overlays implement `Overlay` (`root`, `prepare(ctx)`, `dispose`) and are registered with `overlayTypes.register({id, viewKinds, create})`. Overlay ids are typed (`OverlayId`, the keys of `ViewOverlays`), so a custom overlay declares its flag first: `declare module '@io-gui/three' { interface ViewOverlays { heatmap?: boolean } }`. Full-screen overlays use `createScreenQuad(material)`.
 
@@ -373,9 +376,11 @@ All overlays are off by default; a view lists the ones it draws (`new View({over
 | `cameraHelpers` | Frustum of each shown scene camera, except the one the view looks through |
 | `lightHelpers` | Point, directional and hemisphere light icons at a constant screen size; spot cones and rect area panels at their real size |
 | `skeletonHelpers` | Bones of each shown skeleton, also while its meshes are hidden |
+| `clippingHelpers` | A square per plane of each enabled clipping group, centered on what it clips; filled while selected |
+| `probeHelpers` | Each light probe's irradiance on a sphere at the light icons' size; each probe of a baked light probe grid on a sphere sized by the probe spacing |
 | `gizmos` | The active tool's gizmos (`full` profile only) |
 
-Helper overlays (`HelperOverlay` with a `HelperKind`) draw three.js helpers for content objects without adding them to the scene, so they are not exported, framed or picked. Helpers of selected objects take the outline colors.
+Helper overlays (`HelperOverlay` with a `HelperKind`) draw three.js helpers for content objects without adding them to the scene, so they are not exported, framed or picked. Helpers of selected objects take the outline colors, except probe spheres, which keep showing irradiance.
 
 ### UV View
 

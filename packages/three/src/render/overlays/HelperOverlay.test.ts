@@ -1,6 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { AmbientLight, Bone, CameraHelper, ClippingGroup, Color, Group, Line, LineBasicMaterial, Mesh, OrthographicCamera, PerspectiveCamera, Plane, PointLight, PointLightHelper, SkeletonHelper, Skeleton, SkinnedMesh, BoxGeometry, Vector3 } from 'three/webgpu'
-import { Editor, HelperOverlay, OUTLINE_COLORS, OverlayContext, View, cameraHelpers, clippingHelpers, lightHelpers, skeletonHelpers } from '@io-gui/three'
+import { AmbientLight, Bone, CameraHelper, ClippingGroup, Color, Data3DTexture, Group, LightProbe, Line, LineBasicMaterial, Matrix4, Mesh, OrthographicCamera, PerspectiveCamera, Plane, PointLight, PointLightHelper, SkeletonHelper, Skeleton, SkinnedMesh, BoxGeometry, Vector3 } from 'three/webgpu'
+import type { LightProbeHelper } from 'three/addons/helpers/LightProbeHelperGPU.js'
+import type { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js'
+import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js'
+import { Editor, HelperOverlay, OUTLINE_COLORS, OverlayContext, View, cameraHelpers, clippingHelpers, lightHelpers, probeHelpers, probeSphereSize, skeletonHelpers } from '@io-gui/three'
 
 describe('HelperOverlay', () => {
   let editor: Editor
@@ -135,6 +138,51 @@ describe('HelperOverlay', () => {
     expect(rebuilt).not.toBe(helper)
     expect(rebuilt.visible).toBe(true)
     expect(rebuilt.children.length).toBe(1)
+    overlay.dispose()
+  })
+
+  it('draws light probes at a constant screen size, and probe grids once baked, with spheres sized by their spacing', () => {
+    const scene = editor.document.scene
+    const probe = new LightProbe()
+    probe.position.set(0, 2, 0)
+    const rig = new Group()
+    rig.position.set(1, 0, 0)
+    rig.add(probe)
+    // Probes 1, 1 and 8 apart.
+    const grid = new LightProbeGrid(4, 2, 8, 5, 3, 2)
+    scene.add(rig, grid, new AmbientLight())
+    view.navigation.target.set(1, 2, 0)
+    const overlay = new HelperOverlay('probes', probeHelpers)
+
+    const [probeHelper, gridHelper] = prepare(overlay) as [LightProbeHelper, LightProbeGridHelper]
+    expect(overlay.root.children.length).toBe(2)
+    expect(probeHelper.lightProbe).toBe(probe)
+    expect(probeHelper.matrixWorld.elements.slice(12, 15)).toEqual([1, 2, 0])
+    const near = probeHelper.matrixWorld.getMaxScaleOnAxis()
+    // Twice as far from the view: twice as large in the world, the same size on screen.
+    view.navigation.distance *= 2
+    prepare(overlay)
+    expect(probeHelper.matrixWorld.getMaxScaleOnAxis()).toBeCloseTo(near * 2, 5)
+
+    // An eighth of the smallest spacing (of the largest side for a single probe); hidden until a bake makes the atlas.
+    expect(gridHelper.probes).toBe(grid)
+    expect(gridHelper.geometry.parameters.radius).toBe(1 / 8)
+    expect(probeSphereSize(new LightProbeGrid(2, 3, 4, 1, 1, 1))).toBe(0.5)
+    expect(gridHelper.visible).toBe(false)
+    grid.texture = new Data3DTexture()
+    prepare(overlay)
+    expect(gridHelper.visible).toBe(true)
+
+    // Probes follow the grid; a new resolution rebuilds the helper with spheres for the new spacing.
+    grid.position.set(0, 1, 0)
+    prepare(overlay)
+    const first = (helper: LightProbeGridHelper) => new Vector3().setFromMatrixPosition(helper.getMatrixAt(0, new Matrix4()))
+    expect(first(gridHelper).toArray()).toEqual(grid.getProbePosition(0, 0, 0, new Vector3()).toArray())
+    grid.resolution.set(9, 3, 2)
+    const [, rebuilt] = prepare(overlay) as [LightProbeHelper, LightProbeGridHelper]
+    expect(rebuilt).not.toBe(gridHelper)
+    expect(rebuilt.count).toBe(54)
+    expect(rebuilt.geometry.parameters.radius).toBe(1 / 16)
     overlay.dispose()
   })
 

@@ -1,34 +1,16 @@
-import { CubeTextureLoader, DirectionalLight, LightProbe, Material, Mesh, MeshBasicNodeMaterial, MeshStandardMaterial, Node, PerspectiveCamera, SphereGeometry } from 'three/webgpu'
-import { getShIrradianceAt, normalWorld } from 'three/tsl'
+import { CubeTextureLoader, DirectionalLight, LightProbe, Mesh, MeshStandardMaterial, PerspectiveCamera, SphereGeometry } from 'three/webgpu'
 import { LightProbeGenerator } from 'three/addons/lights/LightProbeGenerator.js'
-import { LightProbeHelper } from 'three/addons/helpers/LightProbeHelperGPU.js'
 import { Register, Property, Field } from '@io-gui/core'
 import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
 /**
- * Gives a light probe helper a basic material that draws the same irradiance. Workaround (upstream:
- * triage-fragment-node-mrt): the helper's own material sets `fragmentNode`, which writes only the first color output:
- * in the TRAA views' MRT pass (color and velocity) WebGPU rejects its pipeline.
- */
-function useBasicMaterial( helper: LightProbeHelper ) {
-  const { _sh: sh, _intensity: intensity } = helper as unknown as { _sh: Node; _intensity: Node<'float'> }
-
-  const material = new MeshBasicNodeMaterial()
-  material.colorNode = ( getShIrradianceAt( normalWorld, sh ) as Node<'vec3'> ).mul( 1 / Math.PI ).mul( intensity )
-
-  const previous = helper.material as Material
-  helper.material = material
-  previous.dispose()
-}
-
-/**
  * A glossy sphere lit by a light probe generated from the Pisa cube map (also the background and the sphere's
- * environment map) and a directional light. The three intensities are in the Document tab. The light probe helper
- * (the probe's lighting on a small sphere at the probe's position) is content: the light helpers overlay draws no
- * probes. Known issue: forward views keep the probe's first `intensity` (three r186 shared refresh; TRAA views
- * follow).
+ * environment map) and a directional light. The three intensities are in the Document tab. The probe helpers overlay
+ * draws the probe's lighting on a small sphere at the probe's position in the editor's views, in place of the source's
+ * light probe helper. Known issue: forward views keep the probe's first `intensity` (three r186 shared refresh; TRAA
+ * views follow).
  */
 @Register
 export class LightprobeExample extends Document {
@@ -106,13 +88,6 @@ export class LightprobeExample extends Document {
       this.mesh = new Mesh( geometry, material )
       this.mesh.name = 'Sphere'
       this.scene.add( this.mesh )
-
-      // helper
-      const helper = new LightProbeHelper( this.lightProbe, 1 )
-      useBasicMaterial( helper )
-      helper.name = 'LightProbeHelper'
-      helper.userData.selectable = false
-      this.scene.add( helper )
 
       this.notify({kind: 'structure'})
       this._frameTarget = this.mesh

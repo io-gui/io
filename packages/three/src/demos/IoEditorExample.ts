@@ -3,9 +3,9 @@ import { ioField, ioButton } from '@io-gui/inputs'
 import { ioPropertyEditor } from '@io-gui/editors'
 import { ioOptionSelect, Menu } from '@io-gui/menus'
 import { Object3D } from 'three/webgpu'
-import { mrt, output, velocity } from 'three/tsl'
+import { context, mrt, output } from 'three/tsl'
 import { traa } from 'three/addons/tsl/display/TRAANode.js'
-import { PostProcessingPipeline, SelectionModel, Document, Editor, View, ViewOverlays, ThreeViewport, threeViewport, threeTimeline, threeScenegraph, pipelineTypes } from '@io-gui/three'
+import { PostProcessingPipeline, SelectionModel, Document, Editor, View, ViewOverlays, ThreeViewport, threeViewport, threeTimeline, threeScenegraph, pipelineTypes, viewVelocity } from '@io-gui/three'
 import { ioLayout, Layout } from '@io-gui/layout'
 import { threeEditorStatus } from '../elements/ThreeEditorStatus.js'
 
@@ -13,8 +13,11 @@ pipelineTypes.register({
   id: 'traa',
   label: 'Forward + TRAA',
   create: renderer => new PostProcessingPipeline(renderer, (scenePass, camera) => {
-    scenePass.setMRT(mrt({output, velocity}))
-    return traa(scenePass.getTextureNode('output'), scenePass.getTextureNode('depth'), scenePass.getTextureNode('velocity'), camera)
+    // Workaround (upstream: velocity-per-view): three's `velocity` shows objects moving only in the first view drawn in a
+    // frame. TRAA un-jitters the velocity node named in its context.
+    scenePass.setMRT(mrt({output, velocity: viewVelocity}))
+    const resolved = traa(scenePass.getTextureNode('output'), scenePass.getTextureNode('depth'), scenePass.getTextureNode('velocity'), camera)
+    return context(resolved, {velocity: viewVelocity})
   }, {convergeFrames: 32, msaa: false}),
 })
 
@@ -346,6 +349,7 @@ const VIEW_OVERLAYS: ViewOverlays = {
   lightHelpers: true,
   skeletonHelpers: true,
   clippingHelpers: true,
+  probeHelpers: true,
   gizmos: true,
 }
 
@@ -354,9 +358,9 @@ const VIEW_OVERLAYS: ViewOverlays = {
  * perspective view with the Move tool, select-only axis views post-processed with TRAA, and a
  * select-only UV view of the selection, and a select-only Camera view through the document's active camera (the source
  * example's camera; ADR-0011).
- * The 3D views turn on every overlay (`VIEW_OVERLAYS`; the Camera view without the grid). The Camera view draws the
- * document's bloom; the other views do not until their `bloom` is switched on. The View tab shows the settings (bloom,
- * MSAA) of the view focused last.
+ * The 3D views turn on every overlay (`VIEW_OVERLAYS`). The Camera view draws only the camera frame, no grid or
+ * helpers, so it shows the document as its source does. The Camera view draws the document's bloom; the other views
+ * do not until their `bloom` is switched on. The View tab shows the settings (bloom, MSAA) of the view focused last.
  * The inspector follows the active object; the Document tab shows the document's own properties. The Scene tab is
  * the document's scene graph: click a row to select its object, its triangle to collapse it, double-click or F2 to
  * rename it; what is collapsed is kept in localStorage by object uuid. Selecting in a view reveals the object there.

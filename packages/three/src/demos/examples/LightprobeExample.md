@@ -9,11 +9,7 @@ synced: d94661f706
 
 ## Deviations
 
-- **Helper:** the light probe helper, the probe's lighting on a small sphere, is content; the light helpers overlay draws no probes.
-
-## Workarounds
-
-- `triage-fragment-node-mrt`: `useBasicMaterial()` gives the probe helper a `MeshBasicNodeMaterial` whose `colorNode` is the same irradiance; the helper's `fragmentNode` writes only the first color output, which the TRAA views' MRT pass rejects. **Restore:** the helper's own material.
+- **Helper:** the probe helpers overlay draws the probe's lighting on a small sphere in the editor's views, at the light icons' screen size rather than the source's one unit; the Camera view draws no helpers, so it lacks the source's sphere at (-10, 0, 0).
 
 ## Open
 
@@ -23,7 +19,12 @@ synced: d94661f706
 
 - `shared-refresh`: a `LightProbe`'s `sh` and `intensity` are an object-group uniform that unchanged objects never upload again, a regression in r186. In the issue kits of 2026-10-15 (https://claude.ai/artifact/VcLnhjZSTRQ4jQPZH39eiz); an upstream fix is expected.
 
+## Related
+
+- [LightprobeCubecamera](LightprobeCubecameraExample.md): a probe from a cube camera, whose helper stays content as the source's subject.
+
 ## History
 
 - 2026-10-15: Converted with the workaround. Checked in the editor (headless Chromium on the GPU): renders against `examples/screenshots`, scene graph names, Document tab controls changed with playback paused, the batch's 30 documents in one page without console errors.
 - 2026-10-19: Changed: the source's camera is the active camera (ADR-0011). Checked: the Scene Camera view against `examples/screenshots`.
+- 2026-10-21: Changed: the probe helpers overlay draws the probe; the content helper, drawn in every view until now, is dropped. Workaround removed: `triage-fragment-node-mrt`, with the helper. Checked headlessly on the linked r187dev build `d94661f706`: the probe in the Front (TRAA) and Perspective views, none in the Camera view, without console errors.

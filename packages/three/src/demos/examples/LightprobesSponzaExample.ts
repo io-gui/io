@@ -4,8 +4,6 @@ import {
   Light,
   MathUtils,
   Mesh,
-  MeshBasicNodeMaterial,
-  Node,
   Object3D,
   PerspectiveCamera,
   Vector3,
@@ -16,7 +14,6 @@ import { SunLightNode } from 'three/addons/lights/SunLightNode.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { SkyMesh } from 'three/addons/objects/SkyMesh.js'
 import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js'
-import { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js'
 import { Register, Property, Field } from '@io-gui/core'
 import { Document, DocumentProps, FrameTarget } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
@@ -35,16 +32,6 @@ const PROBES_PER_DRAW = 16
 /** The grid's bounds (the source's `bounds` and `size` parameters, which have no controls). */
 const PROBES_POSITION = new Vector3( - 0.5, 6, - 0.3 )
 const PROBES_SIZE = new Vector3( 21, 11, 9 )
-
-/**
- * Workaround (upstream: triage-fragment-node-mrt): the helper's `fragmentNode` writes only the first color output,
- * so the TRAA views' MRT pass rejects its pipeline. The same irradiance as the color of a basic material.
- */
-function useBasicMaterial( helper: LightProbeGridHelper ) {
-  const previous = helper.material
-  helper.material = new MeshBasicNodeMaterial( { colorNode: previous.fragmentNode as Node<'vec4'> } )
-  previous.dispose()
-}
 
 async function getSponzaModelURL() {
   const response = await fetch( MODEL_INDEX_URL )
@@ -77,9 +64,9 @@ interface BakeProgress {
 /**
  * Sponza under a sky, lit by a `SunLight` and a `LightProbeGrid` with indirect bounces. Once the model has loaded, the
  * grid bakes progressively in `onBeforeDraw`, 16 probes per draw, one pass per bounce, and restarts after edits to
- * the light, `shadows` or `bounces`; the counts replace the grid. `gi` toggles the grid's light, `showProbes` its
- * helper (each probe's irradiance on a sphere of `probeSize`). The source's first-person controls and Log Camera
- * button are dropped; the active camera keeps its start pose. `shadows` turns the sun's shadows on and off (the
+ * the light, `shadows` or `bounces`; the counts replace the grid. `gi` toggles the grid's light. The probe helpers
+ * overlay shows each probe's irradiance on a sphere in the editor's views, so the source's `showProbes` and `probeSize`
+ * are dropped, as are its first-person controls and Log Camera button; the active camera keeps its start pose. `shadows` turns the sun's shadows on and off (the
  * source also switches the renderer's shadow map, which the editor shares). Static: the bake runs on edits.
  */
 @Register
@@ -112,23 +99,14 @@ export class LightprobesSponzaExample extends Document {
   @Property({type: Number, value: 1})
   declare bounces: number
 
-  @Property({type: Boolean, value: false})
-  declare showProbes: boolean
-
-  @Property({type: Number, value: 0.2})
-  declare probeSize: number
-
   public sky: SkyMesh
   public sunLight: SunLight
   public model: Object3D | null = null
   public probes: LightProbeGrid | null = null
-  public probesHelper: LightProbeGridHelper | null = null
   private probeFar = 100
   /** Bumped by edits that restart the bake of the current grid. */
   private bakeVersion = 0
   private progress = new WeakMap<WebGPURenderer, BakeProgress>()
-  /** The grid whose atlas the helper samples: the first bake of a grid creates its atlas. */
-  private helperProbes: LightProbeGrid | null = null
 
   @Field(null)
   declare private _frameTarget: FrameTarget | null
@@ -205,13 +183,8 @@ export class LightprobesSponzaExample extends Document {
     }
   }
 
-  /** A new grid (and helper) for the counts, baked by `onBeforeDraw`. */
+  /** A new grid for the counts, baked by `onBeforeDraw`. */
   private createProbes() {
-    if ( this.probesHelper ) {
-      this.probesHelper.removeFromParent()
-      this.probesHelper.dispose()
-    }
-
     if ( this.probes ) {
       this.probes.removeFromParent()
       this.probes.dispose()
@@ -225,20 +198,6 @@ export class LightprobesSponzaExample extends Document {
     this.probes.position.copy( PROBES_POSITION )
     this.probes.visible = this.gi
     this.scene.add( this.probes )
-
-    this.createHelper()
-  }
-
-  private createHelper() {
-    if ( ! this.probes ) return
-
-    this.probesHelper = new LightProbeGridHelper( this.probes, this.probeSize )
-    this.probesHelper.name = 'Probes Helper'
-    this.probesHelper.visible = this.showProbes
-    this.probesHelper.userData.selectable = false
-    useBasicMaterial( this.probesHelper )
-    this.scene.add( this.probesHelper )
-    this.helperProbes = null
   }
 
   private updateLightPosition() {
@@ -292,26 +251,13 @@ export class LightprobesSponzaExample extends Document {
     this.resetProbeBake()
   }
 
-  showProbesChanged() {
-    if ( this.probesHelper ) this.probesHelper.visible = this.showProbes
-  }
-
-  probeSizeChanged() {
-    if ( ! this.probesHelper ) return
-    this.probesHelper.removeFromParent()
-    this.probesHelper.dispose()
-    this.createHelper()
-    this.notify({kind: 'structure'})
-  }
-
   /**
    * Bakes the next probes of the current pass, then asks for another draw until the last bounce is done. Each renderer
    * keeps its own progress, restarted for a new grid or after edits.
    */
   override onBeforeDraw(renderer: WebGPURenderer) {
     const probes = this.probes
-    const helper = this.probesHelper
-    if ( ! probes || ! helper ) return
+    if ( ! probes ) return
 
     let progress = this.progress.get( renderer )
 
@@ -326,29 +272,15 @@ export class LightprobesSponzaExample extends Document {
     const totalProbes = resolution.x * resolution.y * resolution.z
     const count = Math.min( PROBES_PER_DRAW, totalProbes - progress.index )
 
-    // Keep the helper spheres out of the cubemap captures.
-    const visible = helper.visible
-
-    helper.visible = false
-
-    try {
-      // Publish a few probes per draw, finishing each pass before the next bounce.
-      probes.bake( renderer, this.scene, {
-        cubemapSize: 32,
-        near: 0.05,
-        far: this.probeFar,
-        start: progress.index,
-        count,
-        pass: progress.pass
-      } )
-    } finally {
-      helper.visible = visible
-    }
-
-    if ( this.helperProbes !== probes ) {
-      helper.update()
-      this.helperProbes = probes
-    }
+    // Publish a few probes per draw, finishing each pass before the next bounce.
+    probes.bake( renderer, this.scene, {
+      cubemapSize: 32,
+      near: 0.05,
+      far: this.probeFar,
+      start: progress.index,
+      count,
+      pass: progress.pass
+    } )
 
     progress.index += count
 
@@ -369,11 +301,10 @@ registerEditorConfig(LightprobesSponzaExample, [
   ['countY', ioNumberSlider({min: 2, max: 16, step: 1})],
   ['countZ', ioNumberSlider({min: 2, max: 16, step: 1})],
   ['bounces', ioNumberSlider({min: 0, max: 2, step: 1})],
-  ['probeSize', ioNumberSlider({min: 0.05, max: 2, step: 0.05})],
 ])
 
 registerEditorGroups(LightprobesSponzaExample, {
   Main: ['gi', 'lightAzimuth', 'lightElevation', 'lightIntensity', 'shadows'],
-  Probes: ['countX', 'countY', 'countZ', 'bounces', 'showProbes', 'probeSize'],
-  Hidden: ['sky', 'sunLight', 'model', 'probes', 'probesHelper', 'probeFar', 'bakeVersion', 'progress', 'helperProbes'],
+  Probes: ['countX', 'countY', 'countZ', 'bounces'],
+  Hidden: ['sky', 'sunLight', 'model', 'probes', 'probeFar', 'bakeVersion', 'progress'],
 })

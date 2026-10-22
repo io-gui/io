@@ -24,8 +24,9 @@ function useBasicMaterial( helper: LightProbeHelper ) {
 
 /**
  * A light probe generated from a cube camera's render of the scene (the Pisa cube map background), shown by a light
- * probe helper at the origin: the probe's lighting on a sphere. The helper is the content (the light helpers overlay
- * draws no probes). The cube camera renders once, with the first renderer, after the background has loaded.
+ * probe helper at the origin: the probe's lighting on a sphere. The helper is the content, the source's subject; the
+ * probe helpers overlay's small sphere for the same probe sits inside it. The cube camera renders once, with the first
+ * renderer, after the background has loaded.
  */
 @Register
 export class LightprobeCubecameraExample extends Document {

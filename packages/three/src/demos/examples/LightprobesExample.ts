@@ -3,9 +3,7 @@ import {
   BoxGeometry,
   Color,
   Mesh,
-  MeshBasicNodeMaterial,
   MeshStandardMaterial,
-  Node,
   PerspectiveCamera,
   PlaneGeometry,
   PointLight,
@@ -13,26 +11,16 @@ import {
   WebGPURenderer
 } from 'three/webgpu'
 import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js'
-import { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js'
 import { Register, Property } from '@io-gui/core'
 import { Document, DocumentProps } from '@io-gui/three'
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 
 /**
- * Workaround (upstream: triage-fragment-node-mrt): the helper's `fragmentNode` writes only the first color output,
- * so the TRAA views' MRT pass rejects its pipeline. The same irradiance as the color of a basic material.
- */
-function useBasicMaterial( helper: LightProbeGridHelper ) {
-  const previous = helper.material
-  helper.material = new MeshBasicNodeMaterial( { colorNode: previous.fragmentNode as Node<'vec4'> } )
-  previous.dispose()
-}
-
-/**
  * A Cornell box lit by a point light and a baked `LightProbeGrid` that adds the bounced light (red and green bleeding
  * onto the boxes and the sphere). The grid bakes in `onBeforeDraw` before its first draw, and again when `resolution`
- * replaces it. `gi` toggles the grid's light, `showProbes` its helper (each probe's irradiance on a small sphere).
+ * replaces it. `gi` toggles the grid's light. The probe helpers overlay shows each probe's irradiance on a small sphere
+ * in the editor's views.
  */
 @Register
 export class LightprobesExample extends Document {
@@ -43,11 +31,7 @@ export class LightprobesExample extends Document {
   @Property({type: Number, value: 6})
   declare resolution: number
 
-  @Property({type: Boolean, value: false})
-  declare showProbes: boolean
-
   public probes: LightProbeGrid
-  public probesHelper: LightProbeGridHelper
   /** The grid each renderer baked last. */
   private baked = new WeakMap<WebGPURenderer, LightProbeGrid>()
 
@@ -138,13 +122,6 @@ export class LightprobesExample extends Document {
     // Light probe volume, baked before the first draw (onBeforeDraw)
 
     this.probes = this.createProbes()
-
-    this.probesHelper = new LightProbeGridHelper( this.probes )
-    this.probesHelper.name = 'Probes Helper'
-    this.probesHelper.visible = this.showProbes
-    this.probesHelper.userData.selectable = false
-    useBasicMaterial( this.probesHelper )
-    this.scene.add( this.probesHelper )
   }
 
   private createProbes() {
@@ -168,35 +145,15 @@ export class LightprobesExample extends Document {
     this.probes.dispose()
 
     this.probes = this.createProbes()
-    this.probesHelper.probes = this.probes
-    this.probesHelper.update()
 
     this.notify({kind: 'structure'})
-  }
-
-  showProbesChanged() {
-    if ( this.probesHelper ) this.probesHelper.visible = this.showProbes
   }
 
   /** Bakes the grid once per renderer, and a new grid when `resolution` replaced it. */
   override onBeforeDraw(renderer: WebGPURenderer) {
     if ( this.baked.get( renderer ) === this.probes ) return
 
-    // Keep the helper spheres out of the cubemap captures.
-    const helper = this.probesHelper
-    const visible = helper.visible
-
-    helper.visible = false
-
-    try {
-      this.probes.bake( renderer, this.scene, { cubemapSize: 32, near: 0.05, far: 20 } )
-    } finally {
-      helper.visible = visible
-    }
-
-    // The helper samples the grid's atlas, which the first bake creates.
-    helper.update()
-
+    this.probes.bake( renderer, this.scene, { cubemapSize: 32, near: 0.05, far: 20 } )
     this.baked.set( renderer, this.probes )
   }
 }
@@ -206,6 +163,6 @@ registerEditorConfig(LightprobesExample, [
 ])
 
 registerEditorGroups(LightprobesExample, {
-  Main: ['gi', 'resolution', 'showProbes'],
-  Hidden: ['probes', 'probesHelper', 'baked'],
+  Main: ['gi', 'resolution'],
+  Hidden: ['probes', 'baked'],
 })

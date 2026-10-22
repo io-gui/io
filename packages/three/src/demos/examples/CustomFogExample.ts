@@ -23,6 +23,8 @@ import { ioNumberSlider } from '@io-gui/sliders'
 /** Seconds of playback. The fog noise drifts without repeating, so it jumps at the wrap. */
 const DURATION = 60
 
+const _cameraPosition = new Vector3()
+
 /** A renderer's environment generator and the target it reuses when the sun moves. */
 interface Environment {
   pmremGenerator: PMREMGenerator
@@ -36,7 +38,8 @@ interface Environment {
  * plus a distance `haze`. A sky that is never drawn lights the scene as a PMREM environment: `elevation` and `azimuth`
  * move the sun and its key light, and regenerate that environment in `onBeforeDraw`. The fog drifts on the timeline.
  * The forest thins out with the distance from the active camera (`cullFrom`, `cullTo`), the source's main camera, so
- * every view sees the same trees; the source's first-person controls are dropped. `regenerate` builds a new terrain
+ * every view sees the same trees. The camera is in the scene: move it with the editor's tools (the source's
+ * first-person controls are dropped) and the forest and its shadows follow. `regenerate` builds a new terrain
  * and forest from the next seed with the current `erosion` and `valleyBias`. Plays when opened.
  */
 @Register
@@ -82,6 +85,8 @@ export class CustomFogExample extends Document {
   /** Bumped when the sun moves: the sky environment is regenerated before the next draw. */
   private environmentVersion = 0
   private environments = new WeakMap<WebGPURenderer, Environment>()
+  /** The world position the forest is culled around: the active camera's when it was last applied. */
+  private cullCentre = new Vector3()
 
   constructor(args?: DocumentProps) {
     super({
@@ -149,7 +154,8 @@ export class CustomFogExample extends Document {
     } )
 
     this.forest = new ForestGenerator( { count: 500000, castShadow: true, from: this.cullFrom, to: this.cullTo } )
-    this.forest.setCameraPosition( camera.position ) // drives the forest cull
+    this.forest.setCameraPosition( camera.position ) // drives the forest cull; onBeforeDraw follows the camera
+    this.cullCentre.copy( camera.position )
 
     // a single directional key aligned with the sky's sun, for the crisp relief
     // shadows the sky fill alone can't give. its colour, intensity and position —
@@ -232,8 +238,13 @@ export class CustomFogExample extends Document {
   erosionChanged() { if ( this.terrain ) this.terrain.parameters.erosion = this.erosion }
   valleyBiasChanged() { if ( this.terrain ) this.terrain.parameters.valleyBias = this.valleyBias }
 
-  /** Regenerates the sky environment after the sun moved (and before the first draw), reusing the renderer's target. */
+  /**
+   * Follows the active camera with the forest cull, and regenerates the sky environment after the sun moved (and before
+   * the first draw), reusing the renderer's target.
+   */
   override onBeforeDraw(renderer: WebGPURenderer) {
+    this.followActiveCamera()
+
     let environment = this.environments.get( renderer )
 
     if ( ! environment ) {
@@ -247,6 +258,22 @@ export class CustomFogExample extends Document {
     environment.version = this.environmentVersion
 
     this.scene.environment = environment.renderTarget.texture
+  }
+
+  /**
+   * Culls the forest around the active camera's world position again once the camera has moved (tools, the Inspector,
+   * another active camera), and refreshes the shadow map, which holds the culled trees too.
+   */
+  private followActiveCamera() {
+    const camera = this.activeCamera
+    if ( ! camera ) return
+
+    camera.getWorldPosition( _cameraPosition )
+    if ( _cameraPosition.equals( this.cullCentre ) ) return
+
+    this.cullCentre.copy( _cameraPosition )
+    this.forest.setCameraPosition( this.cullCentre )
+    this.sunLight.shadow.needsUpdate = true
   }
 }
 
@@ -269,6 +296,6 @@ registerEditorGroups(CustomFogExample, {
   Terrain: ['erosion', 'valleyBias', 'regenerate'],
   Hidden: [
     'terrain', 'forest', 'sunLight', 'terrainGroup', 'forestGroup', 'sky', 'envScene',
-    'fogBaseUniform', 'fogTopUniform', 'hazeUniform', 'environmentVersion', 'environments',
+    'fogBaseUniform', 'fogTopUniform', 'hazeUniform', 'environmentVersion', 'environments', 'cullCentre',
   ],
 })

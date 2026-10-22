@@ -33,6 +33,8 @@ export interface ViewOverlays {
   skeletonHelpers?: boolean
   /** Planes of clipping groups. */
   clippingHelpers?: boolean
+  /** Light probes and probe grids: each probe's irradiance on a sphere. */
+  probeHelpers?: boolean
   /** The active tool's gizmos, in `full` profile views. */
   gizmos?: boolean
 }

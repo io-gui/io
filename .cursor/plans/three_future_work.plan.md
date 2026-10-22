@@ -50,8 +50,14 @@ todos:
   - id: clipping-helpers
     content: "Clipping plane helpers for ClippingGroups as a helper overlay (clippingHelpers)"
     status: completed
+  - id: probe-helpers
+    content: "Light probe and probe grid helpers as a helper overlay (probeHelpers)"
+    status: completed
+  - id: overlay-toggles
+    content: "UI to switch individual overlays per view: a viewport overlays menu of the registered overlays for the view kind, as checkboxes writing View.overlays. Planned with the effect switches as view-display-ui in three_effects.plan.md"
+    status: pending
   - id: bloom-emissive
-    content: "Bloom from an emissive MRT output instead of the scene color (webgpu_water blooms only emissive)"
+    content: "Bloom from an emissive MRT output instead of the scene color (webgpu_water blooms only emissive). Taken over by mrt-channels in three_effects.plan.md"
     status: pending
 isProject: false
 ---
@@ -110,12 +116,12 @@ Done 2026-10-13 (`render/overlays/HelperOverlay.ts`). Decided in a grilling sess
 - **Built per draw, not from change listeners.** Like the component and outline overlays, `prepare()` walks the content scene and keeps one helper per object in a `KeyedPool`. Every structure, time and transform change already redraws overlays, so the helpers follow without a listener.
 - **What is drawn.** Shown objects only (hidden ancestors hide helpers). A view looking through a scene camera skips that camera's helper (resolves `camera-helper-view` in the conversion plan).
   - Cameras: `CameraHelper`, always the full frustum to `far`, neutral gray.
-  - Lights: point, directional and hemisphere icons at a constant screen size (each view sizes its own); spot cones (distance, angle) and rect area panels (`RectAreaLightHelper`, outline and panel) at their real size. Ambient lights and light probes have none.
+  - Lights: point, directional and hemisphere icons at a constant screen size (each view sizes its own); spot cones (distance, angle) and rect area panels (`RectAreaLightHelper`, outline and panel) at their real size. Ambient lights and light probes have none (probes have their own overlay since 2026-10-21, `probe-helpers`).
   - Skeletons: a `SkeletonHelper` per root bone (a bone whose parent is not a bone), so skeletons show while their meshes are hidden, and bone hierarchies without a skinned mesh (BVH) draw too.
 - **Selection.** Helpers of selected objects and their descendants draw in the outline colors (active brighter); a skeleton also highlights when one of its skinned meshes is selected. Not in edit mode, like the outline. No "selected only" filter until someone needs it.
 - **Not pickable.** Helpers live in the overlay scene, so clicking a light's icon does not select the light. Selecting lights and cameras in the viewport needs the `Picker` to consult overlays; later.
 - **Examples.** The authored helpers are gone: the `Helpers` groups and `showHelpers` in CameraExample, AnimationRetargeting and LightsRectarealight (the overlay draws its light panels), and the skeleton helper behind `showSkeleton` in AnimationSkinningBlending, whose `showModel` now hides only the meshes ([three.js_example_conversion.plan.md](./three.js_example_conversion.plan.md), Scene graph and picking).
-- **No overlay UI yet.** Views switch overlays only in code (`View.overlays`), so the demo turns them on in code. A viewport overlays menu (registered overlays for the view kind, by label, as checkboxes) would let users switch any of them; not built.
+- **No overlay UI yet.** Views switch overlays only in code (`View.overlays`), so the demo turns them on in code. A viewport overlays menu (registered overlays for the view kind, by label, as checkboxes) would let users switch any of them; not built (`overlay-toggles`).
 
 ### `clipping-helpers`
 
@@ -125,9 +131,22 @@ Done 2026-10-16: a fourth helper kind, `clippingHelpers`, for `ClippingGroup`s (
 - **Outline always, fill while selected.** A fill spanning the clipped content tinted whole views (Clipping's planes span its 9-unit ground). Planes take the color of their normal's main axis (the translate gizmo's axis colors), and the selection colors when the group is selected. A disabled group (`enabled = false`) draws nothing.
 - The outline is a closed `Line`: WebGPU has no line loops.
 
+### `probe-helpers`
+
+Done 2026-10-21: a fifth helper kind, `probeHelpers`, for `LightProbe`s and `LightProbeGrid`s (`HelperOverlay.ts`), replacing the probe helpers that five converted examples authored into their scenes behind `showProbes` (Lightprobe, Lightprobes, LightprobesComplex, LightprobesSponza, GeneratorCity).
+
+- **Light probes:** three's `LightProbeHelper` (`LightProbeHelperGPU.js`) at the light icons' constant screen size, at the probe's world position through its own matrix: the helper's render hook would place it at the probe's local position, a draw late. The hook still takes the probe's intensity and coefficients.
+- **Probe grids:** three's `LightProbeGridHelper`, spheres an eighth of the smallest probe spacing (of the largest side for a single probe), close to the sources' sizes. Hidden until the grid's first bake creates its atlas; updated when the atlas, resolution, position or size change, rebuilt when the spacing does.
+- **Own materials.** Both helpers shade with a `fragmentNode`, which the TRAA views' scene pass (MRT) rejects (`triage-fragment-node-mrt` in the upstream fixes plan). The overlay pass has no MRT, so they draw as three ships them, and the bakes no longer hide helpers from their captures. A probe helper that is an example's subject stays content (LightprobeCubecamera).
+- **No selection colors:** the spheres show the probes' irradiance.
+
+### `overlay-toggles`
+
+Switch individual overlays per view from the UI: a viewport overlays menu listing the registered overlays for the view's kind, by label, as checkboxes writing `View.overlays`. Views switch overlays only in code until then (the demo host's `VIEW_OVERLAYS`). Planned together with per-view effect switches: `view-display-ui` in [three_effects.plan.md](./three_effects.plan.md).
+
 ### `document-bloom`
 
-Done 2026-10-16. Bloom is part of a document's look, like tone mapping, so it follows the same rule ([ADR-0006](../../packages/three/docs/adr/0006-content-scene-holds-only-content.md)): the document holds the setting, a view may override it.
+Done 2026-10-16. Bloom is part of a document's look, like tone mapping, so it follows the same rule ([ADR-0006](../../packages/three/docs/adr/0006-content-scene-holds-only-content.md)): the document holds the setting, a view may override it. To be superseded by [three_effects.plan.md](./three_effects.plan.md) (2026-10-22): `Bloom` becomes the first `Effect` in `Document.effects`, and `View.bloom` and `BloomStage` go.
 
 - **`Document.bloom`** is a `Bloom` (`enabled`, `strength`, `radius`, `threshold`: three's `BloomNode` inputs), shown in the Document tab's Rendering group. Examples declare their source's bloom (`TslVfxTornado`, `MaterialsRetroreflection`).
 - **`View.bloom`**: `true` or `false` overrides, `null` follows `document.bloom.enabled`. The demo host's Scene Camera view follows the document; its perspective and axis views are off, so editing views stay unaffected. The host's View tab shows the focused viewport's view (bloom, MSAA, ...).

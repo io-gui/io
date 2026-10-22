@@ -1,6 +1,9 @@
 import { Box3, BufferGeometry, CameraHelper, Color, DirectionalLightHelper, DoubleSide, Group, HemisphereLightHelper, Line, LineBasicMaterial, Mesh, MeshBasicMaterial, Object3D, PlaneGeometry, PointLightHelper, Quaternion, SkeletonHelper, Sphere, SpotLightHelper, Vector3 } from 'three/webgpu'
-import type { Bone, Camera, ClippingGroup, DirectionalLight, HemisphereLight, Light, PointLight, RectAreaLight, SkinnedMesh, SpotLight } from 'three/webgpu'
+import type { Bone, Camera, ClippingGroup, DirectionalLight, HemisphereLight, Light, LightProbe, PointLight, RectAreaLight, SkinnedMesh, SpotLight } from 'three/webgpu'
 import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js'
+import { LightProbeHelper } from 'three/addons/helpers/LightProbeHelperGPU.js'
+import { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js'
+import type { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js'
 import type { Overlay, OverlayContext, OverlayType } from '../Overlay.js'
 import { OUTLINE_COLORS } from './SelectionOutlineOverlay.js'
 import { KeyedPool } from '../../utils/KeyedPool.js'
@@ -34,7 +37,7 @@ export interface HelperKind {
 }
 
 /**
- * Draws a three.js helper for each shown content object of one kind (cameras, lights, skeletons), in the
+ * Draws a three.js helper for each shown content object of one kind (cameras, lights, skeletons, probes), in the
  * view's overlay scene rather than the content scene, so helpers are not exported, framed or picked.
  * Helpers of selected objects take the outline's colors. A view looking through a scene camera skips its helper.
  */
@@ -291,6 +294,86 @@ class ClippingHelperEntry implements Helper {
   }
 }
 
+/** A light probe's irradiance on a sphere, at the light icons' constant screen size. */
+class ProbeHelperEntry implements Helper {
+  readonly object: LightProbeHelper
+  private readonly _probe: LightProbe
+
+  constructor(probe: LightProbe) {
+    this._probe = probe
+    this.object = new LightProbeHelper(probe, 1)
+    // Its own matrix at the probe's world position. The helper's render hook still takes the probe's intensity and
+    // coefficients, but would place it at the probe's local position, a draw late.
+    this.object.matrixAutoUpdate = false
+  }
+
+  update(ctx: OverlayContext) {
+    const helper = this.object
+    _position.setFromMatrixPosition(this._probe.matrixWorld)
+    const size = worldPerPixelAt(ctx.camera, _position, ctx.height) * LIGHT_ICON_SIZE / 2
+    helper.matrix.makeScale(size, size, size).setPosition(_position)
+    helper.matrixWorldNeedsUpdate = true
+  }
+
+  dispose() {
+    this.object.dispose()
+  }
+}
+
+/** Probe spheres of a light probe grid, as a share of the smallest spacing between its probes. */
+const PROBE_SPHERE_SHARE = 1 / 8
+
+/** The radius of a grid's probe spheres: an eighth of the smallest probe spacing, or of its largest side for one probe. */
+export function probeSphereSize(grid: LightProbeGrid) {
+  const {x, y, z} = grid.resolution
+  const spacings = [[grid.width, x], [grid.height, y], [grid.depth, z]]
+    .filter(([, count]) => count > 1)
+    .map(([size, count]) => size / (count - 1))
+  const spacing = spacings.length ? Math.min(...spacings) : Math.max(grid.width, grid.height, grid.depth)
+  return Math.max(spacing * PROBE_SPHERE_SHARE, Number.EPSILON)
+}
+
+/** What a grid helper's instances and atlas follow: the baked texture, the resolution, the position and the size. */
+function gridState(grid: LightProbeGrid) {
+  const {position, resolution} = grid
+  return `${grid.texture?.uuid ?? ''} ${resolution.toArray()} ${position.toArray()} ${grid.width} ${grid.height} ${grid.depth}`
+}
+
+/**
+ * Each probe of a light probe grid as a sphere of its irradiance, sized by the probe spacing (`probeSphereSize`). Hidden
+ * until the grid has baked; follows bakes into a new atlas, new resolutions and moves of the grid.
+ */
+class ProbeGridHelperEntry implements Helper {
+  readonly object: LightProbeGridHelper
+  private readonly _grid: LightProbeGrid
+  private readonly _size: number
+  private _state: string
+
+  constructor(grid: LightProbeGrid) {
+    this._grid = grid
+    this._size = probeSphereSize(grid)
+    this.object = new LightProbeGridHelper(grid, this._size)
+    this._state = gridState(grid)
+  }
+
+  update() {
+    const grid = this._grid
+    this.object.visible = grid.texture !== null
+    const state = gridState(grid)
+    if (state === this._state) return
+    this._state = state
+    this.object.update()
+  }
+
+  fits() {
+    return probeSphereSize(this._grid) === this._size
+  }
+
+  dispose() {
+    this.object.dispose()
+  }
+}
+
 type Flags = Record<string, boolean | undefined>
 
 export const cameraHelpers: HelperKind = {
@@ -298,7 +381,7 @@ export const cameraHelpers: HelperKind = {
   create: object => new CameraHelperEntry(object as Camera),
 }
 
-/** Lights that have a place in the scene; ambient lights and light probes have no helper. */
+/** Lights that have a place in the scene; ambient lights have no helper, light probes have theirs in `probeHelpers`. */
 export const lightHelpers: HelperKind = {
   accepts: object => {
     const light = object as unknown as Flags
@@ -317,6 +400,14 @@ export const skeletonHelpers: HelperKind = {
 export const clippingHelpers: HelperKind = {
   accepts: object => !!(object as unknown as Flags).isClippingGroup,
   create: object => new ClippingHelperEntry(object as ClippingGroup),
+}
+
+/** Light probes and light probe grids: each probe's irradiance on a sphere. */
+export const probeHelpers: HelperKind = {
+  accepts: object => !!((object as unknown as Flags).isLightProbe || (object as unknown as Flags).isLightProbeGrid),
+  create: object => (object as unknown as Flags).isLightProbeGrid
+    ? new ProbeGridHelperEntry(object as unknown as LightProbeGrid)
+    : new ProbeHelperEntry(object as LightProbe),
 }
 
 export const cameraHelperOverlayType: OverlayType = {
@@ -349,4 +440,12 @@ export const clippingHelperOverlayType: OverlayType = {
   viewKinds: ['3d'],
   order: 13,
   create: () => new HelperOverlay('ClippingHelperOverlay', clippingHelpers),
+}
+
+export const probeHelperOverlayType: OverlayType = {
+  id: 'probeHelpers',
+  label: 'Probe helpers',
+  viewKinds: ['3d'],
+  order: 14,
+  create: () => new HelperOverlay('ProbeHelperOverlay', probeHelpers),
 }

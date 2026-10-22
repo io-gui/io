@@ -10,11 +10,7 @@ tags: [stand-in-framing]
 
 ## Deviations
 
-- **Panels:** the glowing light panels are the light helpers overlay, which the Scene Camera view does not draw (Open).
-
-## Open
-
-- `scene-camera-helpers`: the Scene Camera view lacks the light panels the source shows.
+- **Panels:** the glowing light panels are the light helpers overlay. The Scene Camera view draws no helpers, so it lacks the panels the source shows.
 
 ## History
 
@@ -22,3 +18,4 @@ tags: [stand-in-framing]
 - 2026-10-13: Changed: the light panels come from the light helpers overlay.
 - 2026-10-19: Fixed: views framed the 2000-unit floor (`framing-scenery`); they frame a stand-in for the knot and the turning panels (`getEditorFrameTarget`, ADR-0012).
 - 2026-10-19: Changed: the source's camera is the active camera (ADR-0011). Checked: the Scene Camera view against `examples/screenshots`.
+- 2026-10-21: Changed: `scene-camera-helpers` closed: the Scene Camera view draws no helpers, by decision, so the missing panels are a deviation.

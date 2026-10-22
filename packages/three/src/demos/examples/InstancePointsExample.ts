@@ -26,8 +26,9 @@ const PERIOD = 10 * 2 * Math.PI / 6
 /**
  * Points along a 3D Hilbert curve, colored along it, whose sizes in pixels pulse in a wave: a compute pass writes each
  * point's size from document time before the views draw (`onBeforeDraw`). `alphaToCoverage`, `minWidth`, `maxWidth`
- * and `pulseSpeed` are in the Document tab; `alphaToCoverage` shows in views with MSAA only. The source's inset view,
- * the same camera on a dark background, is dropped. Plays when opened.
+ * and `pulseSpeed` are in the Document tab; `alphaToCoverage` smooths the circles in views with MSAA only, and an
+ * `alphaTest` cuts them in the others. The source's inset view, the same camera on a dark background, is dropped. Plays
+ * when opened.
  */
 @Register
 export class InstancePointsExample extends Document {
@@ -129,7 +130,10 @@ export class InstancePointsExample extends Document {
       sizeNode: instancedBufferAttribute( instanceSizeBufferAttribute ),
       vertexColors: true,
       sizeAttenuation: false,
-      alphaToCoverage: true
+      alphaToCoverage: true,
+      // Cuts the circles in views without MSAA, where `alphaToCoverage` does not: their corners would draw with zero
+      // alpha, through which the page behind the canvas shows.
+      alphaTest: 0.5
 
     } )
 

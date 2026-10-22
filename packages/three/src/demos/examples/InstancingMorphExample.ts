@@ -6,13 +6,13 @@ import {
   Fog,
   HemisphereLight,
   InstancedMesh,
+  Light,
   Mesh,
   MeshStandardMaterial,
   MeshStandardNodeMaterial,
   PerspectiveCamera,
   PlaneGeometry,
-  Vector3,
-  WebGPURenderer
+  Vector3
 } from 'three/webgpu'
 import { SunLight } from 'three/addons/lights/SunLight.js'
 import { SunLightNode } from 'three/addons/lights/SunLightNode.js'
@@ -20,6 +20,10 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { Register, Field } from '@io-gui/core'
 import { Document, DocumentProps, FrameTarget, Timeline } from '@io-gui/three'
 import { registerEditorGroups } from '@io-gui/editors'
+
+// `Light.registerNode()` is r187 (the source at r186 used `renderer.library.addLight()`, deprecated since); not in
+// @types/three 0.186.
+( SunLight as unknown as typeof Light & { registerNode( lightNodeClass: typeof SunLightNode ): void } ).registerNode( SunLightNode )
 
 const offset = 5000
 const count = 1024
@@ -90,11 +94,6 @@ export class InstancingMorphExample extends Document {
 
   override getEditorFrameTarget() {
     return this._frameTarget
-  }
-
-  override onRendererInitialized(renderer: WebGPURenderer) {
-    super.onRendererInitialized(renderer)
-    renderer.library.addLight( SunLightNode, SunLight )
   }
 
   private async loadModel() {
